@@ -63,7 +63,7 @@ async function startGame(loaded=null) {
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
     if(!loaded) {const start=findInitialLocation(nav,payload);Object.assign(next.villages[0],start);}
-    nav.setState(next);state=next;
+    nav.setState(next);state=next;audio.remember(state.events);
     state.pauses=state.pauses.filter(reason=>!['menu','hidden','context-lost'].includes(reason));
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href='/content/hud.css';document.head.append(nativeStyle);
     app.innerHTML=`<main class="game" id="stage"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
