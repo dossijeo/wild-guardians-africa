@@ -1,4 +1,4 @@
-// Rational accounting preserves repair fractions and modifiers without rounding.
+// Rational intermediates preserve exact repair/modifier calculations; settlement rounds to whole coins.
 const gcd = (a,b) => b ? gcd(b,a%b) : a;
 export function rational(n, d=1n) {
   n=BigInt(n); d=BigInt(d);
