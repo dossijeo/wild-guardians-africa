@@ -32,7 +32,14 @@ function menu() {
 }
 window.addEventListener('message',event=>{
   if(event.origin!==location.origin||event.source!==document.querySelector('#native-menu')?.contentWindow||event.data?.type!=='wild-guardians:menu')return;
-  safe(()=>({new:()=>newGameScreen(),load:loadScreen,library:libraryScreen,settings:()=>settingsDialog()})[event.data.action]?.());
+  safe(()=>{
+   const data=event.data,respond=detail=>event.source.postMessage({type:'wild-guardians:menu-data',...detail},location.origin);
+   if(data.action==='request-saves')respond({slots:saves.list().map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:formatMoney(slot.money)}))});
+   if(data.action==='load-slot')return startGame(saves.load(data.slotId));
+   if(data.action==='start'&&Game.BIOMES.includes(data.biome)&&Game.CULTURES.includes(data.culture)){selectedBiome=data.biome;selectedCulture=data.culture;return startGame();}
+   if(data.action==='request-settings')respond({settings});
+   if(data.action==='settings-change'&&['muy_baja','baja','media','alta'].includes(data.settings?.quality)&&[data.settings.sfx,data.settings.music].every(value=>Number.isFinite(value)&&value>=0&&value<=1)){Object.assign(settings,data.settings);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();}
+  });
 });
 let selectedBiome='sabana',selectedCulture='mapungubwe';
 function newGameScreen() {
