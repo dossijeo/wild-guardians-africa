@@ -11,7 +11,7 @@ export function waterPlant(p,magic=false) {
 }
 export function advancePlant(p,seconds,growthMagic=false) {
   if(!p.alive || p.growth>=cropSpec(p.species).growth_seconds || p.water[0].status==='due')return;
-  const spec=cropSpec(p.species), tolerance=spec.derived_tolerance_seconds;
+  const spec=cropSpec(p.species), tolerance=spec.derived_tolerance_seconds*(1+(p.toleranceBonus??0));
   let left=seconds;
   while(left>1e-9) {
     const due=p.water.filter(w=>w.status==='due');
@@ -24,7 +24,10 @@ export function advancePlant(p,seconds,growthMagic=false) {
     const step=Math.min(left,untilCheckpoint,untilDry,(spec.growth_seconds-p.growth)/rate);
     due.forEach(w=>w.wait+=step);
     p.growth+=step*rate;left-=step;
-    if(next && p.growth>=next.at-1e-9)next.status=magic?'magic':'due';
+    if(next && p.growth>=next.at-1e-9) {
+      next.status=magic?'magic':'due';
+      if(!magic&&p.nextTolerancePenalty){next.wait=tolerance*p.nextTolerancePenalty;p.nextTolerancePenalty=0;}
+    }
     if(p.growth>=spec.growth_seconds-1e-9) {
       p.growth=p.water.some(w=>w.status==='due')?spec.growth_seconds-1e-7:spec.growth_seconds;
       return;
@@ -41,4 +44,3 @@ export function contiguousGroup(plants,root,maxDistance=1.7) {
   }
   return queue;
 }
-

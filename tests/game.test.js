@@ -1,0 +1,83 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {newGame,resume,pause,placeStructure,plant,hire,openInitialHiring,harvest,tick,rebuildTasks,cast,requestRepair,continuePostgame} from '../src/simulation/game.js';
+import {numberOf,rational} from '../src/simulation/money.js';
+import {cropSpec,hitStructure} from '../src/simulation/rules.js';
+import {planNight,spawnRaid,updateRaid} from '../src/simulation/raids.js';
+import {applyEvent} from '../src/simulation/events.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
+const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
+const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
+test('30 canonical combinations validate and each new game starts isolated at 1000',()=>{
+  for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'])for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope']){
+    const s=newGame({biome,culture,slotId:`${biome}-${culture}`,seed:1});assert.equal(numberOf(s.ledger.balance),1000);assert.equal(s.villages[0].culture,culture);
+  }
+  assert.throws(()=>newGame({biome:'invalid'}));
+});
+test('First day center/plant/tutorial hiring sequence and payment idempotency',()=>{
+  const s=ready();placeStructure(s,'center',{x:4,z:0},nav);assert.equal(numberOf(s.ledger.balance),200);assert.equal(s.tutorial.step,'plant');
+  assert.equal(placeStructure(s,'center',{x:4,z:0},nav),false);plant(s,'plant','mijo',8,0,nav);assert.equal(s.tutorial.step,'hire');
+  openInitialHiring(s);assert.ok(s.pauses.includes('hiring'));hire(s,'hire',{olderMale:1});assert.equal(numberOf(s.ledger.balance),95);assert.equal(hire(s,'hire-again',{olderMale:1}),false);
+});
+test('Invalid placement makes no economic or world modification',()=>{
+  const s=ready();assert.throws(()=>placeStructure(s,'bad',{x:0,z:0},{...nav,placement:()=>({valid:false,reason:'invalid'})}));
+  assert.equal(numberOf(s.ledger.balance),1000);assert.equal(s.structures.length,0);assert.equal(s.suppressed.length,0);
+});
+test('Workers physically plant, water and harvest; only crate delivery pays',()=>{
+  const s=setup();assert.equal(s.plants[0].growth,0);tick(s,1,nav);assert.equal(s.plants[0].growth,0);
+  tick(s,170,nav);assert.equal(s.plants[0].growth,140);assert.equal(numberOf(s.ledger.balance),95);
+  harvest(s,'harvest',s.plants[0].id);assert.equal(numberOf(s.ledger.balance),95);
+  tick(s,4,nav);assert.equal(numberOf(s.ledger.balance),95);assert.equal(s.crates.length,1);
+  tick(s,10,nav);assert.equal(numberOf(s.ledger.balance),106);assert.ok(s.crates[0].delivered);
+  const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),106);
+});
+test('Stacked pauses freeze crops and spell clocks',()=>{
+  const s=setup();pause(s,'menu');pause(s,'hidden');tick(s,500,nav);assert.equal(s.time,0);resume(s,'menu');tick(s,500,nav);assert.equal(s.time,0);resume(s,'hidden');tick(s,1,nav);assert.ok(Math.abs(s.time-1)<1e-9);
+});
+test('Manual harvest orders survive queue reconstruction, manual repairs do not',()=>{
+  const s=setup();s.plants[0].growth=140;s.plants[0].water.forEach(w=>w.status='manual');harvest(s,'harvest',s.plants[0].id);
+  s.ledger.balance=rational(200);s.structures[0].hp=500;requestRepair(s,'repair',s.structures[0].id);assert.ok(s.tasks.some(t=>t.kind==='repair'));rebuildTasks(s);
+  assert.ok(s.tasks.some(t=>t.kind==='harvest'));assert.ok(!s.tasks.some(t=>t.kind==='repair'));
+});
+test('New midday center does not move plants or employees',()=>{
+  const s=setup();s.ledger.balance=rational(5000);const original=s.plants[0].centerId;placeStructure(s,'second',{x:10,z:0},nav);
+  assert.equal(s.plants[0].centerId,original);assert.equal(s.workers[0].centerId,original);plant(s,'new','mijo',12,0,nav);assert.equal(s.plants[1].centerId,s.structures[1].id);
+});
+test('Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry',()=>{
+  const s=setup();assert.throws(()=>cast(s,'early','growth',10,0,nav));s.day=5;
+  cast(s,'growth','growth',10,0,nav);assert.equal(s.cooldowns.growth,90);assert.equal(s.spells[0].remaining,30);
+  assert.throws(()=>cast(s,'overlap','multiply',11,0,nav),/solaparse/);tick(s,30,nav);assert.equal(s.spells.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
+});
+test('Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction',()=>{
+  const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,[]);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);
+});
+test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
+  const s=setup();const w=s.workers[0];s.crates.push({id:'crate-test',x:5,z:0,value:rational(10),carrierId:w.id,delivered:false});w.crateId='crate-test';w.status='carrying';
+  spawnRaid(s,{group:['warthog']},nav);assert.equal(w.crateId,null);assert.equal(s.crates[0].carrierId,null);assert.equal(numberOf(s.ledger.balance),95);assert.equal(w.status,'fleeing');
+});
+test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
+  const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
+  a.targetId=center.id;a.status='attacking';a.animation='Weapon_Combo_2';a.attackRemaining=1;a.hitApplied=false;a.hitsRemaining=3;a.attackId='combo';
+  updateRaid(s,.3,nav);assert.equal(center.hp,560);assert.equal(a.hitsRemaining,2);const loaded=deserialize(serialize(s));updateRaid(loaded,.3,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
+});
+test('Attack crossing dawn prevents events, hiring and night completion until departure',()=>{
+  const s=setup();s.ledger.balance=rational(200);s.time=599.9;s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0];a.status='retreating';a.x=0;a.z=0;a.spawn={x:200,z:0};
+  tick(s,.2,nav);assert.equal(s.time,600);assert.equal(s.completedNights,0);assert.ok(!s.pauses.includes('hiring'));
+  a.spawn={x:a.x,z:a.z};a.path=null;tick(s,.1,nav);assert.equal(s.completedNights,1);assert.equal(s.day,2);assert.ok(s.pauses.includes('hiring'));
+});
+test('Final raid defeat takes precedence over hundredth night victory',()=>{
+  const s=setup();s.time=600;s.completedNights=99;s.structures[0].status='ruined';s.ledger.balance=rational(0);s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);s.raid.animals.forEach(a=>a.status='gone');
+  tick(s,.1,nav);assert.equal(s.result,'defeat');assert.equal(s.completedNights,99);
+});
+test('Hundredth completed night wins only after economic check; postgame suppresses attacks',()=>{
+  const s=setup();s.time=599.9;s.completedNights=99;s.ledger.balance=rational(10000);s.nightPlan={at:400,done:true,group:[]};tick(s,.1,nav);assert.equal(s.result,'victory');continuePostgame(s);assert.equal(s.postgame,true);planNight(s);assert.deepEqual(s.nightPlan.group,[]);
+});
+test('Event frost leaves mature plants intact; favorable growth keeps mandatory water debt',()=>{
+  const s=setup();const p=s.plants[0];p.growth=140;p.water.forEach(w=>w.status='manual');s.eventPlan={id:'frost',kind:'frost',affectedFraction:1,negative:true};applyEvent(s);assert.equal(p.growth,140);
+  p.growth=65;p.water[1].status='future';s.eventPlan={id:'favorable',kind:'favorable',magnitude:.3,negative:false};applyEvent(s);assert.equal(p.growth,107);assert.equal(p.water[1].status,'due');const once=p.growth;applyEvent(s);assert.equal(p.growth,once);
+});
+test('Plague consumes half remaining tolerance without killing plants or changing coins',()=>{
+  const s=setup();const p=s.plants[0];p.water[0].status='manual';p.water[1].status='due';p.water[1].wait=20;s.eventPlan={kind:'plague',negative:true,affectedFraction:1};applyEvent(s);
+  assert.equal(p.water[1].wait,45);assert.ok(p.alive);assert.equal(numberOf(s.ledger.balance),95);
+});

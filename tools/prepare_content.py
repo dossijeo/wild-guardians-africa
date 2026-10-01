@@ -1,0 +1,25 @@
+"""Produce lazy runtime manifests from extracted originals."""
+import json,pathlib,shutil
+root=pathlib.Path(__file__).resolve().parents[1]
+refs=root/'references/extracted';out=root/'public/content';out.mkdir(exist_ok=True)
+def read(folder,file):return json.loads((refs/folder/file).read_text(encoding='utf-8'))
+def write(file,data): (out/file).write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+assets=json.loads((root/'content/manifests/assets.json').read_text(encoding='utf-8'))
+biomes=read('Wild_Guardians_Nueva_Partida_V2','biomeData.json')
+cultures=read('Wild_Guardians_Nueva_Partida_V2','cultureData.json')
+fonts=read('Wild_Guardians_Tipografia_Autocontenido','font-payload.json')
+write('selector.json',{'biomes':biomes,'cultures':cultures})
+write('fonts.json',fonts)
+write('models.json',assets['models'])
+write('crop-thumbnails.json',read('Bioma_Cultivos_Lab_V3_Morph_Local','thumbnailData.json'))
+write('sfx.json',read('Wild_Guardians_SFX_Lab_V12_Catalogo','bankData.json'))
+write('villages.json',read('Poblados_Lab_V5_Mapungubwe_Saheliano_Suajili_Musgum_Etiope','villagesPayload.json'))
+write('walls.json',read('Bastion_Lab_V4_1_Puerta_Reforzada_Mas_Grande','bastion-assets.json'))
+write('vfx.json',read('Wild_Guardians_VFX_Atelier_V4','embedded-assets.json'))
+for path in (refs/'Bioma_Lab_V4_0_Materiales_Luz_Optimizado').glob('*-asset-data.json'):
+    data=json.loads(path.read_text(encoding='utf-8'));write('biome-'+data['biomeId']+'.json',data)
+for folder,name in [('Wild_Guardians_Gameplay_A_Balafon_and_Flute_Lab_V1_OFFLINE','music-a.json'),('Wild_Guardians_Gameplay_B_Warm_Afternoon_Lab_V1_OFFLINE','music-b.json')]:write(name,read(folder,'bank.json'))
+bridge=read('Bioma_Cultivos_Lab_V3_Morph_Local','bridgeData.json');write('crop-bridges.json',bridge)
+licenses=root/'licenses';licenses.mkdir(exist_ok=True)
+for name,text in fonts['licences'].items():(licenses/(name+'.txt')).write_text(text,encoding='utf-8')
+print('Runtime manifests and font licenses prepared')
