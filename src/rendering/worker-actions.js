@@ -18,9 +18,11 @@ export function workerPose(worker,task,elapsed,library) {
   const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
   let name='Idle',time=elapsed;
   if(worker.fallRemaining>0&&!worker.incapacitated){name='Fall';time=Math.max(0,library.actions.Fall.duration-worker.fallRemaining);}
-  else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name='Run';time=elapsed*(worker.incapacitated?.35:1);}
-  else if(worker.status==='carrying'){name='Carry_Crate';}
-  else if(['walking','arriving','returning'].includes(worker.status)){name='Walk_Skip';}
+  else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name='Run';time=worker.runPhase??elapsed*(worker.incapacitated?.35:1);}
+  else if(worker.status==='carrying'){name='Carry_Crate';time=worker.carryPhase??elapsed;}
+  else if(['walking','arriving','returning'].includes(worker.status)){
+    name=worker.running?'Run':'Walk_Skip';time=worker.running?(worker.runPhase??elapsed):(worker.walkPhase??elapsed);
+  }
   else if(worker.status==='acting'&&task){
     if(task.kind==='initial'){
       const progress=Math.max(0,7.2-worker.actionRemaining*speed);

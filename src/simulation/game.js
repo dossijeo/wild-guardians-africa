@@ -7,6 +7,8 @@ import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
+import {LOCOMOTION as L} from './locomotion-calibration.js';
+import {dailyRunMetres,urgentWork,moveWorker,movePath} from './locomotion.js';
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -78,7 +80,7 @@ export function hire(s,id,selection) {
     let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
     if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
     const entry=village.entry??village;
-    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:0,actionRemaining:0});
+    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
@@ -121,18 +123,14 @@ export function cast(s,id,kind,x,z,nav) {
     s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });
 }
-export function walkTo(s,w,destination,dt,nav,{speed=1.3,ignore=null,worker=true}={}) {
+export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null}={}) {
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
-  let distanceLeft=speed*dt;
-  while(w.path.length&&distanceLeft>0) {
-    const point=w.path[0],d=dist(w,point);
-    if(d<=distanceLeft){w.x=point.x;w.z=point.z;distanceLeft-=d;w.path.shift();}
-    else {w.x+=(point.x-w.x)*distanceLeft/d;w.z+=(point.z-w.z)*distanceLeft/d;distanceLeft=0;}
-  }
+  if(motion)return moveWorker(w,dt,motion);
+  movePath(w,speed*dt);
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {
@@ -159,19 +157,19 @@ function updateWorkers(s,dt,nav) {
     if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
     const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
     if(['fleeing','returning','incapacitated'].includes(w.status)) {
-      const reached=walkTo(s,w,{...(village.entry??village),id:`home-${village.id}`},dt,nav,{speed:w.incapacitated?.55:w.status==='fleeing'?3:1.3});
+      const reached=walkTo(s,w,{...(village.entry??village),id:`home-${village.id}`},dt,nav,{motion:{flight:w.incapacitated||w.status==='fleeing',slow:w.incapacitated}});
       if(reached)w.status='home';continue;
     }
     if(w.status==='home')continue;
     if(!center||!operational(center)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
-    if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{ignore:center.id}))w.status='idle';continue;}
     const ended=s.time>=p.end;
     if(ended&&!['acting','carrying'].includes(w.status)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
+    if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{ignore:center.id,motion:{urgent:urgentWork(s,w)}}))w.status='idle';continue;}
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
       crate.x=w.x;crate.z=w.z;
-      if(walkTo(s,w,{...center,x:center.x+3.2,id:`delivery-${center.id}`},dt,nav,{ignore:center.id})) {
+      if(walkTo(s,w,{...center,x:center.x+3.2,id:`delivery-${center.id}`},dt,nav,{ignore:center.id,motion:{carrying:true}})) {
         transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{targetId:crate.id});
         if(s.tutorial.step==='observe'||s.tutorial.step==='harvest')s.tutorial.step='done';
       }
@@ -183,7 +181,7 @@ function updateWorkers(s,dt,nav) {
     if(!target || ('alive' in target&&!target.alive)) {s.tasks=s.tasks.filter(q=>q.id!==t.id);w.taskId=null;w.status='idle';w.path=null;continue;}
     if(w.status==='walking') {
       const destination=t.kind==='repair'?{...target,x:target.x+(target.kind==='center'?3.2:1.2)}:target;
-      if(walkTo(s,w,destination,dt,nav,{ignore:t.kind==='repair'?target.id:null})) {
+      if(walkTo(s,w,destination,dt,nav,{ignore:t.kind==='repair'?target.id:null,motion:{urgent:urgentWork(s,w)}})) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);continue;}
         w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
       }
@@ -235,7 +233,9 @@ export function tick(s,seconds,nav) {
     const boundaries=[250,300,600].filter(t=>t>s.time+1e-9).map(t=>t-s.time);
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
-    s.elapsed+=step;s.time=Math.min(600,s.time+step);
+    s.elapsed+=step;
+    const nextTime=Math.min(600,s.time+step);
+    s.time=[250,300,600].find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns))s.cooldowns[kind]=Math.max(0,s.cooldowns[kind]-step);
     for(const structure of s.structures)if(structure.status==='collapsing') {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}

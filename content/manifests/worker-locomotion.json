@@ -1,0 +1,113 @@
+{
+  "schema": "wg-worker-locomotion/1",
+  "method": "Native lab route speeds; median of the five native initial village-to-center walking paths on Sabana/712 at production scale.",
+  "walkMetresPerSecond": 0.72,
+  "runMetresPerSecond": 1.6,
+  "longTripMetres": 28.8790760642946,
+  "sources": [
+    {
+      "profile": "youngMale",
+      "file": "references/extracted/Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7/script-1.js",
+      "sha256": "db0020a49d34a0c0bfefed11262d45d433abb12a8979134976800873231b1b54",
+      "walkMetresPerSecond": 0.72,
+      "runMetresPerSecond": 1.6,
+      "routeRadiusMetres": 0.68
+    },
+    {
+      "profile": "olderMale",
+      "file": "references/extracted/Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5/script-1.js",
+      "sha256": "661b8ef0cd57714f78cf3d479b7ff0e5cbe25b97657c7dbb7979b4badf5eca56",
+      "walkMetresPerSecond": 0.72,
+      "runMetresPerSecond": 1.6,
+      "routeRadiusMetres": 0.68
+    },
+    {
+      "profile": "olderFemale",
+      "file": "references/extracted/Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5/script-1.js",
+      "sha256": "af5568b2851f41f2da8786176e148395e9c773c459b29de25527481a9d75914e",
+      "walkMetresPerSecond": 0.72,
+      "runMetresPerSecond": 1.6,
+      "routeRadiusMetres": 0.68
+    },
+    {
+      "profile": "youngFemale",
+      "file": "references/extracted/Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5/script-1.js",
+      "sha256": "e5a138f8848ca70f818ff37874b40056719fec84ffe3587cd52357065b479120",
+      "walkMetresPerSecond": 0.72,
+      "runMetresPerSecond": 1.6,
+      "routeRadiusMetres": 0.68
+    }
+  ],
+  "samples": [
+    {
+      "culture": "mapungubwe",
+      "seed": 712,
+      "biome": "sabana",
+      "entry": {
+        "x": 91.90606075004732,
+        "z": 90.54282570924263
+      },
+      "destination": {
+        "x": 118.30606075004732,
+        "z": 90.54282570924263
+      },
+      "distanceMetres": 28.385089510534016
+    },
+    {
+      "culture": "saheliano",
+      "seed": 712,
+      "biome": "sabana",
+      "entry": {
+        "x": 102.79088215454767,
+        "z": 85.93567597008598
+      },
+      "destination": {
+        "x": 129.19088215454767,
+        "z": 85.93567597008598
+      },
+      "distanceMetres": 28.8790760642946
+    },
+    {
+      "culture": "suajili",
+      "seed": 712,
+      "biome": "sabana",
+      "entry": {
+        "x": 168,
+        "z": 0
+      },
+      "destination": {
+        "x": 194.4,
+        "z": 0
+      },
+      "distanceMetres": 26.400000000000006
+    },
+    {
+      "culture": "musgum",
+      "seed": 712,
+      "biome": "sabana",
+      "entry": {
+        "x": 199.5936382952636,
+        "z": 35.34991014827507
+      },
+      "destination": {
+        "x": 225.9936382952636,
+        "z": 35.34991014827507
+      },
+      "distanceMetres": 29.28242003186362
+    },
+    {
+      "culture": "etiope",
+      "seed": 712,
+      "biome": "sabana",
+      "entry": {
+        "x": -58.927890563119334,
+        "z": -57.27265356351765
+      },
+      "destination": {
+        "x": -32.527890563119335,
+        "z": -57.27265356351765
+      },
+      "distanceMetres": 32.24888120300137
+    }
+  ]
+}

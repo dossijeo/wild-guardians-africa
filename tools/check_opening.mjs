@@ -6,6 +6,7 @@ import {findInitialLocation} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
 import {isMature} from '../src/simulation/crops.js';
 import {numberOf} from '../src/simulation/money.js';
+import {permission} from '../src/simulation/rules.js';
 const read=name=>JSON.parse(readFileSync(new URL(`../public/content/${name}.json`,import.meta.url),'utf8'));
 const payload=read('villages').find(v=>v.id==='mapungubwe');
 export function simulateOpening(profile,requestedCount=8) {
@@ -31,7 +32,7 @@ export function simulateOpening(profile,requestedCount=8) {
   const initialBalance=numberOf(s.ledger.balance);
   let maximumTime=0;
   while(s.day===1&&!s.result&&!s.pauses.length) {
-    for(const p of s.plants.filter(p=>isMature(p)&&!p.harvestRequested))Game.harvest(s,'harvest-'+p.id,p.id);
+    if(permission(s,'harvest'))for(const p of s.plants.filter(p=>isMature(p)&&!p.harvestRequested))Game.harvest(s,'harvest-'+p.id,p.id);
     Game.tick(s,.5,nav);
     maximumTime=Math.max(maximumTime,s.time);
   }
