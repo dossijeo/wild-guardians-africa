@@ -7,4 +7,5 @@
 .native-hiring .hiring-panel{width:min(1060px,calc(100vw - 16px));max-height:calc(100dvh - 24px);color:#62492b}
 #stage .native-hiring{z-index:50;background:#21382b78;backdrop-filter:blur(3px)}
 #stage #toolbar[hidden]{display:none}
+#stage.game{position:fixed;inset:0;width:100vw;height:100dvh}
 #stage #panel .action-panel{top:var(--header);right:calc(var(--action-w) + 26px);bottom:auto;max-height:calc(100dvh - var(--header) - var(--reserve));overflow:auto}

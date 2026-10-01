@@ -17,6 +17,7 @@ const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 const audio=new AudioSystem(settings);
+let hudSize='',frameImages=null;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
 const button=(id,text,cls='')=>`<button id="${id}" class="${cls}">${text}</button>`;
@@ -93,6 +94,8 @@ function toolPanel(type) {
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
+  const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
+  if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
   document.querySelector('#clockValue').textContent=Game.clockLabel(state);
   document.querySelector('#moneyValue').textContent=formatMoney(state.ledger.balance);
   document.querySelector('#dayValue').textContent=`Día ${state.day}`;
@@ -153,7 +156,7 @@ function hiringDialog() {
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
   bind('hireConfirm',()=>{Game.hire(state,commandId(),selection);modal.innerHTML='';stage.classList.remove('hiring-open');save();audio.gameplay(state.day).catch(()=>{});});refresh();
-  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{if(document.querySelector('#hiring-dialog'))framePaint(modal,layoutHud(stage),Object.fromEntries(entries));}).catch(()=>error('No se ha podido cargar el marco de contratación.'));
+  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(document.querySelector('#hiring-dialog'))framePaint(modal,layoutHud(stage),frameImages);}).catch(()=>error('No se ha podido cargar el marco de contratación.'));
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {
