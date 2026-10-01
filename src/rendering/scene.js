@@ -5,6 +5,7 @@ import {Assets,json} from './assets.js';
 import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch} from './crop-batch.js';
+import {applyWorkerPose,nativeCrate} from './worker-actions.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -27,9 +28,9 @@ export class WorldScene {
   resize() {const r=this.canvas.getBoundingClientRect();this.renderer.setSize(Math.max(1,r.width),Math.max(1,r.height),false);this.camera.aspect=r.width/Math.max(1,r.height);this.camera.updateProjectionMatrix();}
   qualitySetting(quality) {this.quality=quality;this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
   async load(state,nav,villagePayload) {
-    this.state=state;this.nav=nav;this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
+    this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
     this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
-    this.models=await json('/content/models.json');
+    [this.models,this.workerLibraries]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json')]);
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
@@ -90,16 +91,26 @@ export class WorldScene {
     const mesh=original.clone(),group=new THREE.Group();mesh.scale.setScalar(16);mesh.position.set(-(unit.min[0]+unit.max[0])*8,-unit.min[1]*16,-(unit.min[2]+unit.max[2])*8);group.add(mesh);return group;
   }
   async actor(entity,type) {
-    const fragment=type==='worker'?profileSources[entity.profile]:animalSources[entity.species];const descriptor=this.models.find(m=>m.source.includes(fragment));
+    const fragment=type==='worker'?profileSources[entity.profile]:animalSources[entity.species];const descriptor=type==='worker'?this.workerLibraries[entity.profile]:this.models.find(m=>m.source.includes(fragment));
     if(!descriptor)return;
     const gltf=await this.assets.model(descriptor.url);if(!this.state||!this.objects.has(entity.id))return;
     const root=this.objects.get(entity.id),model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
-    const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=type==='worker'?1.7/size.y:({warthog:.85,hyena:.9,buffalo:1.7,lion:1.2,rhino:1.9}[entity.species])/size.y;
-    model.scale.setScalar(scale);model.position.y=-box.min.y*scale;root.add(model);
+    if(type==='animal'){const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=({warthog:.85,hyena:.9,buffalo:1.7,lion:1.2,rhino:1.9}[entity.species])/size.y;model.scale.setScalar(scale);model.position.y=-box.min.y*scale;}
+    root.add(model);
     const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:gltf.animations,action:null,name:null,model});
+  }
+  async crate(entity){
+    const gltf=await this.assets.model(this.workerLibraries[entity.profile??'olderMale'].url);
+    if(!this.state||!this.objects.has(entity.id))return;
+    const model=nativeCrate(gltf);model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;});this.objects.get(entity.id).add(model);
   }
   updateActor(entity,dt,type) {
     const data=this.mixers.get(entity.id);if(!data)return;
+    if(type==='worker'){
+      applyWorkerPose(data,entity,this.state.tasks.find(t=>t.id===entity.taskId),this.state.elapsed,this.workerLibraries[entity.profile]);
+      if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
+      return;
+    }
     let name=type==='animal'?(entity.status==='attacking'?entity.animation:entity.status==='entering'||entity.status==='retreating'?'Running':'Walking'):['fleeing','incapacitated'].includes(entity.status)?'Meshy_Running':['walking','arriving','returning','carrying'].includes(entity.status)?'Meshy_Skip_Forward':entity.fallRemaining>0?'Meshy_Shot_and_Fall_Backward':'Meshy_Alert';
     const clip=data.clips.find(c=>c.name===name);if(clip&&data.name!==name){data.action?.fadeOut(.15);data.action=data.mixer.clipAction(clip);data.action.reset().fadeIn(.15).play();data.name=name;}
     if(data.action)data.action.timeScale=entity.incapacitated?.35:1;data.mixer.update(dt);
@@ -118,13 +129,15 @@ export class WorldScene {
         if(e.kind==='center')mesh=this.centerMesh();
         else if(e.kind==='wall'){mesh=this.wallPrototypes[`${e.material}_${e.gate?'puerta':'intacto'}`].clone();if(e.gate){const scale=e.material==='reforzado'?1.6:['adobe','piedra'].includes(e.material)?1.4:1;mesh.scale.setScalar(scale);mesh.userData.baseScale=scale;}mesh.position.y=-mesh.geometry.boundingBox.min.y;}
         else if(e.species&&'growth' in e)mesh=new THREE.Group();
+        else if('value' in e){mesh=new THREE.Group();this.objects.set(e.id,mesh);this.crate(e).catch(error=>this.onError?.(error));}
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();this.objects.set(e.id,mesh);this.actor(e,'profile' in e?'worker':'animal').catch(error=>this.onError?.(error));}
-        else if('value' in e){mesh=new THREE.Mesh(new THREE.BoxGeometry(.6,.45,.5),new THREE.MeshStandardMaterial({color:'#a67543'}));mesh.geometry.translate(0,.225,0);}
         else if(e.kind==='shield')mesh=new THREE.Mesh(new THREE.SphereGeometry(e.radius,32,16,0,Math.PI*2,0,Math.PI/2),new THREE.MeshBasicMaterial({color:'#62cbd0',transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false}));
         else {mesh=new THREE.Mesh(new THREE.RingGeometry(e.radius-.1,e.radius,48),new THREE.MeshBasicMaterial({color:e.kind==='growth'?'#8bc870':'#dfb85b',side:THREE.DoubleSide}));mesh.rotation.x=-Math.PI/2;}
-        mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
+      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
       }
       mesh.position.set(e.x,this.nav.field.surface(e.x,e.z)+.025-(e.kind==='wall'?mesh.geometry.boundingBox.min.y*(mesh.userData.baseScale??1):0),e.z);
+      if('value' in e)mesh.visible=!e.carrierId;
+      if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall')mesh.rotation.y=e.yaw;
       if(e.status==='ruined')mesh.scale.y=.08;else if(e.status==='collapsing')mesh.scale.y=Math.max(.08,e.collapseRemaining/(e.kind==='center'?3.2:1.4))*(mesh.userData.baseScale??1);else if(e.kind==='center'||e.kind==='wall')mesh.scale.y=mesh.userData.baseScale??1;
       if(e.species&&'growth' in e) {
@@ -132,7 +145,7 @@ export class WorldScene {
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
         if(growth<.065){const amount=Math.max(.06,growth/.065);mesh.scale.set(.4+.6*amount,amount,.4+.6*amount);}else mesh.scale.set(1,1,1);
       }
-      if('profile' in e||'hitsRemaining' in e)this.updateActor(e,dt,'profile' in e?'worker':'animal');
+      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e))this.updateActor(e,dt,'profile' in e?'worker':'animal');
     }
     for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);this.objects.delete(id);this.mixers.delete(id);}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
@@ -151,6 +164,6 @@ export class WorldScene {
     }
     const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId,point:ground?{x:ground.point.x,z:ground.point.z}:null};
   }
-  render(dt) {this.controls.update();this.syncChunks();this.sync(dt);this.renderer.render(this.scene,this.camera);}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.renderer.render(this.scene,this.camera);}
   dispose() {this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }

@@ -1,0 +1,31 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Acciones nativas de trabajadores</title><style>
+body{margin:0;background:#eee7d6;font:16px system-ui;color:#292d24}header{padding:12px;background:#fff9ed;position:absolute;z-index:1;left:0;right:0}canvas{display:block;width:100vw;height:100vh}button,select{font:inherit;margin:4px;padding:6px}#status{display:block;font-size:13px}
+</style><header>Prueba visual de los cuatro GLB exportados y el controlador de producción.
+<label>Acción <select id="action"><option value="idle">Reposo</option><option value="initial">Siembra + primer riego</option><option value="water">Regar</option><option value="harvest">Cosechar</option><option value="carrying">Transportar caja</option><option value="fleeing">Huir</option><option value="fall">Caída</option></select></label><button id="pause">Pausar</button><span id="status">Cargando geometría, texturas y rigs originales…</span></header><canvas id="view" aria-label="Cuatro trabajadores con acciones originales, de izquierda a derecha: hombre mayor, mujer mayor, hombre joven y mujer joven"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {Assets,json} from '/src/rendering/assets.js';
+import {applyWorkerPose} from '/src/rendering/worker-actions.js';
+import {PROFILES} from '/src/simulation/workforce.js';
+const canvas=document.querySelector('#view'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#eee7d6');const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,60);camera.position.set(5,3.3,8.5);
+const controls=new OrbitControls(camera,canvas);controls.target.set(0,.85,0);controls.update();
+const ambient=new THREE.HemisphereLight('#ffffff','#8b7353',2.2);scene.add(ambient);const sun=new THREE.DirectionalLight('#fff5db',3);sun.position.set(1,5,4);sun.castShadow=true;scene.add(sun);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#ccb78c',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+const assets=new Assets(),libraries=await json('/content/worker-actions.json'),actors=[];
+for(const [i,profile] of PROFILES.entries()){
+ const gltf=await assets.model(libraries[profile.id].url),model=clone(gltf.scene);model.position.x=(i-1.5)*2;model.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;});scene.add(model);
+ actors.push({profile,model,mixer:new THREE.AnimationMixer(model),clips:gltf.animations,name:null});
+}
+let elapsed=0,last=performance.now(),paused=false,action='idle';document.querySelector('#action').onchange=e=>{action=e.target.value;elapsed=0;};document.querySelector('#pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'Continuar':'Pausar';};
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(!paused)elapsed+=dt;
+ for(const actor of actors){const speed=actor.profile.speed,duration=action==='initial'?7.2:action==='water'?3.4:action==='harvest'?3.6:3.541667;
+  const worker={profile:actor.profile.id,status:['initial','water','harvest'].includes(action)?'acting':action,actionRemaining:(duration-elapsed*speed%duration)/speed,fallRemaining:action==='fall'?duration-elapsed%duration:0};
+  applyWorkerPose(actor,worker,{kind:action},elapsed,libraries[actor.profile.id]);
+ }
+ document.querySelector('#status').textContent='GLB y controlador cargados · '+action+' · '+elapsed.toFixed(2)+' s'+(paused?' · tiempo simulado congelado':'');controls.update();renderer.render(scene,camera);requestAnimationFrame(frame);
+}requestAnimationFrame(frame);
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});
+</script></html>

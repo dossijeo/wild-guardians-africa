@@ -145,7 +145,7 @@ function completeTask(s,w,t,target) {
       if(spellAt(s,'multiply',target))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
       target.alive=false;target.harvestRequested=false;
-      const crate={id:`crate-${s.nextId++}`,x:w.x,z:w.z,value,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{targetId:target.id});
+      const crate={id:`crate-${s.nextId++}`,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {

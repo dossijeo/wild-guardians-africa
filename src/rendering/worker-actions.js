@@ -1,4 +1,19 @@
 import {PROFILES} from '../simulation/workforce.js';
+import {LoopRepeat,LoopOnce,Box3,Vector3} from 'three';
+export function nativeCrate(gltf){
+  const original=gltf.scene.getObjectByName('Prop_FruitCrate');
+  if(!original)throw new Error('Falta la caja original de transporte');
+  const crate=original.clone();crate.scale.setScalar(1);crate.position.set(0,0,0);crate.rotation.set(0,0,0);crate.updateMatrixWorld(true);
+  const box=new Box3().setFromObject(crate),center=box.getCenter(new Vector3());
+  crate.position.set(-center.x,-box.min.y,-center.z);return crate;
+}
+export function applyWorkerPose(data,worker,task,elapsed,library){
+  const pose=workerPose(worker,task,elapsed,library),clip=data.clips.find(c=>c.name===pose.name);
+  if(!clip)throw new Error(`Falta la acción original ${pose.name} de ${worker.profile}`);
+  if(data.name!==pose.name){data.action?.stop();data.action=data.mixer.clipAction(clip);data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();data.action.paused=true;data.action.clampWhenFinished=true;data.name=pose.name;}
+  data.action.time=pose.time;data.mixer.update(0);
+  return pose;
+}
 export function workerPose(worker,task,elapsed,library) {
   const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
   let name='Idle',time=elapsed;

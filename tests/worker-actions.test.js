@@ -1,8 +1,49 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {workerPose} from '../src/rendering/worker-actions.js';
+import {workerPose,applyWorkerPose,nativeCrate} from '../src/rendering/worker-actions.js';
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const libraries=JSON.parse(readFileSync(new URL('../public/content/worker-actions.json',import.meta.url),'utf8'));
+function geometryOnlyGlb(buffer){
+  const size=buffer.readUInt32LE(12),doc=JSON.parse(buffer.subarray(20,20+size));
+  // Node has no image decoder. Keep native geometry, skins and action channels
+  // intact; texture appearance is verified separately in the browser.
+  for(const material of doc.materials){
+    delete material.normalTexture;delete material.occlusionTexture;delete material.emissiveTexture;
+    delete material.pbrMetallicRoughness?.baseColorTexture;delete material.pbrMetallicRoughness?.metallicRoughnessTexture;
+  }
+  const json=Buffer.from(JSON.stringify(doc)),length=Math.ceil(json.length/4)*4,bin=buffer.subarray(20+size);
+  const output=Buffer.alloc(20+length+bin.length,32);buffer.copy(output,0,0,20);output.writeUInt32LE(output.length,8);output.writeUInt32LE(length,12);json.copy(output,20);bin.copy(output,20+length);
+  return output.buffer.slice(output.byteOffset,output.byteOffset+output.length);
+}
+for(const [profile,library] of Object.entries(libraries))test(`${profile}: Three loads and applies every native action to its real rig`,async()=>{
+  const buffer=readFileSync(new URL('../public'+library.url,import.meta.url));
+  const gltf=await new GLTFLoader().parseAsync(geometryOnlyGlb(buffer),'');
+  const mixer=new THREE.AnimationMixer(gltf.scene);let skins=0;
+  gltf.scene.traverse(node=>{if(node.isSkinnedMesh)skins++;});assert.ok(skins>0);
+  gltf.scene.updateMatrixWorld(true);const rest=new Map();gltf.scene.traverse(node=>{if(node.isBone)rest.set(node,[...node.matrixWorld.elements]);});
+  for(const clip of gltf.animations){
+    const action=mixer.clipAction(clip);action.reset().play();action.paused=true;action.time=clip.duration*.55;mixer.update(0);gltf.scene.updateMatrixWorld(true);
+    gltf.scene.traverse(node=>{
+      assert.ok(node.matrixWorld.elements.every(Number.isFinite),`${clip.name}/${node.name}`);
+      if(node.isSkinnedMesh){node.skeleton.update();assert.ok(node.skeleton.boneMatrices.every(Number.isFinite));}
+    });action.stop();
+  }
+  const data={mixer,clips:gltf.animations,name:null};
+  applyWorkerPose(data,{profile,status:'acting',actionRemaining:1.5},{kind:'water'},1,library);
+  gltf.scene.updateMatrixWorld(true);let moved=false;
+  for(const [bone,matrix] of rest)if(bone.matrixWorld.elements.some((v,i)=>Math.abs(v-matrix[i])>1e-5))moved=true;
+  assert.ok(moved,'Native action must change the rig, not leave a bind pose');
+  assert.ok(gltf.scene.getObjectByName('Prop_WateringCan').scale.length()>1);
+  assert.ok(gltf.scene.getObjectByName('Prop_FruitCrate').scale.length()<.001);
+  applyWorkerPose(data,{profile,status:'carrying'},null,1,library);
+  assert.ok(gltf.scene.getObjectByName('Prop_FruitCrate').scale.length()>1);
+  assert.ok(gltf.scene.getObjectByName('Prop_WateringCan').scale.length()<.001);
+  const crate=nativeCrate(gltf),box=new THREE.Box3().setFromObject(crate),size=box.getSize(new THREE.Vector3());
+  assert.ok(size.x>.2&&size.y>.1&&size.z>.2,'Dropped crate must preserve full native geometry');
+  assert.ok(Math.abs(box.min.y)<1e-5,'Dropped crate rests on the terrain');
+});
 for(const [profile,library] of Object.entries(libraries))test(`${profile}: native action tracks are finite and preserve their last key`,()=>{
   const buffer=readFileSync(new URL('../public'+library.url,import.meta.url)),size=buffer.readUInt32LE(12),doc=JSON.parse(buffer.subarray(20,20+size));
   const binary=buffer.subarray(28+size);
