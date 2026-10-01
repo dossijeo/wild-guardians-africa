@@ -4,6 +4,7 @@ import {emit,notice,walkTo,rebuildTasks,spellAt} from './game.js';
 import {releaseTask} from './tasks.js';
 import {rational,compare} from './money.js';
 import {contiguousGroup} from './crops.js';
+import {updateWorkerEncounters} from './encounters.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
@@ -74,29 +75,15 @@ function approachPoint(a,target) {
   const d=dist(a,target)||1,r=(target.kind==='center'?3.1:target.kind==='wall'?1.2:.6)+a.radius;
   return {...target,x:target.x+(a.x-target.x)*r/d,z:target.z+(a.z-target.z)*r/d};
 }
-function hitWorker(s,a,w) {
-  if(w.incapacitated||a.hitsRemaining<=0)return;
-  const pair=`${a.id}:${w.id}`;
-  if(s.raid.encounters.includes(pair))return;
-  s.raid.encounters.push(pair);
-  const collision=dist(a,w)<a.radius+.28;
-  if(!collision&&nextRandom(s)>=.6)return;
-  a.hitsRemaining--;w.hits++;
-  if(w.hits>=2) {
-    w.incapacitated=true;w.status='incapacitated';w.path=null;
-    const person=s.people.find(p=>p.id===w.personId);if(person)person.recoveryUntil=s.day+1;
-    emit(s,'WorkerIncapacitated',{targetId:w.id});
-  } else {w.fallRemaining=3.54;emit(s,'WorkerHit',{targetId:w.id});}
-}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
+  updateWorkerEncounters(s,nav);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
     if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
     if(a.status==='retreating') {
       if(walkTo(s,a,{...a.spawn,id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false}))a.status='gone';continue;
     }
-    for(const w of s.workers)if(w.status!=='home'&&dist(a,w)<a.radius+1.1)hitWorker(s,a,w);
     if(a.hitsRemaining<=0)continue;
     let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));
     if(!target) {
@@ -111,6 +98,7 @@ export function updateRaid(s,dt,nav) {
     }
     if(a.status!=='attacking') {
       if(walkTo(s,a,destination,dt,nav,{speed:a.status==='entering'?3.8:1.5,ignore:target.kind?target.id:null,worker:false})) {
+        a.heading=Math.atan2(target.x-a.x,target.z-a.z);
         a.status='attacking';a.attackRemaining=1.8;a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
       } else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
@@ -134,7 +122,7 @@ export function updateRaid(s,dt,nav) {
       if(w.incapacitated||s.time>=PROFILES_END(w.profile))continue;
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
       const replacement=center??s.structures.find(c=>operational(c)&&c.villageId===w.villageId);
-      if(replacement){w.centerId=replacement.id;w.status='arriving';w.path=null;}
+      if(replacement){w.centerId=replacement.id;w.status='arriving';w.raidReturn=true;w.path=null;}
     }
     rebuildTasks(s);
   }

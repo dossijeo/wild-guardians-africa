@@ -12,7 +12,8 @@ export const LOCOMOTION = {
       "sha256": "db0020a49d34a0c0bfefed11262d45d433abb12a8979134976800873231b1b54",
       "walkMetresPerSecond": 0.72,
       "runMetresPerSecond": 1.6,
-      "routeRadiusMetres": 0.68
+      "routeRadiusMetres": 0.68,
+      "fallSeconds": 3.5416665077209473
     },
     {
       "profile": "olderMale",
@@ -20,7 +21,8 @@ export const LOCOMOTION = {
       "sha256": "661b8ef0cd57714f78cf3d479b7ff0e5cbe25b97657c7dbb7979b4badf5eca56",
       "walkMetresPerSecond": 0.72,
       "runMetresPerSecond": 1.6,
-      "routeRadiusMetres": 0.68
+      "routeRadiusMetres": 0.68,
+      "fallSeconds": 3.5416665077209473
     },
     {
       "profile": "olderFemale",
@@ -28,7 +30,8 @@ export const LOCOMOTION = {
       "sha256": "af5568b2851f41f2da8786176e148395e9c773c459b29de25527481a9d75914e",
       "walkMetresPerSecond": 0.72,
       "runMetresPerSecond": 1.6,
-      "routeRadiusMetres": 0.68
+      "routeRadiusMetres": 0.68,
+      "fallSeconds": 3.5416665077209473
     },
     {
       "profile": "youngFemale",
@@ -36,7 +39,8 @@ export const LOCOMOTION = {
       "sha256": "e5a138f8848ca70f818ff37874b40056719fec84ffe3587cd52357065b479120",
       "walkMetresPerSecond": 0.72,
       "runMetresPerSecond": 1.6,
-      "routeRadiusMetres": 0.68
+      "routeRadiusMetres": 0.68,
+      "fallSeconds": 3.5416665077209473
     }
   ],
   "samples": [

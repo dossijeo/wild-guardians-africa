@@ -10,7 +10,7 @@ for(const library of Object.values(libraries)){
   const text=bytes.toString('utf8'),match=text.match(/travelTime\?\?t\)\*\(isRun\?([\d.]+):([\d.]+)\)\/([\d.]+)/);
   if(!match)throw new Error('Missing native route calibration: '+file);
   sources.push({profile:library.profile,file,sha256:createHash('sha256').update(bytes).digest('hex'),
-    walkMetresPerSecond:Number(match[2]),runMetresPerSecond:Number(match[1]),routeRadiusMetres:Number(match[3])});
+    walkMetresPerSecond:Number(match[2]),runMetresPerSecond:Number(match[1]),routeRadiusMetres:Number(match[3]),fallSeconds:library.actions.Fall.duration});
 }
 if(sources.some(s=>s.walkMetresPerSecond!==sources[0].walkMetresPerSecond||s.runMetresPerSecond!==sources[0].runMetresPerSecond))
   throw new Error('Worker profiles require separate native speed calibration');

@@ -124,13 +124,14 @@ export function cast(s,id,kind,x,z,nav) {
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null}={}) {
+  const previous={x:w.x,z:w.z};
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
-  if(motion)return moveWorker(w,dt,motion);
-  movePath(w,speed*dt);
+  if(motion)moveWorker(w,dt,motion);else movePath(w,speed*dt);
+  if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {
@@ -164,7 +165,7 @@ function updateWorkers(s,dt,nav) {
     if(!center||!operational(center)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
     const ended=s.time>=p.end;
     if(ended&&!['acting','carrying'].includes(w.status)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
-    if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{ignore:center.id,motion:{urgent:urgentWork(s,w)}}))w.status='idle';continue;}
+    if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{ignore:center.id,motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
