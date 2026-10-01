@@ -1,0 +1,446 @@
+{
+  "youngMale": {
+    "profile": "youngMale",
+    "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+    "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+    "bytes": 27893128,
+    "source": "Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7.html",
+    "sourceSha256": "e30e53a58102844218edf689eb80b5521f9b7a28d2949a9cab29768d8cb8d3c1",
+    "exporterScripts": [
+      {
+        "path": "references/extracted/Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7/script-1.js",
+        "sha256": "db0020a49d34a0c0bfefed11262d45d433abb12a8979134976800873231b1b54"
+      }
+    ],
+    "fps": 30,
+    "actions": {
+      "Idle": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy."
+      },
+      "Walk_Skip": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Skip Forward transferido a Kofi joven desde el visor original. Se conserva su rebote y se suaviza la unión del bucle."
+      },
+      "Run": {
+        "duration": 0.6666666269302368,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Running nativo de Kofi joven. Carrera en el sitio; recorrido opcional para comprobar la lectura."
+      },
+      "Wave": {
+        "duration": 2.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Saludo amplio con mano derecha, anticipación e inclinación de cabeza."
+      },
+      "Dig": {
+        "duration": 2.299999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "hoe",
+        "description": "Cavar con la trayectoria original de la azada. Corrección de codos y muñecas hacia delante, con ambos agarres sujetos al mango y sin desplazar la herramienta para evitar el pecho."
+      },
+      "Plant": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Manos adelantadas y separadas del torso al bajar y al incorporarse. Semillas delante del cuerpo."
+      },
+      "Water": {
+        "duration": 3.4000000953674316,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "can",
+        "description": "Riega solo con la mano derecha; el brazo izquierdo queda libre al costado. Agua desde la boquilla."
+      },
+      "Harvest": {
+        "duration": 3.5999999046325684,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Se agacha, toma un fruto y lo levanta. Acción nueva de validación del agarre."
+      },
+      "Carry_Crate": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy + IK",
+        "defaultAccessory": "crate",
+        "description": "Skip Forward en piernas y torso; brazos adaptados con IK a la caja de frutas."
+      },
+      "Alert": {
+        "duration": 4.0416669845581055,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Alert transferido a Kofi joven: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio."
+      },
+      "Hit": {
+        "duration": 0.949999988079071,
+        "loop": false,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Retroceso breve, brazos abiertos y recuperación. Se puede repetir con el botón de bucle."
+      },
+      "Fall": {
+        "duration": 3.5416665077209473,
+        "loop": false,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Shot and Fall Backward transferido desde el visor original. Tras el impacto el cuerpo queda a ras de suelo, sin elevarse para despejar la cabeza o el sombrero. Pose final sostenida.",
+        "grounding": {
+          "mode": "pelvis-contact",
+          "contactBlend": [
+            0.6,
+            0.67
+          ],
+          "hipHeightMeters": 0.12,
+          "allowMeshPenetration": true
+        }
+      }
+    },
+    "bones": 28
+  },
+  "olderMale": {
+    "profile": "olderMale",
+    "url": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+    "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+    "bytes": 20235172,
+    "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html",
+    "sourceSha256": "916b259f311cd35b48419c8669d6d4083f06288d43e768783e2d755726633815",
+    "exporterScripts": [
+      {
+        "path": "references/extracted/Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5/script-1.js",
+        "sha256": "661b8ef0cd57714f78cf3d479b7ff0e5cbe25b97657c7dbb7979b4badf5eca56"
+      }
+    ],
+    "fps": 30,
+    "actions": {
+      "Idle": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy."
+      },
+      "Walk_Skip": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Skip Forward transferido al ganadero mayor desde el visor original. Se conserva su rebote y se suaviza la unión del bucle."
+      },
+      "Run": {
+        "duration": 0.6666666269302368,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Running nativo del ganadero mayor. Carrera en el sitio; recorrido opcional para comprobar la lectura."
+      },
+      "Wave": {
+        "duration": 2.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Saludo amplio con mano derecha, anticipación e inclinación de cabeza."
+      },
+      "Dig": {
+        "duration": 2.299999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "hoe",
+        "description": "Cavar con la trayectoria original de la azada. Corrección de codos y muñecas hacia delante, con ambos agarres sujetos al mango y sin desplazar la herramienta para evitar el pecho."
+      },
+      "Plant": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Manos adelantadas y separadas del torso al bajar y al incorporarse. Semillas delante del cuerpo."
+      },
+      "Water": {
+        "duration": 3.4000000953674316,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "can",
+        "description": "Riega solo con la mano derecha; el brazo izquierdo queda libre al costado. Agua desde la boquilla."
+      },
+      "Harvest": {
+        "duration": 3.5999999046325684,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Se agacha, toma un fruto y lo levanta. Acción nueva de validación del agarre."
+      },
+      "Carry_Crate": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy + IK",
+        "defaultAccessory": "crate",
+        "description": "Skip Forward en piernas y torso; brazos adaptados con IK a la caja de frutas."
+      },
+      "Alert": {
+        "duration": 4.0416669845581055,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Alert transferido al ganadero mayor: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio."
+      },
+      "Hit": {
+        "duration": 0.949999988079071,
+        "loop": false,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Retroceso breve, brazos abiertos y recuperación. Se puede repetir con el botón de bucle."
+      },
+      "Fall": {
+        "duration": 3.5416665077209473,
+        "loop": false,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Shot and Fall Backward transferido desde el visor original. Tras el impacto el cuerpo queda a ras de suelo, sin elevarse para despejar la cabeza o el sombrero. Pose final sostenida.",
+        "grounding": {
+          "mode": "pelvis-contact",
+          "contactBlend": [
+            0.6,
+            0.67
+          ],
+          "hipHeightMeters": 0.12,
+          "allowMeshPenetration": true
+        }
+      }
+    },
+    "bones": 28
+  },
+  "olderFemale": {
+    "profile": "olderFemale",
+    "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+    "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+    "bytes": 19341308,
+    "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html",
+    "sourceSha256": "f23fe56e8c13205922bb0a2f54470eb161f727d306fd08aed42445f624d6292a",
+    "exporterScripts": [
+      {
+        "path": "references/extracted/Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5/script-1.js",
+        "sha256": "af5568b2851f41f2da8786176e148395e9c773c459b29de25527481a9d75914e"
+      }
+    ],
+    "fps": 30,
+    "actions": {
+      "Idle": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy."
+      },
+      "Walk_Skip": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Skip Forward transferido a Amara mayor desde el visor original. Se conserva su rebote y se suaviza la unión del bucle."
+      },
+      "Run": {
+        "duration": 0.6666666269302368,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Running nativo de Amara mayor. Carrera en el sitio; recorrido opcional para comprobar la lectura."
+      },
+      "Wave": {
+        "duration": 2.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Saludo amplio con mano derecha, anticipación e inclinación de cabeza."
+      },
+      "Dig": {
+        "duration": 2.299999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "hoe",
+        "description": "Cavar con la trayectoria original de la azada. Corrección de codos y muñecas hacia delante, con ambos agarres sujetos al mango y sin desplazar la herramienta para evitar el pecho."
+      },
+      "Plant": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Manos adelantadas y separadas del torso al bajar y al incorporarse. Semillas delante del cuerpo."
+      },
+      "Water": {
+        "duration": 3.4000000953674316,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "can",
+        "description": "Riega solo con la mano derecha; el brazo izquierdo queda libre al costado. Agua desde la boquilla."
+      },
+      "Harvest": {
+        "duration": 3.5999999046325684,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Se agacha, toma un fruto y lo levanta. Acción nueva de validación del agarre."
+      },
+      "Carry_Crate": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy + IK",
+        "defaultAccessory": "crate",
+        "description": "Skip Forward en piernas y torso; brazos adaptados con IK a la caja de frutas."
+      },
+      "Alert": {
+        "duration": 4.0416669845581055,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Alert transferido a Amara mayor: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio."
+      },
+      "Hit": {
+        "duration": 0.949999988079071,
+        "loop": false,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Retroceso breve, brazos abiertos y recuperación. Se puede repetir con el botón de bucle."
+      },
+      "Fall": {
+        "duration": 3.5416665077209473,
+        "loop": false,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Shot and Fall Backward transferido desde el visor original. Tras el impacto el cuerpo queda a ras de suelo, sin elevarse para despejar la cabeza o el sombrero. Pose final sostenida.",
+        "grounding": {
+          "mode": "pelvis-contact",
+          "contactBlend": [
+            0.6,
+            0.67
+          ],
+          "hipHeightMeters": 0.12,
+          "allowMeshPenetration": true
+        }
+      }
+    },
+    "bones": 28
+  },
+  "youngFemale": {
+    "profile": "youngFemale",
+    "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+    "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+    "bytes": 19143664,
+    "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html",
+    "sourceSha256": "f83317d8da9c6b41fdba2375887a4cc0920d17cea51959d8611edff17191e7ab",
+    "exporterScripts": [
+      {
+        "path": "references/extracted/Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5/script-1.js",
+        "sha256": "e5a138f8848ca70f818ff37874b40056719fec84ffe3587cd52357065b479120"
+      }
+    ],
+    "fps": 30,
+    "actions": {
+      "Idle": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy."
+      },
+      "Walk_Skip": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Skip Forward transferido a Amara joven desde el visor original. Se conserva su rebote y se suaviza la unión del bucle."
+      },
+      "Run": {
+        "duration": 0.6666666269302368,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Running nativo de Amara joven. Carrera en el sitio; recorrido opcional para comprobar la lectura."
+      },
+      "Wave": {
+        "duration": 2.799999952316284,
+        "loop": true,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Saludo amplio con mano derecha, anticipación e inclinación de cabeza."
+      },
+      "Dig": {
+        "duration": 2.299999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "hoe",
+        "description": "Cavar con la trayectoria original de la azada. Corrección de codos y muñecas hacia delante, con ambos agarres sujetos al mango y sin desplazar la herramienta para evitar el pecho."
+      },
+      "Plant": {
+        "duration": 3.799999952316284,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Manos adelantadas y separadas del torso al bajar y al incorporarse. Semillas delante del cuerpo."
+      },
+      "Water": {
+        "duration": 3.4000000953674316,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "can",
+        "description": "Riega solo con la mano derecha; el brazo izquierdo queda libre al costado. Agua desde la boquilla."
+      },
+      "Harvest": {
+        "duration": 3.5999999046325684,
+        "loop": true,
+        "source": "Procedural + IK",
+        "defaultAccessory": "none",
+        "description": "Se agacha, toma un fruto y lo levanta. Acción nueva de validación del agarre."
+      },
+      "Carry_Crate": {
+        "duration": 2.875,
+        "loop": true,
+        "source": "Meshy + IK",
+        "defaultAccessory": "crate",
+        "description": "Skip Forward en piernas y torso; brazos adaptados con IK a la caja de frutas."
+      },
+      "Alert": {
+        "duration": 4.0416669845581055,
+        "loop": true,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Alert transferido a Amara joven: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio."
+      },
+      "Hit": {
+        "duration": 0.949999988079071,
+        "loop": false,
+        "source": "Procedural",
+        "defaultAccessory": "none",
+        "description": "Retroceso breve, brazos abiertos y recuperación. Se puede repetir con el botón de bucle."
+      },
+      "Fall": {
+        "duration": 3.5416665077209473,
+        "loop": false,
+        "source": "Meshy",
+        "defaultAccessory": "none",
+        "description": "Shot and Fall Backward transferido desde el visor original. Tras el impacto el cuerpo queda a ras de suelo, sin elevarse para despejar la cabeza o el sombrero. Pose final sostenida.",
+        "grounding": {
+          "mode": "pelvis-contact",
+          "contactBlend": [
+            0.6,
+            0.67
+          ],
+          "hipHeightMeters": 0.12,
+          "allowMeshPenetration": true
+        }
+      }
+    },
+    "bones": 28
+  }
+}

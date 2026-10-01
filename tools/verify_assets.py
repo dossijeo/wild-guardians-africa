@@ -17,4 +17,15 @@ for item in bank['items']:
     assert len(data)==item['bytes'],item['id']
     assert hashlib.sha256(data).hexdigest()==item['sha256'],item['id']
 print(f"PASS: {len(manifest['sources'])} sources, {len(manifest['resources'])} resources, 126 exact SFX matches")
-
+workers=repo/'content/manifests/worker-actions.json'
+if workers.exists():
+    records=json.loads(workers.read_text(encoding='utf-8'))
+    assert set(records)=={'olderMale','olderFemale','youngMale','youngFemale'}
+    assert records==json.loads((repo/'public/content/worker-actions.json').read_text(encoding='utf-8'))
+    for profile,item in records.items():
+        data=(repo/'public'/item['url'].lstrip('/')).read_bytes()
+        assert len(data)==item['bytes'] and hashlib.sha256(data).hexdigest()==item['sha256'],profile
+        assert len(item['actions'])==12 and item['fps']==30 and item['bones']==28,profile
+        for code in item['exporterScripts']:
+            assert hashlib.sha256((repo/code['path']).read_bytes()).hexdigest()==code['sha256'],profile
+    print('PASS: four full worker libraries exported by the original labs, 48 actions with provenance')
