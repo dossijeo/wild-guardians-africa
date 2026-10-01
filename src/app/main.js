@@ -11,9 +11,10 @@ import {findInitialLocation} from '../world/villages.js';
 import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {AudioSystem} from '../audio/audio.js';
+import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint} from '../ui/native-hud.js';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
-let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0;
+let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 const audio=new AudioSystem(settings);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,12 +24,15 @@ function error(message){document.querySelector('.error-banner')?.remove();const 
 function safe(action){try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save(){if(!state)return;state.savedAt=Date.now();try{saves.save(state);}catch(e){error('No se pudo guardar la partida: '+e.message);}}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;}
+function clearWorld(){world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){save();state=null;}clearWorld();screen='menu';
-  app.innerHTML=`<main class="screen menu" style="background-image:url('${selector.biomes[0].src}')"><div class="brand">Wild Guardians <span class="muted">/ Africa</span></div><section class="menu-content"><div class="eyebrow">Cultivar · Proteger · Sobrevivir</div><h1>Un poblado.<br>Cien noches.<br>Tu legado.</h1><p>La tierra guarda una promesa. Cultiva bajo el sol, protege a tu comunidad y escucha al Espíritu cuando cae la noche.</p><div class="menu-actions">${button('new','Nueva partida')}${button('load','Continuar','secondary')}${button('library','Biblioteca','ghost')}${button('settings','Ajustes','ghost')}</div></section><footer class="menu-footer"><span>LA SABANA TE ESPERA</span><span>Diseño de Gabriel · Plan Maestro 2.0</span></footer></main>`;
-  bind('new',()=>newGameScreen());bind('load',loadScreen);bind('library',libraryScreen);bind('settings',()=>settingsDialog());
+  app.innerHTML='<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="/menu/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
 }
+window.addEventListener('message',event=>{
+  if(event.origin!==location.origin||event.source!==document.querySelector('#native-menu')?.contentWindow||event.data?.type!=='wild-guardians:menu')return;
+  safe(()=>({new:()=>newGameScreen(),load:loadScreen,library:libraryScreen,settings:()=>settingsDialog()})[event.data.action]?.());
+});
 let selectedBiome='sabana',selectedCulture='mapungubwe';
 function newGameScreen(step='biome') {
   screen='new';const list=step==='biome'?selector.biomes:selector.cultures,selected=step==='biome'?selectedBiome:selectedCulture;
@@ -46,19 +50,29 @@ async function startGame(loaded=null) {
   try {
     const next=loaded??Game.newGame({biome:selectedBiome,culture:selectedCulture});
     const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);
+    villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
     if(!loaded) {const start=findInitialLocation(nav,payload);Object.assign(next.villages[0],start);}
     nav.setState(next);state=next;
     state.pauses=state.pauses.filter(reason=>!['menu','hidden','context-lost'].includes(reason));
-    app.innerHTML=`<main class="game"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas><header class="hud"><div class="hud-pill" id="clock"></div><div class="hud-pill" id="money"></div><div class="hud-pill" id="survival"></div>${button('pause','☰ Menú','hud-menu secondary')}</header><nav class="toolbar" id="toolbar"></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
+    const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href='/content/hud.css';document.head.append(nativeStyle);
+    app.innerHTML=`<main class="game" id="stage"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
+    document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
+    bind('menuButton',pauseDialog);
+    document.querySelector('[data-menu="home"]').onclick=()=>world.focus(state.villages[0]);
+    document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>toolPanel('plant'));
+    document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
+    document.querySelector('[data-menu="build"]').onclick=()=>safe(buildPanel);
     world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.qualitySetting(settings.quality);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     await world.load(state,nav,payload);screen='game';bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
+    for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
   } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;}
 }
 function onPick({entityId,point}) {
   if(!state||screen!=='game')return;
   safe(()=>{
     if(tool&&point) {
+      if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
       if(tool.kind==='center'||tool.kind==='wall')Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
       else if(tool.kind==='plant')Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
       else if(tool.kind==='spell')Game.cast(state,commandId(),tool.spell,point.x,point.z,nav);
@@ -79,13 +93,15 @@ function toolPanel(type) {
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
-  document.querySelector('#clock').innerHTML=`${state.time>=300?'☾':'☀'} <strong>${Game.clockLabel(state)}</strong> ${state.time>=300&&!state.raid?'×5':'×1'}`;
-  document.querySelector('#money').innerHTML=`◈ <strong>${formatMoney(state.ledger.balance)}</strong>`;
-  document.querySelector('#survival').innerHTML=`Día <strong>${state.day}</strong> · ${state.completedNights}/100 noches`;
+  document.querySelector('#clockValue').textContent=Game.clockLabel(state);
+  document.querySelector('#moneyValue').textContent=formatMoney(state.ledger.balance);
+  document.querySelector('#dayValue').textContent=`Día ${state.day}`;
+  document.querySelector('#days').title=`${state.completedNights}/100 noches superadas`;
   const toolbar=document.querySelector('#toolbar');
   if(!toolbar.children.length||force) {
-    toolbar.innerHTML=`${button('center-action','⌂ Centro · 800')}${button('plant-action','✿ Cultivos')}${button('wall-action','▥ Defensas')}${button('spell-action','✧ Magias')}${button('hire-action','♙ Contratar')}${button('focus-action','◎ Poblado')}`;
+    toolbar.innerHTML=`${button('center-action','⌂ Centro · 800')}${button('plant-action','✿ Cultivos')}${button('wall-action','▥ Defensas')}${button('spell-action','✧ Magias')}${button('hire-action','♙ Contratar')}${button('focus-action','◎ Poblado')}${state.postgame?button('village-action','⌂ Nuevo poblado'):''}`;
     bind('center-action',()=>{tool={kind:'center'};document.querySelector('#panel').innerHTML='';});bind('plant-action',()=>toolPanel('plant'));bind('wall-action',()=>toolPanel('wall'));bind('spell-action',()=>toolPanel('spell'));bind('hire-action',()=>Game.openInitialHiring(state));bind('focus-action',()=>world.focus(state.villages[0]));
+    bind('village-action',villageCulturePanel);
   }
   document.querySelector('#center-action').disabled=!permission(state,'center');document.querySelector('#plant-action').disabled=!permission(state,'plant');document.querySelector('#wall-action').disabled=!permission(state,'wall');document.querySelector('#spell-action').disabled=!permission(state,'shield');document.querySelector('#hire-action').disabled=state.hiringPaidDay===state.day||!state.plants.some(p=>p.alive)||!state.structures.some(operational);
   contextPanel();narrator();
@@ -96,6 +112,19 @@ function updateUI(force=false) {
   if(tool){const text=tool.kind==='center'?'Coloca el centro de trabajo':tool.kind==='plant'?`Plantar ${cropSpec(tool.species).name} · ${cropSpec(tool.species).plant_cost} monedas`:tool.kind==='wall'?`Colocar ${tool.gate?'puerta':'módulo'} de ${B.walls.find(w=>w.id===tool.material).name}`:`Colocar ${B.spells.find(s=>s.id===tool.spell).name}`;
     if(!document.querySelector('.hint')){const el=document.createElement('div');el.className='hint';document.querySelector('.game').append(el);}document.querySelector('.hint').textContent=text+' · Escape para cancelar';
   }else document.querySelector('.hint')?.remove();
+}
+function buildPanel(){
+ document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Construir</h3>${button('native-center','Centro de trabajo · 800')}${button('native-wall','Defensas')}${button('native-hire','Contratar equipo')}${state.postgame?button('native-village','Fundar poblado'):''}${button('native-close','Cerrar')}</div>`;
+ bind('native-center',()=>{tool={kind:'center'};document.querySelector('#panel').innerHTML='';});bind('native-wall',()=>toolPanel('wall'));bind('native-hire',()=>Game.openInitialHiring(state));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
+ document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');document.querySelector('#native-hire').disabled=state.hiringPaidDay===state.day||!state.plants.some(p=>p.alive)||!state.structures.some(operational);
+}
+function villageCulturePanel() {
+  document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Un nuevo poblado</h3><p>Coste: ${formatMoney({n:String(50000+25000*(state.villages.length-1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`;
+  document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);tool={kind:'village',culture};document.querySelector('#panel').innerHTML='';}));
+}
+function villageConfirmPanel() {
+  const p=pendingVillage;document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Fundar poblado</h3><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('cancel-village','Cancelar')}</div>`;document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
+  bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncChunks(true);});bind('cancel-village',()=>{world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';});
 }
 function contextPanel() {
   const el=document.querySelector('#context');const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
@@ -109,16 +138,24 @@ function contextPanel() {
 const tutorialText={intro:'Soy el Espíritu que cuida esta tierra. La maldición despierta al caer el sol. Construye un centro, siembra y deja que tu comunidad trabaje contigo.',center:'Coloca tu primer centro de trabajo. Cuesta 800 monedas. Busca un terreno libre junto al poblado.',plant:'Siembra los cultivos que puedas cuidar. Cada planta tiene un coste, un tiempo y sus propios riegos.',hire:'Cuando estés listo, contrata al equipo de hoy. La jornada se paga una sola vez; elige cantidades según tu presupuesto.',observe:'Los trabajadores siembran y riegan. El brote empezará a crecer cuando completen su primer cuidado.',harvest:'Toca una planta madura y solicita recoger su grupo. Ganarás las monedas cuando cada caja llegue al centro.',done:'Tu primera cosecha ha llegado. Sigue cultivando y conserva monedas para la próxima jornada.'};
 function narrator() {
   const el=document.querySelector('#narrator');if(state.tutorial.step==='done'){el.innerHTML='';return;}
-  const step=state.tutorial.step;el.innerHTML=`<section class="narrator"><div class="spirit" aria-hidden="true">✧</div><div><small>El Espíritu</small><p>${esc(tutorialText[step]??'Cuida la tierra y escucha al poblado.')}</p></div>${step==='intro'?button('intro-next','Comenzar'):''}</section>`;
+  const step=state.tutorial.step;el.innerHTML=`<section class="narrator"><img class="spirit" src="/assets/5170de5cc32e7da971a861db79d090b4bdc2c6cece5b22e4b1c06fe3de59e464.webp" alt="El Espíritu"><div><small>El Espíritu</small><p>${esc(tutorialText[step]??'Cuida la tierra y escucha al poblado.')}</p></div>${step==='intro'?button('intro-next','Comenzar'):''}</section>`;
   bind('intro-next',()=>{Game.resume(state,'intro');state.tutorial.step=state.structures.length?'plant':'center';});
 }
 function hiringDialog() {
   const selection={...state.hiringSelection},modal=document.querySelector('#modal');
-  modal.innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="hiring-title" id="hiring-dialog"><div class="eyebrow">Amanecer · Día ${state.day}</div><h2 id="hiring-title">El equipo de hoy</h2><p>El salario se paga por esta jornada. Los centros conservan su plantilla hasta el siguiente amanecer.</p><div class="hire-grid">${PROFILES.map(p=>`<div class="hire-card"><strong>${p.name}</strong><small>${p.wage} monedas · ${p.male?'07:05–17:05 · +20% cosecha':'07:05–19:05'}${p.speed>1?' · trabajo ×1,5':''}</small><div class="counter"><button data-minus="${p.id}" aria-label="Reducir ${p.name}">−</button><input id="count-${p.id}" type="number" min="0" step="1" value="${selection[p.id]??0}" aria-label="Cantidad ${p.name}"><button data-plus="${p.id}" aria-label="Añadir ${p.name}">+</button></div></div>`).join('')}</div><p id="hire-cost"></p><p class="feedback" id="hire-error" role="alert"></p><div class="dialog-actions">${button('confirm-hire','Confirmar jornada')}</div></section></div>`;
-  const refresh=()=>{for(const p of PROFILES)selection[p.id]=Number(document.querySelector(`#count-${p.id}`).value);try{const cost=hiringCost(selection);document.querySelector('#hire-cost').textContent=`Total: ${cost} monedas · Disponible: ${formatMoney(state.ledger.balance)}`;document.querySelector('#confirm-hire').disabled=cost>numberOf(state.ledger.balance);document.querySelector('#hire-error').textContent=cost>numberOf(state.ledger.balance)?'Reduce la plantilla para ajustarla al saldo.':'';}catch(e){document.querySelector('#confirm-hire').disabled=true;document.querySelector('#hire-error').textContent=e.message;}};
-  document.querySelectorAll('[data-minus],[data-plus]').forEach(el=>el.onclick=()=>{const id=el.dataset.minus??el.dataset.plus,input=document.querySelector(`#count-${id}`);input.value=Math.max(0,Number(input.value)+(el.dataset.plus?1:-1));refresh();});document.querySelectorAll('.counter input').forEach(el=>el.oninput=refresh);
-  bind('confirm-hire',()=>{Game.hire(state,commandId(),selection);modal.innerHTML='';save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
+  const stage=document.querySelector('#stage');stage.classList.add('hiring-open');
+  const refresh=()=>{
+    for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
+    try {const cost=hiringCost(selection),available=numberOf(state.ledger.balance);document.querySelector('#hireAvailable').textContent=formatMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString('es-ES');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString('es-ES');document.querySelector('#hireConfirm').disabled=cost>available;document.querySelector('#hireBudgetMessage').textContent=cost>available?'Reduce la plantilla para ajustarla al saldo.':'El salario se cobra una sola vez al confirmar.';}
+    catch(e){document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
+  };
+  document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
+  document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
+  bind('hireConfirm',()=>{Game.hire(state,commandId(),selection);modal.innerHTML='';stage.classList.remove('hiring-open');save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{if(document.querySelector('#hiring-dialog'))framePaint(modal,layoutHud(stage),Object.fromEntries(entries));}).catch(()=>error('No se ha podido cargar el marco de contratación.'));
 }
+window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {
   Game.pause(state,'menu');document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
   bind('resume',()=>{Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';});bind('save',()=>{save();Game.notice(state,'Partida guardada.');});bind('game-settings',()=>settingsDialog(true));bind('exit',menu);
