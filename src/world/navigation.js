@@ -1,5 +1,5 @@
 import {TerrainField,scatterWorld} from './terrain.js';
-import {containsPoint,footprintDistance,footprintsOverlap} from './footprints.js';
+import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -87,20 +87,22 @@ export class Navigation {
   }
   path(start,end,radius=.3,ignore=null,worker=true) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
-    const directSteps=Math.ceil(distance(start,end)/.6);
-    let clear=true;
-    for(let i=1;i<directSteps;i++)if(!this.walkable(start.x+(end.x-start.x)*i/directSteps,start.z+(end.z-start.z)*i/directSteps,radius,ignore,worker)){clear=false;break;}
-    if(clear)return [{x:end.x,z:end.z}];
+    if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const margin=16,minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
-    const open=[{x:sx,z:sz,g:0,f:Math.hypot(ex-sx,ez-sz)}],costs=new Map([[key(sx,sz),0]]),previous=new Map();
+    const open=[],costs=new Map(),previous=new Map();
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+      const point={x:sx+dx,z:sz+dz};
+      if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.segmentClear(start,point,radius,ignore,worker))continue;
+      const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
+    }
     let visited=0;
     while(open.length&&visited++<12000) {
       open.sort((a,b)=>a.f-b.f);const cur=open.shift(),ck=key(cur.x,cur.z);
       if(Math.hypot(cur.x-ex,cur.z-ez)<1.5&&this.segmentClear(cur,end,radius,ignore,worker)) {
         const route=[{x:end.x,z:end.z}];let k=ck;
-        while(previous.has(k)){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});k=previous.get(k);}
+        while(true){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});if(!previous.has(k))break;k=previous.get(k);}
         return route.reverse();
       }
       for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]) {
@@ -109,14 +111,28 @@ export class Navigation {
         if(dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker)))continue;
         const k=key(x,z),g=cur.g+Math.hypot(dx,dz);
         if(g>=(costs.get(k)??Infinity))continue;
+        if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
         costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
       }
     }
     return null;
   }
   segmentClear(start,end,radius,ignore,worker) {
+    for(const obstacle of this.obstacles){
+      if(obstacle.id===ignore||worker&&(obstacle.gate||obstacle.kind==='shield'))continue;
+      if(obstacle.kind==='wall'){
+        const width=(obstacle.gate?1.09*(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1.09)+radius;
+        const depth=.22+radius,c=Math.cos(obstacle.yaw??0),s=Math.sin(obstacle.yaw??0);
+        const polygon=[[-width,-depth],[width,-depth],[width,depth],[-width,depth]].map(([x,z])=>({x:obstacle.x+x*c+z*s,z:obstacle.z-x*s+z*c}));
+        if(sweptFootprintDistance(start,end,polygon)<1e-9)return false;
+      }else if(obstacle.footprint){
+        if(sweptFootprintDistance(start,end,obstacle.footprint)<radius)return false;
+      }else if(edgeDistance(start,end,obstacle.x,obstacle.z)<obstacle.radius+radius)return false;
+    }
+    const midpoint={x:(start.x+end.x)/2,z:(start.z+end.z)/2};
+    if(this.propsAt(midpoint.x,midpoint.z,distance(start,end)/2+radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&edgeDistance(start,end,p.x,p.z)<(p.radius??1.5)+radius))return false;
     const steps=Math.max(1,Math.ceil(distance(start,end)/.25));
-    for(let i=1;i<=steps;i++)if(!this.walkable(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius,ignore,worker))return false;
+    for(let i=0;i<=steps;i++)if(!this.terrainValid(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius))return false;
     return true;
   }
 }

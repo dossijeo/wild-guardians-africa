@@ -20,5 +20,5 @@ export function releaseTask(state,worker) {
   const t=state.tasks.find(t=>t.id===worker.taskId);
   if(t)t.workerId=null;
   worker.taskId=null;
+  worker.taskApproach=null;
 }
-

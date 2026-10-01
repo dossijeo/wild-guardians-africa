@@ -10,6 +10,14 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
 const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
 const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
+test('A route blocked after reservation releases its worker without deleting the task or starting an action',()=>{
+  const s=setup(),worker=s.workers[0];worker.status='idle';worker.x=7.4;worker.z=0;
+  const movingNav={...nav,version:1};tick(s,.01,movingNav);assert.equal(worker.status,'walking');
+  const task=s.tasks.find(t=>t.id===worker.taskId),balance=numberOf(s.ledger.balance);
+  movingNav.version++;movingNav.path=()=>null;tick(s,.1,movingNav);
+  assert.equal(worker.status,'idle');assert.equal(worker.taskId,null);assert.equal(task.workerId,null);assert.equal(task.blocked,true);
+  assert.equal(s.plants[0].growth,0);assert.equal(s.plants[0].water[0].status,'due');assert.equal(numberOf(s.ledger.balance),balance);
+});
 function repairScenario(){
   const s=setup();s.ledger.balance=rational(1000);s.tasks=[];
   const worker=s.workers[0];worker.status='idle';worker.taskId=null;worker.path=null;
@@ -17,7 +25,7 @@ function repairScenario(){
   const target=s.structures.at(-1);target.hp=target.maxHp*.73;
   requestRepair(s,'repair-order',target.id);const before=numberOf(s.ledger.balance);
   tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),before,'Queueing and reservation must not charge');
-  assert.equal(worker.status,'walking');worker.x=target.x+1.2;worker.z=target.z;
+  assert.equal(worker.status,'walking');worker.x=target.x+1.09+.28+.1;worker.z=target.z;
   return {s,worker,target,before};
 }
 test('Repair settles its rounded current price exactly once on arrival, without an extra animation delay',()=>{

@@ -27,8 +27,8 @@ export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
   const plots=[];
   for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
     const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
-    const route=nav.path(departure,point,.28,center.id,true);
-    if(nav.placement(point.x,point.z,.4).valid&&route&&nav.path(point,departure,.28,center.id,true))
+    const route=nav.path(departure,point,.28,null,true);
+    if(nav.placement(point.x,point.z,.4).valid&&route&&nav.path(point,departure,.28,null,true))
       plots.push({...point,distance:Math.hypot(point.x-departure.x,point.z-departure.z)});
   }
   plots.sort((a,b)=>a.distance-b.distance||a.z-b.z||a.x-b.x);

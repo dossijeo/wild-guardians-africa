@@ -17,7 +17,7 @@ if(sources.some(s=>s.walkMetresPerSecond!==sources[0].walkMetresPerSecond||s.run
 const samples=[];
 for(const payload of villages){
   const nav=new Navigation(712,'sabana',read('biome-'+BIOME_IDS.sabana).profile);
-  const location=findInitialLocation(nav,payload),state={villages:[location],structures:[],spells:[],suppressed:location.suppress};
+  const location=findInitialLocation(nav,payload),state={villages:[location],structures:[{id:'reference-center',kind:'center',status:'intact',...location.center}],spells:[],suppressed:location.suppress};
   nav.setState(state);
   const destination={x:location.center.x+3.4,z:location.center.z};
   const path=nav.path(location.entry,destination,.28,null,true);

@@ -11,6 +11,17 @@ export function edgeDistance(a,b,x,z) {
   const t=length?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/length)):0;
   return Math.hypot(x-a.x-dx*t,z-a.z-dz*t);
 }
+export function segmentDistance(a,b,c,d){
+  const side=(p,q,r)=>(q.x-p.x)*(r.z-p.z)-(q.z-p.z)*(r.x-p.x);
+  if(side(a,b,c)*side(a,b,d)<0&&side(c,d,a)*side(c,d,b)<0)return 0;
+  return Math.min(edgeDistance(a,b,c.x,c.z),edgeDistance(a,b,d.x,d.z),edgeDistance(c,d,a.x,a.z),edgeDistance(c,d,b.x,b.z));
+}
+export function sweptFootprintDistance(start,end,polygon){
+  if(containsPoint(polygon,start.x,start.z)||containsPoint(polygon,end.x,end.z))return 0;
+  let best=Infinity;
+  for(let i=0;i<polygon.length;i++)best=Math.min(best,segmentDistance(start,end,polygon[i],polygon[(i+1)%polygon.length]));
+  return best;
+}
 export function footprintDistance(polygon,x,z) {
   if(containsPoint(polygon,x,z))return 0;
   let best=Infinity;

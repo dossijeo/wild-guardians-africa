@@ -6,9 +6,9 @@ export function villageLayout(payload,x,z) {
     return {key:unit.key,kind:unit.kind,x:x+px,z:z+pz,radius,unit:unit.key,...(footprint?{footprint}:{})};
   });
 }
-export function findVillageEntry(nav,layout,x,z,destination=null) {
+export function findVillageEntry(nav,layout,x,z,destination=null,additionalObstacles=[]) {
   const oldObstacles=nav.obstacles;
-  nav.obstacles=[...(oldObstacles??[]),...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];nav.walkCache?.clear();
+  nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];nav.walkCache?.clear();
   try {
     for(let radius=0;radius<=20;radius+=2)for(let angle=0;angle<(radius?16:1);angle++){
       const point={x:x+Math.cos(angle/16*Math.PI*2)*radius,z:z+Math.sin(angle/16*Math.PI*2)*radius};
@@ -32,7 +32,7 @@ function* initialLocations(nav,payload) {
     let workable=0;
     for(let dz=-6;dz<=6;dz+=1.5)for(let dx=5;dx<=12;dx+=1.5)if(nav.placement(center.x+dx,center.z+dz,.4).valid)workable++;
     if(workable<12)continue;
-    const entry=findVillageEntry(nav,layout,x,z,{x:center.x+3.4,z:center.z});
+    const entry=findVillageEntry(nav,layout,x,z,{x:center.x+3.4,z:center.z},[{id:'initial-center',kind:'center',...center,radius:2.6}]);
     if(entry)return {x,z,buildings:layout,center,entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
   }
   throw new Error('No se encontró una distribución inicial transitable; vuelve a generar la semilla.');
