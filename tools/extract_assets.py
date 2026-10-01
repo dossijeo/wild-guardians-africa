@@ -97,6 +97,10 @@ for path in sorted(pathlib.Path(args.source).glob('*.html')):
             out=folder/(identifier+'.js')
             out.write_text(code,encoding='utf-8')
             record['code'].append(out.relative_to(repo).as_posix())
+    markup=re.sub(r'<script\b[^>]*>.*?</script>','',source,flags=re.S|re.I)
+    markup=data_pattern.sub(lambda m:replace_data(m,path.name+'#markup'),markup)
+    (folder/'markup.html').write_text(markup,encoding='utf-8')
+    record['markup']=(folder/'markup.html').relative_to(repo).as_posix()
     inventory.append(record)
     print(path.name, 'extracted',flush=True)
 

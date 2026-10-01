@@ -12,7 +12,7 @@ export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
 export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slotId=crypto.randomUUID()}={}) {
   if(!BIOMES.includes(biome)||!CULTURES.includes(culture))throw new Error('Combinación desconocida');
   return {saveVersion:1,slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,postgame:false,result:null,
-    ledger:{balance:rational(1000),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
+    initialPreparation:true,ledger:{balance:rational(1000),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:['intro'],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
     cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
@@ -80,7 +80,7 @@ export function hire(s,id,selection) {
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
-  s.hiringSelection={...selection};s.hiringPaidDay=s.day;resume(s,'hiring');rebuildTasks(s);planDay(s);
+  s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total});
 }
 export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
@@ -204,6 +204,7 @@ function closeNight(s) {
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function tick(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
+  if(s.initialPreparation)return;
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     const previousTime=s.time;

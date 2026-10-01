@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#181b13">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Nueva partida de Wild Guardians: seis biomas, cinco culturas y un inicio simulado. Un único HTML sin conexión.">
+<title>Wild Guardians · Nueva partida</title>
+<!--
+WILD GUARDIANS · NUEVA PARTIDA · V2
+Evolución del selector de biomas V1: conserva su diseño e imágenes.
+Flujo: Bioma -> Cultura -> Comenzar partida (simulado, sin tercera configuración).
+Las once ilustraciones están incrustadas, conservando los bytes de los archivos aportados.
+Sin bibliotecas externas, fuentes descargadas, CDN, analítica ni peticiones de red.
+
+INTEGRACIÓN
+  window.addEventListener('wildguardians:new-game', event => {
+    const { biome, culture, simulation } = event.detail;
+    // biome y culture: { id, name, index }
+    // simulation === true: este documento es un lab, no un motor de juego.
+    // event.preventDefault() omite la simulación si el juego real toma el control.
+  });
+Otros eventos:
+  wildguardians:biome-preview / wildguardians:biome-selected
+  wildguardians:culture-preview / wildguardians:culture-selected
+  wildguardians:game-started (al terminar la transición simulada)
+API: window.WildGuardiansNewGameMenu
+  .getSelection(), .getState(), .getLastLaunch()
+  .selectBiome('manglares'), .selectCulture('musgum')
+  .goTo('biome'|'culture'), .continue(), .start(), .cancel()
+  .openArtwork(), .closeArtwork()
+Se mantiene window.WildGuardiansBiomeMenu y se añade WildGuardiansCultureMenu.
+Biomas: sabana, gran-rio, manglares, volcanes, gran-canon, desierto.
+Culturas: mapungubwe, saheliana, suajili, musgum, etiope.
+Las culturas describen la arquitectura ficticia del juego; no añaden bonificaciones.
+Persistencia opcional: wildguardians.newGameMenu.v2. Se restaura la elección,
+no una partida ni el paso: abrir el documento siempre empieza en Biomas.
+-->
+<style>
+
+:root {
+  --ink: #161a13;
+  --panel: #24261b;
+  --cream: #f9efd5;
+  --muted: #c6c4ad;
+  --gold: #e8c477;
+  --gold-soft: rgba(232,196,119,.28);
+  --accent: #e9bc66;
+  --line: rgba(235,211,159,.22);
+  --gallery-limit: min(1240px, calc((100svh - 322px) * 2));
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--ink); }
+body { margin: 0; color: var(--cream); font-family: var(--sans); -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
+button, a { touch-action: manipulation; }
+button:focus-visible { outline: 3px solid #ffebad; outline-offset: 5px; }
+button:disabled { cursor: default; }
+svg { display: block; }
+.icon { width: 21px; height: 21px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+button .icon { pointer-events: none; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+.symbols { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* El paisaje de fondo está separado de las tarjetas: nunca tapa la interfaz. */
+.backdrop { position: fixed; z-index: -2; inset: 0; overflow: hidden; background: #171b14; pointer-events: none; }
+.backdrop img { position: absolute; inset: -3%; width: 106%; height: 106%; object-fit: cover; opacity: 0; filter: blur(15px) saturate(.68); transition: opacity 900ms ease; }
+.backdrop img.visible { opacity: .30; }
+.backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg,rgba(15,20,14,.53),rgba(18,23,15,.72) 46%,rgba(11,17,12,.92)), radial-gradient(ellipse at 50% 35%,transparent 20%,rgba(9,13,9,.68)); }
+.texture { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .10; background: repeating-linear-gradient(0deg,transparent 0 3px,rgba(245,226,169,.05) 4px 5px); }
+.botanical { position: fixed; bottom: -30px; width: min(28vw,340px); height: 450px; color: #c1b16f; opacity: .08; z-index: -1; pointer-events: none; }
+.botanical.left { left: -55px; transform: rotate(-9deg); }
+.botanical.right { right: -55px; transform: scaleX(-1) rotate(-9deg); }
+.edge-rule { position: fixed; inset: 9px; border: 1px solid rgba(225,209,157,.10); border-radius: 2px; pointer-events: none; z-index: -1; }
+.edge-rule::before,.edge-rule::after { content: '◇'; position: absolute; color: rgba(225,209,157,.38); font: 17px var(--serif); top: -10px; background: #202519; padding: 0 10px; }
+.edge-rule::before { left: 27px; }
+.edge-rule::after { right: 27px; }
+
+.app { min-height: 100svh; min-height: 100dvh; width: 100%; padding: 27px 38px 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.masthead { position: relative; width: min(100%, 1240px); text-align: center; margin-bottom: 21px; }
+.brand { display: inline-flex; align-items: center; justify-content: center; gap: 11px; color: #ead2a0; }
+.brand-mark { width: 25px; height: 28px; }
+.brand-name { font-size: 11px; letter-spacing: .30em; font-weight: bold; padding-left: .30em; }
+.masthead h1 { margin: 5px 0 7px; font: normal clamp(34px,3.4vw,50px)/1.12 var(--serif); letter-spacing: -.035em; color: #fff1ce; text-shadow: 0 2px 20px #050b05; }
+.masthead p { margin: 0; color: #c4c8b3; font-size: 13px; letter-spacing: .045em; }
+.header-tools { position: absolute; right: 0; top: 8px; display: flex; gap: 9px; }
+.round-button { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; border: 1px solid rgba(231,211,164,.28); border-radius: 50%; background: rgba(34,40,28,.60); box-shadow: inset 0 1px rgba(255,248,219,.06); transition: background .2s,border-color .2s,transform .2s; }
+.round-button:hover { background: #41442c; border-color: #d7bd7c; transform: translateY(-1px); }
+.workspace { width: min(100%,var(--gallery-limit)); }
+.gallery { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; width: 100%; }
+
+/* Marcos discretos: ilustración completa en 4:3, sin recortes permanentes. */
+.biome-card { padding: 5px; position: relative; display: block; width: 100%; min-width: 0; aspect-ratio: auto; text-align: left; isolation: isolate; border: 1px solid #6e6245; border-radius: 9px; background: repeating-linear-gradient(177deg,#50462e 0 1px,#363722 2px 7px,#48422b 8px 10px,#353120 11px 17px); box-shadow: 0 8px 16px rgba(0,0,0,.23),inset 0 0 0 1px rgba(6,9,4,.65),inset 0 0 0 3px rgba(235,205,140,.09); transition: box-shadow 230ms,transform 230ms,border-color 230ms; }
+.biome-card:hover { transform: translateY(-3px); border-color: #cfb578; box-shadow: 0 13px 23px rgba(0,0,0,.34); }
+.biome-card[aria-checked="true"] { border-color: #ffe3a1; box-shadow: 0 0 0 2px rgba(229,195,114,.57),0 8px 24px rgba(0,0,0,.34),0 0 22px rgba(228,182,81,.08),inset 0 0 0 1px rgba(255,235,179,.48); }
+.card-window { position: relative; display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 4px; background: #443d2c; }
+.card-art { width: 100%; height: 100%; display: block; object-fit: cover; pointer-events: none; user-select: none; -webkit-user-drag: none; filter: saturate(.98) brightness(.97); transition: filter 300ms,transform 600ms cubic-bezier(.2,.65,.25,1); }
+.biome-card[aria-checked="true"] .card-art,.biome-card:hover .card-art { filter: none; }
+@media(hover:hover) and (pointer:fine) { .biome-card:hover .card-art { transform: scale(1.024); } }
+.card-vignette { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(12,17,9,.18),transparent 25%,transparent 46%,rgba(19,22,12,.27) 64%,rgba(9,15,10,.92)); }
+.card-number { position: absolute; top: 12px; left: 13px; color: #fff0cc; font-size: 10px; letter-spacing: .13em; background: rgba(22,26,17,.66); border: 1px solid rgba(255,228,170,.28); border-radius: 3px; padding: 5px 7px; line-height: 1; backdrop-filter: blur(6px); }
+.card-caption { position: absolute; left: 18px; right: 14px; bottom: 15px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.card-name { display: block; margin-bottom: 4px; font: normal clamp(23px,2.3vw,33px)/1 var(--serif); letter-spacing: -.02em; text-shadow: 0 2px 8px rgba(0,0,0,.55); }
+.card-tag { display: block; text-transform: uppercase; font-size: 9px; line-height: 1.2; letter-spacing: .145em; color: #dcdcc3; }
+.card-arrow { width: 23px; height: 23px; opacity: .40; transform: translateX(-3px); transition: opacity .2s,transform .2s; color: #f8dd9d; }
+.biome-card[aria-checked="true"] .card-arrow,.biome-card:hover .card-arrow { opacity: 1; transform: none; }
+.selection-seal { position: absolute; right: 11px; top: 10px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: linear-gradient(140deg,#fff0b0,#d4ac5d); color: #39331f; border: 1px solid #fff0b4; border-radius: 50%; box-shadow: 0 2px 10px #271f1970; opacity: 0; transform: scale(.75); transition: opacity .22s,transform .22s; }
+.selection-seal .icon { width: 17px; height: 17px; stroke-width: 2.1; }
+.biome-card[aria-checked="true"] .selection-seal { opacity: 1; transform: scale(1); }
+.frame-corners { position: absolute; pointer-events: none; z-index: 2; inset: -2px; background: linear-gradient(#edd298,#edd298) left top/13px 2px no-repeat,linear-gradient(#edd298,#edd298) left top/2px 13px no-repeat,linear-gradient(#edd298,#edd298) right top/13px 2px no-repeat,linear-gradient(#edd298,#edd298) right top/2px 13px no-repeat,linear-gradient(#edd298,#edd298) left bottom/13px 2px no-repeat,linear-gradient(#edd298,#edd298) left bottom/2px 13px no-repeat,linear-gradient(#edd298,#edd298) right bottom/13px 2px no-repeat,linear-gradient(#edd298,#edd298) right bottom/2px 13px no-repeat; border-radius: 9px; opacity: 0; transition: opacity 200ms; }
+.biome-card[aria-checked="true"] .frame-corners { opacity: .88; }
+
+/* La elección y su confirmación son acciones distintas. */
+.selection-panel { margin-top: 19px; padding: 15px 18px; min-height: 85px; display: flex; align-items: center; gap: 17px; border: 1px solid var(--line); border-radius: 9px; background: linear-gradient(100deg,rgba(63,61,38,.72),rgba(34,41,27,.87)),repeating-linear-gradient(1deg,transparent 0 3px,rgba(235,205,151,.06) 4px 5px); box-shadow: inset 0 1px rgba(247,232,188,.045),0 8px 24px rgba(0,0,0,.12); }
+.selection-emblem { flex: 0 0 auto; width: 42px; height: 42px; color: var(--accent); opacity: .90; transition: color 400ms; }
+.selection-copy { min-width: 0; flex: 1; }
+.selection-kicker { display: flex; align-items: center; gap: 8px; font-size: 9px; text-transform: uppercase; letter-spacing: .16em; color: #c1c7ab; margin-bottom: 5px; }
+.selection-kicker::before { content: ''; width: 4px; height: 4px; background: var(--accent); transform: rotate(45deg); }
+.selection-heading { display: flex; align-items: baseline; gap: 12px; }
+.selection-name { margin: 0; font: normal 27px/1.1 var(--serif); letter-spacing: -.02em; white-space: nowrap; }
+.selection-description { margin: 0; color: #c7cbb5; font-size: 12px; line-height: 1.45; }
+.selection-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.view-button { background: rgba(17,23,13,.30); border-color: rgba(227,212,168,.27); }
+.confirm-button { position: relative; border: 1px solid #f1d493; border-radius: 5px; background: linear-gradient(170deg,#f4d99b,#d4b470); color: #292d1c; min-height: 48px; min-width: 183px; padding: 0 20px; display: inline-flex; justify-content: center; align-items: center; gap: 17px; font-size: 13px; letter-spacing: .025em; font-weight: bold; box-shadow: inset 0 0 0 2px rgba(49,39,18,.11),inset 0 1px #fff6d7,0 3px 12px rgba(7,11,5,.20); transition: filter .2s,transform .2s,box-shadow .2s; }
+.confirm-button:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: inset 0 0 0 2px rgba(49,39,18,.11),inset 0 1px #fff6d7,0 5px 16px rgba(7,11,5,.3); }
+.confirm-button:active { transform: translateY(1px); }
+.confirm-button .icon { width: 18px; height: 18px; stroke-width: 1.9; }
+.confirm-button.confirmed { background: linear-gradient(150deg,#d7dfab,#b1c18b); border-color: #dbe7b5; }
+.footer { display: flex; justify-content: space-between; gap: 16px; width: min(100%,var(--gallery-limit)); margin-top: 16px; padding: 0 2px; font-size: 10px; color: #adb59a; }
+.keyboard-hints { display: flex; gap: 18px; align-items: center; }
+.keyboard-hints span { display: inline-flex; align-items: center; gap: 6px; }
+kbd { font-family: var(--sans); border: 1px solid rgba(218,218,184,.26); color: #d7ddc2; padding: 2px 5px; font-size: 9px; border-radius: 3px; min-width: 18px; text-align: center; font-weight: normal; }
+.footer-label { font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }
+.status-toast { position: fixed; z-index: 100; bottom: max(25px,env(safe-area-inset-bottom)); left: 50%; transform: translate(-50%,18px); max-width: calc(100vw - 32px); width: max-content; padding: 13px 20px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #e9d9ad; color: #243021; border: 1px solid #fff2c8; border-radius: 7px; box-shadow: 0 8px 32px #0007; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .22s,transform .22s; }
+.status-toast.show { opacity: 1; transform: translate(-50%,0); }
+.status-toast .icon { width: 18px; height: 18px; stroke-width: 2; }
+
+/* Visor: la ilustración se ve siempre entera, también en pantallas verticales. */
+dialog { border: 1px solid #918360; color: var(--cream); border-radius: 12px; padding: 0; background: #1c2117; box-shadow: 0 25px 100px #0009; }
+dialog::backdrop { background: rgba(5,9,5,.89); backdrop-filter: blur(9px); }
+.art-dialog { width: min(1320px,calc(100vw - 48px)); height: min(950px,calc(100dvh - 48px)); max-width: none; max-height: none; overflow: hidden; }
+.viewer-shell { height: 100%; display: grid; grid-template-rows: auto minmax(0,1fr) auto; }
+.viewer-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--line); }
+.viewer-header p { margin: 0 0 3px; font-size: 9px; letter-spacing: .17em; text-transform: uppercase; color: #bdc7a8; }
+.viewer-header h2 { margin: 0; font: 27px/1.1 var(--serif); }
+.viewer-viewport { position: relative; min-height: 0; min-width: 0; padding: 12px; display: grid; place-items: center; overflow: hidden; background: #0e140e; touch-action: pan-y pinch-zoom; }
+.viewer-viewport img { display: block; width: 100%; height: 100%; object-fit: contain; min-height: 0; user-select: none; -webkit-user-drag: none; }
+.viewer-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-top: 1px solid var(--line); }
+.viewer-nav { display: flex; align-items: center; gap: 13px; }
+.viewer-count { font-size: 11px; letter-spacing: .10em; color: #cfceaf; white-space: nowrap; min-width: 51px; text-align: center; }
+.viewer-footer .confirm-button { min-width: 180px; min-height: 42px; }
+.help-dialog { width: min(440px,calc(100vw - 32px)); padding: 26px; }
+.help-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.help-heading h2 { font: normal 31px/1.15 var(--serif); margin: 0; }
+.help-dialog p { color: #c9cdb9; font-size: 14px; line-height: 1.6; }
+.help-keys { display: grid; grid-template-columns: auto 1fr; gap: 13px 17px; font-size: 13px; color: #d6d8c4; border-block: 1px solid var(--line); padding: 18px 0; margin: 18px 0; }
+.help-keys dt { margin: 0; display: flex; gap: 4px; align-items: center; }
+.help-keys dd { margin: 0; align-self: center; }
+.help-keys kbd { font-size: 11px; padding: 4px 7px; }
+.help-note { font-size: 12px !important; color: #aeb99c !important; margin-bottom: 0; }
+body.dialog-open { overflow: hidden; }
+.noscript-notice { background: #f2dfb5; color: #1e291a; padding: 16px; text-align: center; }
+
+@keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media(prefers-reduced-motion:no-preference) {
+  .masthead { animation: appear .6s both; }
+  .biome-card { animation: appear .55s both; animation-delay: calc(var(--order) * 55ms + 80ms); }
+  .selection-panel { animation: appear .65s .28s both; }
+}
+@media(min-width:761px) and (max-height:780px) {
+  :root { --gallery-limit: min(1160px,calc((100svh - 273px) * 2)); }
+  .app { padding-top: 18px; padding-bottom: 14px; }
+  .masthead { margin-bottom: 16px; }
+  .masthead h1 { font-size: 37px; margin-top: 1px; margin-bottom: 5px; }
+  .brand-mark { width: 21px; height: 23px; }
+  .masthead p { font-size: 12px; }
+  .selection-panel { margin-top: 15px; padding: 11px 15px; min-height: 72px; gap: 12px; }
+  .selection-heading { display: block; }
+  .selection-name { font-size: 24px; }
+  .selection-description { font-size: 11px; margin-top: 4px; }
+  .selection-kicker { margin-bottom: 3px; font-size: 8px; }
+  .selection-emblem { width: 35px; height: 35px; }
+  .footer { margin-top: 13px; }
+  .card-name { font-size: 27px; }
+}
+@media(max-width:1050px) {
+  .selection-heading { display: block; }
+  .selection-description { margin-top: 4px; font-size: 11px; }
+  .selection-name { font-size: 25px; }
+  .selection-emblem { width: 34px; height: 34px; }
+  .card-caption { left: 14px; bottom: 13px; }
+  .card-name { font-size: 27px; }
+}
+@media(max-width:760px) and (orientation:portrait), (max-width:600px) {
+  :root { --gallery-limit: 100%; }
+  .app { padding: max(25px,env(safe-area-inset-top)) 19px max(22px,env(safe-area-inset-bottom)); justify-content: center; }
+  .masthead { margin-bottom: 19px; padding-top: 2px; }
+  .brand { gap: 8px; }
+  .brand-mark { width: 21px; height: 25px; }
+  .brand-name { font-size: 9px; letter-spacing: .23em; }
+  .masthead h1 { font-size: clamp(30px,7.8vw,41px); margin: 7px 0; }
+  .masthead p { font-size: 11px; letter-spacing: .015em; }
+  .header-tools { top: 0; right: 0; gap: 5px; }
+  .header-tools .round-button { width: 30px; height: 30px; background: rgba(29,37,22,.5); }
+  .header-tools .icon { width: 16px; height: 16px; }
+  #helpButton { display: none; }
+  .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  .biome-card { border-radius: 7px; padding: 4px; }
+  .card-caption { left: 10px; right: 9px; bottom: 11px; gap: 5px; }
+  .card-name { font-size: clamp(19px,5vw,27px); margin-bottom: 4px; }
+  .card-tag { font-size: 7px; letter-spacing: .11em; }
+  .card-arrow { width: 16px; height: 16px; display: none; }
+  .card-number { top: 8px; left: 8px; font-size: 8px; padding: 4px 5px; }
+  .selection-seal { right: 7px; top: 7px; width: 23px; height: 23px; }
+  .selection-seal .icon { width: 14px; height: 14px; }
+  .frame-corners { border-radius: 7px; }
+  .selection-panel { margin-top: 17px; display: grid; grid-template-columns: minmax(0,1fr) 42px; column-gap: 10px; row-gap: 12px; padding: 14px; min-height: 0; }
+  .selection-emblem { display: none; }
+  .selection-copy { grid-column: 1; grid-row: 1; }
+  .selection-heading { display: block; }
+  .selection-name { font-size: 26px; }
+  .selection-kicker { font-size: 8px; margin-bottom: 5px; letter-spacing: .13em; }
+  .selection-description { margin-top: 4px; font-size: 11px; line-height: 1.4; }
+  .selection-actions { display: contents; }
+  .view-button { grid-column: 2; grid-row: 1; align-self: center; width: 38px; height: 38px; }
+  .confirm-button { grid-column: 1 / -1; min-height: 45px; font-size: 13px; width: 100%; }
+  .footer { justify-content: center; margin-top: 14px; }
+  .keyboard-hints { display: none; }
+  .footer-label { font-size: 8px; }
+  .edge-rule { inset: 7px; }
+  .edge-rule::before,.edge-rule::after { display: none; }
+  .art-dialog { width: calc(100vw - 16px); height: calc(100dvh - 24px); border-radius: 9px; }
+  .viewer-header { padding: 14px; }
+  .viewer-header h2 { font-size: 25px; }
+  .viewer-viewport { padding: 5px; }
+  .viewer-footer { padding: 13px; flex-wrap: wrap; justify-content: center; }
+  .viewer-footer .confirm-button { width: 100%; }
+  .viewer-footer .round-button { width: 38px; height: 38px; }
+  .status-toast { bottom: max(22px,env(safe-area-inset-bottom)); font-size: 12px; padding: 12px 16px; }
+}
+@media(max-width:760px) and (max-height:760px) and (orientation:portrait) {
+  .app { padding-top: 17px; padding-bottom: 15px; }
+  .masthead { margin-bottom: 15px; }
+  .masthead h1 { font-size: 29px; margin: 4px 0 6px; }
+  .masthead p { font-size: 10px; }
+  .selection-panel { margin-top: 14px; padding: 12px; row-gap: 10px; }
+  .selection-name { font-size: 23px; }
+  .selection-description { font-size: 10px; }
+  .footer { display: none; }
+}
+@media(max-width:760px) and (max-height:690px) and (orientation:portrait) {
+  .masthead p { display: none; }
+  .selection-description { display: none; }
+  .app { padding-top: 14px; padding-bottom: 12px; }
+}
+/* En móvil horizontal, las seis tarjetas quedan a la izquierda; las acciones, a la derecha. */
+@media(orientation:landscape) and (max-height:540px) {
+  :root { --gallery-limit: 100%; }
+  .app { min-height: 100dvh; padding: max(13px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(13px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); justify-content: center; }
+  .masthead { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 15px; height: 36px; flex-shrink: 0; }
+  .masthead h1 { margin: 0; font-size: 29px; }
+  .masthead p { display: none; }
+  .brand { gap: 7px; }
+  .brand-name { font-size: 8px; letter-spacing: .18em; }
+  .brand-mark { width: 20px; height: 24px; }
+  .header-tools { right: 0; top: 2px; }
+  .header-tools .round-button { width: 31px; height: 31px; }
+  .header-tools .icon { width: 16px; height: 16px; }
+  #helpButton { display: none; }
+  .workspace { display: grid; grid-template-columns: minmax(0,1fr) 205px; align-items: center; gap: 18px; max-width: 1140px; }
+  .gallery { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 11px; width: min(100%,calc((100dvh - 100px) * 2)); justify-self: center; }
+  .biome-card { padding: 4px; }
+  .card-caption { left: 10px; right: 9px; bottom: 9px; }
+  .card-name { font-size: 21px; margin-bottom: 3px; }
+  .card-tag { font-size: 7px; letter-spacing: .09em; }
+  .card-arrow { display: none; }
+  .card-number { left: 7px; top: 7px; font-size: 8px; padding: 3px 4px; }
+  .selection-seal { width: 22px; height: 22px; right: 7px; top: 6px; }
+  .selection-seal .icon { width: 14px; height: 14px; }
+  .selection-panel { display: flex; flex-direction: column; margin: 0; padding: 17px 13px; gap: 11px; align-items: center; text-align: center; min-height: 0; }
+  .selection-emblem { display: block; width: 35px; height: 35px; }
+  .selection-kicker { justify-content: center; font-size: 7px; letter-spacing: .11em; }
+  .selection-name { font-size: 27px; }
+  .selection-description { font-size: 10px; line-height: 1.5; margin-top: 7px; }
+  .selection-heading { display: block; }
+  .selection-actions { display: flex; flex-direction: column-reverse; width: 100%; gap: 9px; }
+  .confirm-button { min-width: 0; width: 100%; min-height: 40px; padding: 0 10px; gap: 8px; font-size: 11px; }
+  .view-button { width: 32px; height: 32px; }
+  .view-button .icon { width: 17px; height: 17px; }
+  .footer { display: none; }
+  .art-dialog { width: calc(100vw - 22px); height: calc(100dvh - 20px); }
+  .viewer-header { padding: 8px 15px; }
+  .viewer-header h2 { font-size: 21px; }
+  .viewer-header p { display: none; }
+  .viewer-header .round-button { width: 30px; height: 30px; }
+  .viewer-viewport { padding: 4px; }
+  .viewer-footer { padding: 7px 15px; }
+  .viewer-footer .round-button { width: 31px; height: 31px; }
+  .viewer-footer .confirm-button { min-height: 32px; width: auto; }
+}
+@media(orientation:landscape) and (max-height:430px) and (max-width:750px) {
+  .workspace { grid-template-columns: minmax(0,1fr) 171px; gap: 13px; }
+  .brand-name { display: none; }
+  .card-name { font-size: 18px; }
+  .card-tag { display: none; }
+  .selection-emblem { display: none; }
+  .selection-panel { padding: 12px 10px; }
+  .selection-name { font-size: 24px; }
+  .selection-description { font-size: 10px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media(forced-colors:active) {
+  .biome-card[aria-checked="true"] { outline: 3px solid Highlight; }
+  .card-caption { background: Canvas; color: CanvasText; }
+  .card-tag { color: CanvasText; }
+}
+
+
+/* V2 · Nueva partida. Se mantiene el tratamiento visual y las imágenes de V1. */
+:root { --gallery-limit: min(1240px, calc((100svh - 376px) * 2)); }
+.masthead { margin-bottom: 18px; }
+.masthead h1:focus, .launch-heading:focus { outline: none; }
+.setup-progress { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; min-height: 28px; }
+.setup-label { font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: .17em; color: #aeb79b; margin-right: 5px; }
+.step-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 28px; border-radius: 20px; border: 1px solid transparent; background: transparent; padding: 3px 11px 3px 7px; font-size: 10px; letter-spacing: .025em; color: #a3ad93; }
+.step-chip:disabled { opacity: .55; }
+.step-chip[aria-current="step"] { color: #f7e6be; background: #e8c4770d; border-color: #e8c47747; }
+.step-chip:not(:disabled):hover { background: #e8c47714; }
+.step-number { width: 18px; height: 18px; border: 1px solid #aeb6956b; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 9px; flex: 0 0 auto; }
+.step-chip[aria-current="step"] .step-number { background: #e8c477; color: #232a1b; border-color: #e8c477; }
+.step-chip.complete .step-number { color: #ebd49b; border-color: #d5be806e; }
+.step-separator { width: 25px; height: 1px; background: #b3b29355; }
+.back-button { position: absolute; top: 8px; left: 0; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #dacb9b3d; background: #1a211670; border-radius: 22px; padding: 0 13px; min-height: 38px; color: #d8dac0; font-size: 11px; }
+.back-button:hover { background: #44452d; border-color: #d7bd7c; }
+.back-button .icon { width: 17px; height: 17px; }
+/* Cinco tarjetas: tres arriba y dos centradas, sin una sexta cultura artificial. */
+.culture-gallery { grid-template-columns: repeat(6,minmax(0,1fr)); }
+.culture-gallery .biome-card { grid-column: span 2; }
+.culture-gallery .biome-card:nth-child(4) { grid-column: 2 / span 2; }
+.culture-gallery .biome-card:nth-child(5) { grid-column: 4 / span 2; }
+.culture-card .card-name { font-size: clamp(21px,2.2vw,32px); }
+.app[data-step="culture"] .confirm-button { min-width: 206px; }
+.app[data-step="culture"] .selection-heading { display: block; }
+.app[data-step="culture"] .selection-description { margin-top: 4px; }
+.app[data-step="culture"] .selection-kicker { letter-spacing: .13em; }
+.confirm-button:disabled { filter: saturate(.7); opacity: .75; }
+
+/* Inicio simulado: dos elecciones confirmadas y un estado de demostración explícito. */
+.launch-screen { min-height: 100svh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: max(28px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); }
+.launch-top { width: min(100%,1000px); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.lab-pill { display: inline-flex; align-items: center; gap: 7px; color: #cbd4b7; border: 1px solid #cdd3ac40; background: #20271bd9; padding: 7px 11px; border-radius: 20px; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.lab-pill::before { content: ''; width: 5px; height: 5px; background: #d5c087; border-radius: 50%; }
+.launch-panel { width: min(100%,1000px); overflow: hidden; border-radius: 12px; border: 1px solid #ba9d63a3; padding: 6px; background: linear-gradient(130deg,#4b442d,#242c1c 65%); box-shadow: 0 20px 65px #0006,inset 0 0 0 2px #ecd29a12; }
+.launch-artworks { position: relative; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; border-radius: 7px 7px 2px 2px; overflow: hidden; }
+.launch-artworks figure { margin: 0; position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #303322; min-width: 0; }
+.launch-artworks img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.launch-artworks figure::after { content: ''; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent,#0f190de8); pointer-events: none; }
+.launch-artworks figcaption { position: absolute; z-index: 1; inset: auto 23px 20px; }
+.launch-artworks figcaption small { display: block; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #e4dec6; margin-bottom: 6px; }
+.launch-artworks figcaption strong { font: normal 33px/1.1 var(--serif); color: #fff0cd; }
+.launch-connector { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 2; width: 54px; height: 54px; padding: 8px; border: 1px solid #dfc58b; border-radius: 50%; background: #27301eda; color: #f1d597; box-shadow: 0 4px 20px #0004; }
+.launch-content { padding: 26px 30px 24px; text-align: center; background: linear-gradient(110deg,#2c3120,#222a1b); }
+.launch-eyebrow { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: #cfceac; }
+.launch-eyebrow .icon { width: 15px; height: 15px; color: #e7ce92; }
+.launch-heading { margin: 10px 0 8px; font: normal clamp(28px,3.7vw,43px)/1.14 var(--serif); letter-spacing: -.02em; color: #ffedc6; }
+.launch-subtitle { margin: 0; font-size: 13px; line-height: 1.6; color: #cad0b8; }
+.progress-track { height: 5px; overflow: hidden; border-radius: 8px; background: #0f180c; border: 1px solid #c8b4782e; max-width: 370px; margin: 21px auto 12px; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg,#adbd78,#f4d091); transition: width .5s ease; border-radius: inherit; }
+.launch-status { color: #c3c8ac; font-size: 11px; min-height: 17px; margin: 0; }
+.launch-actions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 13px; margin-top: 23px; }
+.launch-actions .confirm-button { min-width: 212px; }
+.secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border: 1px solid #cabb904d; border-radius: 5px; color: #e1e0c5; background: #1b23187a; font-size: 12px; }
+.secondary-button:hover { background: #44492e; border-color: #d7bd7c; }
+.secondary-button .icon { width: 17px; height: 17px; }
+.text-button { border: none; border-bottom: 1px solid #b1b69860; color: #c2c7ab; background: transparent; padding: 5px 0; margin-top: 12px; font-size: 11px; }
+.simulation-note { margin: 17px 0 0; color: #aeb79e; font-size: 10px; line-height: 1.6; }
+.launch-screen.complete .launch-eyebrow { color: #d3e3b1; }
+.launch-screen.complete .launch-eyebrow .icon { color: #c6dda3; }
+@media(prefers-reduced-motion:no-preference) {
+  .workspace.page-enter { animation: appear 300ms both; }
+  .launch-screen:not([hidden]) .launch-panel { animation: appear 450ms both; }
+}
+@media(min-width:761px) and (max-height:780px) {
+  :root { --gallery-limit: min(1160px,calc((100svh - 325px) * 2)); }
+  .setup-progress { margin-top: 9px; min-height: 25px; }
+  .step-chip { min-height: 25px; }
+  .launch-screen { gap: 15px; padding-block: 20px; }
+  .launch-panel,.launch-top { max-width: 860px; }
+  .launch-content { padding: 18px 25px; }
+  .launch-heading { font-size: 33px; }
+  .launch-actions { margin-top: 17px; }
+}
+@media(max-width:1050px) { .culture-card .card-name { font-size: 27px; } }
+@media(max-width:760px) and (orientation:portrait), (max-width:600px) {
+  :root { --gallery-limit: 100%; }
+  .setup-progress { gap: 7px; margin-top: 11px; min-height: 27px; }
+  .setup-label { font-size: 7px; margin-right: 2px; letter-spacing: .10em; }
+  .step-chip { font-size: 9px; padding: 3px 8px 3px 5px; gap: 5px; min-height: 27px; }
+  .step-separator { width: 16px; }
+  .step-number { width: 17px; height: 17px; font-size: 8px; }
+  .back-button { width: 30px; min-height: 30px; padding: 0; justify-content: center; top: 0; }
+  .back-button span { display: none; }
+  .back-button .icon { width: 16px; height: 16px; }
+  .culture-gallery { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .culture-gallery .biome-card,.culture-gallery .biome-card:nth-child(4) { grid-column: span 2; }
+  .culture-gallery .biome-card:nth-child(5) { grid-column: 2 / span 2; }
+  .culture-card .card-name { font-size: clamp(16px,4.5vw,25px); }
+  .culture-card .card-tag { font-size: 6.5px; letter-spacing: .07em; }
+  .app[data-step="culture"] .confirm-button { min-width: 0; }
+  .app[data-step="culture"] .selection-kicker { font-size: 7px; letter-spacing: .1em; }
+  .app[data-step="culture"] .footer-label { font-size: 7px; letter-spacing: .085em; }
+  .launch-screen { padding: 23px 16px; gap: 20px; }
+  .launch-top { gap: 10px; }
+  .launch-top .brand-name { font-size: 8px; }
+  .lab-pill { font-size: 7px; letter-spacing: .08em; padding: 6px 8px; gap: 5px; }
+  .launch-panel { padding: 4px; border-radius: 9px; }
+  .launch-artworks { gap: 4px; }
+  .launch-artworks figcaption { inset: auto 12px 11px; }
+  .launch-artworks figcaption small { font-size: 7px; margin-bottom: 4px; }
+  .launch-artworks figcaption strong { font-size: clamp(17px,5vw,23px); }
+  .launch-connector { width: 36px; height: 36px; padding: 5px; }
+  .launch-content { padding: 24px 17px 21px; }
+  .launch-heading { font-size: 29px; }
+  .launch-subtitle { font-size: 12px; }
+  .launch-eyebrow { font-size: 8px; letter-spacing: .12em; }
+  .launch-actions { flex-direction: column; gap: 11px; margin-top: 21px; }
+  .launch-actions .confirm-button,.launch-actions .secondary-button { width: 100%; min-height: 43px; }
+  .simulation-note { font-size: 9px; margin-top: 15px; }
+}
+@media(max-width:760px) and (max-height:690px) and (orientation:portrait) {
+  .setup-progress { margin-top: 6px; }
+  .setup-label { display: none; }
+  .app { justify-content: flex-start; }
+  .gallery { gap: 10px; }
+}
+@media(orientation:landscape) and (max-height:540px) {
+  :root { --gallery-limit: 100%; }
+  .masthead { flex-wrap: wrap; gap: 4px 16px; height: auto; margin-bottom: 11px; }
+  .masthead h1 { font-size: 26px; }
+  .setup-progress { flex: 0 0 100%; min-height: 23px; margin-top: 1px; gap: 7px; }
+  .setup-label { display: none; }
+  .step-chip { min-height: 23px; padding: 1px 8px 1px 5px; font-size: 9px; }
+  .step-number { width: 16px; height: 16px; font-size: 8px; }
+  .step-separator { width: 20px; }
+  .back-button { min-height: 31px; width: 31px; top: 1px; padding: 0; justify-content: center; }
+  .back-button span { display: none; }
+  .gallery { width: min(100%,calc((100dvh - 128px) * 2)); }
+  .culture-gallery { grid-template-columns: repeat(6,minmax(0,1fr)); }
+  .culture-gallery .biome-card { grid-column: span 2; }
+  .culture-gallery .biome-card:nth-child(4) { grid-column: 2 / span 2; }
+  .culture-gallery .biome-card:nth-child(5) { grid-column: 4 / span 2; }
+  .culture-card .card-name { font-size: clamp(13px,2.1vw,21px); }
+  .culture-card .card-tag { font-size: 6px; letter-spacing: .045em; }
+  .app[data-step="culture"] .confirm-button { min-width: 0; }
+  .app[data-step="culture"] .selection-kicker { line-height: 1.5; font-size: 7px; letter-spacing: .08em; }
+  .app[data-step="culture"] .selection-name { font-size: 26px; }
+  .launch-screen { padding: 14px 23px; gap: 13px; }
+  .launch-top { max-width: 1000px; }
+  .launch-panel { display: grid; grid-template-columns: 1.08fr 1fr; align-items: stretch; max-width: 1000px; }
+  .launch-artworks { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px; border-radius: 5px 0 0 5px; align-items: center; background: #151e12; }
+  .launch-artworks figure { aspect-ratio: auto; height: 100%; min-height: 222px; }
+  .launch-artworks img { object-fit: cover; }
+  .launch-artworks figcaption { inset: auto 12px 13px; }
+  .launch-artworks figcaption strong { font-size: 21px; }
+  .launch-artworks figcaption small { font-size: 7px; }
+  .launch-connector { width: 34px; height: 34px; padding: 5px; }
+  .launch-content { padding: 16px 15px; display: flex; flex-direction: column; justify-content: center; }
+  .launch-heading { font-size: 26px; margin: 8px 0; }
+  .launch-subtitle { font-size: 11px; }
+  .launch-eyebrow { font-size: 7px; letter-spacing: .1em; }
+  .launch-actions { gap: 8px; margin-top: 13px; flex-direction: row; }
+  .launch-actions .confirm-button { min-height: 37px; width: auto; min-width: 0; padding: 0 12px; }
+  .launch-actions .secondary-button { min-height: 35px; font-size: 10px; padding: 0 11px; width: auto; }
+  .simulation-note { margin-top: 11px; font-size: 9px; }
+  .progress-track { width: 100%; margin: 16px auto 10px; }
+}
+
+</style>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-fullscreen" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"/></symbol>
+  <symbol id="i-restore" viewBox="0 0 24 24"><path d="M4 9h5V4m6 0v5h5M9 20v-5H4m16 0h-5v5"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><path d="M8.5 8.1a3.6 3.6 0 0 1 7 1c0 2.6-3.5 2.7-3.5 5"/><path d="M12 18h.01" stroke-width="2.8"/></symbol>
+  <symbol id="i-emblem" viewBox="0 0 48 48"><path d="m24 2 20 22-20 22L4 24Z" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="m24 7 15 17-15 17L9 24Z" fill="none" stroke="currentColor" stroke-width=".55" opacity=".6"/><path d="M24 34V17m0 9c-7 0-10-6-9-10 7 0 9 5 9 10Zm0-4c0-7 4-10 10-10 0 6-4 10-10 10Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M19 35h10" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+  <symbol id="i-botanical" viewBox="0 0 250 410"><path d="M20 410C74 315 99 213 190 18" stroke="currentColor" fill="none" stroke-width="2"/><g fill="currentColor"><path d="M65 316C23 307-3 269 10 226c43 9 67 41 55 90ZM85 272c-40-25-45-63-28-98 34 16 53 55 28 98Zm29-70c-26-22-31-64-8-99 32 22 35 58 8 99Zm29-63c-11-30-2-64 26-86 23 32 8 64-26 86ZM59 335c26-38 61-47 93-35-11 35-48 50-93 35Zm26-65c27-36 65-35 90-16-17 31-59 39-90 16Zm28-64c26-35 57-39 90-25-12 33-49 44-90 25Zm31-65c17-32 50-41 79-27-16 28-51 40-79 27Zm32-61c-1-35 15-60 43-68 11 37-10 65-43 68Z"/></g></symbol>
+</svg>
+
+<div class="backdrop" aria-hidden="true"><img id="backdropA" alt="" decoding="async"><img id="backdropB" alt="" decoding="async"></div>
+<div class="texture" aria-hidden="true"></div>
+<div class="edge-rule" aria-hidden="true"></div>
+<svg class="botanical left" aria-hidden="true"><use href="#i-botanical"/></svg>
+<svg class="botanical right" aria-hidden="true"><use href="#i-botanical"/></svg>
+<noscript><div class="noscript-notice">Activa JavaScript para utilizar el menú de nueva partida. Las once ilustraciones están incluidas en el archivo.</div></noscript>
+<main class="app" id="app" data-step="biome">
+  <header class="masthead">
+    <div class="brand"><svg class="brand-mark" aria-hidden="true"><use href="#i-emblem"/></svg><span class="brand-name">WILD GUARDIANS</span></div>
+    <h1 id="pageTitle" tabindex="-1">Elige tu territorio</h1>
+    <p id="pageSubtitle">Seis paisajes. Un nuevo comienzo.</p>
+    <nav class="setup-progress" aria-label="Pasos de nueva partida">
+      <span class="setup-label">Nueva partida</span>
+      <button type="button" class="step-chip" id="biomeStep" aria-current="step" aria-label="Paso 1: elegir bioma"><span class="step-number" id="biomeStepNumber" aria-hidden="true">1</span><span id="biomeStepLabel">Bioma</span></button>
+      <span class="step-separator" aria-hidden="true"></span>
+      <button type="button" class="step-chip" id="cultureStep" disabled aria-label="Paso 2: elegir cultura"><span class="step-number" aria-hidden="true">2</span><span>Cultura</span></button>
+    </nav>
+    <button type="button" class="back-button" id="backButton" hidden aria-label="Volver a elegir bioma" title="Volver al bioma (Esc)"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg><span>Volver al bioma</span></button>
+    <div class="header-tools">
+      <button class="round-button" type="button" id="helpButton" aria-label="Ayuda y controles" title="Ayuda y controles"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
+      <button class="round-button" type="button" id="fullscreenButton" aria-label="Pantalla completa" title="Pantalla completa (F)"><svg class="icon" aria-hidden="true"><use id="fullscreenIcon" href="#i-fullscreen"/></svg></button>
+    </div>
+  </header>
+  <div class="workspace" id="workspace">
+    <section class="gallery" id="gallery" role="radiogroup" aria-label="Biomas disponibles" aria-describedby="selectionHint"></section>
+    <section class="gallery culture-gallery" id="cultureGallery" role="radiogroup" aria-label="Culturas disponibles" aria-describedby="selectionHint" hidden></section>
+    <p class="sr-only" id="selectionHint">Selecciona un bioma y pulsa Continuar. Después elegirás la cultura. Usa las flechas para cambiar e Intro para continuar.</p>
+    <section class="selection-panel" aria-label="Tu elección">
+      <svg class="selection-emblem" aria-hidden="true"><use href="#i-emblem"/></svg>
+      <div class="selection-copy">
+        <div class="selection-kicker" id="selectionKicker">Tu próximo territorio</div>
+        <div class="selection-heading"><h2 class="selection-name" id="selectionName">Sabana</h2><p class="selection-description" id="selectionDescription">Acacias, hierba dorada y horizontes abiertos.</p></div>
+      </div>
+      <div class="selection-actions">
+        <button type="button" class="round-button view-button" id="viewButton" aria-label="Ver la ilustración completa" title="Ver ilustración completa (V)"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg></button>
+        <button type="button" class="confirm-button" id="confirmButton"><span id="confirmLabel">Continuar</span><svg class="icon" aria-hidden="true"><use id="confirmIcon" href="#i-arrow"/></svg></button>
+      </div>
+    </section>
+  </div>
+  <footer class="footer" id="menuFooter">
+    <div class="keyboard-hints" aria-hidden="true"><span><kbd>←</kbd><kbd>→</kbd> Cambiar</span><span><kbd>↵</kbd> <span id="enterHint">Continuar</span></span><span><kbd>V</kbd> Ampliar</span></div>
+    <span class="footer-label" id="footerLabel">06 territorios · Una historia por empezar</span>
+  </footer>
+</main>
+<section class="launch-screen" id="launchScreen" hidden aria-labelledby="launchHeading">
+  <header class="launch-top"><div class="brand"><svg class="brand-mark" aria-hidden="true"><use href="#i-emblem"/></svg><span class="brand-name">WILD GUARDIANS</span></div><span class="lab-pill">Simulación del lab</span></header>
+  <div class="launch-panel">
+    <div class="launch-artworks">
+      <figure><img id="launchBiomeImage" alt=""><figcaption><small>Bioma</small><strong id="launchBiomeName"></strong></figcaption></figure>
+      <figure><img id="launchCultureImage" alt=""><figcaption><small>Cultura</small><strong id="launchCultureName"></strong></figcaption></figure>
+      <svg class="launch-connector" aria-hidden="true"><use href="#i-emblem"/></svg>
+    </div>
+    <div class="launch-content">
+      <div class="launch-eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span id="launchEyebrow">Nueva partida · Preparando el inicio</span></div>
+      <h1 class="launch-heading" id="launchHeading" tabindex="-1">Un nuevo comienzo</h1>
+      <p class="launch-subtitle" id="launchSubtitle"></p>
+      <div id="launchProgress" class="progress-track" role="progressbar" aria-label="Inicio simulado de la partida" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+      <p class="launch-status" id="launchStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+      <button type="button" id="cancelLaunch" class="text-button">Cancelar inicio</button>
+      <div class="launch-actions" id="launchActions" hidden>
+        <button type="button" class="confirm-button" id="newGameButton"><span>Volver a nueva partida</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <button type="button" class="secondary-button" id="changeCultureButton"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg><span>Cambiar cultura</span></button>
+      </div>
+      <p class="simulation-note" id="simulationNote" hidden>Demostración del menú: no se ha generado un mundo jugable.</p>
+    </div>
+  </div>
+</section>
+<div class="sr-only" id="selectionAnnouncement" role="status" aria-live="polite" aria-atomic="true"></div>
+<div class="status-toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span id="toastText"></span></div>
+<dialog class="art-dialog" id="artDialog" aria-labelledby="viewerTitle">
+  <div class="viewer-shell">
+    <header class="viewer-header"><div><p id="viewerKicker">Atlas de Wild Guardians</p><h2 id="viewerTitle">Sabana</h2></div><button type="button" class="round-button" id="closeViewer" aria-label="Cerrar ilustración" title="Cerrar (Esc)"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header>
+    <div class="viewer-viewport" id="viewerViewport"><img id="viewerImage" alt="" draggable="false"></div>
+    <footer class="viewer-footer"><div class="viewer-nav"><button type="button" class="round-button" id="previousArt" aria-label="Ilustración anterior"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><span class="viewer-count" id="viewerCount">01 / 06</span><button type="button" class="round-button" id="nextArt" aria-label="Ilustración siguiente"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button></div><button type="button" class="confirm-button" id="viewerConfirm"><span id="viewerConfirmLabel">Continuar con Sabana</span><svg class="icon" aria-hidden="true"><use id="viewerConfirmIcon" href="#i-arrow"/></svg></button></footer>
+  </div>
+</dialog>
+<dialog class="help-dialog" id="helpDialog" aria-labelledby="helpTitle">
+  <div class="help-heading"><h2 id="helpTitle">Tu nueva partida</h2><button type="button" class="round-button" id="closeHelp" aria-label="Cerrar ayuda"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <p>Primero elige uno de los <strong>seis biomas</strong> y pulsa <strong>Continuar</strong>. Después escoge una de las <strong>cinco culturas</strong> y pulsa <strong>Comenzar partida</strong>.</p>
+  <p>La cultura define la arquitectura de tu poblado. En este lab puedes combinar cualquier cultura con cualquier bioma. El ojo abre la ilustración completa.</p>
+  <dl class="help-keys"><dt><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></dt><dd>Cambiar de selección</dd><dt><kbd>Intro</kbd></dt><dd>Continuar o comenzar la partida</dd><dt><kbd>V</kbd></dt><dd>Ver la ilustración completa</dd><dt><kbd>F</kbd></dt><dd>Pantalla completa</dd><dt><kbd>Esc</kbd></dt><dd>Cerrar el visor o volver al bioma</dd></dl>
+  <p class="help-note">El inicio de la partida es simulado; no hay un juego detrás de esta pantalla. Puedes volver sin perder tus elecciones. Todo funciona sin Internet y el visor admite deslizamientos.</p>
+</dialog>
+
+
+
+
+</body>
+</html>

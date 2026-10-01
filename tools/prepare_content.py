@@ -1,5 +1,5 @@
 """Produce lazy runtime manifests from extracted originals."""
-import json,pathlib,shutil
+import json,pathlib,shutil,re
 root=pathlib.Path(__file__).resolve().parents[1]
 refs=root/'references/extracted';out=root/'public/content';out.mkdir(exist_ok=True)
 def read(folder,file):return json.loads((refs/folder/file).read_text(encoding='utf-8'))
@@ -23,3 +23,6 @@ bridge=read('Bioma_Cultivos_Lab_V3_Morph_Local','bridgeData.json');write('crop-b
 licenses=root/'licenses';licenses.mkdir(exist_ok=True)
 for name,text in fonts['licences'].items():(licenses/(name+'.txt')).write_text(text,encoding='utf-8')
 print('Runtime manifests and font licenses prepared')
+menu=(refs/'Wild_Guardians_Africa_Menu_V2_8_CORREGIDO_Balafons_Call/markup.html').read_text(encoding='utf-8')
+audio=re.search(r'<audio[^>]*src="([^"]+)"',menu)
+write('menu.json',{'music':audio.group(1) if audio else None})
