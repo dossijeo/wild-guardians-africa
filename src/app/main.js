@@ -7,7 +7,7 @@ import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {SaveRepository} from '../persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../world/navigation.js';
-import {findInitialLocation} from '../world/villages.js';
+import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/villages.js';
 import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {AudioSystem} from '../audio/audio.js';
@@ -62,8 +62,17 @@ async function startGame(loaded=null) {
     const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
-    if(!loaded) {const start=findInitialLocation(nav,payload);Object.assign(next.villages[0],start);}
-    nav.setState(next);state=next;audio.remember(state.events);
+    if(!loaded) {const start=await findInitialLocationAsync(nav,payload);Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
+    // Earlier saves predate native collision footprints. Preserve their units
+    // and positions while restoring the geometric metadata from the catalog.
+    for(const village of next.villages){
+      const source=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));
+      const shapes=new Map(villageLayout(source,village.x,village.z).map(b=>[b.key,b.footprint]));
+      for(const building of village.buildings??[])building.footprint??=shapes.get(building.key);
+    }
+    nav.setState(next);
+    for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
+    state=next;audio.remember(state.events);
     state.pauses=state.pauses.filter(reason=>!['menu','hidden','context-lost'].includes(reason));
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href='/content/hud.css';document.head.append(nativeStyle);
     app.innerHTML=`<main class="game" id="stage"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;

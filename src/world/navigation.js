@@ -1,4 +1,5 @@
 import {TerrainField,scatterWorld} from './terrain.js';
+import {containsPoint,footprintDistance,footprintsOverlap} from './footprints.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -53,16 +54,36 @@ export class Navigation {
         const width=o.gate?1.09*(o.material==='reforzado'?1.6:['adobe','piedra'].includes(o.material)?1.4:1):1.09;
         return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22+radius;
       }
+      if(o.footprint)return footprintDistance(o.footprint,x,z)<radius;
       return distance(o,{x,z})<o.radius+radius;
     }))return false;
     return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius);
   }
   placement(x,z,radius=1) {
     if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
-    if(this.obstacles.some(o=>distance(o,{x,z})<o.radius+radius))return {valid:false,reason:'La construcción solapa otro edificio'};
+    if(this.obstacles.some(o=>o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(x,z,radius+4);
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
     return {valid:true,suppress:props.filter(p=>distance(p,{x,z})<radius+(p.radius??.5)).map(p=>p.id)};
+  }
+  placementFootprint(building) {
+    const polygon=building.footprint;
+    if(!polygon?.length)return this.placement(building.x,building.z,building.radius);
+    const terrainPoint=p=>this.terrainValid(p.x,p.z,0);
+    if(!polygon.every(terrainPoint))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    const xs=polygon.map(p=>p.x),zs=polygon.map(p=>p.z);
+    const minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
+    // Sample the occupied interior and edges, rather than the empty corners of
+    // a bounding circle. Native hull coordinates use the same scale as render.
+    for(let x=minX;x<=maxX;x+=1)for(let z=minZ;z<=maxZ;z+=1)if(containsPoint(polygon,x,z)&&!this.terrainValid(x,z,0))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    for(let i=0;i<polygon.length;i++){
+      const a=polygon[i],b=polygon[(i+1)%polygon.length],steps=Math.ceil(distance(a,b));
+      for(let j=1;j<steps;j++)if(!terrainPoint({x:a.x+(b.x-a.x)*j/steps,z:a.z+(b.z-a.z)*j/steps}))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    }
+    if(this.obstacles.some(o=>o.footprint?footprintsOverlap(polygon,o.footprint):footprintDistance(polygon,o.x,o.z)<o.radius))return {valid:false,reason:'La construcción solapa otro edificio'};
+    const props=this.propsAt(building.x,building.z,building.radius+4);
+    if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&footprintDistance(polygon,p.x,p.z)<(p.radius??1.5)))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
+    return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newGame,resume,pause,placeStructure,plant,hire,openInitialHiring,harvest,tick,rebuildTasks,cast,requestRepair,continuePostgame} from '../src/simulation/game.js';
+import {newGame,resume,pause,placeStructure,plant,hire,openInitialHiring,harvest,tick,rebuildTasks,cast,requestRepair,continuePostgame,foundVillage,previewVillage} from '../src/simulation/game.js';
+import {readFileSync} from 'node:fs';
 import {numberOf,rational} from '../src/simulation/money.js';
 import {cropSpec,hitStructure} from '../src/simulation/rules.js';
 import {planNight,spawnRaid,updateRaid} from '../src/simulation/raids.js';
@@ -9,6 +10,27 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
 const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
 const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
+
+test('Postgame founding uses complete native village, valid departure, exact linear costs and persistent state',()=>{
+  const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.day=101;s.initialPreparation=false;s.ledger.balance=rational(1000000);
+  const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8')).find(v=>v.id==='suajili');
+  const preview=previewVillage(s,'suajili',100,50,payload,nav);
+  assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,50000);
+  assert.equal(preview.buildings.length,payload.units.length);assert.ok(preview.entry);
+  assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),true);
+  assert.equal(numberOf(s.ledger.balance),950000);assert.equal(s.villages.length,2);
+  assert.ok(s.villages[1].buildings.every(b=>b.footprint.length>=3));
+  assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),false);
+  assert.equal(numberOf(s.ledger.balance),950000);
+  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,75000);
+  assert.deepEqual(deserialize(serialize(s)).villages,s.villages);
+});
+test('A village without a walkable departure is rejected before charging or founding',()=>{
+  const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.ledger.balance=rational(100000);
+  const payload={units:[{key:'house',kind:'Edificio',min:[0,0,0],max:[1,1,1]}]};
+  assert.throws(()=>foundVillage(s,'blocked-village','musgum',100,0,payload,{...nav,walkable:()=>false}),/salida transitable/);
+  assert.equal(numberOf(s.ledger.balance),100000);assert.equal(s.villages.length,1);
+});
 test('30 canonical combinations validate and each new game starts isolated at 1000',()=>{
   for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'])for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope']){
     const s=newGame({biome,culture,slotId:`${biome}-${culture}`,seed:1});assert.equal(numberOf(s.ledger.balance),1000);assert.equal(s.villages[0].culture,culture);

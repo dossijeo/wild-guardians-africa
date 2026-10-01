@@ -6,7 +6,7 @@ import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './cr
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {selectEvent,applyEvent} from './events.js';
-import {villageLayout} from '../world/villages.js';
+import {villageLayout,findVillageEntry} from '../world/villages.js';
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -208,16 +208,17 @@ function closeNight(s) {
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
   if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
-  const buildings=villageLayout(payload,x,z),checks=buildings.map(b=>nav.placement(b.x,b.z,b.radius));
-  return {culture,x,z,buildings,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid),suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason};
+  const buildings=villageLayout(payload,x,z),checks=buildings.map(b=>nav.placementFootprint?nav.placementFootprint(b):nav.placement(b.x,b.z,b.radius));
+  const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
+  return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
 export function foundVillage(s,id,culture,x,z,payload,nav) {
   const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
   return commit(s,id,'village',()=>{
-    transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings});s.suppressed.push(...preview.suppress);
+    transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {
-      const routes=s.villages.map(v=>({v,route:nav.path({x:center.x+3.2,z:center.z},v,.28,center.id,true)})).filter(r=>r.route);
+      const routes=s.villages.map(v=>({v,route:nav.path({x:center.x+3.2,z:center.z},v.entry??v,.28,center.id,true)})).filter(r=>r.route);
       routes.sort((a,b)=>a.route.reduce((length,p,i)=>length+(i?dist(p,a.route[i-1]):0),0)-b.route.reduce((length,p,i)=>length+(i?dist(p,b.route[i-1]):0),0));
       if(routes[0])center.villageId=routes[0].v.id;
     }

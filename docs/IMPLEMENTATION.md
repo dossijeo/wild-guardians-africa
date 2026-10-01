@@ -21,7 +21,7 @@ Las aclaraciones del usuario están registradas en `content/balance/clarificatio
 
 `python docs/plan/verificar_reglas.py` ejecuta la comprobación aritmética original. No constituye testeo de una partida integrada.
 
-- Pruebas automatizadas: 53 casos de economía, simulación y audio aprobados; 31 casos de navegación aprobados, incluyendo las 30 combinaciones de bioma/cultura con semilla 712 y un destino bloqueado.
+- Pruebas automatizadas: ejecución completa con 120 casos aprobados, incluyendo 60 combinaciones de bioma/cultura sobre semillas 712 y 918271. Se añadieron después dos casos de fundación postcampaña, también aprobados: conjunto nativo completo, salida transitable, cobro único, coste lineal, persistencia y rechazo sin cobro.
 - La comprobación de navegación detectó salidas dentro de edificios y una búsqueda radial que omitía grandes áreas entre sus 24 rayos. Se añadió un punto de salida transitable y candidatos con separación angular constante.
-- Preparar algunas aldeas, especialmente Suajili en Volcanes, sigue siendo demasiado lento (aproximadamente tres minutos en esa prueba). Queda pendiente optimizar la preparación y verificar más semillas; una matriz aprobada no acredita todas las partidas procedurales.
+- Colocación y navegación de aldeas utilizan las huellas originales de los edificios a escala 16. Se comprueba su interior y sus bordes; los árboles/rocas grandes se conservan y solo se retiran props menores ocupados. La preparación de Suajili/Volcanes/712 bajó de unos 175 segundos a menos de dos segundos en la comprobación dirigida. La búsqueda asíncrona permite al navegador seguir respondiendo; dos semillas aprobadas no acreditan todas las partidas procedurales.
 - Compilación de producción aprobada; sigue existiendo una advertencia por tamaño del módulo principal.
