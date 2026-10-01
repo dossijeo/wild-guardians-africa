@@ -1,0 +1,114 @@
+{
+  "source": "VFX definitions",
+  "status": "Propuesta de adaptación visual, no nuevas mecánicas",
+  "compositions": [
+    {
+      "id": "rhino",
+      "title": "Embestida del rinoceronte",
+      "lab_duration_seconds": 4.5,
+      "integration": "Anticipación, polvo y contacto de rinoceronte; un golpe lógico por acción."
+    },
+    {
+      "id": "lion",
+      "title": "Combo de tres zarpazos",
+      "lab_duration_seconds": 4.1,
+      "integration": "Zarpazos visuales del combo; convertir tres contactos de ensayo en presentación de un único golpe lógico."
+    },
+    {
+      "id": "buffalo",
+      "title": "Pisotón de la sabana",
+      "lab_duration_seconds": 4.5,
+      "integration": "Polvo/impacto pesado de búfalo; adaptar a su clip real, no añadir pisotón de área como habilidad."
+    },
+    {
+      "id": "warthog",
+      "title": "Barrido de colmillos",
+      "lab_duration_seconds": 4.1,
+      "integration": "Barrido de colmillos y polvo; dos barridos visuales no son dos daños."
+    },
+    {
+      "id": "hyena",
+      "title": "Mordida y retirada",
+      "lab_duration_seconds": 3.9,
+      "integration": "Mordida y retirada visual; adaptar sin crear un segundo ataque automático."
+    },
+    {
+      "id": "roar",
+      "title": "Rugido intimidatorio",
+      "lab_duration_seconds": 4.6,
+      "integration": "Aviso agresivo y sonido del león; cono/ondas solo visuales, no daño de área."
+    },
+    {
+      "id": "shield",
+      "title": "Cúpula del guardián",
+      "lab_duration_seconds": 5.1,
+      "integration": "Conservar cúpula y reacción localizada; duración lógica 20 s y barrera real de dominio."
+    },
+    {
+      "id": "repel",
+      "title": "Pulso de repulsión",
+      "lab_duration_seconds": 4.6,
+      "integration": "Reserva de composición; no hay poder Repulsión aprobado. Texturas reutilizables en las tres magias."
+    },
+    {
+      "id": "heal",
+      "title": "Bendición de la tierra",
+      "lab_duration_seconds": 5,
+      "integration": "Aprovechar aura/hojas en Crecimiento; no cura trabajadores ni construcciones, no añadir corazones sin función."
+    },
+    {
+      "id": "stun",
+      "title": "Aturdimiento legible",
+      "lab_duration_seconds": 4.6,
+      "integration": "Reserva de composición; no hay poder Aturdimiento aprobado."
+    },
+    {
+      "id": "dust",
+      "title": "Pisadas en tierra",
+      "lab_duration_seconds": 3.6,
+      "integration": "Polvo de pisadas, escalado y limitado por densidad."
+    },
+    {
+      "id": "dig",
+      "title": "Tierra con peso",
+      "lab_duration_seconds": 3.5,
+      "integration": "Atención inicial/azada; terrones de suelo, no destrucción de edificio."
+    },
+    {
+      "id": "water",
+      "title": "Agua sobre la tierra",
+      "lab_duration_seconds": 4.3,
+      "integration": "Riego del trabajador, agua sin resplandor."
+    },
+    {
+      "id": "harvest",
+      "title": "Una buena cosecha",
+      "lab_duration_seconds": 3.9,
+      "integration": "Recogida individual; planta/caja/dinero pertenecen a la simulación."
+    },
+    {
+      "id": "wood",
+      "title": "Impacto en madera",
+      "lab_duration_seconds": 3.1,
+      "integration": "Impacto material de madera; no duplicar los restos de BAST."
+    },
+    {
+      "id": "adobe",
+      "title": "Impacto en adobe",
+      "lab_duration_seconds": 3.3,
+      "integration": "Impacto material de adobe; no duplicar destrucción estructural."
+    },
+    {
+      "id": "stone",
+      "title": "Impacto en piedra",
+      "lab_duration_seconds": 3.3,
+      "integration": "Impacto material de piedra; esquirlas decorativas acotadas."
+    },
+    {
+      "id": "spirit",
+      "title": "La presencia del guardián",
+      "lab_duration_seconds": 5.5,
+      "integration": "Presencia narrativa/menú e interacción; no crear un avatar 3D físico en la finca."
+    }
+  ]
+}

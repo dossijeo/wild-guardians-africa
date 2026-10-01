@@ -1,0 +1,275 @@
+{
+  "result": "PASS",
+  "assertions_passed": 123048,
+  "random_workforce_scenarios": 5000,
+  "seed": 20261001,
+  "scope": "Algoritmos de referencia y consistencia numérica de este paquete; no ejecución del motor del videojuego.",
+  "not_validated": [
+    "Rendimiento y aspecto visual",
+    "Audio escuchado en una partida",
+    "IA y colisiones reales",
+    "Balance económico a largo plazo",
+    "Contratos C01–C08",
+    "Legalidad actual de licencias"
+  ],
+  "initial_extraction": "La extracción original verificó SHA-256 y tamaño de los 126 MP3 contra los bytes embebidos. Este script comprueba el manifiesto, no reextrae los HTML ausentes del ZIP.",
+  "allocation_examples": [
+    {
+      "workers": 7,
+      "plants": [
+        60,
+        30,
+        10
+      ],
+      "allocation": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "workers": 6,
+      "plants": [
+        100,
+        20,
+        0
+      ],
+      "allocation": [
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "workers": 3,
+      "plants": [
+        0,
+        0,
+        0
+      ],
+      "allocation": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "workers": 8,
+      "plants": [
+        0,
+        0,
+        0
+      ],
+      "allocation": [
+        3,
+        3,
+        2
+      ]
+    },
+    {
+      "workers": 2,
+      "plants": [
+        0,
+        5,
+        50
+      ],
+      "allocation": [
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "workers": 2,
+      "plants": [
+        5,
+        5,
+        5
+      ],
+      "allocation": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "workers": 0,
+      "plants": [
+        100,
+        20,
+        0
+      ],
+      "allocation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "workers": 3,
+      "plants": [],
+      "allocation": []
+    }
+  ],
+  "composition_counts": [
+    {
+      "context": "nivel_1",
+      "budget": 1,
+      "valid_composition_count": 1
+    },
+    {
+      "context": "nivel_1",
+      "budget": 2,
+      "valid_composition_count": 1
+    },
+    {
+      "context": "nivel_2",
+      "budget": 3,
+      "valid_composition_count": 2
+    },
+    {
+      "context": "nivel_2",
+      "budget": 4,
+      "valid_composition_count": 3
+    },
+    {
+      "context": "nivel_3",
+      "budget": 5,
+      "valid_composition_count": 3
+    },
+    {
+      "context": "nivel_3",
+      "budget": 6,
+      "valid_composition_count": 5
+    },
+    {
+      "context": "nivel_3",
+      "budget": 7,
+      "valid_composition_count": 5
+    },
+    {
+      "context": "nivel_4",
+      "budget": 7,
+      "valid_composition_count": 6
+    },
+    {
+      "context": "nivel_4",
+      "budget": 8,
+      "valid_composition_count": 10
+    },
+    {
+      "context": "nivel_4",
+      "budget": 9,
+      "valid_composition_count": 10
+    },
+    {
+      "context": "nivel_4",
+      "budget": 10,
+      "valid_composition_count": 11
+    },
+    {
+      "context": "nivel_5",
+      "budget": 10,
+      "valid_composition_count": 12
+    },
+    {
+      "context": "nivel_5",
+      "budget": 11,
+      "valid_composition_count": 13
+    },
+    {
+      "context": "nivel_5",
+      "budget": 12,
+      "valid_composition_count": 18
+    },
+    {
+      "context": "nivel_5",
+      "budget": 13,
+      "valid_composition_count": 23
+    },
+    {
+      "context": "nivel_5",
+      "budget": 14,
+      "valid_composition_count": 23
+    },
+    {
+      "context": "diurno",
+      "budget": 7,
+      "valid_composition_count": 6
+    },
+    {
+      "context": "diurno",
+      "budget": 8,
+      "valid_composition_count": 10
+    },
+    {
+      "context": "diurno",
+      "budget": 9,
+      "valid_composition_count": 10
+    },
+    {
+      "context": "diurno",
+      "budget": 10,
+      "valid_composition_count": 12
+    }
+  ],
+  "center_hits_to_collapse": {
+    "warthog": 12,
+    "hyena": 10,
+    "buffalo": 7,
+    "lion": 6,
+    "rhino": 4
+  },
+  "wall_hits_to_collapse": [
+    {
+      "wall": "zarzas",
+      "hits_by_species": {
+        "warthog": 2,
+        "hyena": 2,
+        "buffalo": 2,
+        "lion": 1,
+        "rhino": 1
+      }
+    },
+    {
+      "wall": "empalizada",
+      "hits_by_species": {
+        "warthog": 4,
+        "hyena": 4,
+        "buffalo": 3,
+        "lion": 2,
+        "rhino": 2
+      }
+    },
+    {
+      "wall": "adobe",
+      "hits_by_species": {
+        "warthog": 6,
+        "hyena": 5,
+        "buffalo": 4,
+        "lion": 3,
+        "rhino": 2
+      }
+    },
+    {
+      "wall": "reforzado",
+      "hits_by_species": {
+        "warthog": 8,
+        "hyena": 7,
+        "buffalo": 5,
+        "lion": 4,
+        "rhino": 3
+      }
+    },
+    {
+      "wall": "piedra",
+      "hits_by_species": {
+        "warthog": 10,
+        "hyena": 8,
+        "buffalo": 6,
+        "lion": 5,
+        "rhino": 4
+      }
+    }
+  ]
+}

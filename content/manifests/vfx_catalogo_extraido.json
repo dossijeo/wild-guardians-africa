@@ -1,0 +1,683 @@
+{
+  "source": "VFX",
+  "resource_count": 19,
+  "composition_count": 18,
+  "resources": [
+    {
+      "id": "cloud",
+      "title": "Nube volumétrica animada",
+      "source": "Brackeys · Thomas Iché",
+      "file": "flipbooks/cloud_02_8x8.tga",
+      "reason": "Polvo en carreras, pisotones, impactos y agricultura.",
+      "notes": "Secuencia de 64 fotogramas, convertida a tono neutro en V3.",
+      "rect": [
+        0,
+        0,
+        1024,
+        1024
+      ],
+      "grid": [
+        8,
+        8
+      ],
+      "frames": 64
+    },
+    {
+      "id": "burst",
+      "title": "Impacto pesado",
+      "source": "Brackeys · CodeManu",
+      "file": "predrawn/big_hit_6x5.png",
+      "reason": "Embestida de rinoceronte, colmillos y pisotón. No se usa como fuego.",
+      "notes": "Adaptado a atlas; sin fotogramas vacíos al final.",
+      "rect": [
+        1024,
+        0,
+        512,
+        384
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "frames": 12
+    },
+    {
+      "id": "impact",
+      "title": "Contacto seco",
+      "source": "Brackeys · CodeManu",
+      "file": "predrawn/impact_white_6x4.png",
+      "reason": "Mordida, zarpazo y choque con barrera. Destello corto y localizado.",
+      "notes": "La cuadrícula real de impact_white es 6 × 5; el nombre del archivo indica 6 × 4. Se han excluido los fotogramas finales vacíos.",
+      "rect": [
+        1536,
+        0,
+        640,
+        384
+      ],
+      "grid": [
+        5,
+        3
+      ],
+      "frames": 15
+    },
+    {
+      "id": "charge",
+      "title": "Concentración del espíritu",
+      "source": "Brackeys · CodeManu",
+      "file": "predrawn/charge_7x6.png",
+      "reason": "Anticipación de la onda protectora; motas que convergen.",
+      "notes": "Adaptado a atlas; sin fotogramas vacíos al final.",
+      "rect": [
+        2176,
+        0,
+        512,
+        384
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "frames": 12
+    },
+    {
+      "id": "aura",
+      "title": "Aura viva",
+      "source": "Brackeys · CodeManu",
+      "file": "predrawn/wavy_blue_6x5.png",
+      "reason": "Bendición y activación de protección; paleta adaptada.",
+      "notes": "Secuencia de 30 fotogramas; neutralizada para colorear en el motor.",
+      "rect": [
+        1024,
+        512,
+        768,
+        640
+      ],
+      "grid": [
+        6,
+        5
+      ],
+      "frames": 30
+    },
+    {
+      "id": "vortex",
+      "title": "Remolino de guardián",
+      "source": "Brackeys · CodeManu",
+      "file": "predrawn/vortex_6x5.png",
+      "reason": "Onda de repulsión: remolino horizontal, nunca un portal permanente.",
+      "notes": "Secuencia de 30 fotogramas; neutralizada para colorear en el motor.",
+      "rect": [
+        1792,
+        512,
+        768,
+        640
+      ],
+      "grid": [
+        6,
+        5
+      ],
+      "frames": 30
+    },
+    {
+      "id": "dirt",
+      "title": "Tierra en suspensión",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/dirt_02.png",
+      "reason": "Salpicadura terrosa, polvo fino y pequeñas rozaduras.",
+      "notes": "",
+      "rect": [
+        0,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "smoke",
+      "title": "Polvo de pisada",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/smoke_07.png",
+      "reason": "Polvo bajo durante la carrera y en agricultura.",
+      "notes": "",
+      "rect": [
+        256,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "ring",
+      "title": "Onda limpia",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/circle_02.png",
+      "reason": "Salpicaduras, ondas de rugido y refuerzo visual de avisos.",
+      "notes": "",
+      "rect": [
+        512,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "star",
+      "title": "Destello",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/star_01.png",
+      "reason": "Puntas de estela, cosecha y motas de espíritu.",
+      "notes": "",
+      "rect": [
+        768,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "glow",
+      "title": "Halo pequeño",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/circle_05.png",
+      "reason": "Núcleo luminoso contenido; nunca una nube luminosa gigante.",
+      "notes": "",
+      "rect": [
+        1024,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "trail",
+      "title": "Estela suave",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/trace_01.png",
+      "reason": "Recorridos cortos del espíritu y pequeñas chispas de contacto.",
+      "notes": "",
+      "rect": [
+        1280,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "scratch",
+      "title": "Tres marcas de garra",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/scratch_01.png",
+      "reason": "Zarpazo triple del león; dirección y alcance legibles.",
+      "notes": "",
+      "rect": [
+        1536,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "slash",
+      "title": "Barrido curvo",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/slash_01.png",
+      "reason": "Dos arcos que se cierran en la mordida de la hiena.",
+      "notes": "",
+      "rect": [
+        1792,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "hornArc",
+      "title": "Filo de colmillo",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/slash_03.png",
+      "reason": "Recorrido de los colmillos del facóquero.",
+      "notes": "",
+      "rect": [
+        2048,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "dustRing",
+      "title": "Corona de polvo",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/smoke_09.png",
+      "reason": "Pisotón y embestida: expansión sobre el suelo.",
+      "notes": "",
+      "rect": [
+        2304,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "speedLine",
+      "title": "Línea de velocidad",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/trace_05.png",
+      "reason": "Arranque del rinoceronte, impactos radiales y zarpazos.",
+      "notes": "",
+      "rect": [
+        2560,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "stunStar",
+      "title": "Estrella de aturdimiento",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/symbol_02.png",
+      "reason": "Estrellas que orbitan sobre la cabeza; no es una recompensa.",
+      "notes": "",
+      "rect": [
+        2816,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    },
+    {
+      "id": "heart",
+      "title": "Corazón de recuperación",
+      "source": "Kenney",
+      "file": "PNG (Transparent)/symbol_01.png",
+      "reason": "Bendición protectora y curación del espíritu.",
+      "notes": "",
+      "rect": [
+        3072,
+        1536,
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1
+    }
+  ],
+  "compositions": [
+    {
+      "id": "rhino",
+      "name": "Rinoceronte",
+      "title": "Embestida del rinoceronte",
+      "group": "Bestias",
+      "duration": 4.5,
+      "icon": "rhino",
+      "species": "Rinoceronte",
+      "phases": [
+        0.88,
+        1.7,
+        2.4
+      ],
+      "desc": "Carril de aviso → arranque pesado → choque puntual. Polvo de carrera, líneas de velocidad, impacto animado y ondas tridimensionales. No rompe el objetivo.",
+      "chips": [
+        "Aviso + carga + contacto",
+        "Big hit · CodeManu",
+        "Polvo y suelo 3D"
+      ]
+    },
+    {
+      "id": "lion",
+      "name": "León",
+      "title": "Combo de tres zarpazos",
+      "group": "Bestias",
+      "duration": 4.1,
+      "icon": "claw",
+      "species": "León",
+      "phases": [
+        0.77,
+        1.05,
+        2.35
+      ],
+      "desc": "Tres golpes encadenados con barridos inclinados, marcas de garra, estelas afiladas y destellos breves. Cada contacto emite su propio evento.",
+      "chips": [
+        "Garras · Kenney",
+        "Cintas 3D afiladas",
+        "3 contactos separados"
+      ]
+    },
+    {
+      "id": "buffalo",
+      "name": "Búfalo",
+      "title": "Pisotón de la sabana",
+      "group": "Bestias",
+      "duration": 4.5,
+      "icon": "buffalo",
+      "species": "Búfalo",
+      "phases": [
+        1.25,
+        1.43,
+        2.7
+      ],
+      "desc": "Círculo de aviso, elevación del cuerpo y golpe pesado. Corona de polvo, ondas rasantes y tierra con gravedad; ningún edificio se fragmenta.",
+      "chips": [
+        "Corona de polvo",
+        "Onda de suelo",
+        "Terrones, no escombros"
+      ]
+    },
+    {
+      "id": "warthog",
+      "name": "Facóquero",
+      "title": "Barrido de colmillos",
+      "group": "Bestias",
+      "duration": 4.1,
+      "icon": "horn",
+      "species": "Facóquero",
+      "phases": [
+        0.83,
+        1.27,
+        2.2
+      ],
+      "desc": "Carga corta que termina en dos barridos ascendentes. Los filos siguen los colmillos en el espacio y el polvo permanece junto al suelo.",
+      "chips": [
+        "Slash curvo · Kenney",
+        "Doble estela 3D",
+        "Impulso ascendente"
+      ]
+    },
+    {
+      "id": "hyena",
+      "name": "Hiena",
+      "title": "Mordida y retirada",
+      "group": "Bestias",
+      "duration": 3.9,
+      "icon": "bite",
+      "species": "Hiena",
+      "phases": [
+        0.89,
+        1.25,
+        2.1
+      ],
+      "desc": "Un salto corto, dos arcos que se cierran sobre el punto de contacto y retirada. Golpe seco sin sangre ni explosión.",
+      "chips": [
+        "Arcos de mordida",
+        "Impacto blanco · CodeManu",
+        "Contacto localizado"
+      ]
+    },
+    {
+      "id": "roar",
+      "name": "Rugido",
+      "title": "Rugido intimidatorio",
+      "group": "Bestias",
+      "duration": 4.6,
+      "icon": "roar",
+      "species": "León",
+      "phases": [
+        0.78,
+        0.95,
+        2.9
+      ],
+      "desc": "El cono indica el área de amenaza. Cuatro frentes de presión se alejan de la boca, orientados en tres dimensiones, y remueven el polvo.",
+      "chips": [
+        "Aviso en cono",
+        "Frentes de presión 3D",
+        "Sin daño programado"
+      ]
+    },
+    {
+      "id": "shield",
+      "name": "Protección",
+      "title": "Cúpula del guardián",
+      "group": "Espíritu",
+      "duration": 5.1,
+      "icon": "shield",
+      "phases": [
+        0.4,
+        0.9,
+        3.7
+      ],
+      "desc": "Una cúpula tridimensional envuelve el tótem. Bordes Fresnel, patrón de celdas y una ondulación localizada cuando recibe un impacto de prueba.",
+      "chips": [
+        "Superficie 3D",
+        "Colisión visual localizada",
+        "Luz verde controlada"
+      ]
+    },
+    {
+      "id": "repel",
+      "name": "Repulsión",
+      "title": "Pulso de repulsión",
+      "group": "Espíritu",
+      "duration": 4.6,
+      "icon": "repel",
+      "phases": [
+        0.3,
+        1.27,
+        2.9
+      ],
+      "desc": "La energía converge, se enrolla sobre el suelo y sale en tres ondas. El efecto comunica expulsión, no una explosión de fuego.",
+      "chips": [
+        "Charge + vortex · CodeManu",
+        "Tres frentes expansivos",
+        "Motivo circular"
+      ]
+    },
+    {
+      "id": "heal",
+      "name": "Bendición",
+      "title": "Bendición de la tierra",
+      "group": "Espíritu",
+      "duration": 5,
+      "icon": "heart",
+      "phases": [
+        0.3,
+        0.8,
+        3.9
+      ],
+      "desc": "Aura animada en verde, corrientes ascendentes, hojas y pequeños corazones. Una señal de recuperación que puede acompañar al espíritu.",
+      "chips": [
+        "Aura · CodeManu",
+        "Corazones · Kenney",
+        "Espirales tridimensionales"
+      ]
+    },
+    {
+      "id": "stun",
+      "name": "Aturdimiento",
+      "title": "Aturdimiento legible",
+      "group": "Espíritu",
+      "duration": 4.6,
+      "icon": "stun",
+      "phases": [
+        0.25,
+        0.6,
+        3.5
+      ],
+      "desc": "Estrellas orbitan la cabeza de la maqueta y dejan estelas discretas. Feedback de estado separado del ataque, sin cambiar la IA.",
+      "chips": [
+        "Estrellas · Kenney",
+        "Órbita sobre la cabeza",
+        "Estado visual independiente"
+      ]
+    },
+    {
+      "id": "dust",
+      "name": "Pisadas",
+      "title": "Pisadas en tierra",
+      "group": "Movimiento",
+      "duration": 3.6,
+      "icon": "dust",
+      "desc": "Tres apoyos cortos: polvo bajo, motas pequeñas y dispersión lateral. Sin humo blanco ni emisión de luz.",
+      "chips": [
+        "Kenney · humo",
+        "Tamaño: 15–55 cm",
+        "Alpha normal"
+      ]
+    },
+    {
+      "id": "dig",
+      "name": "Cavar",
+      "title": "Tierra con peso",
+      "group": "Cultivo",
+      "duration": 3.5,
+      "icon": "dig",
+      "desc": "El golpe de la azada levanta terrones sólidos y una nube animada. Los fragmentos caen, rebotan y se asientan.",
+      "chips": [
+        "Brackeys · 64 frames",
+        "Terrones 3D",
+        "Kenney · tierra"
+      ]
+    },
+    {
+      "id": "water",
+      "name": "Regar",
+      "title": "Agua sobre la tierra",
+      "group": "Cultivo",
+      "duration": 4.3,
+      "icon": "water",
+      "desc": "Gotas 3D desde una regadera, gravedad hacia abajo, salpicaduras al contacto y un pequeño rastro húmedo.",
+      "chips": [
+        "Gotas 3D",
+        "Kenney · ondas",
+        "Agua sin glow"
+      ]
+    },
+    {
+      "id": "harvest",
+      "name": "Cosechar",
+      "title": "Una buena cosecha",
+      "group": "Cultivo",
+      "duration": 3.9,
+      "icon": "harvest",
+      "desc": "Hojas que giran, pequeñas mazorcas que llegan a la cesta y un destello breve para confirmar la recogida.",
+      "chips": [
+        "Hojas y cosecha 3D",
+        "Kenney · destello",
+        "Brillo acotado"
+      ]
+    },
+    {
+      "id": "wood",
+      "name": "Madera",
+      "title": "Impacto en madera",
+      "group": "Defensa",
+      "duration": 3.1,
+      "icon": "wood",
+      "desc": "Astillas alargadas salen de la cara golpeada. Un toque de serrín acompaña el impacto, sin chispas de metal.",
+      "chips": [
+        "Astillas 3D",
+        "Kenney · tierra",
+        "Material mate"
+      ]
+    },
+    {
+      "id": "adobe",
+      "name": "Adobe",
+      "title": "Impacto en adobe",
+      "group": "Defensa",
+      "duration": 3.3,
+      "icon": "adobe",
+      "desc": "Fragmentos rojizos y polvo cálido. La nube queda pegada al punto de impacto y se disipa sin tapar el muro.",
+      "chips": [
+        "Brackeys · polvo",
+        "Fragmentos 3D",
+        "Color del material"
+      ]
+    },
+    {
+      "id": "stone",
+      "name": "Piedra",
+      "title": "Impacto en piedra",
+      "group": "Defensa",
+      "duration": 3.3,
+      "icon": "stone",
+      "desc": "Esquirlas cortas y pesadas, rebote más seco y una cantidad pequeña de polvo mineral. Nada de explosiones.",
+      "chips": [
+        "Piedras 3D",
+        "Polvo mineral",
+        "Rebote controlado"
+      ]
+    },
+    {
+      "id": "spirit",
+      "name": "Espíritu",
+      "title": "La presencia del guardián",
+      "group": "Espíritu",
+      "duration": 5.5,
+      "icon": "spirit",
+      "desc": "Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.",
+      "chips": [
+        "Kenney · halo y estela",
+        "Trayectorias 3D",
+        "Dos luces locales"
+      ]
+    }
+  ],
+  "licenses_as_embedded": {
+    "Brackeys": "All assets in the pack have been repackaged and some have been modified by Brackeys.\n\n\nLICENSE for all assets:\n\nCreative Commons Zero (CC0)\n\n\nCREDIT:\n\nPARTICLE TEXTURES by:\nPicster (https://github.com/RPicster/Godot-particle-and-vfx-textures)\nKenney (https://kenney.nl/assets/particle-pack)\n\nFLIPBOOKS by Thomas Iché (https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks)\n\nPRE-DRAWN SPRITESHEETS by CodeManu (https://codemanu.itch.io/vfx-free-pack)",
+    "Kenney": "\t\n\n\tParticle Pack (1.1)\n\n\tby Kenney Vleugels (Kenney.nl)\n\n\tAdditional credit for creating filter templates:\n\tIndigo Ray, Craig Nisbet, Zoltan Erdokovy, Heliagon, ThreeDee, Killst4r and Tim2501\n\n\t\t\t------------------------------\n\n\tLicense (Creative Commons Zero, CC0)\n\thttp://creativecommons.org/publicdomain/zero/1.0/\n\n\tYou may use these assets in personal and commercial projects.\n\tCredit (Kenney or www.kenney.nl) would be nice but is not mandatory.\n\n\t\t\t------------------------------\n\n\tDonate:   http://support.kenney.nl\n\tRequest:  http://request.kenney.nl\n\n\tFollow on Twitter for updates: @KenneyNL (www.twitter.com/kenneynl)"
+  },
+  "status": "recursos existentes; nombres como repel/heal no crean poderes de gameplay"
+}
