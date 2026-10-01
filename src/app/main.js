@@ -11,7 +11,7 @@ import {findInitialLocation} from '../world/villages.js';
 import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {AudioSystem} from '../audio/audio.js';
-import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint} from '../ui/native-hud.js';
+import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
@@ -35,12 +35,14 @@ window.addEventListener('message',event=>{
   safe(()=>({new:()=>newGameScreen(),load:loadScreen,library:libraryScreen,settings:()=>settingsDialog()})[event.data.action]?.());
 });
 let selectedBiome='sabana',selectedCulture='mapungubwe';
-function newGameScreen(step='biome') {
-  screen='new';const list=step==='biome'?selector.biomes:selector.cultures,selected=step==='biome'?selectedBiome:selectedCulture;
-  app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Wild Guardians / Africa</div>${button('back','← Volver','ghost')}</header><section class="selection-head"><div><div class="eyebrow">${step==='biome'?'01 / El mundo':'02 / Tu comunidad'}</div><h2>${step==='biome'?'Elige un bioma':'Elige una cultura'}</h2></div><p class="muted">${step==='biome'?'Seis paisajes. Una tierra por cuidar.':'Cinco arquitecturas. El mismo destino compartido.'}</p></section><section class="cards">${list.map(item=>`<button class="card ${item.id===selected?'selected':''}" data-choice="${item.id}" aria-pressed="${item.id===selected}"><img src="${item.src}" alt="${esc(item.alt)}"><div class="card-body"><h3>${esc(item.name)}</h3><p>${esc(item.description)}</p></div></button>`).join('')}</section><footer class="selection-footer"><span class="muted">${esc(list.find(i=>i.id===selected)?.name??'')}</span>${button('next',step==='biome'?'Elegir cultura →':'Comenzar partida →')}</footer></main>`;
-  document.querySelectorAll('[data-choice]').forEach(el=>el.onclick=()=>{if(step==='biome')selectedBiome=el.dataset.choice;else selectedCulture=el.dataset.choice;newGameScreen(step);});
-  bind('back',()=>step==='biome'?menu():newGameScreen('biome'));bind('next',()=>step==='biome'?newGameScreen('culture'):startGame());
+function newGameScreen() {
+  screen='new';app.innerHTML='<iframe id="native-selector" title="Nueva partida · Bioma y cultura" src="/selector/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
 }
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||event.source!==document.querySelector('#native-selector')?.contentWindow||event.data?.type!=='wild-guardians:selector')return;
+ if(event.data.action==='back'){menu();return;}
+ if(event.data.action==='start'&&Game.BIOMES.includes(event.data.biome)&&Game.CULTURES.includes(event.data.culture)){selectedBiome=event.data.biome;selectedCulture=event.data.culture;safe(()=>startGame());}
+});
 function loadScreen() {
   screen='load';const slots=saves.list();app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Tus poblados</div>${button('back','← Volver','ghost')}</header><h2>Retoma tu historia</h2><p class="muted">Cada partida conserva su propio mundo.</p><div class="slots">${slots.length?slots.map(s=>`<div class="slot"><div><h3>${esc(selector.cultures.find(c=>c.id===s.culture)?.name??s.culture)}</h3><p class="muted">Día ${s.day} · ${esc(selector.biomes.find(b=>b.id===s.biome)?.name??s.biome)} · ${formatMoney(s.money)} monedas</p></div><button data-slot="${s.slotId}">Continuar →</button></div>`).join(''):'<p class="muted">Todavía no hay partidas guardadas.</p>'}</div></main>`;bind('back',menu);
   document.querySelectorAll('[data-slot]').forEach(el=>el.onclick=()=>safe(()=>startGame(saves.load(el.dataset.slot))));
@@ -83,13 +85,19 @@ function onPick({entityId,point}) {
 }
 function toolPanel(type) {
   let content='';
-  if(type==='plant')content=`<h3>Qué sembramos</h3><div class="action-grid">${B.crops.map(c=>`<button data-crop="${c.id}"><img src="${thumbnails[c.id]}" alt=""><strong>${c.name}</strong><small>${c.plant_cost} monedas · ${c.total_waters} riegos</small></button>`).join('')}</div>`;
-  if(type==='wall')content=`<h3>Protege la finca</h3><div class="action-grid">${B.walls.map(w=>`<button data-wall="${w.id}"><strong>${w.name}</strong><small>${w.cost} monedas · ${w.hp} PV</small></button>`).join('')}</div><p>Coloca módulos de 2,18 m. Selecciona una puerta para dejar acceso a tus trabajadores.</p><label><input id="gate" type="checkbox"> Colocar puerta</label>`;
-  if(type==='spell')content=`<h3>Magias del Espíritu</h3><div class="action-grid">${B.spells.map(m=>`<button data-spell="${m.id}"><strong>${m.name}</strong><small>${m.duration_seconds} s · recarga ${m.cooldown_seconds} s</small></button>`).join('')}</div>`;
-  document.querySelector('#panel').innerHTML=content?`<div class="action-panel">${content}<p class="muted">Elige y toca una posición del mundo.</p>${button('cancel-tool','Cancelar')}</div>`:'';
+  const price=value=>`<span class="price"><img src="${ASSETS.coin.src}" alt="">${value}</span>`;
+  if(type==='plant')content=`<div class="card-grid crop-grid">${B.crops.map(c=>`<button class="choice-card" data-crop="${c.id}" ${!permission(state,'plant')||numberOf(state.ledger.balance)<c.plant_cost?'disabled':''}><img class="card-image" src="${thumbnails[c.id]}" alt=""><strong>${c.name}</strong>${price(c.plant_cost)}</button>`).join('')}</div><p class="panel-note">Elige una semilla y toca un espacio libre.</p>`;
+  if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar puerta</label>`;
+  if(type==='spell')content=`<div class="card-grid three">${B.spells.map((m,i)=>`<button class="choice-card spell-card" data-spell="${m.id}"><span class="spell-symbol ${['blue','green','purple'][i]}">${spellSVG(i)}<span class="spell-cooldown" style="--cd:${state.cooldowns[m.id]/m.cooldown_seconds*100}%"></span><span class="cooldown-number">${state.cooldowns[m.id]>0?Math.ceil(state.cooldowns[m.id]):''}</span></span><strong>${m.name}</strong><span class="detail">${m.duration_seconds} s · recarga ${m.cooldown_seconds} s</span></button>`).join('')}</div><p class="panel-note">Selecciona un poder y toca la zona donde quieres aplicarlo.</p>`;
+  showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
   document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{tool={kind:'plant',species:el.dataset.crop};document.querySelector('#panel').innerHTML='';updateUI(true);});
   document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{tool={kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked};updateUI(true);});
-  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{tool={kind:'spell',spell:el.dataset.spell};updateUI(true);});bind('cancel-tool',()=>{tool=null;document.querySelector('#panel').innerHTML='';});
+  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{tool={kind:'spell',spell:el.dataset.spell};document.querySelector('#panel').innerHTML='';updateUI(true);});
+}
+function showHudPanel(title,body){
+ const host=document.querySelector('#panel');host.className='native-panel-host';host.innerHTML=`<section class="panel" role="dialog" aria-label="${esc(title)}"><canvas class="frame-canvas" aria-hidden="true"></canvas><header class="panel-head"><h2 class="panel-title">${esc(title)}</h2><button class="close-panel" id="close-hud-panel" aria-label="Cerrar">×</button></header><div class="panel-body">${body}</div></section>`;
+ bind('close-hud-panel',()=>host.innerHTML='');
+ Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(host.firstElementChild)framePaint(host,layoutHud(document.querySelector('#stage')),frameImages);}).catch(()=>error('No se ha podido cargar el marco del menú.'));
 }
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
@@ -117,7 +125,7 @@ function updateUI(force=false) {
   }else document.querySelector('.hint')?.remove();
 }
 function buildPanel(){
- document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Construir</h3>${button('native-center','Centro de trabajo · 800')}${button('native-wall','Defensas')}${button('native-hire','Contratar equipo')}${state.postgame?button('native-village','Fundar poblado'):''}${button('native-close','Cerrar')}</div>`;
+ showHudPanel('Construir',`<div class="card-grid two"><button class="choice-card" id="native-center"><img class="card-image" src="${ASSETS.home_icon.src}" alt=""><strong>Centro de trabajo</strong><span class="price">800 monedas</span></button><button class="choice-card" id="native-wall"><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>Murallas</strong></button></div><div class="menu-list">${button('native-hire','Contratar equipo','wood-button')}${state.postgame?button('native-village','Fundar poblado','wood-button'):''}</div>`);
  bind('native-center',()=>{tool={kind:'center'};document.querySelector('#panel').innerHTML='';});bind('native-wall',()=>toolPanel('wall'));bind('native-hire',()=>Game.openInitialHiring(state));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
  document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');document.querySelector('#native-hire').disabled=state.hiringPaidDay===state.day||!state.plants.some(p=>p.alive)||!state.structures.some(operational);
 }

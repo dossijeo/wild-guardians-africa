@@ -24,5 +24,7 @@ output+='const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));let dims;\n'
 output+="const HIRING_RULES={dawnMinute:425,maxPerType:Number.MAX_SAFE_INTEGER};\nconst fmt=n=>n.toLocaleString('es-ES');const hhmm=n=>`${String(Math.floor(n/60)%24).padStart(2,'0')}:${String(Math.floor(n%60)).padStart(2,'0')}`;const image=id=>`<img src=\"${ASSETS[id].src}\" alt=\"\">`;\n"
 output+="const NPC_TYPES=[['youngMale','young_man','Hombre joven',true,true],['youngFemale','young_woman','Mujer joven',true,false],['olderMale','older_man','Hombre mayor',false,true],['olderFemale','older_woman','Mujer mayor',false,false]].map(([id,key,name,young,male])=>({id,key,name,young,male,wage:young?120:100,speed:young?1.5:1,shiftMinutes:male?600:720,start:425,end:male?1025:1145}));export {NPC_TYPES};\n"
 output+=hire+layout+frame
+output+=code[code.index('function svgWrap('):code.index('function cropSVG(')]
+output+=code[code.index('function spellSVG('):code.index('function sound(')].replace('function spellSVG(', 'export function spellSVG(')
 (root/'src/ui/native-hud.js').write_text(output,encoding='utf-8')
 print('Original HUD, responsive layout, portraits and nine-piece hiring frame prepared')
