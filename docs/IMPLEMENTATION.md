@@ -10,6 +10,7 @@ Fuente normativa: [Plan Maestro 2.0](plan/Wild_Guardians_Plan_Maestro_Definitivo
 - Menú de producción: adaptación del diorama original `Wild_Guardians_Africa_Menu_V2_8_CORREGIDO_Balafons_Call.html`, conservando renderer, recorridos, iluminación, logo y música. Generador: `tools/prepare_menu.py`.
 - HUD de producción: artwork, disposición adaptable, retratos y marco de contratación de `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Generador: `tools/prepare_hud.py`. La simulación de demostración no se utiliza como motor del juego.
 - Los 159 casos recibidos son requisitos pendientes; no se contabilizan como pruebas ejecutadas.
+- Los commits y pushes se realizan directamente en `main`, por preferencia explícita del usuario. No utilizar ramas de transferencia ni commits sin cambios de archivos.
 
 ## Contratos pendientes
 
