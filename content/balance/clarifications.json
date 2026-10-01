@@ -8,6 +8,16 @@
   "negativeEventAffectedFractions": [[0.05, 0.10], [0.10, 0.20], [0.20, 0.30]],
   "negativeEventFractionDistribution": "uniform",
   "positiveEventMagnitudes": [0.10, 0.20, 0.30],
-  "eventEffectTarget": null
+  "eventEffectTarget": "specific-systemic-effect-per-event",
+  "currency": "integer-coins-ceil-per-operation",
+  "raidCrossingDawn": "finish-raid-before-night-close-events-economic-check-victory-hiring",
+  "repairInterruptedByRaid": true,
+  "repairCanBecomeFullCostReconstruction": true,
+  "agriculturalEvents": {
+    "frost": {"effect": "growth-loss", "fraction": 0.10, "affectsMature": false},
+    "plague": {"effect": "consume-remaining-water-tolerance", "fraction": 0.50, "speciesOnly": true},
+    "favorable": {"effect": "growth-progress", "respectWaterCheckpoints": true},
+    "fertile": {"effect": "next-harvest-value"},
+    "season": {"effect": "water-tolerance-until-next-watering"}
+  }
 }
-
