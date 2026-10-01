@@ -77,7 +77,8 @@ export function hire(s,id,selection) {
     const center=s.structures.find(c=>c.id===centerId),village=s.villages.find(v=>v.id===center?.villageId)??s.villages[0];
     let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
     if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
-    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,centerId: centerId??null,villageId:village.id,x:village.x,z:village.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:0,actionRemaining:0});
+    const entry=village.entry??village;
+    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:0,actionRemaining:0});
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
@@ -159,7 +160,7 @@ function updateWorkers(s,dt,nav) {
     if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
     const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
     if(['fleeing','returning','incapacitated'].includes(w.status)) {
-      const reached=walkTo(s,w,{...village,id:`home-${village.id}`},dt,nav,{speed:w.incapacitated?.55:w.status==='fleeing'?3:1.3});
+      const reached=walkTo(s,w,{...(village.entry??village),id:`home-${village.id}`},dt,nav,{speed:w.incapacitated?.55:w.status==='fleeing'?3:1.3});
       if(reached)w.status='home';continue;
     }
     if(w.status==='home')continue;

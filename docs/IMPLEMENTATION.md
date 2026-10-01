@@ -20,3 +20,8 @@ Las aclaraciones del usuario están registradas en `content/balance/clarificatio
 ## Validación
 
 `python docs/plan/verificar_reglas.py` ejecuta la comprobación aritmética original. No constituye testeo de una partida integrada.
+
+- Pruebas automatizadas: 53 casos de economía, simulación y audio aprobados; 31 casos de navegación aprobados, incluyendo las 30 combinaciones de bioma/cultura con semilla 712 y un destino bloqueado.
+- La comprobación de navegación detectó salidas dentro de edificios y una búsqueda radial que omitía grandes áreas entre sus 24 rayos. Se añadió un punto de salida transitable y candidatos con separación angular constante.
+- Preparar algunas aldeas, especialmente Suajili en Volcanes, sigue siendo demasiado lento (aproximadamente tres minutos en esa prueba). Queda pendiente optimizar la preparación y verificar más semillas; una matriz aprobada no acredita todas las partidas procedurales.
+- Compilación de producción aprobada; sigue existiendo una advertencia por tamaño del módulo principal.
