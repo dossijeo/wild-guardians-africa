@@ -135,7 +135,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=1.3,ignore=null,worker=true
   }
   return w.path.length===0;
 }
-function completeTask(s,w,t,target) {
+function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
     if(target.alive){waterPlant(target);target.toleranceBonus=0;emit(s,'WaterSatisfied',{targetId:target.id});}
   } else if(t.kind==='harvest') {
@@ -149,8 +149,7 @@ function completeTask(s,w,t,target) {
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
-    if(target.status==='collapsing') {w.actionRemaining=.1;return;}
-    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;emit(s,'RepairApplied',{targetId:target.id});}
+    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);emit(s,'RepairApplied',{targetId:target.id});}
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;if(w.status!=='carrying')w.status='idle';w.path=null;
@@ -185,10 +184,12 @@ function updateWorkers(s,dt,nav) {
     if(w.status==='walking') {
       const destination=t.kind==='repair'?{...target,x:target.x+(target.kind==='center'?3.2:1.2)}:target;
       if(walkTo(s,w,destination,dt,nav,{ignore:t.kind==='repair'?target.id:null})) {
+        if(t.kind==='repair'){completeTask(s,w,t,target,nav);continue;}
         w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
       }
     } else if(w.status==='acting') {
-      w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target);
+      if(t.kind==='repair'){completeTask(s,w,t,target,nav);continue;}
+      w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
     }
   }
   if(!s.raid && s.time<300)reserveTasks(s,(w,t,target)=>{

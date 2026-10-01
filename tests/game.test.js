@@ -10,6 +10,41 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
 const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
 const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
+function repairScenario(){
+  const s=setup();s.ledger.balance=rational(1000);s.tasks=[];
+  const worker=s.workers[0];worker.status='idle';worker.taskId=null;worker.path=null;
+  placeStructure(s,'wall',{kind:'wall',material:'adobe',x:12,z:0},nav);
+  const target=s.structures.at(-1);target.hp=target.maxHp*.73;
+  requestRepair(s,'repair-order',target.id);const before=numberOf(s.ledger.balance);
+  tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),before,'Queueing and reservation must not charge');
+  assert.equal(worker.status,'walking');worker.x=target.x+1.2;worker.z=target.z;
+  return {s,worker,target,before};
+}
+test('Repair settles its rounded current price exactly once on arrival, without an extra animation delay',()=>{
+  const {s,target,before}=repairScenario();tick(s,.001,nav);
+  assert.equal(numberOf(s.ledger.balance),before-10);assert.equal(target.hp,target.maxHp);
+  assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);
+  tick(s,4,nav);assert.equal(numberOf(s.ledger.balance),before-10);
+});
+test('Funds spent after requesting repair cancel execution at arrival without partial payment',()=>{
+  const {s,target}=repairScenario(),damaged=target.hp;s.ledger.balance=rational(9);
+  tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),9);assert.equal(target.hp,damaged);
+  assert.ok(s.messages.some(m=>m.text.includes('fondos insuficientes')));
+  assert.ok(!s.tasks.some(t=>t.kind==='repair'));
+});
+test('Surviving repair order becomes full reconstruction and does not wait for collapse to finish',()=>{
+  for(const status of ['ruined','collapsing']){
+    const {s,target,before}=repairScenario();target.hp=0;target.status=status;target.collapseRemaining=status==='collapsing'?1:0;
+    tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),before-target.cost);
+    assert.equal(target.status,'intact');assert.equal(target.collapseRemaining,0);assert.equal(target.hp,target.maxHp);
+  }
+});
+test('Starting an attack immediately cancels manual repair orders and releases the worker',()=>{
+  const {s,worker,target,before}=repairScenario(),damaged=target.hp;
+  spawnRaid(s,{group:['warthog']},nav);
+  assert.equal(worker.status,'fleeing');assert.equal(worker.taskId,null);
+  assert.ok(!s.tasks.some(t=>t.kind==='repair'));assert.equal(numberOf(s.ledger.balance),before);assert.equal(target.hp,damaged);
+});
 
 test('Postgame founding uses complete native village, valid departure, exact linear costs and persistent state',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.day=101;s.initialPreparation=false;s.ledger.balance=rational(1000000);

@@ -45,6 +45,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.crateId) {const c=s.crates.find(c=>c.id===w.crateId);c.carrierId=null;c.x=w.x;c.z=w.z;w.crateId=null;emit(s,'CrateDropped',{targetId:c.id});}
     if(w.status!=='home')w.status='fleeing';
   }
+  s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   notice(s,'¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.',animals[0].id);emit(s,'RaidSpawned');
 }
 function release(s,a) {if(a.reservation)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;}
