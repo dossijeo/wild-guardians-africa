@@ -1,6 +1,7 @@
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
-import {emit,notice,walkTo,rebuildTasks,spellAt} from './game.js';
+import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate} from './game.js';
+import {contractExpired} from './workforce.js';
 import {releaseTask} from './tasks.js';
 import {rational,compare} from './money.js';
 import {contiguousGroup} from './crops.js';
@@ -53,7 +54,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
   for(const w of s.workers) {
     releaseTask(s,w);w.path=null;w.hits=0;
-    if(w.crateId) {const c=s.crates.find(c=>c.id===w.crateId);c.carrierId=null;c.x=w.x;c.z=w.z;w.crateId=null;emit(s,'CrateDropped',{targetId:c.id});}
+    if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
@@ -140,7 +141,7 @@ export function updateRaid(s,dt,nav) {
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
     if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(800))<0){s.result='defeat';notice(s,'El último centro ha caído y no puedes financiar otro.');emit(s,'GameOver');return;}
     for(const w of s.workers) {
-      if(w.incapacitated||s.time>=PROFILES_END(w.profile))continue;
+      if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
       const replacement=center??s.structures.find(c=>operational(c)&&c.villageId===w.villageId);
       if(replacement){w.centerId=replacement.id;w.status='arriving';w.raidReturn=true;w.path=null;}

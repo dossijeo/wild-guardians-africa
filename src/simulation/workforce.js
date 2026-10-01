@@ -4,6 +4,7 @@ export const PROFILES = [
   {id:'youngMale',name:'Hombre joven',wage:120,speed:1.5,male:true,end:250},
   {id:'youngFemale',name:'Mujer joven',wage:120,speed:1.5,male:false,end:300},
 ];
+export const contractExpired=(worker,state)=>Number.isSafeInteger(worker.contractDay)&&worker.contractDay<state.day;
 const stable=(a,b)=>a.created-b.created || a.id.localeCompare(b.id);
 export function allocateWorkers(centers,total) {
   if(!Number.isSafeInteger(total)||total<0) throw new Error('Plantilla inválida');
@@ -53,4 +54,3 @@ export function distributeProfiles(quotas,selection) {
   }
   return result;
 }
-

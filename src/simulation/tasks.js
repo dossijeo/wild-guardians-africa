@@ -1,3 +1,5 @@
+import {contractExpired} from './workforce.js';
+
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
   const t={id:`task-${state.nextId++}`,created:state.sequence++,centerId,kind,targetId,workerId:null,blocked:false};
@@ -8,7 +10,7 @@ export function reserveTasks(state,canExecute=()=>true) {
     if(t.workerId)continue;
     const target=[...state.plants,...state.crates,...state.structures].find(e=>e.id===t.targetId);
     if(!target)continue;
-    const workers=state.workers.filter(w=>w.centerId===t.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated);
+    const workers=state.workers.filter(w=>w.centerId===t.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state));
     const eligible=workers.filter(w=>canExecute(w,t,target));
     eligible.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
     const worker=eligible[0];

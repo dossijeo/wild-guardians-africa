@@ -1,6 +1,6 @@
 import {BALANCE as B} from './balance.js';
 import {rational,multiply,negate,transact,compare} from './money.js';
-import {PROFILES,allocateWorkers,hiringCost,distributeProfiles} from './workforce.js';
+import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
@@ -28,7 +28,7 @@ const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const profile=w=>PROFILES.find(p=>p.id===w.profile);
 const nearest=(list,point)=>[...list].sort((a,b)=>dist(a,point)-dist(b,point)||a.id.localeCompare(b.id))[0];
 export function commit(s,id,action,operation) {
-  if(s.commandIds.includes(id))return false;
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(!permission(s,action))throw new Error('Esta acción no está disponible ahora');
   operation();s.commandIds.push(id);return true;
 }
@@ -71,26 +71,34 @@ export function harvest(s,id,plantId) {
 }
 export function hire(s,id,selection) {
   if(s.hiringPaidDay===s.day)return false;
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
   const centers=s.structures.filter(operational).map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
-  s.workers=[];const usedPeople=new Set();
+  for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
+  s.workers=s.workers.filter(w=>contractExpired(w,s)&&w.status!=='home');
+  const usedPeople=new Set(s.workers.map(w=>w.personId));
   const add=(profileId,centerId)=>{
     const center=s.structures.find(c=>c.id===centerId),village=s.villages.find(v=>v.id===center?.villageId)??s.villages[0];
     let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
     if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
     const entry=village.entry??village;
-    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
-  s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
+  s.commandIds.push(id);s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total});
 }
 export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
 export function rebuildTasks(s) {
-  s.tasks=[];for(const w of s.workers){w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';}
+  const committed=new Set(s.workers.filter(w=>contractExpired(w,s)&&w.status==='acting').map(w=>w.taskId));
+  s.tasks=s.tasks.filter(t=>committed.has(t.id));
+  for(const w of s.workers){
+    if(committed.has(w.taskId)&&s.tasks.some(t=>t.id===w.taskId&&t.workerId===w.id))continue;
+    w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';
+  }
   for(const p of s.plants.filter(p=>p.alive)) {
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
     if(p.water[0].status==='due')enqueue(s,p.centerId,'initial',p.id);
@@ -102,6 +110,13 @@ export function rebuildTasks(s) {
   }
 }
 export function repairCost(target) {return target.status==='ruined'?rational(target.cost):multiply(rational(target.cost),target.maxHp-target.hp,target.maxHp);}
+export function dropCarriedCrate(s,worker){
+  const crate=s.crates.find(c=>c.id===worker.crateId&&!c.delivered);
+  worker.crateId=null;
+  if(!crate)return;
+  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
+  if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
+}
 export function requestRepair(s,id,targetId) {
   const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
@@ -163,15 +178,16 @@ function updateWorkers(s,dt,nav) {
       if(reached)w.status='home';continue;
     }
     if(w.status==='home')continue;
-    if(!center||!operational(center)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
-    const ended=s.time>=p.end;
+    if(!center||!operational(center)) {releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
+    const ended=contractExpired(w,s)||s.time>=p.end;
     if(ended&&!['acting','carrying'].includes(w.status)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
     if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
+      const delivered=walkTo(s,w,{...center,x:center.x+3.2,id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}});
       crate.x=w.x;crate.z=w.z;
-      if(walkTo(s,w,{...center,x:center.x+3.2,id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}})) {
+      if(delivered) {
         transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{targetId:crate.id});
         if(s.tutorial.step==='observe'||s.tutorial.step==='harvest')s.tutorial.step='done';
       }
@@ -207,11 +223,17 @@ function updateWorkers(s,dt,nav) {
 }
 function closeNight(s) {
   s.completedNights++;s.time=0;s.day++;
+  s.workers=s.workers.filter(w=>w.status!=='home');
+  for(const w of s.workers){
+    w.contractDay??=s.day-1;w.runRemaining=dailyRunMetres();w.running=false;
+    w.recovering=s.day<=(s.people.find(p=>p.id===w.personId)?.recoveryUntil??0);
+    if(!['acting','carrying','fleeing','returning','incapacitated'].includes(w.status)){releaseTask(s,w);w.status='returning';w.path=null;}
+  }
   applyEvent(s);s.eventPlan=null;s.nightPlan=null;
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El poblado no dispone del mínimo necesario para iniciar otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
   for(const plant of s.plants.filter(p=>p.alive))plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
-  s.workers=[];s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
+  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {

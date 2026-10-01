@@ -1,9 +1,9 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {BALANCE as B} from './balance.js';
-import {PROFILES} from './workforce.js';
+import {PROFILES,contractExpired} from './workforce.js';
 export const dailyRunMetres=()=>L.longTripMetres*B.workers.daily_run_distance_long_trips;
 export function urgentWork(state,worker){
-  const active=state.workers.filter(w=>w.centerId===worker.centerId&&!w.incapacitated&&
+  const active=state.workers.filter(w=>w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
     !['home','returning','fleeing','incapacitated'].includes(w.status)&&state.time<PROFILES.find(p=>p.id===w.profile).end);
   return active.length>0&&state.tasks.filter(t=>t.centerId===worker.centerId).length/active.length>B.workers.run_start_pending_tasks_per_worker_over;
 }
