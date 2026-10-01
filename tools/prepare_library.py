@@ -11,6 +11,9 @@ for key,prefix in selected.items():
     shutil.copyfile(root/source['markup'],folder/'markup.html')
     for payload in source['payloads']:
         data=dict(payload)
+        # The crops lab decompresses assetData before parsing its GLB. Asset
+        # extraction stores the decompressed resource, so restore that envelope.
+        if key=='crops' and data['id']=='assetData':data['encoding']='gzip-binary'
         if 'path' in data:
             path=root/data.pop('path');shutil.copyfile(path,folder/path.name);data['path']=f'/library/{key}/{path.name}'
         result[key]['payloads'].append(data)
@@ -18,4 +21,3 @@ for key,prefix in selected.items():
         path=root/code;shutil.copyfile(path,folder/path.name);result[key]['scripts'].append(f'/library/{key}/{path.name}')
 (root/'public/library/manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 print('Four isolated original libraries prepared')
-

@@ -13,7 +13,11 @@ try {
   document.head.innerHTML=parsed.head.innerHTML;document.body.innerHTML=parsed.body.innerHTML;
   for(const payload of entry.payloads){
     const node=document.createElement('script');node.id=payload.id;node.type=payload.url?'application/octet-stream':'application/json';
-    if(payload.url)node.textContent=base64(new Uint8Array(await get(payload.url,'arrayBuffer')));
+    if(payload.url){
+      let binary=await get(payload.url,'arrayBuffer');
+      if(payload.encoding==='gzip-binary')binary=await new Response(new Blob([binary]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+      node.textContent=base64(new Uint8Array(binary));
+    }
     else {
       const data=JSON.stringify(await restore(await get(payload.path)));
       if(payload.encoding==='gzip-json'){node.type='application/octet-stream';const stream=new Blob([data]).stream().pipeThrough(new CompressionStream('gzip'));node.textContent=base64(new Uint8Array(await new Response(stream).arrayBuffer()));}

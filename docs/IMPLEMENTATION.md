@@ -11,6 +11,7 @@ Fuente normativa: [Plan Maestro 2.0](plan/Wild_Guardians_Plan_Maestro_Definitivo
 - HUD de producción: artwork, disposición adaptable, retratos y marco de contratación de `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Generador: `tools/prepare_hud.py`. La simulación de demostración no se utiliza como motor del juego.
 - Los 159 casos recibidos son requisitos pendientes; no se contabilizan como pruebas ejecutadas.
 - Los commits y pushes se realizan directamente en `main`, por preferencia explícita del usuario. No utilizar ramas de transferencia ni commits sin cambios de archivos.
+- Incidencia de biblioteca corregida: el visor de cultivos espera `assetData` comprimido con gzip; el empaquetador había entregado el GLB descomprimido. El cargador restaura el envoltorio gzip. Comprobación en navegador: finaliza la carga y muestra las ocho plantas de ejemplo en la parcela original.
 
 ## Contratos pendientes
 
