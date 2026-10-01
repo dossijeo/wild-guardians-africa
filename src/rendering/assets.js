@@ -28,5 +28,12 @@ export class Assets {
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.unit=unit;mesh.castShadow=mesh.receiveShadow=true;return mesh;
     });
   }
+  async walls(pack) {
+    const map=await this.texture(pack.texture,true),material=new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}),result={};
+    await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
+      const [positions,normals,uv,index]=await Promise.all([piece.p,piece.n,piece.uv,piece.i].map(p=>bytes(p.url)));
+      const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
+      const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
+    }));return result;
+  }
 }
-

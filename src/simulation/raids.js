@@ -56,7 +56,9 @@ function targetFor(s,a,nav) {
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
   for(const group of groups)for(const p of group.targets.sort((p,q)=>dist(a,p)-dist(a,q))) {
-    if(nav.path(a,p,a.radius,null,false))return {target:p,reservation:group.id};
+    const shield=spellAt(s,'shield',p),d=shield?dist(a,shield)||1:1;
+    const destination=shield?{x:shield.x+(a.x-shield.x)*(shield.radius+a.radius+.1)/d,z:shield.z+(a.z-shield.z)*(shield.radius+a.radius+.1)/d}:p;
+    if(nav.path(a,destination,a.radius,null,false))return {target:p,reservation:group.id};
   }
   // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
   const structures=s.structures.filter(c=>c.status==='intact'&&!s.raid.reservations[`structure:${c.id}`]);

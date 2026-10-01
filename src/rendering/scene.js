@@ -4,6 +4,7 @@ import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {Assets,json} from './assets.js';
 import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
+import {createCropBatch} from './crop-batch.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -27,11 +28,13 @@ export class WorldScene {
   qualitySetting(quality) {this.quality=quality;this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
   async load(state,nav,villagePayload) {
     this.state=state;this.nav=nav;this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
-    this.villagePrototypes=await this.assets.village(villagePayload);
+    this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.models=await json('/content/models.json');
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
-    const gltf=await this.assets.model(cropModel.url);this.cropModels=Array(40);
+    const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
+    this.cropBridgeData=await json('/content/crop-bridges.json');this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
+    this.wallPrototypes=await this.assets.walls(await json('/content/walls.json'));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.syncChunks();this.sync(0);
   }
@@ -73,9 +76,15 @@ export class WorldScene {
   }
   villageMesh(village) {
     const group=new THREE.Group();
-    for(const original of this.villagePrototypes){const mesh=original.clone(),u=mesh.userData.unit,layout=village.buildings.find(b=>b.key===u.key);mesh.scale.setScalar(16);mesh.position.set(village.x,this.nav.field.surface(layout.x,layout.z)-u.min[1]*16+.018,village.z);group.add(mesh);}
+    for(const original of this.villageTemplates.get(village.culture)??this.villagePrototypes){const mesh=original.clone(),u=mesh.userData.unit,layout=village.buildings.find(b=>b.key===u.key);if(!layout)continue;mesh.scale.setScalar(16);mesh.position.set(village.x,this.nav.field.surface(layout.x,layout.z)-u.min[1]*16+.018,village.z);group.add(mesh);}
     return group;
   }
+  async ensureVillage(culture,payload) {if(!this.villageTemplates.has(culture))this.villageTemplates.set(culture,await this.assets.village(payload));}
+  showVillagePreview(preview) {
+    this.clearVillagePreview();this.villagePreview=this.villageMesh(preview);
+    this.villagePreview.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;o.material.depthWrite=false;o.material.color.set(preview.valid?'#d4f3c2':'#f4a198');}});this.scene.add(this.villagePreview);
+  }
+  clearVillagePreview() {if(this.villagePreview){this.villagePreview.traverse(o=>{if(o.isMesh)o.material.dispose();});this.scene.remove(this.villagePreview);this.villagePreview=null;}}
   centerMesh() {
     const original=this.villagePrototypes.find(o=>o.userData.unit.kind==='Edificio')??this.villagePrototypes[0],unit=original.userData.unit;
     const mesh=original.clone(),group=new THREE.Group();mesh.scale.setScalar(16);mesh.position.set(-(unit.min[0]+unit.max[0])*8,-unit.min[1]*16,-(unit.min[2]+unit.max[2])*8);group.add(mesh);return group;
@@ -100,11 +109,14 @@ export class WorldScene {
     const s=this.state;if(!s||!this.cropModels)return;
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
-    for(const e of [...s.structures,...s.plants.filter(p=>p.alive),...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
+    const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
+    if(visiblePlants.length>this.cropBatch.capacity){this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));}
+    this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z));
+    for(const e of [...s.structures,...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
         if(e.kind==='center')mesh=this.centerMesh();
-        else if(e.kind==='wall'){mesh=new THREE.Mesh(new THREE.BoxGeometry(2.18,e.gate?1.6:1.2,.4),new THREE.MeshStandardMaterial({color:{zarzas:'#526044',empalizada:'#765237',adobe:'#bd8357',reforzado:'#a96b44',piedra:'#9a9480'}[e.material]}));mesh.geometry.translate(0,(e.gate?1.6:1.2)/2,0);}
+        else if(e.kind==='wall'){mesh=this.wallPrototypes[`${e.material}_${e.gate?'puerta':'intacto'}`].clone();if(e.gate){const scale=e.material==='reforzado'?1.6:['adobe','piedra'].includes(e.material)?1.4:1;mesh.scale.setScalar(scale);mesh.userData.baseScale=scale;}mesh.position.y=-mesh.geometry.boundingBox.min.y;}
         else if(e.species&&'growth' in e)mesh=new THREE.Group();
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();this.objects.set(e.id,mesh);this.actor(e,'profile' in e?'worker':'animal').catch(error=>this.onError?.(error));}
         else if('value' in e){mesh=new THREE.Mesh(new THREE.BoxGeometry(.6,.45,.5),new THREE.MeshStandardMaterial({color:'#a67543'}));mesh.geometry.translate(0,.225,0);}
@@ -112,9 +124,9 @@ export class WorldScene {
         else {mesh=new THREE.Mesh(new THREE.RingGeometry(e.radius-.1,e.radius,48),new THREE.MeshBasicMaterial({color:e.kind==='growth'?'#8bc870':'#dfb85b',side:THREE.DoubleSide}));mesh.rotation.x=-Math.PI/2;}
         mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
       }
-      mesh.position.set(e.x,this.nav.field.surface(e.x,e.z)+.025,e.z);
+      mesh.position.set(e.x,this.nav.field.surface(e.x,e.z)+.025-(e.kind==='wall'?mesh.geometry.boundingBox.min.y*(mesh.userData.baseScale??1):0),e.z);
       if(e.kind==='wall')mesh.rotation.y=e.yaw;
-      if(e.status==='ruined')mesh.scale.y=.08;else if(e.status==='collapsing')mesh.scale.y=Math.max(.08,e.collapseRemaining/(e.kind==='center'?3.2:1.4));else if(e.kind==='center'||e.kind==='wall')mesh.scale.y=1;
+      if(e.status==='ruined')mesh.scale.y=.08;else if(e.status==='collapsing')mesh.scale.y=Math.max(.08,e.collapseRemaining/(e.kind==='center'?3.2:1.4))*(mesh.userData.baseScale??1);else if(e.kind==='center'||e.kind==='wall')mesh.scale.y=mesh.userData.baseScale??1;
       if(e.species&&'growth' in e) {
         const growth=e.growth/cropSpec(e.species).growth_seconds,stage=growth>=1?4:Math.max(0,marks.findIndex(m=>growth<m)-1),key=`${cropIds.indexOf(e.species)}:${stage}`;
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
@@ -131,6 +143,12 @@ export class WorldScene {
     const rect=this.canvas.getBoundingClientRect();this.cursor.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);this.raycaster.setFromCamera(this.cursor,this.camera);
     const hits=this.raycaster.intersectObjects([...this.objects.values()],true);
     let entityId=null;for(const hit of hits){let object=hit.object;while(object&&!object.userData.entityId)object=object.parent;if(object){entityId=object.userData.entityId;break;}}
+    let closest=hits[0]?.distance??Infinity;const point=new THREE.Vector3(),box=new THREE.Box3();
+    for(const plant of this.state.plants.filter(p=>p.alive)) {
+      const y=this.nav.field.surface(plant.x,plant.z),sample=this.cropBatch.sample(plant.species,plant.growth),radius=plant.species==='platano'?.65:.45;
+      box.min.set(plant.x-radius,y,plant.z-radius);box.max.set(plant.x+radius,y+Math.max(.16,sample.height),plant.z+radius);
+      if(this.raycaster.ray.intersectBox(box,point)){const distance=point.distanceTo(this.raycaster.ray.origin);if(distance<closest){closest=distance;entityId=plant.id;}}
+    }
     const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId,point:ground?{x:ground.point.x,z:ground.point.z}:null};
   }
   render(dt) {this.controls.update();this.syncChunks();this.sync(dt);this.renderer.render(this.scene,this.camera);}

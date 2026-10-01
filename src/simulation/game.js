@@ -6,6 +6,7 @@ import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './cr
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {selectEvent,applyEvent} from './events.js';
+import {villageLayout} from '../world/villages.js';
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -114,14 +115,15 @@ export function cast(s,id,kind,x,z,nav) {
   if(!nav.terrainValid(x,z,.2))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
   if(s.spells.some(a=>a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Las áreas mágicas no pueden solaparse');
-  if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&Math.abs(dist(a,{x,z})-radius)<a.radius))throw new Error('El borde del Escudo solapa un animal');
+  if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   return commit(s,id,kind,()=>{
-    s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;emit(s,'SpellActivated',{kind,x,z});
+    s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=1.3,ignore=null,worker=true}={}) {
-  if(!w.path||w.destinationId!==destination.id) {
+  if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
+    w.pathVersion=nav.version;
     if(!w.path)return false;
   }
   let distanceLeft=speed*dt;
@@ -154,6 +156,7 @@ function completeTask(s,w,t,target) {
 }
 function updateWorkers(s,dt,nav) {
   for(const w of s.workers) {
+    if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
     const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
     if(['fleeing','returning','incapacitated'].includes(w.status)) {
       const reached=walkTo(s,w,{...village,id:`home-${village.id}`},dt,nav,{speed:w.incapacitated?.55:w.status==='fleeing'?3:1.3});
@@ -202,6 +205,24 @@ function closeNight(s) {
   s.workers=[];s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
+export function previewVillage(s,culture,x,z,payload,nav) {
+  if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
+  const buildings=villageLayout(payload,x,z),checks=buildings.map(b=>nav.placement(b.x,b.z,b.radius));
+  return {culture,x,z,buildings,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid),suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason};
+}
+export function foundVillage(s,id,culture,x,z,payload,nav) {
+  const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
+  return commit(s,id,'village',()=>{
+    transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings});s.suppressed.push(...preview.suppress);
+    nav.setState(s);
+    for(const center of s.structures.filter(operational)) {
+      const routes=s.villages.map(v=>({v,route:nav.path({x:center.x+3.2,z:center.z},v,.28,center.id,true)})).filter(r=>r.route);
+      routes.sort((a,b)=>a.route.reduce((length,p,i)=>length+(i?dist(p,a.route[i-1]):0),0)-b.route.reduce((length,p,i)=>length+(i?dist(p,b.route[i-1]):0),0));
+      if(routes[0])center.villageId=routes[0].v.id;
+    }
+    emit(s,'VillageFounded',{culture,x,z});
+  });
+}
 export function tick(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   if(s.initialPreparation)return;
@@ -223,8 +244,10 @@ export function tick(s,seconds,nav) {
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
       }
     }
+    const spellCount=s.spells.length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
+    if(s.spells.length!==spellCount)nav.setState(s);
     if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
     if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
     if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}

@@ -1,0 +1,26 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Biblioteca · Wild Guardians</title></head><body><p>Preparando el laboratorio original…</p><script type="module">
+const get=async(url,type='json')=>{const response=await fetch(url);if(!response.ok)throw new Error('No se pudo cargar '+url);return response[type]();};
+const base64=bytes=>{let text='';for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(text);};
+async function restore(value){
+  if(value&&typeof value==='object'&&value.encoding==='external-binary')return base64(new Uint8Array(await get(value.url,'arrayBuffer')));
+  if(Array.isArray(value))return Promise.all(value.map(restore));
+  if(value&&typeof value==='object'){const entries=await Promise.all(Object.entries(value).map(async([k,v])=>[k,await restore(v)]));return Object.fromEntries(entries);}
+  return value;
+}
+try {
+  const key=new URLSearchParams(location.search).get('lab'),manifest=await get('/library/manifest.json'),entry=manifest[key];if(!entry)throw new Error('Laboratorio desconocido');
+  const markup=await get(entry.markup,'text'),parsed=new DOMParser().parseFromString(markup,'text/html');
+  document.head.innerHTML=parsed.head.innerHTML;document.body.innerHTML=parsed.body.innerHTML;
+  for(const payload of entry.payloads){
+    const node=document.createElement('script');node.id=payload.id;node.type=payload.url?'application/octet-stream':'application/json';
+    if(payload.url)node.textContent=base64(new Uint8Array(await get(payload.url,'arrayBuffer')));
+    else {
+      const data=JSON.stringify(await restore(await get(payload.path)));
+      if(payload.encoding==='gzip-json'){node.type='application/octet-stream';const stream=new Blob([data]).stream().pipeThrough(new CompressionStream('gzip'));node.textContent=base64(new Uint8Array(await new Response(stream).arrayBuffer()));}
+      else node.textContent=data;
+    }
+    document.body.append(node);
+  }
+  for(const url of entry.scripts){const code=await get(url,'text'),script=document.createElement('script');script.textContent=code;document.body.append(script);}
+}catch(error){document.body.textContent='No se pudo abrir la demostración: '+error.message;console.error(error);}
+</script></body></html>

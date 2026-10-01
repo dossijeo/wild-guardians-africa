@@ -1,0 +1,77 @@
+{
+  "crops": {
+    "markup": "/library/crops/markup.html",
+    "payloads": [
+      {
+        "id": "bridgeData",
+        "encoding": "gzip-json",
+        "path": "/library/crops/bridgeData.json"
+      },
+      {
+        "id": "assetData",
+        "url": "/assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb"
+      },
+      {
+        "id": "thumbnailData",
+        "path": "/library/crops/thumbnailData.json"
+      }
+    ],
+    "scripts": [
+      "/library/crops/script-3.js",
+      "/library/crops/script-4.js"
+    ]
+  },
+  "walls": {
+    "markup": "/library/walls/markup.html",
+    "payloads": [
+      {
+        "id": "bastion-assets",
+        "path": "/library/walls/bastion-assets.json"
+      }
+    ],
+    "scripts": [
+      "/library/walls/script-1.js",
+      "/library/walls/script-2.js"
+    ]
+  },
+  "destruction": {
+    "markup": "/library/destruction/markup.html",
+    "payloads": [
+      {
+        "id": "model-data",
+        "url": "/assets/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb"
+      },
+      {
+        "id": "model-data-2",
+        "url": "/assets/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb"
+      },
+      {
+        "id": "model-data-3",
+        "url": "/assets/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb"
+      },
+      {
+        "id": "model-data-4",
+        "url": "/assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb"
+      },
+      {
+        "id": "model-data-5",
+        "url": "/assets/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb"
+      }
+    ],
+    "scripts": [
+      "/library/destruction/script-5.js"
+    ]
+  },
+  "sfx": {
+    "markup": "/library/sfx/markup.html",
+    "payloads": [
+      {
+        "id": "bankData",
+        "path": "/library/sfx/bankData.json"
+      }
+    ],
+    "scripts": [
+      "/library/sfx/script-1.js"
+    ]
+  }
+}

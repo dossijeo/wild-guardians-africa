@@ -2,7 +2,7 @@ export function villageLayout(payload,x,z) {
   return payload.units.map(unit=>{
     const px=(unit.min[0]+unit.max[0])*8,pz=(unit.min[2]+unit.max[2])*8;
     const radius=Math.hypot(unit.max[0]-unit.min[0],unit.max[2]-unit.min[2])*8;
-    return {key:unit.key,x:x+px,z:z+pz,radius,unit:unit.key};
+    return {key:unit.key,kind:unit.kind,x:x+px,z:z+pz,radius,unit:unit.key};
   });
 }
 export function findInitialLocation(nav,payload) {
@@ -18,4 +18,3 @@ export function findInitialLocation(nav,payload) {
   }
   throw new Error('No se encontró una distribución inicial transitable; vuelve a generar la semilla.');
 }
-

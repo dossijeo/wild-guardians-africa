@@ -23,10 +23,12 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    this.version=(this.version??0)+1;
     this.walkCache.clear();
     this.suppressed=new Set(state.suppressed);
     this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>({...s,radius:s.kind==='center'?2.6:.7}));
-    for(const v of state.villages)for(const b of v.buildings??[])this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
+    for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
+    for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
   }
   terrainValid(x,z,radius=.3) {
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
@@ -43,7 +45,16 @@ export class Navigation {
   }
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
     if(!this.terrainValid(x,z,radius))return false;
-    if(this.obstacles.some(o=>o.id!==ignore&&!(worker&&o.gate)&&distance(o,{x,z})<o.radius+radius))return false;
+    if(this.obstacles.some(o=>{
+      if(o.id===ignore||worker&&(o.gate||o.kind==='shield'))return false;
+      if(o.kind==='wall'){
+        const dx=x-o.x,dz=z-o.z,c=Math.cos(o.yaw??0),s=Math.sin(o.yaw??0);
+        const localX=dx*c-dz*s,localZ=dx*s+dz*c;
+        const width=o.gate?1.09*(o.material==='reforzado'?1.6:['adobe','piedra'].includes(o.material)?1.4:1):1.09;
+        return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22+radius;
+      }
+      return distance(o,{x,z})<o.radius+radius;
+    }))return false;
     return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius);
   }
   placement(x,z,radius=1) {
@@ -54,6 +65,7 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>distance(p,{x,z})<radius+(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true) {
+    if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     const directSteps=Math.ceil(distance(start,end)/.6);
     let clear=true;
     for(let i=1;i<directSteps;i++)if(!this.walkable(start.x+(end.x-start.x)*i/directSteps,start.z+(end.z-start.z)*i/directSteps,radius,ignore,worker)){clear=false;break;}
@@ -65,7 +77,7 @@ export class Navigation {
     let visited=0;
     while(open.length&&visited++<12000) {
       open.sort((a,b)=>a.f-b.f);const cur=open.shift(),ck=key(cur.x,cur.z);
-      if(Math.hypot(cur.x-ex,cur.z-ez)<1.5) {
+      if(Math.hypot(cur.x-ex,cur.z-ez)<1.5&&this.segmentClear(cur,end,radius,ignore,worker)) {
         const route=[{x:end.x,z:end.z}];let k=ck;
         while(previous.has(k)){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});k=previous.get(k);}
         return route.reverse();
@@ -80,5 +92,10 @@ export class Navigation {
       }
     }
     return null;
+  }
+  segmentClear(start,end,radius,ignore,worker) {
+    const steps=Math.max(1,Math.ceil(distance(start,end)/.25));
+    for(let i=1;i<=steps;i++)if(!this.walkable(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius,ignore,worker))return false;
+    return true;
   }
 }
