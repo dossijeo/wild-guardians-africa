@@ -8,15 +8,21 @@ import {isMature} from '../src/simulation/crops.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission} from '../src/simulation/rules.js';
 const read=name=>JSON.parse(readFileSync(new URL(`../public/content/${name}.json`,import.meta.url),'utf8'));
-const payload=read('villages').find(v=>v.id==='mapungubwe');
-export function simulateOpening(profile,requestedCount=8) {
-  if(!['olderMale','olderFemale','youngMale','youngFemale'].includes(profile))throw new Error('Unknown worker profile');
-  if(!Number.isSafeInteger(requestedCount)||requestedCount<1)throw new Error('Crop count must be a positive integer');
-  const nav=new Navigation(712,'sabana',read('biome-'+BIOME_IDS.sabana).profile);
-  const location=findInitialLocation(nav,payload),s=Game.newGame({seed:712,slotId:'opening'});
+const villages=read('villages');
+export function createOpeningWorld({seed=712,biome='sabana',culture='mapungubwe',slotId='opening'}={}){
+  const payload=villages.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
+  if(!payload)throw new Error('Unknown culture');
+  const nav=new Navigation(seed,biome,read('biome-'+BIOME_IDS[biome]).profile);
+  const location=findInitialLocation(nav,payload),s=Game.newGame({seed,biome,culture,slotId});
   Object.assign(s.villages[0],location);s.suppressed.push(...location.suppress);nav.setState(s);
   Game.resume(s,'intro');s.tutorial.step='center';
   Game.placeStructure(s,'center',{x:location.center.x,z:location.center.z},nav);
+  return {s,nav};
+}
+export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
+  if(!['olderMale','olderFemale','youngMale','youngFemale'].includes(profile))throw new Error('Unknown worker profile');
+  if(!Number.isSafeInteger(requestedCount)||requestedCount<1)throw new Error('Crop count must be a positive integer');
+  const {s,nav}=createOpeningWorld(worldOptions);
   const center=s.structures[0],departure={x:center.x+3.4,z:center.z};
   const plots=[];
   for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
@@ -38,11 +44,11 @@ export function simulateOpening(profile,requestedCount=8) {
   }
   return {profile,plots:s.plants.length,initialBalance,delivered:s.crates.filter(c=>c.delivered).length,
     mature:s.plants.filter(isMature).length,living:s.plants.filter(p=>p.alive).length,money:numberOf(s.ledger.balance),result:s.result,day:s.day,
-    maximumTime,pauses:s.pauses,ledger:s.ledger,plants:s.plants,crates:s.crates};
+    maximumTime,pauses:s.pauses,ledger:s.ledger,plants:s.plants,crates:s.crates,state:s,nav};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   for(const profile of ['olderMale','olderFemale','youngMale','youngFemale']){
-    const {ledger,plants,crates,...report}=simulateOpening(profile,Number(process.argv[2]??8));
+    const {ledger,plants,crates,state,nav,...report}=simulateOpening(profile,Number(process.argv[2]??8));
     console.log(JSON.stringify(report));
   }
 }
