@@ -17,6 +17,10 @@ export function applyWorkerPose(data,worker,task,elapsed,library){
 export function workerPose(worker,task,elapsed,library) {
   const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
   let name='Idle',time=elapsed;
+  if(['idle','waiting'].includes(worker.status)&&worker.idleState){
+    name={rest:'Idle',watch:'Alert',walk:'Walk_Skip'}[worker.idleState.mode]??'Idle';
+    time=worker.idleState.mode==='walk'?(worker.walkPhase??0):worker.idleState.elapsed;
+  }
   if(worker.fallRemaining>0&&!worker.incapacitated){name='Fall';time=Math.max(0,library.actions.Fall.duration-worker.fallRemaining);}
   else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name='Run';time=worker.runPhase??elapsed*(worker.incapacitated?.35:1);}
   else if(worker.status==='carrying'){name='Carry_Crate';time=worker.carryPhase??elapsed;}

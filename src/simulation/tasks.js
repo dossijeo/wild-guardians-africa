@@ -1,4 +1,5 @@
 import {contractExpired} from './workforce.js';
+import {cancelIdle} from './idle.js';
 
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
@@ -15,7 +16,7 @@ export function reserveTasks(state,canExecute=()=>true) {
     eligible.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
     const worker=eligible[0];
     t.blocked=!worker && workers.length>0;
-    if(worker) { t.workerId=worker.id;worker.taskId=t.id;worker.status='walking'; }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking'; }
   }
 }
 export function releaseTask(state,worker) {

@@ -71,9 +71,12 @@ test('Retreating animals and exhausted hit budgets cannot create a free worker h
 test('Recovery remains attached to the injured person during re-hiring and clears on the following day',()=>{
   const {s,worker}=fixture();s.people[0].recoveryUntil=2;s.raid=null;worker.status='home';
   for(const [day,recovering] of [[2,true],[3,false]]){
-    s.day=day;s.hiringPaidDay=null;s.pauses=['hiring'];Game.hire(s,'hire-'+day,{olderMale:2});
+    s.day=day;s.time=0;s.hiringPaidDay=null;s.pauses=['hiring'];Game.hire(s,'hire-'+day,{olderMale:2});
     const injured=s.workers.find(w=>w.personId===worker.personId),other=s.workers.find(w=>w.personId!==worker.personId);
     assert.equal(injured.recovering,recovering);assert.equal(other.recovering,false);
+    // Finish their real waiting shift and return before re-hiring the same people.
+    Game.tick(s,260,{...nav,path:(_a,b)=>[b],setState:()=>{}});
+    assert.ok(s.workers.every(w=>w.status==='home'));
   }
 });
 test('Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample',()=>{

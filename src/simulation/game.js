@@ -10,6 +10,7 @@ import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath} from './locomotion.js';
 import {repairRoute} from '../world/work-points.js';
+import {updateIdle,cancelIdle} from './idle.js';
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -84,7 +85,7 @@ export function hire(s,id,selection) {
     let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
     if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
     const entry=village.entry??village;
-    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'home',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
@@ -96,6 +97,7 @@ export function rebuildTasks(s) {
   const committed=new Set(s.workers.filter(w=>contractExpired(w,s)&&w.status==='acting').map(w=>w.taskId));
   s.tasks=s.tasks.filter(t=>committed.has(t.id));
   for(const w of s.workers){
+    cancelIdle(w);
     if(committed.has(w.taskId)&&s.tasks.some(t=>t.id===w.taskId&&t.workerId===w.id))continue;
     w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';
   }
@@ -178,9 +180,11 @@ function updateWorkers(s,dt,nav) {
       if(reached)w.status='home';continue;
     }
     if(w.status==='home')continue;
-    if(!center||!operational(center)) {releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
+    if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed);continue;}
+    if(w.status!=='idle')cancelIdle(w);
+    if(!center||!operational(center)) {cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
     const ended=contractExpired(w,s)||s.time>=p.end;
-    if(ended&&!['acting','carrying'].includes(w.status)) {releaseTask(s,w);w.status='returning';w.path=null;continue;}
+    if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;continue;}
     if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
@@ -194,7 +198,12 @@ function updateWorkers(s,dt,nav) {
       continue;
     }
     const t=s.tasks.find(t=>t.id===w.taskId);
-    if(!t) {if(w.status!=='idle')w.status='idle';continue;}
+    if(!t) {
+      if(w.status!=='idle')w.status='idle';
+      if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
+      else updateIdle(w,center,dt,nav,s.seed);
+      continue;
+    }
     const target=[...s.plants,...s.crates,...s.structures].find(e=>e.id===t.targetId);
     if(!target || ('alive' in target&&!target.alive)) {s.tasks=s.tasks.filter(q=>q.id!==t.id);w.taskId=null;w.status='idle';w.path=null;continue;}
     if(w.status==='walking') {

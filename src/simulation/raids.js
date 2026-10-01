@@ -2,6 +2,7 @@ import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate} from './game.js';
 import {contractExpired} from './workforce.js';
+import {cancelIdle} from './idle.js';
 import {releaseTask} from './tasks.js';
 import {rational,compare} from './money.js';
 import {contiguousGroup} from './crops.js';
@@ -53,6 +54,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     hitsRemaining:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
   for(const w of s.workers) {
+    cancelIdle(w);
     releaseTask(s,w);w.path=null;w.hits=0;
     if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
