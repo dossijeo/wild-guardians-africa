@@ -53,6 +53,8 @@ test('native RGB vertex palette is converted once before lighting in both qualit
   for(const Material of [THREE.MeshStandardMaterial,THREE.MeshBasicMaterial]){
     const material=new Material({vertexColors:true});Object.assign(material.userData,{toonGround:true,nativeGroundColor:true});new AfricanToon().material(material);
     const shader={uniforms:{},...THREE.ShaderLib[material.isMeshBasicMaterial?'basic':'standard']};material.onBeforeCompile(shader,{});
-    assert.equal(shader.fragmentShader.split('diffuseColor.rgb=toLinear4(diffuseColor.rgb);').length,2);
+    assert.equal(shader.fragmentShader.split('vec3 groundColor=diffuseColor.rgb;').length,2);
+    assert.equal(shader.fragmentShader.split('vec3 groundAlbedo=toLinear4(clamp(groundColor,0.,1.));').length,2);
+    assert.ok(!shader.fragmentShader.includes('diffuseColor.rgb=toLinear4(diffuseColor.rgb);'));
   }
 });

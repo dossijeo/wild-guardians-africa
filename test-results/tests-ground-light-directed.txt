@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 3.5773
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 2.6406
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.2169
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.2898
+  ...
+# (node:19344) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HDR environment bytes match original radiance compression for both panoramas
+ok 5 - HDR environment bytes match original radiance compression for both panoramas
+  ---
+  duration_ms: 297.11
+  ...
+# Subtest: complete Fresnel, environment BRDF and fluid branch retain user shader constants
+ok 6 - complete Fresnel, environment BRDF and fluid branch retain user shader constants
+  ---
+  duration_ms: 0.7052
+  ...
+# Subtest: water binds common night and yaw, keeps native exposure and avoids a second tone curve
+ok 7 - water binds common night and yaw, keeps native exposure and avoids a second tone curve
+  ---
+  duration_ms: 2.546
+  ...
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 8 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 2.76
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 9 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 3.2979
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 10 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 3152.9794
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 11 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 448.1817
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 12 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 1.0741
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3848.7169
