@@ -207,3 +207,16 @@ Tests 632/632; build y verificación web aprobados. No se cambia calidad ni
 se acredita mejora móvil, matriz visual completa o cumplimiento de los 159
 casos del Plan Maestro. Pendiente receta barata/textura, culling por unidad,
 caras por categoría, profundidad VFX y diagnóstico de resolución.
+
+### 3 de octubre: bounds por unidad del poblado
+
+Publicado f604ed1: cajas/esferas por unidad desde min/max originales, sin
+cambiar buffers, drawRange, materiales, escala o reglas de juego. Se verifican
+todos los vértices de las 46 unidades de cinco culturas, cuatro orientaciones
+por unidad y eliminación de falsos positivos de frustum. Navegador Sabana/Mapungubwe:
+89 a 82 calls y 1,403,884 a 1,337,176 triángulos con misma cámara; sombras
+activas y diferencias RGB pequeñas registradas. Suite 633/633, assets, build y
+paquete web aprobados. [Evidencia y límites](qa-village-bounds.md).
+Pendientes envolvente de centros/colapso y selección de casters contra luz;
+no acredita matriz visual completa ni aceptación global del Plan Maestro.
+CI 4fced98 finalizada correctamente (632/632, assets, GLB web y paquete).
