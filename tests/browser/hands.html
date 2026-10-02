@@ -1,9 +1,9 @@
 <!doctype html><html lang="es"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>QA · Manos V8 en la finca real</title><style>body{margin:0;font:14px system-ui;background:#ebe2c9}header{position:absolute;z-index:1;padding:12px;background:#fff9ed}button,select{font:inherit;padding:8px;margin:5px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><header>Visor de manos: usa WorldScene, el terreno original y entidades creadas con comandos del juego.<br><label>Paso <select id="step"><option value="intro">Mano abierta</option><option value="center">Señalar</option><option value="plant">Tocar</option><option value="hire">Mantener pulsado</option><option value="observe">Arrastrar</option><option value="harvest">Pellizcar</option><option value="done">Tutorial terminado</option></select></label><button id="focus">Acercar al objetivo</button><button id="day">Mostrar día 2</button><span id="status" role="status">Cargando finca y seis texturas originales…</span></header><canvas id="world" aria-label="Finca original con manos del tutorial"></canvas><script type="module">
-import * as Game from '/src/simulation/game.js';
-import {Navigation} from '/src/world/navigation.js';
-import {findInitialLocationAsync} from '/src/world/villages.js';
-import {WorldScene} from '/src/rendering/scene.js';
-import {json} from '/src/rendering/assets.js';
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
 const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
 const state=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
 Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');

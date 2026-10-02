@@ -9,10 +9,20 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests",
     "verify:assets": "python tools/verify_assets.py",
-    "verify:plan": "python docs/plan/verificar_reglas.py"
+    "verify:plan": "python docs/plan/verificar_reglas.py",
+    "assets:compress": "node tools/compress_web_assets.mjs",
+    "verify:web-assets": "node tools/verify_web_assets.mjs",
+    "test:web-package": "node tools/check_web_package.mjs",
+    "qa:web-package": "node tools/serve_web_package.mjs",
+    "package:itch": "npm run build && npm run test:web-package && python tools/package_itch.py"
   },
   "dependencies": {
     "three": "0.180.0",
     "vite": "6.4.3"
+  },
+  "devDependencies": {
+    "gltf-validator": "2.0.0-dev.3.10",
+    "meshoptimizer": "1.3.0",
+    "sharp": "0.35.5"
   }
 }

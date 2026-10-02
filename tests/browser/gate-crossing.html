@@ -2,12 +2,12 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
-import {Assets,json} from '/src/rendering/assets.js';
-import {NativeWall} from '/src/rendering/walls.js';
-import {applyWorkerPose} from '/src/rendering/worker-actions.js';
-import {Navigation} from '/src/world/navigation.js';
-import {serialize,deserialize} from '/src/persistence/snapshots.js';
-import * as Game from '/src/simulation/game.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {NativeWall} from '../../src/rendering/walls.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import * as Game from '../../src/simulation/game.js';
 const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 const scene=new THREE.Scene();scene.background=new THREE.Color('#d3dac6');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-4,8,5);scene.add(sun);
 const camera=new THREE.PerspectiveCamera(40,1,.1,80);camera.position.set(6,5,9);const controls=new OrbitControls(camera,canvas);controls.target.set(0,.8,-1);controls.update();

@@ -6,11 +6,11 @@ body{margin:0;background:#eee7d6;font:16px system-ui;color:#292d24}header{paddin
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
-import {Assets,json} from '/src/rendering/assets.js';
-import {applyWorkerPose} from '/src/rendering/worker-actions.js';
-import {PROFILES} from '/src/simulation/workforce.js';
-import {LOCOMOTION as L} from '/src/simulation/locomotion-calibration.js';
-import {updateIdle} from '/src/simulation/idle.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
+import {LOCOMOTION as L} from '../../src/simulation/locomotion-calibration.js';
+import {updateIdle} from '../../src/simulation/idle.js';
 const canvas=document.querySelector('#view'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#eee7d6');const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,60);camera.position.set(5,3.3,8.5);
 const controls=new OrbitControls(camera,canvas);controls.target.set(0,.85,0);controls.update();

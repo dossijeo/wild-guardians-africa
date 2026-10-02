@@ -1,9 +1,9 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Cinco casas DEST originales</title><style>body{margin:0;font:14px system-ui;background:#c8cdb9}header{position:absolute;z-index:2;background:#fff9ed;padding:10px;max-width:95vw}button{margin:3px;padding:6px}canvas{display:block;width:100vw;height:100vh}#status{display:block;white-space:pre-line}</style><header>Visor visual aislado: geometrías y máscaras originales, sin economía ni guardados de campaña.<br><button data-damage="0">Intacto</button><button data-damage=".10">Primeros impactos</button><button data-damage=".35">Daño localizado</button><button data-damage=".65">Daño severo</button><button id="collapse">Iniciar colapso</button><button id="step">Avanzar 0,1 s</button><button id="second">Avanzar 1 s</button><button id="fade">Avanzar 10 s</button><button id="finish">Terminar los 3,2 s</button><button id="pause">Pausar</button><button id="reset">Restablecer visor</button><button id="close-up">Acercar a casa suajili</button><span id="status">Cargando las cinco casas originales…</span></header><canvas id="world" aria-label="Cinco edificios originales con destrucción por máscaras y colapso regional"></canvas><script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {Assets,json} from '/src/rendering/assets.js';
-import {NativeBuilding,BuildingDestructionPass} from '/src/rendering/buildings.js';
-import {hitStructure} from '/src/simulation/rules.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {NativeBuilding,BuildingDestructionPass} from '../../src/rendering/buildings.js';
+import {hitStructure} from '../../src/simulation/rules.js';
 const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 const scene=new THREE.Scene();scene.background=new THREE.Color('#c8cdb9');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-8,13,9);scene.add(sun,sun.target);
 const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(2,16,25);const controls=new OrbitControls(camera,canvas);controls.target.set(0,1,0);controls.update();
