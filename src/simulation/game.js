@@ -9,9 +9,10 @@ import {wallStroke,wallLayout} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
-import {dailyRunMetres,urgentWork,moveWorker,movePath} from './locomotion.js';
+import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
 import {repairRoute} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
+import {advanceGateLeaves,waitForGate} from './gates.js';
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -219,8 +220,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
-  if(motion)moveWorker(w,dt,motion);else {
-    const metres=movePath(w,speed*dt);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  if(worker&&waitForGate(w,s.structures))return false;
+  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[]});else {
+    const metres=worker?movePathWithGates(w,speed*dt,s.structures):movePath(w,speed*dt);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   return w.path.length===0;
@@ -253,7 +255,7 @@ function updateWorkers(s,dt,nav) {
       if(reached)w.status='home';continue;
     }
     if(w.status==='home')continue;
-    if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed);continue;}
+    if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures);continue;}
     if(w.status!=='idle')cancelIdle(w);
     if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
     const ended=contractExpired(w,s)||s.time>=p.end;
@@ -274,7 +276,7 @@ function updateWorkers(s,dt,nav) {
     if(!t) {
       if(w.status!=='idle')w.status='idle';
       if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-      else updateIdle(w,center,dt,nav,s.seed);
+      else updateIdle(w,center,dt,nav,s.seed,s.structures);
       continue;
     }
     const target=[...s.plants,...s.crates,...s.structures].find(e=>e.id===t.targetId);
@@ -367,7 +369,7 @@ export function tick(s,seconds,nav) {
     if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
     if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
     if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
-    updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
     if(s.time>=600 && !s.raid && !s.result)closeNight(s);
   }
 }

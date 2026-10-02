@@ -37,6 +37,7 @@ export function workerPose(worker,task,elapsed,library) {
       time=Math.max(0,logicalDuration-worker.actionRemaining*speed)*library.actions[name].duration/logicalDuration;
     }
   }
+  if(worker.gateWaiting&&!worker.incapacitated&&!worker.fallRemaining){name=worker.status==='carrying'?'Carry_Crate':'Idle';time=worker.status==='carrying'?(worker.carryPhase??0):elapsed;}
   const spec=library.actions[name];
   return {name,time:spec.loop?time%spec.duration:Math.min(time,spec.duration),loop:spec.loop};
 }

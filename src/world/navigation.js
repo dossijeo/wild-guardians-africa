@@ -1,7 +1,7 @@
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 import {SearchFrontier} from './search-frontier.js';
-import {gateFrameFootprints} from './gate-passages.js';
+import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -26,6 +26,8 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    this.state=state;
+    this.portalGraphs=new Map();
     this.version=(this.version??0)+1;
     this.walkCache.clear();
     this.segmentCache.clear();
@@ -108,16 +110,37 @@ export class Navigation {
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
     return result;
   }
+  portalGraph(radius,ignore){
+    this.portalGraphs??=new Map();const cacheKey=`${radius}:${ignore}`;
+    if(this.portalGraphs.has(cacheKey))return this.portalGraphs.get(cacheKey);
+    const nodes=new Map(),links=new Map(),key=p=>`${p.x},${p.z}`;
+    for(const gate of this.obstacles.filter(o=>o.gate&&o.id!==ignore)){
+      const points=gatePortalPoints(gate,radius);if(points.length!==2)continue;
+      for(let i=0;i<2;i++){
+        const point=points[i],node={...point,neighbors:[points[1-i]]};
+        for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){
+          const grid={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz};node.neighbors.push(grid);
+          const gridKey=key(grid);if(!links.has(gridKey))links.set(gridKey,[]);links.get(gridKey).push(point);
+        }
+        nodes.set(key(point),node);
+      }
+    }
+    const graph={nodes,links};this.portalGraphs.set(cacheKey,graph);return graph;
+  }
   findPath(start,end,radius=.3,ignore=null,worker=true) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const margin=16,minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
+    const portals=worker?this.portalGraph(radius,ignore):{nodes:new Map(),links:new Map()},inside=p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ;
     const open=new SearchFrontier(),costs=new Map(),previous=new Map();
     for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
       const point={x:sx+dx,z:sz+dz};
       if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.segmentClear(start,point,radius,ignore,worker))continue;
+      const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
+    }
+    for(const point of portals.nodes.values())if(inside(point)&&distance(start,point)<=4&&this.walkable(point.x,point.z,radius,ignore,worker)&&this.segmentClear(start,point,radius,ignore,worker)){
       const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
     }
     const regionKey=k=>`${radius}:${ignore}:${worker}|${k}`;
@@ -126,6 +149,7 @@ export class Navigation {
         const point={x:ex+dx,z:ez+dz};
         if(region.has(key(point.x,point.z))&&this.segmentClear(point,end,radius,ignore,worker))return true;
       }
+      for(const point of portals.nodes.values())if(distance(point,end)<=4&&region.has(key(point.x,point.z))&&this.segmentClear(point,end,radius,ignore,worker))return true;
       return false;
     };
     // An exhausted bounded search also proves failures for contained corridors,
@@ -143,15 +167,18 @@ export class Navigation {
     while(open.length&&visited++<12000) {
       const cur=open.pop(),ck=key(cur.x,cur.z);
       if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)touchesBoundary=true;
-      if(Math.hypot(cur.x-ex,cur.z-ez)<1.5&&this.segmentClear(cur,end,radius,ignore,worker)) {
+      if((Math.hypot(cur.x-ex,cur.z-ez)<1.5||portals.nodes.has(ck)&&distance(cur,end)<=4)&&this.segmentClear(cur,end,radius,ignore,worker)) {
         const route=[{x:end.x,z:end.z}];let k=ck;
         while(true){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});if(!previous.has(k))break;k=previous.get(k);}
         return route.reverse();
       }
-      for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]) {
-        const x=cur.x+dx,z=cur.z+dz;
-        if(x<minX||x>maxX||z<minZ||z>maxZ||!this.walkable(x,z,radius,ignore,worker))continue;
-        if(dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker)))continue;
+      const extras=portals.nodes.get(ck)?.neighbors??portals.links.get(ck)??[];
+      const neighbors=portals.nodes.has(ck)?extras:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].map(([dx,dz])=>({x:cur.x+dx,z:cur.z+dz,gridStep:true})).concat(extras);
+      for(const point of neighbors){
+        const {x,z}=point,dx=x-cur.x,dz=z-cur.z;
+        if(!inside(point)){if(!point.gridStep)touchesBoundary=true;continue;}
+        if(!this.walkable(x,z,radius,ignore,worker))continue;
+        if(point.gridStep&&dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker)))continue;
         const k=key(x,z),g=cur.g+Math.hypot(dx,dz);
         if(g>=(costs.get(k)??Infinity))continue;
         if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
@@ -181,6 +208,17 @@ export class Navigation {
     const result=this.testSegmentClear(start,end,radius,ignore,worker);
     if(key){if(this.segmentCache.size>=100000)this.segmentCache.clear();this.segmentCache.set(key,result);}
     return result;
+  }
+  workerMotionClear(start,end,radius=.28){
+    if(!this.segmentClear(start,end,radius,null,true))return false;
+    for(const gate of this.state?.structures??this.obstacles){
+      if(!gate.gate||gate.status==='ruined')continue;
+      const frames=gateFrameFootprints(gate,gate.status==='collapsing'?0:gate.gateOpen??0);
+      if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;
+      const opening=gate.gateOpen??0;
+      if(opening>0&&opening<1){const area=gateSwingPolygon(gate);if(area&&sweptFootprintDistance(start,end,area)<radius)return false;}
+    }
+    return true;
   }
   testSegmentClear(start,end,radius,ignore,worker) {
     for(const obstacle of this.obstacles){

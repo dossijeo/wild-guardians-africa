@@ -1,6 +1,7 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {BALANCE as B} from './balance.js';
 import {PROFILES,contractExpired} from './workforce.js';
+import {waitForGate} from './gates.js';
 export const dailyRunMetres=()=>L.longTripMetres*B.workers.daily_run_distance_long_trips;
 export function urgentWork(state,worker){
   const active=state.workers.filter(w=>w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
@@ -16,20 +17,30 @@ export function movePath(actor,metres){
   }
   return metres-left;
 }
-export function moveWorker(worker,seconds,{urgent=false,flight=false,slow=false,carrying=false}={}){
+export function movePathWithGates(actor,metres,gates=[]){
+  const leaves=gates.filter(g=>g.gate&&g.status!=='ruined');if(!leaves.length)return movePath(actor,metres);
+  let travelled=0;
+  while(actor.path.length&&metres-travelled>1e-9){
+    if(waitForGate(actor,leaves))break;
+    const step=movePath(actor,Math.min(.1,metres-travelled));travelled+=step;if(!step)break;
+  }
+  return travelled;
+}
+export function moveWorker(worker,seconds,{urgent=false,flight=false,slow=false,carrying=false,gates=[]}={}){
+  if(waitForGate(worker,gates))return false;
   let left=seconds,runDistance=0,walkDistance=0;
   const canRun=!carrying&&(flight||urgent&&!worker.recovering&&!worker.incapacitated&&(worker.runRemaining??0)>0);
   if(canRun){
     const speed=L.runMetresPerSecond*(slow?.35:1);
     const requested=flight?speed*left:Math.min(speed*left,worker.runRemaining);
-    runDistance=movePath(worker,requested);left-=runDistance/speed;
+    runDistance=movePathWithGates(worker,requested,gates);left-=runDistance/speed;
     if(!flight)worker.runRemaining=Math.max(0,worker.runRemaining-runDistance);
     worker.runPhase=(worker.runPhase??0)+runDistance/L.runMetresPerSecond;
   }
-  if(left>1e-9&&worker.path.length){
-    walkDistance=movePath(worker,L.walkMetresPerSecond*left);
+  if(left>1e-9&&worker.path.length&&!worker.gateWaiting){
+    walkDistance=movePathWithGates(worker,L.walkMetresPerSecond*left,gates);
     const key=carrying?'carryPhase':'walkPhase';worker[key]=(worker[key]??0)+walkDistance/L.walkMetresPerSecond;
   }
-  worker.running=runDistance>0&&walkDistance<1e-9;
+  worker.running=runDistance>0&&walkDistance<1e-9&&!worker.gateWaiting;
   return worker.path.length===0;
 }

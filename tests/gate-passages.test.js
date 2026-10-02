@@ -13,7 +13,7 @@ test('Gate frames retain original mesh hashes and the height of all four exporte
   for(const [path,hash] of Object.entries(manifest.sources))assert.equal(createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex'),hash);
   assert.equal(createHash('sha256').update(readFileSync(new URL('../src/world/gate-frames-native.js',import.meta.url))).digest('hex'),manifest.moduleSha256);
   assert.ok(gateBodyHeight>=1.7&&gateBodyHeight<1.70001);
-  assert.deepEqual(Object.keys(nativeGateFrames),['adobe','piedra']);
+  assert.deepEqual(Object.keys(nativeGateFrames),['zarzas','empalizada','adobe','piedra','reforzado']);
 });
 test('Worker controllers pass through open native arches while their pillars remain solid',()=>{
   for(const material of ['adobe','piedra'])for(const yaw of [0,Math.PI/4,Math.PI/2]){
@@ -38,7 +38,7 @@ test('Frame transforms are cached and update when placement or scale changes',()
   const entity=gate('adobe'),a=gateFrameFootprints(entity);assert.equal(gateFrameFootprints(entity),a);
   entity.x=5;entity.yaw=Math.PI/2;entity.baseScaleX=.5;const b=gateFrameFootprints(entity);assert.notEqual(a,b);
   for(const polygon of b)assert.ok(polygon.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.z)));
-  assert.equal(gateFrameFootprints(gate('zarzas')),null,'closed leaves remain explicitly outside extraction scope');
+  assert.equal(gateFrameFootprints(gate('zarzas')).length,3,'planning includes the two pillars and the fully open leaf');
 });
 test('Convex frame projection retains side boundaries and a positive controller clearance',()=>{
   for(const material of ['adobe','piedra']){

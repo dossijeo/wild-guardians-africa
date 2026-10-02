@@ -12,7 +12,7 @@ export function cancelIdle(worker){
   if(worker.idleState?.mode==='walk'){worker.path=null;worker.destinationId=null;}
   worker.idleState=null;worker.running=false;
 }
-export function updateIdle(worker,anchor,seconds,nav,seed){
+export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
   const source=L.sources.find(s=>s.profile===worker.profile);
   let idle=worker.idleState;
   if(!idle||idle.anchorId!==anchor.id){
@@ -27,7 +27,7 @@ export function updateIdle(worker,anchor,seconds,nav,seed){
       worker.path=path;idle.pathVersion=nav.version;
     }
     const previous={x:worker.x,z:worker.z};
-    const arrived=moveWorker(worker,seconds); // Ambient walking never requests a run.
+    const arrived=moveWorker(worker,seconds,{gates}); // Ambient walking never requests a run.
     if(Math.hypot(worker.x-previous.x,worker.z-previous.z)>1e-9)worker.heading=Math.atan2(worker.x-previous.x,worker.z-previous.z);
     if(arrived)cancelWalk(worker,idle,source);
     return;

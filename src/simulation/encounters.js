@@ -19,6 +19,8 @@ export function pushWorker(animal,worker,metres,nav){
     for(let step=1;step<=Math.ceil(metres/.1);step++){
       const d=Math.min(metres,step*.1),x=worker.x+Math.sin(angle+offset)*d,z=worker.z+Math.cos(angle+offset)*d;
       if(!nav.walkable(x,z,.28,null,true))break;
+      const previous={x:worker.x+Math.sin(angle+offset)*reachable,z:worker.z+Math.cos(angle+offset)*reachable};
+      if(nav.workerMotionClear&&!nav.workerMotionClear(previous,{x,z},.28))break;
       reachable=d;
     }
     if(reachable>best.distance)best={x:worker.x+Math.sin(angle+offset)*reachable,z:worker.z+Math.cos(angle+offset)*reachable,distance:reachable};
