@@ -8,8 +8,9 @@ import {numberOf} from '../src/simulation/money.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plotCount=16,species='girasol',diversifyDay=null,onDay,onProgress,...world}={}){
+export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plotCount=16,species='girasol',diversifyDay=null,onDay,onProgress,onNavigation,...world}={}){
   const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,command=0,reloads=0;
+  onNavigation?.(nav);
   const id=kind=>`active-${kind}-${command++}`;
   const center=s.structures[0],departure={x:center.x+3.4,z:center.z};
   const plots=[];
@@ -104,6 +105,13 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plot
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const report=simulateActiveFarm({days:Number(process.argv[2]??100),profile:process.argv[3]??'olderMale',species:process.argv[4]??'girasol',diversifyDay:process.argv[5]?Number(process.argv[5]):null,
     biome:process.argv[6]??'sabana',culture:process.argv[7]??'mapungubwe',seed:Number(process.argv[8]??712),
-    onDay:r=>console.log(JSON.stringify(r)),onProgress:process.env.WG_FARM_TRACE?r=>console.log(JSON.stringify(r)):undefined});
+    onDay:r=>console.log(JSON.stringify(r)),onProgress:process.env.WG_FARM_TRACE?r=>console.log(JSON.stringify(r)):undefined,
+    onNavigation:process.env.WG_NAV_TRACE?nav=>{
+      const path=nav.path.bind(nav);let calls=0;
+      nav.path=(...args)=>{const started=performance.now(),call=++calls,result=path(...args),ms=performance.now()-started;
+        if(ms>=500||call%100===0)console.log(JSON.stringify({phase:'navigation',call,ms,start:args[0],end:args[1],radius:args[2],reachable:!!result,cache:nav.segmentCache.size}));
+        return result;
+      };
+    }:undefined});
   const {state,nav,daily,...summary}=report;console.log(JSON.stringify(summary));
 }

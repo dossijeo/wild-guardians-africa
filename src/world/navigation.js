@@ -5,7 +5,7 @@ export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
-    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();
+    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();
   }
   chunk(cx,cz) {
     const key=`${cx},${cz}`;
@@ -26,6 +26,8 @@ export class Navigation {
   setState(state) {
     this.version=(this.version??0)+1;
     this.walkCache.clear();
+    this.segmentCache.clear();
+    this.failedPaths.clear();
     this.suppressed=new Set(state.suppressed);
     this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>({...s,radius:s.kind==='center'?2.6:.7}));
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
@@ -86,6 +88,13 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true) {
+    const key=`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}`;
+    if(this.failedPaths.has(key))return null;
+    const result=this.findPath(start,end,radius,ignore,worker);
+    if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
+    return result;
+  }
+  findPath(start,end,radius=.3,ignore=null,worker=true) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
@@ -118,6 +127,17 @@ export class Navigation {
     return null;
   }
   segmentClear(start,end,radius,ignore,worker) {
+    // Repeated A* searches share exact directed grid edges. Geometry remains
+    // unchanged until setState invalidates both navigation caches.
+    const grid=[start.x,start.z,end.x,end.z].every(Number.isInteger);
+    const from=`${start.x},${start.z}`,to=`${end.x},${end.z}`;
+    const key=grid?`${from}|${to}:${radius}:${ignore}:${worker}`:null;
+    if(key&&this.segmentCache.has(key))return this.segmentCache.get(key);
+    const result=this.testSegmentClear(start,end,radius,ignore,worker);
+    if(key){if(this.segmentCache.size>=100000)this.segmentCache.clear();this.segmentCache.set(key,result);}
+    return result;
+  }
+  testSegmentClear(start,end,radius,ignore,worker) {
     for(const obstacle of this.obstacles){
       if(obstacle.id===ignore||worker&&(obstacle.gate||obstacle.kind==='shield'))continue;
       if(obstacle.kind==='wall'){
