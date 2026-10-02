@@ -1,5 +1,6 @@
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint} from '../world/centers.js';
+import {prepareActorMotion} from './actor-motion.js';
 import {BALANCE as B} from './balance.js';
 import {rational,multiply,negate,transact,compare} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
@@ -229,8 +230,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(!w.path)return false;
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[]});else {
-    const metres=worker?movePathWithGates(w,speed*dt,s.structures):movePath(w,speed*dt);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  const clear=prepareActorMotion(s,w,nav,worker);
+  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
+    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   return w.path.length===0;

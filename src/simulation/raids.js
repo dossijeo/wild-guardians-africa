@@ -9,6 +9,7 @@ import {rational,compare} from './money.js';
 import {contiguousGroup} from './crops.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
+import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
@@ -79,6 +80,7 @@ export function reachableApproach(a,target,nav,shield=null){
   for(let sample=0;sample<32;sample++){
     const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
+    if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     const path=nav.path(a,point,a.radius,null,false);
     if(path)return {point,path};
   }
@@ -147,7 +149,7 @@ export function updateRaid(s,dt,nav) {
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
     }
     const shield=spellAt(s,'shield',target);
-    if(!a.approach||a.approachShieldId!==(shield?.id??null)) {
+    if(!a.approach||a.approachShieldId!==(shield?.id??null)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
       const approach=reachableApproach(a,target,nav,shield);
       if(!approach){release(s,a);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;

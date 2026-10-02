@@ -1,0 +1,39 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Retirada sin interpenetración</title>
+<style>body{margin:0;font:14px system-ui;background:#d8cca9}header{position:absolute;z-index:2;background:#fff9ed;padding:10px}button,select{padding:8px;margin:3px}canvas{width:100vw;height:100vh;display:block}</style>
+<header>Ensayo aislado en terreno plano: rigs nativos, retirada y controlador de producción. No es una partida de campaña.<br>
+<label>Bestia <select id="species"><option value="warthog">Facóquero</option><option value="hyena">Hiena</option><option value="buffalo">Búfalo</option><option value="lion">León</option><option value="rhino">Rinoceronte</option></select></label>
+<button id="step">Paso de 0,1 s</button><button id="pass">Avanzar hasta el cruce</button><button id="finish">Terminar retirada</button><button id="reload">Recargar en memoria</button><div id="status">Cargando…</div></header><canvas id="world"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {prepareAnimalModel,prepareAnimalClips,applyAnimalPose,animalGroundSamples} from '../../src/rendering/animal-actions.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
+import {AfricanToon} from '../../src/rendering/african-toon.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {edgeDistance} from '../../src/world/footprints.js';
+import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
+import {newGame,walkTo} from '../../src/simulation/game.js';
+import {updateWorkerEncounters} from '../../src/simulation/encounters.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('canvas'),antialias:true});renderer.setSize(innerWidth,innerHeight,false);renderer.outputColorSpace=THREE.SRGBColorSpace;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#ddd1ad');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-4,8,5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,100);camera.position.set(8,9,-12);camera.lookAt(0,.5,0);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#bca878'}));floor.rotation.x=-Math.PI/2;scene.add(floor);
+const toon=new AfricanToon();toon.update(false,sun,'sabana');const paint=root=>root.traverse(m=>{if(m.isMesh)for(const mat of [].concat(m.material))toon.material(mat);});paint(floor);
+const assets=new Assets(),animals=(await json('../../content/animal-actions.json')).animals,workers=await json('../../content/worker-actions.json');
+let state,nav,animalRoot,animalData,workerRoot,workerData,ring,arrived=false,violations=0,minClearance=Infinity;
+const destination={id:'exit',x:4,z:0};
+function draw(){const a=state.raid.animals[0],w=state.workers[0];animalRoot.position.set(a.x,0,a.z);animalRoot.rotation.y=a.heading??0;applyAnimalPose(animalData,a,state.elapsed);workerRoot.position.set(w.x,0,w.z);applyWorkerPose(workerData,{...w,status:'idle'},null,state.elapsed,workers[w.profile]);
+ ring.position.set(a.x,.01,a.z);renderer.render(scene,camera);
+ document.querySelector('#status').textContent=`${a.species} · escala 1 · ${state.elapsed.toFixed(1)} s · ${arrived?'retirada completada':'retirada'} · margen mínimo ${Number.isFinite(minClearance)?minClearance.toFixed(3):'—'} · segmentos inválidos ${violations} · golpes ${w.hits} · cupo ${a.hitsRemaining}`;}
+async function setup(){document.querySelectorAll('button,select').forEach(b=>b.disabled=true);for(const root of [animalRoot,workerRoot,ring])if(root)scene.remove(root);for(const data of [animalData,workerData])if(data){data.mixer.stopAllAction();data.mixer.uncacheRoot(data.model);}
+ const species=document.querySelector('#species').value;state=newGame({seed:712});state.pauses=[];state.workers=[{id:'worker',profile:'olderMale',x:0,z:0,status:'fleeing',hits:0}];state.raid={id:'qa',animals:[{id:'animal',species,x:-4,z:0,radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius,status:'retreating',hitsRemaining:0}],reservations:{}};
+ nav=Object.create(Navigation.prototype);nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.chunks=new Map();nav.setState(state);
+ const gltf=await assets.model(animals[species].url),model=prepareAnimalModel(clone(gltf.scene),species);animalRoot=new THREE.Group();animalRoot.add(model);scene.add(animalRoot);animalData={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)};paint(animalRoot);
+ const wg=await assets.model(workers.olderMale.url),wm=clone(wg.scene);workerRoot=new THREE.Group();workerRoot.add(wm);scene.add(workerRoot);workerData={model:wm,mixer:new THREE.AnimationMixer(wm),clips:wg.animations,name:null};paint(workerRoot);
+ ring=new THREE.Mesh(new THREE.RingGeometry(state.raid.animals[0].radius-.01,state.raid.animals[0].radius+.01,64),new THREE.MeshBasicMaterial({color:'#b64924',side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);
+ arrived=false;violations=0;minClearance=Infinity;draw();document.querySelectorAll('button,select').forEach(b=>b.disabled=false);}
+function step(){if(arrived)return;const a=state.raid.animals[0],w=state.workers[0],before={x:a.x,z:a.z};arrived=walkTo(state,a,destination,.1,nav,{speed:3.8,worker:false});const margin=edgeDistance(before,a,w.x,w.z)-a.radius-.28;minClearance=Math.min(minClearance,margin);if(margin< -1e-8||!nav.segmentClear(before,a,a.radius,null,false))violations++;state.elapsed+=.1;updateWorkerEncounters(state,nav);}
+document.querySelector('#step').onclick=()=>{step();draw();};document.querySelector('#pass').onclick=()=>{for(let i=0;i<60&&state.raid.animals[0].x<0;i++)step();draw();};document.querySelector('#finish').onclick=()=>{for(let i=0;i<500&&!arrived;i++)step();draw();};document.querySelector('#reload').onclick=()=>{state=deserialize(serialize(state));nav.setState(state);draw();};document.querySelector('#species').onchange=()=>setup();await setup();
+</script></html>

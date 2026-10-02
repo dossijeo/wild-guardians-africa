@@ -34,8 +34,12 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
   const cast=(kind,p)=>{if(canCast(kind,p))return Game.cast(s,id(kind),kind,p.x,p.z,nav);return false;};
   const act=()=>{
     if(s.raid&&s.cooldowns.shield===0){
-      for(const a of s.raid.animals.filter(a=>a.hitsRemaining>0)){
-        const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId);
+      const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));
+      threats.sort((a,b)=>Number(!!b.target?.alive)-Number(!!a.target?.alive));
+      for(const {a,target} of threats){
+        // Conserve the only shield for living crops while a healthy center can
+        // absorb damage and be repaired. This is the diagnostic player's choice.
+        if(target?.kind==='center'&&target.hp>target.maxHp/2&&s.plants.some(p=>p.alive))continue;
         if(target&&distance(a,target)<8&&!Game.spellAt(s,'shield',target)&&cast('shield',target))break;
       }
     }
@@ -57,7 +61,8 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     if(diversifyDay!==null&&s.day>=diversifyDay&&numberOf(s.ledger.balance)>=1500)diversified=true;
     // Fill this strategy's fixed set of plots. It is not a gameplay entity limit.
     // After startup, keep a full next-day wage while financing the following crop cohort.
-    const end=PROFILES.find(p=>p.id===profile).end,reserve=s.day===startDay&&s.time<30?0:120;
+    // If nothing survives, restart production instead of reserving an unusable wage.
+    const end=PROFILES.find(p=>p.id===profile).end,reserve=!live.length||s.day===startDay&&s.time<30?0:120;
     if(s.time<end-10){
       for(const [i,p] of plots.slice(0,plotCount).entries()){
         if(live.some(plant=>distance(plant,p)<1.1))continue;
