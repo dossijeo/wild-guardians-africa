@@ -24,7 +24,7 @@ export class VfxLibrary {
 
 export class NativeVfx extends THREE.Group {
   constructor(library,id,pipeline,options={}){
-    super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
+    super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
     const v=value=>({value});this.uniforms={uVP:v(new THREE.Matrix4()),uView:v(new THREE.Matrix4()),uModel:v(new THREE.Matrix4()),uInst:v(true),uTime:v(0),uWind:v(options.wind??.3),uWet:v(0),uNight:v(0),uEye:v(new THREE.Vector3()),uRight:v(new THREE.Vector3()),uUp:v(new THREE.Vector3()),uScale:v(1),uExposure:v(1.03),uFogColor:v(new THREE.Color()),uFogRange:v(new THREE.Vector2(1e8,1e9)),uAtlas:v(library.texture),uDepth:v(pipeline.smokeDepth.depthTexture),uViewport:v(new THREE.Vector2()),uNear:v(.1),uFar:v(600),uSunDir:v(new THREE.Vector3()),uSun:v(new THREE.Vector3()),uSky:v(new THREE.Vector3()),uGround:v(new THREE.Vector3()),uParticleLight:v(new THREE.Vector3()),uShadowVP:v(new THREE.Matrix4()),uShadow:v(null),uShadowTexel:v(new THREE.Vector2(1/1024,1/1024)),uHasShadow:v(false)};
     for(let i=0;i<2;i++){this.uniforms['uLightPos'+i]=v(new THREE.Vector3());this.uniforms['uLightCol'+i]=v(new THREE.Vector3());}
     this.localLights=Array.from({length:2},()=>new THREE.PointLight(0xffffff,0,0,2));for(const light of this.localLights){light.visible=false;this.add(light);}
@@ -48,8 +48,10 @@ export class NativeVfx extends THREE.Group {
   setRibbonBuffer(vertices){const capacity=2**Math.ceil(Math.log2(Math.max(1,vertices))),g=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(new Float32Array(capacity*11),11);buffer.setUsage(THREE.DynamicDrawUsage);
     for(const [name,size,offset] of [['aPosition',3,0],['aNormal',3,3],['aColor',4,6],['aKind',1,10]])g.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));g.setAttribute('position',g.getAttribute('aPosition'));g.setDrawRange(0,0);this.ribbons.geometry.dispose();this.ribbons.geometry=g;this.ribbonBuffer=buffer;this.ribbonCapacity=capacity;
   }
-  surfaceTransform(){if(this.surface){this.updateWorldMatrix(true,false);this.surfaceInverse.copy(this.matrixWorld).invert();}}
-  localSurface(x,z){const p=this.surfacePoint.set(x,0,z).applyMatrix4(this.matrixWorld);p.y=this.surface(p.x,p.z);return p.applyMatrix4(this.surfaceInverse).y;}
+  // Procedural geometry may be packed during relative rendering. Terrain
+  // queries retain the global transform captured during simulation advancement.
+  surfaceTransform(){if(this.surface){this.updateWorldMatrix(true,false);this.surfaceMatrix.copy(this.matrixWorld);this.surfaceInverse.copy(this.surfaceMatrix).invert();}}
+  localSurface(x,z){const p=this.surfacePoint.set(x,0,z).applyMatrix4(this.surfaceMatrix);p.y=this.surface(p.x,p.z);return p.applyMatrix4(this.surfaceInverse).y;}
   advance(dt){if(!this.stopped){this.surfaceTransform();this.native.advance(dt);}}
   seek(time){this.stopped=false;this.surfaceTransform();this.native.seek(time);this.packedTime=undefined;}
   clear(){this.stopped=true;this.native.clear();this.packedTime=undefined;this.sprites.visible=this.ribbons.visible=false;for(const m of this.rigids.values())m.visible=false;for(const light of this.localLights)light.visible=false;}
