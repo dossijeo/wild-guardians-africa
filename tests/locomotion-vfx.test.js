@@ -41,7 +41,7 @@ test('Paid walking emits only measured single-step dust, freezes on pause and do
 });
 test('Waiting, falling, incapacitation, stationary animation and backwards time cannot generate footsteps',()=>{
  const base={id:'worker',profile:'olderMale',x:0,z:0,status:'walking',walkPhase:0};
- for(const changes of [{gateWaiting:true},{fallRemaining:1},{incapacitated:true},{status:'home'},{status:'acting'}])assert.equal(movingPose({...base,...changes}),null);
+ for(const changes of [{gateWaiting:true},{fallRemaining:1},{incapacitated:true},{status:'home'},{status:'acting'},{status:'acting',running:true},{status:'acting',idleState:{mode:'walk'}}])assert.equal(movingPose({...base,...changes}),null);
  const g=graphics(),s={elapsed:0,time:0,workers:[base],raid:null};g.manager.update(s);base.walkPhase=3;s.elapsed=.1;g.manager.update(s);assert.equal(g.manager.effects.size,0);
  base.x=.1;base.walkPhase=4;s.elapsed=.2;g.manager.update(s);assert.ok(g.manager.effects.size>0);s.elapsed=0;g.manager.update(s);assert.equal(g.manager.effects.size,0);g.dispose();
 });

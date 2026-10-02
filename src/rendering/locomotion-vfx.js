@@ -5,8 +5,9 @@ export function movingPose(actor){
  if(actor.profile){
   if(actor.status==='home'||actor.incapacitated||actor.fallRemaining>0||actor.gateWaiting)return null;
   if(actor.status==='carrying')return {name:'Carry_Crate',phase:actor.carryPhase??0};
-  if(actor.status==='fleeing'||actor.running)return {name:'Run',phase:actor.runPhase??0};
-  if(['walking','arriving','returning'].includes(actor.status)||actor.idleState?.mode==='walk')return {name:'Walk_Skip',phase:actor.walkPhase??0};
+  if(actor.status==='fleeing')return {name:'Run',phase:actor.runPhase??0};
+  if(['walking','arriving','returning'].includes(actor.status))return actor.running?{name:'Run',phase:actor.runPhase??0}:{name:'Walk_Skip',phase:actor.walkPhase??0};
+  if(['idle','waiting'].includes(actor.status)&&actor.idleState?.mode==='walk')return {name:'Walk_Skip',phase:actor.walkPhase??0};
  }else if(['entering','walking','retreating'].includes(actor.status))return {name:actor.status==='walking'?'Walking':'Running',phase:actor.motionPhase??0};
  return null;
 }
