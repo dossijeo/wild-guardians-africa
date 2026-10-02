@@ -1,6 +1,6 @@
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
-import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate} from './game.js';
+import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 import {releaseTask} from './tasks.js';
@@ -155,9 +155,10 @@ export function updateRaid(s,dt,nav) {
     for(const w of s.workers) {
       if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
-      const replacement=center??s.structures.find(c=>operational(c)&&c.villageId===w.villageId);
-      if(replacement){w.centerId=replacement.id;w.status='arriving';w.raidReturn=true;w.path=null;}
+      if(center){w.status='arriving';w.raidReturn=true;w.path=null;}
+      else {w.displacedDay=s.day;w.status='returning';w.path=null;}
     }
+    recoverDisplacedWorkers(s);
     rebuildTasks(s);
   }
 }
