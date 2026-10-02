@@ -62,7 +62,7 @@ test('generation and installation failures settle waiters and coordinate mismatc
 test('scene installs transferred data without regenerating terrain or navigation population on the main thread',()=>{
  const pack=JSON.parse(readFileSync('public/content/biome-grand_river.json','utf8')),config={seed:'712',biome:'grand_river',relief:1,density:1,river:true,n:1,layers:Array(6).fill(true)},data=buildNativeChunk(config,pack.profile,0,0),suppressed=new Set([data.instances.flat()[0].id]);
  const g=new THREE.BoxGeometry(2,3,2);g.computeBoundingBox();const material=new THREE.MeshStandardMaterial(),prototypes=Array.from({length:20},()=>[0,1,2].map(()=>new THREE.Mesh(g,material)));
- const world={nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
+ const world={buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:new TerrainField(config),suppressed,chunk(){throw new Error('Main generation must not run');}},pack,prototypes,quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'gran-rio'}};
  const group=WorldScene.prototype.terrain.call(world,0,0,data),ground=world.terrainMeshes[0];assert.equal(ground.geometry.attributes.position.data.array,data.terrain);
  assert.deepEqual(group.userData.contactInstances,data.instances.map(list=>list.filter(p=>!suppressed.has(p.id))));
  const water=group.children.find(m=>m.userData.nativeFluid==='chunk');if(data.water.length)assert.equal(water.geometry.attributes.position.array,data.water);

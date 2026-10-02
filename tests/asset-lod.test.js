@@ -43,7 +43,7 @@ test('render bins preserve authored transforms and coverage through level change
  const m=new THREE.Matrix4(),position=new THREE.Vector3(),rotation=new THREE.Quaternion(),scale=new THREE.Vector3();
  for(const [level,mesh] of batch.meshes.entries())for(const [j,i] of batch.orders[level].entries()){
   mesh.getMatrixAt(j,m);m.decompose(position,rotation,scale);assert.ok(Math.abs(position.x-instances[i].x)<1e-6);
-  assert.equal(mesh.geometry,geometry[level]);assert.equal(mesh.geometry.attributes.position,levels[level].geometry.attributes.position);
+  assert.equal(mesh.geometry,geometry[level]);assert.notEqual(mesh.geometry.attributes.position,levels[level].geometry.attributes.position);assert.equal(mesh.geometry.attributes.position.array,levels[level].geometry.attributes.position.array);
   assert.equal(mesh.geometry.attributes.nativeVisibility.array[j],saved[i]);
  }
  const statsFade=updateObstructions(chunks,camera,target,.016,{enabled:false});assert.ok(statsFade.affected<=instances.length);
