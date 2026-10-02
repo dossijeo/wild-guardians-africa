@@ -23,7 +23,7 @@ export function prepareNativeBuilding(gltf,building){
   const meshes=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
   if(meshes.length!==1)throw new Error('DEST requiere la malla original de una sola primitiva');
   const mesh=meshes[0],identity=new THREE.Matrix4();
-  if(mesh.matrixWorld.elements.some((v,i)=>Math.abs(v-identity.elements[i])>1e-9))throw new Error('TransformaciÃƒÂ³n de casa DEST no compatible');
+  if(mesh.matrixWorld.elements.some((v,i)=>Math.abs(v-identity.elements[i])>1e-9))throw new Error('Transformación de casa DEST no compatible');
   const original=mesh.geometry,positions=new Float32Array(original.getAttribute('position').array),normals=new Float32Array(original.getAttribute('normal').array),uv=new Float32Array(original.getAttribute('uv').array),indices=original.index.array;
   const bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
   for(let i=0;i<positions.length;i++){const axis=i%3;bounds.min[axis]=Math.min(bounds.min[axis],positions[i]);bounds.max[axis]=Math.max(bounds.max[axis],positions[i]);}
