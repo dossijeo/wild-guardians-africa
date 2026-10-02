@@ -26,7 +26,7 @@ test('volcanic activation follows all six original manifests and composes with c
    const material=nativeAssetMaterial(pack,asset,slot,textures,box.boundingBox);obstructionMaterial(material);new AfricanToon().material(material);
    const s={uniforms:{},...THREE.ShaderLib.standard};material.onBeforeCompile(s,{});
    assert.equal(s.uniforms.uNativeVolcanicGlow.value,id==='volcanoes'?1:0);assert.equal(s.uniforms.uNativeVolcanicGlow,material.userData.nativeVolcanicGlow);
-   assert.ok(s.fragmentShader.includes('nativeVolcanic4(nativeGlowTexel)'));assert.ok(s.fragmentShader.includes('vToonWorld,nativeEmission)'));
+   assert.ok(s.fragmentShader.includes('nativeVolcanic4(nativeGlowTexel)'));assert.ok(s.fragmentShader.includes('worldPatternPosition(vToonWorld),nativeEmission)'));
    assert.ok(s.fragmentShader.indexOf('nativeGlowTexel=')<s.fragmentShader.indexOf('diffuseColor.rgb*=pow(mix'));
    assert.ok(s.fragmentShader.includes('sRGBTransferOETF(vec4(diffuseColor.rgb,1.)).rgb'));assert.ok(s.fragmentShader.includes('coverageThreshold(gl_FragCoord.xy)'));
    assert.equal(material.map,textures.baseColor);assert.equal(material.normalMap,textures.normal);assert.equal(material.transparent,false);assert.equal(material.toneMapped,false);material.dispose();

@@ -29,7 +29,7 @@ export function updateAssetShadow(batch){
 export function disposeAssetShadows(group){for(const batch of group.userData.lodBatches??[])batch.shadow?.dispose();}
 
 export function installAssetShadows(renderer,chunks){
-  const map=renderer.shadowMap,original=map.render,proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';
+  const map=renderer.shadowMap,original=map.render,proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';proxies.matrixAutoUpdate=false;
   // Native DVS/DFS project solid geometry without atlas alpha or visibility.
   // This shared source material is borrowed only during the shadow traversal.
   const solid=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
@@ -50,7 +50,7 @@ export function installAssetShadows(renderer,chunks){
           mesh.matrix.copy(group.matrixWorld);proxies.add(mesh);
         }
       }
-      scene.add(proxies);proxies.updateMatrixWorld(true);
+      proxies.matrix.copy(scene.matrixWorld).invert();scene.add(proxies);proxies.updateMatrixWorld(true);
       return original.call(this,lights,scene,camera);
     }finally{for(const [mesh,material] of materials){mesh.material=material;delete mesh.userData.nativeShadowStats;}scene.remove(proxies);proxies.clear();}
   }

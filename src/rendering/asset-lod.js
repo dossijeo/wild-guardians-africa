@@ -13,7 +13,7 @@ export function createAssetLod(group,levels,instances,asset,slot,clipBounds=null
   const chunkOrigin=group.userData.nativeChunkOrigin??[0,0];
   const batch={chunkOrigin,uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,clip:!!clipBounds,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
   for(const [level,original] of levels.entries()){
-    const geometry=clipBounds?assetClipGeometry(original.geometry,clipBounds,instances.length):obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
+    const geometry=clipBounds?assetClipGeometry(original.geometry,clipBounds,instances.length,chunkOrigin):obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
     if(clipBounds)assetClipMaterial(original.material);
     obstructionMaterial(original.material);
     const mesh=new THREE.InstancedMesh(geometry,original.material,instances.length);

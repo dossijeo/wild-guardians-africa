@@ -6,7 +6,7 @@ import * as THREE from 'three';
 export const nativeAssetClipFragment=`if(uNativeClip>.5){bool within=vNativeClipWorld.x>=vNativeClipBounds.x&&vNativeClipWorld.z>=vNativeClipBounds.y&&vNativeClipWorld.x<vNativeClipBounds.z&&vNativeClipWorld.z<vNativeClipBounds.w;if((uNativeClip<1.5&&!within)||(uNativeClip>1.5&&within))discard;}`;
 export const nativeAssetClipRequired=(slot,biome)=>slot===19&&!['gran-canon','desierto'].includes(biome);
 
-export function assetClipGeometry(source,bounds,capacity){
+export function assetClipGeometry(source,bounds,capacity,origin=[0,0]){
   const geometry=new THREE.BufferGeometry();
   // Own attribute identities so unloading one chunk cannot delete a borrowed
   // vertex buffer belonging to another chunk or the detached shadow proxy.
@@ -14,7 +14,7 @@ export function assetClipGeometry(source,bounds,capacity){
   for(const [key,a] of Object.entries(source.attributes))geometry.setAttribute(key,new THREE.BufferAttribute(a.array,a.itemSize,a.normalized));
   geometry.groups=source.groups.map(g=>({...g}));geometry.drawRange={...source.drawRange};
   geometry.boundingBox=source.boundingBox?.clone()??null;geometry.boundingSphere=source.boundingSphere?.clone()??null;
-  const array=new Float32Array(capacity*4);for(let i=0;i<capacity;i++)array.set(bounds,i*4);
+  const local=[bounds[0]-origin[0],bounds[1]-origin[1],bounds[2]-origin[0],bounds[3]-origin[1]],array=new Float32Array(capacity*4);for(let i=0;i<capacity;i++)array.set(local,i*4);
   geometry.setAttribute('nativeClipBounds',new THREE.InstancedBufferAttribute(array,4));geometry.userData.nativeChunkClip=true;
   return geometry;
 }
@@ -32,7 +32,7 @@ export function assetClipMaterial(material){
       #ifdef USE_INSTANCING
         nativeClipPosition=instanceMatrix*nativeClipPosition;
       #endif
-      vNativeClipWorld=(modelMatrix*nativeClipPosition).xyz;vNativeClipBounds=nativeClipBounds;`);
+      vNativeClipWorld=nativeClipPosition.xyz;vNativeClipBounds=nativeClipBounds;`);
     shader.fragmentShader='varying vec4 vNativeClipBounds;varying vec3 vNativeClipWorld;uniform float uNativeClip;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\n'+nativeAssetClipFragment);
   };

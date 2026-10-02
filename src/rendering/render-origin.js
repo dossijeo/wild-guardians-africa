@@ -12,3 +12,44 @@ export class RenderOrigin {
     return true;
   }
 }
+
+// Projection, view vectors and shadow sampling see the same local world during
+// every pass. CPU simulation, streaming, picking and effect advancement run
+// outside this synchronous window and retain their global coordinates.
+export function withRenderOrigin({scene,camera,origin,detached=[],minMax=[],minSize=[]},draw){
+  if(!origin.x&&!origin.z)return draw();
+  const position=scene.position.clone(),eye=camera.position.clone();
+  const roots=detached.map(root=>[root,root.position.clone()]);
+  const bounds=new Map();
+  for(const value of [...minMax,...minSize])if(!bounds.has(value))bounds.set(value,value.clone());
+  try{
+    scene.position.x-=origin.x;scene.position.z-=origin.z;
+    camera.position.x-=origin.x;camera.position.z-=origin.z;
+    for(const [root] of roots){root.position.x-=origin.x;root.position.z-=origin.z;root.updateMatrixWorld(true);}
+    for(const value of new Set(minMax)){value.x-=origin.x;value.y-=origin.z;value.z-=origin.x;value.w-=origin.z;}
+    for(const value of new Set(minSize)){value.x-=origin.x;value.y-=origin.z;}
+    scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+    return draw();
+  }finally{
+    scene.position.copy(position);camera.position.copy(eye);
+    for(const [root,saved] of roots){root.position.copy(saved);root.updateMatrixWorld(true);}
+    for(const [value,saved] of bounds)value.copy(saved);
+    // Restore world matrices too: input/raycast and terrain effect callbacks
+    // must never observe last frame's relative transform after this returns.
+    scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+  }
+}
+
+export function renderOriginBounds(scene){
+  const bounds=new Set();
+  scene.traverse(object=>{
+    for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
+      const data=material.userData;
+      if(data.horizonBounds)bounds.add(data.horizonBounds);
+      if(data.paintUniforms)bounds.add(data.paintUniforms.uFluidBounds.value);
+    }
+  });
+  return [...bounds];
+}
+
+export const worldPatternFunctions='uniform vec2 uWorldOrigin;\nvec3 worldPatternPosition(vec3 p){return p+vec3(uWorldOrigin.x,0.,uWorldOrigin.y);}\n';
