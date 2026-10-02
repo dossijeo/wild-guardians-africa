@@ -1,5 +1,11 @@
 // Clip the whole hand plane against the actual 1.5 m terrain triangles.
 // The maximum of a linear height difference occurs at a clipped vertex.
+export function terrainTriangleHeight(x,z,surface){
+  const step=1.5,origin=-24,loX=origin+Math.floor((x-origin)/step)*step,loZ=origin+Math.floor((z-origin)/step)*step,u=(x-loX)/step,v=(z-loZ)/step;
+  const a=Math.fround(surface(loX,loZ)),b=Math.fround(surface(loX,loZ+step)),c=Math.fround(surface(loX+step,loZ));
+  if(u+v<=1)return a+u*(c-a)+v*(b-a);
+  const d=Math.fround(surface(loX+step,loZ+step));return d+(1-u)*(b-d)+(1-v)*(c-d);
+}
 function clipTriangle(points,triangle){
   let poly=points.map(p=>p.slice());
   const side=(a,b,p)=>(b[0]-a[0])*(p[2]-a[2])-(b[2]-a[2])*(p[0]-a[0]);

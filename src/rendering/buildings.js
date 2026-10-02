@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
+import {BuildingEffects} from './building-effects.js';
 
 const glsl=source=>source.replace('#version 300 es\n','');
 const clamp=value=>Math.max(0,Math.min(1,value));
@@ -47,7 +48,7 @@ function shaderMaterial(uniforms,fragmentShader){
   return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
 }
 export class NativeBuilding extends THREE.Group {
-  constructor(template,entity,pipeline){
+  constructor(template,entity,pipeline,elapsed=0){
     super();this.template=template;this.pipeline=pipeline;this.entityId=entity.id;this.userData.entityId=entity.id;this.userData.nativeBuilding=true;
     this.scale.setScalar(template.scale);this.rotation.y=entity.yaw??0;
     const value=x=>({value:x}),material=template.material;
@@ -67,7 +68,7 @@ export class NativeBuilding extends THREE.Group {
       mesh.onBeforeRender=(renderer,scene,camera)=>this.cameraUniforms(mesh,camera);
     }
     this.add(this.ash,this.outer,this.inner);pipeline.add(this);this.outer.raycast=(raycaster,hits)=>this.raycastBody(raycaster,hits);this.inner.raycast=()=>{};
-    this.ash.raycast=(raycaster,hits)=>{if(this.damage>=.9998)THREE.Mesh.prototype.raycast.call(this.ash,raycaster,hits);};this.update(entity,0);
+    this.ash.raycast=(raycaster,hits)=>{if(this.damage>=.9998)THREE.Mesh.prototype.raycast.call(this.ash,raycaster,hits);};this.effects=new BuildingEffects(this);this.update(entity,elapsed);
   }
   cameraUniforms(mesh,camera){
     const inverse=new THREE.Matrix4().copy(mesh.matrixWorld).invert();
@@ -81,12 +82,12 @@ export class NativeBuilding extends THREE.Group {
   update(entity,elapsed){
     this.damage=centerVisualDamage(entity);this.uniforms.uDamage.value=this.damage;this.uniforms.uTime.value=elapsed;
     this.uniforms.uQuality.value=this.pipeline.quality??1;
-    this.uniforms.uAshAge.value=entity.status==='ruined'?Math.max(0,elapsed-(this.ruinedAt??elapsed)):0;
-    if(entity.status==='ruined')this.ruinedAt??=elapsed;else this.ruinedAt=null;
     this.rotation.y=entity.yaw??0;
     for(let i=0;i<8;i++){const site=this.template.kernel.hitSites[i],t=clamp((this.damage-site.birth)/(.91-site.birth)),radius=this.damage<=.0001?0:site.maxRadius*Math.pow(t,.70);this.uniforms.uHoles.value[i].set(...site.p,radius);}
     this.outer.visible=this.damage<.9998;this.inner.visible=this.damage>.015&&this.damage<.9998;this.ash.visible=this.damage>.23;
     this.opening.visible=this.damage>.015&&this.damage<.9998;
+    this.effects.update(this.damage,elapsed);
+    this.uniforms.uAshAge.value=Math.max(0,this.effects.native.time-this.effects.native.destructionAt);
   }
   raycastBody(raycaster,hits){
     if(this.damage>=.9998)return;
@@ -96,13 +97,14 @@ export class NativeBuilding extends THREE.Group {
     if(!hit)return;const point=new THREE.Vector3(...hit.p).applyMatrix4(this.matrixWorld),distance=point.distanceTo(raycaster.ray.origin);
     if(distance>=raycaster.near&&distance<=raycaster.far)hits.push({distance,point,object:this.outer});
   }
-  dispose(){this.pipeline.remove(this);for(const mesh of [this.outer,this.inner,this.ash,this.opening])mesh.material.dispose();this.outer.customDepthMaterial.dispose();this.clear();}
+  dispose(){this.effects.dispose();this.pipeline.remove(this);for(const mesh of [this.outer,this.inner,this.ash,this.opening])mesh.material.dispose();this.outer.customDepthMaterial.dispose();this.clear();}
 }
 export class BuildingDestructionPass {
   constructor(renderer,sun=null,ambient=null){
-    this.renderer=renderer;this.sun=sun;this.ambient=ambient;this.quality=1;this.scene=new THREE.Scene();this.buildings=new Set();this.key='';
+    this.renderer=renderer;this.sun=sun;this.ambient=ambient;this.quality=1;this.effectQuality='medium';this.scene=new THREE.Scene();this.smokeScene=new THREE.Scene();this.buildings=new Set();this.key='';
     this.target=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter,depthBuffer:true});
     this.target.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);this.target.depthTexture.minFilter=this.target.depthTexture.magFilter=THREE.NearestFilter;
+    this.smokeDepth=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter,depthBuffer:true});this.smokeDepth.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);this.smokeDepth.depthTexture.minFilter=this.smokeDepth.depthTexture.magFilter=THREE.NearestFilter;
   }
   add(building){this.buildings.add(building);this.scene.add(building.opening);this.key='';}
   remove(building){this.buildings.delete(building);this.scene.remove(building.opening);this.key='';}
@@ -122,5 +124,18 @@ export class BuildingDestructionPass {
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setClearColor(0,0);renderer.setRenderTarget(this.target);renderer.render(this.scene,camera);this.key=key;
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
-  dispose(){for(const building of [...this.buildings])building.dispose();this.target.dispose();}
+  renderSmoke(camera,world){
+    if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;
+    camera.updateWorldMatrix(true,false);for(const building of this.buildings)if(building.effects.native.smoke.length)building.effects.prepareSmoke(camera);
+    const renderer=this.renderer,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=renderer.getRenderTarget(),autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled,materials=new Map();
+    if(this.smokeDepth.width!==size.x||this.smokeDepth.height!==size.y)this.smokeDepth.setSize(size.x,size.y);
+    world.traverse(object=>{for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[])if(!materials.has(material))materials.set(material,{visible:material.visible,colorWrite:material.colorWrite});});
+    if(world.overrideMaterial&&!materials.has(world.overrideMaterial))materials.set(world.overrideMaterial,{visible:world.overrideMaterial.visible,colorWrite:world.overrideMaterial.colorWrite});
+    try{
+      for(const material of materials.keys()){material.colorWrite=false;if(material.transparent||!material.depthWrite)material.visible=false;}
+      renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);renderer.render(world,camera);
+    }finally{for(const [material,saved] of materials)Object.assign(material,saved);renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+    try{renderer.autoClear=false;renderer.shadowMap.enabled=false;renderer.render(this.smokeScene,camera);}finally{renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+  }
+  dispose(){for(const building of [...this.buildings])building.dispose();this.target.dispose();this.smokeDepth.dispose();}
 }

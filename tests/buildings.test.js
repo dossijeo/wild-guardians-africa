@@ -7,6 +7,7 @@ import {hitStructure} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {terrainTriangleHeight} from '../src/rendering/hand-terrain.js';
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/destruction.json',import.meta.url))).buildings;
 function originalModel(building){
   const bytes=readFileSync(new URL('../public'+building.url,import.meta.url)),array=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),view=new DataView(array);let json,bin;
@@ -92,4 +93,38 @@ test('Real blocking pauses and a saved collapse retain identical native geometry
   state=deserialize(serialize(state));house.update(state.structures[0],state.elapsed);assert.equal(house.damage,phase);assert.equal(house.uniforms.uTime.value,time);assert.equal(JSON.stringify(house.uniforms.uHoles.value),holes);
   Game.resume(state,'qa');Game.tick(state,2.1,nav);house.update(state.structures[0],state.elapsed);assert.equal(state.structures[0].status,'ruined');assert.equal(house.damage,1);assert.equal(house.outer.visible,false);assert.equal(house.ash.visible,true);
   house.dispose();pass.dispose();
+});
+test('GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks',()=>{
+  const renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer),entity={id:'fx',hp:600,maxHp:600,status:'intact',collapseRemaining:0},house=new NativeBuilding(templates[0],entity,pass),camera=new THREE.PerspectiveCamera(42,1,.25,500);
+  house.position.set(10,3,4);camera.position.set(10,6,12);camera.updateMatrixWorld();hitStructure(entity,480);entity.collapseRemaining=2;house.update(entity,1.2);pass.smokeScene.updateMatrixWorld();
+  assert.equal(house.effects.native.ashChips.length,175);assert.ok(house.effects.native.debris.length>0);assert.ok(house.effects.native.smoke.length>0);
+  const smoke=house.effects.smoke,debris=house.effects.debris;assert.equal(debris.geometry.getAttribute('aPos').count,36);assert.equal(debris.geometry.getAttribute('aOffset').data.stride,12);assert.equal(smoke.geometry.getAttribute('aCorner').count,6);assert.equal(smoke.geometry.getAttribute('aPosSize').data.stride,11);
+  assert.equal(smoke.material.depthWrite,false);assert.equal(smoke.material.depthTest,false);assert.equal(smoke.material.transparent,true);assert.equal(debris.material.transparent,false);assert.equal(smoke.material.uniforms.uDepth.value,pass.smokeDepth.depthTexture);
+  house.effects.prepareSmoke(camera);smoke.onBeforeRender(renderer,pass.smokeScene,camera);assert.equal(smoke.material.uniforms.uClip.value.x,.25);assert.equal(smoke.material.uniforms.uClip.value.y,500);assert.equal(smoke.material.uniforms.uSoftness.value,.48*templates[0].scale);assert.equal(smoke.geometry.instanceCount,house.effects.native.smoke.length);
+  const before=JSON.stringify({smoke:house.effects.native.smoke,debris:house.effects.native.debris,time:house.effects.native.time}),upload=[...house.effects.debrisBuffer.array];house.update(entity,1.2);assert.equal(JSON.stringify({smoke:house.effects.native.smoke,debris:house.effects.native.debris,time:house.effects.native.time}),before);assert.deepEqual([...house.effects.debrisBuffer.array],upload);
+  assert.match(smoke.material.fragmentShader,/texelFetch\(uDepth,ivec2\(gl_FragCoord.xy\),0\)/);assert.match(smoke.material.fragmentShader,/float n=uClip.x,f=uClip.y/);house.dispose();pass.dispose();
+});
+test('Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state',()=>{
+  const renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer),world=new THREE.Scene(),opaque=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()),transparent=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial({transparent:true})),entity={id:'fx',hp:600,maxHp:600,status:'intact'},house=new NativeBuilding(templates[0],entity,pass),camera=new THREE.PerspectiveCamera();world.add(opaque,transparent,house);
+  pass.renderSmoke(camera,world);assert.equal(renderer.renders,0);house.update({...entity,hp:390},.5);assert.ok(house.effects.native.smoke.length>0);
+  const target={original:true};renderer.target=target;const render=renderer.render;let captured=false,overlaid=false;
+  renderer.render=function(scene){if(scene===world){captured=true;assert.equal(opaque.material.colorWrite,false);assert.equal(transparent.material.visible,false);assert.equal(house.outer.material.colorWrite,false);assert.equal(house.inner.material.colorWrite,false);assert.equal(scene.overrideMaterial,null);}else{overlaid=true;assert.equal(scene,pass.smokeScene);assert.equal(this.autoClear,false);assert.equal(this.target,target);}render.call(this);};
+  pass.renderSmoke(camera,world);assert.ok(captured&&overlaid);assert.equal(renderer.renders,2);assert.equal(opaque.material.colorWrite,true);assert.equal(transparent.material.visible,true);assert.equal(renderer.target,target);assert.equal(renderer.autoClear,false);assert.equal(renderer.shadowMap.enabled,true);assert.equal(pass.smokeDepth.width,1280);
+  renderer.fail=true;assert.throws(()=>pass.renderSmoke(camera,world),/fallo GPU/);assert.equal(opaque.material.colorWrite,true);assert.equal(transparent.material.visible,true);assert.equal(renderer.target,target);assert.equal(renderer.autoClear,false);assert.equal(renderer.shadowMap.enabled,true);
+  house.dispose();pass.dispose();
+});
+test('Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals',()=>{
+  const surface=(x,z)=>Math.sin(x*.4)*.7+z*.03+x*x*.001,renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer);pass.surface=surface;
+  for(const [x,z] of [[-23.9,-23.8],[-23,-23.2],[5.2,-2.1],[100.1,300.7]]){
+    const step=1.5,loX=-24+Math.floor((x+24)/step)*step,loZ=-24+Math.floor((z+24)/step)*step,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute([loX,Math.fround(surface(loX,loZ)),loZ,loX,Math.fround(surface(loX,loZ+step)),loZ+step,loX+step,Math.fround(surface(loX+step,loZ)),loZ,loX+step,Math.fround(surface(loX+step,loZ+step)),loZ+step],3));geometry.setIndex([0,1,2,2,1,3]);const mesh=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));mesh.updateMatrixWorld();
+    const hits=new THREE.Raycaster(new THREE.Vector3(x,200,z),new THREE.Vector3(0,-1,0)).intersectObject(mesh);assert.ok(hits.length);assert.ok(Math.abs(hits[0].point.y-terrainTriangleHeight(x,z,surface))<1e-9);geometry.dispose();mesh.material.dispose();
+  }
+  const entity={id:'terrain-fx',hp:600,maxHp:600,status:'intact',collapseRemaining:0},house=new NativeBuilding(templates[0],entity,pass);house.position.set(10,3,4);hitStructure(entity,480);entity.collapseRemaining=0;house.update(entity,.1);
+  for(let i=0;i<60;i++){house.update({...entity,status:'ruined'},.1+i/30);for(const fragment of house.effects.native.debris){const point=new THREE.Vector3(...fragment.p).applyMatrix4(house.matrixWorld),floor=terrainTriangleHeight(point.x,point.z,surface)+(.028+fragment.size[1]*.23)*house.template.scale;assert.ok(point.y>=floor-1e-9);}}
+  assert.ok(house.effects.native.debris.some(p=>p.bounces>0));house.dispose();pass.dispose();
+});
+test('Particle meshes remain presentation only and release geometry, materials and emitters on center removal',()=>{
+  const pass=new BuildingDestructionPass(fakeRenderer()),house=new NativeBuilding(templates[0],{id:'fx',hp:600,maxHp:600,status:'intact'},pass);house.update({hp:120,maxHp:600,status:'collapsing',collapseRemaining:2},1);let released=0;
+  for(const mesh of [house.effects.smoke,house.effects.debris]){mesh.geometry.addEventListener('dispose',()=>released++);mesh.material.addEventListener('dispose',()=>released++);const hits=[];mesh.raycast(new THREE.Raycaster(),hits);assert.equal(hits.length,0);}
+  house.dispose();assert.equal(released,4);assert.equal(pass.smokeScene.children.length,0);assert.equal(house.effects.native.smoke.length,0);assert.equal(house.effects.native.debris.length,0);assert.equal(house.effects.native.ashChips.length,0);pass.dispose();
 });
