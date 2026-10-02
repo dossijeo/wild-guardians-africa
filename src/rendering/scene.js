@@ -12,6 +12,9 @@ import {tutorialHandTarget} from './tutorial-hand-target.js';
 import {NativeWall} from './walls.js';
 import {WallDrawing} from './wall-drawing.js';
 import {NativeBuilding,BuildingDestructionPass} from './buildings.js';
+import {VfxLibrary} from './vfx.js';
+import {WorkVfx} from './work-vfx.js';
+import {renderedTerrainSurface} from './terrain-surface.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -63,6 +66,8 @@ export class WorldScene {
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
     this.cropBridgeData=await json('/content/crop-bridges.json');this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
     this.wallPrototypes=await this.assets.walls(await json('/content/walls.json'));
+    const vfxCatalogue=await json('/content/vfx.json');this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.assets.texture(vfxCatalogue.atlas));
+    this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
@@ -229,6 +234,6 @@ export class WorldScene {
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.destructionPass.render(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene);}
-  dispose() {this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.destructionPass.render(this.camera,this.scene);const depth=!!this.workVfx?.prepare(this.camera);if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
+  dispose() {this.workVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }
