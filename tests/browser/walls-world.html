@@ -1,10 +1,10 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Muro nativo en la finca</title><style>body{margin:0;font:14px system-ui}header{position:absolute;z-index:2;padding:12px;background:#fff9ed}button{padding:8px;margin:4px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><header>Prueba aislada con WorldScene y comandos de juego: centro, mijo, trabajador y muro de adobe pagados. No modifica partidas guardadas.<br><button id="hit">Golpe lógico de 40 PV</button><button id="repair">Solicitar reparación pagada</button><span id="status" role="status">Cargando finca…</span></header><canvas id="world" aria-label="Muro nativo en el mundo original"></canvas><script type="module">
-import {hitStructure} from '/src/simulation/rules.js';
-import * as Game from '/src/simulation/game.js';
-import {Navigation} from '/src/world/navigation.js';
-import {findInitialLocationAsync} from '/src/world/villages.js';
-import {WorldScene} from '/src/rendering/scene.js';
-import {json} from '/src/rendering/assets.js';
+import {hitStructure} from '../../src/simulation/rules.js';
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
 const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
 const state=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
 Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');

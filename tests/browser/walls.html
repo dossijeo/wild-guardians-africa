@@ -1,8 +1,8 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Geometría nativa de Bastión</title><style>body{margin:0;font:14px system-ui;background:#dfdcc8}nav{position:absolute;z-index:2;background:#fff9ed;padding:12px}label,button{margin:6px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><nav>Visor de geometría de producción. Estas piezas de prueba no modifican partidas ni dinero.<br><label>Vida restante <input id="health" type="range" min="0" max="100" value="100"></label><label><input id="gate" type="checkbox">Puertas</label><button id="collapse">Colapso nativo de 1,4 s</button><button id="repair">Reconstruir</button><span id="status" role="status">Cargando las veinte mallas y sus puentes originales…</span></nav><canvas id="world" aria-label="Cinco defensas originales de Bastión"></canvas><script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {Assets,json} from '/src/rendering/assets.js';
-import {NativeWall} from '/src/rendering/walls.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {NativeWall} from '../../src/rendering/walls.js';
 const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#world'),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd5be');scene.add(new THREE.HemisphereLight('#f4efdc','#605b3a',2));const sun=new THREE.DirectionalLight('#fff1d5',3);sun.position.set(-8,15,9);scene.add(sun);
 const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.set(3,8,16);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.8,0);controls.update();

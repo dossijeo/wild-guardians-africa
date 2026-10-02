@@ -7,8 +7,8 @@
 <script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {Assets,json} from '/src/rendering/assets.js';
-import {prepareAnimalClips,applyAnimalPose,animalGroundSamples} from '/src/rendering/animal-actions.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {prepareAnimalClips,applyAnimalPose,animalGroundSamples} from '../../src/rendering/animal-actions.js';
 const canvas=document.querySelector('#view'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);renderer.shadowMap.enabled=true;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#e7ddc6');const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,100);camera.position.set(12,9,24);
 const controls=new OrbitControls(camera,canvas);controls.target.set(0,1.2,0);controls.update();scene.add(new THREE.HemisphereLight('#fff','#8d7052',2.2));

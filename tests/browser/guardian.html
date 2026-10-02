@@ -1,5 +1,5 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>Espíritu nativo · ocho gestos</title><style>body{margin:0;background:linear-gradient(#aac5ab,#ebecd2);font-family:system-ui;height:100dvh}nav{position:relative;z-index:30;padding:20px;display:flex;gap:12px}button,select{padding:10px}#status{align-self:center}</style><nav><label>Gesto <select id="gesture"><option>greeting</option><option>speak</option><option>acknowledge</option><option>curious</option><option>warning</option><option>reveal</option><option>idle</option><option>farewell</option></select></label><button id="replay">Repetir gesto</button><button id="half">Fase 50 %</button><button id="pause">Pausar</button><button id="hide">Cerrar con despedida</button><span id="status" role="status">Cargando Espíritu original…</span></nav><div id="guardian"></div><script type="module">
-import {NativeGuardian} from '/src/ui/guardian.js';
+import {NativeGuardian} from '../../src/ui/guardian.js';
 const actor=new NativeGuardian(document.querySelector('#guardian'),e=>document.querySelector('#status').textContent=e.message);
 let key=0,paused=false;
 function show(){actor.show({key:key++,gesture:document.querySelector('#gesture').value,text:'Soy el Espíritu que cuida estas tierras. Cada gesto conserva la malla, las curvas y los adornos del laboratorio original.'});}
