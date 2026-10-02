@@ -79,7 +79,7 @@ export const vfxDefinitions=[
 {id:'spirit',name:'Espíritu',title:'La presencia del guardián',group:'Espíritu',duration:5.5,icon:'spirit',desc:'Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.',chips:['Kenney · halo y estela','Trayectorias 3D','Dos luces locales']},
 ];
 
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 let seed=7131;function random(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t^=t+Math.imul(t^t>>>7,61|t);return ((t^t>>>14)>>>0)/4294967296}const rand=(a=0,b=1)=>a+(b-a)*random();const choose=a=>a[Math.floor(random()*a.length)];
@@ -87,6 +87,7 @@ const settings={density:1,speed:1,wind:.3,nightFill:.14,quality:'high',cycleDura
 
  if(!Number.isFinite(density)||density<=0||!Number.isFinite(wind))throw new Error('Configuración VFX inválida');
  if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
+ if(shieldMode!==null&&!['barrier','contact'].includes(shieldMode)||!Number.isFinite(shieldDuration)||shieldDuration<1)throw new Error('Configuración Escudo inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 let current=definitions[0],clock=0,paused=false,looping=true,events=[],eventIndex=0,parts=[],rigids=[],wetness=0,hitTime=-10;
@@ -119,7 +120,7 @@ function simulate(dt){clock+=dt;toolPose();while(eventIndex<events.length&&event
    if(r.v[1]<0)r.v[1]=-r.v[1]*r.bounce;r.v[0]*=.64;r.v[2]*=.64;r.spin=r.spin.map(x=>x*.52);if(impact<.2){r.settled=true;r.v=[0,0,0];if(r.kind==='leaf'){r.rot[0]=Math.PI/2;r.p[1]=floor+.015;}}}
  }
 }
-function seekTo(t){isSeeking=true;const was=paused;restartEffect(false);const target=clamp(t,0,current.duration);while(clock+1/60<target)simulate(1/60);if(clock<target)simulate(target-clock);paused=was;isSeeking=false;}
+function seekTo(t){isSeeking=true;const was=paused;restartEffect(false);const target=clamp(t,0,shieldMode==='barrier'?shieldDuration:current.duration);while(clock+1/60<target)simulate(1/60);if(clock<target)simulate(target-clock);paused=was;isSeeking=false;}
 function spriteInstances(){const out=[];for(const p of parts){const t=p.age/p.life,fade=smooth(0,.1,t)*(1-smooth(.5,1,t)),s=mix(p.size0,p.size1,1-(1-t)**2);out.push({tex:p.tex,p:p.p,size:[s,s*p.ratio],col:p.col,alpha:p.alpha*fade,angle:p.angle,soft:p.soft,orient:p.orient,emit:p.emit,dir:p.dir||[0,1,0],frame:mix(p.frameStart||0,p.frameEnd??((spriteRects[p.tex]?.length||1)-1),t)});}
  lightCol0=[0,0,0];lightCol1=[0,0,0];
  if(current.id==='spirit'){
@@ -140,7 +141,7 @@ function arcRibbon(p,U,W,r,width,a0,a1,c,alpha){const n=V.norm(V.cross(U,W));fxR
 function warningCircle(p,r,t,c=color('#eea85e')){if(!settings.layers.telegraph||t<0||t>1)return;const pulse=.56+.14*Math.sin(t*TAU*4);const a=V.add(p,[0,.024,0]);fxBand(a,0,r,0,TAU,c,.065+ t*.04);fxBand(a,r-.032,r,0,TAU,c,pulse);fxBand(V.add(a,[0,.003,0]),r-.135,r-.085,-Math.PI/2,-Math.PI/2+t*TAU,c,.8);for(let j=0;j<12;j++){let u=j/12*TAU;fxBand(a,r+.04,r+.15,u-.012,u+.012,c,.5,[1,0,0],[0,0,1],1);}}
 function warningLane(start,end,half,t){if(!settings.layers.telegraph||t<0||t>1)return;const c=color('#f0aa62'),y=.024,a=[start,y,-half],b=[end,y,-half],d=[start,y,half],e=[end,y,half];fxQuad(a,b,e,d,c,.085);fxLine(a,b,.028,c,.62);fxLine(d,e,.028,c,.62);fxLine(b,e,.025,c,.6);fxQuad(a,[mix(start,end,t),y,-half],[mix(start,end,t),y,half],d,c,.08);for(let j=0;j<6;j++){const x=mix(start+.15,end-.2,j/6),aa=.23+.6*smooth(j/6,j/6+.15,t);fxLine([x,y+.003,-half*.46],[x+.18,y+.003,0],.035,c,aa);fxLine([x+.18,y+.003,0],[x,y+.003,half*.46],.035,c,aa);}}
 function warningCone(p,r,half,t){if(!settings.layers.telegraph||t<0||t>1)return;const c=color('#e9a46a'),q=V.add(p,[0,.025,0]);fxBand(q,.04,r,-half,half,c,.07+.02*t);fxBand(q,r-.035,r,-half,half,c,.62);fxBand(q,r-.15,r-.1,-half,mix(-half,half,t),c,.68);for(const a of[-half,half])fxLine(q,V.add(q,[Math.cos(a)*r,0,Math.sin(a)*r]),.027,c,.55);}
-function shieldDome(radius,alpha){if(alpha<.005)return;const center=[0,.04,0],seg=48,rings=17,c=color('#7bcfb8');for(let i=0;i<seg;i++)for(let j=0;j<rings;j++){const at=(x,y)=>{let a=x/seg*TAU,t=y/rings*Math.PI/2,n=[Math.sin(t)*Math.cos(a),Math.cos(t),Math.sin(t)*Math.sin(a)];return {p:V.add(center,[n[0]*radius,n[1]*radius*1.2,n[2]*radius]),n:V.norm([n[0],n[1]/1.2,n[2]])}};const a=at(i,j),b=at(i+1,j),d=at(i,j+1),e=at(i+1,j+1);fxTri(a.p,b.p,e.p,c,alpha,2,[a.n,b.n,e.n]);fxTri(a.p,e.p,d.p,c,alpha,2,[a.n,e.n,d.n]);}}
+function shieldDome(radius,alpha){if(alpha<.005)return;const center=[0,.04,0],seg=48,rings=17,c=color('#7bcfb8');for(let i=0;i<seg;i++)for(let j=0;j<rings;j++){const at=(x,y)=>{let a=x/seg*TAU,t=y/rings*Math.PI/2,n=[Math.sin(t)*Math.cos(a),Math.cos(t),Math.sin(t)*Math.sin(a)];return {p:V.add(center,[n[0]*radius,n[1]*radius*1.2+(shieldMode==='barrier'&&surface?floorAt([n[0]*radius,0,n[2]*radius]):0),n[2]*radius]),n:V.norm([n[0],n[1]/1.2,n[2]])}};const a=at(i,j),b=at(i+1,j),d=at(i,j+1),e=at(i+1,j+1);fxTri(a.p,b.p,e.p,c,alpha,2,[a.n,b.n,e.n]);fxTri(a.p,e.p,d.p,c,alpha,2,[a.n,e.n,d.n]);}}
 function attackWindow(start,length){const u=(clock-start)/length;return u<0||u>1?null:u;}
 function composeGeometryFX(){fxVertices=[];const id=current.id,t=clock,amber=color('#eac18a'),ivory=color('#f7e2b4'),jade=color('#81d8b7'),blue=color('#91cfdb');
  if(id==='rhino'){warningLane(-2.7,1.38,.57,t/.91);const u=attackWindow(1.7,.64);if(u!==null&&settings.layers.ribbons){const r=.22+u*1.55;fxBand([.86,.65,0],r,r+.075*(1-u),0,TAU,ivory,.55*(1-u),[0,1,0],[0,0,1]);for(let j=0;j<2;j++)arcRibbon([.6,.045,0],[1,0,0],[0,0,1],.35+u*(1.8+j*.35),.09*(1-u),-.9,2.9,amber,.6*(1-u));}}
@@ -149,7 +150,7 @@ function composeGeometryFX(){fxVertices=[];const id=current.id,t=clock,amber=col
  if(id==='warthog'){warningLane(-2.35,1.32,.4,t/.83);const u=attackWindow(1.24,.61);if(u!==null&&settings.layers.ribbons)for(const s of[-1,1])arcRibbon([.57,.93,s*.25],[1,0,0],[0,1,0],.83,.16,.9+u*1.1,4.7+u*1.1,ivory,.76*(1-smooth(.5,1,u)));}
  if(id==='hyena'){warningCircle([.72,0,0],.66,t/.89);const u=attackWindow(1.21,.32);if(u!==null&&settings.layers.ribbons){const close=1-smooth(0,.48,u),a=(1-smooth(.52,1,u));for(const s of[-1,1])arcRibbon([.8,1.05+s*.19*close,.05],[1,0,0],[0,1,0],.38+.07*close,.065,s>0?0:Math.PI,s>0?Math.PI:TAU,ivory,a*.85);}}
  if(id==='roar'){warningCone([-.76,0,0],3.35,.48,t/.78);if(settings.layers.ribbons)for(let j=0;j<4;j++){const u=attackWindow(.95+j*.26,1.43);if(u===null)continue;let radius=.18+u*.84;fxBand([-.55+u*2.85,1.1,0],radius,radius+.025+.015*(1-u),0,TAU,amber,(1-u)*.53,[0,1,0],[0,0,1]);}}
- if(id==='shield'&&settings.layers.ribbons){const vis=smooth(.35,.9,t)*(1-smooth(3.65,4.65,t)),r=1.65*smooth(.35,.92,t);shieldDome(r,vis*.65);fxBand([0,.033,0],r-.045,r,0,TAU,jade,vis*.68);fxBand([0,.038,0],r+.1,r+.12,0,TAU,jade,vis*.3);const u=attackWindow(1.85,.7);if(u!==null){for(let j=0;j<3;j++){const a=clamp(u-j*.12);if(a>0)fxBand([-1.5,.86,0],a*.88,a*.88+.026,0,TAU,ivory,(1-a)*.6,[0,1,0],[0,0,1]);}}}
+ if(id==='shield'&&settings.layers.ribbons){const vis=shieldMode==='contact'?0:smooth(.35,.9,t)*(1-smooth(shieldMode==='barrier'?shieldDuration-.5:3.65,shieldMode==='barrier'?shieldDuration:4.65,t)),r=1.65*(shieldMode==='barrier'?1:smooth(.35,.92,t));shieldDome(r,vis*.65);fxBand([0,.033,0],r-.045,r,0,TAU,jade,vis*.68);fxBand([0,.038,0],r+.1,r+.12,0,TAU,jade,vis*.3);const u=shieldMode==='barrier'?null:attackWindow(shieldMode==='contact'?0:1.85,.7);if(u!==null){for(let j=0;j<3;j++){const a=clamp(u-j*.12);if(a>0)fxBand([-1.5,.86,0],a*.88,a*.88+.026,0,TAU,ivory,(1-a)*.6,[0,1,0],[0,0,1]);}}}
  if(id==='repel'&&settings.layers.ribbons){const prep=smooth(.1,.5,t)*(1-smooth(1.14,1.34,t));for(let j=0;j<3;j++)arcRibbon([0,.06+j*.18,0],[1,0,0],[0,0,1],.53+j*.17,.065,t*2+j*2,t*2+j*2+3.5,jade,prep*.65);const u=attackWindow(1.27,1.25);if(u!==null)for(let j=0;j<3;j++){const p=clamp(u-j*.13);if(p<=0)continue;let r=.5+p*2.75;fxBand([0,.045,0],r,r+.06*(1-p),0,TAU,jade,.8*(1-p));arcRibbon([0,.15+.3*(1-p),0],[1,0,0],[0,0,1],r,.085,clock*1.5,clock*1.5+5.4,blue,.5*(1-p));if(j===0)for(let k=0;k<4;k++){const a=k*Math.PI/2+clock*.23;arcRibbon([0,.07,0],[Math.cos(a),0,Math.sin(a)],[0,.55,0],r,.035,0,Math.PI,jade,.24*(1-p));}}}
  if(id==='heal'&&settings.layers.ribbons){const vis=smooth(.3,.8,t)*(1-smooth(3.8,4.6,t));fxBand([0,.025,0],.76,.79,0,TAU,jade,.5*vis);for(let j=0;j<2;j++)fxRibbon(u=>{const angle=u*TAU*1.1+t*1.7+j*Math.PI;return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]},[0,0,1],.033,jade,.37*vis,45);}
  if(id==='stun'&&settings.layers.ribbons){const vis=smooth(.25,.7,t)*(1-smooth(3.4,4.2,t));fxBand([.18,1.66,0],.32,.338,0,TAU,amber,.48*vis);}
@@ -190,8 +191,8 @@ function scheduleCombat(at){const id=current.id;
   for(let i=0;i<7;i++)at(1.02+i*.17,()=>dustAt([-.4+i*.42,.03,Math.sin(i)*.17],2,.54,'#bca378',false));
  }
  if(id==='shield'){
-  at(.54,()=>twinkle([0,.7,0],7,'#9bdbc6'));
-  at(1.85,()=>{contact([-1.5,.86,0],.8,'shield-block','spirit');flip('impact',[-1.48,.86,0],.91,.34,'#c5e7d4',{orient:4,dir:[-1,0,0],alpha:.85});radialStreaks([-1.52,.9,0],7,1.2,'#9cd7ca');});
+  if(shieldMode!=='contact')at(.54,()=>twinkle([0,.7,0],7,'#9bdbc6'));
+  if(shieldMode!=='barrier')at(shieldMode==='contact'?0:1.85,()=>{contact([-1.5,.86,0],.8,'shield-block','spirit');flip('impact',[-1.48,.86,0],.91,.34,'#c5e7d4',{orient:4,dir:[-1,0,0],alpha:.85});radialStreaks([-1.52,.9,0],7,1.2,'#9cd7ca');});
  }
  if(id==='repel'){
   at(.28,()=>flip('charge',[0,1.7,0],1.07,1.04,'#88d8c4',{alpha:.66,frameStart:0,emit:1.14}));
@@ -208,9 +209,9 @@ function combatSprites(out){const id=current.id,t=clock;
  if(id==='rhino'&&t>.88&&t<1.7){const u=smooth(.88,1.65,t),x=mix(-2.36,-.24,u);for(let j=0;j<7;j++){const a=j/7*TAU;staticSprite(out,'speedLine',[x-.6-.17*(j%3),.65+Math.sin(a)*.4,Math.cos(a)*.43],[.06,.6],.27+u*.15,'#e1c08c',{orient:3,dir:[1,0,0],emit:.79});}}
  if(id==='roar')for(let j=0;j<4;j++){const u=attackWindow(.95+j*.26,1.43);if(u!==null)staticSprite(out,'ring',[-.55+u*2.85,1.1,0],(.18+u*.84)*2.17,(1-u)*.13,'#e4c499',{orient:4,dir:[1,0,0],emit:.8,soft:.14});}
  if(id==='shield'){
-  const vis=smooth(.38,.92,t)*(1-smooth(3.65,4.7,t));lightPos0=[-.5,1.05,.5];lightPos1=[.8,.75,-.5];lightCol0=V.scale([.04,.56,.35],vis*.67);lightCol1=V.scale([.06,.3,.4],vis*.38);
+  const vis=shieldMode==='contact'?0:smooth(.38,.92,t)*(1-smooth(shieldMode==='barrier'?shieldDuration-.5:3.65,shieldMode==='barrier'?shieldDuration:4.7,t));lightPos0=[-.5,1.05,.5];lightPos1=[.8,.75,-.5];lightCol0=V.scale([.04,.56,.35],vis*.67);lightCol1=V.scale([.06,.3,.4],vis*.38);
   for(let j=0;j<10;j++){const a=t*.55+j/10*TAU;staticSprite(out,'star',[Math.cos(a)*1.54,.18+.5*(.5+.5*Math.sin(a*1.7+j)),Math.sin(a)*1.54],.067,vis*.57,'#b4ded0',{emit:1.05});}
-  const u=attackWindow(1.25,.61);if(u!==null){const p=[mix(-2.9,-1.5,u),.85,0];staticSprite(out,'trail',p,[.14,.7],.65,'#d9b48a',{orient:3,dir:[1,0,0],emit:.95});staticSprite(out,'star',p,.17,.69,'#f4d5a2');}
+  const u=shieldMode?null:attackWindow(1.25,.61);if(u!==null){const p=[mix(-2.9,-1.5,u),.85,0];staticSprite(out,'trail',p,[.14,.7],.65,'#d9b48a',{orient:3,dir:[1,0,0],emit:.95});staticSprite(out,'star',p,.17,.69,'#f4d5a2');}
  }
  if(id==='repel'){
   const vis=smooth(.15,.5,t)*(1-smooth(1.4,2.7,t));lightPos0=[0,1,.5];lightPos1=[0,.4,-.8];lightCol0=V.scale([.05,.49,.31],vis*.7);lightCol1=V.scale([.06,.28,.33],vis*.7);
