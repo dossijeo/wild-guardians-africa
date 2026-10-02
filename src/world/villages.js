@@ -1,3 +1,5 @@
+import {centerFootprint,centerServicePoint} from './centers.js';
+import {footprintsOverlap} from './footprints.js';
 export function villageLayout(payload,x,z) {
   return payload.units.map(unit=>{
     const px=(unit.min[0]+unit.max[0])*8,pz=(unit.min[2]+unit.max[2])*8;
@@ -27,12 +29,23 @@ function* initialLocations(nav,payload) {
     const checks=[];
     for(const building of layout){const check=nav.placementFootprint(building);checks.push(check);if(!check.valid)break;}
     if(checks.some(c=>!c.valid))continue;
-    const center={x:x+23,z};
-    if(!nav.placement(center.x,center.z,2.6).valid)continue;
+    const center={x:x+23,z,culture:payload.id==='saheliano'?'saheliana':payload.id};
+    const shape=centerFootprint(center);
+    const centerCheck=nav.placementFootprint(shape);
+    if(!centerCheck.valid||layout.some(b=>b.kind!=='Zona común'&&b.footprint&&footprintsOverlap(shape.footprint,b.footprint)))continue;
     let workable=0;
-    for(let dz=-6;dz<=6;dz+=1.5)for(let dx=5;dx<=12;dx+=1.5)if(nav.placement(center.x+dx,center.z+dz,.4).valid)workable++;
+    const oldObstacles=nav.obstacles,oldSuppressed=nav.suppressed;
+    nav.obstacles=[...(oldObstacles??[]),{id:'initial-center',kind:'center',...shape},...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,kind:'house'}))];
+    nav.suppressed=new Set([...(oldSuppressed??[]),...checks.flatMap(c=>c.suppress??[]),...(centerCheck.suppress??[])]);nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];
+    try {
+      const departure=centerServicePoint(center,null,.8);
+      for(let dz=-9;dz<=9&&workable<12;dz+=1.5)for(let dx=4.5;dx<=15&&workable<12;dx+=1.5){
+        const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
+        if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,departure,.28,null,true))workable++;
+      }
+    }finally{nav.obstacles=oldObstacles;nav.suppressed=oldSuppressed;nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];}
     if(workable<12)continue;
-    const entry=findVillageEntry(nav,layout,x,z,{x:center.x+3.4,z:center.z},[{id:'initial-center',kind:'center',...center,radius:2.6}]);
+    const entry=findVillageEntry(nav,layout,x,z,centerServicePoint(center,null,.8),[{id:'initial-center',kind:'center',...shape}]);
     if(entry)return {x,z,buildings:layout,center,entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
   }
   throw new Error('No se encontró una distribución inicial transitable; vuelve a generar la semilla.');

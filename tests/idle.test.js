@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -81,7 +82,7 @@ test('Receiving queued work prevents even one extra ambient step',()=>{
 });
 
 test('Ambient paths stay inside the local radius and original terrain/building footprints',()=>{
-  const {s,nav:actualNav}=createOpeningWorld();const center=s.structures[0],w=worker('youngFemale');w.x=center.x+3.4;w.z=center.z;
+  const {s,nav:actualNav}=createOpeningWorld();const center=s.structures[0],w=worker('youngFemale');Object.assign(w,centerServicePoint(center,s,.8));
   let walked=0;
   for(let i=0;i<6000;i++){
     const previous={x:w.x,z:w.z};updateIdle(w,center,.1,actualNav,s.seed);

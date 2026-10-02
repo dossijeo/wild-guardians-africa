@@ -1,3 +1,4 @@
+import {centerBoundaryPoint,centerCulture} from '../world/centers.js';
 import {vfxDefinitions,vfxEnvironment} from './vfx-native.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
@@ -12,8 +13,8 @@ function frame(species,animal,target){
   const yaw=(animal.heading??Math.atan2(target.x-animal.x,target.z-animal.z))-Math.PI/2;
   const scale=animalVisualHeights[species]/1.1;
   const distance=Math.hypot(animal.x-target.x,animal.z-target.z);
-  const radius=Math.min(distance,target.radius??(target.kind==='center'?3.1:target.kind==='wall'?1.2:0));
-  const x=target.x+(distance?(animal.x-target.x)/distance*radius:0),z=target.z+(distance?(animal.z-target.z)/distance*radius:0);
+  const radius=Math.min(distance,target.radius??(target.kind==='wall'?1.2:0));
+  const {x,z}=target.kind==='center'?centerBoundaryPoint(target,Math.atan2(animal.x-target.x,animal.z-target.z)):{x:target.x+(distance?(animal.x-target.x)/distance*radius:0),z:target.z+(distance?(animal.z-target.z)/distance*radius:0)};
   const [px,,pz]=contact.point;
   return {x:x-scale*(Math.cos(yaw)*px+Math.sin(yaw)*pz),z:z-scale*(-Math.sin(yaw)*px+Math.cos(yaw)*pz),yaw,scale,contact:{x,z}};
 }
@@ -25,7 +26,7 @@ export function attackVfxPlans(state){
     if(animal.status!=='attacking'||animal.hitApplied||animal.hitsRemaining<=0||!animal.attackId||!(animal.attackDuration>0))continue;
     const target=targets.get(animal.targetId),contact=attackVfxContacts[animal.species];
     if(!target||target.alive===false||target.status&&target.status!=='intact'||!contact)continue;
-    const placement=frame(animal.species,animal,shieldFor(state,target)??target);
+    const placement=frame(animal.species,animal,shieldFor(state,target)??(target.kind==='center'?{...target,culture:centerCulture(target,state)}:target));
     const progress=Math.max(0,Math.min(1,1-animal.attackRemaining/animal.attackDuration));
     plans.set(animal.attackId,{key:animal.attackId,id:animal.species,...placement,time:Math.min(contact.time-1e-5,contact.time*progress)});
   }
@@ -37,7 +38,8 @@ export function attackVfxPlans(state){
     if(!contact||!Number.isFinite(p.elapsed)||!point(p.animal)||!point(p.target)||p.shield&&(!point(p.shield)||!(p.shield.radius>0)))continue;
     const age=state.elapsed-p.elapsed,time=contact.time+age;
     if(age<0||time>=definitions.get(event.species).duration)continue;
-    plans.set(event.attackId,{key:event.attackId,id:event.species,...frame(event.species,p.animal,p.shield??p.target),time,blocked:!!p.shield});
+    const savedTarget=p.shield??(p.target.kind==='center'?{...p.target,culture:p.target.culture??centerCulture(targets.get(event.targetId)??p.target,state),yaw:p.target.yaw??targets.get(event.targetId)?.yaw}:p.target);
+    plans.set(event.attackId,{key:event.attackId,id:event.species,...frame(event.species,p.animal,savedTarget),time,blocked:!!p.shield});
   }
   return [...plans.values()];
 }

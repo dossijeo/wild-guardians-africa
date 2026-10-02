@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 // Calibrate one long trip against native village-to-center routes in world metres.
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -20,7 +21,7 @@ for(const payload of villages){
   const nav=new Navigation(712,'sabana',read('biome-'+BIOME_IDS.sabana).profile);
   const location=findInitialLocation(nav,payload),state={villages:[location],structures:[{id:'reference-center',kind:'center',status:'intact',...location.center}],spells:[],suppressed:location.suppress};
   nav.setState(state);
-  const destination={x:location.center.x+3.4,z:location.center.z};
+  const destination=centerServicePoint(state.structures[0],state,.8);
   const path=nav.path(location.entry,destination,.28,null,true);
   if(!path)throw new Error('Native reference route is unreachable');
   let last=location.entry,distance=0;

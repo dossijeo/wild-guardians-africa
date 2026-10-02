@@ -16,7 +16,7 @@ const libraries=JSON.parse(readFileSync(new URL('../public/content/worker-action
 function paidFixture(material,profile='olderMale',centerZ=2){
   const s=Game.newGame({seed:712});s.villages[0].z=-8;Game.resume(s,'intro');s.tutorial.step='center';
   const nav=Object.create(Navigation.prototype);nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];nav.chunks=new Map();nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.searchedRegions=[];nav.obstacles=[];
-  Game.placeStructure(s,'center',{x:-3.4,z:centerZ},nav);Game.placeStructure(s,'gate',{kind:'wall',material,gate:true,x:0,z:0},nav);Game.plant(s,'seed','mijo',0,4,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{[profile]:1});
+  Game.placeStructure(s,'center',{x:-6,z:centerZ},nav);Game.placeStructure(s,'gate',{kind:'wall',material,gate:true,x:0,z:0},nav);Game.plant(s,'seed','mijo',0,4,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{[profile]:1});
   return {s,nav,g:s.structures.find(e=>e.gate),w:s.workers[0]};
 }
 test('Workers request a near crossing and wait without spending run distance or movement phases',()=>{

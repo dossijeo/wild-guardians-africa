@@ -1,3 +1,5 @@
+import {footprintDistance} from '../world/footprints.js';
+import {centerCulture,centerFootprint,centerServicePoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {rational,multiply,negate,transact,compare} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
@@ -36,14 +38,17 @@ export function commit(s,id,action,operation) {
   operation();s.commandIds.push(id);return true;
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
-  const check=nav.placement(x,z,kind==='center'?2.6:.8);
+  const village=nearest(s.villages,{x,z}),culture=village?.culture??s.culture;
+  const candidate={kind,x,z,yaw,culture},footprint=kind==='center'?centerFootprint(candidate,s):null;
+  const check=footprint?(nav.placementFootprint?.(footprint)??nav.placement(x,z,footprint.radius)):(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
+  if(footprint&&s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4))throw new Error('Un cultivo ocupa este terreno');
   if(!check.valid)throw new Error(check.reason);
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?800:wallSpec(material).cost;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     transact(s.ledger,id,rational(-cost));
-    const maxHp=structureHealth(kind,material,gate),village=nearest(s.villages,{x,z});
-    s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
+    const maxHp=structureHealth(kind,material,gate);
+    s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind});
     if(kind==='center')recoverDisplacedWorkers(s);
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
@@ -263,11 +268,11 @@ function updateWorkers(s,dt,nav) {
     if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
     const ended=contractExpired(w,s)||s.time>=p.end;
     if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;continue;}
-    if(w.status==='arriving') {if(walkTo(s,w,{...center,x:center.x+3.4,id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
+    if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
-      const delivered=walkTo(s,w,{...center,x:center.x+3.2,id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}});
+      const delivered=walkTo(s,w,{...center,...centerServicePoint(center,s),id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}});
       crate.x=w.x;crate.z=w.z;
       if(delivered) {
         transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{targetId:crate.id});
@@ -335,9 +340,9 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {
-      const routes=s.villages.map(v=>({v,route:nav.path({x:center.x+3.2,z:center.z},v.entry??v,.28,center.id,true)})).filter(r=>r.route);
+      const routes=s.villages.map(v=>({v,route:nav.path(centerServicePoint(center,s),v.entry??v,.28,null,true)})).filter(r=>r.route);
       routes.sort((a,b)=>a.route.reduce((length,p,i)=>length+(i?dist(p,a.route[i-1]):0),0)-b.route.reduce((length,p,i)=>length+(i?dist(p,b.route[i-1]):0),0));
-      if(routes[0])center.villageId=routes[0].v.id;
+      if(routes[0]){center.culture??=centerCulture(center,s);center.villageId=routes[0].v.id;}
     }
     emit(s,'VillageFounded',{culture,x,z});
   });

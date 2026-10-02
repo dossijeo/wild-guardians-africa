@@ -1,3 +1,4 @@
+import {centerGeometry} from './centers.js';
 // Service points outside the same footprints used by Navigation.
 export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
@@ -6,7 +7,7 @@ export function repairRoute(worker,target,nav){
     const angle=Math.atan2(worker.x-target.x,worker.z-target.z);
     points=Array.from({length:16},(_,i)=>{
       const offset=i===0?0:Math.ceil(i/2)*(i%2?1:-1)*Math.PI/8;
-      return {x:target.x+Math.sin(angle+offset)*3.2,z:target.z+Math.cos(angle+offset)*3.2};
+      return {x:target.x+Math.sin(angle+offset)*(centerGeometry(target,nav.state).radius+radius+clearance),z:target.z+Math.cos(angle+offset)*(centerGeometry(target,nav.state).radius+radius+clearance)};
     });
   }else{
     const scale=target.gate?(target.material==='reforzado'?1.6:['adobe','piedra'].includes(target.material)?1.4:1):1;

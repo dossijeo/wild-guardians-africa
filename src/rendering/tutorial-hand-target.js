@@ -1,3 +1,4 @@
+import {centerGeometry} from '../world/centers.js';
 import {isMature} from '../simulation/crops.js';
 // These IDs describe real game entities or proposed, legal ground positions.
 // No demonstration cart or parcel is inserted into the simulation.
@@ -18,7 +19,7 @@ export function tutorialHandTarget(state,nav){
   switch(state.tutorial.step){
     case 'intro':return target('open',entry,'village-entry');
     case 'center':{
-      const site=center??ground(entry,2.6);return site?target('point',site,center?.id??'center-site'):null;
+      const site=center??ground(entry,centerGeometry({culture:village.culture},state).radius);return site?target('point',site,center?.id??'center-site'):null;
     }
     case 'plant':{
       const site=plant??(center&&ground(center,.5));return site?target('tap',site,plant?.id??'plant-site'):null;

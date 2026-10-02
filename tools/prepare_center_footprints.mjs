@@ -12,5 +12,5 @@ for(const building of catalogue){
  template.dispose();
 }
 writeFileSync(new URL('content/manifests/center-footprints.json',root),JSON.stringify({schema:'wg-center-footprints/1',method:'Native scale 1; original DEST rigid centring and geometry patches; convex XZ hull of the rendered building.',cultures},null,2)+'\n');
-writeFileSync(new URL('src/world/center-geometries.js',root),'// Generated from the five original DEST GLB by tools/prepare_center_footprints.mjs.\nexport const CENTER_GEOMETRIES = '+JSON.stringify(cultures)+';\n');
+writeFileSync(new URL('src/world/center-geometries.js',root),'// Generated from the five original DEST GLB by tools/prepare_center_footprints.mjs.\nexport const CENTER_GEOMETRIES = '+JSON.stringify(Object.fromEntries(Object.entries(cultures).map(([culture,{bounds,hull,radius}])=>[culture,{bounds,hull,radius}])) )+';\n');
 console.log('Five native center footprints prepared');

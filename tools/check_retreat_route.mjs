@@ -1,10 +1,31 @@
+import {footprintDistance} from '../src/world/footprints.js';
+import {centerServicePoint} from '../src/world/centers.js';
 // Reproduce the route endpoint from the seed-712 active-farm failure.
 // Uses a legally purchased opening and crops; no economy or balance overrides.
-import {createOpeningWorld} from './check_opening.mjs';
+import {readFileSync} from 'node:fs';
+import {Navigation} from '../src/world/navigation.js';
+import {villageLayout,findVillageEntry} from '../src/world/villages.js';
+import {centerFootprint} from '../src/world/centers.js';
 import * as Game from '../src/simulation/game.js';
 import {pathToFileURL} from 'node:url';
 export function createRetreatReproduction(){
-const {s,nav}=createOpeningWorld({seed:712,biome:'sabana',culture:'etiope'}),center=s.structures[0],departure={x:center.x+3.4,z:center.z},plots=[];
+// Freeze the historical village position recorded in test-results/retreat-route-712.txt.
+// A newer opening search may choose a different village and erase this regression.
+const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url))).find(v=>v.id==='etiope');
+const pack=JSON.parse(readFileSync(new URL('../public/content/biome-savanna.json',import.meta.url)));
+const nav=new Navigation(712,'sabana',pack.profile),s=Game.newGame({seed:712,culture:'etiope'});
+const x=-58.927890563119334,z=-57.27265356351765,buildings=villageLayout(payload,x,z);
+Object.assign(s.villages[0],{x,z,buildings,entry:findVillageEntry(nav,buildings,x,z)});
+s.suppressed.push(...buildings.flatMap(b=>nav.placementFootprint(b).suppress??[]));nav.setState(s);Game.resume(s,'intro');
+let site;
+for(let ring=0;ring<12&&!site;ring++)for(let i=0;i<(ring?16:1)&&!site;i++){
+ const point={x:x+23+Math.cos(i*Math.PI/8)*ring*3,z:z+Math.sin(i*Math.PI/8)*ring*3};
+ const shape=centerFootprint({...point,culture:'etiope'});
+ if(footprintDistance(shape.footprint,-29.289059826756475,-56.22730078939573)>.45&&nav.placementFootprint(shape).valid)site=point;
+}
+if(!site)throw new Error('No legal native center for the historical retreat fixture');
+Game.placeStructure(s,'route-center',site,nav);
+const center=s.structures[0],departure=centerServicePoint(center,s,.8),plots=[];
 for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
   const p={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
   if(nav.placement(p.x,p.z,.4).valid&&nav.path(departure,p,.28,null,true)&&nav.path(p,departure,.28,null,true))plots.push(p);

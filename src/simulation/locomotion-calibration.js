@@ -4,7 +4,7 @@ export const LOCOMOTION = {
   "method": "Native lab route speeds; median of the five native initial village-to-center walking paths on Sabana/712 at production scale.",
   "walkMetresPerSecond": 0.72,
   "runMetresPerSecond": 1.6,
-  "longTripMetres": 31.98830498693036,
+  "longTripMetres": 35.268031177720886,
   "sources": [
     {
       "profile": "youngMale",
@@ -57,42 +57,42 @@ export const LOCOMOTION = {
       "seed": 712,
       "biome": "sabana",
       "entry": {
-        "x": 91.90606075004732,
-        "z": 90.54282570924263
+        "x": 199.5936382952636,
+        "z": 35.34991014827507
       },
       "destination": {
-        "x": 118.30606075004732,
-        "z": 90.54282570924263
+        "x": 227.54863731297905,
+        "z": 35.34991014827507
       },
-      "distanceMetres": 31.98830498693036
+      "distanceMetres": 33.58340539712448
     },
     {
       "culture": "saheliano",
       "seed": 712,
       "biome": "sabana",
       "entry": {
-        "x": 102.79088215454767,
-        "z": 85.93567597008598
+        "x": 211.89648612493355,
+        "z": 35.54514738888946
       },
       "destination": {
-        "x": 129.19088215454767,
-        "z": 85.93567597008598
+        "x": 241.85823381894906,
+        "z": 35.54514738888946
       },
-      "distanceMetres": 29.934769481017707
+      "distanceMetres": 37.96903213194107
     },
     {
       "culture": "suajili",
       "seed": 712,
       "biome": "sabana",
       "entry": {
-        "x": 168,
-        "z": 0
+        "x": 217.40755379995997,
+        "z": 58.70998217264851
       },
       "destination": {
-        "x": 194.4,
-        "z": 0
+        "x": 245.61952918371853,
+        "z": 58.70998217264851
       },
-      "distanceMetres": 30.31967364854619
+      "distanceMetres": 34.33333431348686
     },
     {
       "culture": "musgum",
@@ -103,24 +103,24 @@ export const LOCOMOTION = {
         "z": 35.34991014827507
       },
       "destination": {
-        "x": 225.9936382952636,
+        "x": 228.8415097418731,
         "z": 35.34991014827507
       },
-      "distanceMetres": 33.02723445055491
+      "distanceMetres": 35.268031177720886
     },
     {
       "culture": "etiope",
       "seed": 712,
       "biome": "sabana",
       "entry": {
-        "x": -58.927890563119334,
-        "z": -57.27265356351765
+        "x": 199.5936382952636,
+        "z": 35.34991014827507
       },
       "destination": {
-        "x": -32.527890563119335,
-        "z": -57.27265356351765
+        "x": 228.24922410878594,
+        "z": 35.34991014827507
       },
-      "distanceMetres": 33.24610932037491
+      "distanceMetres": 35.51039288190775
     }
   ]
 };

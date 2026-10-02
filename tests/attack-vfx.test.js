@@ -1,3 +1,5 @@
+import {centerFootprint} from '../src/world/centers.js';
+import {edgeDistance} from '../src/world/footprints.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,8 +12,8 @@ import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url)));
 const nav={version:1,placement:()=>({valid:true}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
-function fixture(species,animation){
-  const state=Game.newGame({slotId:'attack-vfx',seed:712});Game.resume(state,'intro');Game.placeStructure(state,'center',{x:12,z:8},nav);
+function fixture(species,animation,culture='mapungubwe'){
+  const state=Game.newGame({slotId:'attack-vfx',seed:712,culture});Game.resume(state,'intro');Game.placeStructure(state,'center',{x:12,z:8},nav);
   const target=state.structures[0],duration=A.animals[species].clips[animation].duration;
   const animal={id:'animal',species,x:12,z:13,heading:Math.PI,radius:1,spawn:{x:12,z:30},targetId:target.id,reservation:'structure:'+target.id,hitsRemaining:1,status:'attacking',animation,attackId:'attack-vfx',attackDuration:duration,attackRemaining:duration,hitApplied:false};
   state.raid={id:'raid',animals:[animal],reservations:{[animal.reservation]:animal.id},encounters:[]};state.initialPreparation=false;state.time=320;state.nightPlan={at:320,done:true,group:[]};
@@ -24,7 +26,7 @@ for(const species of Object.keys(A.animals))test(`${species}: four clips present
     let {state,animal,target,duration}=fixture(species,animation),g=graphics();const hp=target.hp;
     Game.tick(state,duration/2,nav);const before=serialize(state);g.manager.update(state);assert.equal(serialize(state),before);
     let effect=g.manager.effects.get(animal.attackId),plan=attackVfxPlans(state)[0];assert.ok(Math.abs(plan.time-attackVfxContacts[species].time/2)<1e-8);assert.equal(target.hp,hp);
-    const landed=new THREE.Vector3(...attackVfxContacts[species].point);effect.updateWorldMatrix(true,false);landed.applyMatrix4(effect.matrixWorld);assert.ok(Math.abs(landed.x-12)<1e-8);assert.ok(Math.abs(landed.z-11.1)<1e-8);
+    const landed=new THREE.Vector3(...attackVfxContacts[species].point);effect.updateWorldMatrix(true,false);landed.applyMatrix4(effect.matrixWorld);const hull=centerFootprint(target,state).footprint;assert.ok(Math.min(...hull.map((p,i)=>edgeDistance(p,hull[(i+1)%hull.length],landed.x,landed.z)))<1e-8);
     Game.pause(state,'qa');const phase=effect.native.time;Game.tick(state,20,nav);g.manager.update(state);assert.equal(effect.native.time,phase);Game.resume(state,'qa');
     g.dispose();state=deserialize(serialize(state));g=graphics();g.manager.update(state);assert.ok(Math.abs(g.manager.effects.get(animal.attackId).native.time-phase)<1e-8);
     Game.tick(state,duration/2+.01,nav);g.manager.update(state);assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit').length,1);assert.equal(state.raid.animals[0].hitsRemaining,0);assert.ok(state.structures[0].hp<hp);
@@ -58,4 +60,16 @@ test('Different attack IDs coexist through dissipating tails; legacy/malformed m
   assert.equal(attackVfxPlans(state).length,2);
   state.events.push({...first,id:'legacy',attackId:'legacy',presentation:undefined},{...first,id:'bad',attackId:'bad',presentation:{elapsed:NaN}});assert.equal(attackVfxPlans(state).length,2);
   state.elapsed=first.presentation.elapsed+10;assert.equal(attackVfxPlans(state).length,1);
+});
+
+test('Legacy center hit facts recover native culture and yaw from the retained structure without changing damage',()=>{
+ for(const culture of Game.CULTURES){
+  const {state,target,duration}=fixture('hyena','Right_Hand_Sword_Slash',culture);target.yaw=.73;
+  Game.tick(state,duration+.01,nav);const event=state.events.find(e=>e.type==='AnimalLogicalHit');
+  assert.equal(event.presentation.target.culture,culture);assert.equal(event.presentation.target.yaw,.73);
+  const expected=attackVfxPlans(state)[0];assert.ok(expected);
+  delete event.presentation.target.culture;delete event.presentation.target.yaw;
+  const before=serialize(state);assert.deepEqual(attackVfxPlans(state)[0],expected);assert.equal(serialize(state),before);
+  assert.deepEqual(attackVfxPlans(deserialize(before))[0],expected);assert.equal(target.hp,550);
+ }
 });

@@ -1,3 +1,4 @@
+import {repairRoute} from '../src/world/work-points.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
@@ -45,7 +46,7 @@ test('Worker arrival reconstructs a ruined center and recovers its displaced sta
   displaced.forEach(w=>{w.displacedDay=1;w.status='home';});
   Game.requestRepair(s,'rebuild-request',lost.id);
   const task=s.tasks.find(t=>t.kind==='repair');task.workerId=repairing.id;
-  Object.assign(repairing,{x:lost.x+3.2,z:lost.z,status:'walking',taskId:task.id,path:null});
+  Object.assign(repairing,{...repairRoute(repairing,lost,nav).destination,status:'walking',taskId:task.id,path:null});
   const cash=numberOf(s.ledger.balance);Game.tick(s,.1,nav);
   assert.equal(lost.status,'intact');assert.equal(numberOf(s.ledger.balance),cash-800);
   assert.equal(repairing.centerId,survivor.id);

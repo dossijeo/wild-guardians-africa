@@ -107,8 +107,8 @@ test('Manual harvest orders survive queue reconstruction, manual repairs do not'
   assert.ok(s.tasks.some(t=>t.kind==='harvest'));assert.ok(!s.tasks.some(t=>t.kind==='repair'));
 });
 test('New midday center does not move plants or employees',()=>{
-  const s=setup();s.ledger.balance=rational(5000);const original=s.plants[0].centerId;placeStructure(s,'second',{x:10,z:0},nav);
-  assert.equal(s.plants[0].centerId,original);assert.equal(s.workers[0].centerId,original);plant(s,'new','mijo',12,0,nav);assert.equal(s.plants[1].centerId,s.structures[1].id);
+  const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',12,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});s.ledger.balance=rational(5000);const original=s.plants[0].centerId;placeStructure(s,'second',{x:18,z:0},nav);
+  assert.equal(s.plants[0].centerId,original);assert.equal(s.workers[0].centerId,original);plant(s,'new','mijo',24,0,nav);assert.equal(s.plants[1].centerId,s.structures[1].id);
 });
 test('Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry',()=>{
   const s=setup();assert.throws(()=>cast(s,'early','growth',10,0,nav));s.day=5;

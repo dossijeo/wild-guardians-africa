@@ -1,3 +1,4 @@
+import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 import {SearchFrontier} from './search-frontier.js';
@@ -35,7 +36,7 @@ export class Navigation {
     this.closedRegions.clear();
     this.searchedRegions=[];
     this.suppressed=new Set(state.suppressed);
-    this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>({...s,radius:s.kind==='center'?2.6:.7}));
+    this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>s.kind==='center'?centerFootprint(s,state):({...s,radius:.7}));
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
   }

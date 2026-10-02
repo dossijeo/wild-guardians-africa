@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
@@ -34,7 +35,7 @@ test('The native farm resumes physical worker actions after reading, and complet
   const {s:state,nav}=createOpeningWorld(),profile=new TutorialProfile(new Storage()),controller=new TutorialController(state,profile);
   assert.equal(state.tutorial.reading,'basic.plant');controller.acknowledge();
   const center=state.structures[0];let point;
-  for(let dz=-6;dz<=6&&!point;dz+=1.5)for(let dx=4.5;dx<12&&!point;dx+=1.5){const p={x:center.x+dx,z:center.z+dz};if(nav.placement(p.x,p.z,.4).valid&&nav.path({x:center.x+3.4,z:center.z},p,.28,null,true))point=p;}
+  for(let dz=-6;dz<=6&&!point;dz+=1.5)for(let dx=4.5;dx<12&&!point;dx+=1.5){const p={x:center.x+dx,z:center.z+dz};if(nav.placement(p.x,p.z,.4).valid&&nav.path(centerServicePoint(center,state,.8),p,.28,null,true))point=p;}
   assert.ok(point);Game.plant(state,'tutorial-seed','mijo',point.x,point.z,nav);controller.update();assert.equal(state.tutorial.reading,'basic.hiring');controller.acknowledge();
   Game.openInitialHiring(state);controller.update();assert.equal(controller.presentation(),null);
   Game.hire(state,'tutorial-wage',{olderFemale:1});controller.update();assert.equal(state.tutorial.reading,'basic.work');

@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -16,12 +17,14 @@ for(const biome of Game.BIOMES)for(const culture of Game.CULTURES)test(`${biome}
   Object.assign(s.villages[0],location);s.suppressed.push(...location.suppress);nav.setState(s);
   Game.resume(s,'intro');s.tutorial.step='center';
   Game.placeStructure(s,'center',{x:location.center.x,z:location.center.z},nav);
-  const center=s.structures[0],departure={x:center.x+3.4,z:center.z},delivery={x:center.x+3.2,z:center.z};
-  let plot=null;
-  for(let dz=-6;dz<=6&&!plot;dz+=1.5)for(let dx=5;dx<=12;dx+=1.5){
+  const center=s.structures[0],departure=centerServicePoint(center,s,.8),delivery=centerServicePoint(center,s);
+  const plots=[];
+  for(let dz=-6;dz<=6;dz+=1.5)for(let dx=5;dx<=12;dx+=1.5){
     const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
-    if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,delivery,.28,null,true)){plot=point;break;}
+    if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,delivery,.28,null,true)){plots.push(point);}
   }
+  plots.sort((a,b)=>Math.hypot(a.x-departure.x,a.z-departure.z)-Math.hypot(b.x-departure.x,b.z-departure.z)||a.z-b.z||a.x-b.x);
+  const plot=plots[0];
   assert.ok(plot,'At least one legal crop plot must be reachable in both directions');
   Game.plant(s,'seed','mijo',plot.x,plot.z,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   const p=s.plants[0];assert.equal(p.growth,0);assert.equal(numberOf(s.ledger.balance),95);

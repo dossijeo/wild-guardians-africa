@@ -27,7 +27,7 @@ test('Five native center templates retain original textures, proportions, UVs an
     const template=templates[i],original=models[i];assert.equal(template.material,original.material);
     assert.equal(template.body.getAttribute('aPos'),template.body.getAttribute('position'));assert.equal(template.body.getAttribute('aPos').count,template.kernel.indices.length);assert.equal(template.body.getAttribute('aUV').count,template.kernel.indices.length);
     assert.equal(template.body.index,null);assert.equal(template.noise.format,THREE.RedFormat);assert.equal(template.noise.wrapR,THREE.RepeatWrapping);
-    assert.ok(template.kernel.hull.every(p=>Math.hypot(...p)*template.scale<=2.6+1e-9));assert.ok(Math.abs(Math.max(...template.kernel.hull.map(p=>Math.hypot(...p)))*template.scale-2.6)<1e-9);
+    assert.equal(template.scale,1);
     const source=original.geometry.getAttribute('position');assert.notEqual(source.array,template.kernel.positions);
     const box=new THREE.Box3().setFromBufferAttribute(source);assert.equal(box.max.y-box.min.y,template.kernel.bounds.max[1]-template.kernel.bounds.min[1]);
   }

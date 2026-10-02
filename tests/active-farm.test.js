@@ -4,8 +4,8 @@ import {simulateActiveFarm} from '../tools/check_active_farm.mjs';
 import {cropSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const species=['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'];
-for(const diversifyDay of [null,20])test(`Sabana/Mapungubwe/712: ${diversifyDay?'mixed eight-crop':'sunflower'} farm sustains paid work, real deliveries and raids through night 100`,()=>{
-  const report=simulateActiveFarm({diversifyDay}),s=report.state;
+for(const diversifyDay of [null,20])test(`Sabana/Mapungubwe/712/olderFemale: ${diversifyDay?'mixed eight-crop':'sunflower'} farm sustains paid work, real deliveries and raids through night 100`,()=>{
+  const report=simulateActiveFarm({diversifyDay,profile:'olderFemale',repairBelowHp:540}),s=report.state;
   assert.equal(s.result,'victory');assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.raid,null);
   assert.equal(report.counts.CampaignWon,1);assert.equal(report.counts.GameOver??0,0);
   assert.ok(report.counts.RaidSpawned>=20);assert.equal(report.counts.RaidEnded,report.counts.RaidSpawned);

@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 // Legal farming diagnostic. Never alters money, clock, growth, RNG, raid budgets or results.
 import {pathToFileURL} from 'node:url';
 import {createOpeningWorld} from './check_opening.mjs';
@@ -8,11 +9,11 @@ import {numberOf} from '../src/simulation/money.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plotCount=16,species='girasol',diversifyDay=null,onDay,onProgress,onNavigation,...world}={}){
+export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repairBelowHp=300,plotCount=16,species='girasol',diversifyDay=null,onDay,onProgress,onNavigation,...world}={}){
   const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,command=0,reloads=0;
   onNavigation?.(nav);
   const id=kind=>`active-${kind}-${command++}`;
-  const center=s.structures[0],departure={x:center.x+3.4,z:center.z};
+  const center=s.structures[0],departure=centerServicePoint(center,s,.8);
   const plots=[];
   for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
     const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
@@ -68,7 +69,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plot
     }
     for(const target of s.structures.filter(operational)){
       const cost=Math.ceil(numberOf(Game.repairCost(target)));
-      if(target.hp<300&&numberOf(s.ledger.balance)>=cost+120&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===target.id))Game.requestRepair(s,id('repair'),target.id);
+      if(target.hp<repairBelowHp&&numberOf(s.ledger.balance)>=cost+120&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===target.id))Game.requestRepair(s,id('repair'),target.id);
     }
   };
   const finishDay=()=>{

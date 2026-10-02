@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
@@ -58,8 +59,8 @@ test('Replaying a hiring transaction from the previous day leaves hiring open an
   assert.equal(Game.plant(s,'earlier-proceeds','mijo',10,0,nav),false);assert.equal(serialize(s),before);
 });
 test('Cargo coordinates follow the actual carrier after every movement step',()=>{
-  const {s,worker,crate}=carrying();s.time=598;Game.tick(s,.5,nav);
-  assert.equal(crate.x,worker.x);assert.equal(crate.z,worker.z);assert.ok(worker.x<8);assert.equal(crate.delivered,false);
+  const {s,worker,crate}=carrying();const point=centerServicePoint(s.structures[0],s);worker.x=point.x+2;worker.z=point.z;crate.x=worker.x;crate.z=worker.z;const start=worker.x;s.time=598;Game.tick(s,.5,nav);
+  assert.equal(crate.x,worker.x);assert.equal(crate.z,worker.z);assert.ok(worker.x<start);assert.equal(crate.delivered,false);
 });
 test('Losing the carrier center drops the box at its physical position without paying or deleting it',()=>{
   const {s,worker,crate}=carrying();s.time=598;s.structures[0].status='ruined';s.structures[0].hp=0;

@@ -1,3 +1,5 @@
+import {centerFootprint} from '../src/world/centers.js';
+import {footprintDistance} from '../src/world/footprints.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
@@ -42,7 +44,7 @@ for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals))test(`${sp
 test('Approach selection tries another side when the direct contact point is blocked, without ignoring the building',()=>{
   const nav=world((_x,z)=>z>1),target={id:'center',kind:'center',x:0,z:0};
   const result=reachableApproach({x:20,z:0,radius:.45},target,nav);
-  assert.ok(result);assert.ok(result.point.z>1);assert.ok(Math.abs(Math.hypot(result.point.x,result.point.z)-3.55)<1e-12);
+  assert.ok(result);assert.ok(result.point.z>1);assert.ok(footprintDistance(centerFootprint(target).footprint,result.point.x,result.point.z)>=.45);
 });
 test('The selected contact point persists while walking and across an active-raid save/load',()=>{
   const nav=world(),s=ready(nav);spawnRaid(s,{group:['warthog']},nav);updateRaid(s,.1,nav);

@@ -1,3 +1,4 @@
+import {centerServicePoint} from '../src/world/centers.js';
 // Legal first-day commands on the original terrain; no money, growth or time overrides.
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
@@ -23,7 +24,7 @@ export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
   if(!['olderMale','olderFemale','youngMale','youngFemale'].includes(profile))throw new Error('Unknown worker profile');
   if(!Number.isSafeInteger(requestedCount)||requestedCount<1)throw new Error('Crop count must be a positive integer');
   const {s,nav}=createOpeningWorld(worldOptions);
-  const center=s.structures[0],departure={x:center.x+3.4,z:center.z};
+  const center=s.structures[0],departure=centerServicePoint(center,s,.8);
   const plots=[];
   for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
     const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};

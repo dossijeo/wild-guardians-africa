@@ -31,9 +31,8 @@ export function prepareNativeBuilding(gltf,building){
   for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];
   for(let axis=0;axis<3;axis++){bounds.min[axis]-=center[axis];bounds.max[axis]-=center[axis];}
   const kernel=createNativeDestruction(building,{positions,normals,uv,indices,bounds}),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
-  let radius=0;for(const point of kernel.hull)radius=Math.max(radius,Math.hypot(...point));
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
-  return {building,kernel,body,ash,noise,material:mesh.material,scale:2.6/radius,
+  return {building,kernel,body,ash,noise,material:mesh.material,scale:1,
     dispose(){body.dispose();ash.dispose();noise.dispose();original.dispose();for(const texture of new Set(Object.values(mesh.material).filter(v=>v?.isTexture)))texture.dispose();mesh.material.dispose();}};
 }
 function shaderMaterial(uniforms,fragmentShader){

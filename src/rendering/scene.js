@@ -1,3 +1,4 @@
+import {centerCulture} from '../world/centers.js';
 import * as THREE from 'three';
 import {AfricanToon,paintedWaterMaterial} from './african-toon.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -65,7 +66,7 @@ export class WorldScene {
     this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
     this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await json('/content/destruction.json')).buildings;
-    await Promise.all([...new Set(state.villages.map(v=>v.culture))].map(culture=>this.ensureBuilding(culture)));
+    await Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture)));
     [this.models,this.workerLibraries]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json')]);
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
@@ -133,7 +134,7 @@ export class WorldScene {
   }
   clearVillagePreview() {if(this.villagePreview){this.villagePreview.traverse(o=>{if(o.isMesh)o.material.dispose();});this.scene.remove(this.villagePreview);this.villagePreview=null;}}
   centerMesh(entity) {
-    const culture=this.state.villages.find(v=>v.id===entity.villageId)?.culture??this.state.culture;
+    const culture=centerCulture(entity,this.state);
     return new NativeBuilding(this.buildingTemplates.get(culture),entity,this.destructionPass,this.state.elapsed);
   }
   async actor(entity,type) {
