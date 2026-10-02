@@ -35,3 +35,5 @@ La versión final del visor completa otra media: 17,40 FPS, CPU 11,87 / p95 14,9
 ## Instrumentación GPU posterior
 
 Los ocho ensayos anteriores usan el esquema 1 sin timer GPU. La fixture actual añade temporizador GPU opcional, con muestras válidas, descarte disjoint y limpieza acotada. Sus ensayos instrumentados, variabilidad y límites se documentan en [QA del timer GPU](qa-gpu-timing.md). La reutilización de visibilidad PCF en objetos se describe en [QA del resultado compartido](qa-pcf-reuse.md); no acredita una mejora de FPS.
+
+La caché posterior conserva el muestreo PCF y evita recalcular mapas con inputs de profundidad idénticos. Conteos, coste CPU, temporizador GPU, diferencias de imagen y límites están en [QA de caché de sombras](qa-shadow-cache.md).
