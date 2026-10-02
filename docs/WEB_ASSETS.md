@@ -1,8 +1,8 @@
-# DistribuciÃ³n web / itch.io
+# Distribución web / itch.io
 
-El build mantiene el juego, los ocho laboratorios y todos los recursos de audio. Las variantes GLB se sirven desde `assets/web/`; los 20 originales permanecen intactos en `public/assets/` para procedencia, calibraciÃ³n y pruebas, y se excluyen de `dist/`.
+El build mantiene el juego, los ocho laboratorios y todos los recursos de audio. Las variantes GLB se sirven desde `assets/web/`; los 20 originales permanecen intactos en `public/assets/` para procedencia, calibración y pruebas, y se excluyen de `dist/`.
 
-## ReproducciÃ³n
+## Reproducción
 
 ```sh
 npm ci
@@ -15,48 +15,48 @@ npm run package:itch
 npm run qa:web-package
 ```
 
-`assets:compress` sÃ³lo regenera variantes y su manifiesto. Las dependencias estÃ¡n fijadas: meshoptimizer 1.3.0, sharp 0.35.5, gltf-validator 2.0.0-dev.3.10 y Three.js 0.180.0. El decoder local es exactamente `three/addons/libs/meshopt_decoder.module.js` (meshoptimizer 0.22); se fuerza el codec v0 compatible. Su copia para los labs conserva aviso y licencia MIT. No hay decoder CDN.
+`assets:compress` sólo regenera variantes y su manifiesto. Las dependencias están fijadas: meshoptimizer 1.3.0, sharp 0.35.5, gltf-validator 2.0.0-dev.3.10 y Three.js 0.180.0. El decoder local es exactamente `three/addons/libs/meshopt_decoder.module.js` (meshoptimizer 0.22); se fuerza el codec v0 compatible. Su copia para los labs conserva aviso y licencia MIT. No hay decoder CDN.
 
-`package:itch` valida el contenido y crea `test-results/wild-guardians-itch.zip`, con `index.html` en la raÃ­z. Orden, timestamps y permisos ZIP son constantes. Comprueba CRC, 1.000 archivos, 240 caracteres por ruta, 500 MB extraÃ­dos y 200 MB por archivo, segÃºn [requisitos oficiales de itch.io](https://itch.io/docs/creators/html5#zip-file-requirements). No se ha publicado el juego en itch.io.
+`package:itch` valida el contenido y crea `test-results/wild-guardians-itch.zip`, con `index.html` en la raíz. Orden, timestamps y permisos ZIP son constantes. Comprueba CRC, 1.000 archivos, 240 caracteres por ruta, 500 MB extraídos y 200 MB por archivo, según [requisitos oficiales de itch.io](https://itch.io/docs/creators/html5#zip-file-requirements). No se ha publicado el juego en itch.io.
 
-## CompresiÃ³n y fidelidad
+## Compresión y fidelidad
 
-Todos los bufferViews de geometrÃ­a y animaciÃ³n usan `EXT_meshopt_compression`, sin simplificaciÃ³n, welding, reorder, filtros ni cuantizaciÃ³n. Se conservan todos los bytes de accessors, Ã­ndices, UV, morphs, pesos, joints, matrices, tiempos y muestras de animaciÃ³n. La tolerancia geomÃ©trica y de animaciÃ³n es cero; tambiÃ©n se comparan exactamente nodos, escenas, skins, materiales, samplers, extras y accessors. Esto conserva la correspondencia con los puentes de cultivos y la calibraciÃ³n existente.
+Todos los bufferViews de geometría y animación usan `EXT_meshopt_compression`, sin simplificación, welding, reorder, filtros ni cuantización. Se conservan todos los bytes de accessors, índices, UV, morphs, pesos, joints, matrices, tiempos y muestras de animación. La tolerancia geométrica y de animación es cero; también se comparan exactamente nodos, escenas, skins, materiales, samplers, extras y accessors. Esto conserva la correspondencia con los puentes de cultivos y la calibración existente.
 
-Las 63 imÃ¡genes integradas usan `EXT_texture_webp`: color/emisiÃ³n calidad 90, datos ORM calidad 95 y normales lossless. El mÃ¡ximo es 2048 Ã— 2048, sin ampliar imÃ¡genes pequeÃ±as; 25 imÃ¡genes de 4096 se reducen con Lanczos. Las normales son lossless respecto a esa resoluciÃ³n destino, no respecto a una fuente de 4096. Se conservan UV, Ã­ndices de textura, canales, materiales y parÃ¡metros PBR. Se verifica alpha exactamente (ninguna fuente actual tiene alpha; se comprueba tambiÃ©n el canal implÃ­cito 255). La verificaciÃ³n de pÃ­xeles compara contra el original reducido del mismo modo y exige PSNR â‰¥32 dB; el mÃ­nimo medido es 34,73 dB. El informe incluye RMSE, error mÃ¡ximo, resoluciones, roles y bytes por imagen; `psnr: null` indica RMSE cero.
+Las 63 imágenes integradas usan `EXT_texture_webp`: color/emisión calidad 90, datos ORM calidad 95 y normales lossless. El máximo es 2048 × 2048, sin ampliar imágenes pequeñas; 25 imágenes de 4096 se reducen con Lanczos. Las normales son lossless respecto a esa resolución destino, no respecto a una fuente de 4096. Se conservan UV, índices de textura, canales, materiales y parámetros PBR. Se verifica alpha exactamente (ninguna fuente actual tiene alpha; se comprueba también el canal implícito 255). La verificación de píxeles compara contra el original reducido del mismo modo y exige PSNR ≥32 dB; el mínimo medido es 34,73 dB. El informe incluye RMSE, error máximo, resoluciones, roles y bytes por imagen; `psnr: null` indica RMSE cero.
 
-El validador Khronos no implementa meshopt/WebP completamente. Se verifica el contrato de extensiones, los hashes y cada buffer decodificado con el decoder local, se validan los contenedores decodificados manteniendo WebP en su extensiÃ³n y se comparan los diagnÃ³sticos contra cada original. Resultado: cero errores nuevos. Se conservan 1.893 errores originales: 473 normales no unitarias en cada una de las cuatro bibliotecas completas de trabajadores y un error en otro modelo. No se alteran esas normales ni otros datos de procedencia para ocultarlos.
+El validador Khronos no implementa meshopt/WebP completamente. Se verifica el contrato de extensiones, los hashes y cada buffer decodificado con el decoder local, se validan los contenedores decodificados manteniendo WebP en su extensión y se comparan los diagnósticos contra cada original. Resultado: cero errores nuevos. Se conservan 1.893 errores originales: 473 normales no unitarias en cada una de las cuatro bibliotecas completas de trabajadores y un error en otro modelo. No se alteran esas normales ni otros datos de procedencia para ocultarlos.
 
-`content/manifests/web-assets.json` enumera TODOS los GLB, mapping original â†’ runtime, tamaÃ±os, SHA-256 y texturas. `web-assets-verification.json` registra la comprobaciÃ³n numÃ©rica y conformidad. Los manifiestos originales y tests de calibraciÃ³n conservan sus fuentes.
+`content/manifests/web-assets.json` enumera TODOS los GLB, mapping original → runtime, tamaños, SHA-256 y texturas. `web-assets-verification.json` registra la comprobación numérica y conformidad. Los manifiestos originales y tests de calibración conservan sus fuentes.
 
 ## Rutas y laboratorios
 
-Vite utiliza `base: './'`. El resolver central calcula el directorio del proyecto desde la URL del mÃ³dulo, tanto en desarrollo como en el bundle: modelos, texturas, JSON, audio, manos, guardian y DOM/HUD quedan dentro del prefijo de despliegue. Los identificadores originales de assets se preservan en los mÃ³dulos generados y catÃ¡logos de procedencia; sus consumidores resuelven esas rutas.
+Vite utiliza `base: './'`. El resolver central calcula el directorio del proyecto desde la URL del módulo, tanto en desarrollo como en el bundle: modelos, texturas, JSON, audio, manos, guardian y DOM/HUD quedan dentro del prefijo de despliegue. Los identificadores originales de assets se preservan en los módulos generados y catálogos de procedencia; sus consumidores resuelven esas rutas.
 
-El plugin aplica la misma adaptaciÃ³n al servir desarrollo y al copiar `public/` en el build. Reescribe las rutas de catÃ¡logos, fuentes/CSS, menÃº, selector, mÃºsica e iframes segÃºn su contexto real. Los scripts/markup de biblioteca se inyectan en `library.html`, por lo que se resuelven desde ese documento; CSS usa la profundidad de su propio directorio. Respeta URLs ya relativas y chunks generados por Vite. Futuras ejecuciones de `prepare_menu`, `prepare_selector`, `prepare_library` y otras extracciones mantienen esta adaptaciÃ³n automÃ¡ticamente, sin modificar los originales exportados. Un nuevo GLB sin variante bloquea el build hasta regenerar el inventario.
+El plugin aplica la misma adaptación al servir desarrollo y al copiar `public/` en el build. Reescribe las rutas de catálogos, fuentes/CSS, menú, selector, música e iframes según su contexto real. Los scripts/markup de biblioteca se inyectan en `library.html`, por lo que se resuelven desde ese documento; CSS usa la profundidad de su propio directorio. Respeta URLs ya relativas y chunks generados por Vite. Futuras ejecuciones de `prepare_menu`, `prepare_selector`, `prepare_library` y otras extracciones mantienen esta adaptación automáticamente, sin modificar los originales exportados. Un nuevo GLB sin variante bloquea el build hasta regenerar el inventario.
 
-El GLTFLoader de producciÃ³n usa el decoder local directamente. El menÃº y los labs con parsers propios reciben un GLB decodificado en memoria; workers/destruction leen el Ã­ndice de imagen de `EXT_texture_webp`. No se distribuye un segundo GLB descomprimido. El lab de cultivos conserva su envelope gzip y su Three r140 con soporte WebP; mantiene los 40 estados y los 32 puentes originales.
+El GLTFLoader de producción usa el decoder local directamente. El menú y los labs con parsers propios reciben un GLB decodificado en memoria; workers/destruction leen el índice de imagen de `EXT_texture_webp`. No se distribuye un segundo GLB descomprimido. El lab de cultivos conserva su envelope gzip y su Three r140 con soporte WebP; mantiene los 40 estados y los 32 puentes originales.
 
-`test:web-package` comprueba links HTML/CSS y referencias JSON, index en raÃ­z, mapping completo y ausencia de originales duplicados. CI ejecuta esa comprobaciÃ³n, la verificaciÃ³n GLB, las comprobaciones originales, la suite completa y publica ambos artifacts, build y ZIP itch.
+`test:web-package` comprueba links HTML/CSS y referencias JSON, index en raíz, mapping completo y ausencia de originales duplicados. CI ejecuta esa comprobación, la verificación GLB, las comprobaciones originales, la suite completa y publica ambos artifacts, build y ZIP itch.
 
-## RevisiÃ³n de navegador
+## Revisión de navegador
 
-El servidor QA no sirve archivos desde la raÃ­z: sÃ³lo `/nested/itch/game/` y `/qa/`. La revisiÃ³n usa la interfaz visible por CUA, no mutaciÃ³n de estado desde el driver.
+El servidor QA no sirve archivos desde la raíz: sólo `/nested/itch/game/` y `/qa/`. La revisión usa la interfaz visible por CUA, no mutación de estado desde el driver.
 
-- `/nested/itch/game/`: abrir menÃº, Juego nuevo, seleccionar Sabana/Mapungubwe y entrar en la partida; revisar terreno, HUD, guardian y tutorial.
+- `/nested/itch/game/`: abrir menú, Juego nuevo, seleccionar Sabana/Mapungubwe y entrar en la partida; revisar terreno, HUD, guardian y tutorial.
 - `/nested/itch/game/library.html?lab=...`: crops, walls, destruction, sfx y los cuatro worker-*.
-- `/qa/tests/browser/web-assets.html`: renderiza automÃ¡ticamente los 20 GLB con Three.js y reporta meshes, skins, morphs, clips y texturas; `done: true` y veinte entradas confirman fin.
-- `/qa/tests/browser/vfx.html` y `work-vfx.html`: las rutas nuevas de VFX tambiÃ©n funcionan bajo prefijo.
+- `/qa/tests/browser/web-assets.html`: renderiza automáticamente los 20 GLB con Three.js y reporta meshes, skins, morphs, clips y texturas; `done: true` y veinte entradas confirman fin.
+- `/qa/tests/browser/vfx.html` y `work-vfx.html`: las rutas nuevas de VFX también funcionan bajo prefijo.
 
-QA CUA del 2 de octubre: 20/20 GLB terminados sin warnings/errores de consola; menÃº y selector por botones, nueva partida, terreno/HUD/guardian visibles; Cultivos muestra ocho plantas, BastiÃ³n carga 33 piezas. RevisiÃ³n de los otros laboratorios en curso; se registra el resultado final antes de cerrar PR.
+QA CUA del 2 de octubre: 20/20 GLB terminados sin warnings/errores de consola; menú y selector por botones, nueva partida, terreno/HUD/guardian visibles; Cultivos muestra ocho plantas, Bastión carga 33 piezas. Los ocho laboratorios terminan sin avisos/errores: Destrucción carga cinco edificios y un impacto del 7,5%; SFX ofrece 126 botones y reproduce Viento suave (12 s); los cuatro visores de trabajadores muestran materiales, rig de 28 huesos y las 12 acciones del lab, con animación y Regar revisados.
 
 QA CUA final de las variantes finales: veinte modelos, 95 clips y materiales/rigs cargados, sin warnings/errores. WorkVfx completa una entrega real a 229,10 s: saldo 95 → 106, una caja entregada y efectos finales a cero, sin consola. Los reportes de CUA `itch-models-cua-final.json` e `itch-work-vfx-report.txt` se conservan en test-results del checkout principal, junto con las capturas.
 
 HTTP de desarrollo bajo `/dev/prefix/`: index, catálogos runtime, menú/adaptador, módulo resolver y proxy VFX resuelven correctamente. Vite limita el scan de dependencias a index para evitar escanear el código clásico de los labs originales.
 
-Suite completa: 436/436 PASS. VerificaciÃ³n original: 23 fuentes, 484 recursos y 126 SFX con hashes intactos; cuatro bibliotecas completas y 48 acciones con procedencia. Plan: 123.048 aserciones correctas. La QA acredita carga/decodificaciÃ³n, no un presupuesto de FPS mÃ³vil ni una publicaciÃ³n real en itch.io.
+Suite completa: 436/436 PASS. Verificación original: 23 fuentes, 484 recursos y 126 SFX con hashes intactos; cuatro bibliotecas completas y 48 acciones con procedencia. Plan: 123.048 aserciones correctas. La QA acredita carga/decodificación, no un presupuesto de FPS móvil ni una publicación real en itch.io.
 
-## Inventario y tamaÃ±os
+## Inventario y tamaños
 
 20/20 GLB: **432,310,652 → 150,791,556 bytes** (−65.12%). Texturas: 383.957.531 → 115.262.176 bytes (−69,98%).
 
