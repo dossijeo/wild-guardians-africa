@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {toonFunctions,waterFunctions} from './african-toon-source.js';
+import {WATER_DEFAULTS,waterPalette,waterSeed} from './world-atmosphere.js';
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
@@ -7,7 +8,7 @@ export class AfricanToon {
     this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1.15},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1}};
     this.materials=new WeakSet();
   }
-  update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=night?1:0;this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();}
+  update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=Number(night);this.uniforms.uNightLight.value=1.12;this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();}
   material(material){
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
@@ -72,14 +73,15 @@ export function toonDestruction(fragment){
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
 }
 
-export function paintedWaterMaterial(color,lava=false){
+export function paintedWaterMaterial(color,lava=false,seed=42){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
-  const uniforms={uTime:{value:0},uAmplitude:{value:1},uStrokeWidth:{value:1},uHandmade:{value:.5},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2()},uInk0:{value:new THREE.Color(lava?'#281916':color)},uInk1:{value:new THREE.Color(lava?'#682817':color).multiplyScalar(1.2)},uInk2:{value:new THREE.Color(lava?'#ed5a12':'#71aea9')},uInk3:{value:new THREE.Color(lava?'#ffc859':'#e1dcc4')}};
+  const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
+  waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
   material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);shader.vertexShader='varying vec3 vPaintWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvPaintWorld=(modelMatrix*vec4(transformed,1.)).xyz;');
-    shader.fragmentShader='varying vec3 vPaintWorld;\n'+waterFunctions+'\n'+shader.fragmentShader;
-    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb='+ (lava?'paintedLava(vPaintWorld.zx*vec2(.88,1.8))':'paintedWater(vPaintWorld.zx*vec2(.22,.45),.001)')+';');
+    shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale;\n'+waterFunctions+'\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb=pow('+ (lava?'paintedLava(vPaintWorld.zx*vec2(.88,1.8)*uWaterScale)':'paintedWater(vPaintWorld.zx*vec2(.22,.45)*uWaterScale,.001)')+',vec3(2.2));');
     if(lava)shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=diffuseColor.rgb*1.4;');
   };
   material.customProgramCacheKey=()=>lava?'african-lava-v4.1.4':'african-water-v4.1.4';

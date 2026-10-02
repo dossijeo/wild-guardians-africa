@@ -128,3 +128,9 @@ test('Particle meshes remain presentation only and release geometry, materials a
   for(const mesh of [house.effects.smoke,house.effects.debris]){mesh.geometry.addEventListener('dispose',()=>released++);mesh.material.addEventListener('dispose',()=>released++);const hits=[];mesh.raycast(new THREE.Raycaster(),hits);assert.equal(hits.length,0);}
   house.dispose();assert.equal(released,4);assert.equal(pass.smokeScene.children.length,0);assert.equal(house.effects.native.smoke.length,0);assert.equal(house.effects.native.debris.length,0);assert.equal(house.effects.native.ashChips.length,0);pass.dispose();
 });
+
+test('centers consume shared fractional atmosphere rather than inferring night from sun intensity',()=>{
+ const pass=new BuildingDestructionPass(fakeRenderer()),house=new NativeBuilding(templates[0],{id:'dusk',hp:600,maxHp:600,status:'intact'},pass),camera=new THREE.PerspectiveCamera();camera.updateMatrixWorld();
+ for(const phase of [0,.25,.5,.75,1]){pass.night=phase;pass.nightLight=1.12;house.cameraUniforms(house.outer,camera);assert.equal(house.uniforms.uNight.value,phase);assert.equal(house.uniforms.uNightLight.value,1.12);}
+ house.dispose();pass.dispose();
+});
