@@ -25,12 +25,12 @@ function fakeRenderer(){
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
 
 test('all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure',()=>{
-  const toon=new AfricanToon(),renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer);pass.environmentUniforms=toon.environmentUniforms;
+  const toon=new AfricanToon(),renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer);pass.environmentUniforms=toon.environmentUniforms;pass.fineNoiseUniform=toon.uniforms.uFineNoise;toon.uniforms.uFineNoise.value=0;
   const textures=[new THREE.Texture(),new THREE.Texture()];toon.environment(textures,{value:.25});assert.equal(toon.uniforms.uExposure.value,1);
   for(const [index,template] of templates.entries()){
     const house=new NativeBuilding(template,{id:'hdr-'+index,hp:600,maxHp:600,status:'intact',yaw:.9},pass),camera=new THREE.PerspectiveCamera();house.position.set(20,3,-11);house.updateWorldMatrix(true,true);camera.position.set(29,8,-6);camera.lookAt(house.position);camera.updateWorldMatrix(true,false);house.cameraUniforms(house.outer,camera);
     for(const material of [house.outer.material,house.inner.material,house.ash.material,house.effects.debris.material]){
-      assert.equal(material.uniforms.uEnvDay,pass.environmentUniforms.uEnvDay);assert.equal(material.uniforms.uEnvNight.value,textures[1]);assert.equal(material.uniforms.uEnvYaw.value,.25);assert.equal(material.uniforms.uExposure.value,1);assert.ok(material.fragmentShader.includes('environment4(normalize(mat3(uToonModel)*reflect(-V,N))'));
+      assert.equal(material.uniforms.uFineNoise,toon.uniforms.uFineNoise);assert.equal(material.uniforms.uFineNoise.value,0);assert.ok(material.fragmentShader.includes("if(uFineNoise>.5)"));assert.equal(material.uniforms.uEnvDay,pass.environmentUniforms.uEnvDay);assert.equal(material.uniforms.uEnvNight.value,textures[1]);assert.equal(material.uniforms.uEnvYaw.value,.25);assert.equal(material.uniforms.uExposure.value,1);assert.ok(material.fragmentShader.includes('environment4(normalize(mat3(uToonModel)*reflect(-V,N))'));
     }
     const localPoint=new THREE.Vector3(.3,1,-.2),normal=new THREE.Vector3(0,0,1),localV=house.uniforms.uEye.value.clone().sub(localPoint).normalize(),reflected=localV.clone().negate().reflect(normal).transformDirection(house.uniforms.uToonModel.value);
     const worldPoint=localPoint.clone().applyMatrix4(house.matrixWorld),worldNormal=normal.clone().transformDirection(house.matrixWorld),reference=camera.position.clone().sub(worldPoint).normalize().negate().reflect(worldNormal);

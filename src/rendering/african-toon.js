@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {diagnosticPigment,diagnosticGroundNoise} from './fine-noise.js';
 import {worldPatternFunctions} from './render-origin.js';
 import {toonFunctions,waterFunctions} from './african-toon-source.js';
 import {WATER_DEFAULTS,waterPalette,waterSeed} from './world-atmosphere.js';
@@ -7,10 +8,12 @@ import {groundLightingFunctions} from './ground-lighting-source.js';
 import {volcanicFunctions} from './volcanic-source.js';
 import {createNativeShadowUniforms,patchNativeShadow} from './native-shadow.js';
 
+const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnosticPigment(volcanicFunctions);
+
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
-    this.uniforms={uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
+    this.uniforms={uFineNoise:{value:1},uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
     this.contactUniforms={uContactMap:{value:null},uContactBounds:{value:new THREE.Vector4(0,0,1,1)},uContactOn:{value:0}};
     this.environmentUniforms={uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
@@ -34,10 +37,10 @@ export class AfricanToon {
         #endif
         vToonWorld=(modelMatrix*toonPosition).xyz;
         ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
-      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
+      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise;uniform vec3 uLightDir;\n'+diagnosticToon+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
-      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)'):'')+'\n'+(material.userData.nativeSurface?volcanicFunctions:'')+'\nvoid main() {');
+      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
       if(material.userData.horizonBounds){
         shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
@@ -75,7 +78,7 @@ export class AfricanToon {
 
     };
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
@@ -85,15 +88,15 @@ export class AfricanToon {
 
 // DEST keeps its original damage field, textures, cut-outs, collapse and emission.
 export function toonDestruction(fragment){
-  return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+toonFunctions+'\n'+environmentFunctions+'\nout vec4 fragColor;')
+  return fragment.replace('out vec4 fragColor;', worldPatternFunctions+'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+diagnosticToon+'\n'+environmentFunctions+'\nout vec4 fragColor;')
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),rough):vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),worldPatternPosition((uToonModel*vec4(vWorld,1.)).xyz))+toSRGB(emit)');
 }
 
 export function toonDebris(vertex,fragment){
   vertex=vertex.replace('uniform mat4 uVP;', 'out vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uVP;')
     .replace('vColor=aColor*(', 'vDebrisPosition=p;vDebrisNormal=n;vDebrisBase=aColor;vColor=aColor*(');
-  const declarations=worldPatternFunctions+'in vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uToonModel;uniform vec3 uEye,uSun;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n';
-  fragment=fragment.replace('out vec4 fragColor;', 'out vec4 fragColor;\n'+declarations+toonFunctions+'\n'+environmentFunctions)
+  const declarations=worldPatternFunctions+'in vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uToonModel;uniform vec3 uEye,uSun;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uFineNoise,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n';
+  fragment=fragment.replace('out vec4 fragColor;', 'out vec4 fragColor;\n'+declarations+diagnosticToon+'\n'+environmentFunctions)
     .replace('pow(x,vec3(1./2.2))',`africanToon4(vColor,toLinear4(vDebrisBase),N,V,normalize(uSun),uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),.9):vec3(0.),.9,1.,0.,0.,0.,max(dot(N,V),0.),worldPatternPosition((uToonModel*vec4(vDebrisPosition,1.)).xyz))`)
     .replace('void main(){', 'void main(){vec3 N=normalize(vDebrisNormal);if(!gl_FrontFacing)N=-N;vec3 V=normalize(uEye-vDebrisPosition);');
   return {vertex,fragment};
