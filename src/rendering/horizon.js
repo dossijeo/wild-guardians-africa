@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {makeCanyonHorizon,makeDesertHorizon} from './horizon-source.js';
 import {nativeTerrainBuffer} from './terrain-geometry.js';
+import {nativeGroundMaterial,updateGroundQuality} from './render-quality.js';
 
 // ChunkManager.plan centers resident terrain on the eye, not the point of interest.
 export function nativeNearRegion(eye,quality){
@@ -11,14 +12,13 @@ export function nativeNearRegion(eye,quality){
 export class NativeHorizon{
   constructor(scene,waterMaterial){this.scene=scene;this.waterMaterial=waterMaterial;this.group=null;this.key=null;}
   update(config,profile,region,quality,force=false){
-    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range,quality]);
-    if(!force&&this.key===key)return;
+    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range]);
+    if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality);return;}
     this.dispose();this.key=key;
     if(!['canyons','desert'].includes(config.biome))return;
     const make=config.biome==='desert'?makeDesertHorizon:makeCanyonHorizon;
     const data=make(config,profile,region.cx,region.cz,region.bounds),group=new THREE.Group();group.name='native-horizon';group.position.set(region.cx*48,0,region.cz*48);
-    const material=quality==='muy_baja'?new THREE.MeshBasicMaterial({vertexColors:true}):new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
-    Object.assign(material.userData,{toonGround:true,nativeGroundColor:true});
+    const material=nativeGroundMaterial(quality);
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons')material.userData.horizonBounds=new THREE.Vector4(...region.bounds);
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';group.add(ground);
