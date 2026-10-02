@@ -62,3 +62,7 @@ de recursos siguen pendientes. Esta revisión no reemplaza la cámara, foco/reso
 filtrado o política completa de actualización de sombras de Three por los del
 lab. Tampoco acredita la matriz visual de todas las culturas/calidades ni
 rendimiento móvil, y no da por completado el Plan Maestro.
+
+Dirección, encuadre y resolución se completan posteriormente en
+[QA de cámara de sombras](qa-shadow-camera.md). Filtrado y política completa
+de actualización siguen pendientes.
