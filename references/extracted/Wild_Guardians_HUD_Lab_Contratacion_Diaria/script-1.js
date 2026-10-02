@@ -1,0 +1,46 @@
+/* Tiny, dependency-free WebGL renderer, written for this HUD lab. */
+'use strict';
+const V={add:(a,b)=>a.map((v,i)=>v+b[i]),sub:(a,b)=>a.map((v,i)=>v-b[i]),mul:(a,s)=>a.map(v=>v*s),dot:(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),cross:(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm:a=>{let n=Math.hypot(...a)||1;return a.map(v=>v/n)}};
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const mix=(a,b,t)=>a+(b-a)*t;
+const TAU=Math.PI*2;
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand=rng(52841);
+function rgb(hex){return [parseInt(hex.slice(1,3),16)/255,parseInt(hex.slice(3,5),16)/255,parseInt(hex.slice(5,7),16)/255]}
+function tint(c,n){return [c[0]*n,c[1]*n,c[2]*n,c[3]??1]}
+function matModel(x=0,y=0,z=0,yaw=0,sx=1,sy=sx,sz=sx){let c=Math.cos(yaw),s=Math.sin(yaw);return new Float32Array([c*sx,0,-s*sx,0,0,sy,0,0,s*sz,0,c*sz,0,x,y,z,1])}
+function matMul(a,b){const o=new Float32Array(16);for(let j=0;j<4;j++)for(let i=0;i<4;i++)for(let k=0;k<4;k++)o[j*4+i]+=a[k*4+i]*b[j*4+k];return o}
+class Geo{
+ constructor(){this.v=[]}
+ tri(a,b,c,col,n){n=n||V.norm(V.cross(V.sub(b,a),V.sub(c,a)));if(!Number.isFinite(n[0]))return;const al=col[3]??1;for(const p of[a,b,c])this.v.push(p[0],p[1],p[2],n[0],n[1],n[2],col[0],col[1],col[2],al);return this}
+ quad(a,b,c,d,col,n){this.tri(a,b,c,col,n);this.tri(a,c,d,col,n);return this}
+ box(x,y,z,w,h,d,col,yaw=0){const c=Math.cos(yaw),s=Math.sin(yaw),f=(X,Y,Z)=>[x+X*c+Z*s,y+Y,z-X*s+Z*c],xx=w/2,zz=d/2;
+ const p=[f(-xx,0,-zz),f(xx,0,-zz),f(xx,h,-zz),f(-xx,h,-zz),f(-xx,0,zz),f(xx,0,zz),f(xx,h,zz),f(-xx,h,zz)];
+ for(const q of [[0,3,2,1],[4,5,6,7],[0,4,7,3],[1,2,6,5],[3,7,6,2],[0,1,5,4]])this.quad(...q.map(i=>p[i]),col);return this}
+ cylinder(x,y,z,r1,r2,h,col,n=10){return this.branch([x,y,z],[x,y+h,z],r1,r2,col,n)}
+ branch(a,b,r1,r2,col,n=7){const dir=V.norm(V.sub(b,a)),cross=V.norm(V.cross(dir,Math.abs(dir[1])>.9?[1,0,0]:[0,1,0])),up=V.cross(dir,cross);let point=(o,r,t)=>V.add(o,V.add(V.mul(cross,Math.cos(t)*r),V.mul(up,Math.sin(t)*r)));
+ for(let i=0;i<n;i++){let t=i*TAU/n,tt=(i+1)*TAU/n,A=point(a,r1,t),B=point(b,r2,t),C=point(b,r2,tt),D=point(a,r1,tt);this.quad(A,B,C,D,tint(col,.94+.10*(i%3)/2));this.tri(b,C,B,col,dir);this.tri(a,A,D,col,V.mul(dir,-1))}return this}
+ ellipsoid(x,y,z,rx,ry,rz,col,n=9,rings=5,phiEnd=Math.PI){const p=(i,j)=>[x+Math.sin(i/rings*phiEnd)*Math.cos(j/n*TAU)*rx,y+Math.cos(i/rings*phiEnd)*ry,z+Math.sin(i/rings*phiEnd)*Math.sin(j/n*TAU)*rz];
+ for(let i=0;i<rings;i++)for(let j=0;j<n;j++){const a=p(i,j),b=p(i+1,j),c=p(i+1,j+1),d=p(i,j+1),cc=tint(col,.97+.05*((i*5+j*7)%9)/8);if(i>0)this.tri(a,d,c,cc);if(i<rings-1||phiEnd<3)this.tri(a,c,b,cc)}return this}
+ leaf(a,b,width,col){let mid=V.mul(V.add(a,b),.5),q=V.norm(V.cross(V.sub(b,a),[0,1,0]));if(Math.hypot(...q)<.1)q=[1,0,0];this.quad(a,V.add(mid,V.mul(q,width)),b,V.add(mid,V.mul(q,-width)),col,[0,.9,.4]);return this}
+ disc(x,y,z,rx,rz,col,n=24,soft=false){for(let i=0;i<n;i++){let t=i/n*TAU,tt=(i+1)/n*TAU;const A=[x,y,z],B=[x+Math.cos(t)*rx,y,z+Math.sin(t)*rz],C=[x+Math.cos(tt)*rx,y,z+Math.sin(tt)*rz];if(soft){let N=[0,1,0];this.v.push(...A,...N,col[0],col[1],col[2],col[3]??.2,...C,...N,col[0],col[1],col[2],0,...B,...N,col[0],col[1],col[2],0)}else this.tri(A,C,B,col,[0,1,0])}return this}
+ ring(x,y,z,r,w,col,n=48){for(let i=0;i<n;i++){let a=i*TAU/n,b=(i+1)*TAU/n,p=(t,k)=>[x+Math.cos(t)*k,y,z+Math.sin(t)*k];this.quad(p(a,r),p(b,r),p(b,r+w),p(a,r+w),col,[0,1,0])}return this}
+}
+class GLMesh{
+ constructor(renderer,geo,opts={}){this.r=renderer;this.buffer=renderer.gl.createBuffer();this.count=geo.v.length/10;renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER,this.buffer);renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER,new Float32Array(geo.v),renderer.gl.STATIC_DRAW);this.matrix=matModel();this.visible=true;this.alpha=1;this.tint=[1,1,1];this.unlit=0;this.water=0;this.blend=false;Object.assign(this,opts)}
+ at(x,y,z,angle=0,s=1,sy=s,sz=s){this.matrix=matModel(x,y,z,angle,s,sy,sz);return this}
+ dispose(){this.r.gl.deleteBuffer(this.buffer);this.visible=false}
+}
+class TinyRenderer{
+ constructor(canvas){this.canvas=canvas;const gl=this.gl=canvas.getContext('webgl',{alpha:true,antialias:true,depth:true,premultipliedAlpha:false,preserveDrawingBuffer:false});if(!gl)throw new Error('Este navegador no ha podido iniciar WebGL. Prueba a abrir el HTML en Chrome, Edge, Firefox o Safari.');
+ const vs=`precision highp float;attribute vec3 aPos;attribute vec3 aNormal;attribute vec4 aColor;uniform mat4 uVP;uniform mat4 uModel;uniform float uTime;uniform float uWater;varying vec3 vNormal;varying vec3 vWorld;varying vec4 vColor;void main(){vec4 w=uModel*vec4(aPos,1.);if(uWater>.5)w.y+=sin(w.z*.65+uTime*.7+w.x*.28)*.025;vWorld=w.xyz;vNormal=normalize(mat3(uModel)*aNormal);vColor=aColor;gl_Position=uVP*w;}`;
+ const fs=`precision highp float;varying vec3 vNormal;varying vec3 vWorld;varying vec4 vColor;uniform vec3 uTint;uniform vec3 uEye;uniform float uAlpha;uniform float uNight;uniform float uTime;uniform float uUnlit;uniform float uWater;void main(){vec3 normal=normalize(vNormal);vec3 light=normalize(vec3(-.48,.85,.32));float d=max(dot(normal,light),0.);float hemi=.72+normal.y*.12;vec3 col=vColor.rgb*(hemi+d*.30);vec3 warmth=mix(vec3(1.05,1.02,.90),vec3(.33,.48,.72),uNight);col*=warmth;if(uWater>.5){float band=sin(vWorld.z*2.6+sin(vWorld.x*.7)*2.2-uTime*.75);float line=smoothstep(.97,1.,band);col+=vec3(.11,.18,.15)*line*(1.-uNight*.8);}col=mix(col,vColor.rgb,uUnlit);col*=uTint;float dist=length(uEye-vWorld);float fog=smoothstep(65.,155.,dist);vec3 fogCol=mix(vec3(.75,.80,.72),vec3(.07,.12,.20),uNight);col=mix(col,fogCol,fog*.85);gl_FragColor=vec4(col,vColor.a*uAlpha);}`;
+ let shader=(type,src)=>{let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s};this.program=gl.createProgram();gl.attachShader(this.program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(this.program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(this.program);if(!gl.getProgramParameter(this.program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(this.program));gl.useProgram(this.program);this.u={};for(let n of ['VP','Model','Time','Water','Tint','Eye','Alpha','Night','Unlit'])this.u[n]=gl.getUniformLocation(this.program,'u'+n);this.a={};for(let n of['Pos','Normal','Color'])this.a[n]=gl.getAttribLocation(this.program,'a'+n);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+ this.camera={target:[1,0,0],yaw:.60,pitch:.68,distance:33,eye:[0,0,0],right:[1,0,0],up:[0,1,0],forward:[0,0,-1]};this.fov=42*Math.PI/180;this.width=1;this.height=1;this.pixels=1}
+ resize(w,h,dpr){this.width=w;this.height=h;this.pixels=Math.min(dpr||1,1.7);this.canvas.width=Math.round(w*this.pixels);this.canvas.height=Math.round(h*this.pixels);this.gl.viewport(0,0,this.canvas.width,this.canvas.height)}
+ updateCamera(){let c=this.camera,h=Math.cos(c.pitch)*c.distance;c.eye=V.add(c.target,[Math.sin(c.yaw)*h,Math.sin(c.pitch)*c.distance,Math.cos(c.yaw)*h]);c.forward=V.norm(V.sub(c.target,c.eye));c.right=V.norm(V.cross(c.forward,[0,1,0]));c.up=V.cross(c.right,c.forward);const r=c.right,u=c.up,f=c.forward,e=c.eye;const view=new Float32Array([r[0],u[0],-f[0],0,r[1],u[1],-f[1],0,r[2],u[2],-f[2],0,-V.dot(r,e),-V.dot(u,e),V.dot(f,e),1]);const t=1/Math.tan(this.fov/2),a=this.width/this.height,n=.1,far=250;const p=new Float32Array([t/a,0,0,0,0,t,0,0,0,0,(far+n)/(n-far),-1,0,0,2*far*n/(n-far),0]);this.VP=matMul(p,view)}
+ begin(time,night){const gl=this.gl;gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(this.program);this.updateCamera();gl.uniformMatrix4fv(this.u.VP,false,this.VP);gl.uniform1f(this.u.Time,time);gl.uniform1f(this.u.Night,night);gl.uniform3fv(this.u.Eye,this.camera.eye);this.drawCalls=0}
+ draw(m){if(!m||!m.visible||m.alpha<=0)return;const g=this.gl;g.bindBuffer(g.ARRAY_BUFFER,m.buffer);g.enableVertexAttribArray(this.a.Pos);g.vertexAttribPointer(this.a.Pos,3,g.FLOAT,false,40,0);g.enableVertexAttribArray(this.a.Normal);g.vertexAttribPointer(this.a.Normal,3,g.FLOAT,false,40,12);g.enableVertexAttribArray(this.a.Color);g.vertexAttribPointer(this.a.Color,4,g.FLOAT,false,40,24);g.uniformMatrix4fv(this.u.Model,false,m.matrix);g.uniform3fv(this.u.Tint,m.tint);g.uniform1f(this.u.Alpha,m.alpha);g.uniform1f(this.u.Water,m.water);g.uniform1f(this.u.Unlit,m.unlit);if(m.blend||m.alpha<1){g.enable(g.BLEND);g.depthMask(false)}else{g.disable(g.BLEND);g.depthMask(true)}g.drawArrays(g.TRIANGLES,0,m.count);g.depthMask(true);this.drawCalls++}
+ groundAt(px,py){let c=this.camera,t=Math.tan(this.fov/2),x=(px/this.width*2-1)*t*this.width/this.height,y=(1-py/this.height*2)*t;const ray=V.norm(V.add(c.forward,V.add(V.mul(c.right,x),V.mul(c.up,y))));if(ray[1]>=-.025)return null;let dist=-c.eye[1]/ray[1];if(dist>180)return null;return V.add(c.eye,V.mul(ray,dist))}
+ project(p){let c=this.camera,d=V.sub(p,c.eye),depth=V.dot(d,c.forward);if(depth<=.1)return null;let k=1/Math.tan(this.fov/2);return {x:(.5+V.dot(d,c.right)*k/(2*depth*this.width/this.height))*this.width,y:(.5-V.dot(d,c.up)*k/(2*depth))*this.height,depth}}
+}

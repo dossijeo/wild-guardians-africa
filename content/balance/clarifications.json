@@ -1,0 +1,13 @@
+{
+  "source": "Decisiones explícitas del usuario, 2026-10-01, conversación de implementación",
+  "initialGrowthRequiresPlantAndWater": true,
+  "maturityRequiresAllMandatoryWaters": true,
+  "cooldownStartsAt": "activation",
+  "harvestRequestPersistsAcrossQueueRebuild": true,
+  "eventSeverityWeights": [1, 1, 1],
+  "negativeEventAffectedFractions": [[0.05, 0.10], [0.10, 0.20], [0.20, 0.30]],
+  "negativeEventFractionDistribution": "uniform",
+  "positiveEventMagnitudes": [0.10, 0.20, 0.30],
+  "eventEffectTarget": null
+}
+
