@@ -63,6 +63,8 @@ campañas activas con todas sus aserciones originales. La prueba adicional de
 espera/reserva pasa dentro de las 13/13 dirigidas finales; la suite actual tiene
 501 pruebas. Build final y paquete web aprobados: 546 archivos, 789 enlaces
 relativos y 20 GLB de runtime. El ZIP para itch.io conserva CRC verificados.
+La suite de 501/501 y el paquete pasan sobre `387cc8c` en
+[GitHub Actions](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37010383490).
 
 ## Límites
 

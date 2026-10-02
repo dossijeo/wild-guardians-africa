@@ -8,32 +8,41 @@ import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
 import {Navigation} from '../../src/world/navigation.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import * as Game from '../../src/simulation/game.js';
+import {isMature} from '../../src/simulation/crops.js';
 const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 const scene=new THREE.Scene();scene.background=new THREE.Color('#d3dac6');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-4,8,5);scene.add(sun);
 const camera=new THREE.PerspectiveCamera(40,1,.1,80);camera.position.set(6,5,9);const controls=new OrbitControls(camera,canvas);controls.target.set(0,.8,-1);controls.update();
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#cfb988',roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;scene.add(floor);
 const assets=new Assets(),prototypes=await assets.walls(await json('/content/walls.json')),libraries=await json('/content/worker-actions.json');
-let state,nav,gate,worker,wall,root,data,crossed=false,waited=false,violations=0,loading=false;
+const deliveryLabel=document.createElement('label');deliveryLabel.innerHTML=' <input id="delivery-mode" type="checkbox"> Transporte de cosecha';document.querySelector('header').append(deliveryLabel);
+const prepareButton=document.createElement('button');prepareButton.id='prepare-crate';prepareButton.textContent='Trabajar hasta transportar';document.querySelector('header').append(prepareButton);
+let state,nav,gate,worker,wall,root,data,crossed=false,waited=false,violations=0,loading=false,carryWait=false,initialMoney,premature=0;
 function status(){document.querySelector('#status').textContent=`Saldo ${state.ledger.balance.n} · apertura ${Math.round((gate.gateOpen??0)*100)} % · ${worker.gateWaiting?'espera ante la hoja':worker.status} · ${waited?'espera verificada':'aún sin espera'} · ${crossed?'cruce verificado':'aún sin cruce'} · ${violations} segmentos inválidos · tiempo ${state.elapsed.toFixed(1)} s`;
+  if(document.querySelector('#delivery-mode').checked)document.querySelector('#status').textContent+=` · ${carryWait?'espera con caja verificada':'aún sin espera con caja'} · ${state.crates.some(c=>c.delivered)?'cosecha entregada':'cosecha sin cobrar'} · ${premature} cobros prematuros`;
+  if(document.querySelector('#delivery-mode').checked)document.querySelector('#status').textContent+=` · cajas ${state.crates.length} · portadores ${state.crates.filter(c=>c.carrierId).length} · ingresos ${Object.keys(state.ledger.entries).filter(id=>id.startsWith('deliver:')).length}`;
   wall.update(gate);root.position.set(worker.x,0,worker.z);root.rotation.y=worker.heading??0;applyWorkerPose(data,worker,state.tasks.find(t=>t.id===worker.taskId),state.elapsed,libraries[worker.profile]);}
 async function setup(){
-  if(loading)return;loading=true;document.querySelectorAll('button,select').forEach(e=>e.disabled=true);
+  if(loading)return;loading=true;document.querySelectorAll('button,select,input').forEach(e=>e.disabled=true);
   if(wall){wall.dispose();scene.remove(wall);data.mixer.stopAllAction();data.mixer.uncacheRoot(data.model);scene.remove(root);}
   state=Game.newGame({seed:712});state.villages[0].z=-8;Game.resume(state,'intro');state.tutorial.step='center';
   nav=Object.create(Navigation.prototype);nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];nav.chunks=new Map();nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.searchedRegions=[];nav.obstacles=[];
   const material=document.querySelector('#material').value,profile=document.querySelector('#profile').value;
-  Game.placeStructure(state,'center',{x:-3.4,z:2},nav);Game.placeStructure(state,'gate',{kind:'wall',gate:true,material,x:0,z:0},nav);Game.plant(state,'seed','mijo',0,4,nav);Game.openInitialHiring(state);Game.hire(state,'hire',{[profile]:1});Game.pause(state,'qa');
+  Game.placeStructure(state,'center',{x:-6,z:document.querySelector('#delivery-mode').checked?-3:2},nav);Game.placeStructure(state,'gate',{kind:'wall',gate:true,material,x:0,z:0},nav);Game.plant(state,'seed','mijo',0,4,nav);Game.openInitialHiring(state);Game.hire(state,'hire',{[profile]:1});Game.pause(state,'qa');
   gate=state.structures.find(e=>e.gate);worker=state.workers[0];wall=new NativeWall(prototypes,gate);scene.add(wall);
   const gltf=await assets.model(libraries[profile].url),model=clone(gltf.scene);root=new THREE.Group();root.add(model);scene.add(root);data={model,mixer:new THREE.AnimationMixer(model),clips:gltf.animations,name:null};
-  crossed=false;waited=false;violations=0;loading=false;document.querySelectorAll('button,select').forEach(e=>e.disabled=false);status();
+  crossed=false;waited=false;carryWait=false;initialMoney=state.ledger.balance.n;premature=0;violations=0;loading=false;document.querySelectorAll('button,select,input').forEach(e=>e.disabled=false);status();
 }
 function step(){const previous={x:worker.x,z:worker.z};Game.resume(state,'qa');Game.tick(state,.1,nav);Game.pause(state,'qa');waited||=!!worker.gateWaiting;crossed||=previous.z<=0&&worker.z>0;
+  carryWait||=worker.status==='carrying'&&!!worker.gateWaiting;
+  if(document.querySelector('#delivery-mode').checked&&!state.crates.some(c=>c.delivered)&&state.ledger.balance.n!==initialMoney)premature++;
   if(Math.hypot(worker.x-previous.x,worker.z-previous.z)>1e-8&&!nav.workerMotionClear(previous,worker))violations++;status();}
 document.querySelector('#approach').onclick=()=>{for(let i=0;i<250&&!worker.gateWaiting&&!crossed;i++)step();};
 document.querySelector('#step').onclick=step;
-document.querySelector('#cross').onclick=()=>{for(let i=0;i<400;i++){step();if(crossed&&gate.gateOpen===0)break;}};
+document.querySelector('#cross').onclick=()=>{for(let i=0;i<400;i++){step();if(crossed&&gate.gateOpen===0&&(!document.querySelector('#delivery-mode').checked||state.crates.some(c=>c.delivered)))break;}};
+prepareButton.onclick=()=>{if(!document.querySelector('#delivery-mode').checked)return;for(let i=0;i<2400;i++){const p=state.plants[0];if(p.alive&&isMature(p)&&!p.harvestRequested){Game.resume(state,'qa');try{Game.harvest(state,'qa-harvest',p.id);}finally{Game.pause(state,'qa');}}step();if(carryWait)break;}};
 document.querySelector('#reload-save').onclick=()=>{state=deserialize(serialize(state));nav.setState(state);gate=state.structures.find(e=>e.gate);worker=state.workers[0];status();};
 document.querySelectorAll('select').forEach(e=>e.onchange=()=>setup().catch(error=>document.querySelector('#status').textContent=error.message));
+document.querySelector('#delivery-mode').onchange=()=>setup().catch(error=>document.querySelector('#status').textContent=error.message);
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();await setup();
 function render(){controls.update();renderer.render(scene,camera);requestAnimationFrame(render);}requestAnimationFrame(render);
 </script></html>
