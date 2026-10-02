@@ -4,17 +4,17 @@ import {toonFunctions,waterFunctions} from './african-toon-source.js';
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
-    this.uniforms={uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1.15},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1}};
+    this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1.15},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1}};
     this.materials=new WeakSet();
   }
-  update(night,sun,biome){this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=night?1:0;this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();}
+  update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=night?1:0;this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();}
   material(material){
-    if(!material?.isMeshStandardMaterial||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
+    if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
     const original=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
     material.onBeforeCompile=(shader,renderer)=>{
       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:1};
-      shader.vertexShader='varying vec3 vToonWorld;\n'+shader.vertexShader;
+      shader.vertexShader='varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
         vec4 toonPosition=vec4(transformed,1.0);
         #ifdef USE_BATCHING
@@ -23,9 +23,29 @@ export class AfricanToon {
         #ifdef USE_INSTANCING
           toonPosition=instanceMatrix*toonPosition;
         #endif
-        vToonWorld=(modelMatrix*toonPosition).xyz;`);
-      shader.fragmentShader='varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
-      shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
+        vToonWorld=(modelMatrix*toonPosition).xyz;
+        ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
+      shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
+      if(material.userData.toonGround)shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+        float coarse=materialNoise(vToonWorld*.32),fine=materialNoise(vToonWorld*2.6);
+        float detailAA=1.-smoothstep(.2,1.,max(length(dFdx(vToonWorld)),length(dFdy(vToonWorld))));
+        diffuseColor.rgb*=.94+.10*coarse+.05*(fine-.5)*detailAA;
+        if(uBiome>3.5&&uBiome<4.5){
+          float h=vToonWorld.y-3.28+sin(vToonWorld.z*.024)*.55,phase=mod(h,5.6);
+          float pale=smoothstep(3.85,4.05,phase)*(1.-smoothstep(4.7,4.92,phase)),thin=smoothstep(1.7,1.82,phase)*(1.-smoothstep(1.97,2.06,phase));
+          vec3 stone=mix(vec3(.67,.29,.16),vec3(.84,.48,.27),.40+.07*sin(h*1.1));
+          stone=mix(stone,vec3(.91,.66,.40),pale*.72+thin*.32);
+          diffuseColor.rgb=mix(diffuseColor.rgb,toLinear4(stone),smoothstep(1.4,4.,h)*.90);
+        }
+        if(uBiome>4.5)diffuseColor.rgb*=1.+(coarse-.5)*.018+(fine-.5)*.006*detailAA;
+      `);
+      shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',material.isMeshBasicMaterial?`
+        vec3 toonV=normalize(cameraPosition-vToonWorld);
+        vec3 toonN=normalize(vToonLowNormal);
+        if(dot(toonN,toonV)<0.)toonN=-toonN;
+        outgoingLight=toLinear4(africanToon4(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,vec3(0.),1.,1.,0.,0.,0.,max(dot(toonN,toonV),0.),vToonWorld));
+        #include <opaque_fragment>
+      `:`
         vec3 toonN=inverseTransformDirection(normal,viewMatrix);
         vec3 toonV=normalize(cameraPosition-vToonWorld);
         float toonVisibility=1.0;
@@ -38,7 +58,7 @@ export class AfricanToon {
         #include <opaque_fragment>`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
     };
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4';
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|'+(material.userData.toonGround?'ground':'object')+'|'+material.type;
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;

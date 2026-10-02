@@ -20,9 +20,19 @@ test('toon composes with native vertex deformation, preserves textures and depth
   assert.ok(shader.vertexShader.includes('vec3 transformed=position*2.0;'));assert.ok(shader.vertexShader.includes('instanceMatrix*toonPosition'));
   assert.ok(shader.fragmentShader.includes('#include <map_fragment>'));assert.ok(shader.fragmentShader.includes('#include <alphatest_fragment>'));
   assert.ok(shader.fragmentShader.includes('toonVisibility=getShadowMask()'));assert.equal(mesh.customDepthMaterial,depth);
+  const object=new THREE.MeshStandardMaterial(),ground=new THREE.MeshStandardMaterial();
+  assert.equal(object.customProgramCacheKey(),ground.customProgramCacheKey());ground.userData.toonGround=true;
+  toon.material(object);toon.material(ground);assert.notEqual(ground.customProgramCacheKey(),object.customProgramCacheKey());
 });
 test('transparent VFX, basic overlays and painted water keep their native shader paths',()=>{
   const toon=new AfricanToon();for(const material of [new THREE.MeshStandardMaterial({transparent:true}),new THREE.MeshBasicMaterial(),paintedWaterMaterial('#345678')]){
     const compile=material.onBeforeCompile;toon.material(material);assert.equal(material.onBeforeCompile,compile);
   }
+});
+
+test('very low ground receives authentic toon bands without Three lighting or shadow dependencies',()=>{
+ const material=new THREE.MeshBasicMaterial({vertexColors:true});material.userData.toonGround=true;new AfricanToon().material(material);
+ const shader={uniforms:{},vertexShader:THREE.ShaderLib.basic.vertexShader,fragmentShader:THREE.ShaderLib.basic.fragmentShader};material.onBeforeCompile(shader,{});
+ assert.ok(shader.fragmentShader.includes('toonRamp4(nl*visibility,4.)'));assert.ok(shader.vertexShader.includes('normalMatrix*normal'));
+ assert.ok(!shader.fragmentShader.includes('roughnessFactor'));assert.ok(!shader.fragmentShader.includes('getShadowMask()'));
 });
