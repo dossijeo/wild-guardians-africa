@@ -31,5 +31,5 @@ for entries in json.loads((ROOT/'public/content/selector.json').read_text(encodi
  for entry in entries:
   for key in ['name','tag','description','alt']:add(entry[key],'public/content/selector.json')
 target=ROOT/'docs/i18n-inventory.json'
-target.write_text(json.dumps({k:sorted(v) for k,v in sorted(inventory.items())},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+target.write_text(json.dumps({k:sorted(v) for k,v in sorted(inventory.items())},ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
 print(f'{len(inventory)} presentation candidates -> {target}')
