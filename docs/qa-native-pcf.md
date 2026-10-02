@@ -72,6 +72,15 @@ pasan en 0,553 s. El build pasa en 8,80 s y el paquete conserva 548 archivos,
 Evidencia específica: `native-pcf-unrolled-comparison.json`, captura y registro
 `native-pcf-unrolled-gpu.json` en `test-results`.
 
+GitHub Actions 37061827771 aprueba la revisión cd1e6bf: 585/585 pruebas, cero
+fallos/omisiones, build y paquete. La revisión adicional de Suajili, Musgum,
+Saheliana y Etíope en Sabana/media no registra errores ni avisos. Se conserva
+el corte DEST tras un daño de 0,417 en Etíope. `native-pcf-cultures.json` y las
+capturas documentan esos casos; no amplían el alcance a treinta combinaciones.
+El indicador PCF de la fixture lee el último pase: el humo puede dejarlo en
+cero porque su pase final desactiva sombras, aunque el pase de color anterior
+sí las haya aplicado. La captura de daño muestra las sombras del pase de color.
+
 La revisión no introduce todavía `shadowDirty` para evitar pasadas estáticas:
 se conserva la actualización de Three, necesaria para actores y destrucción.
 Tampoco acredita FPS, memoria GPU medida, todos los dispositivos móviles o la
