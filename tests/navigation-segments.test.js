@@ -102,3 +102,10 @@ test('Center repair paths go around the center footprint and reject a completely
   assert.ok(Math.hypot(route.destination.x,route.destination.z)>=3.2-1e-9);
   assert.equal(repairRoute({x:-5,z:0},target,{path:()=>null}),null);
 });
+
+test('Wider searches find physical detours beyond the local corridor without reusing its cached failure',()=>{
+  const nav=flat([],[{id:'barrier',kind:'house',footprint:[{x:4,z:-20},{x:5,z:-20},{x:5,z:20},{x:4,z:20}]}]),start={x:0,z:0},end={x:10,z:0};
+  assert.equal(nav.path(start,end,.45,null,false),null);const path=nav.path(start,end,.45,null,false,32);assert.ok(path);assert.ok(path.some(p=>Math.abs(p.z)>20));
+  let previous=start;for(const p of path){assert.ok(nav.segmentClear(previous,p,.45,null,false));previous=p;}assert.deepEqual(path.at(-1),end);
+  assert.equal(nav.path(start,end,.45,null,false),null,'A failed narrow corridor remains separately cached');assert.deepEqual(nav.path(start,end,.45,null,false,32),path);
+});

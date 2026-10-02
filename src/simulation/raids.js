@@ -129,7 +129,7 @@ export function updateRaid(s,dt,nav) {
     }
     if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
     if(a.status==='retreating') {
-      if(walkTo(s,a,{...a.spawn,id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false}))a.status='gone';continue;
+      if(walkTo(s,a,{...a.spawn,id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));

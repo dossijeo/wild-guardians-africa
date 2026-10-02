@@ -213,10 +213,13 @@ export function cast(s,id,kind,x,z,nav) {
     s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });
 }
-export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null}={}) {
+export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false}={}) {
   const previous={x:w.x,z:w.z};
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
+    // The local search corridor is not a physical enclosure. Exhausted animals
+    // can need a wider detour to reach the same exit they entered through.
+    if(!w.path&&expandRoute)for(const margin of [32,64]){w.path=nav.path(w,destination,w.radius??.28,ignore,worker,margin);if(w.path)break;}
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }

@@ -103,10 +103,10 @@ export class Navigation {
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&footprintDistance(polygon,p.x,p.z)<(p.radius??1.5)))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
-  path(start,end,radius=.3,ignore=null,worker=true) {
-    const key=`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}`;
+  path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
+    const key=`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}:${margin}`;
     if(this.failedPaths.has(key))return null;
-    const result=this.findPath(start,end,radius,ignore,worker);
+    const result=this.findPath(start,end,radius,ignore,worker,margin);
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
     return result;
   }
@@ -127,12 +127,12 @@ export class Navigation {
     }
     const graph={nodes,links};this.portalGraphs.set(cacheKey,graph);return graph;
   }
-  findPath(start,end,radius=.3,ignore=null,worker=true) {
+  findPath(start,end,radius=.3,ignore=null,worker=true,margin=16) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
-    const margin=16,minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
+    const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
     const portals=worker?this.portalGraph(radius,ignore):{nodes:new Map(),links:new Map()},inside=p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ;
     const open=new SearchFrontier(),costs=new Map(),previous=new Map();
     for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
@@ -164,7 +164,7 @@ export class Navigation {
       if(![...new Set(known)].some(reachesEnd))return null;
     }
     let visited=0,touchesBoundary=false;
-    while(open.length&&visited++<12000) {
+    while(open.length&&visited++<maxVisited) {
       const cur=open.pop(),ck=key(cur.x,cur.z);
       if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)touchesBoundary=true;
       if((Math.hypot(cur.x-ex,cur.z-ez)<1.5||portals.nodes.has(ck)&&distance(cur,end)<=4)&&this.segmentClear(cur,end,radius,ignore,worker)) {
@@ -187,7 +187,7 @@ export class Navigation {
     }
     // Only an exhaustive search wholly inside the corridor proves a finite,
     // closed grid region. Time/bounds limited failures never prove isolation.
-    if(!open.length&&visited<12000&&costs.size){
+    if(!open.length&&visited<maxVisited&&costs.size){
       const region=new Set(costs.keys());
       while(this.searchedRegions.length&&(this.searchedRegions.length>=32||this.searchedRegions.reduce((sum,r)=>sum+r.nodes.size,0)+region.size>50000))this.searchedRegions.shift();
       this.searchedRegions.push({nodes:region,minX,maxX,minZ,maxZ,radius,ignore,worker});
