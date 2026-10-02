@@ -1,0 +1,173 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 6.7431
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 4.5923
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.7075
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.4399
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 5 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 10.4305
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 6 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 29.6961
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 7 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 14.4717
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 8 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 3.8499
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 9 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 98.1534
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 10 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 2.9723
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 11 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 61.3762
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 12 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 3.8246
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 13 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 5.5502
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 14 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 5.0398
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 15 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 38.3193
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 16 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.9781
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 17 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 2.395
+  ...
+# (node:22652) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HDR environment bytes match original radiance compression for both panoramas
+ok 18 - HDR environment bytes match original radiance compression for both panoramas
+  ---
+  duration_ms: 426.0014
+  ...
+# Subtest: complete Fresnel, environment BRDF and fluid branch retain user shader constants
+ok 19 - complete Fresnel, environment BRDF and fluid branch retain user shader constants
+  ---
+  duration_ms: 1.0882
+  ...
+# Subtest: water binds common night and yaw, keeps native exposure and avoids a second tone curve
+ok 20 - water binds common night and yaw, keeps native exposure and avoids a second tone curve
+  ---
+  duration_ms: 4.6633
+  ...
+# (node:28920) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky shader and raw HDR decoder preserve the original lab output
+ok 21 - sky shader and raw HDR decoder preserve the original lab output
+  ---
+  duration_ms: 1241.8842
+  ...
+# Subtest: native exponential sky fade follows simulated day time and survives reload
+ok 22 - native exponential sky fade follows simulated day time and survives reload
+  ---
+  duration_ms: 0.2939
+  ...
+# Subtest: sky keeps camera rotation independent of translation and restores renderer on failure
+ok 23 - sky keeps camera rotation independent of translation and restores renderer on failure
+  ---
+  duration_ms: 6.0208
+  ...
+# (node:32880) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+ok 24 - river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+  ---
+  duration_ms: 177.0252
+  ...
+# Subtest: pond and lava pool fans preserve original outline, local level and transformed instance placement
+ok 25 - pond and lava pool fans preserve original outline, local level and transformed instance placement
+  ---
+  duration_ms: 11.275
+  ...
+# Subtest: painted fluids evaluate transformed world coordinates for instanced pools
+ok 26 - painted fluids evaluate transformed world coordinates for instanced pools
+  ---
+  duration_ms: 0.8647
+  ...
+# Subtest: unloading a chunk releases private instance buffers and retains shared water resources
+ok 27 - unloading a chunk releases private instance buffers and retains shared water resources
+  ---
+  duration_ms: 6.109
+  ...
+# Subtest: pool fragments keep the original half-open chunk clip and independent bounds
+ok 28 - pool fragments keep the original half-open chunk clip and independent bounds
+  ---
+  duration_ms: 1.2084
+  ...
+# (node:5580) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fluid uniforms match the original renderer recipe for all biome palettes and seeds
+ok 29 - fluid uniforms match the original renderer recipe for all biome palettes and seeds
+  ---
+  duration_ms: 22.3111
+  ...
+# Subtest: animation uses integrated simulated time once and shader converts flat inks to linear
+ok 30 - animation uses integrated simulated time once and shader converts flat inks to linear
+  ---
+  duration_ms: 0.8322
+  ...
+# Subtest: toon retains the same fractional dusk phase as the sky after reload
+ok 31 - toon retains the same fractional dusk phase as the sky after reload
+  ---
+  duration_ms: 1.4998
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2735.9872

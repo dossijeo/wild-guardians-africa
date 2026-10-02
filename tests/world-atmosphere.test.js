@@ -29,7 +29,7 @@ test('animation uses integrated simulated time once and shader converts flat ink
   const state={elapsed:123.5};assert.equal(waterTime(state.elapsed),80.275);assert.equal(waterTime(JSON.parse(JSON.stringify(state)).elapsed),waterTime(state.elapsed));
   for(const lava of [false,true]){
     const m=paintedWaterMaterial('#38bcc5',lava,712),shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};m.onBeforeCompile(shader);
-    assert.ok(shader.fragmentShader.includes('diffuseColor.rgb=pow(painted'));assert.ok(shader.fragmentShader.includes('*uWaterScale'));assert.ok(!shader.fragmentShader.includes('uTime*.65'));
+    assert.ok(shader.fragmentShader.includes('toLinear4(base)'));assert.ok(shader.fragmentShader.includes('toLinear4(paintedLava(wp*4.))*2.15'));assert.ok(shader.fragmentShader.includes('*uWaterScale'));assert.ok(!shader.fragmentShader.includes('uTime*.65'));
     assert.equal(shader.uniforms.uTime,m.userData.paintUniforms.uTime);m.dispose();
   }
 });

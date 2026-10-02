@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {toonFunctions,waterFunctions} from './african-toon-source.js';
 import {WATER_DEFAULTS,waterPalette,waterSeed} from './world-atmosphere.js';
+import {fluidLightingFunctions} from './fluid-lighting-source.js';
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
@@ -73,11 +74,12 @@ export function toonDestruction(fragment){
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
 }
 
-export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null){
+export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
   uniforms.uFluidClip={value:bounds?1:0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
+  Object.assign(uniforms,{uEnvDay:{value:lighting?.textures[0]??null},uEnvNight:{value:lighting?.textures[1]??null},uEnvYaw:lighting?.yaw??{value:0},uNight:lighting?.uniforms.uNight??{value:0},uNightLight:lighting?.uniforms.uNightLight??{value:1.12},uLightDir:lighting?.uniforms.uLightDir??{value:new THREE.Vector3(-30,55,25).normalize()},uExposure:{value:1},uKind:{value:1},uSurfaceLava:{value:lava?1:0}});
   material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);shader.vertexShader='varying vec3 vPaintWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
@@ -89,12 +91,18 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null){
         paintPosition=instanceMatrix*paintPosition;
       #endif
       vPaintWorld=(modelMatrix*paintPosition).xyz;`);
-    shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale,uFluidClip;uniform vec4 uFluidBounds;\n'+waterFunctions+'\n'+shader.fragmentShader;
+    shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale,uFluidClip,uEnvYaw,uNight,uNightLight,uExposure,uKind,uSurfaceLava;uniform vec3 uLightDir;uniform sampler2D uEnvDay,uEnvNight;uniform vec4 uFluidBounds;\n'+waterFunctions+'\n'+fluidLightingFunctions+'\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
       if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if(!inside)discard;}`);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb=pow('+ (lava?'paintedLava(vPaintWorld.zx*vec2(.88,1.8)*uWaterScale)':'paintedWater(vPaintWorld.zx*vec2(.22,.45)*uWaterScale,.001)')+',vec3(2.2));');
-    if(lava)shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=diffuseColor.rgb*1.4;');
+    shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
+      float fluidVisibility=1.;
+      #if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
+        fluidVisibility=1.-(1.-getShadowMask())*.93;
+      #endif
+      outgoingLight=sRGBTransferEOTF(vec4(nativeFluid4(vPaintWorld,normalize(cameraPosition-vPaintWorld),fluidVisibility),1.)).rgb;
+      #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>lava?'african-lava-v4.1.4':'african-water-v4.1.4';
+  material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-hdr-v4.1.4':'african-water-hdr-v4.1.4';
   material.userData.paintUniforms=uniforms;return material;
 }
