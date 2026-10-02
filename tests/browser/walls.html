@@ -11,6 +11,8 @@ const assets=new Assets(),prototypes=await assets.walls(await json('/content/wal
 const materials=['zarzas','empalizada','adobe','reforzado','piedra'],hp=[100,200,300,400,500],entities=materials.map((material,i)=>({id:'qa-'+material,material,gate:false,x:(i-2)*3.8,z:0,hp:hp[i],maxHp:hp[i],status:'intact',collapseRemaining:0})),walls=entities.map(e=>{const wall=new NativeWall(prototypes,e);wall.position.x=e.x;scene.add(wall);return wall;});
 function setHealth(percent){entities.forEach(e=>{e.hp=e.maxHp*percent/100;e.status=percent===0?'ruined':'intact';e.collapseRemaining=0;});walls.forEach((wall,i)=>wall.update(entities[i]));}
 document.querySelector('#health').oninput=e=>setHealth(Number(e.target.value));
+const openingLabel=document.createElement('label');openingLabel.innerHTML=' Apertura de hoja <input id="opening" type="range" min="0" max="100" value="0">';document.querySelector('nav').insertBefore(openingLabel,document.querySelector('#collapse'));
+document.querySelector('#opening').oninput=event=>entities.forEach(e=>e.gateOpen=Number(event.target.value)/100);
 document.querySelector('#gate').onchange=event=>{entities.forEach((e,i)=>{const ratio=e.hp/e.maxHp;e.gate=event.target.checked;e.maxHp=hp[i]*(e.gate?.6:1);e.hp=e.maxHp*ratio;});};
 document.querySelector('#collapse').onclick=()=>{setHealth(20);entities.forEach(e=>{e.status='collapsing';e.collapseRemaining=1.4;});};
 document.querySelector('#repair').onclick=()=>{setHealth(100);document.querySelector('#health').value=100;};

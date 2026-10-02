@@ -65,3 +65,14 @@ test('Ordinary damage uses native 480 ms cubic easing, pauses hold it and collap
   entity.collapseRemaining=.7;wall.update(entity,.7);assert.equal(wall.visual,.25);
   wall.dispose();
 });
+test('Articulated leaves retain finite native damage bridges and reconstruct the original closed pose',()=>{
+  for(const material of ['zarzas','empalizada','reforzado']){
+    const entity={id:'gate',material,gate:true,hp:60,maxHp:60,status:'intact',gateOpen:0},wall=new NativeWall(prototypes(),entity),closed=wall.parts[0].mesh.geometry.attributes.position.array.slice();
+    for(const ratio of [1,.9,.5,.21])for(const opening of [0,.25,.5,1]){
+      entity.hp=60*ratio;entity.gateOpen=opening;wall.update(entity);
+      for(const {mesh} of wall.parts){assert.ok(mesh.geometry.attributes.position.array.every(Number.isFinite));assert.ok(mesh.geometry.attributes.normal.array.every(Number.isFinite));assert.equal(mesh.material.transparent,false);}
+    }
+    entity.status='ruined';entity.hp=0;wall.update(entity);assert.match(wall.stageKey,/destruido/);
+    entity.status='intact';entity.hp=60;entity.gateOpen=0;wall.update(entity);assert.deepEqual(wall.parts[0].mesh.geometry.attributes.position.array,closed);wall.dispose();
+  }
+});

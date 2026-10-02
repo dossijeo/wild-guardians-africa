@@ -4,6 +4,9 @@ root = pathlib.Path(__file__).resolve().parents[1]
 pack_path = root / 'public/content/walls.json'
 pack = json.loads(pack_path.read_text(encoding='utf-8'))
 sources = {}
+calibration_path = root / 'content/manifests/gate-leaf-calibration.json'
+calibration = json.loads(calibration_path.read_text(encoding='utf-8'))
+sources[calibration_path.relative_to(root).as_posix()] = hashlib.sha256(calibration_path.read_bytes()).hexdigest()
 worker_pack = json.loads((root / 'public/content/worker-actions.json').read_text(encoding='utf-8'))
 heights = []
 for profile in ('youngMale', 'olderMale', 'youngFemale', 'olderFemale'):
@@ -56,6 +59,7 @@ for material in ('adobe', 'piedra'):
 module = '// Generated from native gate triangles by tools/prepare_gate_passages.py.\n'
 module += 'export const gateBodyHeight=' + str(height) + ';\n'
 module += 'export const nativeGateFrames=' + json.dumps(frames, separators=(',', ':')) + ';\n'
+module += 'export const nativeGateLeaves=' + json.dumps(calibration['leaves'], separators=(',', ':')) + ';\n'
 target = root / 'src/world/gate-frames-native.js'
 target.write_text(module, encoding='utf-8', newline='\n')
 manifest = {'bodyHeight': height, 'sources': sources, 'moduleSha256': hashlib.sha256(target.read_bytes()).hexdigest(),

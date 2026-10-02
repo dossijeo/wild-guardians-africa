@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import {wallStages,morphedWallPositions} from './walls-native.js';
+import {nativeGateLeaves} from '../world/gate-frames-native.js';
+import {splitGateBridge,articulateGate} from './gate-articulation.js';
 
 // Original getVAO expands indexed faces so each triangle keeps ONE region.
 export function wallBridge(source,destination=null){
@@ -33,8 +35,9 @@ export class NativeWall extends THREE.Group {
     }
     this.lastStatus=entity.status;
     if(entity.status!=='intact'||seconds===undefined){this.target=target;this.from=visual;this.damageAge=.48;}
-    if(this.visual===visual&&this.gate===entity.gate)return;
-    this.visual=visual;this.gate=entity.gate;
+    const opening=entity.status==='ruined'?0:Math.max(0,Math.min(1,entity.gateOpen??0));
+    if(this.visual===visual&&this.gate===entity.gate&&this.gateOpen===opening)return;
+    this.visual=visual;this.gate=entity.gate;this.gateOpen=opening;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;
     this.scale.set((entity.baseScaleX??1)*scale,scale,scale);
     const stages=wallStages({material:entity.material,kind:entity.gate?'gate':'wall',visual});
@@ -43,7 +46,9 @@ export class NativeWall extends THREE.Group {
       this.disposeParts();this.stageKey=key;
       for(const stage of stages){
         const prototype=this.prototypes[stage.key],source=prototype.userData.nativePiece;
-        const bridge=wallBridge(source,stage.dest?source.morph[stage.dest]:null),geometry=new THREE.BufferGeometry();
+        let bridge=wallBridge(source,stage.dest?source.morph[stage.dest]:null);
+        if(stage.key.endsWith('_puerta')&&nativeGateLeaves[entity.material])bridge=splitGateBridge(bridge,nativeGateLeaves[entity.material]);
+        const geometry=new THREE.BufferGeometry();
         geometry.setAttribute('position',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('normal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('uv',new THREE.BufferAttribute(bridge.uv,2));
         const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge});
@@ -55,7 +60,7 @@ export class NativeWall extends THREE.Group {
       const p=Math.max(0,Math.min(1,stage.morph)),t=p*p*p*(p*(p*6-15)+10);
       for(let j=0;j<normals.length;j++)normals[j]=bridge.normal[j]+(bridge.targetNormals[j]-bridge.normal[j])*t;
       for(let j=0;j<normals.length;j+=3)if(normals[j]**2+normals[j+1]**2+normals[j+2]**2<.0001)normals.set(bridge.normal.subarray(j,j+3),j);
-      mesh.geometry.attributes.position.array.set(positions);mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
+      mesh.geometry.attributes.position.array.set(articulateGate(bridge,opening,positions,normals));mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
     });
   }
