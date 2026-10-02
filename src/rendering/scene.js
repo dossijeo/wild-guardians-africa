@@ -14,6 +14,7 @@ import {WallDrawing} from './wall-drawing.js';
 import {NativeBuilding,BuildingDestructionPass} from './buildings.js';
 import {VfxLibrary} from './vfx.js';
 import {WorkVfx} from './work-vfx.js';
+import {AttackVfx,animalVisualHeights} from './attack-vfx.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
@@ -68,6 +69,7 @@ export class WorldScene {
     this.wallPrototypes=await this.assets.walls(await json('/content/walls.json'));
     const vfxCatalogue=await json('/content/vfx.json');this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.assets.texture(vfxCatalogue.atlas));
     this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
+    this.attackVfx=new AttackVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
@@ -130,7 +132,7 @@ export class WorldScene {
     if(!descriptor)return;
     const gltf=await this.assets.model(descriptor.url);if(!this.state||!this.objects.has(entity.id))return;
     const root=this.objects.get(entity.id),model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
-    if(type==='animal'){const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=({warthog:.85,hyena:.9,buffalo:1.7,lion:1.2,rhino:1.9}[entity.species])/size.y;model.scale.setScalar(scale);model.position.y=-box.min.y*scale;}
+    if(type==='animal'){const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=animalVisualHeights[entity.species]/size.y;model.scale.setScalar(scale);model.position.y=-box.min.y*scale;}
     root.add(model);
     const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
       groundSamples:type==='animal'?animalGroundSamples(model):null});
@@ -234,6 +236,6 @@ export class WorldScene {
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.destructionPass.render(this.camera,this.scene);const depth=!!this.workVfx?.prepare(this.camera);if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
-  dispose() {this.workVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),depth=workDepth||attackDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
+  dispose() {this.workVfx?.dispose();this.attackVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }
