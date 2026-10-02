@@ -4,11 +4,41 @@ import * as Game from '../src/simulation/game.js';
 import {spawnRaid,updateRaid,reachableApproach} from '../src/simulation/raids.js';
 import {nextRandom} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {Navigation} from '../src/world/navigation.js';
 function world(walkable=()=>true){
   return {version:1,placement:()=>({valid:true}),setState(){this.version++;},walkable,
     path(start,end,radius,ignore){assert.equal(ignore,null);return walkable(end.x,end.z,radius)?[{x:end.x,z:end.z}]:null;}};
 }
 function ready(nav){const s=Game.newGame({seed:712,slotId:'raid-route'});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);s.time=400;s.initialPreparation=false;return s;}
+
+for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals))test(`${species}: native body radius controls entry, approach, shield exclusion and survives reload`,()=>{
+  const expected=library.presentation.footprint.radius,calls=[],nav=world();
+  nav.walkable=(_x,_z,r)=>{calls.push(r);return true;};
+  nav.path=(_a,b,r)=>{calls.push(r);return [{x:b.x,z:b.z}];};
+  const s=ready(nav);spawnRaid(s,{group:[species]},nav);const animal=s.raid.animals[0];
+  assert.equal(animal.radius,expected);assert.ok(calls.length>0);assert.ok(calls.every(r=>r===expected));
+  const shield={id:'shield',x:0,z:0,radius:4};
+  const approach=reachableApproach(animal,s.structures[0],nav,shield);
+  assert.ok(Math.abs(Math.hypot(approach.point.x,approach.point.z)-(4+expected+.1))<1e-10);
+  const loaded=deserialize(serialize(s));assert.equal(loaded.raid.animals[0].radius,expected);
+  s.day=2;nav.terrainValid=()=>true;const spellRadius=Game.spellRadius('shield');
+  animal.x=spellRadius+expected-.01;animal.z=0;s.cooldowns.shield=0;
+  assert.throws(()=>Game.cast(s,'shield-blocked','shield',0,0,nav),/solapa un animal/);
+  animal.x=spellRadius+expected+.01;Game.cast(s,'shield-clear','shield',0,0,nav);assert.equal(s.spells.length,1);
+});
+
+for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals))test(`${species}: swept native body fits clear passages and rejects narrower structure, rock and shield gaps`,()=>{
+  const radius=library.presentation.footprint.radius,nav=new Navigation(712,'sabana',{});
+  // Isolate obstacle geometry; original terrain coverage belongs to campaigns.
+  nav.terrainValid=()=>true;nav.propsAt=()=>[];
+  const start={x:0,z:-4},end={x:0,z:4};
+  for(const kind of ['center','shield','rock'])for(const clearance of [.01,-.01]){
+    const objects=[-1,1].map(side=>({id:`${kind}-${side}`,kind,slot:0,x:side*(radius+.5+clearance),z:0,radius:.5}));
+    nav.obstacles=kind==='rock'?[]:objects;nav.propsAt=()=>kind==='rock'?objects:[];nav.segmentCache.clear();
+    assert.equal(nav.segmentClear(start,end,radius,null,false),clearance>0,`${kind} gap with ${clearance} clearance`);
+  }
+});
 test('Approach selection tries another side when the direct contact point is blocked, without ignoring the building',()=>{
   const nav=world((_x,z)=>z>1),target={id:'center',kind:'center',x:0,z:0};
   const result=reachableApproach({x:20,z:0,radius:.45},target,nav);

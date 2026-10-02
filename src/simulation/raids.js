@@ -30,7 +30,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   if(!group?.length)return;
   const focus=s.structures.find(operational)??s.villages[0],preferredSide=randomInt(s,0,3);
-  const specs=group.map(id=>({spec:animalSpec(id),radius:{warthog:.45,hyena:.45,buffalo:.8,lion:.65,rhino:1}[id]}));
+  const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   let entries=null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;

@@ -21,7 +21,24 @@ export const ANIMAL_ACTIONS = {
           0.6939153539096528
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2/script-1.js",
-        "sourceScriptSha256": "10f1d17bb2ef4a766656936624783d5a34d70941fe0465767b88a2ab791715a8"
+        "sourceScriptSha256": "10f1d17bb2ef4a766656936624783d5a34d70941fe0465767b88a2ab791715a8",
+        "footprint": {
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 25503,
+          "bindRadius": 0.8462308935268169,
+          "clips": {
+            "Running": {
+              "samples": 65,
+              "radius": 1.0462129773170006
+            },
+            "Walking": {
+              "samples": 65,
+              "radius": 0.9812096576354113
+            }
+          },
+          "clearance": 0.05,
+          "radius": 1.1
+        }
       },
       "clips": {
         "Running": {
@@ -79,7 +96,24 @@ export const ANIMAL_ACTIONS = {
           0.4721926462423706
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2/script-1.js",
-        "sourceScriptSha256": "24b60f541191b52c03d6325f92624578aec63158315787605e710cc99a885057"
+        "sourceScriptSha256": "24b60f541191b52c03d6325f92624578aec63158315787605e710cc99a885057",
+        "footprint": {
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 20684,
+          "bindRadius": 0.4725847990283314,
+          "clips": {
+            "Walking": {
+              "samples": 65,
+              "radius": 0.7621358866927412
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 0.8498551415694445
+            }
+          },
+          "clearance": 0.05,
+          "radius": 0.9
+        }
       },
       "clips": {
         "Walking": {
@@ -132,7 +166,24 @@ export const ANIMAL_ACTIONS = {
           0.4935731347115668
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3/script-1.js",
-        "sourceScriptSha256": "d1e99dbc2349a08d31131472ad8496cbc93ed423636f4bb6f10d388f5d66b90e"
+        "sourceScriptSha256": "d1e99dbc2349a08d31131472ad8496cbc93ed423636f4bb6f10d388f5d66b90e",
+        "footprint": {
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 15160,
+          "bindRadius": 0.6788460699741056,
+          "clips": {
+            "Walking": {
+              "samples": 65,
+              "radius": 0.9161469061104492
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 0.8347404277811116
+            }
+          },
+          "clearance": 0.05,
+          "radius": 0.97
+        }
       },
       "clips": {
         "Walking": {
@@ -185,7 +236,24 @@ export const ANIMAL_ACTIONS = {
           0.3049231128226246
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Leon_Bestiario_Corregido_v2/script-1.js",
-        "sourceScriptSha256": "757c7e2898ba70c5622d5648e200ff19273785452ccab340c78759a36000bd94"
+        "sourceScriptSha256": "757c7e2898ba70c5622d5648e200ff19273785452ccab340c78759a36000bd94",
+        "footprint": {
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 14049,
+          "bindRadius": 0.4165557637026854,
+          "clips": {
+            "Walking": {
+              "samples": 65,
+              "radius": 0.7641619177814347
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 0.7998726124433984
+            }
+          },
+          "clearance": 0.05,
+          "radius": 0.85
+        }
       },
       "clips": {
         "Walking": {
@@ -238,7 +306,24 @@ export const ANIMAL_ACTIONS = {
           0.6120777627466218
         ],
         "sourceScript": "references/extracted/Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3/script-1.js",
-        "sourceScriptSha256": "de7c89474ef48b3016d5e607974bb440d4b93c70aa620a53df517b5d01cd3f06"
+        "sourceScriptSha256": "de7c89474ef48b3016d5e607974bb440d4b93c70aa620a53df517b5d01cd3f06",
+        "footprint": {
+          "method": "dominant skin weight excluding Shoulder/Arm/Hand; native in-place Walking/Running; radial body cylinder",
+          "bodyVertices": 13968,
+          "bindRadius": 0.7067256002314869,
+          "clips": {
+            "Walking": {
+              "samples": 65,
+              "radius": 1.0836355433575962
+            },
+            "Running": {
+              "samples": 65,
+              "radius": 1.497440261263126
+            }
+          },
+          "clearance": 0.05,
+          "radius": 1.55
+        }
       },
       "clips": {
         "Walking": {
