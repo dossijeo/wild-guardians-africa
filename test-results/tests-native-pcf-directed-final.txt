@@ -1,0 +1,122 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 17.5171
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 8.2551
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 2.4321
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.9251
+  ...
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 5 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 45.4733
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 6 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 9.4097
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 7 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 7.6803
+  ...
+# (node:29656) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HDR environment bytes match original radiance compression for both panoramas
+ok 8 - HDR environment bytes match original radiance compression for both panoramas
+  ---
+  duration_ms: 423.5634
+  ...
+# Subtest: complete Fresnel, environment BRDF and fluid branch retain user shader constants
+ok 9 - complete Fresnel, environment BRDF and fluid branch retain user shader constants
+  ---
+  duration_ms: 1.2634
+  ...
+# Subtest: water binds common night and yaw, keeps native exposure and avoids a second tone curve
+ok 10 - water binds common night and yaw, keeps native exposure and avoids a second tone curve
+  ---
+  duration_ms: 5.5425
+  ...
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 11 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 3.1092
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 12 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 2.8154
+  ...
+# Subtest: PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+ok 13 - PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+  ---
+  duration_ms: 3.3595
+  ...
+# Subtest: shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+ok 14 - shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+  ---
+  duration_ms: 3.4873
+  ...
+# Subtest: native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+ok 15 - native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+  ---
+  duration_ms: 4.0545
+  ...
+# Subtest: disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+ok 16 - disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+  ---
+  duration_ms: 4.9271
+  ...
+# Subtest: Standard direct lighting uses native PCF while spot and point shadows keep their own source
+ok 17 - Standard direct lighting uses native PCF while spot and point shadows keep their own source
+  ---
+  duration_ms: 0.5969
+  ...
+# Subtest: ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+ok 18 - ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+  ---
+  duration_ms: 3.36
+  ...
+# Subtest: independent water retains one valid fallback across shader recompiles and releases it with the material
+ok 19 - independent water retains one valid fallback across shader recompiles and releases it with the material
+  ---
+  duration_ms: 1.0656
+  ...
+# Subtest: terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+ok 20 - terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+  ---
+  duration_ms: 9.8643
+  ...
+# Subtest: focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+ok 21 - focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+  ---
+  duration_ms: 1.4502
+  ...
+# Subtest: quality changes replace allocated targets once and same resolution retains GPU resources
+ok 22 - quality changes replace allocated targets once and same resolution retains GPU resources
+  ---
+  duration_ms: 1.224
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 916.3666

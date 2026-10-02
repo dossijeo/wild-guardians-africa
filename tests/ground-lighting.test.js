@@ -24,10 +24,10 @@ test('both ground quality paths share surface, HDR and native wet lighting witho
   assert.equal(f.split('nativeGroundSurface4(vToonWorld,').length,2);assert.equal(f.split('nativeGroundLight4(groundAlbedo,').length,2);
   assert.ok(f.includes('environment4(reflect(-toonV,toonN),groundRough)'));assert.ok(f.includes('groundVisibility,0.,groundWet,0.'));
   assert.ok(!f.includes('uWet*(1.-toonLeaf*.35)'));
-  if(material.isMeshBasicMaterial)assert.ok(!f.includes('getShadowMask()'));else assert.ok(f.includes('groundVisibility=1.-(1.-getShadowMask())*.93'));
+  if(material.isMeshBasicMaterial)assert.ok(!f.includes('getShadowMask()'));else assert.ok(f.includes('groundVisibility=1.-nativeShadowOcclusion(toonN,vToonWorld)*.93'));
   material.dispose();
  }
  const object=new THREE.MeshStandardMaterial();toon.material(object);const output={uniforms:{},...THREE.ShaderLib.standard};object.onBeforeCompile(output,{});
- assert.ok(!output.fragmentShader.includes('nativeGroundSurface4'));assert.ok(output.fragmentShader.includes('toonVisibility=getShadowMask()'));
+ assert.ok(!output.fragmentShader.includes('nativeGroundSurface4'));assert.ok(output.fragmentShader.includes('toonVisibility=receiveShadow?1.-nativeShadowOcclusion(toonN,vToonWorld):1.'));
  object.dispose();textures.forEach(t=>t.dispose());
 });

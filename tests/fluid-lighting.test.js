@@ -33,7 +33,7 @@ test('water binds common night and yaw, keeps native exposure and avoids a secon
   const material=paintedWaterMaterial('#49aeb6',lava,712,null,lighting),u=material.userData.paintUniforms;
   assert.equal(u.uEnvDay.value,textures[0]);assert.equal(u.uEnvNight.value,textures[1]);assert.equal(u.uNight,toon.uniforms.uNight);assert.equal(u.uEnvYaw,sky.uniforms.uSkyYaw);assert.equal(u.uExposure.value,1);assert.equal(material.toneMapped,false);
   const output={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(output);
-  assert.ok(output.fragmentShader.includes('sRGBTransferEOTF(vec4(nativeFluid4'));assert.ok(output.fragmentShader.includes('fluidVisibility=1.-(1.-getShadowMask())*.93'));assert.ok(!output.fragmentShader.includes('totalEmissiveRadiance+=diffuseColor.rgb*1.4'));
+  assert.ok(output.fragmentShader.includes('sRGBTransferEOTF(vec4(nativeFluid4'));assert.ok(output.fragmentShader.includes('fluidVisibility=1.-nativeShadowOcclusion(inverseTransformDirection(normal,viewMatrix),vPaintWorld)*.93'));assert.ok(!output.fragmentShader.includes('totalEmissiveRadiance+=diffuseColor.rgb*1.4'));
   material.dispose();
  }
  let disposed=0;sky.environmentTextures=textures;for(const t of textures)t.addEventListener('dispose',()=>disposed++);sky.dispose();assert.equal(disposed,2);

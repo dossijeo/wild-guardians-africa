@@ -45,3 +45,8 @@ Tampoco sustituye su política de actualización por la caché `shadowDirty`
 del lab; actores, cosechas y destrucción siguen necesitando actualizaciones.
 No acredita FPS, la matriz completa de culturas/calidades ni origen flotante.
 El Plan Maestro sigue en curso.
+
+Revisión posterior: profundidad DEPTH_COMPONENT24, PCF por pendiente y
+polygon offset se integran en [QA de PCF nativo](qa-native-pcf.md). La descripción
+anterior del filtro PCFSoft corresponde al estado de este commit de cámara;
+la política de caché `shadowDirty` continúa pendiente.

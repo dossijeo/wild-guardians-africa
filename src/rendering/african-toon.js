@@ -4,12 +4,13 @@ import {WATER_DEFAULTS,waterPalette,waterSeed} from './world-atmosphere.js';
 import {fluidLightingFunctions,environmentFunctions} from './fluid-lighting-source.js';
 import {groundLightingFunctions} from './ground-lighting-source.js';
 import {volcanicFunctions} from './volcanic-source.js';
+import {createNativeShadowUniforms,patchNativeShadow} from './native-shadow.js';
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
     this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
-    this.materials=new WeakSet();
+    this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
     this.contactUniforms={uContactMap:{value:null},uContactBounds:{value:new THREE.Vector4(0,0,1,1)},uContactOn:{value:0}};
     this.environmentUniforms={uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
   }
@@ -51,7 +52,7 @@ export class AfricanToon {
         vec3 groundAlbedo=toLinear4(clamp(groundColor,0.,1.));
         float groundVisibility=1.;
         ${material.isMeshBasicMaterial?'':`#if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
-          groundVisibility=1.-(1.-getShadowMask())*.93;
+          groundVisibility=1.-nativeShadowOcclusion(toonN,vToonWorld)*.93;
         #endif`}
         vec3 groundReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,toonN),groundRough):vec3(0.);
         vec3 groundLit=nativeGroundLight4(groundAlbedo,toonN,toonV,groundRough,groundVisibility,groundReflection,nativeContact4(vToonWorld));
@@ -62,16 +63,17 @@ export class AfricanToon {
         vec3 toonV=normalize(cameraPosition-vToonWorld);
         float toonVisibility=1.0;
         #if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
-          toonVisibility=getShadowMask();
+          toonVisibility=receiveShadow?1.-nativeShadowOcclusion(toonN,vToonWorld):1.;
         #endif
         float toonLeaf=${material.userData.nativeSurface?'nativeLeaf':'smoothstep(.018,.13,diffuseColor.g-diffuseColor.r*.87)*smoothstep(.06,.20,diffuseColor.g)'};
         vec3 toonReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,toonN),roughnessFactor):reflectedLight.indirectSpecular;
         ${material.userData.nativeSurface?'vec3 nativeEmission=uNativeVolcanicGlow>.5?nativeVolcanic4(nativeGlowTexel):vec3(0.);':''}
         outgoingLight=toLinear4(${material.userData.nativeSurface?'africanToonEmission4':'africanToon4'}(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':material.userData.nativeSurface?'nativeWet':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld${material.userData.nativeSurface?',nativeEmission':''}))+totalEmissiveRadiance;
         #include <opaque_fragment>`);
-      shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
+
     };
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
@@ -97,6 +99,7 @@ export function toonDebris(vertex,fragment){
 
 export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
+  const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
   uniforms.uFluidClip={value:bounds?(clipOutside?2:1):0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
@@ -115,15 +118,16 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
     shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale,uFluidClip,uEnvYaw,uNight,uNightLight,uExposure,uKind,uSurfaceLava;uniform vec3 uLightDir;uniform sampler2D uEnvDay,uEnvNight;uniform vec4 uFluidBounds;\n'+waterFunctions+'\n'+fluidLightingFunctions+'\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
       if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if((uFluidClip<1.5&&!inside)||(uFluidClip>1.5&&inside))discard;}`);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
+
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       float fluidVisibility=1.;
       #if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
-        fluidVisibility=1.-(1.-getShadowMask())*.93;
+        fluidVisibility=1.-nativeShadowOcclusion(inverseTransformDirection(normal,viewMatrix),vPaintWorld)*.93;
       #endif
       outgoingLight=sRGBTransferEOTF(vec4(nativeFluid4(vPaintWorld,normalize(cameraPosition-vPaintWorld),fluidVisibility),1.)).rgb;
       #include <opaque_fragment>`);
   };
+  material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,shadowUniforms,'vPaintWorld');})(material.onBeforeCompile);
   material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-hdr-v4.1.4':'african-water-hdr-v4.1.4';
   material.userData.paintUniforms=uniforms;return material;
 }
