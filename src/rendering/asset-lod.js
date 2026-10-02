@@ -2,16 +2,18 @@ import * as THREE from 'three';
 import {nativeLodBins} from './lod-source.js';
 import {obstructionGeometry,obstructionMaterial} from './obstruction.js';
 import {createAssetShadow,updateAssetShadow} from './asset-shadows.js';
+import {assetClipGeometry,assetClipMaterial} from './asset-clip.js';
 let batchSerial=0;
 
 // Stable logical instances own coverage; render bins only borrow it. Navigation,
 // contact AO and water continue using the full, unmodified instance population.
-export function createAssetLod(group,levels,instances,asset,slot){
+export function createAssetLod(group,levels,instances,asset,slot,clipBounds=null){
   const bounds=levels[0].geometry.boundingBox;
   const prototype={...asset,size:bounds.getSize(new THREE.Vector3()).toArray(),centerY:(bounds.min.y+bounds.max.y)/2};
-  const batch={uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
+  const batch={uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,clip:!!clipBounds,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
   for(const [level,original] of levels.entries()){
-    const geometry=obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
+    const geometry=clipBounds?assetClipGeometry(original.geometry,clipBounds,instances.length):obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
+    if(clipBounds)assetClipMaterial(original.material);
     obstructionMaterial(original.material);
     const mesh=new THREE.InstancedMesh(geometry,original.material,instances.length);
     mesh.count=0;mesh.castShadow=false;mesh.receiveShadow=true;mesh.userData.nativeLodBatch=batch;mesh.userData.nativeLodLevel=level;

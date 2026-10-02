@@ -1,0 +1,77 @@
+TAP version 13
+# Subtest: chunk clip preserves the original half-open FS predicate and biome exceptions
+ok 1 - chunk clip preserves the original half-open FS predicate and biome exceptions
+  ---
+  duration_ms: 4.1882
+  ...
+# Subtest: adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+ok 2 - adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+  ---
+  duration_ms: 13.0162
+  ...
+# Subtest: clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+ok 3 - clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+  ---
+  duration_ms: 2.2237
+  ...
+# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+ok 4 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+  ---
+  duration_ms: 18.6449
+  ...
+# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+ok 5 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+  ---
+  duration_ms: 6.2342
+  ...
+# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+ok 6 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+  ---
+  duration_ms: 6.7601
+  ...
+# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+ok 7 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+  ---
+  duration_ms: 5.3752
+  ...
+# (node:26972) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+ok 8 - native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+  ---
+  duration_ms: 51.4238
+  ...
+# Subtest: render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+ok 9 - render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+  ---
+  duration_ms: 7.7061
+  ...
+# Subtest: short vegetation distance culling does not remove logical instances and reappears when the camera returns
+ok 10 - short vegetation distance culling does not remove logical instances and reappears when the camera returns
+  ---
+  duration_ms: 2.9566
+  ...
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 11 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 19.7954
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 12 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 4.8016
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 13 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 5.2907
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 344.4712

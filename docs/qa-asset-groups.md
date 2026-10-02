@@ -72,3 +72,6 @@ vértices privados. No se acredita rendimiento móvil ni la matriz visual de
 culturas/calidades completa. Origen flotante, generación mediante worker,
 recorte especial del slot 19 y gestión completa de recursos siguen pendientes.
 Esta revisión no da por completado el Plan Maestro.
+
+El recorte especial se completa posteriormente en
+[QA del recorte de formaciones](qa-asset-clip.md).
