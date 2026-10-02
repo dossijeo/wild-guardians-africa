@@ -1,0 +1,14 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA cielo HDR original</title>
+<style>body{margin:0}canvas{width:100vw;height:100vh;display:block}header{position:absolute;background:#fff9ed;padding:12px;font:16px system-ui}button{padding:10px}</style>
+<header>HDR original del lab de biomas, sin iluminación ni cel shading.<br><button id="night">Noche</button><button id="day">Día</button><button id="mix">Transición</button><button id="rotate">Girar 90°</button><output id="status">Cargando…</output></header><canvas></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {NativeSky,skyNight} from '../../src/rendering/sky.js';
+const canvas=document.querySelector('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:true}),sky=new NativeSky(),camera=new THREE.PerspectiveCamera(65,1,.1,600),state={day:1,time:0};
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+let yaw=0;const status=document.querySelector('#status');
+addEventListener('error',e=>status.textContent=e.message);addEventListener('unhandledrejection',e=>status.textContent=String(e.reason));
+await sky.load();
+function render(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();camera.lookAt(Math.cos(yaw),.15,Math.sin(yaw));renderer.clear();sky.render(renderer,camera,state);status.textContent=' · noche '+skyNight(state).toFixed(4)+' · '+sky.textures.map(t=>t.image.width+'×'+t.image.height).join(' / ');}
+document.querySelector('#night').onclick=()=>{state.time=600;render();};document.querySelector('#day').onclick=()=>{state.time=0;render();};document.querySelector('#mix').onclick=()=>{state.time=300+Math.log(2)/2.4;render();};document.querySelector('#rotate').onclick=()=>{yaw+=Math.PI/2;render();};addEventListener('resize',render);render();
+</script></html>
