@@ -1,0 +1,25 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Cinco casas DEST originales</title><style>body{margin:0;font:14px system-ui;background:#c8cdb9}header{position:absolute;z-index:2;background:#fff9ed;padding:10px;max-width:95vw}button{margin:3px;padding:6px}canvas{display:block;width:100vw;height:100vh}#status{display:block;white-space:pre-line}</style><header>Visor visual aislado: geometrías y máscaras originales, sin economía ni guardados de campaña.<br><button data-damage="0">Intacto</button><button data-damage=".10">Primeros impactos</button><button data-damage=".35">Daño localizado</button><button data-damage=".65">Daño severo</button><button id="collapse">Iniciar colapso</button><button id="step">Avanzar 0,1 s</button><button id="finish">Terminar los 3,2 s</button><button id="pause">Pausar</button><button id="reset">Restablecer visor</button><button id="close-up">Acercar a casa suajili</button><span id="status">Cargando las cinco casas originales…</span></header><canvas id="world" aria-label="Cinco edificios originales con destrucción por máscaras y colapso regional"></canvas><script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {Assets,json} from '/src/rendering/assets.js';
+import {NativeBuilding,BuildingDestructionPass} from '/src/rendering/buildings.js';
+import {hitStructure} from '/src/simulation/rules.js';
+const canvas=document.querySelector('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const scene=new THREE.Scene();scene.background=new THREE.Color('#c8cdb9');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-8,13,9);scene.add(sun,sun.target);
+const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(2,16,25);const controls=new OrbitControls(camera,canvas);controls.target.set(0,1,0);controls.update();
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:'#ada78b',roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.025;scene.add(floor);
+const assets=new Assets(),descriptors=(await json('/content/destruction.json')).buildings,pass=new BuildingDestructionPass(renderer,sun),houses=[];
+for(let i=0;i<descriptors.length;i++){const descriptor=descriptors[i],template=await assets.building(descriptor),entity={id:descriptor.culture,kind:'center',maxHp:600,hp:600,status:'intact',collapseRemaining:0},house=new NativeBuilding(template,entity,pass);house.position.x=(i-2)*6;scene.add(house);houses.push({descriptor,template,entity,house});}
+let elapsed=0,paused=true,playing=false;
+function status(){for(const item of houses)item.house.update(item.entity,elapsed);document.querySelector('#status').textContent=houses.map(({descriptor,entity,house})=>`${descriptor.name}: daño visual ${(house.damage*100).toFixed(2)} % · ${entity.status} · caída pendiente ${entity.collapseRemaining.toFixed(2)} s`).join('\n')+`\nTiempo simulado ${elapsed.toFixed(2)} s · ${paused?'pausado':'activo'}`;}
+function advance(dt){if(paused)return;elapsed+=dt;for(const {entity} of houses)if(entity.status==='collapsing'){entity.collapseRemaining=Math.max(0,entity.collapseRemaining-dt);if(entity.collapseRemaining<=1e-9){entity.status='ruined';entity.hp=0;}}status();}
+for(const button of document.querySelectorAll('[data-damage]'))button.onclick=()=>{playing=false;for(const {entity} of houses){entity.status='intact';entity.hp=600*(1-Number(button.dataset.damage));entity.collapseRemaining=0;}status();};
+document.querySelector('#collapse').onclick=()=>{for(const {entity} of houses){entity.status='intact';entity.hp=600;hitStructure(entity,480);}playing=false;status();};
+document.querySelector('#step').onclick=()=>{const before=paused;paused=false;advance(.1);paused=before;status();};
+document.querySelector('#finish').onclick=()=>{const before=paused;paused=false;for(let i=0;i<32;i++)advance(.1);paused=before;status();};
+document.querySelector('#pause').onclick=()=>{paused=!paused;playing=!paused;document.querySelector('#pause').textContent=paused?'Reanudar':'Pausar';status();};
+document.querySelector('#reset').onclick=()=>{playing=false;paused=true;elapsed=0;document.querySelector('#pause').textContent='Reanudar';for(const {entity} of houses){entity.status='intact';entity.hp=600;entity.collapseRemaining=0;}status();};
+document.querySelector('#close-up').onclick=()=>{controls.target.set(-12,1.5,0);camera.position.set(-5,5,9);controls.update();};
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();status();let last=performance.now();
+function render(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(playing)advance(dt);controls.update();pass.render(camera);renderer.render(scene,camera);requestAnimationFrame(render);}requestAnimationFrame(render);
+</script></html>

@@ -11,6 +11,7 @@ import {NativeHands} from './hands.js';
 import {tutorialHandTarget} from './tutorial-hand-target.js';
 import {NativeWall} from './walls.js';
 import {WallDrawing} from './wall-drawing.js';
+import {NativeBuilding,BuildingDestructionPass} from './buildings.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -24,6 +25,7 @@ export class WorldScene {
     this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;this.controls.maxPolarAngle=Math.PI*.47;this.controls.minDistance=8;this.controls.maxDistance=140;this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.sun.castShadow=true;this.sun.shadow.mapSize.set(1024,1024);this.sun.shadow.camera.left=-60;this.sun.shadow.camera.right=60;this.sun.shadow.camera.top=60;this.sun.shadow.camera.bottom=-60;this.sun.shadow.bias=-.0008;
     this.scene.add(this.sun,this.sun.target);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.ambient);
+    this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.buildingTemplates=new Map();
     this.raycaster=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.terrainMeshes=[];
     this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
     this.strokeLine=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineDashedMaterial({color:'#49623d',dashSize:.5,gapSize:.25,depthWrite:false}));this.strokeLine.visible=false;this.scene.add(this.strokeLine);
@@ -49,10 +51,12 @@ export class WorldScene {
     this.scene.add(this.wallPreview);
   }
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
-  qualitySetting(quality) {this.quality=quality;this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
+  qualitySetting(quality) {this.quality=quality;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
   async load(state,nav,villagePayload) {
     this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
     this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
+    this.buildingCatalogue=(await json('/content/destruction.json')).buildings;
+    await Promise.all([...new Set(state.villages.map(v=>v.culture))].map(culture=>this.ensureBuilding(culture)));
     [this.models,this.workerLibraries]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json')]);
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
@@ -105,15 +109,16 @@ export class WorldScene {
     for(const original of this.villageTemplates.get(village.culture)??this.villagePrototypes){const mesh=original.clone(),u=mesh.userData.unit,layout=village.buildings.find(b=>b.key===u.key);if(!layout)continue;mesh.scale.setScalar(16);mesh.position.set(village.x,this.nav.field.surface(layout.x,layout.z)-u.min[1]*16+.018,village.z);group.add(mesh);}
     return group;
   }
-  async ensureVillage(culture,payload) {if(!this.villageTemplates.has(culture))this.villageTemplates.set(culture,await this.assets.village(payload));}
+  async ensureBuilding(culture){if(!this.buildingTemplates.has(culture)){const descriptor=this.buildingCatalogue.find(b=>b.culture===culture);if(!descriptor)throw new Error('Casa DEST desconocida: '+culture);this.buildingTemplates.set(culture,await this.assets.building(descriptor));}}
+  async ensureVillage(culture,payload) {await this.ensureBuilding(culture);if(!this.villageTemplates.has(culture))this.villageTemplates.set(culture,await this.assets.village(payload));}
   showVillagePreview(preview) {
     this.clearVillagePreview();this.villagePreview=this.villageMesh(preview);
     this.villagePreview.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;o.material.depthWrite=false;o.material.color.set(preview.valid?'#d4f3c2':'#f4a198');}});this.scene.add(this.villagePreview);
   }
   clearVillagePreview() {if(this.villagePreview){this.villagePreview.traverse(o=>{if(o.isMesh)o.material.dispose();});this.scene.remove(this.villagePreview);this.villagePreview=null;}}
-  centerMesh() {
-    const original=this.villagePrototypes.find(o=>o.userData.unit.kind==='Edificio')??this.villagePrototypes[0],unit=original.userData.unit;
-    const mesh=original.clone(),group=new THREE.Group();mesh.scale.setScalar(16);mesh.position.set(-(unit.min[0]+unit.max[0])*8,-unit.min[1]*16,-(unit.min[2]+unit.max[2])*8);group.add(mesh);return group;
+  centerMesh(entity) {
+    const culture=this.state.villages.find(v=>v.id===entity.villageId)?.culture??this.state.culture;
+    return new NativeBuilding(this.buildingTemplates.get(culture),entity,this.destructionPass);
   }
   async actor(entity,type) {
     const fragment=type==='worker'?profileSources[entity.profile]:animalSources[entity.species];const descriptor=type==='worker'?this.workerLibraries[entity.profile]:this.models.find(m=>m.source.includes(fragment));
@@ -151,7 +156,7 @@ export class WorldScene {
     for(const e of [...s.structures,...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
-        if(e.kind==='center')mesh=this.centerMesh();
+        if(e.kind==='center')mesh=this.centerMesh(e);
         else if(e.kind==='wall')mesh=new NativeWall(this.wallPrototypes,e);
         else if(e.species&&'growth' in e)mesh=new THREE.Group();
         else if('value' in e){mesh=new THREE.Group();this.objects.set(e.id,mesh);this.crate(e).catch(error=>this.onError?.(error));}
@@ -164,7 +169,7 @@ export class WorldScene {
       if('value' in e)mesh.visible=!e.carrierId;
       if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt);}
-      else if(e.kind==='center'){if(e.status==='ruined')mesh.scale.y=.08;else if(e.status==='collapsing')mesh.scale.y=Math.max(.08,e.collapseRemaining/3.2);else mesh.scale.y=1;}
+      else if(e.kind==='center')mesh.update(e,s.elapsed);
       if(e.species&&'growth' in e) {
         const growth=e.growth/cropSpec(e.species).growth_seconds,stage=growth>=1?4:Math.max(0,marks.findIndex(m=>growth<m)-1),key=`${cropIds.indexOf(e.species)}:${stage}`;
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
@@ -172,7 +177,7 @@ export class WorldScene {
       }
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e))this.updateActor(e,dt,'profile' in e?'worker':'animal');
     }
-    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall)mesh.dispose();this.objects.delete(id);this.mixers.delete(id);}
+    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();this.objects.delete(id);this.mixers.delete(id);}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
     this.scene.background.set(tint);this.scene.fog=new THREE.Fog(tint,130,250);this.sun.intensity=night?.4:3;this.ambient.intensity=night?1.1:2;
     this.sun.position.set(this.controls.target.x-30,this.controls.target.y+55,this.controls.target.z+25);this.sun.target.position.copy(this.controls.target);
@@ -224,6 +229,6 @@ export class WorldScene {
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.renderer.render(this.scene,this.camera);}
-  dispose() {this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.destructionPass.render(this.camera,this.scene);this.renderer.render(this.scene,this.camera);}
+  dispose() {this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }

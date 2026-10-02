@@ -61,3 +61,4 @@ for building in buildings:
     building['sha256']=hashlib.sha256((root/'public'/building['url'].lstrip('/')).read_bytes()).hexdigest()
 manifest={'source':source.relative_to(root).as_posix(),'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),'moduleSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'buildings':buildings}
 (root/'content/manifests/destruction-native.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+(root/'public/content/destruction.json').write_text(json.dumps({'buildings':buildings},ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

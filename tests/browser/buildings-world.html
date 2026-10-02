@@ -1,0 +1,24 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Centro DEST en la finca</title><style>body{margin:0;font:14px system-ui}header{position:absolute;z-index:2;padding:12px;background:#fff9ed}button{padding:8px;margin:4px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><header>WorldScene, terreno original y centro/mijo/trabajador pagados. Prueba aislada sin partidas guardadas.<br><button id="hit">Golpe lógico de 40 PV</button><button id="collapse">Golpe lógico de 480 PV</button><button id="step">Avanzar 0,1 s</button><button id="finish">Avanzar 3,2 s</button><button id="repair">Solicitar reparación pagada</button><button id="work">Ejecutar tareas hasta reparar</button><button id="reload-save">Guardar y recargar en memoria</button><span id="status">Cargando finca…</span></header><canvas id="world" aria-label="Casa original con daño y colapso en el terreno de la finca"></canvas><script type="module">
+import {hitStructure} from '/src/simulation/rules.js';
+import * as Game from '/src/simulation/game.js';
+import {Navigation} from '/src/world/navigation.js';
+import {findInitialLocationAsync} from '/src/world/villages.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {json} from '/src/rendering/assets.js';
+import {serialize,deserialize} from '/src/persistence/snapshots.js';
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='suajili');
+let state=Game.newGame({culture:'suajili',seed:712});const nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);let center=state.structures[0],site;
+for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:center.x+x,z:center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
+Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-contract',{olderMale:1});Game.pause(state,'qa');state.tutorial.step='done';
+const world=new WorldScene(document.querySelector('#world'),()=>{});let error='';world.onError=e=>{error=e.message;status();};world.qualitySetting('media');await world.load(state,nav,payload);
+world.focus(center);const groundY=nav.field.surface(center.x,center.z);world.controls.target.set(center.x,groundY+1.2,center.z);world.camera.position.set(center.x+7,groundY+6,center.z+9);world.controls.update();
+function status(){const house=world.objects.get(center.id);document.querySelector('#status').textContent=`Centro ${center.hp}/${center.maxHp} PV · ${center.status} · daño visual ${((house?.damage??0)*100).toFixed(2)} % · caída pendiente ${center.collapseRemaining.toFixed(2)} s · saldo ${state.ledger.balance.n} · tiempo simulado ${state.elapsed.toFixed(2)} s · ${state.result??'partida activa'}${error?' · '+error:''}`;}
+function advance(dt,draw=true){Game.resume(state,'qa');Game.tick(state,dt,nav);Game.pause(state,'qa');if(draw){world.render(0);status();}}
+document.querySelector('#hit').onclick=()=>{hitStructure(center,40);nav.setState(state);world.render(0);status();};document.querySelector('#collapse').onclick=()=>{hitStructure(center,480);nav.setState(state);world.render(0);status();};
+document.querySelector('#step').onclick=()=>advance(.1);document.querySelector('#finish').onclick=()=>advance(3.2);
+let repairId=0;document.querySelector('#repair').onclick=()=>{Game.resume(state,'qa');try{Game.requestRepair(state,'qa-repair-'+repairId++,center.id);error='';}catch(e){error=e.message;}finally{Game.pause(state,'qa');}status();};
+document.querySelector('#work').onclick=async()=>{document.querySelector('#work').disabled=true;for(let i=0;i<3000&&center.hp<center.maxHp&&!state.result;i++){advance(.1,false);if(i%25===24){world.render(0);status();await new Promise(resolve=>setTimeout(resolve,0));}}document.querySelector('#work').disabled=false;world.render(0);status();};
+document.querySelector('#reload-save').onclick=()=>{state=deserialize(serialize(state));nav.setState(state);world.state=state;world.simElapsed=state.elapsed;center=state.structures[0];world.render(0);status();};
+function frame(){world.render(0);status();requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>

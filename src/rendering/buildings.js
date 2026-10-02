@@ -1,0 +1,126 @@
+import * as THREE from 'three';
+import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
+
+const glsl=source=>source.replace('#version 300 es\n','');
+const clamp=value=>Math.max(0,Math.min(1,value));
+export function centerVisualDamage(entity){
+  if(entity.status==='ruined')return 1;
+  // Native setDamage latches at .79 even when one impact overshoots the threshold.
+  if(entity.status==='collapsing')return COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*clamp(1-entity.collapseRemaining/COLLAPSE_SECONDS);
+  return clamp(1-entity.hp/entity.maxHp);
+}
+function geometry(data,repairNormals=null){
+  const result=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(data,12);
+  for(const [name,size,offset] of [['aPos',3,0],['aNormal',3,3],['aUV',2,6],['aAnchor',3,8],['aSeed',1,11]])result.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
+  // Three uses position for frustum bounds; the shader uses the same source data.
+  result.setAttribute('position',result.getAttribute('aPos'));
+  result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
+  result.computeBoundingBox();result.computeBoundingSphere();return result;
+}
+export function prepareNativeBuilding(gltf,building){
+  const meshes=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
+  if(meshes.length!==1)throw new Error('DEST requiere la malla original de una sola primitiva');
+  const mesh=meshes[0],identity=new THREE.Matrix4();
+  if(mesh.matrixWorld.elements.some((v,i)=>Math.abs(v-identity.elements[i])>1e-9))throw new Error('Transformación de casa DEST no compatible');
+  const original=mesh.geometry,positions=new Float32Array(original.getAttribute('position').array),normals=new Float32Array(original.getAttribute('normal').array),uv=new Float32Array(original.getAttribute('uv').array),indices=original.index.array;
+  const bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
+  for(let i=0;i<positions.length;i++){const axis=i%3;bounds.min[axis]=Math.min(bounds.min[axis],positions[i]);bounds.max[axis]=Math.max(bounds.max[axis],positions[i]);}
+  const center=[(bounds.min[0]+bounds.max[0])/2,bounds.min[1],(bounds.min[2]+bounds.max[2])/2];
+  for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];
+  for(let axis=0;axis<3;axis++){bounds.min[axis]-=center[axis];bounds.max[axis]-=center[axis];}
+  const kernel=createNativeDestruction(building,{positions,normals,uv,indices,bounds}),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
+  let radius=0;for(const point of kernel.hull)radius=Math.max(radius,Math.hypot(...point));
+  const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
+  return {building,kernel,body,ash,noise,material:mesh.material,scale:2.6/radius,
+    dispose(){body.dispose();ash.dispose();noise.dispose();original.dispose();for(const texture of new Set(Object.values(mesh.material).filter(v=>v?.isTexture)))texture.dispose();mesh.material.dispose();}};
+}
+function shaderMaterial(uniforms,fragmentShader){
+  if(fragmentShader===destructionFragment){
+    // The lab fog belongs to its standalone camera. Use the enclosing world
+    // distance/color instead, while retaining its material and damage shading.
+    fragmentShader=fragmentShader.replace('out vec4 fragColor;','#include <packing>\nuniform vec3 uWorldFogColor;uniform vec2 uWorldFogRange;uniform float uWorldScale;uniform float uWorldSun;uniform float uWorldAmbient;\nout vec4 fragColor;')
+      .replace('vec3 direct=vec3(1.90,1.59,1.11)*ndl*sh;','ambient*=uWorldAmbient;vec3 direct=vec3(1.90,1.59,1.11)*ndl*sh*uWorldSun;')
+      .replace('texture(uShadow,p.xy+vec2(x,y)*1.35/uShadowSize).r','unpackRGBAToDepth(textureLod(uShadow,p.xy+vec2(x,y)*1.35/uShadowSize,0.))');
+    const start=fragmentShader.indexOf(' float dist=length(uEye-vWorld);'),end=fragmentShader.indexOf('\n}',start);
+    fragmentShader=fragmentShader.slice(0,start)+' float fog=smoothstep(uWorldFogRange.x,uWorldFogRange.y,length(uEye-vWorld)*uWorldScale);\n fragColor=vec4(mix(toSRGB(tonemap(color)),uWorldFogColor,fog),1.);'+fragmentShader.slice(end);
+  }
+  return new THREE.RawShaderMaterial({vertexShader:glsl(destructionVertex),fragmentShader:glsl(fragmentShader),glslVersion:THREE.GLSL3,uniforms,side:THREE.DoubleSide,toneMapped:false});
+}
+export class NativeBuilding extends THREE.Group {
+  constructor(template,entity,pipeline){
+    super();this.template=template;this.pipeline=pipeline;this.entityId=entity.id;this.userData.entityId=entity.id;this.userData.nativeBuilding=true;
+    this.scale.setScalar(template.scale);this.rotation.y=entity.yaw??0;
+    const value=x=>({value:x}),material=template.material;
+    this.uniforms={uVP:value(new THREE.Matrix4()),uLightVP:value(new THREE.Matrix4()),uDamage:value(0),uInner:value(0),uMode:value(0),uHoles:value(Array.from({length:8},()=>new THREE.Vector4())),uNoise:value(template.noise),uEye:value(new THREE.Vector3()),uSun:value(new THREE.Vector3(-8,13,9).normalize()),uAlbedo:value(material.map),uNormalMap:value(material.normalMap),uMR:value(material.roughnessMap),uShadow:value(null),uIntactDepth:value(pipeline.target.depthTexture),uOpeningMask:value(pipeline.target.texture),uResolution:value(new THREE.Vector2(1,1)),uAshAge:value(0),uRepair:value(template.building.repairPlaster?1:0),uTime:value(0),uShadowSize:value(1024),uShadows:value(0),uEmbers:value(1),uQuality:value(1)};
+    Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(130,250)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1)});
+    this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment));
+    const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
+    this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
+    this.outer.onBeforeShadow=(renderer,object,camera,shadowCamera)=>this.cameraUniforms(this.outer,shadowCamera);
+    const innerUniforms={...this.uniforms,uInner:value(1)},ashUniforms={...this.uniforms,uMode:value(2)};
+    this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
+    this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));
+    this.opening=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionOpeningFragment));this.opening.matrixAutoUpdate=false;
+    for(const mesh of [this.outer,this.inner,this.ash,this.opening]){
+      // Falling regions can move beyond the original static box.
+      mesh.frustumCulled=false;
+      mesh.onBeforeRender=(renderer,scene,camera)=>this.cameraUniforms(mesh,camera);
+    }
+    this.add(this.ash,this.outer,this.inner);pipeline.add(this);this.outer.raycast=(raycaster,hits)=>this.raycastBody(raycaster,hits);this.inner.raycast=()=>{};
+    this.ash.raycast=(raycaster,hits)=>{if(this.damage>=.9998)THREE.Mesh.prototype.raycast.call(this.ash,raycaster,hits);};this.update(entity,0);
+  }
+  cameraUniforms(mesh,camera){
+    const inverse=new THREE.Matrix4().copy(mesh.matrixWorld).invert();
+    this.uniforms.uVP.value.copy(camera.projectionMatrix).multiply(camera.matrixWorldInverse).multiply(mesh.matrixWorld);
+    this.uniforms.uEye.value.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(inverse);
+    if(this.pipeline.sun)this.uniforms.uSun.value.copy(this.pipeline.sun.position).sub(this.pipeline.sun.target.position).transformDirection(inverse);
+    const shadow=this.pipeline.sun?.shadow;
+    if(shadow?.map){this.uniforms.uShadow.value=shadow.map.texture;this.uniforms.uShadowSize.value=shadow.mapSize.x;this.uniforms.uLightVP.value.copy(shadow.camera.projectionMatrix).multiply(shadow.camera.matrixWorldInverse).multiply(mesh.matrixWorld);}
+    this.uniforms.uShadows.value=this.pipeline.renderer.shadowMap.enabled&&this.pipeline.sun?.castShadow&&shadow?.map?1:0;
+  }
+  update(entity,elapsed){
+    this.damage=centerVisualDamage(entity);this.uniforms.uDamage.value=this.damage;this.uniforms.uTime.value=elapsed;
+    this.uniforms.uQuality.value=this.pipeline.quality??1;
+    this.uniforms.uAshAge.value=entity.status==='ruined'?Math.max(0,elapsed-(this.ruinedAt??elapsed)):0;
+    if(entity.status==='ruined')this.ruinedAt??=elapsed;else this.ruinedAt=null;
+    this.rotation.y=entity.yaw??0;
+    for(let i=0;i<8;i++){const site=this.template.kernel.hitSites[i],t=clamp((this.damage-site.birth)/(.91-site.birth)),radius=this.damage<=.0001?0:site.maxRadius*Math.pow(t,.70);this.uniforms.uHoles.value[i].set(...site.p,radius);}
+    this.outer.visible=this.damage<.9998;this.inner.visible=this.damage>.015&&this.damage<.9998;this.ash.visible=this.damage>.23;
+    this.opening.visible=this.damage>.015&&this.damage<.9998;
+  }
+  raycastBody(raycaster,hits){
+    if(this.damage>=.9998)return;
+    this.updateWorldMatrix(true,false);
+    const inverse=new THREE.Matrix4().copy(this.matrixWorld).invert(),origin=raycaster.ray.origin.clone().applyMatrix4(inverse),direction=raycaster.ray.direction.clone().transformDirection(inverse),kernel=this.template.kernel,previous=kernel.damage;
+    let hit;try{kernel.setDamage(this.damage);hit=kernel.raycast(origin.toArray(),direction.toArray(),true);}finally{kernel.setDamage(previous);}
+    if(!hit)return;const point=new THREE.Vector3(...hit.p).applyMatrix4(this.matrixWorld),distance=point.distanceTo(raycaster.ray.origin);
+    if(distance>=raycaster.near&&distance<=raycaster.far)hits.push({distance,point,object:this.outer});
+  }
+  dispose(){this.pipeline.remove(this);for(const mesh of [this.outer,this.inner,this.ash,this.opening])mesh.material.dispose();this.outer.customDepthMaterial.dispose();this.clear();}
+}
+export class BuildingDestructionPass {
+  constructor(renderer,sun=null,ambient=null){
+    this.renderer=renderer;this.sun=sun;this.ambient=ambient;this.quality=1;this.scene=new THREE.Scene();this.buildings=new Set();this.key='';
+    this.target=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter,depthBuffer:true});
+    this.target.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);this.target.depthTexture.minFilter=this.target.depthTexture.magFilter=THREE.NearestFilter;
+  }
+  add(building){this.buildings.add(building);this.scene.add(building.opening);this.key='';}
+  remove(building){this.buildings.delete(building);this.scene.remove(building.opening);this.key='';}
+  render(camera,world=null){
+    if(!this.buildings.size)return;
+    camera.updateWorldMatrix(true,false);
+    const size=this.renderer.getDrawingBufferSize(new THREE.Vector2()),parts=[...camera.projectionMatrix.elements,...camera.matrixWorldInverse.elements,size.x,size.y];
+    for(const building of this.buildings){building.updateWorldMatrix(true,true);building.opening.matrix.copy(building.outer.matrixWorld);building.uniforms.uResolution.value.copy(size);parts.push(building.damage,...building.outer.matrixWorld.elements);
+      if(world?.fog){building.uniforms.uWorldFogColor.value.copy(world.fog.color).convertLinearToSRGB();building.uniforms.uWorldFogRange.value.set(world.fog.near,world.fog.far);}
+      building.uniforms.uWorldSun.value=(this.sun?.intensity??3)/3;
+      const hemisphere=this.ambient??world?.children.find(o=>o.isHemisphereLight);building.uniforms.uWorldAmbient.value=(hemisphere?.intensity??2)/2;
+    }
+    const key=parts.join(',');if(key===this.key)return;
+    if(this.target.width!==size.x||this.target.height!==size.y)this.target.setSize(size.x,size.y);
+    const renderer=this.renderer,target=renderer.getRenderTarget(),clearColor=renderer.getClearColor(new THREE.Color()),clearAlpha=renderer.getClearAlpha(),autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled;
+    try{
+      renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setClearColor(0,0);renderer.setRenderTarget(this.target);renderer.render(this.scene,camera);this.key=key;
+    }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+  }
+  dispose(){for(const building of [...this.buildings])building.dispose();this.target.dispose();}
+}
