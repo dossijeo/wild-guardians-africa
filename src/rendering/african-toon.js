@@ -63,7 +63,8 @@ export class AfricanToon {
         vec3 toonV=normalize(cameraPosition-vToonWorld);
         float toonVisibility=1.0;
         #if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
-          toonVisibility=receiveShadow?1.-nativeShadowOcclusion(toonN,vToonWorld):1.;
+          // Standard lighting and object grading use the same unmodified normal.
+          toonVisibility=receiveShadow?nativeDirectVisibility:1.;
         #endif
         float toonLeaf=${material.userData.nativeSurface?'nativeLeaf':'smoothstep(.018,.13,diffuseColor.g-diffuseColor.r*.87)*smoothstep(.06,.20,diffuseColor.g)'};
         vec3 toonReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,toonN),roughnessFactor):reflectedLight.indirectSpecular;
@@ -73,7 +74,7 @@ export class AfricanToon {
 
     };
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-shared|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;

@@ -28,6 +28,6 @@ test('both ground quality paths share surface, HDR and native wet lighting witho
   material.dispose();
  }
  const object=new THREE.MeshStandardMaterial();toon.material(object);const output={uniforms:{},...THREE.ShaderLib.standard};object.onBeforeCompile(output,{});
- assert.ok(!output.fragmentShader.includes('nativeGroundSurface4'));assert.ok(output.fragmentShader.includes('toonVisibility=receiveShadow?1.-nativeShadowOcclusion(toonN,vToonWorld):1.'));
+ assert.ok(!output.fragmentShader.includes('nativeGroundSurface4'));assert.ok(output.fragmentShader.includes('toonVisibility=receiveShadow?nativeDirectVisibility:1.'));
  object.dispose();textures.forEach(t=>t.dispose());
 });

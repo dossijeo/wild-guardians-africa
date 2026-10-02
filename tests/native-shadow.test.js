@@ -53,7 +53,7 @@ test('Standard direct lighting uses native PCF while spot and point shadows keep
 });
 
 test('ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials',()=>{
- const toon=new AfricanToon();for(const ground of [true,false]){const material=new THREE.MeshStandardMaterial();material.userData.toonGround=ground;toon.material(material);const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});assert.equal(shader.uniforms.uNativeShadowFiltered,toon.shadowUniforms.uNativeShadowFiltered);assert.ok(shader.fragmentShader.includes('nativeShadowOcclusion(toonN,vToonWorld)'));material.dispose();}
+ const toon=new AfricanToon();for(const ground of [true,false]){const material=new THREE.MeshStandardMaterial();material.userData.toonGround=ground;toon.material(material);const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});assert.equal(shader.uniforms.uNativeShadowFiltered,toon.shadowUniforms.uNativeShadowFiltered);if(ground)assert.ok(shader.fragmentShader.includes('nativeShadowOcclusion(toonN,vToonWorld)'));else{assert.ok(shader.fragmentShader.includes('toonVisibility=receiveShadow?nativeDirectVisibility:1.'));assert.equal((shader.fragmentShader.match(/nativeShadowOcclusion\(/g)||[]).length,2);}material.dispose();}
  const material=paintedWaterMaterial('#336699',false,712,null,{textures:[],uniforms:toon.uniforms,shadowUniforms:toon.shadowUniforms}),shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});assert.equal(shader.uniforms.uNativeShadowFiltered,toon.shadowUniforms.uNativeShadowFiltered);assert.ok(shader.fragmentShader.includes('nativeShadowOcclusion(inverseTransformDirection(normal,viewMatrix),vPaintWorld)'));material.dispose();
 });
 
@@ -61,4 +61,17 @@ test('independent water retains one valid fallback across shader recompiles and 
  const material=paintedWaterMaterial('#336699'),compile=()=>{const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});return shader.uniforms.uNativeShadowFiltered.value;};
  const first=compile();assert.equal(compile(),first);assert.equal(first.compareFunction,THREE.LessEqualCompare);assert.ok(first.version>0);
  let disposed=0;first.addEventListener('dispose',()=>disposed++);material.dispose();assert.equal(disposed,1);
+});
+
+
+test('PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged',()=>{
+ const chunks=['lights_fragment_begin','lights_fragment_maps','lights_fragment_end'];
+ for(const name of chunks)assert.doesNotMatch(THREE.ShaderChunk[name],/\bnormal\s*(?:=|\+=|-=|\*=|\/=|\+\+|--)/,name+' must not mutate the sampled normal');
+ const toon=new AfricanToon(),material=new THREE.MeshStandardMaterial(),shader={uniforms:{},...THREE.ShaderLib.standard};
+ toon.material(material);material.onBeforeCompile(shader,{});
+ assert.ok(shader.fragmentShader.includes('nativeShadowOcclusion(inverseTransformDirection(normal,viewMatrix),vToonWorld)'));
+ assert.ok(shader.fragmentShader.includes('vec3 toonN=inverseTransformDirection(normal,viewMatrix);'));
+ assert.ok(shader.fragmentShader.indexOf('float nativeDirectVisibility=')<shader.fragmentShader.indexOf('for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ )'));
+ assert.equal((shader.fragmentShader.match(/nativeShadowOcclusion\(/g)||[]).length,2,'one definition and one evaluation for object direct light and cel');
+ material.dispose();toon.shadowUniforms.fallback.dispose();
 });
