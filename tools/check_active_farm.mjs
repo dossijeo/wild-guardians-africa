@@ -8,7 +8,7 @@ import {numberOf} from '../src/simulation/money.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plotCount=16,species='girasol',diversifyDay=null,onDay,...world}={}){
+export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plotCount=16,species='girasol',diversifyDay=null,onDay,onProgress,...world}={}){
   const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,command=0,reloads=0;
   const id=kind=>`active-${kind}-${command++}`;
   const center=s.structures[0],departure={x:center.x+3.4,z:center.z};
@@ -72,8 +72,14 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plot
   };
   const finishDay=()=>{
     const day=s.day,started=s.elapsed,delivered=counts.CrateDelivered??0,picked=counts.CropPicked??0,before=numberOf(s.ledger.balance);
+    let progressAt=s.elapsed;
     while(s.day===day&&!s.result){
+      if(s.pauses.length)throw new Error(`Unexpected blocking pause inside day ${day}: ${s.pauses.join(',')}`);
       act();Game.tick(s,s.time<300||s.raid?.animals.some(a=>a.status==='attacking') ? .5:5,nav);collect();
+      if(onProgress&&s.elapsed-progressAt>=30){
+        progressAt=s.elapsed;onProgress({phase:'progress',day:s.day,time:s.time,elapsed:s.elapsed,money:numberOf(s.ledger.balance),navVersion:nav.version,
+          animals:s.raid?.animals.map(a=>({id:a.id,species:a.species,status:a.status,hits:a.hitsRemaining,x:a.x,z:a.z,spawn:a.spawn,target:a.targetId,path:a.path?.length,destination:a.destinationId}))??[]});
+      }
       if(s.raid&&!activeRaids.has(s.raid.id)){
         activeRaids.add(s.raid.id);const text=serialize(s);s=deserialize(text);nav.setState(s);reloads++;
       }
@@ -96,6 +102,8 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',plot
     reloads,counts,deliveries,magic,diversified,daily,state:s,nav};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
-  const report=simulateActiveFarm({days:Number(process.argv[2]??100),profile:process.argv[3]??'olderMale',species:process.argv[4]??'girasol',diversifyDay:process.argv[5]?Number(process.argv[5]):null,onDay:r=>console.log(JSON.stringify(r))});
+  const report=simulateActiveFarm({days:Number(process.argv[2]??100),profile:process.argv[3]??'olderMale',species:process.argv[4]??'girasol',diversifyDay:process.argv[5]?Number(process.argv[5]):null,
+    biome:process.argv[6]??'sabana',culture:process.argv[7]??'mapungubwe',seed:Number(process.argv[8]??712),
+    onDay:r=>console.log(JSON.stringify(r)),onProgress:process.env.WG_FARM_TRACE?r=>console.log(JSON.stringify(r)):undefined});
   const {state,nav,daily,...summary}=report;console.log(JSON.stringify(summary));
 }
