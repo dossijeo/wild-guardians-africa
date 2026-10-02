@@ -13,12 +13,16 @@ import {json} from '../rendering/assets.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 import {NativeGuardian} from '../ui/guardian.js';
+import {TutorialController} from '../tutorial/controller.js';
+import {TutorialProfile} from '../tutorial/profile.js';
+import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 const audio=new AudioSystem(settings);
-let hudSize='',frameImages=null,guardian=null;
+let hudSize='',frameImages=null,guardian=null,tutorial=null,tutorialInert=null,tutorialFocus=null;
+const tutorialProfile=new TutorialProfile(localStorage);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
 const button=(id,text,cls='')=>`<button id="${id}" class="${cls}">${text}</button>`;
@@ -26,7 +30,7 @@ function error(message){document.querySelector('.error-banner')?.remove();const 
 function safe(action){try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save(){if(!state)return;state.savedAt=Date.now();try{saves.save(state);}catch(e){error('No se pudo guardar la partida: '+e.message);}}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){setTutorialInteraction(false);tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){save();state=null;}clearWorld();screen='menu';
   app.innerHTML='<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="/menu/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
@@ -84,7 +88,7 @@ async function startGame(loaded=null) {
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(buildPanel);
     world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.qualitySetting(settings.quality);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
-    await world.load(state,nav,payload);screen='game';bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
+    await world.load(state,nav,payload);tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
   } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;}
 }
@@ -136,7 +140,7 @@ function updateUI(force=false) {
   document.querySelector('#notices').innerHTML=state.messages.slice(-3).map(m=>`<button data-notice="${m.id}">${esc(m.text)}</button>`).join('');
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(state.pauses.includes('hiring')&&!document.querySelector('#hiring-dialog'))hiringDialog();
-  if(state.result&&!document.querySelector('#result-dialog'))resultDialog();
+  if(state.result&&!state.tutorial.reading&&!document.querySelector('#result-dialog'))resultDialog();
   if(tool){const text=tool.kind==='center'?'Coloca el centro de trabajo':tool.kind==='plant'?`Plantar ${cropSpec(tool.species).name} · ${cropSpec(tool.species).plant_cost} monedas`:tool.kind==='wall'?`Colocar ${tool.gate?'puerta':'módulo'} de ${B.walls.find(w=>w.id===tool.material).name}`:`Colocar ${B.spells.find(s=>s.id===tool.spell).name}`;
     if(!document.querySelector('.hint')){const el=document.createElement('div');el.className='hint';document.querySelector('.game').append(el);}document.querySelector('.hint').textContent=text+' · Escape para cancelar';
   }else document.querySelector('.hint')?.remove();
@@ -163,12 +167,22 @@ function contextPanel() {
     el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));
   } else el.innerHTML='';bind('close-context',()=>{selection=null;});
 }
-const tutorialText={intro:'Soy el Espíritu que cuida esta tierra. La maldición despierta al caer el sol. Construye un centro, siembra y deja que tu comunidad trabaje contigo.',center:'Coloca tu primer centro de trabajo. Cuesta 800 monedas. Busca un terreno libre junto al poblado.',plant:'Siembra los cultivos que puedas cuidar. Cada planta tiene un coste, un tiempo y sus propios riegos.',hire:'Cuando estés listo, contrata al equipo de hoy. La jornada se paga una sola vez; elige cantidades según tu presupuesto.',observe:'Los trabajadores siembran y riegan. El brote empezará a crecer cuando completen su primer cuidado.',harvest:'Toca una planta madura y solicita recoger su grupo. Ganarás las monedas cuando cada caja llegue al centro.',done:'Tu primera cosecha ha llegado. Sigue cultivando y conserva monedas para la próxima jornada.'};
+function setTutorialInteraction(blocking){
+  if(blocking&&!tutorialInert){
+    tutorialFocus=document.activeElement;tutorialInert=new Map();
+    for(const child of document.querySelector('#stage')?.children??[])if(child.id!=='narrator'){tutorialInert.set(child,child.inert);child.inert=true;}
+  }else if(!blocking&&tutorialInert){
+    for(const [child,inert] of tutorialInert)child.inert=inert;tutorialInert=null;
+    if(tutorialFocus?.isConnected&&!tutorialFocus.closest('#narrator'))tutorialFocus.focus({preventScroll:true});tutorialFocus=null;
+  }
+}
 function narrator() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message));
-  const step=state.tutorial.step,gestures={intro:'greeting',center:'speak',plant:'curious',hire:'acknowledge',observe:'idle',harvest:'reveal',done:'farewell'};
-  guardian.show({key:step,text:tutorialText[step]??'Cuida la tierra y escucha al poblado.',gesture:gestures[step]??'speak',closeAfter:step==='done',
-    advance:step==='intro'?()=>safe(()=>{Game.resume(state,'intro');state.tutorial.step=state.structures.length?'plant':'center';}):null});
+  tutorial?.update();const message=tutorial?.presentation();setTutorialInteraction(message?.blocking??false);
+  if(!message){guardian.hide();return;}
+  const advance=message.blocking?()=>safe(()=>{tutorial.acknowledge();save();}):null;
+  guardian.show({key:message.id+':'+(message.blocking?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,
+    skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
 }
 function hiringDialog() {
   const selection={...state.hiringSelection},modal=document.querySelector('#modal');
@@ -204,14 +218,14 @@ function libraryScreen() {
   bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{const iframe=document.createElement('iframe');iframe.src=`/library.html?lab=${el.dataset.demo}`;iframe.title='Laboratorio '+el.dataset.demo;iframe.style='position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee';app.querySelector('.library-grid').replaceWith(iframe);});
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state){if(tool){tool=null;document.querySelector('#panel').innerHTML='';}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(tool){tool=null;document.querySelector('#panel').innerHTML='';}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});},{once:true});
 window.addEventListener('beforeunload',()=>{if(state)save();});
 function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state) {
     const eventIndex=state.events.at(-1)?.id;
-    try {Game.advanceReal(state,dt,nav);world.render(dt);audio.process(state.events);updateUI();guardian?.update();}
+    try {tutorial?.update();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events);updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     const newEvents=state.events.filter(e=>e.id!==eventIndex&&['Dawn','RaidEnded','CampaignWon'].includes(e.type));
     if(newEvents.length&&newEvents.at(-1).id!==frame.lastSaveEvent){frame.lastSaveEvent=newEvents.at(-1).id;save();}

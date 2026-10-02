@@ -8,6 +8,7 @@ import {compositions,threatTier,attraction,villageCost,hitStructure,permission,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from '../src/simulation/crops.js';
 import {enqueue,reserveTasks,releaseTask} from '../src/simulation/tasks.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
+import {newGame} from '../src/simulation/game.js';
 
 test('Generated balance matches authoritative received JSON exactly',()=>assert.deepEqual(BALANCE,JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'))));
 test('Ledger rounds an exact repair fraction upward only at settlement',()=>{
@@ -100,7 +101,7 @@ test('Economic dawn thresholds and linear unlimited village costs',()=>{
   const s={structures:[],plants:[],crates:[]};assert.equal(dawnMinimum(s),905);s.crates=[{}];assert.equal(dawnMinimum(s),900);s.structures=[{kind:'center',status:'intact'}];assert.equal(dawnMinimum(s),100);s.crates=[];assert.equal(dawnMinimum(s),105);
   for(const [n,cost] of [[2,50000],[3,75000],[10,250000],[50,1250000],[100,2500000]])assert.equal(villageCost(n),cost);
 });
-const snapshot=()=>({saveVersion:1,slotId:'one',day:1,time:0,ledger:{balance:rational(1000),entries:{}},plants:[],structures:[],workers:[],crates:[],villages:[],spells:[],tasks:[],rng:123});
+const snapshot=()=>newGame({seed:123,slotId:'one'});
 class Storage {
   data=new Map();get length(){return this.data.size;}key(i){return [...this.data.keys()][i];}getItem(k){return this.data.get(k)??null;}setItem(k,v){this.data.set(k,v);}removeItem(k){this.data.delete(k);}
 }

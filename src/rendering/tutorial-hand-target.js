@@ -31,7 +31,11 @@ export function tutorialHandTarget(state,nav){
       if(path.length===1&&center)path.push(center);
       return {...target('drag',worker),route:path.map(position)};
     }
-    case 'harvest':return (mature??plant)?target('pinch',mature??plant):null;
+    case 'harvest':{
+      if(mature??plant)return target('pinch',mature??plant);
+      const crate=state.crates?.find(c=>!c.delivered),carrier=crate&&state.workers.find(w=>w.id===crate.carrierId);
+      return crate?target('open',carrier??crate):null;
+    }
     default:return null;
   }
 }

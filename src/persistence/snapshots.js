@@ -1,3 +1,4 @@
+import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
@@ -7,6 +8,9 @@ export function validateSnapshot(state) {
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
   if(!state.ledger.entries||typeof state.ledger.entries!=='object'||Array.isArray(state.ledger.entries)||!Object.values(state.ledger.entries).every(wholeMoney))throw new Error('Libro monetario inválido');
+  const tutorial=state.tutorial,validIds=ids=>Array.isArray(ids)&&ids.every(id=>TUTORIAL_IDS.includes(id))&&new Set(ids).size===ids.length;
+  if(!tutorial||!BASIC_STEPS.includes(tutorial.step)||!validIds(tutorial.seen)||tutorial.pending!==undefined&&!validIds(tutorial.pending)||tutorial.reading!==undefined&&tutorial.reading!==null&&!TUTORIAL_IDS.includes(tutorial.reading)||tutorial.basicSkipped!==undefined&&typeof tutorial.basicSkipped!=='boolean')throw new Error('Tutorial inválido');
+  if(tutorial.reading&&!state.pauses?.includes('tutorial-reading')||state.pauses?.includes('tutorial-reading')&&!tutorial.reading)throw new Error('Lectura tutorial incoherente');
   const ids=new Set();
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');

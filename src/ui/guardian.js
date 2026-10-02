@@ -6,9 +6,15 @@ export class NativeGuardian {
     this.container=container;this.onError=onError;this.disposed=false;this.key=null;this.time=0;this.age=0;this.lastStamp=null;
     this.physics=new OrnamentPhysics();this.pose=Object.fromEntries(['roll','yaw','pitch','lift','zoom','headX','headY','bodyX','bodyRoll','eyes','medallion','reveal'].map(k=>[k,0]));
     this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-    container.innerHTML='<section id="guardian-root" class="closed" aria-hidden="true"><div class="avatar-shell"><canvas id="guardian-avatar" aria-label="El Espíritu" role="img"></canvas><canvas id="guardian-magic" aria-hidden="true"></canvas></div><div class="bubble"><div class="message-body"><p class="message" aria-live="polite"></p></div><button type="button" class="next-button" aria-label="Continuar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></section>';
+    container.innerHTML='<section id="guardian-root" class="closed" aria-hidden="true"><div class="avatar-shell"><canvas id="guardian-avatar" aria-label="El Espíritu" role="img"></canvas><canvas id="guardian-magic" aria-hidden="true"></canvas></div><div class="bubble"><div class="message-body"><p class="message" aria-live="polite"></p><button type="button" class="tutorial-skip" hidden>Omitir tutorial básico</button></div><button type="button" class="next-button" aria-label="Continuar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></section>';
     this.root=container.querySelector('#guardian-root');this.canvas=container.querySelector('#guardian-avatar');this.fx=container.querySelector('#guardian-magic');this.message=container.querySelector('.message');this.button=container.querySelector('.next-button');
     this.button.onclick=()=>this.advance?.();
+    this.skipButton=container.querySelector('.tutorial-skip');this.skipButton.onclick=()=>this.skip?.();
+    this.root.addEventListener('keydown',event=>{
+      if(!this.blocking||event.key!=='Tab')return;
+      const buttons=[this.skipButton,this.button].filter(button=>!button.hidden&&!button.disabled),current=buttons.indexOf(document.activeElement);
+      event.preventDefault();buttons[(current+(event.shiftKey?-1:1)+buttons.length)%buttons.length]?.focus();
+    });
     this.observer=new ResizeObserver(()=>this.resize());this.observer.observe(this.canvas);
     this.ready=this.load();
   }
@@ -20,16 +26,20 @@ export class NativeGuardian {
       this.mesh=new GuardianMesh(this.canvas,image);this.magic=new GuardianMagic(this.fx);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}
   }
-  show({key,text,gesture='speak',advance=null,closeAfter=false}){
+  show({key,text,gesture='speak',advance=null,closeAfter=false,blocking=false,skip=null,result=false}){
     if(this.disposed||this.key===key)return;
     this.key=key;this.age=0;this.gesture=gesture;this.advance=advance;this.closeAfter=closeAfter;this.lastStamp=null;
+    this.blocking=blocking;this.skip=skip;this.skipButton.hidden=!skip;this.root.classList.toggle('reading',blocking);this.root.classList.toggle('result-narration',result);
+    this.root.setAttribute('role',blocking?'dialog':'region');this.root.setAttribute('aria-label','El Espíritu');
+    if(blocking)this.root.setAttribute('aria-modal','true');else this.root.removeAttribute('aria-modal');
     const words=text.trim().split(/\s+/).length;
     this.duration=Math.max(GESTURE_MIN_SECONDS[gesture]??5.8,words*60/155+.45);
     this.message.textContent=text;this.button.disabled=!advance;this.button.hidden=!advance;this.button.style.display=advance?'':'none';
     this.root.classList.remove('closed','leaving');this.root.classList.add('visible');this.root.setAttribute('aria-hidden','false');
     this.root.dataset.gesture=gesture;this.resize();
+    if(blocking)this.button.focus({preventScroll:true});
   }
-  hide(){this.root.classList.remove('visible');this.root.classList.add('closed');this.root.setAttribute('aria-hidden','true');this.lastStamp=null;}
+  hide(){this.root.classList.remove('visible','reading','result-narration');this.root.classList.add('closed');this.root.setAttribute('aria-hidden','true');this.root.removeAttribute('aria-modal');this.blocking=false;this.key=null;this.lastStamp=null;}
   resize(){if(this.mesh){this.mesh.resize();this.magic.resize();this.draw(0);}}
   update(){
     if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}

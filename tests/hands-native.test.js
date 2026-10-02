@@ -73,6 +73,11 @@ test('Day-one hand targets map six kinds to actual entities and never modify gam
   check('harvest','pinch','p');state.day=2;assert.equal(tutorialHandTarget(state,nav),null);
   state.day=1;state.tutorial.step='done';assert.equal(tutorialHandTarget(state,nav),null);
 });
+test('The delivery hand follows the actual carrier instead of introducing a demonstration cart',()=>{
+  const state={day:1,result:null,tutorial:{step:'harvest'},villages:[{id:'v',x:0,z:0}],structures:[],plants:[],workers:[{id:'w',x:3,z:4}],crates:[{id:'crate',x:2,z:2,carrierId:'w',delivered:false}]},nav={field:{surface:()=>0}};
+  let target=tutorialHandTarget(state,nav);assert.equal(target.kind,'open');assert.equal(target.target,'w');assert.deepEqual(target.position,[3,.025,4]);
+  state.workers[0].x=8;target=tutorialHandTarget(state,nav);assert.equal(target.position[0],8);state.crates[0].delivered=true;assert.equal(tutorialHandTarget(state,nav),null);
+});
 test('Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources',async()=>{
   const world=new THREE.Scene(),loaded=[],textures=[];
   const textureLoader={loadAsync:async url=>{loaded.push(url);const texture=new THREE.Texture();textures.push(texture);return texture;}};

@@ -1,0 +1,21 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Memoria y lectura del Espíritu</title><style>body{margin:0;background:linear-gradient(#bacbad,#e8ddbe);height:100dvh;font:14px system-ui;color:#244333}nav{position:relative;z-index:100;padding:16px;background:#fff9ed}button{padding:8px;margin:5px}#status{display:block}</style><nav>Visor de presentación con datos de prueba. La memoria vive solo en esta página; no modifica tus partidas.<br><button id="completed">Marcar tutorial básico de prueba completado</button><button id="new">Nueva ranura de prueba</button><button id="raid">Primera incursión de prueba · día 2</button><button id="growth">Día 3 de prueba</button><button id="reload">Guardar y cargar lectura</button><span id="status" role="status">Preparando el Espíritu original…</span></nav><div id="guardian"></div><script type="module">
+import {NativeGuardian} from '/src/ui/guardian.js';
+import '/src/ui/tutorial.css';
+import * as Game from '/src/simulation/game.js';
+import {TutorialController} from '/src/tutorial/controller.js';
+import {TutorialProfile} from '/src/tutorial/profile.js';
+import {serialize,deserialize} from '/src/persistence/snapshots.js';
+const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)},profile=new TutorialProfile(storage);
+let state,controller;
+const actor=new NativeGuardian(document.querySelector('#guardian'),e=>document.querySelector('#status').textContent=e.message);
+function update(){
+  controller.update();const m=controller.presentation();
+  if(m)actor.show({key:m.id+':'+m.blocking,text:m.text,gesture:m.gesture,blocking:m.blocking,advance:m.blocking?()=>{controller.acknowledge();update();}:null,skip:m.canSkip?()=>{controller.skipBasic();update();}:null});else actor.hide();
+  document.querySelector('#status').textContent=`Ranura ${state.slotId} · ${state.tutorial.basicSkipped?'básico omitido':'básico activo'} · ${state.tutorial.reading??'sin lectura'} · ${state.pauses.includes('tutorial-reading')?'simulación pausada':'lectura cerrada'} · saldo ${state.ledger.balance.n} · ${profile.read().size} mensajes globales vistos`;
+}
+let slot=0;function fresh(){state=Game.newGame({seed:712,slotId:String(++slot)});controller=new TutorialController(state,profile);actor.hide();update();}
+document.querySelector('#completed').onclick=()=>{profile.record('basic.complete');fresh();};document.querySelector('#new').onclick=fresh;
+document.querySelector('#raid').onclick=()=>{state.day=2;state.raid={animals:[],reservations:{}};update();};document.querySelector('#growth').onclick=()=>{state.day=3;state.raid=null;update();};
+document.querySelector('#reload').onclick=()=>{state=deserialize(serialize(state));controller=new TutorialController(state,profile);actor.hide();update();};
+await actor.ready;fresh();function frame(){actor.update();requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>
