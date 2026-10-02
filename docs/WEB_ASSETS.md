@@ -84,4 +84,3 @@ Todos los nombres siguientes terminan en `.glb`; original en `public/assets/` y 
 | `eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb` | 20211084 | 6533740 |
 | `f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb` | 22362516 | 7814792 |
 | `fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb` | 23317344 | 7435732 |
-
