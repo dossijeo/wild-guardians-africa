@@ -1,0 +1,449 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 4.8793
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 4.9234
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.6323
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.4187
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 5 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 9.2496
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 6 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 27.2319
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 7 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 17.6894
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 8 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 5.0413
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 9 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 126.4962
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 10 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 3.6297
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 11 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 69.134
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 12 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 5.3683
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 13 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 5.7182
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 14 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 4.1328
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 15 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 43.8477
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 16 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.2272
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 17 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 2.4921
+  ...
+# (node:35732) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky shader and raw HDR decoder preserve the original lab output
+ok 18 - sky shader and raw HDR decoder preserve the original lab output
+  ---
+  duration_ms: 1258.4567
+  ...
+# Subtest: native exponential sky fade follows simulated day time and survives reload
+ok 19 - native exponential sky fade follows simulated day time and survives reload
+  ---
+  duration_ms: 0.2617
+  ...
+# Subtest: sky keeps camera rotation independent of translation and restores renderer on failure
+ok 20 - sky keeps camera rotation independent of translation and restores renderer on failure
+  ---
+  duration_ms: 5.7495
+  ...
+# Subtest: river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+ok 21 - river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+  ---
+  duration_ms: 146.8229
+  ...
+# Subtest: pond and lava pool fans preserve original outline, local level and transformed instance placement
+ok 22 - pond and lava pool fans preserve original outline, local level and transformed instance placement
+  ---
+  duration_ms: 5.8354
+  ...
+# Subtest: painted fluids evaluate transformed world coordinates for instanced pools
+ok 23 - painted fluids evaluate transformed world coordinates for instanced pools
+  ---
+  duration_ms: 0.5046
+  ...
+# (node:31080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fluid uniforms match the original renderer recipe for all biome palettes and seeds
+ok 24 - fluid uniforms match the original renderer recipe for all biome palettes and seeds
+  ---
+  duration_ms: 22.0871
+  ...
+# Subtest: animation uses integrated simulated time once and shader converts flat inks to linear
+ok 25 - animation uses integrated simulated time once and shader converts flat inks to linear
+  ---
+  duration_ms: 0.5681
+  ...
+# Subtest: toon retains the same fractional dusk phase as the sky after reload
+ok 26 - toon retains the same fractional dusk phase as the sky after reload
+  ---
+  duration_ms: 1.1283
+  ...
+# Subtest: Navigation refuses a blocked destination, including routes shorter than one step
+ok 27 - Navigation refuses a blocked destination, including routes shorter than one step
+  ---
+  duration_ms: 3.6785
+  ...
+# Subtest: sabana/mapungubwe/712: original terrain supports initial village and employee route
+ok 28 - sabana/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3893.1312
+  ...
+# Subtest: sabana/saheliana/712: original terrain supports initial village and employee route
+ok 29 - sabana/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3985.4924
+  ...
+# Subtest: sabana/suajili/712: original terrain supports initial village and employee route
+ok 30 - sabana/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4575.1118
+  ...
+# Subtest: sabana/musgum/712: original terrain supports initial village and employee route
+ok 31 - sabana/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3765.9954
+  ...
+# Subtest: sabana/etiope/712: original terrain supports initial village and employee route
+ok 32 - sabana/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3537.938
+  ...
+# Subtest: gran-rio/mapungubwe/712: original terrain supports initial village and employee route
+ok 33 - gran-rio/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 838.8137
+  ...
+# Subtest: gran-rio/saheliana/712: original terrain supports initial village and employee route
+ok 34 - gran-rio/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3859.6376
+  ...
+# Subtest: gran-rio/suajili/712: original terrain supports initial village and employee route
+ok 35 - gran-rio/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3268.4565
+  ...
+# Subtest: gran-rio/musgum/712: original terrain supports initial village and employee route
+ok 36 - gran-rio/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3864.4851
+  ...
+# Subtest: gran-rio/etiope/712: original terrain supports initial village and employee route
+ok 37 - gran-rio/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3545.2952
+  ...
+# Subtest: manglares/mapungubwe/712: original terrain supports initial village and employee route
+ok 38 - manglares/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 449.5073
+  ...
+# Subtest: manglares/saheliana/712: original terrain supports initial village and employee route
+ok 39 - manglares/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 482.8692
+  ...
+# Subtest: manglares/suajili/712: original terrain supports initial village and employee route
+ok 40 - manglares/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 676.757
+  ...
+# Subtest: manglares/musgum/712: original terrain supports initial village and employee route
+ok 41 - manglares/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 674.8739
+  ...
+# Subtest: manglares/etiope/712: original terrain supports initial village and employee route
+ok 42 - manglares/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 572.9185
+  ...
+# Subtest: volcanes/mapungubwe/712: original terrain supports initial village and employee route
+ok 43 - volcanes/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3274.0224
+  ...
+# Subtest: volcanes/saheliana/712: original terrain supports initial village and employee route
+ok 44 - volcanes/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5876.9172
+  ...
+# Subtest: volcanes/suajili/712: original terrain supports initial village and employee route
+ok 45 - volcanes/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3960.1821
+  ...
+# Subtest: volcanes/musgum/712: original terrain supports initial village and employee route
+ok 46 - volcanes/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 6322.0826
+  ...
+# Subtest: volcanes/etiope/712: original terrain supports initial village and employee route
+ok 47 - volcanes/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 32137.736
+  ...
+# Subtest: gran-canon/mapungubwe/712: original terrain supports initial village and employee route
+ok 48 - gran-canon/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 121.3468
+  ...
+# Subtest: gran-canon/saheliana/712: original terrain supports initial village and employee route
+ok 49 - gran-canon/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 176.7552
+  ...
+# Subtest: gran-canon/suajili/712: original terrain supports initial village and employee route
+ok 50 - gran-canon/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 138.7308
+  ...
+# Subtest: gran-canon/musgum/712: original terrain supports initial village and employee route
+ok 51 - gran-canon/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 183.7759
+  ...
+# Subtest: gran-canon/etiope/712: original terrain supports initial village and employee route
+ok 52 - gran-canon/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 248.4463
+  ...
+# Subtest: desierto/mapungubwe/712: original terrain supports initial village and employee route
+ok 53 - desierto/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 372.7348
+  ...
+# Subtest: desierto/saheliana/712: original terrain supports initial village and employee route
+ok 54 - desierto/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 510.9208
+  ...
+# Subtest: desierto/suajili/712: original terrain supports initial village and employee route
+ok 55 - desierto/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 199.6192
+  ...
+# Subtest: desierto/musgum/712: original terrain supports initial village and employee route
+ok 56 - desierto/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 288.3955
+  ...
+# Subtest: desierto/etiope/712: original terrain supports initial village and employee route
+ok 57 - desierto/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 395.2933
+  ...
+# Subtest: sabana/mapungubwe/918271: original terrain supports initial village and employee route
+ok 58 - sabana/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 799.4028
+  ...
+# Subtest: sabana/saheliana/918271: original terrain supports initial village and employee route
+ok 59 - sabana/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 858.7902
+  ...
+# Subtest: sabana/suajili/918271: original terrain supports initial village and employee route
+ok 60 - sabana/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3513.9146
+  ...
+# Subtest: sabana/musgum/918271: original terrain supports initial village and employee route
+ok 61 - sabana/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 720.4195
+  ...
+# Subtest: sabana/etiope/918271: original terrain supports initial village and employee route
+ok 62 - sabana/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1013.1147
+  ...
+# Subtest: gran-rio/mapungubwe/918271: original terrain supports initial village and employee route
+ok 63 - gran-rio/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 765.3146
+  ...
+# Subtest: gran-rio/saheliana/918271: original terrain supports initial village and employee route
+ok 64 - gran-rio/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 752.4358
+  ...
+# Subtest: gran-rio/suajili/918271: original terrain supports initial village and employee route
+ok 65 - gran-rio/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5883.0199
+  ...
+# Subtest: gran-rio/musgum/918271: original terrain supports initial village and employee route
+ok 66 - gran-rio/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 616.8051
+  ...
+# Subtest: gran-rio/etiope/918271: original terrain supports initial village and employee route
+ok 67 - gran-rio/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 843.4157
+  ...
+# Subtest: manglares/mapungubwe/918271: original terrain supports initial village and employee route
+ok 68 - manglares/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 553.4354
+  ...
+# Subtest: manglares/saheliana/918271: original terrain supports initial village and employee route
+ok 69 - manglares/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 464.271
+  ...
+# Subtest: manglares/suajili/918271: original terrain supports initial village and employee route
+ok 70 - manglares/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 363.5846
+  ...
+# Subtest: manglares/musgum/918271: original terrain supports initial village and employee route
+ok 71 - manglares/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 658.9576
+  ...
+# Subtest: manglares/etiope/918271: original terrain supports initial village and employee route
+ok 72 - manglares/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 405.7058
+  ...
+# Subtest: volcanes/mapungubwe/918271: original terrain supports initial village and employee route
+ok 73 - volcanes/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 832.0414
+  ...
+# Subtest: volcanes/saheliana/918271: original terrain supports initial village and employee route
+ok 74 - volcanes/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 920.6883
+  ...
+# Subtest: volcanes/suajili/918271: original terrain supports initial village and employee route
+ok 75 - volcanes/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 7805.8506
+  ...
+# Subtest: volcanes/musgum/918271: original terrain supports initial village and employee route
+ok 76 - volcanes/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1291.8249
+  ...
+# Subtest: volcanes/etiope/918271: original terrain supports initial village and employee route
+ok 77 - volcanes/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3481.0594
+  ...
+# Subtest: gran-canon/mapungubwe/918271: original terrain supports initial village and employee route
+ok 78 - gran-canon/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 111.5379
+  ...
+# Subtest: gran-canon/saheliana/918271: original terrain supports initial village and employee route
+ok 79 - gran-canon/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 157.2144
+  ...
+# Subtest: gran-canon/suajili/918271: original terrain supports initial village and employee route
+ok 80 - gran-canon/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 117.2382
+  ...
+# Subtest: gran-canon/musgum/918271: original terrain supports initial village and employee route
+ok 81 - gran-canon/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 154.7606
+  ...
+# Subtest: gran-canon/etiope/918271: original terrain supports initial village and employee route
+ok 82 - gran-canon/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 231.0052
+  ...
+# Subtest: desierto/mapungubwe/918271: original terrain supports initial village and employee route
+ok 83 - desierto/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 234.4578
+  ...
+# Subtest: desierto/saheliana/918271: original terrain supports initial village and employee route
+ok 84 - desierto/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 404.5266
+  ...
+# Subtest: desierto/suajili/918271: original terrain supports initial village and employee route
+ok 85 - desierto/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 162.1141
+  ...
+# Subtest: desierto/musgum/918271: original terrain supports initial village and employee route
+ok 86 - desierto/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 465.2338
+  ...
+# Subtest: desierto/etiope/918271: original terrain supports initial village and employee route
+ok 87 - desierto/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 343.3469
+  ...
+1..87
+# tests 87
+# suites 0
+# pass 87
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 127396.2312

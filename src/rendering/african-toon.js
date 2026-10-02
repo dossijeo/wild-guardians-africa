@@ -73,14 +73,25 @@ export function toonDestruction(fragment){
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
 }
 
-export function paintedWaterMaterial(color,lava=false,seed=42){
+export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
+  uniforms.uFluidClip={value:bounds?1:0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
   material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);shader.vertexShader='varying vec3 vPaintWorld;\n'+shader.vertexShader;
-    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvPaintWorld=(modelMatrix*vec4(transformed,1.)).xyz;');
-    shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale;\n'+waterFunctions+'\n'+shader.fragmentShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
+      vec4 paintPosition=vec4(transformed,1.0);
+      #ifdef USE_BATCHING
+        paintPosition=batchingMatrix*paintPosition;
+      #endif
+      #ifdef USE_INSTANCING
+        paintPosition=instanceMatrix*paintPosition;
+      #endif
+      vPaintWorld=(modelMatrix*paintPosition).xyz;`);
+    shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale,uFluidClip;uniform vec4 uFluidBounds;\n'+waterFunctions+'\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
+      if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if(!inside)discard;}`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb=pow('+ (lava?'paintedLava(vPaintWorld.zx*vec2(.88,1.8)*uWaterScale)':'paintedWater(vPaintWorld.zx*vec2(.22,.45)*uWaterScale,.001)')+',vec3(2.2));');
     if(lava)shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=diffuseColor.rgb*1.4;');
   };

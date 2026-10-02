@@ -6,6 +6,7 @@ import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {Assets,json} from './assets.js';
 import {NativeSky,skyNight} from './sky.js';
 import {waterTime} from './world-atmosphere.js';
+import {nativeChunkWater,nativeAssetWater} from './water-geometry.js';
 import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch} from './crop-batch.js';
@@ -65,7 +66,7 @@ export class WorldScene {
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {this.quality=quality;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
   async load(state,nav,villagePayload) {
-    await this.sky.load();this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
+    await this.sky.load();this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed);
     this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await json('/content/destruction.json')).buildings;
     await Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture)));
@@ -99,20 +100,15 @@ export class WorldScene {
     const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();
     const material=this.quality==='muy_baja'?new THREE.MeshBasicMaterial({vertexColors:true}):new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
     material.userData.toonGround=true;const ground=new THREE.Mesh(geometry,material);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
-    // Water cells follow the original TerrainField surface/mask, including desert exclusion.
-    const waterPositions=[];
-    for(let z=0;z<n;z++)for(let x=0;x<n;x++){
-      const wx=x0+(x+.5)*48/n,wz=z0+(z+.5)*48/n,info=this.nav.field.waterInfo(wx,wz);
-      if(!info.inside)continue;const loX=wx-.75,hiX=wx+.75,loZ=wz-.75,hiZ=wz+.75,y=info.level+.035;
-      waterPositions.push(loX,y,loZ,loX,y,hiZ,hiX,y,loZ,hiX,y,loZ,loX,y,hiZ,hiX,y,hiZ);
-    }
-    if(waterPositions.length){const waterGeometry=new THREE.BufferGeometry();waterGeometry.setAttribute('position',new THREE.Float32BufferAttribute(waterPositions,3));waterGeometry.computeVertexNormals();group.add(new THREE.Mesh(waterGeometry,paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed)));}
+    const waterGeometry=nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
+    if(waterGeometry){const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(cx*48,0,cz*48);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
     const chunk=this.nav.chunk(cx,cz);
     for(let i=0;i<20;i++) {
       const instances=chunk.instances[i].filter(p=>!this.nav.suppressed.has(p.id));if(!instances.length)continue;
       const lod=this.quality==='alta'?0:this.quality==='media'?1:2,prototype=this.prototypes[i][Math.min(lod,this.prototypes[i].length-1)];
       const mesh=new THREE.InstancedMesh(prototype.geometry,prototype.material,instances.length),dummy=new THREE.Object3D();
       instances.forEach((p,j)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(j,dummy.matrix);});mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
+      if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48]),instances.length);water.instanceMatrix.copy(mesh.instanceMatrix);water.receiveShadow=true;water.userData.nativeFluid='asset';group.add(water);}
     }
     return group;
   }
@@ -120,7 +116,7 @@ export class WorldScene {
     if(!this.nav||!this.prototypes)return;
     const cx=Math.floor((this.controls.target.x+24)/48),cz=Math.floor((this.controls.target.z+24)/48),range=this.quality==='alta'?2:1;
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
-    for(const [key,group] of this.chunks)if(force||!desired.has(key)){this.scene.remove(group);group.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh){o.geometry.dispose();o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.handStaticBoxes=null;}
+    for(const [key,group] of this.chunks)if(force||!desired.has(key)){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.handStaticBoxes=null;}
     for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.handStaticBoxes=null;}
   }
   villageMesh(village) {
@@ -221,7 +217,7 @@ export class WorldScene {
     if(!this.handStaticBoxes){
       this.handStaticBoxes=[];
       for(const [key,group] of this.chunks){group.updateMatrixWorld(true);group.traverse(mesh=>{
-        if(!mesh.isInstancedMesh)return;mesh.geometry.computeBoundingBox();
+        if(!mesh.isInstancedMesh||mesh.userData.nativeFluid)return;mesh.geometry.computeBoundingBox();
         for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);matrix.premultiply(mesh.matrixWorld);box.copy(mesh.geometry.boundingBox).applyMatrix4(matrix);add(box,`${key}:prop:${mesh.id}:${i}`,this.handStaticBoxes);}
       });}
     }
@@ -251,6 +247,6 @@ export class WorldScene {
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
   render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.toon.apply(this.scene);this.scene.traverse(o=>{for(const m of o.isMesh?(Array.isArray(o.material)?o.material:[o.material]):[]){if(m.userData.paintUniforms)m.userData.paintUniforms.uTime.value=waterTime(this.state.elapsed);}});const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
-  dispose() {this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  dispose() {this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(o.userData.nativeFluid!=='asset')o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.renderer.dispose();this.state=null;}
 
 }

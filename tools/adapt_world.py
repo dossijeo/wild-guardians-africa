@@ -9,5 +9,5 @@ body=source[source.index('function canyonFrame('):source.index('// === MATRICES'
 body=body[:body.index('function mm(')] if 'function mm(' in body else body
 out=root/'src/world/terrain.js'
 out.parent.mkdir(parents=True,exist_ok=True)
-out.write_text('// Adapted without changing terrain/scatter constants from BIOMA V4.0.\n'+header+'\nconst num=v=>Number(v.toFixed(4));\n'+body+'\nexport {TerrainField,scatterWorld,hashString,hashCell,noise,rand,SLOTS,GROUPS,hex,canyonGroundColor,desertGroundColor};\n',encoding='utf-8')
+out.write_text('// Adapted without changing terrain/scatter constants from BIOMA V4.0.\n'+header+'\nconst num=v=>Number(v.toFixed(4));\n'+body+'\nexport {TerrainField,scatterWorld,hashString,hashCell,noise,rand,SLOTS,GROUPS,hex,canyonFrame,canyonGroundColor,desertGroundColor};\n',encoding='utf-8')
 

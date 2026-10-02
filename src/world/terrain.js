@@ -483,4 +483,4 @@ function terrainFingerprint(field,bounds){let h=2166136261;for(let z=bounds.minZ
 
 
 
-export {TerrainField,scatterWorld,hashString,hashCell,noise,rand,SLOTS,GROUPS,hex,canyonGroundColor,desertGroundColor};
+export {TerrainField,scatterWorld,hashString,hashCell,noise,rand,SLOTS,GROUPS,hex,canyonFrame,canyonGroundColor,desertGroundColor};
