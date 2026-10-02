@@ -1,0 +1,96 @@
+TAP version 13
+# (node:30568) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+ok 1 - native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+  ---
+  duration_ms: 64.5075
+  ...
+# Subtest: render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+ok 2 - render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+  ---
+  duration_ms: 11.357
+  ...
+# Subtest: short vegetation distance culling does not remove logical instances and reappears when the camera returns
+ok 3 - short vegetation distance culling does not remove logical instances and reappears when the camera returns
+  ---
+  duration_ms: 2.8599
+  ...
+# Subtest: native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+ok 4 - native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+  ---
+  duration_ms: 109.7056
+  ...
+# Subtest: contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+ok 5 - contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+  ---
+  duration_ms: 4.9263
+  ...
+# Subtest: resident contact texture is stable, updates on streaming or removal and releases its owner resource
+ok 6 - resident contact texture is stable, updates on streaming or removal and releases its owner resource
+  ---
+  duration_ms: 3.9956
+  ...
+# (node:31088) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native canyon and desert horizons preserve every original position, normal and color byte
+ok 7 - native canyon and desert horizons preserve every original position, normal and color byte
+  ---
+  duration_ms: 2765.6314
+  ...
+# Subtest: streaming uses the eye and original resident radii, including negative boundaries
+ok 8 - streaming uses the eye and original resident radii, including negative boundaries
+  ---
+  duration_ms: 7.0923
+  ...
+# Subtest: horizon resources survive static frames and are released once on travel, quality change and close
+ok 9 - horizon resources survive static frames and are released once on travel, quality change and close
+  ---
+  duration_ms: 425.0917
+  ...
+# Subtest: native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+ok 10 - native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+  ---
+  duration_ms: 334.4389
+  ...
+# (node:26280) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 11 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 6.6111
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 12 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 4.6589
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 13 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 2.7295
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 14 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 0.7858
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 15 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 1.8028
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 16 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 0.909
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3819.4097

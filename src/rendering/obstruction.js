@@ -38,8 +38,11 @@ export function obstructionMaterial(material){
 export function updateObstructions(chunks,camera,target,dt,{enabled=true,distance=7,snap=false}={}){
   const frame=obstructionFrame(camera.position.toArray(),target.toArray(),THREE.MathUtils.degToRad(camera.fov),camera.aspect,distance);
   const stats={hidden:0,fading:0,affected:0};dt=Math.max(0,Math.min(.12,dt));
-  for(const group of chunks.values())for(const mesh of group.children){
-    const fade=mesh.geometry?.userData.obstruction;if(!fade)continue;let dirty=false;
+  for(const group of chunks.values()){
+   const batches=group.userData?.lodBatches??[];
+   const fades=[...batches.map(b=>b.fade),...group.children.filter(m=>!m.userData?.nativeLodBatch).map(m=>m.geometry?.userData.obstruction)];
+   for(const fade of fades){
+    if(!fade)continue;let dirty=false;
     for(let i=0;i<fade.records.length;i++){
       const desired=enabled?obstructionVisibility(fade.records[i],frame):1,old=fade.attribute.array[i],rate=desired<old?16:7;
       let value=snap||fade.fresh?desired:old+(desired-old)*(1-Math.exp(-dt*rate));
@@ -48,6 +51,8 @@ export function updateObstructions(chunks,camera,target,dt,{enabled=true,distanc
       if(value<.999){stats.affected++;if(value<.002)stats.hidden++;else stats.fading++;}
     }
     fade.fresh=false;if(dirty)fade.attribute.needsUpdate=true;
+   }
+   for(const batch of batches)batch.packCoverage();
   }
   return stats;
 }
