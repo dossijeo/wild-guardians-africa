@@ -7,6 +7,8 @@ import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch} from './crop-batch.js';
 import {applyWorkerPose,nativeCrate} from './worker-actions.js';
 import {applyAnimalPose,prepareAnimalClips,animalGroundSamples} from './animal-actions.js';
+import {NativeHands} from './hands.js';
+import {tutorialHandTarget} from './tutorial-hand-target.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -39,6 +41,8 @@ export class WorldScene {
     this.wallPrototypes=await this.assets.walls(await json('/content/walls.json'));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.syncChunks();this.sync(0);
+    this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
+    await this.hands.ready;
   }
   focus(point) {const y=this.nav?.field.surface(point.x,point.z)??0;this.controls.target.set(point.x,y,point.z);this.camera.position.set(point.x+34,y+32,point.z+40);this.controls.update();}
   terrain(cx,cz) {
@@ -73,8 +77,8 @@ export class WorldScene {
     if(!this.nav||!this.prototypes)return;
     const cx=Math.floor((this.controls.target.x+24)/48),cz=Math.floor((this.controls.target.z+24)/48),range=this.quality==='alta'?2:1;
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
-    for(const [key,group] of this.chunks)if(force||!desired.has(key)){this.scene.remove(group);group.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh){o.geometry.dispose();o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);}
-    for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);}
+    for(const [key,group] of this.chunks)if(force||!desired.has(key)){this.scene.remove(group);group.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh){o.geometry.dispose();o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.handStaticBoxes=null;}
+    for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.handStaticBoxes=null;}
   }
   villageMesh(village) {
     const group=new THREE.Group();
@@ -165,6 +169,41 @@ export class WorldScene {
     }
     const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId,point:ground?{x:ground.point.x,z:ground.point.z}:null};
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.renderer.render(this.scene,this.camera);}
-  dispose() {this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  handColliders(config){
+    const boxes=[],box=new THREE.Box3(),matrix=new THREE.Matrix4();
+    const add=(bounds,id,list=boxes)=>{if(!bounds.isEmpty())list.push({id,min:bounds.min.toArray(),max:bounds.max.toArray()});};
+    if(!this.handStaticBoxes){
+      this.handStaticBoxes=[];
+      for(const [key,group] of this.chunks){group.updateMatrixWorld(true);group.traverse(mesh=>{
+        if(!mesh.isInstancedMesh)return;mesh.geometry.computeBoundingBox();
+        for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);matrix.premultiply(mesh.matrixWorld);box.copy(mesh.geometry.boundingBox).applyMatrix4(matrix);add(box,`${key}:prop:${mesh.id}:${i}`,this.handStaticBoxes);}
+      });}
+    }
+    boxes.push(...this.handStaticBoxes);
+    const ids=[...this.state.villages,...this.state.structures].map(e=>e.id);
+    for(const id of ids){const root=this.objects.get(id);if(!root)continue;root.updateMatrixWorld(true);root.traverse(mesh=>{
+      if(!mesh.isMesh)return;
+      // Village draw ranges share a buffer containing every building. Its
+      // complete geometry box would incorrectly enclose the whole village.
+      const unit=mesh.userData.unit;
+      if(unit)box.set(new THREE.Vector3(...unit.min),new THREE.Vector3(...unit.max)).applyMatrix4(mesh.matrixWorld);
+      else {mesh.geometry.computeBoundingBox();box.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);}
+      add(box,id+':'+mesh.id);
+    });}
+    const points=config.route??[config.position],radius=3;
+    const loX=Math.min(...points.map(p=>p[0]))-radius,hiX=Math.max(...points.map(p=>p[0]))+radius,loZ=Math.min(...points.map(p=>p[2]))-radius,hiZ=Math.max(...points.map(p=>p[2]))+radius;
+    return boxes.filter(b=>b.max[0]>=loX&&b.min[0]<=hiX&&b.max[2]>=loZ&&b.min[2]<=hiZ);
+  }
+  updateHands(dt){
+    if(!this.hands)return;
+    const step=this.state.tutorial.step,key=step+':'+this.nav.version;
+    let config=null;
+    if(this.state.day===1&&!this.state.result&&step!=='done'){
+      if(['observe','harvest'].includes(step))config=tutorialHandTarget(this.state,this.nav);
+      else {if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav);}config=this.handTargetCache;}
+    }
+    this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
+  }
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.renderer.render(this.scene,this.camera);}
+  dispose() {this.hands?.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }
