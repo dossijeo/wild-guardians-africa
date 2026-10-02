@@ -22,6 +22,13 @@ function fakeRenderer(){
     getDrawingBufferSize(out){return out.copy(this.size)},getRenderTarget(){return this.target},setRenderTarget(target){this.target=target},getClearColor(out){return out.copy(this.color)},getClearAlpha(){return this.alpha},setClearColor(color,alpha){this.color.set(color);this.alpha=alpha},render(){this.renders++;if(this.fail)throw new Error('fallo GPU de prueba');}};
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
+
+test('removing world fog also removes it from DEST buildings, debris and smoke',()=>{
+  const renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer),house=new NativeBuilding(templates[0],{id:'clear-world',hp:600,maxHp:600,status:'intact'},pass),world=new THREE.Scene(),camera=new THREE.PerspectiveCamera();
+  world.add(house);world.fog=new THREE.Fog('#765b3b',130,250);pass.render(camera,world);assert.deepEqual(house.uniforms.uWorldFogRange.value.toArray(),[130,250]);
+  world.fog=null;pass.render(camera,world);assert.deepEqual(house.uniforms.uWorldFogRange.value.toArray(),[1e8,1e9]);
+  assert.equal(house.effects.smokeUniforms.uWorldFogRange,house.uniforms.uWorldFogRange);house.dispose();pass.dispose();
+});
 test('Five native center templates retain original textures, proportions, UVs and world footprint',()=>{
   for(let i=0;i<templates.length;i++){
     const template=templates[i],original=models[i];assert.equal(template.material,original.material);

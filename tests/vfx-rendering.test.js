@@ -50,7 +50,7 @@ test('Atlas upload preserves original flipped rows, linear sampling, straight al
 
 test('Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders',()=>{
   const {library,pipeline,camera}=setup(),fx=library.create('shield',pipeline),world=new THREE.Scene();world.fog=new THREE.Fog('#735635',20,80);world.add(fx);fx.position.set(2,3,-4);fx.rotation.y=Math.PI/2;fx.scale.setScalar(4);fx.seek(2);fx.prepare(camera,world);
-  const localEye=camera.position.clone().applyMatrix4(fx.matrixWorld.clone().invert());assert.ok(localEye.distanceTo(fx.uniforms.uEye.value)<1e-9);assert.equal(fx.uniforms.uScale.value,4);assert.equal(fx.uniforms.uNear.value,.2);assert.equal(fx.uniforms.uFar.value,400);assert.deepEqual(fx.uniforms.uFogRange.value.toArray(),[20,80]);assert.deepEqual(fx.uniforms.uViewport.value.toArray(),[1280,720]);
+  const localEye=camera.position.clone().applyMatrix4(fx.matrixWorld.clone().invert());assert.ok(localEye.distanceTo(fx.uniforms.uEye.value)<1e-9);assert.equal(fx.uniforms.uScale.value,4);assert.equal(fx.uniforms.uNear.value,.2);assert.equal(fx.uniforms.uFar.value,400);assert.deepEqual(fx.uniforms.uFogRange.value.toArray(),[20,80]);world.fog=null;fx.prepare(camera,world);assert.deepEqual(fx.uniforms.uFogRange.value.toArray(),[1e8,1e9]);assert.deepEqual(fx.uniforms.uViewport.value.toArray(),[1280,720]);
   assert.match(fx.sprites.material.fragmentShader,/vParams\.w\*uScale/);assert.match(fx.rigidMaterial.fragmentShader,/unpackRGBAToDepth/);assert.match(fx.depthMaterial.fragmentShader,/packDepthToRGBA\(gl_FragCoord.z\)/);assert.ok([...fx.rigids.values()].every(m=>m.castShadow&&m.customDepthMaterial===fx.depthMaterial));library.dispose();pipeline.dispose();
 });
 

@@ -63,7 +63,7 @@ export class NativeVfx extends THREE.Group {
     if(this.stopped)return false;
     camera.updateWorldMatrix(true,false);this.cameraUniforms(camera);const u=this.uniforms,env=this.environment;u.uTime.value=this.native.time;u.uWet.value=this.native.wetness;u.uNight.value=env.night;
     for(const [name,key] of [['uSun','sun'],['uSky','sky'],['uGround','ground'],['uParticleLight','particle']])u[name].value.fromArray(env[key]);u.uSunDir.value.fromArray(env.dir).transformDirection(this.inverse);
-    this.pipeline.renderer.getDrawingBufferSize(u.uViewport.value);if(world?.fog){u.uFogColor.value.copy(world.fog.color).convertLinearToSRGB();u.uFogRange.value.set(world.fog.near,world.fog.far);}
+    this.pipeline.renderer.getDrawingBufferSize(u.uViewport.value);if(world?.fog){u.uFogColor.value.copy(world.fog.color).convertLinearToSRGB();u.uFogRange.value.set(world.fog.near,world.fog.far);}else u.uFogRange.value.set(1e8,1e9);
     const sprites=this.native.sprites(),forward=this.point.setFromMatrixColumn(camera.matrixWorld,2).negate().transformDirection(this.inverse),packed=packVfxSprites(sprites,this.library.rects,{eye:u.uEye.value.toArray(),forward:forward.toArray()});this.spriteBuffer.array.set(packed.data);this.spriteBuffer.needsUpdate=true;this.sprites.geometry.instanceCount=packed.count;this.sprites.visible=packed.count>0;
     const lights=this.native.lights;for(let i=0;i<2;i++){
       u['uLightPos'+i].value.fromArray(lights.positions[i]);u['uLightCol'+i].value.fromArray(lights.colors[i]);

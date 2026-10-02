@@ -28,6 +28,11 @@ export class AfricanToon {
         vToonWorld=(modelMatrix*toonPosition).xyz;
         ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
       shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
+      if(material.userData.horizonBounds){
+        shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
+          if(vToonWorld.x>=uHorizonBounds.x&&vToonWorld.z>=uHorizonBounds.y&&vToonWorld.x<uHorizonBounds.z&&vToonWorld.z<uHorizonBounds.w)discard;`);
+      }
       if(material.userData.toonGround)shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
         ${material.userData.nativeGroundColor?'diffuseColor.rgb=toLinear4(diffuseColor.rgb);':''}
         float coarse=materialNoise(vToonWorld*.32),fine=materialNoise(vToonWorld*2.6);
@@ -61,7 +66,7 @@ export class AfricanToon {
         #include <opaque_fragment>`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
     };
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|'+(material.userData.toonGround?'ground':'object')+'|'+material.type;
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
@@ -75,11 +80,11 @@ export function toonDestruction(fragment){
     .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
 }
 
-export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null){
+export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
-  uniforms.uFluidClip={value:bounds?1:0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
+  uniforms.uFluidClip={value:bounds?(clipOutside?2:1):0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
   Object.assign(uniforms,{uEnvDay:{value:lighting?.textures[0]??null},uEnvNight:{value:lighting?.textures[1]??null},uEnvYaw:lighting?.yaw??{value:0},uNight:lighting?.uniforms.uNight??{value:0},uNightLight:lighting?.uniforms.uNightLight??{value:1.12},uLightDir:lighting?.uniforms.uLightDir??{value:new THREE.Vector3(-30,55,25).normalize()},uExposure:{value:1},uKind:{value:1},uSurfaceLava:{value:lava?1:0}});
   material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);shader.vertexShader='varying vec3 vPaintWorld;\n'+shader.vertexShader;
@@ -94,7 +99,7 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
       vPaintWorld=(modelMatrix*paintPosition).xyz;`);
     shader.fragmentShader='varying vec3 vPaintWorld;uniform float uWaterScale,uFluidClip,uEnvYaw,uNight,uNightLight,uExposure,uKind,uSurfaceLava;uniform vec3 uLightDir;uniform sampler2D uEnvDay,uEnvNight;uniform vec4 uFluidBounds;\n'+waterFunctions+'\n'+fluidLightingFunctions+'\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
-      if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if(!inside)discard;}`);
+      if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if((uFluidClip<1.5&&!inside)||(uFluidClip>1.5&&inside))discard;}`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       float fluidVisibility=1.;

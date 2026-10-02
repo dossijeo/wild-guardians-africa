@@ -26,6 +26,7 @@ import {MaterialVfx} from './material-vfx.js';
 import {LocomotionVfx} from './locomotion-vfx.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
 import {nativeGroundGeometry} from './terrain-geometry.js';
+import {NativeHorizon,nativeNearRegion} from './horizon.js';
 import {configureTerrainControls,protectTerrainCamera,updateTerrainCamera,focusTerrainCamera} from './terrain-camera.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
@@ -34,7 +35,7 @@ const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Le
 export class WorldScene {
   constructor(canvas,onPick) {
     this.toon=new AfricanToon();this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.mixers=new Map();this.scene=new THREE.Scene();this.sky=new NativeSky();
-    this.camera=new THREE.PerspectiveCamera(42,1,.1,600);this.camera.position.set(40,35,50);
+    this.camera=new THREE.PerspectiveCamera(42,1,.1,500);this.camera.position.set(40,35,50);
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
     this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;configureTerrainControls(this.controls);this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
@@ -111,7 +112,9 @@ export class WorldScene {
   }
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
-    const cx=Math.floor((this.controls.target.x+24)/48),cz=Math.floor((this.controls.target.z+24)/48),range=this.quality==='alta'?2:1;
+    const region=nativeNearRegion(this.camera.position,this.quality),{cx,cz,range}=region;this.nearBounds=region.bounds;
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside));
+    this.horizon.update(this.nav.config,this.pack.profile,region,this.quality,force);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.handStaticBoxes=null;}
     for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.handStaticBoxes=null;}
@@ -193,7 +196,7 @@ export class WorldScene {
     }
     for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();this.objects.delete(id);this.mixers.delete(id);}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
-    this.renderer.setClearColor(tint);this.scene.fog=new THREE.Fog(tint,130,250);this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
+    this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     this.sun.position.set(this.controls.target.x-30,this.controls.target.y+55,this.controls.target.z+25);this.sun.target.position.copy(this.controls.target);
   }
   pick(event) {
@@ -245,6 +248,6 @@ export class WorldScene {
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
   render(dt) {this.updateCamera();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.toon.apply(this.scene);this.scene.traverse(o=>{for(const m of o.isMesh?(Array.isArray(o.material)?o.material:[o.material]):[]){if(m.userData.paintUniforms)m.userData.paintUniforms.uTime.value=waterTime(this.state.elapsed);}});const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
-  dispose() {this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(o.userData.nativeFluid!=='asset')o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.renderer.dispose();this.state=null;}
+  dispose() {this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(o.userData.nativeFluid!=='asset')o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.renderer.dispose();this.state=null;}
 
 }

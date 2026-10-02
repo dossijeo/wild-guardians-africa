@@ -54,7 +54,7 @@ export class NativeBuilding extends THREE.Group {
     this.scale.setScalar(template.scale);this.rotation.y=entity.yaw??0;
     const value=x=>({value:x}),material=template.material;
     this.uniforms={uVP:value(new THREE.Matrix4()),uLightVP:value(new THREE.Matrix4()),uDamage:value(0),uInner:value(0),uMode:value(0),uHoles:value(Array.from({length:8},()=>new THREE.Vector4())),uNoise:value(template.noise),uEye:value(new THREE.Vector3()),uSun:value(new THREE.Vector3(-8,13,9).normalize()),uAlbedo:value(material.map),uNormalMap:value(material.normalMap),uMR:value(material.roughnessMap),uShadow:value(null),uIntactDepth:value(pipeline.target.depthTexture),uOpeningMask:value(pipeline.target.texture),uResolution:value(new THREE.Vector2(1,1)),uAshAge:value(0),uRepair:value(template.building.repairPlaster?1:0),uTime:value(0),uShadowSize:value(1024),uShadows:value(0),uEmbers:value(1),uQuality:value(1)};
-    Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(130,250)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1),uToonModel:value(new THREE.Matrix4()),uNight:value(0),uNightLight:value(1),uExposure:value(1.15),uKind:value(0),uSurfaceType:value(1)});
+    Object.assign(this.uniforms,{uWorldFogColor:value(new THREE.Color()),uWorldFogRange:value(new THREE.Vector2(1e8,1e9)),uWorldScale:value(template.scale),uWorldSun:value(1),uWorldAmbient:value(1),uToonModel:value(new THREE.Matrix4()),uNight:value(0),uNightLight:value(1),uExposure:value(1.15),uKind:value(0),uSurfaceType:value(1)});
     this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment));
     const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
     this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
@@ -116,7 +116,7 @@ export class BuildingDestructionPass {
     camera.updateWorldMatrix(true,false);
     const size=this.renderer.getDrawingBufferSize(new THREE.Vector2()),parts=[...camera.projectionMatrix.elements,...camera.matrixWorldInverse.elements,size.x,size.y];
     for(const building of this.buildings){building.updateWorldMatrix(true,true);building.opening.matrix.copy(building.outer.matrixWorld);building.uniforms.uResolution.value.copy(size);parts.push(building.damage,...building.outer.matrixWorld.elements);
-      if(world?.fog){building.uniforms.uWorldFogColor.value.copy(world.fog.color).convertLinearToSRGB();building.uniforms.uWorldFogRange.value.set(world.fog.near,world.fog.far);}
+      if(world?.fog){building.uniforms.uWorldFogColor.value.copy(world.fog.color).convertLinearToSRGB();building.uniforms.uWorldFogRange.value.set(world.fog.near,world.fog.far);}else building.uniforms.uWorldFogRange.value.set(1e8,1e9);
       building.uniforms.uWorldSun.value=(this.sun?.intensity??3)/3;
       const hemisphere=this.ambient??world?.children.find(o=>o.isHemisphereLight);building.uniforms.uWorldAmbient.value=(hemisphere?.intensity??2)/2;
     }
