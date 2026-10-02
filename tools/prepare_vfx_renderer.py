@@ -41,6 +41,7 @@ simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
 simulation = simulation.replace('function floorAt(p){return ', "function floorAt(p){if(surface){const y=surface(p[0],p[2]);if(!Number.isFinite(y))throw new Error('Superficie VFX inválida');return y;}return ")
 simulation = simulation.replace('if(p.p[1]<p.ground+.025', 'if(surface)p.ground=floorAt(p.p);if(p.p[1]<p.ground+.025')
 simulation = simulation.replace('target=clamp(t,0,current.duration)', "target=clamp(t,0,agricultureMode?agricultureDuration:shieldMode==='barrier'?shieldDuration:current.duration)")
+simulation = simulation.replace("case'dust':at(.25,()=>stepDust(-.72,.17));at(.57,()=>stepDust(0,-.06));at(.93,()=>stepDust(.75,.17));break;", "case'dust':if(stepMode)at(0,()=>stepDust(0,0));else{at(.25,()=>stepDust(-.72,.17));at(.57,()=>stepDust(0,-.06));at(.93,()=>stepDust(.75,.17));}break;")
 combat = section('const DUST_TEXTURES=', 'const paths=')
 combat = combat.replace("if(!isSeeking)window.dispatchEvent(new CustomEvent('wgvfx:impact',{detail:{...lastImpact}}));", 'contacts.push({...lastImpact});')
 # Production Shield reuses the original mesh, rings, stars and block particles.
@@ -81,7 +82,7 @@ environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
 module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
 module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
 module += '''
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 '''+random+settings+'''
@@ -89,6 +90,7 @@ export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surf
  if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
  if(shieldMode!==null&&!['barrier','contact'].includes(shieldMode)||!Number.isFinite(shieldDuration)||shieldDuration<1)throw new Error('Configuración Escudo inválida');
  if(agricultureMode!==null&&(!['growth','multiply'].includes(agricultureMode)||id!=='heal')||!Number.isFinite(agricultureDuration)||agricultureDuration<1)throw new Error('Configuración magia agrícola inválida');
+ if(typeof stepMode!=='boolean'||stepMode&&id!=='dust')throw new Error('Configuración de pisada inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 '''+simulation+geometry+combat+rigid_pack+'''
