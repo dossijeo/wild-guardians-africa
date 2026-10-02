@@ -1,0 +1,85 @@
+TAP version 13
+# Subtest: growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 1 - growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 218.8802
+  ...
+# Subtest: multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 2 - multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 67.0437
+  ...
+# Subtest: The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+ok 3 - The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+  ---
+  duration_ms: 178.9568
+  ...
+# Subtest: Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+ok 4 - Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+  ---
+  duration_ms: 207.048
+  ...
+# Subtest: Production shield mesh follows the world floor and has no incoming demonstration bolt
+ok 5 - Production shield mesh follows the world floor and has no incoming demonstration bolt
+  ---
+  duration_ms: 20.9168
+  ...
+# Subtest: shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+ok 6 - shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+  ---
+  duration_ms: 153.4529
+  ...
+# Subtest: Terrain contact maps world heights into a translated, rotated and scaled effect frame
+ok 7 - Terrain contact maps world heights into a translated, rotated and scaled effect frame
+  ---
+  duration_ms: 65.3189
+  ...
+# Subtest: Native debris follows original terrain heights in all six biomes without changing domain state
+ok 8 - Native debris follows original terrain heights in all six biomes without changing domain state
+  ---
+  duration_ms: 95.8475
+  ...
+# Subtest: All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+ok 9 - All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+  ---
+  duration_ms: 249.4359
+  ...
+# Subtest: Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+ok 10 - Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+  ---
+  duration_ms: 34.326
+  ...
+# Subtest: Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+ok 11 - Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+  ---
+  duration_ms: 15.4233
+  ...
+# Subtest: Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+ok 12 - Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+  ---
+  duration_ms: 24.834
+  ...
+# Subtest: Effects never participate in interaction raycasts and release private resources before the shared atlas
+ok 13 - Effects never participate in interaction raycasts and release private resources before the shared atlas
+  ---
+  duration_ms: 14.0644
+  ...
+# Subtest: Native environment retains distinct day, sunset and night lighting for particles
+ok 14 - Native environment retains distinct day, sunset and night lighting for particles
+  ---
+  duration_ms: 0.3903
+  ...
+# Subtest: Two native local lights retain source positions/colors on world materials and disappear when stopped
+ok 15 - Two native local lights retain source positions/colors on world materials and disappear when stopped
+  ---
+  duration_ms: 14.535
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 966.2722

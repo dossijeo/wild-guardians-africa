@@ -1,0 +1,34 @@
+# Prioridades de rendimiento
+
+Sugerencias del usuario del 3 de octubre de 2026. Se medirán con la misma cámara,
+calidad y dispositivo, conservando diferencias visuales y tiempos CPU/GPU por
+separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
+
+1. **Invalidación de paisaje (siguiente):** separar entidades y supresiones de
+   props del streaming del suelo. Conservar navegación, guardado, agua de assets,
+   contactos, LOD, ocultación y sombras. Plantar y lanzar magia no deben retirar
+   todos los chunks ni forzar el horizonte.
+2. **Caras:** experimentar por categorías con FrontSide en geometría cerrada;
+   mantener hojas, planos y superficies abiertas. Revisar shadowSide y edificios
+   dañados con cámara girada; comparar GPU e imágenes.
+3. **Caché de sombras (implementada):** [evidencia y límites](qa-shadow-cache.md).
+   Invalida por poses, crecimiento/viento, geometría, luz, contexto y materiales.
+   Separar casters estáticos/dinámicos queda como mejora posterior.
+4. **Coste del shader:** diagnóstico de ruido fino desactivado conservando bandas,
+   paleta y contornos. Evaluar ruido de textura/receta barata/calidad/distancia
+   con comparación visual. Probar una sola lectura HDR en extremos día/noche.
+   PCF compartido ya implementado; no duplicar ese trabajo.
+5. **Bounds:** asignar bounds por unidad del poblado (drawRange no los calcula);
+   envolvente conservadora del centro según estado; seleccionar casters contra
+   volumen de luz, sin excluir sombras visibles de árboles fuera de cámara.
+6. **Cultivos (después de 1):** matrices estables, atributos de crecimiento/morph
+   separados, subidas únicamente de rangos cambiados. El viento usa reloj, sin
+   reenviar matrices. Después: registros de materiales/agua y cachés de CPU.
+7. **Profundidad VFX:** estudiar ruta específica conservando alpha test, clipping,
+   skinning, morph, crecimiento y agujeros DEST. No explica una vista sin efectos.
+8. **Resolución:** diagnóstico con DPR 1 conservando calidad media. Posible control
+   de resolución 3D separado del HUD HTML, explícitamente como intercambio de
+   nitidez por rendimiento.
+
+Origen relativo y cambios 1/6 publicados; [alcance y evidencia de acciones](qa-performance-actions.md). Estas prioridades no
+sustituyen la auditoría funcional completa del Plan Maestro ni acreditan móvil.
