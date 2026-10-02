@@ -82,8 +82,8 @@ La regresión integrada pasa 487/487 pruebas, sin omisiones, en 332,365 s
 (`test-results/tests-native-center-complete.txt`). Los cambios finales de
 colocación pasan 42/42 pruebas dirigidas; los impactos y la compatibilidad de
 hechos antiguos pasan 9/9, incluida una prueba nueva posterior a la regresión.
-La suite actual tiene 488 pruebas; su ejecución completa en GitHub Actions
-queda pendiente al publicar esta revisión. Build final aprobado; paquete web
+La suite de esta revisión pasa 488/488 pruebas en GitHub Actions sobre
+`55678cd` ([ejecución 37007500926](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37007500926)). Build final aprobado; paquete web
 validado con 546 archivos, 789 enlaces relativos y 20 GLB de runtime, sin
 duplicados originales. No se da por terminada la implementación del Plan Maestro.
 
