@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 4.8025
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 3.9449
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.3784
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.4232
+  ...
+# (node:27456) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native canyon and desert horizons preserve every original position, normal and color byte
+ok 5 - native canyon and desert horizons preserve every original position, normal and color byte
+  ---
+  duration_ms: 3405.4684
+  ...
+# Subtest: streaming uses the eye and original resident radii, including negative boundaries
+ok 6 - streaming uses the eye and original resident radii, including negative boundaries
+  ---
+  duration_ms: 6.4528
+  ...
+# Subtest: horizon resources survive static frames and are released once on travel, quality change and close
+ok 7 - horizon resources survive static frames and are released once on travel, quality change and close
+  ---
+  duration_ms: 539.4282
+  ...
+# Subtest: native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+ok 8 - native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+  ---
+  duration_ms: 405.6025
+  ...
+# (node:25952) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 9 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 8.3933
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 10 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 3.4814
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 11 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 2.8036
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 12 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 0.8121
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 13 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 3.202
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 14 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 2.27
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4704.0421
