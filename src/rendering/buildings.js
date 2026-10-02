@@ -60,6 +60,10 @@ export class NativeBuilding extends THREE.Group {
     const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
     this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
     this.outer.onBeforeShadow=(renderer,object,camera,shadowCamera)=>this.cameraUniforms(this.outer,shadowCamera);
+    // Depth only uses deformation/cut inputs; color camera/fog/time uniforms
+    // are overwritten by other passes and do not change the silhouette.
+    this.outer.userData.nativeShadowCallback=this.outer.onBeforeShadow;
+    this.outer.customDepthMaterial.userData.nativeShadowInputs=()=>['uDamage','uInner','uMode','uHoles','uNoise','uUncut'].map(k=>this.outer.customDepthMaterial.uniforms[k].value);
     const innerUniforms={...this.uniforms,uInner:value(1)},ashUniforms={...this.uniforms,uMode:value(2)};
     this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
     this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));

@@ -26,6 +26,7 @@ const GROWTH_POSITION=`
  transformed.x+=breeze; transformed.z+=breeze*0.47;
 `;
 function patchGrowth(material,meta,depth=false){
+ if(depth)material.userData.nativeShadowInputs=()=>[.10,meta.height,uniforms.clock.value,uniforms.wind.value];
  material.onBeforeCompile=shader=>{
   shader.uniforms.uGround={value:.10};shader.uniforms.uHeight={value:meta.height};shader.uniforms.uClock=uniforms.clock;shader.uniforms.uWind=uniforms.wind;
   shader.vertexShader=GROWTH_DECL+'\n'+shader.vertexShader;
@@ -121,6 +122,7 @@ vec3 bridgeNormal(vec3 p,vec3 n){
 }
 `;
 function patchBridge(material,a,b,depth=false){
+ if(depth)material.userData.nativeShadowInputs=()=>[a.height,b.height,a.foliageRadius,b.foliageRadius,uniforms.clock.value,uniforms.wind.value];
  material.onBeforeCompile=shader=>{
   shader.uniforms.uHeights={value:new THREE.Vector2(a.height,b.height)};
   shader.uniforms.uRadii={value:new THREE.Vector2(a.foliageRadius,b.foliageRadius)};

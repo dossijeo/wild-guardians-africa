@@ -10,6 +10,7 @@ export function createAssetShadow(levels,capacity,group){
     const stats=mesh.userData.nativeShadowStats;if(!stats)return;
     stats.draws++;stats.triangles+=(geometry.index?.count??geometry.attributes.position.count)/3*mesh.count;
   };
+  mesh.userData.nativeShadowCallback=mesh.onBeforeShadow;
   return mesh;
 }
 

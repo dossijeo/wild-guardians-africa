@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {ShadowCache,shadowSnapshot} from './shadow-cache.js';
 import {nativeShadowFunctions} from './native-shadow-source.js';
 
 export function createNativeShadowUniforms(){
@@ -31,19 +32,27 @@ export function updateNativeShadowUniforms(uniforms,renderer,light){
 }
 
 export function installNativeShadow(renderer,light,uniforms){
-  const map=renderer.shadowMap,original=map.render;
+  const map=renderer.shadowMap,original=map.render,cache=new ShadowCache();
+  const canvas=renderer.domElement,reset=()=>cache.invalidate();
+  canvas?.addEventListener('webglcontextlost',reset);canvas?.addEventListener('webglcontextrestored',reset);
   function render(lights,scene,camera){
     const active=map.enabled&&(map.autoUpdate||map.needsUpdate)&&lights.includes(light)&&light.castShadow&&(light.shadow.autoUpdate||light.shadow.needsUpdate);
     if(!active){updateNativeShadowUniforms(uniforms,renderer,light);return original.call(this,lights,scene,camera);}
     ensureNativeShadowTarget(light);
+    const snapshot=cache.enabled&&lights.length===1?shadowSnapshot(renderer,light,scene,camera):null;
+    if(cache.enabled&&cache.matches(snapshot,map.needsUpdate||light.shadow.needsUpdate)){
+      cache.stats.hits++;updateNativeShadowUniforms(uniforms,renderer,light);return;
+    }
+    cache.invalidate();
     const originalDraw=renderer.renderBufferDirect,materials=new Map();
     function draw(...args){const material=args[3];if(!materials.has(material))materials.set(material,[material.polygonOffset,material.polygonOffsetFactor,material.polygonOffsetUnits]);material.polygonOffset=true;material.polygonOffsetFactor=material.polygonOffsetUnits=1;return originalDraw.apply(this,args);}
     renderer.renderBufferDirect=draw;
-    try{return original.call(this,lights,scene,camera);}
+    try{const result=original.call(this,lights,scene,camera);cache.commit(snapshot);return result;}
     finally{if(renderer.renderBufferDirect===draw)renderer.renderBufferDirect=originalDraw;for(const [material,saved] of materials)[material.polygonOffset,material.polygonOffsetFactor,material.polygonOffsetUnits]=saved;updateNativeShadowUniforms(uniforms,renderer,light);}
   }
   map.render=render;let released=false;
-  return ()=>{if(released)return;released=true;if(map.render===render)map.render=original;uniforms.uNativeShadowOn.value=0;uniforms.uNativeShadowFiltered.value=null;uniforms.fallback.dispose();};
+  const release=()=>{if(released)return;released=true;canvas?.removeEventListener('webglcontextlost',reset);canvas?.removeEventListener('webglcontextrestored',reset);cache.invalidate();if(map.render===render)map.render=original;uniforms.uNativeShadowOn.value=0;uniforms.uNativeShadowFiltered.value=null;uniforms.fallback.dispose();};
+  release.cache=cache;return release;
 }
 
 // Apply the same visibility to the Standard direct-light term and cel grading.
