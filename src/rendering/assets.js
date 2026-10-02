@@ -31,6 +31,10 @@ export class Assets {
     const material=new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide});
     return payload.units.map(unit=>{
       const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(interleaved,2,6));geometry.setIndex(new THREE.BufferAttribute(index,1));geometry.setDrawRange(unit.offset,unit.count);
+      // Units borrow the complete village buffer; drawRange does not constrain
+      // Three's automatic bounds. Use the authored unit envelope for both passes.
+      geometry.boundingBox=new THREE.Box3(new THREE.Vector3().fromArray(unit.min),new THREE.Vector3().fromArray(unit.max));
+      geometry.boundingSphere=geometry.boundingBox.getBoundingSphere(new THREE.Sphere());
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.unit=unit;mesh.castShadow=mesh.receiveShadow=true;return mesh;
     });
   }
