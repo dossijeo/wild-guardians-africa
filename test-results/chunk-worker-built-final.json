@@ -1,0 +1,6 @@
+{
+  "url": "http://127.0.0.1:4175/nested/itch/game/",
+  "dom": "- main:\n  - generic \"Mundo de Wild Guardians Africa\"\n  - img \"Reloj solar\"\n  - generic: 07:05\n  - img \"Dinero\"\n  - generic: 1K\n  - generic \"0/100 noches superadas\":\n    - img \"Supervivencia\"\n    - generic: Día 1\n  - button \"Abrir menú de pausa\"\n  - navigation \"Acciones de la granja\":\n    - button \"Volver\":\n      - generic: Volver\n    - button \"Construir\":\n      - generic: Construir\n    - button \"Cultivar\":\n      - generic: Cultivar\n    - button \"Magia\":\n      - generic: Magia\n  - complementary\n  - complementary\n  - dialog \"El Espíritu\":\n    - img \"El Espíritu\"\n    - paragraph: \"Soy el Espíritu que cuida estas tierras. Una maldición inquieta a los animales al caer el sol. Junto al poblado levantarás una finca: construiremos un centro, sembrarás y tu comunidad cuidará los cultivos.\"\n    - button \"Continuar\" [active]:",
+  "stats": "",
+  "logs": []
+}
