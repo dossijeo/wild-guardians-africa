@@ -10,6 +10,7 @@ import {Navigation,BIOME_IDS} from '../world/navigation.js';
 import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/villages.js';
 import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
+import {assetUrl} from '../rendering/asset-url.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 import {NativeGuardian} from '../ui/guardian.js';
@@ -18,6 +19,7 @@ import {TutorialProfile} from '../tutorial/profile.js';
 import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
+for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 const audio=new AudioSystem(settings);
@@ -33,7 +35,7 @@ function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>s
 function clearWorld(){setTutorialInteraction(false);pendingWall=null;tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){save();state=null;}clearWorld();screen='menu';
-  app.innerHTML='<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="/menu/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
+  app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
 }
 window.addEventListener('message',event=>{
   if(event.origin!==location.origin||event.source!==document.querySelector('#native-menu')?.contentWindow||event.data?.type!=='wild-guardians:menu')return;
@@ -48,7 +50,7 @@ window.addEventListener('message',event=>{
 });
 let selectedBiome='sabana',selectedCulture='mapungubwe';
 function newGameScreen() {
-  screen='new';app.innerHTML='<iframe id="native-selector" title="Nueva partida · Bioma y cultura" src="/selector/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
+  screen='new';app.innerHTML=`<iframe id="native-selector" title="Nueva partida · Bioma y cultura" src="${assetUrl('/selector/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
 }
 window.addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==document.querySelector('#native-selector')?.contentWindow||event.data?.type!=='wild-guardians:selector')return;
@@ -79,7 +81,7 @@ async function startGame(loaded=null) {
     for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
     state=next;audio.remember(state.events);
     state.pauses=state.pauses.filter(reason=>!['menu','hidden','context-lost'].includes(reason));
-    const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href='/content/hud.css';document.head.append(nativeStyle);
+    const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
     app.innerHTML=`<main class="game" id="stage"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
     bind('menuButton',pauseDialog);
@@ -237,7 +239,7 @@ function resultDialog() {
 }
 function libraryScreen() {
   clearWorld();screen='library';app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Biblioteca</div>${button('back','← Volver','ghost')}</header><h2>Los archivos del poblado</h2><p class="muted">Laboratorios originales aislados de tus partidas. Los recursos se cargan al abrir cada demostración.</p><div class="library-grid">${[['crops','Cultivos','Ocho especies, cinco etapas y transiciones locales.'],['walls','Bastión','Materiales, puertas reforzadas y estados de daño.'],['destruction','Destrucción','Daño normalizado y colapso de los edificios.'],['sfx','Sonidos','126 sonidos originales, con usos y reservas documentados.']].map(([id,title,description])=>`<article class="library-card"><h3>${title}</h3><p class="muted">${description}</p><button data-demo="${id}">Abrir demostración →</button></article>`).join('')}</div><p class="muted">Modelos originales Meshy · Audio original ElevenLabs y paquetes musicales suministrados · Ga Maamli y Banga bajo SIL OFL.</p></main>`;
-  bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{const iframe=document.createElement('iframe');iframe.src=`/library.html?lab=${el.dataset.demo}`;iframe.title='Laboratorio '+el.dataset.demo;iframe.style='position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee';app.querySelector('.library-grid').replaceWith(iframe);});
+  bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{const iframe=document.createElement('iframe');iframe.src=assetUrl(`/library.html?lab=${el.dataset.demo}`);iframe.title='Laboratorio '+el.dataset.demo;iframe.style='position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee';app.querySelector('.library-grid').replaceWith(iframe);});
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(pendingWall){cancelWallPreview();}else if(tool){tool=null;document.querySelector('#panel').innerHTML='';}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});

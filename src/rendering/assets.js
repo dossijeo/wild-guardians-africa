@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import {assetUrl,resolveAssetValues} from './asset-url.js';
 import {prepareNativeBuilding} from './buildings.js';
-export const json=async url=>{const response=await fetch(url);if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.json();};
-export const bytes=async url=>{const response=await fetch(url);if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.arrayBuffer();};
+export const json=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return resolveAssetValues(await response.json());};
+export const bytes=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.arrayBuffer();};
 export class Assets {
-  constructor(){this.loader=new GLTFLoader();this.textures=new THREE.TextureLoader();this.cache=new Map();}
-  async model(url) {if(!this.cache.has(url))this.cache.set(url,this.loader.loadAsync(url));return this.cache.get(url);}
+  constructor(){this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();}
+  async model(url) {if(!this.cache.has(url))this.cache.set(url,this.loader.loadAsync(assetUrl(url)));return this.cache.get(url);}
   async building(descriptor){const key='building:'+descriptor.url;if(!this.cache.has(key))this.cache.set(key,this.model(descriptor.url).then(gltf=>prepareNativeBuilding(gltf,descriptor)));return this.cache.get(key);}
   async texture(url,color=false) {
-    const key=url+color;if(!this.cache.has(key))this.cache.set(key,this.textures.loadAsync(url).then(texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;return texture;}));
+    const key=url+color;if(!this.cache.has(key))this.cache.set(key,this.textures.loadAsync(assetUrl(url)).then(texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;return texture;}));
     return this.cache.get(key);
   }
   async biome(pack) {

@@ -1,5 +1,6 @@
 import './guardian-native.css';
 import {GuardianMesh,GuardianMagic,OrnamentPhysics,guardianPose,GUARDIAN_SPRITE,GESTURE_MIN_SECONDS} from './guardian-native.js';
+import {assetUrl} from '../rendering/asset-url.js';
 import {GuardianLifecycle} from './guardian-lifecycle.js';
 
 export class NativeGuardian {
@@ -23,7 +24,7 @@ export class NativeGuardian {
   async load(){
     try{
       const image=new Image();image.decoding='async';
-      await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('No se ha podido cargar el Espíritu original.'));image.src=GUARDIAN_SPRITE;});
+      await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('No se ha podido cargar el Espíritu original.'));image.src=assetUrl(GUARDIAN_SPRITE);});
       if(this.disposed)return;
       this.mesh=new GuardianMesh(this.canvas,image);this.magic=new GuardianMagic(this.fx);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}

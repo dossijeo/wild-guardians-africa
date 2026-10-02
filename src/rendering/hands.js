@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {assetUrl} from './asset-url.js';
 import {HAND_ASSETS,HandHints3D,handEffects} from './hands-native.js';
 import {quadTerrainLift} from './hand-terrain.js';
 
@@ -21,7 +22,7 @@ export class NativeHands {
     }
     this.textures=new Map();const loader=textureLoader;
     this.ready=Promise.all(Object.entries(HAND_ASSETS).map(async([kind,url])=>{
-      const texture=await loader.loadAsync(url);texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;
+      const texture=await loader.loadAsync(assetUrl(url));texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;
       if(this.disposed){texture.dispose();return;}this.textures.set(kind,texture);
     })).catch(error=>{if(!this.disposed)onError(error);});
   }
