@@ -28,7 +28,7 @@ test('native volumes and viewing corridor match the original across rotation, sc
 
 test('coverage is independent per instance and chunk, excluding low vegetation, water and short props',()=>{
   const original=new THREE.BoxGeometry(4,10,4),a=obstructionGeometry(original,[instance(),instance(100,'far')],prototype,0),b=obstructionGeometry(original,[instance(48)],prototype,0);
-  assert.equal(a.getAttribute('position'),original.getAttribute('position'));assert.equal(a.index,original.index);assert.equal(original.getAttribute('nativeVisibility'),undefined);
+  assert.notEqual(a.getAttribute('position'),original.getAttribute('position'));assert.equal(a.getAttribute('position').array,original.getAttribute('position').array);assert.notEqual(a.index,original.index);assert.equal(a.index.array,original.index.array);assert.equal(original.getAttribute('nativeVisibility'),undefined);
   assert.notEqual(a.getAttribute('nativeVisibility'),b.getAttribute('nativeVisibility'));
   for(const slot of [7,8,9,19])assert.equal(obstructionGeometry(original,[instance()],prototype,slot),original);
   assert.equal(obstructionGeometry(original,[instance()],{min:[0,0,0],max:[1,.72,1]},0),original);
@@ -59,9 +59,9 @@ test('streaming releases the private coverage geometry once while retaining anot
   const original=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial(),kept=obstructionGeometry(original,[instance()],prototype,0),retired=obstructionGeometry(original,[instance(48000)],prototype,0);
   const group=geometry=>{const g=new THREE.Group();g.add(new THREE.InstancedMesh(geometry,material,1));return g;},a=group(kept),b=group(retired),scene=new THREE.Scene();scene.add(a,b);
   let releases=0,sourceReleases=0;retired.addEventListener('dispose',()=>releases++);original.addEventListener('dispose',()=>sourceReleases++);
-  const world={nav:{config:{},field:{seed:42}},prototypes:[],pack:{profile:{colors:{water:'#88bbcc'}}},camera:new THREE.PerspectiveCamera(),quality:'media',horizon:{update(){}},contacts:{update(){}},chunkRevision:0,chunks:new Map([['0,0',a],['999,999',b]]),terrainMeshes:[],scene,terrain:()=>new THREE.Group()};
+  const world={syncResidentProps(){},nav:{config:{},field:{seed:42}},prototypes:[],pack:{profile:{colors:{water:'#88bbcc'}}},camera:new THREE.PerspectiveCamera(),quality:'media',horizon:{update(){}},contacts:{update(){}},chunkRevision:0,chunks:new Map([['0,0',a],['999,999',b]]),terrainMeshes:[],scene,terrain:()=>new THREE.Group()};
   WorldScene.prototype.syncChunks.call(world);WorldScene.prototype.syncChunks.call(world);
-  assert.equal(releases,1);assert.equal(sourceReleases,0);assert.equal(world.chunks.get('0,0'),a);assert.equal(b.parent,null);assert.equal(kept.getAttribute('nativeVisibility').count,1);assert.equal(kept.getAttribute('position'),original.getAttribute('position'));
+  assert.equal(releases,1);assert.equal(sourceReleases,0);assert.equal(world.chunks.get('0,0'),a);assert.equal(b.parent,null);assert.equal(kept.getAttribute('nativeVisibility').count,1);assert.notEqual(kept.getAttribute('position'),original.getAttribute('position'));assert.equal(kept.getAttribute('position').array,original.getAttribute('position').array);
   kept.dispose();original.dispose();material.dispose();
 });
 

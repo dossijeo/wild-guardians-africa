@@ -105,7 +105,7 @@ function onPick({entityId,point}) {
       if(tool.kind==='center'||tool.kind==='wall')Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
       else if(tool.kind==='plant')Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
       else if(tool.kind==='spell')Game.cast(state,commandId(),tool.spell,point.x,point.z,nav);
-      if(tool.kind!=='plant'){save();tool=null;}world.syncChunks(true);
+      if(tool.kind!=='plant'){save();tool=null;}world.syncResidentProps();
     } else selection=entityId;
   });
 }
@@ -122,7 +122,7 @@ function wallConfirmPanel(){
     const draft=pendingWall;if(!draft)return;
     const fresh=Game.previewWallChain(state,draft.material,draft.points,nav);
     if(fresh.cost!==draft.plan.cost){draft.plan=fresh;world.showWallPreview(fresh);wallConfirmPanel();return;}
-    Game.buildWallChain(state,commandId(),draft.material,draft.points,nav);cancelWallPreview();world.syncChunks(true);save();
+    Game.buildWallChain(state,commandId(),draft.material,draft.points,nav);cancelWallPreview();world.syncResidentProps();save();
   });
 }
 function toolPanel(type) {
@@ -181,7 +181,7 @@ function villageCulturePanel() {
 }
 function villageConfirmPanel() {
   const p=pendingVillage;document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Fundar poblado</h3><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('cancel-village','Cancelar')}</div>`;document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
-  bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncChunks(true);});bind('cancel-village',()=>{world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';});
+  bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncResidentProps();});bind('cancel-village',()=>{world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';});
 }
 function contextPanel() {
   const el=document.querySelector('#context');const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);

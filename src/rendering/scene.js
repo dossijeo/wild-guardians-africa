@@ -1,3 +1,4 @@
+import {refreshResidentProps,sameSuppressions} from './resident-props.js';
 import {RenderOrigin,withRenderOrigin,renderOriginBounds} from './render-origin.js';
 import {centerCulture} from '../world/centers.js';
 import * as THREE from 'three';
@@ -107,20 +108,31 @@ export class WorldScene {
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
   terrain(cx,cz,payload=null) {
-    const group=new THREE.Group(),x0=cx*48-24,z0=cz*48-24;group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
+    const group=new THREE.Group();group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
     material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
     if(waterGeometry){const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
-    const chunk=payload??this.nav.chunk(cx,cz);group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
-    for(let i=0;i<20;i++) {
-      const instances=group.userData.contactInstances[i];if(!instances.length)continue;
+    const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
+    for(let i=0;i<20;i++)this.buildPropSlot(group,i,group.userData.contactInstances[i]);
+    return group;
+  }
+  buildPropSlot(group,i,instances) {
+    const [x,z]=group.userData.nativeChunkOrigin,cx=x/48,cz=z/48,x0=x-24,z0=z-24;
+      if(!instances.length)return;
       const asset=nativeAssetSurface(this.pack,this.pack.assets[i],i);
       createAssetLod(group,this.prototypes[i],instances,asset,i,nativeAssetClipRequired(i,this.state.biome)?[x0,z0,x0+48,z0+48]:null);
-      if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48],this.fluidLighting),instances.length);const dummy=new THREE.Object3D();instances.forEach((p,j)=>{dummy.position.set(p.x-cx*48,p.y,p.z-cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();water.setMatrixAt(j,dummy.matrix);});water.receiveShadow=true;water.userData.nativeFluid='asset';group.add(water);}
-    }
-    return group;
+      if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48],this.fluidLighting),instances.length);const dummy=new THREE.Object3D();instances.forEach((p,j)=>{dummy.position.set(p.x-cx*48,p.y,p.z-cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();water.setMatrixAt(j,dummy.matrix);});water.receiveShadow=true;water.userData.nativeFluid='asset';water.userData.nativePropSlot=i;group.add(water);}
+  }
+  syncResidentProps() {
+    if(!this.nav||!this.prototypes)return {chunks:0,slots:0};
+    if(this.propSuppressionSource===this.nav.suppressed)return {chunks:0,slots:0};
+    if(sameSuppressions(this.propsSuppressed,this.nav.suppressed)){this.propSuppressionSource=this.nav.suppressed;return {chunks:0,slots:0};}
+    const stats=refreshResidentProps(this.chunks,this.nav.suppressed,(group,slot,instances)=>this.buildPropSlot(group,slot,instances));
+    this.propsSuppressed=new Set(this.nav.suppressed);this.propSuppressionSource=this.nav.suppressed;
+    if(stats.chunks){this.chunkRevision++;this.handStaticBoxes=null;this.releaseNativeShadow?.cache.invalidate();this.contacts.update(this.chunks,this.contactPrototypes,this.nearBounds,this.chunkRevision,this.nav.config.layers);}
+    return stats;
   }
   installChunk(data){const group=this.terrain(data.cx,data.cz,data);this.chunks.set(data.cx+','+data.cz,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;this.onChunkProgress?.({loaded:this.chunks.size,desired:this.chunkStream.desired.size,...this.chunkStream.summary()});}
   whenChunksReady(){return this.chunkStream?.whenIdle()??Promise.resolve({cancelled:false});}
@@ -133,6 +145,7 @@ export class WorldScene {
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){disposeAssetShadows(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;}
     if(this.chunkStream){const key=cx+','+cz+':'+range;if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
     else for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;}
+    this.syncResidentProps();
     this.contacts.update(this.chunks,this.contactPrototypes,region.bounds,this.chunkRevision,this.nav.config.layers);
   }
   villageMesh(village) {

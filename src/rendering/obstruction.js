@@ -3,15 +3,17 @@ import {SLOTS} from '../world/terrain.js';
 import {obstructionRecord,obstructionFrame,obstructionVisibility,coverageThreshold} from './obstruction-source.js';
 
 // Geometry views retain the shared immutable vertex/index arrays and add only
-// a private per-instance coverage buffer. Materials remain shared across chunks.
+// private GPU identities and per-instance coverage. Disposing a changed slot
+// cannot delete another slot or shadow proxy's vertex buffers. Materials are shared.
 export function obstructionGeometry(geometry,instances,prototype,slot,fullGeometry=geometry){
   if(!prototype.min||!prototype.max){
     if(!fullGeometry.boundingBox)fullGeometry.computeBoundingBox();
     prototype={...prototype,min:fullGeometry.boundingBox.min.toArray(),max:fullGeometry.boundingBox.max.toArray()};
   }
   if(slot===19||(prototype.group??SLOTS[slot].g)===2||prototype.max[1]-prototype.min[1]<=.72)return geometry;
-  const view=new THREE.BufferGeometry();view.index=geometry.index;
-  for(const [key,attribute] of Object.entries(geometry.attributes))view.setAttribute(key,attribute);
+  const view=new THREE.BufferGeometry();
+  if(geometry.index)view.setIndex(new THREE.BufferAttribute(geometry.index.array,geometry.index.itemSize,geometry.index.normalized));
+  for(const [key,attribute] of Object.entries(geometry.attributes))view.setAttribute(key,new THREE.BufferAttribute(attribute.array,attribute.itemSize,attribute.normalized));
   view.groups=geometry.groups.map(group=>({...group}));view.drawRange={...geometry.drawRange};
   view.boundingBox=geometry.boundingBox?.clone()??null;view.boundingSphere=geometry.boundingSphere?.clone()??null;
   const attribute=new THREE.InstancedBufferAttribute(new Float32Array(instances.length).fill(1),1).setUsage(THREE.DynamicDrawUsage);
