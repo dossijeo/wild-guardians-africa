@@ -36,6 +36,10 @@ de restaurar los centros; no se deduce un factor nuevo arbitrario por cultura.
 La tabla anterior registra el defecto antes de la corrección (commit
 `d232e70`). La calibración independiente de huellas ya está publicada en
 `24f62c6`; la integración posterior restaura escala 1 en las cinco culturas.
+La auditoría regenerada con el código corregido confirma escala 1 y alturas
+3/8/8/9/7 para Mapungubwe/Suajili/Etíope/Saheliana/Musgum; el manifiesto
+registra ahora esas dimensiones actuales. La tabla conserva la comparación
+histórica que permite identificar la reducción anterior.
 
 ## Corrección y evidencia
 
