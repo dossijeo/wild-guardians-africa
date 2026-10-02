@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
-import {createNativeVfx,createVfxAtlasRects,createVfxGeometries,packVfxSprites,vfxDefinitions,vfxSpriteVertex,vfxSpriteFragment,vfxGeometryVertex,vfxGeometryFragment,MAX_SPRITES,MAX_FX_VERTS} from '../src/rendering/vfx-native.js';
+import {createNativeVfx,createVfxAtlasRects,createVfxGeometries,packVfxSprites,vfxDefinitions,vfxSpriteVertex,vfxSpriteFragment,vfxGeometryVertex,vfxGeometryFragment,vfxRigidVertex,vfxRigidFragment,vfxShadowVertex,vfxShadowFragment,vfxEnvironment,MAX_SPRITES,MAX_FX_VERTS} from '../src/rendering/vfx-native.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url));
 const manifest=JSON.parse(read('content/manifests/vfx-native.json'));
 const source=read(manifest.source).toString().replace(/\r\n/g,'\n');
@@ -33,15 +33,21 @@ function oracle(id){
   return context;
 }
 
-test('VFX extraction traces the original atlas, 19 resources, 18 definitions and four shaders',()=>{
+test('VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders',()=>{
   assert.equal(hash(read(manifest.source)),manifest.sourceSha256);assert.equal(hash(read('src/rendering/vfx-native.js')),manifest.moduleSha256);
   assert.equal(hash(read('public'+manifest.atlas)),manifest.atlasSha256);assert.deepEqual(manifest.atlasDimensions,[4096,2048]);
   assert.equal(assets.resources.length,19);assert.equal(vfxDefinitions.length,18);assert.equal(MAX_SPRITES,760);assert.equal(MAX_FX_VERTS,48000);
   assert.equal(manifest.structuralDamage,'external');assert.equal(manifest.previewContactsOnly,true);
-  for(const [name,v,f] of [['spriteP',vfxSpriteVertex,vfxSpriteFragment],['fxP',vfxGeometryVertex,vfxGeometryFragment]]){
-    const match=source.match(new RegExp('const '+name+'=program\\(`([\\s\\S]*?)`,\\s*`([\\s\\S]*?)`\\);'));assert.equal(v,match[1]);assert.equal(f,match[2]);
+  const worldVertex=source.match(/const worldVertex=`([\s\S]*?)`;/)[1];
+  for(const [name,v,f] of [['spriteP',vfxSpriteVertex,vfxSpriteFragment],['fxP',vfxGeometryVertex,vfxGeometryFragment],['meshP',vfxRigidVertex,vfxRigidFragment],['shadowP',vfxShadowVertex,vfxShadowFragment]]){
+    const match=source.match(new RegExp('const '+name+'=program\\(`([\\s\\S]*?)`,\\s*`([\\s\\S]*?)`\\);'));assert.equal(v,match[1].replace('${worldVertex}',worldVertex));assert.equal(f,match[2]);
   }
   const original=JSON.parse(read('references/extracted/Wild_Guardians_VFX_Atelier_V4/embedded-assets.json'));assert.deepEqual(assets,original);
+});
+
+test('Day, sunset and night environment values match original source lighting and matrices',()=>{
+  const context=vm.createContext({});vm.runInContext('const TAU=Math.PI*2;'+section('const clamp=','let seed=')+'const settings={nightFill:.14};'+section("let environmentMode='sunset'",'// Test maquettes only.')+'this.env=v=>{environmentValue=environmentTarget=v;return environment(0)};',context);
+  for(const value of [0,.15,.43,.7,1])assert.deepEqual(json(vfxEnvironment(value)),json(context.env(value)));
 });
 
 test('All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights',()=>{

@@ -124,9 +124,8 @@ export class BuildingDestructionPass {
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setClearColor(0,0);renderer.setRenderTarget(this.target);renderer.render(this.scene,camera);this.key=key;
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
-  renderSmoke(camera,world){
-    if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;
-    camera.updateWorldMatrix(true,false);for(const building of this.buildings)if(building.effects.native.smoke.length)building.effects.prepareSmoke(camera);
+  captureDepth(camera,world){
+    camera.updateWorldMatrix(true,false);
     const renderer=this.renderer,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=renderer.getRenderTarget(),autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled,materials=new Map();
     if(this.smokeDepth.width!==size.x||this.smokeDepth.height!==size.y)this.smokeDepth.setSize(size.x,size.y);
     world.traverse(object=>{for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[])if(!materials.has(material))materials.set(material,{visible:material.visible,colorWrite:material.colorWrite});});
@@ -135,6 +134,12 @@ export class BuildingDestructionPass {
       for(const material of materials.keys()){material.colorWrite=false;if(material.transparent||!material.depthWrite)material.visible=false;}
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);renderer.render(world,camera);
     }finally{for(const [material,saved] of materials)Object.assign(material,saved);renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+  }
+  renderSmoke(camera,world,{depthPrepared=false}={}){
+    if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;
+    camera.updateWorldMatrix(true,false);for(const building of this.buildings)if(building.effects.native.smoke.length)building.effects.prepareSmoke(camera);
+    if(!depthPrepared)this.captureDepth(camera,world);
+    const renderer=this.renderer,autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled;
     try{renderer.autoClear=false;renderer.shadowMap.enabled=false;renderer.render(this.smokeScene,camera);}finally{renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   dispose(){for(const building of [...this.buildings])building.dispose();this.target.dispose();this.smokeDepth.dispose();}

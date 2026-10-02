@@ -19,8 +19,10 @@ random = section('let seed=', 'const settings=')
 settings = section('const settings=', 'const canvas=')
 definitions = section('const definitions=', 'let current=')
 shaders = ''
-for name, exported in [('spriteP', 'vfxSprite'), ('fxP', 'vfxGeometry')]:
+world_vertex = re.search(r'const worldVertex=`([\s\S]*?)`;', code).group(1)
+for name, exported in [('spriteP', 'vfxSprite'), ('fxP', 'vfxGeometry'), ('meshP', 'vfxRigid'), ('shadowP', 'vfxShadow')]:
     vertex, fragment = re.search(r'const '+name+r'=program\(`([\s\S]*?)`,\s*`([\s\S]*?)`\);', code).groups()
+    vertex = vertex.replace('${worldVertex}', world_vertex)
     shaders += f'export const {exported}Vertex={json.dumps(vertex)};\nexport const {exported}Fragment={json.dumps(fragment)};\n'
 shapes = section('function tri(', 'class Builder{')
 shapes = 'export function createVfxGeometries(){\n'+shapes+'''
@@ -46,6 +48,8 @@ pack = pack.replace('if(!list.length)return;', 'const spriteData=new Float32Arra
 pack += 'return {count,data:spriteData};}\n'
 
 module = '// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\n'+helpers+shaders+shapes+style+rects+'export const MAX_SPRITES=760,MAX_FX_VERTS=48000;\n'+pack
+environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
+module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
 module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
 module += '''
 export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={}}={}){
