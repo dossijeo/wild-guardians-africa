@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Muro nativo en la finca</title><style>body{margin:0;font:14px system-ui}header{position:absolute;z-index:2;padding:12px;background:#fff9ed}button{padding:8px;margin:4px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><header>Prueba aislada con WorldScene y comandos de juego: centro, mijo, trabajador y muro de adobe pagados. No modifica partidas guardadas.<br><button id="hit">Golpe lógico de 40 PV</button><button id="repair">Solicitar reparación pagada</button><span id="status" role="status">Cargando finca…</span></header><canvas id="world" aria-label="Muro nativo en el mundo original"></canvas><script type="module">
+import {hitStructure} from '/src/simulation/rules.js';
+import * as Game from '/src/simulation/game.js';
+import {Navigation} from '/src/world/navigation.js';
+import {findInitialLocationAsync} from '/src/world/villages.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {json} from '/src/rendering/assets.js';
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');
+Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);
+let site;
+for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:location.center.x+x,z:location.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
+Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-contract',{olderMale:1});
+let defense;
+for(let z=-9;z<=9&&!defense;z+=2.5)for(let x=7;x<16&&!defense;x+=2.5){const p={x:location.center.x+x,z:location.center.z+z};if(nav.placement(p.x,p.z,.8).valid){Game.placeStructure(state,'qa-wall',{kind:'wall',material:'adobe',...p},nav);defense=state.structures.at(-1);}}
+if(!defense)throw new Error('No hay posición legal para el muro de prueba');
+const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>document.querySelector('#status').textContent=e.message;world.qualitySetting('media');await world.load(state,nav,payload);
+state.tutorial.step='done';world.focus(defense);const groundY=nav.field.surface(defense.x,defense.z);world.controls.target.set(defense.x,groundY+.8,defense.z);world.camera.position.set(defense.x+6,groundY+7,defense.z+10);world.controls.update();
+document.querySelector('#hit').onclick=()=>{hitStructure(defense,40);nav.setState(state);};
+let repairId=0;document.querySelector('#repair').onclick=()=>{try{Game.requestRepair(state,'qa-repair-'+repairId++,defense.id);}catch(error){document.querySelector('#status').textContent=error.message;}};
+let last=performance.now();function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;Game.advanceReal(state,dt,nav);world.render(dt);document.querySelector('#status').textContent=`Muro ${defense.hp}/${defense.maxHp} PV · ${defense.status} · saldo ${state.ledger.balance.n} · hora simulada ${state.time.toFixed(1)} s · ${state.result??'partida activa'}`;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>

@@ -1,0 +1,19 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Geometría nativa de Bastión</title><style>body{margin:0;font:14px system-ui;background:#dfdcc8}nav{position:absolute;z-index:2;background:#fff9ed;padding:12px}label,button{margin:6px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><nav>Visor de geometría de producción. Estas piezas de prueba no modifican partidas ni dinero.<br><label>Vida restante <input id="health" type="range" min="0" max="100" value="100"></label><label><input id="gate" type="checkbox">Puertas</label><button id="collapse">Colapso nativo de 1,4 s</button><button id="repair">Reconstruir</button><span id="status" role="status">Cargando las veinte mallas y sus puentes originales…</span></nav><canvas id="world" aria-label="Cinco defensas originales de Bastión"></canvas><script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {Assets,json} from '/src/rendering/assets.js';
+import {NativeWall} from '/src/rendering/walls.js';
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#world'),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd5be');scene.add(new THREE.HemisphereLight('#f4efdc','#605b3a',2));const sun=new THREE.DirectionalLight('#fff1d5',3);sun.position.set(-8,15,9);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.set(3,8,16);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.8,0);controls.update();
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(45,35),new THREE.MeshStandardMaterial({color:'#d6c4a1',roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.015;scene.add(ground);
+const assets=new Assets(),prototypes=await assets.walls(await json('/content/walls.json'));
+const materials=['zarzas','empalizada','adobe','reforzado','piedra'],hp=[100,200,300,400,500],entities=materials.map((material,i)=>({id:'qa-'+material,material,gate:false,x:(i-2)*3.8,z:0,hp:hp[i],maxHp:hp[i],status:'intact',collapseRemaining:0})),walls=entities.map(e=>{const wall=new NativeWall(prototypes,e);wall.position.x=e.x;scene.add(wall);return wall;});
+function setHealth(percent){entities.forEach(e=>{e.hp=e.maxHp*percent/100;e.status=percent===0?'ruined':'intact';e.collapseRemaining=0;});walls.forEach((wall,i)=>wall.update(entities[i]));}
+document.querySelector('#health').oninput=e=>setHealth(Number(e.target.value));
+document.querySelector('#gate').onchange=event=>{entities.forEach((e,i)=>{const ratio=e.hp/e.maxHp;e.gate=event.target.checked;e.maxHp=hp[i]*(e.gate?.6:1);e.hp=e.maxHp*ratio;});};
+document.querySelector('#collapse').onclick=()=>{setHealth(20);entities.forEach(e=>{e.status='collapsing';e.collapseRemaining=1.4;});};
+document.querySelector('#repair').onclick=()=>{setHealth(100);document.querySelector('#health').value=100;};
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();
+let last=performance.now();function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;entities.forEach((e,i)=>{if(e.status==='collapsing'){e.collapseRemaining=Math.max(0,e.collapseRemaining-dt);if(!e.collapseRemaining){e.status='ruined';e.hp=0;}}walls[i].update(e);});controls.update();renderer.render(scene,camera);document.querySelector('#status').textContent=materials.join(' · ')+' · '+(entities[0].gate?'puertas':'muros')+' · '+Math.round(walls[0].visual*100)+' % vida visual · '+entities[0].status+' · superficies opacas y geometría regional original';requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>

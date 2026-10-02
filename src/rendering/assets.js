@@ -31,9 +31,12 @@ export class Assets {
   async walls(pack) {
     const map=await this.texture(pack.texture,true),material=new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}),result={};
     await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
-      const [positions,normals,uv,index]=await Promise.all([piece.p,piece.n,piece.uv,piece.i].map(p=>bytes(p.url)));
+      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url)));
+      const morph=Object.fromEntries(await Promise.all(Object.entries(piece.morph).map(async([dest,bridge])=>{
+        const [p,n]=await Promise.all([bytes(bridge.p.url),bytes(bridge.n.url)]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
+      })));
       const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
-      const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
+      const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
     }));return result;
   }
 }
