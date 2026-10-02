@@ -37,3 +37,17 @@ test('An impossible full-group entry does not silently drop the animals that cou
   assert.equal(s.raid,null);assert.equal(s.nextId,nextId);
   assert.ok(s.messages.at(-1).text.includes('grupo completo'));
 });
+test('Structure connectivity preflight leaves the actual crop target priority unchanged',()=>{
+  const nav=world(),s=ready(nav);s.time=0;Game.plant(s,'crop','mijo',5,0,nav);s.time=400;
+  const calls=[],path=nav.path.bind(nav);nav.path=(...args)=>{calls.push(args[1].id);return path(...args);};
+  spawnRaid(s,{group:['warthog']},nav);
+  assert.ok(calls[0].startsWith(`approach-${s.structures[0].id}-`));
+  updateRaid(s,.1,nav);assert.equal(s.raid.animals[0].targetId,s.plants[0].id);
+  assert.ok(s.raid.animals[0].reservation.startsWith('crop:'));
+});
+test('A reachable crop permits entry when every structure approach is blocked',()=>{
+  const nav=world(),s=ready(nav);s.time=0;Game.plant(s,'crop','mijo',5,0,nav);s.time=400;
+  const path=nav.path.bind(nav);nav.path=(...args)=>args[1].id?.startsWith('approach-structure-')?null:path(...args);
+  spawnRaid(s,{group:['warthog']},nav);assert.equal(s.raid.animals.length,1);
+  updateRaid(s,.1,nav);assert.equal(s.raid.animals[0].targetId,s.plants[0].id);
+});

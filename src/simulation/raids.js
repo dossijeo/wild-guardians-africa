@@ -41,7 +41,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
         for(const adjustment of [0,1,-1,2,-2]){
           const offset=clusterOffset+(i-(group.length-1)/2)*4+adjustment;
           const point={x:focus.x+(side<2?(side?1:-1)*46:offset),z:focus.z+(side>=2?(side===3?1:-1)*46:offset)};
-          if(nav.walkable(point.x,point.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&targetFor(s,{...point,radius},nav)){
+          if(nav.walkable(point.x,point.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&connectedEntry(s,{...point,radius},nav)){
             spawn=point;break;
           }
         }
@@ -64,6 +64,14 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   notice(s,'¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.',animals[0].id);emit(s,'RaidSpawned');
 }
 function release(s,a) {if(a.reservation)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function connectedEntry(s,a,nav){
+  // Spawn only needs proof that some target is reachable. Check the larger
+  // structure service rings first; actual target priority is still targetFor.
+  for(const structure of s.structures.filter(c=>c.status==='intact'&&!s.raid?.reservations[`structure:${c.id}`])){
+    if(reachableApproach(a,structure,nav,spellAt(s,'shield',structure)))return true;
+  }
+  return !!targetFor(s,a,nav);
+}
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='center'?3.1:target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
