@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {createNativeDestructionEffects,destructionSmokeVertex,destructionSmokeFragment,destructionDebrisVertex,destructionDebrisFragment,destructionDebrisVertices} from './destruction-effects-native.js';
 import {terrainTriangleHeight} from './hand-terrain.js';
+import {toonDebris} from './african-toon.js';
 const glsl=source=>source.replace('#version 300 es\n','');
 export class BuildingEffects {
   constructor(building){
@@ -14,7 +15,8 @@ export class BuildingEffects {
     const vertex=destructionDebrisVertex.replace('uniform mat4 uVP;uniform vec3 uSun;out vec3 vColor;','uniform mat4 uVP;uniform vec3 uSun;uniform vec3 uEye;uniform float uWorldScale;uniform float uWorldSun;uniform float uWorldAmbient;out float vDistance;out vec3 vColor;')
       .replace('vColor=aColor*(', 'vDistance=length(uEye-p)*uWorldScale;vColor=aColor*(').replace('n.y*.5+.5)+vec3', 'n.y*.5+.5)*uWorldAmbient+vec3').replace('*max(dot(n,uSun),0.));','*max(dot(n,uSun),0.)*uWorldSun);');
     const fragment=destructionDebrisFragment.replace('in vec3 vColor;out vec4 fragColor;', 'in vec3 vColor;in float vDistance;uniform vec3 uWorldFogColor;uniform vec2 uWorldFogRange;out vec4 fragColor;').replace('vec4(pow(x,vec3(1./2.2)),1.)','vec4(mix(pow(x,vec3(1./2.2)),uWorldFogColor,smoothstep(uWorldFogRange.x,uWorldFogRange.y,vDistance)),1.)');
-    this.debris=new THREE.Mesh(geometry,new THREE.RawShaderMaterial({vertexShader:glsl(vertex),fragmentShader:glsl(fragment),glslVersion:THREE.GLSL3,uniforms:building.uniforms,side:THREE.DoubleSide,toneMapped:false}));
+    const cel=toonDebris(vertex,fragment);
+    this.debris=new THREE.Mesh(geometry,new THREE.RawShaderMaterial({vertexShader:glsl(cel.vertex),fragmentShader:glsl(cel.fragment),glslVersion:THREE.GLSL3,uniforms:building.uniforms,side:THREE.DoubleSide,toneMapped:false}));
     this.debris.frustumCulled=false;this.debris.raycast=()=>{};this.debris.onBeforeRender=(renderer,scene,camera)=>building.cameraUniforms(this.debris,camera);
     const smokeGeometry=new THREE.InstancedBufferGeometry(),corners=new Float32Array([-1,-1,1,-1,1,1,-1,-1,1,1,-1,1]);smokeGeometry.setAttribute('aCorner',new THREE.BufferAttribute(corners,2));smokeGeometry.setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:6},(_,i)=>[corners[i*2],corners[i*2+1],0]).flat(),3));
     this.smokeBuffer=new THREE.InstancedInterleavedBuffer(new Float32Array(512*11),11);

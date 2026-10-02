@@ -8,6 +8,7 @@ import {numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {terrainTriangleHeight} from '../src/rendering/hand-terrain.js';
+import {AfricanToon} from '../src/rendering/african-toon.js';
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/destruction.json',import.meta.url))).buildings;
 function originalModel(building){
   const bytes=readFileSync(new URL('../public'+building.url,import.meta.url)),array=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),view=new DataView(array);let json,bin;
@@ -22,6 +23,22 @@ function fakeRenderer(){
     getDrawingBufferSize(out){return out.copy(this.size)},getRenderTarget(){return this.target},setRenderTarget(target){this.target=target},getClearColor(out){return out.copy(this.color)},getClearAlpha(){return this.alpha},setClearColor(color,alpha){this.color.set(color);this.alpha=alpha},render(){this.renders++;if(this.fail)throw new Error('fallo GPU de prueba');}};
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
+
+test('all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure',()=>{
+  const toon=new AfricanToon(),renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer);pass.environmentUniforms=toon.environmentUniforms;
+  const textures=[new THREE.Texture(),new THREE.Texture()];toon.environment(textures,{value:.25});assert.equal(toon.uniforms.uExposure.value,1);
+  for(const [index,template] of templates.entries()){
+    const house=new NativeBuilding(template,{id:'hdr-'+index,hp:600,maxHp:600,status:'intact',yaw:.9},pass),camera=new THREE.PerspectiveCamera();house.position.set(20,3,-11);house.updateWorldMatrix(true,true);camera.position.set(29,8,-6);camera.lookAt(house.position);camera.updateWorldMatrix(true,false);house.cameraUniforms(house.outer,camera);
+    for(const material of [house.outer.material,house.inner.material,house.ash.material,house.effects.debris.material]){
+      assert.equal(material.uniforms.uEnvDay,pass.environmentUniforms.uEnvDay);assert.equal(material.uniforms.uEnvNight.value,textures[1]);assert.equal(material.uniforms.uEnvYaw.value,.25);assert.equal(material.uniforms.uExposure.value,1);assert.ok(material.fragmentShader.includes('environment4(normalize(mat3(uToonModel)*reflect(-V,N))'));
+    }
+    const localPoint=new THREE.Vector3(.3,1,-.2),normal=new THREE.Vector3(0,0,1),localV=house.uniforms.uEye.value.clone().sub(localPoint).normalize(),reflected=localV.clone().negate().reflect(normal).transformDirection(house.uniforms.uToonModel.value);
+    const worldPoint=localPoint.clone().applyMatrix4(house.matrixWorld),worldNormal=normal.clone().transformDirection(house.matrixWorld),reference=camera.position.clone().sub(worldPoint).normalize().negate().reflect(worldNormal);
+    assert.ok(reflected.distanceTo(reference)<1e-12);assert.ok(!house.outer.customDepthMaterial.fragmentShader.includes('environment4'));assert.ok(house.effects.debris.material.vertexShader.includes('vDebrisBase=aColor'));
+    house.dispose();
+  }
+  pass.dispose();textures.forEach(t=>t.dispose());
+});
 
 test('removing world fog also removes it from DEST buildings, debris and smoke',()=>{
   const renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer),house=new NativeBuilding(templates[0],{id:'clear-world',hp:600,maxHp:600,status:'intact'},pass),world=new THREE.Scene(),camera=new THREE.PerspectiveCamera();

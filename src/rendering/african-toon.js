@@ -6,7 +6,7 @@ import {fluidLightingFunctions,environmentFunctions} from './fluid-lighting-sour
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
-    this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1.15},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1}};
+    this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1}};
     this.materials=new WeakSet();
     this.environmentUniforms={uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
   }
@@ -81,8 +81,18 @@ export class AfricanToon {
 
 // DEST keeps its original damage field, textures, cut-outs, collapse and emission.
 export function toonDestruction(fragment){
-  return fragment.replace('out vec4 fragColor;', 'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType;\n#define uLightDir uSun\n'+toonFunctions+'\nout vec4 fragColor;')
-    .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
+  return fragment.replace('out vec4 fragColor;', 'uniform mat4 uToonModel;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n'+toonFunctions+'\n'+environmentFunctions+'\nout vec4 fragColor;')
+    .replace('toSRGB(tonemap(color))','africanToon4(color,base,N,V,L,uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),rough):vec3(0.),rough,sh,0.,0.,metal,max(dot(N,V),0.),(uToonModel*vec4(vWorld,1.)).xyz)+toSRGB(emit)');
+}
+
+export function toonDebris(vertex,fragment){
+  vertex=vertex.replace('uniform mat4 uVP;', 'out vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uVP;')
+    .replace('vColor=aColor*(', 'vDebrisPosition=p;vDebrisNormal=n;vDebrisBase=aColor;vColor=aColor*(');
+  const declarations='in vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;uniform mat4 uToonModel;uniform vec3 uEye,uSun;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uNativeEnvEnabled,uEnvYaw;uniform sampler2D uEnvDay,uEnvNight;\n#define uLightDir uSun\n';
+  fragment=fragment.replace('out vec4 fragColor;', 'out vec4 fragColor;\n'+declarations+toonFunctions+'\n'+environmentFunctions)
+    .replace('pow(x,vec3(1./2.2))',`africanToon4(vColor,toLinear4(vDebrisBase),N,V,normalize(uSun),uNativeEnvEnabled>.5?environment4(normalize(mat3(uToonModel)*reflect(-V,N)),.9):vec3(0.),.9,1.,0.,0.,0.,max(dot(N,V),0.),(uToonModel*vec4(vDebrisPosition,1.)).xyz)`)
+    .replace('void main(){', 'void main(){vec3 N=normalize(vDebrisNormal);if(!gl_FrontFacing)N=-N;vec3 V=normalize(uEye-vDebrisPosition);');
+  return {vertex,fragment};
 }
 
 export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
