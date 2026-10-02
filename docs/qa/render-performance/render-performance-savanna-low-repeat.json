@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-02T21:12:30.987Z",
+  "scenario": {
+    "case": 1,
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "seed": 712,
+    "camera": [
+      216.29611361550624,
+      27.425634827160323,
+      65.92358614418451
+    ],
+    "target": [
+      199.5936382952636,
+      12.250732709721943,
+      35.34991014827507
+    ],
+    "quality": "baja",
+    "shadows": false,
+    "shadowMapSize": [
+      768,
+      768
+    ],
+    "batching": true,
+    "view": "village",
+    "night": false,
+    "phase": null,
+    "simulatedElapsed": 0,
+    "workers": 4,
+    "animals": 5,
+    "plants": 16,
+    "chunks": 25
+  },
+  "device": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "hardwareConcurrency": 16,
+    "deviceMemoryGiB": 32,
+    "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "glVendor": "Google Inc. (Intel)",
+    "viewport": [
+      1280,
+      720
+    ],
+    "canvas": [
+      1280,
+      720
+    ],
+    "dpr": 1.25,
+    "hiddenDuringRun": false
+  },
+  "warmupFrames": 30,
+  "cpuSubmissionMs": {
+    "count": 180,
+    "mean": 9.655000000695388,
+    "p50": 9.5,
+    "p95": 11.800000011920929,
+    "max": 14
+  },
+  "frameIntervalMs": {
+    "count": 180,
+    "mean": 32.61055555555552,
+    "p50": 33.20000000001164,
+    "p95": 49.79999999998836,
+    "max": 50
+  },
+  "averageObservedFps": 30.664917630624064,
+  "submittedCalls": {
+    "count": 180,
+    "mean": 106,
+    "p50": 106,
+    "p95": 106,
+    "max": 106
+  },
+  "submittedTriangles": {
+    "count": 180,
+    "mean": 1171005,
+    "p50": 1171005,
+    "p95": 1171005,
+    "max": 1171005
+  },
+  "threeResourceCounts": {
+    "calls": 106,
+    "triangles": 1171005,
+    "lines": 0,
+    "points": 0,
+    "geometries": 211,
+    "textures": 40,
+    "programs": 22
+  },
+  "simulationUnchanged": true,
+  "errors": [],
+  "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX but no GPU timer/fence. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+}
