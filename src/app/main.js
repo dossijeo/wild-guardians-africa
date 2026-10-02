@@ -12,12 +12,13 @@ import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
+import {NativeGuardian} from '../ui/guardian.js';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 const audio=new AudioSystem(settings);
-let hudSize='',frameImages=null;
+let hudSize='',frameImages=null,guardian=null;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
 const button=(id,text,cls='')=>`<button id="${id}" class="${cls}">${text}</button>`;
@@ -25,7 +26,7 @@ function error(message){document.querySelector('.error-banner')?.remove();const 
 function safe(action){try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save(){if(!state)return;state.savedAt=Date.now();try{saves.save(state);}catch(e){error('No se pudo guardar la partida: '+e.message);}}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){save();state=null;}clearWorld();screen='menu';
   app.innerHTML='<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="/menu/index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>';
@@ -164,9 +165,10 @@ function contextPanel() {
 }
 const tutorialText={intro:'Soy el Espíritu que cuida esta tierra. La maldición despierta al caer el sol. Construye un centro, siembra y deja que tu comunidad trabaje contigo.',center:'Coloca tu primer centro de trabajo. Cuesta 800 monedas. Busca un terreno libre junto al poblado.',plant:'Siembra los cultivos que puedas cuidar. Cada planta tiene un coste, un tiempo y sus propios riegos.',hire:'Cuando estés listo, contrata al equipo de hoy. La jornada se paga una sola vez; elige cantidades según tu presupuesto.',observe:'Los trabajadores siembran y riegan. El brote empezará a crecer cuando completen su primer cuidado.',harvest:'Toca una planta madura y solicita recoger su grupo. Ganarás las monedas cuando cada caja llegue al centro.',done:'Tu primera cosecha ha llegado. Sigue cultivando y conserva monedas para la próxima jornada.'};
 function narrator() {
-  const el=document.querySelector('#narrator');if(state.tutorial.step==='done'){el.innerHTML='';return;}
-  const step=state.tutorial.step;el.innerHTML=`<section class="narrator"><img class="spirit" src="/assets/5170de5cc32e7da971a861db79d090b4bdc2c6cece5b22e4b1c06fe3de59e464.webp" alt="El Espíritu"><div><small>El Espíritu</small><p>${esc(tutorialText[step]??'Cuida la tierra y escucha al poblado.')}</p></div>${step==='intro'?button('intro-next','Comenzar'):''}</section>`;
-  bind('intro-next',()=>{Game.resume(state,'intro');state.tutorial.step=state.structures.length?'plant':'center';});
+  const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message));
+  const step=state.tutorial.step,gestures={intro:'greeting',center:'speak',plant:'curious',hire:'acknowledge',observe:'idle',harvest:'reveal',done:'farewell'};
+  guardian.show({key:step,text:tutorialText[step]??'Cuida la tierra y escucha al poblado.',gesture:gestures[step]??'speak',closeAfter:step==='done',
+    advance:step==='intro'?()=>safe(()=>{Game.resume(state,'intro');state.tutorial.step=state.structures.length?'plant':'center';}):null});
 }
 function hiringDialog() {
   const selection={...state.hiringSelection},modal=document.querySelector('#modal');
@@ -209,7 +211,7 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state) {
     const eventIndex=state.events.at(-1)?.id;
-    try {Game.advanceReal(state,dt,nav);world.render(dt);audio.process(state.events);updateUI();}
+    try {Game.advanceReal(state,dt,nav);world.render(dt);audio.process(state.events);updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     const newEvents=state.events.filter(e=>e.id!==eventIndex&&['Dawn','RaidEnded','CampaignWon'].includes(e.type));
     if(newEvents.length&&newEvents.at(-1).id!==frame.lastSaveEvent){frame.lastSaveEvent=newEvents.at(-1).id;save();}
