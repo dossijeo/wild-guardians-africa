@@ -179,7 +179,7 @@ function setTutorialInteraction(blocking){
 function narrator() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message));
   tutorial?.update();const message=tutorial?.presentation();setTutorialInteraction(message?.blocking??false);
-  if(!message){guardian.hide();return;}
+  if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return;}
   const advance=message.blocking?()=>safe(()=>{tutorial.acknowledge();save();}):null;
   guardian.show({key:message.id+':'+(message.blocking?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
