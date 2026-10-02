@@ -56,20 +56,29 @@ export class Navigation {
       if(o.kind==='wall'){
         const dx=x-o.x,dz=z-o.z,c=Math.cos(o.yaw??0),s=Math.sin(o.yaw??0);
         const localX=dx*c-dz*s,localZ=dx*s+dz*c;
-        const width=o.gate?1.09*(o.material==='reforzado'?1.6:['adobe','piedra'].includes(o.material)?1.4:1):1.09;
-        return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22+radius;
+        const scale=o.gate?(o.material==='reforzado'?1.6:['adobe','piedra'].includes(o.material)?1.4:1):1,width=1.09*(o.baseScaleX??1)*scale;
+        return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22*scale+radius;
       }
       if(o.footprint)return footprintDistance(o.footprint,x,z)<radius;
       return distance(o,{x,z})<o.radius+radius;
     }))return false;
     return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius);
   }
-  placement(x,z,radius=1) {
+  placement(x,z,radius=1,{ignoreWalls=false}={}) {
     if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
-    if(this.obstacles.some(o=>o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius))return {valid:false,reason:'La construcción solapa otro edificio'};
+    if(this.obstacles.some(o=>!(ignoreWalls&&o.kind==='wall')&&(o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius)))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(x,z,radius+4);
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
     return {valid:true,suppress:props.filter(p=>distance(p,{x,z})<radius+(p.radius??.5)).map(p=>p.id)};
+  }
+  wallPlacement(wall) {
+    const scale=wall.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[wall.material]??1):1,half=1.09*(wall.baseScaleX??1)*scale,depth=.22*scale,c=Math.cos(wall.yaw),s=Math.sin(wall.yaw),suppressed=new Set();
+    const steps=Math.max(1,Math.ceil(half*2/.35));
+    for(let i=0;i<=steps;i++)for(const dz of [-depth,0,depth]){
+      const dx=-half+half*2*i/steps,check=this.placement(wall.x+dx*c+dz*s,wall.z-dx*s+dz*c,.05,{ignoreWalls:true});
+      if(!check.valid)return check;for(const id of check.suppress??[])suppressed.add(id);
+    }
+    return {valid:true,suppress:[...suppressed]};
   }
   placementFootprint(building) {
     const polygon=building.footprint;
@@ -175,8 +184,8 @@ export class Navigation {
     for(const obstacle of this.obstacles){
       if(obstacle.id===ignore||worker&&(obstacle.gate||obstacle.kind==='shield'))continue;
       if(obstacle.kind==='wall'){
-        const width=(obstacle.gate?1.09*(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1.09)+radius;
-        const depth=.22+radius,c=Math.cos(obstacle.yaw??0),s=Math.sin(obstacle.yaw??0);
+        const scale=obstacle.gate?(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1,width=1.09*(obstacle.baseScaleX??1)*scale+radius;
+        const depth=.22*scale+radius,c=Math.cos(obstacle.yaw??0),s=Math.sin(obstacle.yaw??0);
         const polygon=[[-width,-depth],[width,-depth],[width,depth],[-width,depth]].map(([x,z])=>({x:obstacle.x+x*c+z*s,z:obstacle.z-x*s+z*c}));
         if(sweptFootprintDistance(start,end,polygon)<1e-9)return false;
       }else if(obstacle.footprint){

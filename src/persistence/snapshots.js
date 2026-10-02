@@ -20,6 +20,7 @@ export function validateSnapshot(state) {
     }
   }
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
+  for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
   const harvested=new Set();
   for(const crate of state.crates){
     // Older version-1 snapshots lack provenance. Validate it whenever present.

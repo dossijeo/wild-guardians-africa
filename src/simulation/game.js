@@ -5,6 +5,7 @@ import {permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nex
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
+import {wallStroke,wallLayout} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
@@ -45,6 +46,41 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind});
     if(kind==='center')recoverDisplacedWorkers(s);
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
+  });
+}
+export function buildWallChain(s,id,material,points,nav,options={}) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+  const spec=wallSpec(material),slots=wallStroke(points,s.structures,options);
+  if(!slots.length)throw new Error('Ese tramo ya está ocupado o es demasiado corto');
+  const newPieces=slots.map((slot,i)=>({id:`structure-${s.nextId+i}`,created:s.sequence+i,kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id}));
+  const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
+  layout.ensureAutomaticGates();
+  const converted=layout.pieces.filter(p=>p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
+  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp}));
+  for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
+  const checks=[...newPieces,...updates.filter(p=>!newPieces.some(e=>e.id===p.id)).map(p=>({...s.structures.find(e=>e.id===p.id),...p}))],suppressed=new Set();
+  for(const piece of checks){
+    const check=nav.wallPlacement(piece);if(!check.valid)throw new Error(check.reason);
+    const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;
+    if(s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4))throw new Error('El trazado solapa un cultivo');
+    for(const key of check.suppress??[])suppressed.add(key);
+  }
+  return commit(s,id,'wall',()=>{
+    transact(s.ledger,id,rational(-spec.cost*newPieces.length));
+    for(const update of updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
+    s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...[...suppressed].filter(key=>!s.suppressed.includes(key)));nav.setState(s);
+    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:converted.length});
+  });
+}
+export function removeWall(s,id,targetId,nav) {
+  return commit(s,id,'wall',()=>{
+    const target=s.structures.find(e=>e.id===targetId&&e.kind==='wall');if(!target)throw new Error('No existe esa defensa');
+    const tasks=new Set(s.tasks.filter(t=>t.targetId===targetId).map(t=>t.id));
+    for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';}
+    s.tasks=s.tasks.filter(t=>t.targetId!==targetId);s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
+    // Removal opens the graph: never call ensureAutomaticGates here or on reload.
+    emit(s,'WallRemoved',{targetId});
   });
 }
 export function plant(s,id,species,x,z,nav) {

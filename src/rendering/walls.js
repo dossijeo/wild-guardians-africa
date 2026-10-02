@@ -35,7 +35,8 @@ export class NativeWall extends THREE.Group {
     if(entity.status!=='intact'||seconds===undefined){this.target=target;this.from=visual;this.damageAge=.48;}
     if(this.visual===visual&&this.gate===entity.gate)return;
     this.visual=visual;this.gate=entity.gate;
-    this.scale.setScalar(entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1);
+    const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;
+    this.scale.set((entity.baseScaleX??1)*scale,scale,scale);
     const stages=wallStages({material:entity.material,kind:entity.gate?'gate':'wall',visual});
     const key=stages.map(s=>s.key+'>'+s.dest).join('|');
     if(key!==this.stageKey){
