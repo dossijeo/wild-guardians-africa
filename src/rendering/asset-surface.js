@@ -11,16 +11,18 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
   const material=new THREE.MeshStandardMaterial({map:textures.baseColor,normalMap:textures.normal,roughnessMap:textures.metallicRoughness,metalnessMap:textures.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:THREE.DoubleSide});
   material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);
   material.userData.nativeSurface=surface;
-  const uniforms={uNativeSurface:{value:new THREE.Vector4(...surface.params)},uNativeMinY:{value:bounds.min.y},uNativeSizeY:{value:bounds.max.y-bounds.min.y}};
+  const uniforms={uNativeVolcanicGlow:{value:pack.material.volcanicGlow??0},uNativeSurface:{value:new THREE.Vector4(...surface.params)},uNativeMinY:{value:bounds.min.y},uNativeSizeY:{value:bounds.max.y-bounds.min.y}};
+  material.userData.nativeVolcanicGlow=uniforms.uNativeVolcanicGlow;
   material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);
     shader.vertexShader='varying float vNativeHeight;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvNativeHeight=position.y;');
-    shader.fragmentShader='varying float vNativeHeight;uniform vec4 uNativeSurface;uniform float uNativeMinY,uNativeSizeY;\n'+shader.fragmentShader;
+    shader.fragmentShader='varying float vNativeHeight;uniform vec4 uNativeSurface;uniform float uNativeMinY,uNativeSizeY,uNativeVolcanicGlow;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
       #ifdef USE_ROUGHNESSMAP
         roughnessFactor=clamp(mix(roughnessFactor,texture2D(roughnessMap,vRoughnessMapUv).g,.26),.24,.98);
       #endif
+      vec3 nativeGlowTexel=sRGBTransferOETF(vec4(diffuseColor.rgb,1.)).rgb;
       vec3 nativeTexel=pow(max(diffuseColor.rgb,vec3(0.)),vec3(1./2.2));
       float nativeLeaf=smoothstep(.018,.13,nativeTexel.g-nativeTexel.r*.87)*smoothstep(.06,.20,nativeTexel.g)*uNativeSurface.z;
       roughnessFactor=mix(roughnessFactor,.54,nativeLeaf);

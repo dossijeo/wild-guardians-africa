@@ -3,6 +3,7 @@ import {toonFunctions,waterFunctions} from './african-toon-source.js';
 import {WATER_DEFAULTS,waterPalette,waterSeed} from './world-atmosphere.js';
 import {fluidLightingFunctions,environmentFunctions} from './fluid-lighting-source.js';
 import {groundLightingFunctions} from './ground-lighting-source.js';
+import {volcanicFunctions} from './volcanic-source.js';
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
@@ -34,7 +35,7 @@ export class AfricanToon {
       shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
-      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+groundLightingFunctions:'')+'\nvoid main() {');
+      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+groundLightingFunctions:'')+'\n'+(material.userData.nativeSurface?volcanicFunctions:'')+'\nvoid main() {');
       if(material.userData.horizonBounds){
         shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
@@ -65,7 +66,8 @@ export class AfricanToon {
         #endif
         float toonLeaf=${material.userData.nativeSurface?'nativeLeaf':'smoothstep(.018,.13,diffuseColor.g-diffuseColor.r*.87)*smoothstep(.06,.20,diffuseColor.g)'};
         vec3 toonReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,toonN),roughnessFactor):reflectedLight.indirectSpecular;
-        outgoingLight=toLinear4(africanToon4(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':material.userData.nativeSurface?'nativeWet':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld))+totalEmissiveRadiance;
+        ${material.userData.nativeSurface?'vec3 nativeEmission=uNativeVolcanicGlow>.5?nativeVolcanic4(nativeGlowTexel):vec3(0.);':''}
+        outgoingLight=toLinear4(${material.userData.nativeSurface?'africanToonEmission4':'africanToon4'}(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':material.userData.nativeSurface?'nativeWet':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld${material.userData.nativeSurface?',nativeEmission':''}))+totalEmissiveRadiance;
         #include <opaque_fragment>`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
     };
