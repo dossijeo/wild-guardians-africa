@@ -8,7 +8,8 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {Assets,json} from '../../src/rendering/assets.js';
-import {prepareAnimalClips,applyAnimalPose,animalGroundSamples} from '../../src/rendering/animal-actions.js';
+import {prepareAnimalClips,applyAnimalPose,animalGroundSamples,prepareAnimalModel} from '../../src/rendering/animal-actions.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
 const canvas=document.querySelector('#view'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);renderer.shadowMap.enabled=true;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#e7ddc6');const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,100);camera.position.set(12,9,24);
 const controls=new OrbitControls(camera,canvas);controls.target.set(0,1.2,0);controls.update();scene.add(new THREE.HemisphereLight('#fff','#8d7052',2.2));
@@ -16,10 +17,14 @@ const sun=new THREE.DirectionalLight('#fff5db',3);sun.position.set(2,10,5);sun.c
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
 const libraries=(await json('/content/animal-actions.json')).animals,assets=new Assets(),actors=[];
 for(const [i,[species,library]] of Object.entries(libraries).entries()){
-  const gltf=await assets.model(library.url),model=gltf.scene,root=new THREE.Group();root.position.x=(i-2)*4;root.add(model);scene.add(root);
+  const gltf=await assets.model(library.url),model=prepareAnimalModel(gltf.scene,species),root=new THREE.Group();root.position.x=(i-2)*4;root.add(model);scene.add(root);
   model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
   actors.push({species,library,model,root,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)});
 }
+const workerLibraries=await json('/content/worker-actions.json'),workerGltf=await assets.model(workerLibraries.olderMale.url),workerRoot=new THREE.Group();workerRoot.position.x=-12;workerRoot.add(workerGltf.scene);scene.add(workerRoot);
+const workerData={model:workerGltf.scene,mixer:new THREE.AnimationMixer(workerGltf.scene),clips:workerGltf.animations,name:null};
+const label=document.createElement('div');label.textContent='Referencia a la izquierda: trabajador mayor original. Animales a escala nativa 1: facóquero 2,64 · hiena 2,03 · búfalo 2,27 · león 1,81 · rinoceronte 3,00 unidades (altura de referencia del GLB).';document.querySelector('header').append(label);
+controls.target.set(-2,1.2,0);camera.position.set(12,9,26);controls.update();
 let elapsed=0,last=performance.now(),paused=false,attack='Right_Hand_Sword_Slash',attackId=1;
 const maxDuration=()=>Math.max(...actors.map(a=>a.library.clips[attack].duration));
 function replay(){elapsed=0;attackId++;paused=false;document.querySelector('#pause').textContent='Pausar';}
@@ -27,6 +32,7 @@ document.querySelector('#attack').onchange=e=>{attack=e.target.value;replay();};
 document.querySelector('#pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'Continuar':'Pausar';};
 document.querySelector('#phase').oninput=e=>{paused=true;elapsed=Number(e.target.value)/1000*maxDuration();document.querySelector('#pause').textContent='Continuar';};
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(!paused)elapsed=Math.min(maxDuration(),elapsed+dt);
+  applyWorkerPose(workerData,{profile:'olderMale',status:'idle'},null,elapsed,workerLibraries.olderMale);
   for(const actor of actors){const duration=actor.library.clips[attack].duration;
     applyAnimalPose(actor,{species:actor.species,status:'attacking',animation:attack,attackId:String(attackId),attackDuration:duration,attackRemaining:Math.max(0,duration-elapsed)},elapsed);
   }

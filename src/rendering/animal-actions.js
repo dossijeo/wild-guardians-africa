@@ -1,6 +1,12 @@
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
+export function prepareAnimalModel(model,species){
+  model.scale.setScalar(ANIMAL_ACTIONS.animals[species].presentation.scale);
+  model.position.y=0;
+  return model;
+}
+
 // Mirror native bestiary import: normalize timestamps and remove horizontal hip drift.
 export function prepareAnimalClips(clips){
   return clips.map(original=>{

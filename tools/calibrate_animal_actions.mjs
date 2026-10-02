@@ -1,6 +1,8 @@
 // Native labs normalize timestamps and keep each complete slash/combo non-looping.
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const assets=JSON.parse(readFileSync(new URL('../content/manifests/assets.json',import.meta.url)));
 const fragments={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 const actions={};
@@ -19,7 +21,17 @@ for(const [species,fragment] of Object.entries(fragments)){
   }
   for(const name of ['Walking','Running','Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2'])
     if(!(clips[name]?.duration>0))throw new Error(`Missing native clip ${species}/${name}`);
-  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),clips};
+  const script='references/extracted/'+model.source.split('.html')[0]+'/script-1.js',scriptBytes=readFileSync(new URL('../'+script,import.meta.url));
+  if(!/avatar\.s=\[1,1,1\]/.test(scriptBytes.toString()))throw Error('Native scale contract not found: '+species);
+  // Decode geometry/skins only in Node. Original labs use unit scale; the
+  // intended heroic dimensions are already authored into each embedded GLB.
+  const geometryDoc=structuredClone(doc);
+  for(const m of geometryDoc.materials){delete m.normalTexture;delete m.occlusionTexture;delete m.emissiveTexture;delete m.pbrMetallicRoughness?.baseColorTexture;delete m.pbrMetallicRoughness?.metallicRoughnessTexture;}
+  const encoded=Buffer.from(JSON.stringify(geometryDoc)),size=Math.ceil(encoded.length/4)*4,tail=bytes.subarray(20+jsonLength),geometry=Buffer.alloc(20+size+tail.length,32);
+  bytes.copy(geometry,0,0,20);geometry.writeUInt32LE(geometry.length,8);geometry.writeUInt32LE(size,12);encoded.copy(geometry,20);tail.copy(geometry,20+size);
+  const gltf=await new GLTFLoader().parseAsync(geometry.buffer.slice(geometry.byteOffset,geometry.byteOffset+geometry.length),'');gltf.scene.updateMatrixWorld(true);
+  const bounds=new THREE.Box3().setFromObject(gltf.scene,true),height=bounds.max.y-bounds.min.y;
+  actions[species]={url:model.url,source:model.source,sha256:createHash('sha256').update(bytes).digest('hex'),presentation:{scale:1,bindHeight:height,bindMin:bounds.min.toArray(),bindMax:bounds.max.toArray(),sourceScript:script,sourceScriptSha256:createHash('sha256').update(scriptBytes).digest('hex')},clips};
 }
 const manifest={schema:'wg-animal-actions/1',logicalMarker:'Complete native clip. Original bestiary labs encode no logical damage/contact markers; decorative contacts do not drive damage.',animals:actions};
 for(const path of ['content/manifests/animal-actions.json','public/content/animal-actions.json'])writeFileSync(new URL('../'+path,import.meta.url),JSON.stringify(manifest,null,2)+'\n');

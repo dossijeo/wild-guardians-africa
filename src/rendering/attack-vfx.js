@@ -1,10 +1,11 @@
 import {vfxDefinitions,vfxEnvironment} from './vfx-native.js';
+import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
 const definitions=new Map(vfxDefinitions.map(d=>[d.id,d]));
 // Last decorative contact in each original composition. A combo still consumes
 // exactly one logical hit, at the end of the committed animation.
 export const attackVfxContacts={rhino:{time:1.7,point:[.84,.98,0]},lion:{time:1.75,point:[.78,1.1,.09]},buffalo:{time:1.43,point:[-.03,.03,0]},warthog:{time:1.27,point:[.8,1.03,0]},hyena:{time:1.25,point:[.84,1.1,0]}};
-export const animalVisualHeights={warthog:.85,hyena:.9,buffalo:1.7,lion:1.2,rhino:1.9};
+export const animalVisualHeights=Object.fromEntries(Object.entries(ANIMAL_ACTIONS.animals).map(([id,a])=>[id,a.presentation.bindHeight]));
 
 function frame(species,animal,target){
   const contact=attackVfxContacts[species];if(!contact)return null;

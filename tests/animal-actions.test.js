@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {ANIMAL_ACTIONS as A} from '../src/simulation/animal-actions-data.js';
-import {prepareAnimalClips,applyAnimalPose,animalGroundSamples,animalPose} from '../src/rendering/animal-actions.js';
+import {prepareAnimalClips,applyAnimalPose,animalGroundSamples,animalPose,prepareAnimalModel} from '../src/rendering/animal-actions.js';
 import * as Game from '../src/simulation/game.js';
 import {updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -67,6 +67,9 @@ function geometryOnly(buffer){
 for(const [species,library] of Object.entries(A.animals))test(`${species}: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding`,async()=>{
   const bytes=readFileSync(new URL('../public'+library.url,import.meta.url));assert.equal(createHash('sha256').update(bytes).digest('hex'),library.sha256);
   const gltf=await new GLTFLoader().parseAsync(geometryOnly(bytes),''),clips=prepareAnimalClips(gltf.animations);
+  const native=library.presentation;assert.equal(native.scale,1);const source=readFileSync(new URL('../'+native.sourceScript,import.meta.url));assert.equal(createHash('sha256').update(source).digest('hex'),native.sourceScriptSha256);assert.match(source.toString(),/avatar\.s=\[1,1,1\]/);
+  gltf.scene.scale.setScalar(.1);prepareAnimalModel(gltf.scene,species);assert.deepEqual(gltf.scene.scale.toArray(),[1,1,1]);gltf.scene.updateMatrixWorld(true);
+  const originalBounds=new THREE.Box3().setFromObject(gltf.scene,true);assert.ok(Math.abs(originalBounds.max.y-originalBounds.min.y-native.bindHeight)<1e-8);assert.deepEqual(originalBounds.min.toArray(),native.bindMin);assert.deepEqual(originalBounds.max.toArray(),native.bindMax);
   const parent=new THREE.Group();parent.position.set(20,5,10);parent.add(gltf.scene);
   const data={model:gltf.scene,mixer:new THREE.AnimationMixer(gltf.scene),clips,groundSamples:animalGroundSamples(gltf.scene)};
   assert.ok(data.groundSamples.length>0);

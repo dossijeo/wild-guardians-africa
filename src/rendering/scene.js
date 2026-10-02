@@ -6,7 +6,7 @@ import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch} from './crop-batch.js';
 import {applyWorkerPose,nativeCrate} from './worker-actions.js';
-import {applyAnimalPose,prepareAnimalClips,animalGroundSamples} from './animal-actions.js';
+import {applyAnimalPose,prepareAnimalClips,animalGroundSamples,prepareAnimalModel} from './animal-actions.js';
 import {NativeHands} from './hands.js';
 import {tutorialHandTarget} from './tutorial-hand-target.js';
 import {NativeWall} from './walls.js';
@@ -14,7 +14,7 @@ import {WallDrawing} from './wall-drawing.js';
 import {NativeBuilding,BuildingDestructionPass} from './buildings.js';
 import {VfxLibrary} from './vfx.js';
 import {WorkVfx} from './work-vfx.js';
-import {AttackVfx,animalVisualHeights} from './attack-vfx.js';
+import {AttackVfx} from './attack-vfx.js';
 import {ShieldVfx} from './shield-vfx.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
@@ -134,7 +134,9 @@ export class WorldScene {
     if(!descriptor)return;
     const gltf=await this.assets.model(descriptor.url);if(!this.state||!this.objects.has(entity.id))return;
     const root=this.objects.get(entity.id),model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
-    if(type==='animal'){const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=animalVisualHeights[entity.species]/size.y;model.scale.setScalar(scale);model.position.y=-box.min.y*scale;}
+    // Native bestiary labs use unit scale. Their heroic dimensions are already
+    // authored in the GLB; animated foot grounding follows in applyAnimalPose.
+    if(type==='animal')prepareAnimalModel(model,entity.species);
     root.add(model);
     const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
       groundSamples:type==='animal'?animalGroundSamples(model):null});
