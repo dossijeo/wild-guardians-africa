@@ -1,18 +1,19 @@
 import * as THREE from 'three';
 import {nativeLodBins} from './lod-source.js';
 import {obstructionGeometry,obstructionMaterial} from './obstruction.js';
+import {createAssetShadow,updateAssetShadow} from './asset-shadows.js';
 
 // Stable logical instances own coverage; render bins only borrow it. Navigation,
 // contact AO and water continue using the full, unmodified instance population.
 export function createAssetLod(group,levels,instances,asset,slot){
   const bounds=levels[0].geometry.boundingBox;
   const prototype={...asset,size:bounds.getSize(new THREE.Vector3()).toArray(),centerY:(bounds.min.y+bounds.max.y)/2};
-  const batch={instances,prototype,group:asset.group,meshes:[],orders:[],key:null,fade:null};
+  const batch={instances,prototype,group:asset.group,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
   for(const [level,original] of levels.entries()){
     const geometry=obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
     obstructionMaterial(original.material);
     const mesh=new THREE.InstancedMesh(geometry,original.material,instances.length);
-    mesh.count=0;mesh.castShadow=mesh.receiveShadow=true;mesh.userData.nativeLodBatch=batch;mesh.userData.nativeLodLevel=level;
+    mesh.count=0;mesh.castShadow=false;mesh.receiveShadow=true;mesh.userData.nativeLodBatch=batch;mesh.userData.nativeLodLevel=level;
     if(geometry.userData.obstruction&&!batch.fade){const f=geometry.userData.obstruction;batch.fade={records:f.records,attribute:new THREE.InstancedBufferAttribute(new Float32Array(instances.length).fill(1),1),fresh:true};}
     group.add(mesh);batch.meshes.push(mesh);batch.orders.push([]);
   }
@@ -31,7 +32,7 @@ export function packLodCoverage(batch){
 
 export function updateAssetLods(chunks,camera,quality){
   const eye=camera.position.toArray(),key=eye.map(v=>Math.round(v/1.5)).join(',')+':'+quality;
-  const stats={counts:[0,0,0],culled:0,updates:0,triangles:0,fullTriangles:0};
+  const stats={counts:[0,0,0],culled:0,updates:0,triangles:0,fullTriangles:0,shadowTriangles:0,shadowDraws:0};
   let dummy;
   for(const group of chunks.values())for(const batch of group.userData.lodBatches??[]){
     if(batch.key!==key){
@@ -44,10 +45,11 @@ export function updateAssetLods(chunks,camera,quality){
           mesh.count=order.length;mesh.instanceMatrix.needsUpdate=true;mesh.boundingBox=null;mesh.boundingSphere=null;batch.orders[level]=order;stats.updates++;
         }
       }
-      packLodCoverage(batch);batch.key=key;
+      packLodCoverage(batch);updateAssetShadow(batch);batch.key=key;
     }
     let active=0;for(const [level,mesh] of batch.meshes.entries()){stats.counts[level]+=mesh.count;active+=mesh.count;stats.triangles+=(mesh.geometry.index?.count??mesh.geometry.attributes.position.count)/3*mesh.count;}stats.culled+=batch.instances.length-active;
     const full=batch.meshes[0].geometry;stats.fullTriangles+=(full.index?.count??full.attributes.position.count)/3*batch.instances.length;
+    if(batch.shadow.castShadow&&batch.shadow.count){const g=batch.shadow.geometry;stats.shadowTriangles+=(g.index?.count??g.attributes.position.count)/3*batch.shadow.count;stats.shadowDraws++;}
   }
   return stats;
 }

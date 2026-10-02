@@ -52,7 +52,7 @@ combinaciones ni de todos los niveles de calidad por bioma.
 Los conteos son geometría seleccionada de props residentes; no equivalen a
 triángulos efectivamente rasterizados después del frustum, ni incluyen terreno,
 poblados, agua, personajes o pasadas de sombras. No acreditan FPS en móvil.
-La agrupación global entre chunks, el origen flotante y la selección especial
-del último LOD para la pasada de sombras del renderer original siguen
-pendientes: Three actualmente proyecta la geometría seleccionada para color.
+La selección especial del último LOD para sombras se completa en la revisión
+posterior [QA de sombras](qa-asset-shadows.md). La agrupación global entre
+chunks y el origen flotante siguen pendientes.
 No se da por completada la optimización web ni el Plan Maestro.
