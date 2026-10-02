@@ -3,6 +3,8 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetUrl,resolveAssetValues} from './asset-url.js';
 import {prepareNativeBuilding} from './buildings.js';
+import {nativeAssetMaterial} from './asset-surface.js';
+import {computeTangents} from './surface-source.js';
 export const json=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return resolveAssetValues(await response.json());};
 export const bytes=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.arrayBuffer();};
 export class Assets {
@@ -14,14 +16,14 @@ export class Assets {
     return this.cache.get(key);
   }
   async biome(pack) {
-    const buffer=await bytes(pack.binary.url),map=await this.texture(pack.textures.find(t=>t.role==='baseColor').base64.url,true);
-    const material=new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide});
+    const [buffer,entries]=await Promise.all([bytes(pack.binary.url),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
     const attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count);
-    return pack.assets.map(a=>a.lods.map(lod=>{
+    return pack.assets.map((a,index)=>{const levels=a.lods.map(lod=>{
       const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingSphere();
-      return new THREE.Mesh(geometry,material);
-    }));
+      geometry.setAttribute('tangent',new THREE.BufferAttribute(computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
+      return geometry;
+    });const material=nativeAssetMaterial(pack,a,index,textures,levels[0].boundingBox);return levels.map(geometry=>new THREE.Mesh(geometry,material));});
   }
   async village(payload) {
     const buffer=await bytes(payload.binary.url),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);

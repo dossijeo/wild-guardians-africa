@@ -1,0 +1,79 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 5.2176
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 4.1996
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.6329
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.4999
+  ...
+# (node:36492) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all 120 original surface classifications and every LOD tangent buffer match the native recipes
+ok 5 - all 120 original surface classifications and every LOD tangent buffer match the native recipes
+  ---
+  duration_ms: 938.2933
+  ...
+# Subtest: native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+ok 6 - native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+  ---
+  duration_ms: 459.5078
+  ...
+# Subtest: native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+ok 7 - native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+  ---
+  duration_ms: 2.3978
+  ...
+# (node:36640) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 8 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 9.2712
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 9 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 4.2149
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 10 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 1.7034
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 11 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 0.6033
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 12 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 1.6648
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 13 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 0.7883
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1640.3137

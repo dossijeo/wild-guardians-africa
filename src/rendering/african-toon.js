@@ -15,7 +15,7 @@ export class AfricanToon {
     this.materials.add(material);
     const original=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
     material.onBeforeCompile=(shader,renderer)=>{
-      original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:1};
+      original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.nativeSurface?.type??1};
       shader.vertexShader='varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
         vec4 toonPosition=vec4(transformed,1.0);
@@ -60,9 +60,9 @@ export class AfricanToon {
         #if NUM_DIR_LIGHT_SHADOWS > 0 && defined(USE_SHADOWMAP)
           toonVisibility=getShadowMask();
         #endif
-        float toonLeaf=smoothstep(.018,.13,diffuseColor.g-diffuseColor.r*.87)*smoothstep(.06,.20,diffuseColor.g);
+        float toonLeaf=${material.userData.nativeSurface?'nativeLeaf':'smoothstep(.018,.13,diffuseColor.g-diffuseColor.r*.87)*smoothstep(.06,.20,diffuseColor.g)'};
         vec3 toonReflection=reflectedLight.indirectSpecular;
-        outgoingLight=toLinear4(africanToon4(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld))+totalEmissiveRadiance;
+        outgoingLight=toLinear4(africanToon4(outgoingLight,diffuseColor.rgb,toonN,toonV,uLightDir,toonReflection,roughnessFactor,toonVisibility,toonLeaf,${material.userData.toonGround?'uWet*(1.-toonLeaf*.35)':material.userData.nativeSurface?'nativeWet':'0.0'},metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld))+totalEmissiveRadiance;
         #include <opaque_fragment>`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>','#include <shadowmap_pars_fragment>\n#include <shadowmask_pars_fragment>');
     };

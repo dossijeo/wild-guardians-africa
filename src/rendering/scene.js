@@ -28,6 +28,7 @@ import {renderedTerrainSurface} from './terrain-surface.js';
 import {nativeGroundGeometry} from './terrain-geometry.js';
 import {NativeHorizon,nativeNearRegion} from './horizon.js';
 import {obstructionGeometry,obstructionMaterial,updateObstructions} from './obstruction.js';
+import {nativeAssetSurface} from './asset-surface.js';
 import {configureTerrainControls,protectTerrainCamera,updateTerrainCamera,focusTerrainCamera} from './terrain-camera.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
@@ -105,7 +106,7 @@ export class WorldScene {
     for(let i=0;i<20;i++) {
       const instances=chunk.instances[i].filter(p=>!this.nav.suppressed.has(p.id));if(!instances.length)continue;
       const lod=this.quality==='alta'?0:this.quality==='media'?1:2,prototype=this.prototypes[i][Math.min(lod,this.prototypes[i].length-1)];
-      const asset=this.pack.assets[i],propGeometry=obstructionGeometry(prototype.geometry,instances,asset,i,this.prototypes[i][0].geometry);obstructionMaterial(prototype.material);
+      const asset=nativeAssetSurface(this.pack,this.pack.assets[i],i),propGeometry=obstructionGeometry(prototype.geometry,instances,asset,i,this.prototypes[i][0].geometry);obstructionMaterial(prototype.material);
       const mesh=new THREE.InstancedMesh(propGeometry,prototype.material,instances.length),dummy=new THREE.Object3D();
       instances.forEach((p,j)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(j,dummy.matrix);});mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);
       if(this.waterPrototypes[i]){const water=new THREE.InstancedMesh(this.waterPrototypes[i],paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,[x0,z0,x0+48,z0+48],this.fluidLighting),instances.length);water.instanceMatrix.copy(mesh.instanceMatrix);water.receiveShadow=true;water.userData.nativeFluid='asset';group.add(water);}
