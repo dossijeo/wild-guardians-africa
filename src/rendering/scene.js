@@ -17,6 +17,7 @@ import {WorkVfx} from './work-vfx.js';
 import {AttackVfx} from './attack-vfx.js';
 import {ShieldVfx} from './shield-vfx.js';
 import {AgricultureVfx} from './agriculture-vfx.js';
+import {MaterialVfx} from './material-vfx.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
@@ -74,6 +75,7 @@ export class WorldScene {
     this.attackVfx=new AttackVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.shieldVfx=new ShieldVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.agricultureVfx=new AgricultureVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
+    this.materialVfx=new MaterialVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
@@ -242,6 +244,6 @@ export class WorldScene {
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
-  dispose() {this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
+  dispose() {this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }

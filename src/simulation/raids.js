@@ -124,7 +124,7 @@ export function updateRaid(s,dt,nav) {
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.
           emit(s,'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,presentation:{elapsed:s.elapsed,
-            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind},
+            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species});
       }
