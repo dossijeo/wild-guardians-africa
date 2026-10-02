@@ -79,7 +79,7 @@ export const vfxDefinitions=[
 {id:'spirit',name:'Espíritu',title:'La presencia del guardián',group:'Espíritu',duration:5.5,icon:'spirit',desc:'Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.',chips:['Kenney · halo y estela','Trayectorias 3D','Dos luces locales']},
 ];
 
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 let seed=7131;function random(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t^=t+Math.imul(t^t>>>7,61|t);return ((t^t>>>14)>>>0)/4294967296}const rand=(a=0,b=1)=>a+(b-a)*random();const choose=a=>a[Math.floor(random()*a.length)];
@@ -88,6 +88,7 @@ const settings={density:1,speed:1,wind:.3,nightFill:.14,quality:'high',cycleDura
  if(!Number.isFinite(density)||density<=0||!Number.isFinite(wind))throw new Error('Configuración VFX inválida');
  if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
  if(shieldMode!==null&&!['barrier','contact'].includes(shieldMode)||!Number.isFinite(shieldDuration)||shieldDuration<1)throw new Error('Configuración Escudo inválida');
+ if(agricultureMode!==null&&(!['growth','multiply'].includes(agricultureMode)||id!=='heal')||!Number.isFinite(agricultureDuration)||agricultureDuration<1)throw new Error('Configuración magia agrícola inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 let current=definitions[0],clock=0,paused=false,looping=true,events=[],eventIndex=0,parts=[],rigids=[],wetness=0,hitTime=-10;
@@ -120,7 +121,7 @@ function simulate(dt){clock+=dt;toolPose();while(eventIndex<events.length&&event
    if(r.v[1]<0)r.v[1]=-r.v[1]*r.bounce;r.v[0]*=.64;r.v[2]*=.64;r.spin=r.spin.map(x=>x*.52);if(impact<.2){r.settled=true;r.v=[0,0,0];if(r.kind==='leaf'){r.rot[0]=Math.PI/2;r.p[1]=floor+.015;}}}
  }
 }
-function seekTo(t){isSeeking=true;const was=paused;restartEffect(false);const target=clamp(t,0,shieldMode==='barrier'?shieldDuration:current.duration);while(clock+1/60<target)simulate(1/60);if(clock<target)simulate(target-clock);paused=was;isSeeking=false;}
+function seekTo(t){isSeeking=true;const was=paused;restartEffect(false);const target=clamp(t,0,agricultureMode?agricultureDuration:shieldMode==='barrier'?shieldDuration:current.duration);while(clock+1/60<target)simulate(1/60);if(clock<target)simulate(target-clock);paused=was;isSeeking=false;}
 function spriteInstances(){const out=[];for(const p of parts){const t=p.age/p.life,fade=smooth(0,.1,t)*(1-smooth(.5,1,t)),s=mix(p.size0,p.size1,1-(1-t)**2);out.push({tex:p.tex,p:p.p,size:[s,s*p.ratio],col:p.col,alpha:p.alpha*fade,angle:p.angle,soft:p.soft,orient:p.orient,emit:p.emit,dir:p.dir||[0,1,0],frame:mix(p.frameStart||0,p.frameEnd??((spriteRects[p.tex]?.length||1)-1),t)});}
  lightCol0=[0,0,0];lightCol1=[0,0,0];
  if(current.id==='spirit'){
@@ -134,7 +135,7 @@ function spriteInstances(){const out=[];for(const p of parts){const t=p.age/p.li
 let fxVertices=[];
 function fxTri(a,b,c,col,alpha,kind=0,normals=null){if(alpha<.003)return;const n=normals||[V.norm(V.cross(V.sub(b,a),V.sub(c,a)))];for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);}
 function fxQuad(a,b,c,d,col,alpha,kind=0){fxTri(a,b,c,col,alpha,kind);fxTri(a,c,d,col,alpha,kind);}
-function fxBand(p,r0,r1,a0,a1,c,alpha,U=[1,0,0],W=[0,0,1],steps=56,kind=0){if(r1<=r0||alpha<.003)return;const at=(r,a)=>V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));for(let i=0;i<steps;i++){const a=mix(a0,a1,i/steps),b=mix(a0,a1,(i+1)/steps);fxQuad(at(r0,a),at(r1,a),at(r1,b),at(r0,b),c,alpha,kind);}}
+function fxBand(p,r0,r1,a0,a1,c,alpha,U=[1,0,0],W=[0,0,1],steps=56,kind=0){if(r1<=r0||alpha<.003)return;const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};for(let i=0;i<steps;i++){const a=mix(a0,a1,i/steps),b=mix(a0,a1,(i+1)/steps);fxQuad(at(r0,a),at(r1,a),at(r1,b),at(r0,b),c,alpha,kind);}}
 function fxLine(a,b,w,c,alpha,normal=[0,1,0]){const side=V.scale(V.norm(V.cross(V.sub(b,a),normal)),w*.5);fxQuad(V.add(a,side),V.sub(a,side),V.sub(b,side),V.add(b,side),c,alpha);}
 function fxRibbon(path,normal,width,c,alpha,segments=36){if(alpha<.003)return;for(let j=0;j<segments;j++){const t0=j/segments,t1=(j+1)/segments,p0=path(t0),p1=path(t1),side=V.norm(V.cross(V.sub(p1,p0),normal)),w0=width*(.035+Math.sin(t0*Math.PI)**.7)*.5,w1=width*(.035+Math.sin(t1*Math.PI)**.7)*.5;fxQuad(V.add(p0,V.scale(side,w0)),V.sub(p0,V.scale(side,w0)),V.sub(p1,V.scale(side,w1)),V.add(p1,V.scale(side,w1)),c,alpha,1);}}
 function arcRibbon(p,U,W,r,width,a0,a1,c,alpha){const n=V.norm(V.cross(U,W));fxRibbon(t=>V.add(p,V.add(V.scale(U,Math.cos(mix(a0,a1,t))*r),V.scale(W,Math.sin(mix(a0,a1,t))*r))),n,width,c,alpha);}
@@ -152,10 +153,11 @@ function composeGeometryFX(){fxVertices=[];const id=current.id,t=clock,amber=col
  if(id==='roar'){warningCone([-.76,0,0],3.35,.48,t/.78);if(settings.layers.ribbons)for(let j=0;j<4;j++){const u=attackWindow(.95+j*.26,1.43);if(u===null)continue;let radius=.18+u*.84;fxBand([-.55+u*2.85,1.1,0],radius,radius+.025+.015*(1-u),0,TAU,amber,(1-u)*.53,[0,1,0],[0,0,1]);}}
  if(id==='shield'&&settings.layers.ribbons){const vis=shieldMode==='contact'?0:smooth(.35,.9,t)*(1-smooth(shieldMode==='barrier'?shieldDuration-.5:3.65,shieldMode==='barrier'?shieldDuration:4.65,t)),r=1.65*(shieldMode==='barrier'?1:smooth(.35,.92,t));shieldDome(r,vis*.65);fxBand([0,.033,0],r-.045,r,0,TAU,jade,vis*.68);fxBand([0,.038,0],r+.1,r+.12,0,TAU,jade,vis*.3);const u=shieldMode==='barrier'?null:attackWindow(shieldMode==='contact'?0:1.85,.7);if(u!==null){for(let j=0;j<3;j++){const a=clamp(u-j*.12);if(a>0)fxBand([-1.5,.86,0],a*.88,a*.88+.026,0,TAU,ivory,(1-a)*.6,[0,1,0],[0,0,1]);}}}
  if(id==='repel'&&settings.layers.ribbons){const prep=smooth(.1,.5,t)*(1-smooth(1.14,1.34,t));for(let j=0;j<3;j++)arcRibbon([0,.06+j*.18,0],[1,0,0],[0,0,1],.53+j*.17,.065,t*2+j*2,t*2+j*2+3.5,jade,prep*.65);const u=attackWindow(1.27,1.25);if(u!==null)for(let j=0;j<3;j++){const p=clamp(u-j*.13);if(p<=0)continue;let r=.5+p*2.75;fxBand([0,.045,0],r,r+.06*(1-p),0,TAU,jade,.8*(1-p));arcRibbon([0,.15+.3*(1-p),0],[1,0,0],[0,0,1],r,.085,clock*1.5,clock*1.5+5.4,blue,.5*(1-p));if(j===0)for(let k=0;k<4;k++){const a=k*Math.PI/2+clock*.23;arcRibbon([0,.07,0],[Math.cos(a),0,Math.sin(a)],[0,.55,0],r,.035,0,Math.PI,jade,.24*(1-p));}}}
- if(id==='heal'&&settings.layers.ribbons){const vis=smooth(.3,.8,t)*(1-smooth(3.8,4.6,t));fxBand([0,.025,0],.76,.79,0,TAU,jade,.5*vis);for(let j=0;j<2;j++)fxRibbon(u=>{const angle=u*TAU*1.1+t*1.7+j*Math.PI;return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]},[0,0,1],.033,jade,.37*vis,45);}
+ if(id==='heal'&&settings.layers.ribbons){const vis=smooth(.3,.8,t)*(1-smooth(agricultureMode?agricultureDuration-.5:3.8,agricultureMode?agricultureDuration:4.6,t)),blessingColor=agricultureMode==='multiply'?amber:jade;fxBand([0,.025,0],.76,.79,0,TAU,blessingColor,.5*vis);for(let j=0;j<2;j++)fxRibbon(u=>{const angle=u*TAU*1.1+t*1.7+j*Math.PI;const q=[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)];if(agricultureMode&&surface)q[1]+=floorAt(q);return q},[0,0,1],.033,blessingColor,.37*vis,45);}
  if(id==='stun'&&settings.layers.ribbons){const vis=smooth(.25,.7,t)*(1-smooth(3.4,4.2,t));fxBand([.18,1.66,0],.32,.338,0,TAU,amber,.48*vis);}
  return fxVertices.length/11;
 }
+function blessingLeafOrigin(a){const p=[Math.cos(a)*.55,.1,Math.sin(a)*.55];if(agricultureMode&&surface)p[1]+=floorAt(p);return p;}
 const DUST_TEXTURES=new Set(['cloud','smoke','dirt','dustRing']);
 let isSeeking=false,lastImpact=null;
 function contact(point,strength=1,tag='impact',material='soil'){
@@ -199,8 +201,8 @@ function scheduleCombat(at){const id=current.id;
   at(1.27,()=>{contact([0,.08,0],1.2,'spirit-repulse','spirit');flip('vortex',[0,.038,0],1.4,.95,'#80bfae',{orient:1,size1:4.6,soft:0,alpha:.43,frameStart:0,emit:.76});radialStreaks([0,.7,0],17,2.6,'#a7ddc2');groundCrown([0,0,0],.88);});
  }
  if(id==='heal'){
-  for(let j=0;j<6;j++)at(.65+j*.44,()=>{const a=j*2.4;flip('heart',[Math.cos(a)*.34,1.05,Math.sin(a)*.34],.16,1.2,'#ace2af',{size1:.11,v:[Math.cos(a)*.08,.74,Math.sin(a)*.08],alpha:.66,soft:.02,emit:1.03});});
-  at(.65,()=>{for(let j=0;j<7;j++){const a=j/7*TAU;solid('leaf',[Math.cos(a)*.55,.1,Math.sin(a)*.55],[Math.cos(a)*.11,1.25,Math.sin(a)*.11],[.11,.22,.16],'#9fb765',{life:2.8,gravity:.9,drag:.3,spin:[1,2,1]});}});
+  if(!agricultureMode)for(let j=0;j<6;j++)at(.65+j*.44,()=>{const a=j*2.4;flip('heart',[Math.cos(a)*.34,1.05,Math.sin(a)*.34],.16,1.2,'#ace2af',{size1:.11,v:[Math.cos(a)*.08,.74,Math.sin(a)*.08],alpha:.66,soft:.02,emit:1.03});});
+  for(let burst=0;burst<(agricultureMode?Math.ceil(agricultureDuration/3):1);burst++)at(.65+burst*3,()=>{for(let j=0;j<7;j++){const a=j/7*TAU;solid('leaf',blessingLeafOrigin(a),[Math.cos(a)*.11,1.25,Math.sin(a)*.11],[.11,.22,.16],(agricultureMode==='multiply'?'#eac98d':'#9fb765'),{life:2.8,gravity:.9,drag:.3,spin:[1,2,1]});}});
  }
  if(id==='stun')at(.45,()=>{contact([.38,1.22,0],.35,'stun-feedback','status');flip('impact',[.32,1.24,0],.7,.24,'#eac98d',{alpha:.58});});
 }
@@ -218,9 +220,9 @@ function combatSprites(out){const id=current.id,t=clock;
   const prep=smooth(.15,.45,t)*(1-smooth(1.22,1.4,t));for(let j=0;j<15;j++){const r=.35+1.45*(1-smooth(.12,1.25,t)),a=j/15*TAU+t*2,p=[Math.cos(a)*r,.4+(j%5)*.24,Math.sin(a)*r];staticSprite(out,'glow',p,.085,prep*.66,'#a0d7bc');}
  }
  if(id==='heal'){
-  const vis=smooth(.32,.85,t)*(1-smooth(3.75,4.75,t));for(let j=0;j<2;j++)staticSprite(out,'aura',[0,.9,0],[1.34,1.8],vis*.19,'#a7d5a4',{orient:4,dir:[Math.cos(j*Math.PI/2),0,Math.sin(j*Math.PI/2)],frame:(t*11+j*13)%29,angle:0,soft:.15,emit:.98});
-  for(let j=0;j<14;j++){const u=(t*.3+j/14)%1,a=t*1.7+j*2.4;staticSprite(out,'star',[Math.cos(a)*(.6-.24*u),.2+u*1.95,Math.sin(a)*(.6-.24*u)],.055+.02*Math.sin(j),vis*Math.sin(u*Math.PI)*.61,'#d3dda2',{emit:1.02});}
-  lightPos0=[.3,1.13,.6];lightPos1=[-.6,.5,-.4];lightCol0=V.scale([.16,.43,.13],vis*.65);lightCol1=V.scale([.11,.3,.2],vis*.45);
+  const vis=smooth(.32,.85,t)*(1-smooth(agricultureMode?agricultureDuration-.5:3.75,agricultureMode?agricultureDuration:4.75,t));for(let j=0;j<2;j++)staticSprite(out,'aura',[0,.9,0],[1.34,1.8],vis*.19,(agricultureMode==='multiply'?'#eac98d':'#a7d5a4'),{orient:4,dir:[Math.cos(j*Math.PI/2),0,Math.sin(j*Math.PI/2)],frame:(t*11+j*13)%29,angle:0,soft:.15,emit:.98});
+  for(let j=0;j<14;j++){const u=(t*.3+j/14)%1,a=t*1.7+j*2.4;staticSprite(out,'star',[Math.cos(a)*(.6-.24*u),.2+u*1.95,Math.sin(a)*(.6-.24*u)],.055+.02*Math.sin(j),vis*Math.sin(u*Math.PI)*.61,(agricultureMode==='multiply'?'#eac98d':'#d3dda2'),{emit:1.02});}
+  lightPos0=[.3,1.13,.6];lightPos1=[-.6,.5,-.4];lightCol0=V.scale(agricultureMode==='multiply'?color('#eac98d'):[.16,.43,.13],vis*.65);lightCol1=V.scale(agricultureMode==='multiply'?color('#eac98d'):[.11,.3,.2],vis*.45);
  }
  if(id==='stun'){
   const vis=smooth(.36,.7,t)*(1-smooth(3.4,4.25,t));for(let j=0;j<4;j++){const a=t*2.1+j/4*TAU,p=[.18+Math.cos(a)*.39,1.67+Math.sin(a*1.9)*.05,Math.sin(a)*.39];staticSprite(out,'stunStar',p,.19,vis*.92,'#e8bd6e',{angle:Math.sin(a)*.3,emit:.96});for(let k=1;k<4;k++){const b=a-k*.16;staticSprite(out,'glow',[.18+Math.cos(b)*.39,1.67+Math.sin(b*1.9)*.05,Math.sin(b)*.39],.05,vis*(1-k/4)*.3,'#ddbe86');}}

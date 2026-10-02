@@ -40,7 +40,7 @@ simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
 simulation = simulation.replace('function floorAt(p){return ', "function floorAt(p){if(surface){const y=surface(p[0],p[2]);if(!Number.isFinite(y))throw new Error('Superficie VFX inválida');return y;}return ")
 simulation = simulation.replace('if(p.p[1]<p.ground+.025', 'if(surface)p.ground=floorAt(p.p);if(p.p[1]<p.ground+.025')
-simulation = simulation.replace('target=clamp(t,0,current.duration)', "target=clamp(t,0,shieldMode==='barrier'?shieldDuration:current.duration)")
+simulation = simulation.replace('target=clamp(t,0,current.duration)', "target=clamp(t,0,agricultureMode?agricultureDuration:shieldMode==='barrier'?shieldDuration:current.duration)")
 combat = section('const DUST_TEXTURES=', 'const paths=')
 combat = combat.replace("if(!isSeeking)window.dispatchEvent(new CustomEvent('wgvfx:impact',{detail:{...lastImpact}}));", 'contacts.push({...lastImpact});')
 # Production Shield reuses the original mesh, rings, stars and block particles.
@@ -52,6 +52,23 @@ combat = combat.replace("at(.54,()=>twinkle([0,.7,0],7,'#9bdbc6'));", "if(shield
 combat = combat.replace("at(1.85,()=>{contact([-1.5,.86,0]", "if(shieldMode!=='barrier')at(shieldMode==='contact'?0:1.85,()=>{contact([-1.5,.86,0]")
 combat = combat.replace('const vis=smooth(.38,.92,t)*(1-smooth(3.65,4.7,t));', "const vis=shieldMode==='contact'?0:smooth(.38,.92,t)*(1-smooth(shieldMode==='barrier'?shieldDuration-.5:3.65,shieldMode==='barrier'?shieldDuration:4.7,t));")
 combat = combat.replace('const u=attackWindow(1.25,.61);', "const u=shieldMode?null:attackWindow(1.25,.61);")
+# Approved farm powers reuse the blessing aura, with no decorative healing hearts.
+# Keep the unadapted composition identical for the original Atelier comparison.
+geometry = geometry.replace("const vis=smooth(.3,.8,t)*(1-smooth(3.8,4.6,t));", "const vis=smooth(.3,.8,t)*(1-smooth(agricultureMode?agricultureDuration-.5:3.8,agricultureMode?agricultureDuration:4.6,t)),blessingColor=agricultureMode==='multiply'?amber:jade;")
+heal_geometry_start = geometry.index("if(id==='heal'")
+heal_geometry_end = geometry.index("if(id==='stun'",heal_geometry_start)
+geometry = geometry[:heal_geometry_start]+geometry[heal_geometry_start:heal_geometry_end].replace(',jade,',',blessingColor,')+geometry[heal_geometry_end:]
+combat = combat.replace("for(let j=0;j<6;j++)at(.65+j*.44", "if(!agricultureMode)for(let j=0;j<6;j++)at(.65+j*.44")
+combat = combat.replace("at(.65,()=>{for(let j=0;j<7;j++){const a=j/7*TAU;solid('leaf'", "for(let burst=0;burst<(agricultureMode?Math.ceil(agricultureDuration/3):1);burst++)at(.65+burst*3,()=>{for(let j=0;j<7;j++){const a=j/7*TAU;solid('leaf'")
+combat = combat.replace("const vis=smooth(.32,.85,t)*(1-smooth(3.75,4.75,t));", "const vis=smooth(.32,.85,t)*(1-smooth(agricultureMode?agricultureDuration-.5:3.75,agricultureMode?agricultureDuration:4.75,t));")
+for original in ["'#a7d5a4'","'#d3dda2'","'#9fb765'"]:
+    combat = combat.replace(original,"(agricultureMode==='multiply'?'#eac98d':"+original+")")
+combat = combat.replace('V.scale([.16,.43,.13],vis*.65)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.16,.43,.13],vis*.65)")
+combat = combat.replace('V.scale([.11,.3,.2],vis*.45)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.11,.3,.2],vis*.45)")
+geometry = geometry.replace('const at=(r,a)=>V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));',"const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};")
+geometry = geometry.replace('return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]',"const q=[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)];if(agricultureMode&&surface)q[1]+=floorAt(q);return q")
+combat = combat.replace("solid('leaf',[Math.cos(a)*.55,.1,Math.sin(a)*.55]","solid('leaf',blessingLeafOrigin(a)")
+combat = "function blessingLeafOrigin(a){const p=[Math.cos(a)*.55,.1,Math.sin(a)*.55];if(agricultureMode&&surface)p[1]+=floorAt(p);return p;}\n"+combat
 rects = section('const spriteRects={};', 'const MAX_SPRITES=')
 rects = 'export function createVfxAtlasRects(ASSETS,width,height){const atlasImage={width,height};'+rects+'return spriteRects;}\n'
 pack = section('function paintSprites(', 'gl.useProgram(spriteP.p);')
@@ -64,13 +81,14 @@ environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
 module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
 module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
 module += '''
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 '''+random+settings+'''
  if(!Number.isFinite(density)||density<=0||!Number.isFinite(wind))throw new Error('Configuración VFX inválida');
  if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
  if(shieldMode!==null&&!['barrier','contact'].includes(shieldMode)||!Number.isFinite(shieldDuration)||shieldDuration<1)throw new Error('Configuración Escudo inválida');
+ if(agricultureMode!==null&&(!['growth','multiply'].includes(agricultureMode)||id!=='heal')||!Number.isFinite(agricultureDuration)||agricultureDuration<1)throw new Error('Configuración magia agrícola inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 '''+simulation+geometry+combat+rigid_pack+'''
