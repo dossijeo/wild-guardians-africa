@@ -7,6 +7,7 @@ const MARKS=[.065,.27,.53,.78,1];
 export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
  const state={morphSeconds:2},renderOrigin={x:0,z:0};
  let models=[],bridges=[],counts=new Uint32Array(40),bridgeCounts=new Uint32Array(32);
+ const dirty=new Map();
  const uniforms={clock:{value:0},wind:{value:1}},tmpObj=new THREE.Object3D();
  const cycleDuration=crop=>cropSpec(ids[crop]).growth_seconds;
 const GROWTH_DECL=`attribute vec4 iGrowth; uniform float uGround; uniform float uHeight; uniform float uClock; uniform float uWind;`;
@@ -194,10 +195,27 @@ function transitionWindow(crop,stage){
  const width=state.morphSeconds>0?Math.min(.34,state.morphSeconds/intervalSeconds):.34;
  return{start:.81-width*.5,end:.81+width*.5,seconds:width*intervalSeconds};
 }
+// Compare in GPU precision. Repeated Float64-to-Float32 conversion must not
+// dirty a stable plant, and pending ranges survive multiple updates before draw.
+function writeValues(attribute,offset,values){
+ let first=-1,last=-1;
+ for(let i=0;i<values.length;i++){
+  const value=Math.fround(values[i]);if(attribute.array[offset+i]===value)continue;
+  attribute.array[offset+i]=value;if(first<0)first=offset+i;last=offset+i;
+ }
+ if(first<0)return;
+ const range=dirty.get(attribute);if(range){range[0]=Math.min(range[0],first);range[1]=Math.max(range[1],last);}else dirty.set(attribute,[first,last]);
+}
+function writePose(item,slot,plant){
+ const x=plant.x-renderOrigin.x,y=plant.y||0,z=plant.z-renderOrigin.z,rotation=plant.rotation||0,old=item.poses?.[slot];
+ if(old&&old[0]===x&&old[1]===y&&old[2]===z&&old[3]===rotation)return;
+ (item.poses??=[])[slot]=[x,y,z,rotation];
+ tmpObj.position.set(x,y,z);tmpObj.rotation.set(0,rotation,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();
+ writeValues(item.mesh.instanceMatrix,slot*16,tmpObj.matrix.elements);
+}
 function writeBridge(index,plant,part){
  const b=bridges[index],slot=bridgeCounts[index]++;if(slot>=MAX_PLANTS)return;
- tmpObj.position.set(plant.x-renderOrigin.x,plant.y||0,plant.z-renderOrigin.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();b.mesh.setMatrixAt(slot,tmpObj.matrix);
- b.attr.setXYZW(slot,part.t,part.e,plant.seed||0,0);
+ writePose(b,slot,plant);writeValues(b.attr,slot*4,[part.t,part.e,plant.seed||0,0]);
 }
 
 function stageSample(crop,growth){
@@ -217,8 +235,7 @@ function stageSample(crop,growth){
 }
 function writeInstance(modelIndex,plant,part){
  const item=models[modelIndex],slot=counts[modelIndex]++;if(slot>=MAX_PLANTS)return;
- tmpObj.position.set(plant.x-renderOrigin.x,plant.y||0,plant.z-renderOrigin.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();item.mesh.setMatrixAt(slot,tmpObj.matrix);
- item.growthAttr.setXYZW(slot,part.sy,part.sr,part.open,plant.seed||0);
+ writePose(item,slot,plant);writeValues(item.growthAttr,slot*4,[part.sy,part.sr,part.open,plant.seed||0]);
 }
 
  prepareModels(gltf);prepareBridges(bridgeData);
@@ -226,15 +243,16 @@ function writeInstance(modelIndex,plant,part){
   capacity:MAX_PLANTS,
   update(plants,clock,ground,origin={x:0,z:0}) {
    renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges])model.mesh.position.set(origin.x,0,origin.z);
-   uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);
+   uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
    for(const entity of plants){
     const p={...entity,crop:ids.indexOf(entity.species),growth:entity.growth/cropSpec(entity.species).growth_seconds,y:ground(entity.x,entity.z),seed:Number(entity.id.replace(/\D/g,''))||0};
     const sample=stageSample(p.crop,p.growth);
     for(const part of sample.items)writeInstance(part.index,p,part);
     if(sample.bridge)writeBridge(sample.bridge.index,p,sample.bridge);
    }
-   for(let i=0;i<models.length;i++){const m=models[i];m.mesh.count=counts[i];m.mesh.visible=counts[i]>0;if(counts[i]){m.mesh.instanceMatrix.needsUpdate=true;m.growthAttr.needsUpdate=true;}}
-   for(let i=0;i<bridges.length;i++){const b=bridges[i];b.mesh.count=bridgeCounts[i];b.mesh.visible=bridgeCounts[i]>0;if(bridgeCounts[i]){b.mesh.instanceMatrix.needsUpdate=true;b.attr.needsUpdate=true;}}
+   for(let i=0;i<models.length;i++){const m=models[i];m.mesh.count=Math.min(MAX_PLANTS,counts[i]);m.mesh.visible=m.mesh.count>0;}
+   for(let i=0;i<bridges.length;i++){const b=bridges[i];b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
+   for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
   dispose(){for(const model of [...models,...bridges]){scene.remove(model.mesh);model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
