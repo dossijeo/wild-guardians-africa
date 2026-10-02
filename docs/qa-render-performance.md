@@ -31,3 +31,7 @@ Una vista aislada de los cuatro trabajadores y las cinco bestias, media/noche, a
 El informe completo se despliega desde una línea compacta de resultados, para poder revisar la escena sin que el JSON la tape. La versión de producción medida conserva el código de renderizado de 789b1a6; las revisiones posteriores de este documento/visor no cambian la simulación o WorldScene.
 
 La versión final del visor completa otra media: 17,40 FPS, CPU 11,87 / p95 14,90 ms, las mismas 275 calls y 2.837.376 triángulos. El resumen compacto y el desplegado completo se verifican en navegador. En total se conservan ocho ensayos y 1.440 muestras medidas, todos con estado lógico idéntico, pestaña visible según document.visibilityState y sin errores. Consola final sin avisos/errores; paquete web aprobado (554 archivos, 794 enlaces relativos, 20 GLB). CI 37065369958 de 262d7cf aprobado: 595/595 pruebas, cero fallos/omisiones, build y paquete. La mejora final del informe compacto se prueba en navegador después de esa revisión; su CI se iniciará al publicar.
+
+## Instrumentación GPU posterior
+
+Los ocho ensayos anteriores usan el esquema 1 sin timer GPU. La fixture actual añade temporizador GPU opcional, con muestras válidas, descarte disjoint y limpieza acotada. Sus ensayos instrumentados, variabilidad y límites se documentan en [QA del timer GPU](qa-gpu-timing.md). La reutilización de visibilidad PCF en objetos se describe en [QA del resultado compartido](qa-pcf-reuse.md); no acredita una mejora de FPS.
