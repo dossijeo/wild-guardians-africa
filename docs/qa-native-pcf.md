@@ -11,7 +11,9 @@ La adaptación evalúa las derivadas antes del retorno por borde de mapa y antes
 de la rama de visibilidad de cada luz. Conserva el cálculo de las muestras
 válidas y evita derivadas indefinidas en quads que cruzan una condición. Las
 consultas usan LOD explícito cero: la profundidad no tiene mipmaps. Estas
-adaptaciones responden a avisos reales del compilador ANGLE en Windows.
+adaptaciones responden a avisos reales del compilador ANGLE en Windows. Las
+nueve consultas se expresan explícitamente, con el mismo orden x/y y cálculo;
+la prueba recompone el bucle original antes de comparar el cuerpo fuente.
 
 El mapa usa una `DepthTexture` DEPTH_COMPONENT24/UNSIGNED_INT y comparación
 LEQUAL con filtro lineal, equivalente al sampler de PCF del lab. El attachment
@@ -52,10 +54,23 @@ pasadas desactivadas o una luz sin actualización no asignan un target nuevo.
 - Evidencia GPU y capturas en `test-results/native-pcf-*`: seis biomas con
   Mapungubwe, personajes a escala nativa, DEST, agua, noche y resolución.
   El registro final distingue los ajustes posteriores a la primera comparación.
-- La compilación final de Sabana y Gran Río no registra avisos; Manglares aún
+- En la revisión 214fb9b, Sabana y Gran Río no registran avisos; Manglares aún
   registra X3595 de ANGLE (derivadas en un bucle). No se atribuye ese aviso a una
   causa no demostrada ni se acredita compilación sin avisos en toda la matriz.
-  La revisión de ese aviso sigue pendiente, aunque los frames no tienen errores GL.
+  Los frames no tienen errores GL. Ese registro conserva los avisos anteriores.
+
+## Corrección posterior del aviso de ANGLE
+
+Expresar las nueve muestras de forma explícita elimina X3595 en la nueva
+compilación de Manglares. No cambia el sampler, coordenadas ni orden de suma.
+La comparación de la misma escena, reloj y cámara registra 112 píxeles distintos
+de 524.800, con máximo de 4 niveles por canal; no se afirma identidad binaria
+entre programas GPU. Las 16 pruebas dirigidas de sombras, cel, terreno y agua
+pasan en 0,553 s. El build pasa en 8,80 s y el paquete conserva 548 archivos,
+791 enlaces relativos y 20 GLB de runtime, con 379.422.758 bytes. La regresión
+585/585 anterior precede este desenrollado; CI verifica la revisión publicada.
+Evidencia específica: `native-pcf-unrolled-comparison.json`, captura y registro
+`native-pcf-unrolled-gpu.json` en `test-results`.
 
 La revisión no introduce todavía `shadowDirty` para evitar pasadas estáticas:
 se conserva la actualización de Three, necesaria para actores y destrucción.

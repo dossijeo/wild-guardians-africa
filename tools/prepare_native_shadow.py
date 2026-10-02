@@ -15,6 +15,14 @@ for old, new in [('uShadowOn', 'uNativeShadowOn'), ('uShadowFiltered', 'uNativeS
 # There are no mip levels in this depth attachment. Explicit LOD zero retains
 # the native hardware PCF and avoids implicit derivatives inside the tap loop.
 adapted = adapted.replace('texture(uNativeShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias))', 'textureLod(uNativeShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.)')
+# Fixed taps also avoid ANGLE translating comparison samples through a loop
+# with an implicit gradient. Keep the original x-major order and expressions.
+tap_loop = ' for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++){vec2 o=vec2(float(x),float(y))*uNativeShadowTexel*1.15;v+=textureLod(uNativeShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.);}'
+if adapted.count(tap_loop) != 1:
+    raise ValueError('Native PCF tap loop changed')
+adapted = adapted.replace(tap_loop, '\n'.join(
+    ' {vec2 o=vec2(float(%d),float(%d))*uNativeShadowTexel*1.15;v+=textureLod(uNativeShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.);}' % (x, y)
+    for x in range(-1, 2) for y in range(-1, 2)))
 # Evaluate derivatives across the whole quad before the varying map-edge guard.
 # The original early return otherwise leaves edge derivatives undefined on ANGLE.
 guard = next(line for line in adapted.splitlines() if line.startswith(' if(uNativeShadowOn'))

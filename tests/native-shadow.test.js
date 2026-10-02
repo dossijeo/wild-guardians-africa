@@ -15,7 +15,11 @@ test('PCF preserves the original nine taps, slope compensation, bias and edge fa
  assert.equal(createHash('sha256').update(original).digest('hex'),nativeShadowSourceHash);
  const restored=nativeShadowFunctions.slice(nativeShadowFunctions.indexOf('float nativeShadowOcclusion')).replace('nativeShadowOcclusion(vec3 normal,vec3 worldPosition)','filteredShadow4(vec3 normal)').replace(' vec4 lightPosition=uNativeLightVP*vec4(worldPosition,1.);\n vec3 p=lightPosition.xyz/lightPosition.w*.5+.5;',' vec3 p=vLight.xyz/vLight.w*.5+.5;').replaceAll('uNativeShadowOn','uShadowOn').replaceAll('uNativeShadowFiltered','uShadowFiltered').replaceAll('uNativeShadowTexel','uTexel').replaceAll('uNativeShadowLight','uLightDir');
  const guard=restored.split('\n').find(line=>line.startsWith(' if(uShadowOn')),normalOrder=restored.replace(guard+'\n','').replace(' vec2 ux=',guard+'\n vec2 ux=');
- assert.equal(normalOrder.replace('textureLod(uShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.)','texture(uShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias))'),original);assert.ok(source.includes('gl.polygonOffset(1,1)'));assert.ok(source.includes('gl.LEQUAL'));
+ const tapBody='vec2 o=vec2(float(x),float(y))*uTexel*1.15;v+=textureLod(uShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.);',taps=[];
+ for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)taps.push(' {'+tapBody.replace('float(x)',`float(${x})`).replace('float(y)',`float(${y})`)+'}');
+ assert.ok(normalOrder.includes(taps.join('\n')));assert.equal((nativeShadowFunctions.match(/v\+=textureLod/g)||[]).length,9);
+ const loopOrder=normalOrder.replace(taps.join('\n'),' for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++){'+tapBody+'}');
+ assert.equal(loopOrder.replace('textureLod(uShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias),0.)','texture(uShadowFiltered,vec3(p.xy+o,p.z+dot(slope,o)-bias))'),original);assert.ok(source.includes('gl.polygonOffset(1,1)'));assert.ok(source.includes('gl.LEQUAL'));
 });
 
 test('shadow target keeps packed-color compatibility and native depth24 comparison through resizing',()=>{
