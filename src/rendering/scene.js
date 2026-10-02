@@ -6,6 +6,7 @@ import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch} from './crop-batch.js';
 import {applyWorkerPose,nativeCrate} from './worker-actions.js';
+import {applyAnimalPose,prepareAnimalClips,animalGroundSamples} from './animal-actions.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -97,7 +98,8 @@ export class WorldScene {
     const root=this.objects.get(entity.id),model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
     if(type==='animal'){const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),scale=({warthog:.85,hyena:.9,buffalo:1.7,lion:1.2,rhino:1.9}[entity.species])/size.y;model.scale.setScalar(scale);model.position.y=-box.min.y*scale;}
     root.add(model);
-    const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:gltf.animations,action:null,name:null,model});
+    const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
+      groundSamples:type==='animal'?animalGroundSamples(model):null});
   }
   async crate(entity){
     const gltf=await this.assets.model(this.workerLibraries[entity.profile??'olderMale'].url);
@@ -111,9 +113,8 @@ export class WorldScene {
       if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
       return;
     }
-    let name=type==='animal'?(entity.status==='attacking'?entity.animation:entity.status==='entering'||entity.status==='retreating'?'Running':'Walking'):['fleeing','incapacitated'].includes(entity.status)?'Meshy_Running':['walking','arriving','returning','carrying'].includes(entity.status)?'Meshy_Skip_Forward':entity.fallRemaining>0?'Meshy_Shot_and_Fall_Backward':'Meshy_Alert';
-    const clip=data.clips.find(c=>c.name===name);if(clip&&data.name!==name){data.action?.fadeOut(.15);data.action=data.mixer.clipAction(clip);data.action.reset().fadeIn(.15).play();data.name=name;}
-    if(data.action)data.action.timeScale=entity.incapacitated?.35:1;data.mixer.update(dt);
+    applyAnimalPose(data,entity,this.state.elapsed);
+    this.objects.get(entity.id).rotation.y=entity.heading??0;
     if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
   }
   sync(dt) {

@@ -148,7 +148,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
-  if(motion)moveWorker(w,dt,motion);else movePath(w,speed*dt);
+  if(motion)moveWorker(w,dt,motion);else {
+    const metres=movePath(w,speed*dt);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   return w.path.length===0;
 }

@@ -124,7 +124,9 @@ test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
 test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
   const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
   a.targetId=center.id;a.status='attacking';a.animation='Weapon_Combo_2';a.attackRemaining=1;a.hitApplied=false;a.hitsRemaining=3;a.attackId='combo';
-  updateRaid(s,.3,nav);assert.equal(center.hp,560);assert.equal(a.hitsRemaining,2);const loaded=deserialize(serialize(s));updateRaid(loaded,.3,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
+  updateRaid(s,.3,nav);assert.equal(center.hp,600);assert.equal(a.hitsRemaining,3);const loaded=deserialize(serialize(s));
+  updateRaid(loaded,.7,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
+  updateRaid(loaded,.1,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
 });
 test('Attack crossing dawn prevents events, hiring and night completion until departure',()=>{
   const s=setup();s.ledger.balance=rational(200);s.time=599.9;s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0];a.status='retreating';a.x=0;a.z=0;a.spawn={x:200,z:0};

@@ -7,6 +7,7 @@ import {releaseTask} from './tasks.js';
 import {rational,compare} from './money.js';
 import {contiguousGroup} from './crops.js';
 import {updateWorkerEncounters} from './encounters.js';
+import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
@@ -99,6 +100,25 @@ export function updateRaid(s,dt,nav) {
   updateWorkerEncounters(s,nav);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
+    if(a.status==='attacking'){
+      a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
+      a.attackRemaining=Math.max(0,a.attackRemaining-dt);
+      if(a.attackRemaining>1e-9)continue;
+      const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));
+      if(!a.hitApplied&&a.hitsRemaining>0){
+        a.hitApplied=true;a.hitsRemaining--;
+        if(target){
+          if(!spellAt(s,'shield',target)){
+            if('alive' in target){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
+            else {hitStructure(target,animalSpec(a.species).structure_hit_damage);emit(s,'StructureHit',{targetId:target.id});}
+          }
+          emit(s,'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species});
+        }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species});
+      }
+      a.status='walking';a.path=null;if(!target)release(s,a);
+      // Finish the committed animation before spending another hit or retreating.
+      continue;
+    }
     if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
     if(a.status==='retreating') {
       if(walkTo(s,a,{...a.spawn,id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false}))a.status='gone';continue;
@@ -122,21 +142,11 @@ export function updateRaid(s,dt,nav) {
     if(a.status!=='attacking') {
       if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,worker:false})) {
         a.heading=Math.atan2(target.x-a.x,target.z-a.z);
-        a.status='attacking';a.attackRemaining=1.8;a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
+        a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
+        a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
       } else if(!a.path){release(s,a);a.status='walking';}
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
-    } else {
-      a.attackRemaining-=dt;
-      if(a.attackRemaining<=.8&&!a.hitApplied) {
-        a.hitApplied=true;a.hitsRemaining--;
-        if(!spellAt(s,'shield',target)) {
-          if('alive' in target){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
-          else {hitStructure(target,animalSpec(a.species).structure_hit_damage);emit(s,'StructureHit',{targetId:target.id});}
-        }
-        emit(s,'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species});
-      }
-      if(a.attackRemaining<=0){a.status='walking';a.path=null;if(!target.alive&&'alive' in target||target.status&&target.status!=='intact')release(s,a);}
     }
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
