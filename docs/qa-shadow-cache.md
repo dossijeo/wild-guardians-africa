@@ -23,3 +23,5 @@ Los personajes quietos (cuatro trabajadores y cinco bestias, escala nativa 1) re
 Comparación RGB de capturas en (0,302)-(1280,650), **445.440 píxeles**, excluyendo encabezado y resumen de rendimiento: personajes, cero diferencias; primer poblado, 280 píxeles distintos y máximo 4 niveles por canal; poblado final, 670 píxeles distintos y máximo 14. Se conservan todas las capturas/JSON, sin afirmar identidad binaria del poblado ni atribuir la diferencia al driver. No acredita la matriz completa de culturas/biomas, móvil, memoria GPU residente ni rendimiento durante ataques con VFX activos. Los efectos con profundidad no declarada siguen recalculándose de forma conservadora.
 
 Evidencia en `docs/qa/shadow-cache/`: seis informes de rendimiento, comparaciones RGB, capturas y checks finales. Continúan pendientes otros puntos del Plan Maestro, incluido el origen flotante del terreno.
+
+CI final de esa revisión: 37071847304 (`e6e3269`) y 37071625305 (`f7420fd`) aprobados. El log de 37071847304 acredita 612/612, cero fallos y paquete de 554 archivos/794 enlaces/20 GLB.
