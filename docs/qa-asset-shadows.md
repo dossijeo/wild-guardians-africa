@@ -56,8 +56,9 @@ Artefactos: `test-results/asset-shadow-*`.
 
 ## Trabajo restante
 
-La agrupación global entre chunks, origen flotante y gestión/caché de recursos
-siguen pendientes. Esta revisión no reemplaza la cámara, foco/resolución de luz,
+La agrupación global entre chunks se completa posteriormente en
+[QA de agrupación](qa-asset-groups.md). Origen flotante y gestión/caché completa
+de recursos siguen pendientes. Esta revisión no reemplaza la cámara, foco/resolución de luz,
 filtrado o política completa de actualización de sombras de Three por los del
 lab. Tampoco acredita la matriz visual de todas las culturas/calidades ni
 rendimiento móvil, y no da por completado el Plan Maestro.

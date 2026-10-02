@@ -54,5 +54,6 @@ triángulos efectivamente rasterizados después del frustum, ni incluyen terreno
 poblados, agua, personajes o pasadas de sombras. No acreditan FPS en móvil.
 La selección especial del último LOD para sombras se completa en la revisión
 posterior [QA de sombras](qa-asset-shadows.md). La agrupación global entre
-chunks y el origen flotante siguen pendientes.
+chunks se completa posteriormente en [QA de agrupación](qa-asset-groups.md).
+El origen flotante sigue pendiente.
 No se da por completada la optimización web ni el Plan Maestro.

@@ -1,0 +1,131 @@
+TAP version 13
+# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+ok 1 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+  ---
+  duration_ms: 23.5545
+  ...
+# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+ok 2 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+  ---
+  duration_ms: 9.2612
+  ...
+# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+ok 3 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+  ---
+  duration_ms: 7.3944
+  ...
+# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+ok 4 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+  ---
+  duration_ms: 7.1297
+  ...
+# (node:25828) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+ok 5 - native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+  ---
+  duration_ms: 75.2873
+  ...
+# Subtest: render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+ok 6 - render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+  ---
+  duration_ms: 16.6078
+  ...
+# Subtest: short vegetation distance culling does not remove logical instances and reappears when the camera returns
+ok 7 - short vegetation distance culling does not remove logical instances and reappears when the camera returns
+  ---
+  duration_ms: 5.6705
+  ...
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 8 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 20.5129
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 9 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 8.2617
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 10 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 5.94
+  ...
+# Subtest: native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+ok 11 - native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+  ---
+  duration_ms: 126.0228
+  ...
+# Subtest: contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+ok 12 - contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+  ---
+  duration_ms: 6.7148
+  ...
+# Subtest: resident contact texture is stable, updates on streaming or removal and releases its owner resource
+ok 13 - resident contact texture is stable, updates on streaming or removal and releases its owner resource
+  ---
+  duration_ms: 4.7684
+  ...
+# (node:32464) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native canyon and desert horizons preserve every original position, normal and color byte
+ok 14 - native canyon and desert horizons preserve every original position, normal and color byte
+  ---
+  duration_ms: 3651.2359
+  ...
+# Subtest: streaming uses the eye and original resident radii, including negative boundaries
+ok 15 - streaming uses the eye and original resident radii, including negative boundaries
+  ---
+  duration_ms: 14.6004
+  ...
+# Subtest: horizon resources survive static frames and are released once on travel, quality change and close
+ok 16 - horizon resources survive static frames and are released once on travel, quality change and close
+  ---
+  duration_ms: 524.2797
+  ...
+# Subtest: native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+ok 17 - native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+  ---
+  duration_ms: 520.1798
+  ...
+# (node:10836) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 18 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 9.294
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 19 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 5.5799
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 20 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 2.7798
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 21 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 0.9387
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 22 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 2.8988
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 23 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 1.8384
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5106.6986
