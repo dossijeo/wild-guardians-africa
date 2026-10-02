@@ -51,8 +51,8 @@ export function setLanguage(next, {persist = true, broadcast = true} = {}) {
   localize();
   for (const select of document.querySelectorAll('[data-language-select]')) select.value = language;
   window.dispatchEvent(new CustomEvent('wild-guardians:language-change', {detail:{language}}));
+  notifyChildren();
   if (broadcast) {
-    notifyChildren();
     if (parent !== window) parent.postMessage({type:'wild-guardians:language-request', language}, location.origin);
   }
   return true;

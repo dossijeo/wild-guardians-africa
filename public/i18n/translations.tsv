@@ -1,4 +1,936 @@
 Idioma	Language
+{event} de {count} plantas de {species}.	{event} for {count} {species} plants.
+{event} de {count} plantas.	{event} for {count} plants.
+{count} módulos	{count} modules
+{count} módulos construidos	{count} modules built
+{count} puertas automáticas añadidas	{count} automatic gates added
+{count} de {total} sonidos · {category}	{count} of {total} sounds · {category}
+% del tamaño ·	% size ·
+, colapso automático en curso	, automatic collapse in progress
+03 / DAÑO LOCALIZADO	03 / LOCAL DAMAGE
+04 / PÉRDIDA DE ESTRUCTURA	04 / STRUCTURAL LOSS
+06 / DESTRUCCIÓN TOTAL	06 / TOTAL DESTRUCTION
+Acciones de granja procedurales de validación	Procedural farm actions for validation
+Acción recuperada.	Action recovered.
+Ambiente preparado para bucle	Ambience prepared for looping
+Asignación conservada:	Preserved assignment:
+Automático	Automatic
+BASTIÓN / LABORATORIO DE MURALLAS	BASTION / WALL LABORATORY
+Borde de regadera	Watering can rim
+Botón derecho / Mayús + arrastrar	Right mouse button / Shift + drag
+CON DAÑOS	DAMAGED
+Caja de frutas	Fruit crate
+Cantos de madera	Wooden edges
+Colapso irreversible: la pieza caerá hasta el 0 %.	Irreversible collapse: this piece will fall to 0 %.
+Correspondencia de transición no válida	Invalid transition correspondence
+Costuras de lona	Canvas seams
+Cuadrícula tenue	Faint grid
+Datos de transición incompletos	Incomplete transition data
+Descomprimiendo las geometrías integradas…	Decompressing embedded geometry…
+Destrucción total · solo quedan cenizas	Total destruction · only ashes remain
+El morph ocupa como máximo	The morph lasts at most
+Ese espacio ya está ocupado.	That space is occupied.
+Esta pieza ya tiene el 100 % de vida.	This piece already has 100 % health.
+Este cultivo todavía está creciendo.	This crop is still growing.
+Falta el clip importado de vigilancia Alert.	The imported Alert watch clip is missing.
+Falta la clasificación de un modelo	A model classification is missing
+Fondo cálido	Warm background
+Ganancia y limitación acotada de picos	Gain and bounded peak limiting
+Gotas de agua	Water drops
+Hay piezas fuera de los límites permitidos.	Some pieces are outside permitted bounds.
+Hay un material o tipo de pieza desconocido.	There is an unknown material or piece type.
+Impacto final · el edificio sigue derrumbándose	Final impact · the building is still collapsing
+Impacto: el agujero se amplía	Impact: the hole widens
+La animación contiene valores no finitos:	The animation contains non-finite values:
+La escena contiene coordenadas o vida no válidas.	The scene contains invalid coordinates or health.
+La escena contiene escalas base no válidas.	The scene contains invalid base scales.
+La escena contiene un estado de colapso no válido.	The scene contains an invalid collapse state.
+La escena supera el límite de	The scene exceeds the limit of
+La parcela está lista.	The plot is ready.
+La parcela ya está vacía.	The plot is already empty.
+La planta permanece hasta su recolección.	The plant remains until harvested.
+La resistencia de un material no es válida.	A material strength is invalid.
+La resistencia debe estar entre 25 y 5000 PV.	Strength must be between 25 and 5000 HP.
+La transición no coincide con la malla original	The transition does not match the original mesh
+Listo para recolectar	Ready to harvest
+Límite de	Limit of
+No es un archivo de parcela compatible	This is not a compatible plot file
+No queda espacio libre para la muestra.	There is no free space left for the sample.
+PARCELA LIBRE · SELECCIONADO: MAÍZ	CLEAR PLOT · SELECTED: MAIZE
+PV de resistencia	HP strength
+Parcela vacía. Lista para empezar.	Empty plot. Ready to start.
+Pieza eliminada. Puedes recuperarla con Deshacer.	Piece removed. You can restore it with Undo.
+Pista de animación incompatible:	Incompatible animation track:
+Planta dentro de la superficie de tierra.	Plant within the soil area.
+Preparando 32 puentes geométricos locales…	Preparing 32 local geometric bridges…
+Preparando la superficie y la iluminación…	Preparing surfaces and lighting…
+Puerta automática añadida	Automatic gate added
+Raíz	Root
+Región de transición desconocida	Unknown transition region
+Render de referencia de	Reference render of
+Rig no compatible con la plantilla: faltan	Rig incompatible with template: missing
+Tamaño	Size
+Terreno de demostración preparado.	Demonstration terrain ready.
+Tiempo de animación no válido.	Invalid animation time.
+Tiempos de animación no crecientes:	Animation times are not increasing:
+Tierra de cultivo	Growing soil
+Toca un tramo para repararlo y reconstruirlo.	Touch a segment to repair and rebuild it.
+Toca una pieza para examinarla o eliminarla.	Touch a piece to inspect or remove it.
+Transición	Transition
+WEBGL 2 / SIN LIBRERÍAS EXTERNAS	WEBGL 2 / NO EXTERNAL LIBRARIES
+cinemática inversa (IK)	inverse kinematics (IK)
+cámara	camera
+eliminar selección	remove selection
+triángulos	triangles
+listo · 0 % de daño	ready · 0 % damage
+módulos alcanzado.	module limit reached.
+módulos construidos	modules built
+puertas automáticas añadidas	automatic gates added
+recolectado. La tierra vuelve a estar libre.	harvested. The soil is clear again.
+CINCO GEOMETRÍAS ORIGINALES · TIEMPO DETENIDO	FIVE ORIGINAL GEOMETRIES · TIME PAUSED
+ciclo de demostración de	demonstration cycle of
+listo para destruir	ready to destroy
+reconstrucción completada	rebuild completed
+Límite alcanzado	Limit reached
+¿Empezar de nuevo?	Start again?
+Última acción deshecha.	Last action undone.
+¿Cargar el ejemplo?	Load the example?
+Planta joven	Young plant
+Planta adulta	Adult plant
+Desarrollo	Developing
+Maduro	Ripe
+Joven	Young
+Adulto	Adult
+Semilla	Seed
+Fruto	Fruit
+Fibra	Fibre
+Etapa	Stage
+Etapas	Stages
+Inicio	Start
+Caminar	Walk
+Correr	Run
+Saltar	Jump
+Saltaritos	Skip
+Alerta	Alert
+Caer	Fall
+Saludar	Greet
+Regar	Water
+Cavar	Dig
+Recolectar	Harvest
+Con saco	With sack
+Saco	Sack
+Azada	Hoe
+Regadera	Watering can
+Caja	Crate
+Ambiente	Ambience
+Movimiento de personajes	Character movement
+Agricultura	Agriculture
+Construcción	Construction
+Murallas y destrucción	Walls and destruction
+Bestias · comunes	Beasts · common
+Bestias · león	Beasts · lion
+Bestias · hiena	Beasts · hyena
+Bestias · búfalo	Beasts · buffalo
+Bestias · rinoceronte	Beasts · rhinoceros
+Bestias · facóquero	Beasts · warthog
+Granjero / NPC	Farmer / NPC
+Espíritu / jugador	Spirit / player
+Interfaz	Interface
+Economía / recursos	Economy / resources
+Feedback de gameplay	Gameplay feedback
+Viento suave	Soft wind
+Viento fuerte	Strong wind
+Viento moderado	Moderate wind
+Ambiente tenue	Quiet ambience
+Ambiente nocturno	Night ambience
+Agua de costa / manglar	Coastal / mangrove water
+Agua de río	River water
+Agua y lluvia de fondo	Background water and rain
+Aves de fondo	Background birds
+Insectos de fondo	Background insects
+Insectos	Insects
+Pájaros	Birds
+Lluvia	Rain
+Trueno lejano	Distant thunder
+Truenos	Thunder
+Pasos ligeros	Light footsteps
+Pasos pesados	Heavy footsteps
+Pasos · arena	Footsteps · sand
+Pasos · barro	Footsteps · mud
+Pasos · hierba	Footsteps · grass
+Pasos · madera	Footsteps · wood
+Pasos · piedra	Footsteps · stone
+Pasos · tierra seca	Footsteps · dry soil
+Carrera · variaciones por superficie	Running · surface variations
+Pequeño aterrizaje / salto	Small landing / jump
+Saco manipulándose	Handling a sack
+Caja de fruta moviéndose	Moving a fruit crate
+Sembrar	Sow
+Semillas cayendo	Falling seeds
+Regadera vertiendo agua	Watering can pouring water
+Agua golpeando tierra	Water striking soil
+Azada / cavar tierra	Hoe / digging soil
+Recoger cultivo	Harvest crop
+Colocar cosecha en caja	Placing harvest in a crate
+Interacción genérica con cultivo	Generic crop interaction
+Arrancar planta	Pulling out a plant
+Foley agrícola	Farming Foley
+Golpe de herramienta	Tool strike
+Construcción · adobe / barro	Construction · adobe / mud
+Construcción · madera	Construction · wood
+Construcción · piedra	Construction · stone
+Construcción terminada	Construction completed
+Colocar elemento / edificio	Place object / building
+Reparación	Repair
+Crujido estructural	Structural creak
+Pequeñas grietas	Small cracks
+Desprendimiento de fragmentos	Breaking fragments
+Fragmentos cayendo al suelo	Fragments falling to the ground
+Derrumbe	Collapse
+Colapso completo	Complete collapse
+Demolición voluntaria	Manual demolition
+Detalle estructural	Structural detail
+Impacto contra estructura	Impact against structure
+Impacto estructural	Structural impact
+Impacto · adobe	Impact · adobe
+Impacto · adobe reforzado	Impact · reinforced adobe
+Impacto · madera	Impact · wood
+Impacto · piedra	Impact · stone
+Impacto · zarzas	Impact · thorn bushes
+Paso de bestia ligero	Light beast footstep
+Paso de bestia pesado	Heavy beast footstep
+Acción de bestia	Beast action
+Reacción de bestia	Beast reaction
+Bestia en reposo	Beast at rest
+Ataque	Attack
+Carga	Charge
+Carrera / carga	Run / charge
+Caída	Fall
+Retirada	Retreat
+Vocalización agresiva	Aggressive vocalisation
+Vocalización neutra	Neutral vocalisation
+agresiva	aggressive
+agresiva / risa	aggression / laughter
+vocalización neutra	neutral vocalisation
+ataque	attack
+carga	charge
+daño	damage
+retirada	retreat
+rugido / agresiva	roar / aggression
+Aviso de granjero	Farmer notice
+Aviso de juego	Game notice
+Aviso discreto	Quiet notice
+Confirmación vocal discreta	Quiet vocal confirmation
+Esfuerzo trabajando	Working effort
+Granjero herido	Injured farmer
+Grito breve al huir	Brief fleeing cry
+Grito contenido	Restrained cry
+Huida / retirada	Fleeing / retreat
+Impacto contra personaje	Impact against character
+Recibir daño	Take damage
+Recibir golpe	Take a hit
+Reacción al peligro	Reaction to danger
+Movimiento espiritual	Spirit movement
+Poder del espíritu	Spirit power
+Interacción del espíritu	Spirit interaction
+Carga del poder	Power charging
+Poder cargándose	Power charging
+Poder activado	Power activated
+Aparición	Appearance
+Desaparición	Disappearance
+Abrir panel	Open panel
+Cerrar panel	Close panel
+Cambiar pestaña	Change tab
+Seleccionar	Select
+Soltar	Release
+Arrastrar	Drag
+Tocar / interactuar	Touch / interact
+Confirmación	Confirmation
+Confirmación de interfaz	Interface confirmation
+Interfaz discreta	Quiet interface
+Acción válida	Valid action
+Acción inválida	Invalid action
+Ganar recurso	Gain resource
+Gastar recurso	Spend resource
+Comprar	Buy
+Vender	Sell
+Cosecha vendida	Harvest sold
+Recompensa	Reward
+Recompensa importante	Major reward
+Economía	Economy
+Desbloqueo	Unlock
+Objetivo completado	Objective completed
+Objeto recogido	Object collected
+Alerta de ataque	Attack alert
+Ataque terminado	Attack ended
+Enemigo detectado	Enemy detected
+Edificio bajo ataque	Building under attack
+Muralla crítica	Wall critical
+Victoria / objetivo completado	Victory / objective completed
+Derrota / pérdida importante	Defeat / major loss
+Muerte / derrota	Death / defeat
+Tutorial / indicación especial	Tutorial / special instruction
+Cierre de partida	Game ending
+Volver al juego	Return to game
+021 usa la toma que antes pertenecía a 022 · Agua golpeando tierra.	021 uses the take previously assigned to 022 · Water striking soil.
+022 usa la toma que antes pertenecía a 021 · Regadera vertiendo agua.	022 uses the take previously assigned to 021 · Watering can pouring water.
+sonidos	sounds
+sonido	sound
+Resultados	Results
+Descargar	Download
+de {total} sonidos	of {total} sounds
+{count} de {total} sonidos	{count} of {total} sounds
+MP3 · 128 kb/s · 44,1 kHz · estéreo	MP3 · 128 kb/s · 44.1 kHz · stereo
+40 geometrías extraídas · 107.109 triángulos únicos. El motor 3D Three.js r140 está integrado bajo licencia MIT. Los GLB y mockups proceden de los archivos aportados.	40 extracted geometries · 107,109 unique triangles. The Three.js r140 3D engine is embedded under the MIT licence. GLBs and mockups come from the supplied files.
+: cada rig y cada proporción necesitan revisar los puntos de agarre y los límites de movimiento.	: each rig and body proportion requires checking grip points and movement limits.
+Activa JavaScript para consultar y reproducir el catálogo incrustado.	Enable JavaScript to browse and play the embedded catalog.
+Ajusta la resistencia, el impacto y la visualización.	Adjust strength, impact and display.
+Ajustar nuevas plantas a una cuadrícula de 1,25 unidades	Snap new plants to a 1.25-unit grid
+Ajustes aplicados. Las puertas conservan el factor 60 %.	Settings applied. Gates retain the 60 % factor.
+Al 20 % o menos comienza el colapso automático. Una vez completado, puedes reconstruir la pieza.	Automatic collapse begins at 20 % or less. You can rebuild the piece once it finishes.
+Alert transferido a Amara joven: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio.	Alert transferred to young Amara: looks both ways. Useful for waiting, thinking or keeping watch. Natural loop, no required accessory.
+Alert transferido a Amara mayor: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio.	Alert transferred to older Amara: looks both ways. Useful for waiting, thinking or keeping watch. Natural loop, no required accessory.
+Alert transferido a Kofi joven: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio.	Alert transferred to young Kofi: looks both ways. Useful for waiting, thinking or keeping watch. Natural loop, no required accessory.
+Alert transferido al ganadero mayor: mira a ambos lados. Útil para espera, pensamiento o vigilancia. Bucle natural, sin accesorio obligatorio.	Alert transferred to the older herder: looks both ways. Useful for waiting, thinking or keeping watch. Natural loop, no required accessory.
+Alta: sombras de 2048 px. Media: sombras de 1024 px. Baja: sin sombras dinámicas. Límite de seguridad: 240 plantas. La velocidad real depende del equipo y del navegador.	High: 2048 px shadows. Medium: 1024 px shadows. Low: no dynamic shadows. Safety limit: 240 plants. Actual speed depends on your device and browser.
+Arrastra para girar. Con Shift, desplaza. Dos dedos desplazan y amplían.	Drag to rotate. Hold Shift to pan. Two fingers pan and zoom.
+Automático equipa la herramienta de cada acción. Los demás botones permiten combinarla con caminar o correr.	Automatic equips the tool for each action. Other buttons let you combine it with walking or running.
+Cada toque daña solo la pieza elegida. Al llegar al 20 % o menos, colapsa automáticamente hasta el 0 %.	Each touch damages only the selected piece. At 20 % or less, it automatically collapses to 0 %.
+Cavar con la trayectoria original de la azada. Corrección de codos y muñecas hacia delante, con ambos agarres sujetos al mango y sin desplazar la herramienta para evitar el pecho.	Dig using the hoe's original path. Elbows and wrists are corrected forward, with both grips on the handle and without moving the tool to avoid the chest.
+De arriba abajo: intacto · puerta · dañado · escombros.	From top to bottom: intact · gate · damaged · rubble.
+Deja un poco de espacio entre las bases de los cultivos.	Leave some space between crop bases.
+Descodificando las texturas originales, sin alterarlas…	Decoding the original textures without changing them…
+Durante las etapas se utiliza exactamente el crecimiento anclado de la V1 sobre los 40 modelos originales. Solo al cambiar de modelo se activa un puente geométrico opaco: las regiones del estado anterior se retiran y las del siguiente se despliegan desde anclajes próximos. No se utiliza dithering ni transparencia en los cultivos.	Stages use the exact anchored V1 growth on all 40 original models. An opaque geometric bridge activates only when changing models: regions of the previous stage retract while those of the next unfold from nearby anchors. Crops use neither dithering nor transparency.
+Edificio original → daño localizado → colapso → cenizas	Original building → local damage → collapse → ashes
+Ejes alineados · geometría editada · UV conservadas.	Aligned axes · edited geometry · preserved UVs.
+El catálogo conserva los portales abiertos de adobe y piedra tal como están en los modelos. Las bases de exhibición se han eliminado de la geometría. Las resistencias son valores de juego editables. Límite: 240 módulos por escena.	The catalog preserves the open adobe and stone gateways as modelled. Display bases have been removed from the geometry. Strength values are editable gameplay settings. Limit: 240 modules per scene.
+El deslizador es reversible antes del 79 %. Al alcanzar ese umbral, el colapso termina solo. Reconstruir es la única forma de interrumpirlo. Desactiva humo e interior para inspeccionar los agujeros.	The slider is reversible below 79 %. At that threshold, collapse finishes automatically. Rebuilding is the only way to interrupt it. Disable smoke and the interior to inspect holes.
+El grito de huida permanece contenido. No se han cambiado las tomas elegidas ni recortado sus duraciones. Los sonidos 021 y 022 mantienen el intercambio solicitado.	The fleeing cry remains restrained. Selected takes and their durations are unchanged. Sounds 021 and 022 retain the requested swap.
+El morph ocupa el intervalo completo donde la V1 utilizaba dithering.	The morph occupies the full interval where V1 used dithering.
+Elige un cultivo y toca cualquier punto de la parcela. El tiempo hará el resto.	Choose a crop and touch any point on the plot. Time will do the rest.
+Elige un material y activa Trazar. Dibuja una línea o una curva y suelta: se ajustará a módulos con vida independiente. Un toque coloca un solo tramo.	Choose a material and activate Draw. Draw a line or curve and release: it snaps to modules with independent health. A tap places one segment.
+En Golpear, cada toque resta los PV indicados en Fuerza sin abrir el inspector. Al llegar al 20 % de vida o menos, la pieza colapsa automáticamente hasta el 0 % mediante morph geométrico. Ninguna reparación puede detener la caída. Una vez reducida a escombros, Reparar permite reconstruirla.	In Hit mode, each touch subtracts the HP shown under Strength without opening the inspector. At 20 % health or less, the piece automatically collapses to 0 % through a geometric morph. Repairs cannot stop the fall. Once reduced to rubble, Repair rebuilds it.
+En el juego, distancia, simultaneidad y prioridad siguen necesitando su propia mezcla. Esta es una base de archivos, no un mezclador de escenas.	In the game, distance, simultaneous sounds and priority still need their own mix. This is a file library rather than a scene mixer.
+Escena guardada: disposición, vida, colapsos en curso y ajustes.	Scene saved: layout, health, ongoing collapses and settings.
+Ese tramo ya está ocupado. Dibuja en un espacio libre.	That segment is occupied. Draw in a clear space.
+Esta pieza ya está destruida. Puedes reconstruirla o eliminarla.	This piece is already destroyed. You can rebuild or remove it.
+Este archivo no es una escena de Bastión compatible (v1 / v2 / v3 / v4).	This file is not a compatible Bastion scene (v1 / v2 / v3 / v4).
+Este edificio utiliza sus normales originales. La corrección de paredes está configurada para Casa Suajili.	This building uses its original normals. Wall correction is configured for the Swahili House.
+Este simulador necesita JavaScript para cargar las piezas y dibujar la escena 3D.	This simulator needs JavaScript to load pieces and render the 3D scene.
+Explora las 20 piezas sin peana. Arrastra para girar la vista.	Explore all 20 pieces without display bases. Drag to rotate the view.
+Explorar los cinco modelos originales de cada cultivo	Explore the five original models of each crop
+Falta el clip importado de caída Shot and Fall Backward.	The imported Shot and Fall Backward clip is missing.
+GLB: personaje + rig + accesorios + animaciones horneadas a 30 fps. JSON: nombres semánticos, agarres y parámetros de la plantilla.	GLB: character + rig + accessories + animations baked at 30 fps. JSON: semantic names, grips and template parameters.
+Guardado local borrado. La parcela abierta no cambia.	Local save deleted. The open plot is unchanged.
+Guardar la distribución de la parcela en un archivo JSON	Save the plot layout to a JSON file
+Hay una posición o un cultivo no válido en el archivo	The file contains an invalid position or crop
+La colocación es libre por defecto. La rejilla es solo una referencia visual.	Placement is free by default. The grid is only a visual reference.
+La parcela admite hasta 240 cultivos. Recolecta o retira alguno.	The plot supports up to 240 crops. Harvest or remove some.
+La plantilla sirve de base para otros personajes con un esqueleto equivalente.	The template provides a basis for other characters with an equivalent skeleton.
+Las manos no tienen dedos articulados. Revisar agarres, hombros y contacto de pies antes de producción.	The hands have no articulated fingers. Check grips, shoulders and foot contact before production.
+Las tomas elegidas, normalizadas y listas para consultar.	Selected takes, normalised and ready to browse.
+Lienzo 3D: dibuja con ratón o dedo para crear murallas	3D canvas: draw with a mouse or finger to create walls
+Los archivos reproducidos y descargados son los mismos.	The files you play and download are identical.
+Los ciclos de 70–150 segundos son tiempos de demostración. En Ajustes también puedes elegir un ciclo de 1, 2, 10, 30 o 60 minutos. Puedes acelerarlos, pausarlos o recorrer el crecimiento con el deslizador de un cultivo seleccionado. Una planta madura permanece hasta que la recolectas. El tiempo se detiene mientras la pestaña está oculta o estás explorando las etapas.	The 70–150 second cycles are demonstration timings. In Settings you can choose a 1, 2, 10, 30 or 60 minute cycle. You can speed up, pause or scrub growth using the selected crop's slider. A ripe plant remains until harvested. Time stops while the tab is hidden or you are exploring stages.
+Los impactos abren y amplían agujeros reales en la imagen, sin transparencia gradual.	Impacts open and enlarge real holes in the image without gradual transparency.
+Malla, texturas y animaciones están dentro de este HTML.	Mesh, textures and animations are embedded in this HTML.
+Modelo real de Meshy. Arrastra para girar, pellizca para acercarte.	Real Meshy model. Drag to rotate, pinch to zoom in.
+Modelo y texturas originales embebidos. WebGL 2, sin bibliotecas ni red.	Embedded original model and textures. WebGL 2, without libraries or network access.
+Mostrar avisos de cosecha sobre los cultivos maduros	Show harvest notices above ripe crops
+No hay movimientos faciales nuevos ni dedos individuales, y las acciones de trabajo son un primer pase procedural. La apariencia puede variar al importar el GLB en otro motor.	There are no new facial movements or individual fingers; work actions are an initial procedural pass. Appearance may vary when importing the GLB into another engine.
+No se pudo crear el ZIP. Los MP3 individuales siguen disponibles.	Could not create the ZIP. Individual MP3 files remain available.
+Ocho cultivos, cinco estados por especie. Todos proceden de tus dos archivos GLB. Las miniaturas son recortes de los mockups originales.	Eight crops, five stages per species. All come from your two GLB files. Thumbnails are cropped from the original mockups.
+Parcela tridimensional. Clic para plantar, arrastrar para girar.	3D plot. Click to plant, drag to rotate.
+Preparando las sombras, los recortes y las partículas…	Preparing shadows, cutouts and particles…
+Preparando tus 20 piezas y sus superficies de destrucción…	Preparing your 20 pieces and their destruction surfaces…
+Prototipo visual · Las colisiones no se reconstruyen	Visual prototype · Collisions are not rebuilt
+Recordar la parcela en este navegador (cuando esté disponible)	Remember the plot in this browser (when available)
+Reproduce una sola toma cada vez · Volumen coherente por función	Plays one take at a time · Consistent volume by function
+Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy.	Subtle breathing, relaxed weight and free hands. New action on the Meshy rig.
+Retroceso breve, brazos abiertos y recuperación. Se puede repetir con el botón de bucle.	Brief recoil, open arms and recovery. Can be repeated with the loop button.
+Ritmo V1: ciclos de 70–150 segundos, según la especie.	V1 pace: 70–150 second cycles depending on species.
+Saltitos, correr, mirar a los lados y caer hacia atrás	Skipping, running, looking both ways and falling backward
+Saludo amplio con mano derecha, anticipación e inclinación de cabeza.	Broad right-handed greeting with anticipation and a head tilt.
+Se agacha, toma un fruto y lo levanta. Acción nueva de validación del agarre.	Crouches, picks up a fruit and lifts it. New grip validation action.
+Se conserva el porcentaje ya crecido al cambiar estos ajustes. La velocidad ×1–×25 acelera tanto el ciclo como las transiciones.	Existing growth percentage is preserved when changing these settings. ×1–×25 speed accelerates both the cycle and transitions.
+Se conservan intactas las texturas, la malla y los pesos de Amara joven. La carrera es su clip nativo. Saltitos, Alerta y Caer se han transferido desde el visor original con calibración sobre la carrera común y tiempos independientes por pista. La exportación no incluye el escenario, la luz ni las partículas.	Young Amara's textures, mesh and weights remain intact. Running is her native clip. Skip, Alert and Fall were transferred from the original viewer with calibration against the shared run and independent track timings. Export excludes the scene, lighting and particles.
+Se conservan intactas las texturas, la malla y los pesos de Amara mayor. La carrera es su clip nativo. Saltitos, Alerta y Caer se han transferido desde el visor original con calibración sobre la carrera común y tiempos independientes por pista. La exportación no incluye el escenario, la luz ni las partículas.	Older Amara's textures, mesh and weights remain intact. Running is her native clip. Skip, Alert and Fall were transferred from the original viewer with calibration against the shared run and independent track timings. Export excludes the scene, lighting and particles.
+Se conservan intactas las texturas, la malla y los pesos del ganadero mayor adjunto. La carrera es su clip nativo. Saltitos, Alerta y Caer se han transferido desde el visor original con calibración sobre la carrera común y tiempos independientes por pista. La exportación no incluye el escenario, la luz ni las partículas.	The supplied older herder's textures, mesh and weights remain intact. Running is his native clip. Skip, Alert and Fall were transferred from the original viewer with calibration against the shared run and independent track timings. Export excludes the scene, lighting and particles.
+Se esperaban 40 geometrías y no se han podido leer todas	Expected 40 geometries but could not read all of them
+Se ha perdido el contexto gráfico. Guarda la parcela y vuelve a abrir el visor.	The graphics context was lost. Save the plot and reopen the viewer.
+Se ha perdido el contexto gráfico. Tu escena se guardó localmente cuando fue posible. Recarga el archivo para continuar.	The graphics context was lost. Your scene was saved locally when possible. Reload the file to continue.
+Se reproduce exactamente el archivo descargable, sin compensaciones adicionales por sonido. El control de volumen es general.	The exact downloadable file is played, without additional per-sound compensation. The volume control is global.
+Se requiere un esqueleto de entre 1 y 64 articulaciones.	A skeleton with 1 to 64 joints is required.
+Se retirarán los cultivos que hay plantados. El contador de cosechas se conserva.	Planted crops will be removed. The harvest counter is preserved.
+Se retirarán todas las piezas. Podrás deshacer esta acción.	All pieces will be removed. You can undo this action.
+Se retirarán todos los módulos. Podrás deshacer esta acción.	All modules will be removed. You can undo this action.
+Selecciona una especie y haz clic sobre la tierra para plantarla.	Choose a species and click on the soil to plant it.
+Shot and Fall Backward transferido desde el visor original. Tras el impacto el cuerpo queda a ras de suelo, sin elevarse para despejar la cabeza o el sombrero. Pose final sostenida.	Shot and Fall Backward transferred from the original viewer. After impact, the body stays at ground level without being raised to clear the head or hat. Final pose is held.
+Skip Forward transferido a Amara joven desde el visor original. Se conserva su rebote y se suaviza la unión del bucle.	Skip Forward transferred to young Amara from the original viewer. Bounce is preserved and the loop seam is smoothed.
+Skip Forward transferido a Amara mayor desde el visor original. Se conserva su rebote y se suaviza la unión del bucle.	Skip Forward transferred to older Amara from the original viewer. Bounce is preserved and the loop seam is smoothed.
+Skip Forward transferido a Kofi joven desde el visor original. Se conserva su rebote y se suaviza la unión del bucle.	Skip Forward transferred to young Kofi from the original viewer. Bounce is preserved and the loop seam is smoothed.
+Skip Forward transferido al ganadero mayor desde el visor original. Se conserva su rebote y se suaviza la unión del bucle.	Skip Forward transferred to the older herder from the original viewer. Bounce is preserved and the loop seam is smoothed.
+Solo normales de iluminación. Geometría, UV y texturas originales intactas.	Lighting normals only. Original geometry, UVs and textures remain intact.
+Sustituirá la escena actual por el terreno de demostración. Puedes deshacerlo.	Replaces the current scene with the demonstration terrain. You can undo it.
+Terreno despejado. Tu siguiente defensa empieza con un trazo.	Terrain cleared. Your next defence starts with a stroke.
+Toca una pieza para consultar su vida, probar el daño o eliminarla. El borrado se puede deshacer.	Touch a piece to check its health, test damage or remove it. Removal can be undone.
+Todo el audio está dentro de este HTML. Puedes descargar un MP3 desde cada fila o un ZIP con los 126 y el manifiesto desde la cabecera. No se guardan valoraciones.	All audio is embedded in this HTML. Download an MP3 from each row or a ZIP with all 126 and the manifest from the header. Ratings are not saved.
+Todo listo. Arrastra para girar o pulsa Reproducir.	All ready. Drag to rotate or press Play.
+Traza un muro. Cierra un recinto para añadir su puerta.	Draw a wall. Close an enclosure to add its gate.
+Traza una línea o curva. Al cerrar un recinto, se añade una puerta automáticamente.	Draw a line or curve. Closing an enclosure automatically adds a gate.
+Umbral superado: el colapso terminará automáticamente.	Threshold passed: collapse will finish automatically.
+Un pequeño laboratorio para probar grandes defensas.	A small lab for testing great defences.
+Verificar pies y deformaciones en el motor de destino	Check feet and deformations in the target engine
+Wild Guardians · Selección final V12 · 44,1 kHz · Estéreo · MP3 128 kb/s	Wild Guardians · Final selection V12 · 44.1 kHz · Stereo · MP3 128 kb/s
+cultivos de muestra plantados. Prueba la velocidad ×5.	sample crops planted. Try ×5 speed.
+lleva las manos a puntos de agarre definidos en cada accesorio. La regadera se sujeta	moves hands to grip points defined for each accessory. The watering can is held
+s simulados y nunca sale del antiguo intervalo de transición.	simulated seconds and never exceeds the old transition interval.
+v1.5 · 4 edificios · Colapso automático desde el 79 % · Corrección de paredes por edificio · Cenizas ajustadas a la huella.	v1.5 · 4 buildings · Automatic collapse from 79 % · Per-building wall correction · Ashes fitted to the footprint.
+y quedan dentro del antiguo intervalo de dithering. En Ajustes puedes cambiar esa duración o utilizar el intervalo V1 completo. «Ver etapas» conserva el catálogo de originales sin deformación.	and stay within the old dithering interval. In Settings you can change that duration or use the full V1 interval. “View stages” preserves the original catalog without deformation.
+«Guardar» exporta posiciones y progreso a JSON. Los modelos ya están integrados en el visor. Al cargar una parcela se sustituye la distribución actual, no las geometrías.	“Save” exports positions and progress to JSON. Models are already embedded in the viewer. Loading a plot replaces its layout rather than its geometries.
+Acantilados	Cliffs
+Adobe reforzado	Reinforced adobe
+Animal desconocido	Unknown animal
+Atardecer	Sunset
+Batata	Sweet potato
+Bioma anterior	Previous biome
+Bioma elegido:	Selected biome:
+Bioma siguiente	Next biome
+Colgante derecho	Right pendant
+Colgante izquierdo	Left pendant
+Comenzar	Start
+Comenzar partida simulada en {biome} con cultura {culture}	Start simulated game in {biome} with {culture} culture
+Continuar con	Continue with
+Cuidado	Care
+Cultivo desconocido	Unknown crop
+Cultura anterior	Previous culture
+Cultura desconocida	Unknown culture
+Cultura elegida:	Selected culture:
+Cultura siguiente	Next culture
+Dinero	Money
+Elegir	Choose
+Elige tu cultura	Choose your culture
+Entorno: Sabana	Environment: Savanna
+Error al inicializar la escena 3D.	Error initialising the 3D scene.
+Este navegador no admite pantalla completa.	This browser does not support full screen.
+Experiencia:	Experience:
+Girasol	Sunflower
+Hiena	Hyena
+Laboratorio	Laboratory
+Magia	Power
+Magia desconocida	Unknown power
+Material desconocido	Unknown material
+Mensaje tutorial desconocido	Unknown tutorial message
+Necesitas separar las plantas	Plants need more space between them
+No existe esa defensa	That defence does not exist
+No se ha podido compilar el shader:	Could not compile shader:
+No se ha podido enlazar el shader.	Could not link the shader.
+No se pudo abrir el santuario	Could not open the sanctuary
+Partida simulada iniciada en {biome} con cultura {culture}.	Simulated game started in {biome} with {culture} culture.
+Perfil desconocido	Unknown profile
+Pluma flotante derecha	Right floating feather
+Pluma flotante izquierda	Left floating feather
+Preparando el inicio simulado…	Preparing the simulated start…
+Reloj solar	Sun clock
+Rinoceronte	Rhinoceros
+Semillas	Seeds
+Supervivencia	Survival
+Tu aventura comienza	Your adventure begins
+Tu poblado en	Your village in
+Elige su arquitectura.	Choose its architecture.
+Un cultivo ocupa este terreno	A crop occupies this ground
+Volver a un centro urbano · 1	Return to a village centre · 1
+Yuca	Cassava
+Zarzas	Thorn bushes
+Mampostería	Masonry
+Lona de algodón	Cotton canvas
+Piedra de jardín	Garden stone
+Herramienta	Tool
+0,8 s · muy breve	0.8 s · very short
+1 minuto · todos los cultivos	1 minute · all crops
+2 minutos · todos los cultivos	2 minutes · all crops
+10 minutos · todos los cultivos	10 minutes · all crops
+30 minutos · todos los cultivos	30 minutes · all crops
+60 minutos · todos los cultivos	60 minutes · all crops
+2 s · recomendado	2 s · recommended
+4 s · suave	4 s · smooth
+8 s · inspección	8 s · inspection
+2 segundos simulados	2 simulated seconds
+2 unidades de escena	2 scene units
+100 % SIN CONEXIÓN	100 % OFFLINE
+12 ACCIONES	12 ACTIONS
+126 sonidos disponibles	126 sounds available
+20 piezas	20 pieces
+20 piezas sin peana · V2	20 pieces without display bases · V2
+28 huesos	28 bones
+4 edificios disponibles	4 buildings available
+40 estados · morph local	40 stages · local morph
+AGARRES + IK	GRIPS + IK
+ATAQUES LOCALIZADOS	LOCAL ATTACKS
+Accesorios intercambiables	Interchangeable accessories
+Acerca de esta prueba	About this test
+Acercar	Zoom in
+Alejar	Zoom out
+Activar o desactivar viento	Toggle wind
+Ajustes de la parcela	Plot settings
+Ajustes del laboratorio	Lab settings
+Ajustes y archivos	Settings and files
+Alternar vista cenital	Toggle top view
+Amara joven del GLB adjunto	Young Amara from the supplied GLB
+Amara joven.	Young Amara.
+Amara mayor del GLB adjunto	Older Amara from the supplied GLB
+Amara mayor.	Older Amara.
+Ambientes en bucle	Looping ambience
+Anterior	Previous
+Aplicar ajustes	Apply settings
+Archivo sonoro · Catálogo de consulta	Sound archive · Reference catalog
+Arcilla	Clay
+Arrastra para girar · Rueda o pellizco para zoom.	Drag to rotate · Scroll or pinch to zoom.
+Arrastra para girar · rueda o pellizco para zoom	Drag to rotate · scroll or pinch to zoom
+Arrastra para girar · Dos dedos para mover y ampliar.	Drag to rotate · Two fingers to move and zoom.
+Arrastra para probar cualquier punto del ciclo.	Drag to test any point in the cycle.
+Audio incrustado · Sin conexión	Embedded audio · Offline
+Ayuda	Help
+Ayuda y detalles del crecimiento	Help and growth details
+Añadir impacto	Add impact
+Añadir una muestra con los ocho cultivos	Add a sample of all eight crops
+BASTIÓN	BASTION
+BIOMA	BIOME
+BIOMA · Cultivos LAB V3 · Morph local	BIOME · Crop LAB V3 · Local morph
+BIOMA · Edificio 4 · Destrucción v1.5	BIOME · Building 4 · Destruction v1.5
+Bastión · Laboratorio de murallas V4.1	Bastion · Wall laboratory V4.1
+Borrar guardado local	Delete local save
+Brasas en los bordes	Embers along edges
+Brote	Sprout
+Bucle	Loop
+Bucles	Loops
+Busca un sonido, escúchalo y descarga su MP3.	Find a sound, listen to it and download its MP3.
+Buscar por nombre, identificador o número	Search by name, identifier or number
+Buscar y filtrar	Search and filter
+Buscar	Search
+CAPAS DEL EFECTO	EFFECT LAYERS
+CRECIMIENTO · CULTIVOS	GROWTH · CROPS
+Cada toque cuenta	Every touch counts
+Calidad gráfica	Graphics quality
+Caminar a saltitos	Skip
+Cargando a Amara joven…	Loading young Amara…
+Cargando a Amara mayor…	Loading older Amara…
+Cargando a Kofi joven…	Loading young Kofi…
+Cargando al ganadero mayor…	Loading the older herder…
+Cargar escena	Load scene
+Cargar parcela JSON	Load plot JSON
+Casa Suajili	Swahili house
+Casa etíope	Ethiopian house
+Categoría	Category
+Categorías	Categories
+Catálogo de efectos	Effects catalog
+Centrar cámara	Centre camera
+Cerrar ajustes	Close settings
+Cerrar guía	Close guide
+Cerrar inspector	Close inspector
+Cierra el recinto	Close the enclosure
+Clip actual	Current clip
+Colapso irreversible · continuará hasta el 100 %	Irreversible collapse · continues to 100 %
+Completamente autocontenido	Fully self-contained
+Conectar extremos cercanos	Connect nearby ends
+Consulta sin conexión.	Offline reference.
+Consulta su progreso y recoléctalo al madurar.	Check its progress and harvest when ripe.
+Copiar identificador	Copy identifier
+Copiar identificador del sonido	Copy sound identifier
+Corregir sombreado de paredes	Correct wall shading
+Crecimiento y transición	Growth and transition
+Cultivo seleccionado	Selected crop
+Cómo funciona	How it works
+DAÑO ESTRUCTURAL	STRUCTURAL DAMAGE
+Dale forma	Shape it
+Datos del visor	Viewer data
+Dañado	Damaged
+dañado	damaged
+Dañar pieza · G	Damage piece · G
+Daño por toque	Damage per touch
+Daño localizado	Local damage
+Daño severo	Severe damage
+De la referencia al juego.	From reference to game.
+Del primer brote a la cosecha	From the first sprout to harvest
+Del trazo a la muralla.	From layout to wall.
+Densidad de humo	Smoke density
+Densidad del humo	Smoke density
+Derrumbar	Collapse
+Descargar MP3	Download MP3
+Descargar el MP3 actual	Download current MP3
+Descargar los 126	Download all 126
+Deshacer	Undo
+Desplaza la cámara sobre la parcela.	Move the camera across the plot.
+Destrucción procedural	Procedural destruction
+Detener	Stop
+Detener y volver al inicio	Stop and return to start
+Dibuja con el dedo	Draw with your finger
+Dibuja. Construye. Ponlo a prueba.	Draw. Build. Put it to the test.
+Dos dedos para mover y ampliar	Two fingers to move and zoom
+Duración	Duration
+Duración de la destrucción	Destruction duration
+Duración del ciclo	Cycle duration
+Duración máxima del morph entre etapas	Maximum morph duration between stages
+Duración total	Total duration
+EDIFICIO	BUILDING
+EN LA PARCELA	ON THE PLOT
+Efectos de sonido	Sound effects
+Ejemplo	Example
+El ganadero	The herder
+El ganadero mayor.	The older herder.
+Elige qué cultivar.	Choose what to grow.
+Elige un material	Choose a material
+Eliminar esta pieza · Se puede deshacer	Remove this piece · Can be undone
+Eliminar pieza	Remove piece
+Empezar a construir	Start building
+En crecimiento…	Growing…
+En pie	Standing
+Encuadrar	Frame
+Encuadrar todas las piezas	Frame all pieces
+Encuadrar todas las piezas · F	Frame all pieces · F
+Escombros	Rubble
+Espacio	Space
+Espalda	Back
+Esqueleto	Skeleton
+Estado de la pieza seleccionada	Selected piece status
+Este visor dibuja tu	This viewer renders your
+Etiquetas de vida en el terreno	Health labels on the ground
+Eventos	Events
+Examina, elimina y encuadra	Inspect, remove and frame
+Examinar	Inspect
+Examinar pieza · I	Inspect piece · I
+Explorar la transición	Explore the transition
+Fragmentos	Fragments
+Frente	Front
+Fuerza de cada golpe	Strength of each hit
+GEOMETRÍA · TEXTURAS · CRECIMIENTO PROCEDURAL	GEOMETRY · TEXTURES · PROCEDURAL GROWTH
+GLB completo	Complete GLB
+Ganadero mayor del GLB adjunto	Older herder from the supplied GLB
+Geometría real, transición procedural.	Real geometry, procedural transition.
+Gira la cámara y ajusta la distancia.	Rotate the camera and adjust the distance.
+Girar cámara	Rotate camera
+Girar cámara 45 grados	Rotate camera 45 degrees
+Golpear	Hit
+Golpear al pulsar el modelo	Hit when touching the model
+Gotas y partículas	Drops and particles
+Guardar captura	Save screenshot
+Guardar escena	Save scene
+Guardar imagen del terreno	Save terrain image
+Guía	Guide
+HERRAMIENTAS	TOOLS
+HTML AUTÓNOMO	STANDALONE HTML
+Hecho	Done
+Humo y polvo	Smoke and dust
+Imagen PNG	PNG image
+Impacto fuerte	Heavy impact
+Información del visor	Viewer information
+Inspección del modelo	Model inspection
+Inspección manual del crecimiento	Manual growth inspection
+Intacto	Intact
+Integridad	Integrity
+Interior oscuro	Dark interior
+Intervalo V1 completo	Full V1 interval
+Juego	Game
+Kofi joven del GLB adjunto	Young Kofi from the supplied GLB
+Kofi joven.	Young Kofi.
+LABORATORIO DE MURALLAS	WALL LABORATORY
+LABORATORIO DE PERSONAJES	CHARACTER LABORATORY
+Las 20 piezas sin peana	All 20 pieces without display bases
+Limpiar	Clear
+Limpiar filtros	Clear filters
+Los MP3 ya están normalizados.	The MP3 files are already normalised.
+Los originales primero. Morph solo entre etapas.	Originals first. Morph only between stages.
+MADUROS	RIPE
+MESHY · CLIP IMPORTADO	MESHY · IMPORTED CLIP
+Malla	Mesh
+Margen de seguridad.	Safety margin.
+Materiales	Materials
+Materiales y herramientas	Materials and tools
+Modelo de referencia de Amara joven	Young Amara reference model
+Modelo de referencia de Amara mayor	Older Amara reference model
+Modelo de referencia de Kofi joven	Young Kofi reference model
+Modelo de referencia del ganadero mayor	Older herder reference model
+Mostrar contador de FPS y llamadas de dibujo	Show FPS and draw call counters
+Mostrar cuadrícula	Show grid
+Mostrar u ocultar rejilla	Toggle grid
+Mover cámara	Move camera
+Movimiento, herramientas y personalidad.	Movement, tools and personality.
+Muestra	Sample
+Muro · 300 PV de resistencia	Wall · 300 HP strength
+Muro · PV	Wall · HP
+Módulos	Modules
+No hay sonidos con esos filtros.	No sounds match those filters.
+No implica retargeting universal	Does not imply universal retargeting
+No se ha podido iniciar el visor	Could not start the viewer
+No se pudo iniciar el visor.	Could not start the viewer.
+Nombre · A–Z	Name · A–Z
+Nombre, ID o número…	Name, ID or number…
+Nueva distribución de daños	New damage layout
+Nueva distribución preparada	New layout ready
+Número original	Original number
+ORIGINALES V1 · MORPH SOLO AL CAMBIAR	V1 ORIGINALS · MORPH ONLY ON CHANGE
+Opciones de la parcela	Plot options
+Orbitar	Orbit
+Orden	Order
+Original V1 · 70–150 s según cultivo	Original V1 · 70–150 s depending on crop
+Pausa	Pause
+Pausar	Pause
+Pausar el tiempo	Pause time
+Perfil	Profile
+Planta la especie seleccionada.	Plant the selected species.
+Plantilla JSON	JSON template
+Plantilla y exportación	Template and export
+Por defecto las transiciones duran como máximo	By default, transitions last at most
+Porcentaje de crecimiento del cultivo seleccionado	Growth percentage of the selected crop
+Porcentaje de daño	Damage percentage
+Posición de la animación	Animation position
+Posición de reproducción	Playback position
+Preparando el edificio	Preparing the building
+Prueba de integración, no animación final.	Integration test rather than final animation.
+Puerta · 60 %	Gate · 60 %
+Puntos de agarre	Grip points
+Qüata · Amara joven · Laboratorio de personajes	Qüata · Young Amara · Character laboratory
+Qüata · Amara mayor · Laboratorio de personajes	Qüata · Older Amara · Character laboratory
+Qüata · Ganadero mayor · Laboratorio de personajes	Qüata · Older herder · Character laboratory
+Qüata · Kofi joven · Skin corregido v7	Qüata · Young Kofi · Corrected skin v7
+RECOLECTADOS	HARVESTED
+Recolectar maduros	Harvest ripe plants
+Recorrido circular	Circular route
+Reencuadrar	Reframe
+Reencuadrar · R	Reframe · R
+Rehacer	Redo
+Render de referencia de Casa Suajili	Swahili house reference render
+Rendimiento	Performance
+Reparar	Repair
+Reparar pieza · R	Repair piece · R
+Repetir	Repeat
+Repetir animación	Repeat animation
+Repetir desde el inicio	Repeat from start
+Reproducción en bucle	Loop playback
+Reproducir	Play
+Reproducir destrucción	Play destruction
+Pausar destrucción	Pause destruction
+Reproductor de efectos	Effects player
+Restaurar	Restore
+Restaurar encuadre	Restore framing
+Restaurar escena de ejemplo	Restore example scene
+Resumen del catálogo	Catalog summary
+Rotar cámara	Rotate camera
+Rotar cámara automáticamente	Auto-rotate camera
+Selecciona un sonido	Select a sound
+Seleccionar edificio	Select building
+Siguiente	Next
+Sin accesorio	No accessory
+Sin conexión · WebGL2	Offline · WebGL2
+Sobre la normalización y este catálogo	About normalisation and this catalog
+Sombras	Shadows
+Sombras suaves	Soft shadows
+Sonido anterior	Previous sound
+Sonido siguiente	Next sound
+Suavizar bucle	Smooth loop
+Suavizar el trazo	Smooth stroke
+Supr	Delete
+TIEMPO SIMULADO	SIMULATED TIME
+TRAMO 001	SEGMENT 001
+TRIÁNGULOS	TRIANGLES
+Terreno	Terrain
+Terreno de pruebas	Test terrain
+Terreno de simulación 3D	3D simulation terrain
+Tipo de muralla	Wall type
+Tipo de sonido	Sound type
+Todas las categorías	All categories
+Todo está integrado en este archivo.	Everything is embedded in this file.
+Todos	All
+Toque ligero	Light touch
+Trazar	Draw
+Trazar muro · D	Draw wall · D
+UN PERSONAJE · MUCHAS POSIBILIDADES	ONE CHARACTER · MANY POSSIBILITIES
+Un laboratorio, no un calendario agrícola	A lab rather than a farming calendar
+Un lienzo. Cinco materiales. Infinitas defensas.	One canvas. Five materials. Endless defences.
+Un rig. Toda una granja.	One rig. An entire farm.
+Una parcela para experimentar.	A plot for experimenting.
+VELOCIDAD DEL TIEMPO	TIME SPEED
+Vaciar	Clear
+Vaciar el terreno	Clear terrain
+Vaciar la parcela	Clear plot
+Valores iniciales	Initial values
+Velocidad de animación	Animation speed
+Velocidad del clip	Clip speed
+Ver etapas	View stages
+Ver modelo de referencia	View reference model
+Visor tridimensional de Amara joven	3D viewer of young Amara
+Visor tridimensional de Amara mayor	3D viewer of older Amara
+Visor tridimensional de Kofi joven	3D viewer of young Kofi
+Visor tridimensional del ganadero mayor	3D viewer of the older herder
+Vista cenital	Top view
+Vista del laboratorio	Lab view
+Vistas de cámara	Camera views
+Volumen general	Master volume
+Volver a la parcela	Return to plot
+Wild Guardians · Catálogo SFX V12	Wild Guardians · SFX catalog V12
+modelo 3D real de Meshy	real Meshy 3D model
+solo con la mano derecha	with the right hand only
+¿Vaciar el terreno?	Clear the terrain?
+¿Vaciar la parcela?	Clear the plot?
+⌖ Seleccionar	⌖ Select
+ⓘ Ficha técnica · ↓ MP3 normalizado	ⓘ Technical details · ↓ Normalised MP3
+Ficha técnica	Technical details
+✦ Añadir impacto	✦ Add impact
+＋ Plantar	＋ Plant
+Colapsando	Collapsing
+Ampliar	Zoom in
+Ayuda y controles	Help and controls
+Biomas disponibles	Available biomes
+Cambiar	Change
+Cambiar cultura	Change culture
+Cancelar inicio	Cancel start
+Cerrar (Esc)	Close (Esc)
+Cerrar ayuda	Close help
+Cerrar el visor o volver al bioma	Close the viewer or return to the biome
+Continuar o comenzar la partida	Continue or start the game
+Culturas disponibles	Available cultures
+Cómo navegar	How to navigate
+Elige tu territorio	Choose your homeland
+Inicio simulado de la partida	Simulated game start
+Nueva partida · Preparando el inicio	New game · Preparing to start
+Paso 1: elegir bioma	Step 1: choose biome
+Paso 2: elegir cultura	Step 2: choose culture
+Preparando el santuario…	Preparing the sanctuary…
+Seis paisajes. Un nuevo comienzo.	Six landscapes. A new beginning.
+Tu nueva partida	Your new game
+Un nuevo comienzo	A new beginning
+Volver a elegir bioma	Choose biome again
+Volver a nueva partida	Return to new game
+Volver al bioma	Return to biome
+Volver al bioma (Esc)	Return to biome (Esc)
+Wild Guardians · Nueva partida	Wild Guardians · New game
+cinco culturas	five cultures
+seis biomas	six biomes
+y pulsa	and press
+← Regresar	← Back
+← Santuario	← Sanctuary
+Canvas 2D · malla de respaldo	Canvas 2D · fallback mesh
+Denominador monetario inválido	Invalid currency denominator
+Ordinal de poblado inválido	Invalid village ordinal
+Paso de puerta inválido	Invalid gate step
+Paso temporal inválido	Invalid time step
+Transacción sin identidad	Transaction has no identity
+Menú · Escape	Menu · Escape
+vértices	vertices
+Activa JavaScript para utilizar el menú de nueva partida. Las once ilustraciones están incluidas en el archivo.	Enable JavaScript to use the new game menu. All eleven artworks are embedded in the file.
+Herramientas	Tools
+EL SANTUARIO	THE SANCTUARY
+El santuario	The sanctuary
+Donde comienza tu historia	Where your story begins
+Cada historia empieza con una semilla.	Every story starts with a seed.
+05 culturas · Todas combinables con tu bioma	05 cultures · All compatible with your biome
+06 territorios · Una historia por empezar	06 lands · A story waiting to begin
+Atlas de Wild Guardians	Wild Guardians atlas
+Poblados de Wild Guardians	Wild Guardians villages
+Biblioteca de semillas	Seed library
+Pasos de nueva partida	New game steps
+Primero elige uno de los	First choose one of the
+y continuar al selector de cultura	and continue to the culture selector
+Continuar con Sabana	Continue with Savanna
+Ver la ilustración completa de	View the full artwork for
+No se pudo mostrar la ilustración de	Could not show the artwork for
+La biblioteca	The library
+La casa	The house
+Un mundo por proteger.	A world to protect.
+Todo empieza con un brote.	Everything starts with a sprout.
+Un lugar para consultar el riego, el crecimiento y las necesidades de cada planta.	A place to learn about watering, growth and each plant's needs.
+Abrir menú de pausa	Open pause menu
+Acciones de la granja	Farm actions
+El Escudo solapa un animal	Shield overlaps an animal
+El poblado no tiene una salida transitable	The village has no accessible exit
+El trazado solapa un cultivo	The layout overlaps a crop
+La incursión no encuentra una entrada transitable para su grupo completo.	The raid cannot find an accessible entrance for its whole group.
+No hay monedas suficientes para todo el trazado	There are not enough coins for the entire layout
+Ese tramo ya está ocupado o es demasiado corto	That segment is occupied or too short
+Plaga: se reduce el margen de riego	Pests: less time until watering
+Noche favorable: crecen los cultivos	Favourable night: crops grow
+Coloca una puerta de {material}	Place a {material} gate
+Arrastra para trazar una muralla de {material}	Drag to lay out a {material} wall
+El dispositivo no permite crear el mapa de sombras WebGL.	This device cannot create the WebGL shadow map.
+El navegador no ha permitido abrir la pantalla completa.	The browser did not allow full screen.
+El navegador no permite acceder al guardado local.	The browser does not allow local storage access.
+El navegador no permite pantalla completa en esta vista.	The browser does not allow full screen in this view.
+Salir de pantalla completa	Exit full screen
+Salir de pantalla completa (F)	Exit full screen (F)
+Pantalla completa	Full screen
+Pantalla completa (F)	Full screen (F)
+Vida de prueba	Test health
+Vida de prueba. Al 20 por ciento se inicia el colapso	Test health. Collapse begins at 20 percent
+El GLB necesita normales, UV e índices.	The GLB needs normals, UVs and indices.
+El archivo de escena es demasiado grande.	The scene file is too large.
+El archivo supera 2 MB	The file exceeds 2 MB
+El navegador no admite el mapa de sombras requerido.	The browser does not support the required shadow map.
+El navegador no ofrece Canvas 2D ni WebGL.	The browser offers neither Canvas 2D nor WebGL.
+Este importador espera nodos TRS, no matrices de nodo.	This importer expects TRS nodes rather than node matrices.
+Este visor necesita un GLB de una sola malla/primitiva.	This viewer needs a GLB with a single mesh/primitive.
+Este visor requiere GLB sin compresión Draco/meshopt.	This viewer requires a GLB without Draco/meshopt compression.
+Formato de atributo no compatible.	Unsupported attribute format.
+GLB 2.0 no válido.	Invalid GLB 2.0.
+Las texturas deben estar dentro del GLB.	Textures must be embedded in the GLB.
+No se pudo crear el mapa de sombras.	Could not create the shadow map.
+No se pudo crear el búfer de iluminación.	Could not create the lighting buffer.
+No se pudo crear el búfer de imagen.	Could not create the image buffer.
+No se pudo crear la máscara de aberturas del interior.	Could not create the interior opening mask.
+Este archivo necesita WebGL 2 y aceleración gráfica. Ábrelo en un navegador actualizado, no en una vista previa de archivos.	This file needs WebGL 2 and graphics acceleration. Open it in an up-to-date browser rather than a file preview.
+Este navegador no ha podido activar WebGL 2. Abre el archivo en Chrome, Edge, Firefox o Safari con aceleración gráfica.	This browser could not activate WebGL 2. Open the file in Chrome, Edge, Firefox or Safari with graphics acceleration.
+Este navegador no ofrece WebGL2. Abre el archivo en un navegador con aceleración gráfica.	This browser does not offer WebGL2. Open the file in a browser with graphics acceleration.
+WebGL 2 no está disponible en este navegador o la aceleración gráfica está desactivada.	WebGL 2 is unavailable in this browser or graphics acceleration is disabled.
+Abre este archivo en un navegador actualizado con WebGL2 y descompresión nativa (Chrome, Edge, Firefox o Safari).	Open this file in an up-to-date browser with WebGL2 and native decompression (Chrome, Edge, Firefox or Safari).
+El navegador ha perdido el contexto gráfico. Pulsa «Volver a intentar».	The browser has lost its graphics context. Press “Try again”.
+El navegador ha perdido el contexto gráfico. Recarga el HTML para recuperarlo.	The browser has lost its graphics context. Reload the HTML to recover it.
+Volver a intentar	Try again
+El modelo todavía no está listo.	The model is not ready yet.
+WebGL suspendido · esperando recuperación	WebGL suspended · awaiting recovery
+Biblioteca · Wild Guardians	Library · Wild Guardians
+Biblioteca de movimiento	Movement library
+Atlas de materiales	Material atlas
+El punto de regreso a tu aventura, en la cima del diorama.	The return point to your adventure, at the top of the diorama.
+Aquí se ajustan la iluminación, los efectos y el ritmo de la escena.	Adjust lighting, effects and the scene's pace here.
+Este refugio reúne el conocimiento del mundo del juego.	This refuge gathers knowledge about the game world.
+La sabana te espera.	The savanna awaits.
+Las reglas del terreno.	The rules of the land.
+La luz cálida, los pastizales y las acacias forman el paisaje de este menú.	Warm light, grasslands and acacias form this menu's landscape.
+Las luces del diorama y las luciérnagas acompañan el final del día.	The diorama lights and fireflies accompany the end of the day.
+Las mesetas del horizonte dan profundidad al fondo ilustrado.	The distant plateaus add depth to the illustrated background.
+Nombre de tu granja	Farm name
+Mi refugio	My refuge
+Tu forma de jugar	Your play style
+Experiencia	Experience
+Guardián	Guardian
+Desafío	Challenge
+Preparar aventura	Prepare adventure
+Preparar una aventura	Prepare an adventure
+Continuar aventura	Continue adventure
+Todo está guardado en tu navegador	Everything is saved in your browser
+Todavía no hay una aventura preparada.	No adventure has been prepared yet.
+Tu próxima aventura ya tiene nombre. Esta es la configuración que has preparado en el prototipo.	Your next adventure already has a name. This is the configuration you prepared in the prototype.
+Un pequeño huerto. Un lugar al que volver.	A small garden. A place to return to.
+Empieza en el huerto y dale nombre a tu granja.	Start in the garden and name your farm.
+Prepara tu primera aventura en la sabana.	Prepare your first adventure in the savanna.
+Tus ajustes de este prototipo se conservarán en este navegador.	Your prototype settings will be kept in this browser.
+Configuración preparada ✓	Configuration ready ✓
+Configuración preparada. La aventura se conectará al motor del juego.	Configuration ready. The adventure will connect to the game engine.
+Configuración lista. Iniciando la simulación…	Configuration ready. Starting the simulation…
+CONFIGURACIÓN DE DEMOSTRACIÓN	DEMONSTRATION CONFIGURATION
+Vista de demostración. Guarda estos ajustes y emite el evento de nueva partida; todavía no inicia el juego.	Demonstration view. Saves these settings and emits the new game event; it does not start the game yet.
+Demostración del menú: no se ha generado un mundo jugable.	Menu demonstration: no playable world has been generated.
+Partida iniciada · Simulación	Game started · Simulation
+Simulación del lab	Lab simulation
+El juego no está conectado todavía. Este botón emite el evento de continuación para integrarlo con el motor.	The game is not connected yet. This button emits the continuation event for engine integration.
+Evento «continuar» enviado. El juego aún no está conectado.	“Continue” event sent. The game is not connected yet.
+Este menú no busca ni modifica partidas del juego. Solo guarda una configuración de prueba en este navegador.	This menu neither searches nor modifies game saves. It only stores a test configuration in this browser.
+Un espacio para las fichas de cultivos, construcciones y paisajes del juego.	A space for crop, building and landscape information.
+Contenido de muestra para probar la navegación. No representa descubrimientos ni progreso de una partida.	Sample content for testing navigation. It does not represent discoveries or game progress.
+Edificios	Buildings
+Paisajes	Landscapes
+Categorías de la biblioteca	Library categories
+El comienzo de cada cultivo. La biblioteca podrá reunir aquí sus fichas y requisitos.	The beginning of each crop. The library can collect their information and requirements here.
+Las futuras fichas mostrarán el momento de recoger cada cultivo.	Future information cards will show when each crop is ready to harvest.
 Contratar un {profile} menos	Hire one fewer {profile}
 Contratar un {profile} más	Hire one more {profile}
 {count} puerta sin recargo	{count} gate at no extra cost
@@ -344,3 +1276,235 @@ Daño normalizado y colapso de los edificios.	Normalised damage and building col
 Preparando el laboratorio original…	Preparing the original lab…
 Modelos originales Meshy · Audio original ElevenLabs y paquetes musicales suministrados · Ga Maamli y Banga bajo SIL OFL.	Original Meshy models · Original ElevenLabs audio and supplied music packs · Ga Maamli and Banga under SIL OFL.
 La caja recogida viaja al centro. Espera su entrega: las monedas se cobran al llegar. Si una caja queda en el suelo, conserva su valor hasta que el equipo pueda recuperarla.	The harvested crate is travelling to the centre. Wait for delivery: coins arrive on arrival. If a crate is left on the ground, it keeps its value until your crew can retrieve it.
+Un árbol o roca grande ocupa este terreno	A tree or large rock occupies this ground
+La construcción solapa otro edificio	The building overlaps another building
+Apertura de puerta inválida	Invalid gate opening
+Cabecera HDR no válida.	Invalid HDR header.
+Carga de mundo cancelada	World loading cancelled
+Carga de trabajador inválida	Invalid worker load
+Composición VFX desconocida	Unknown VFX composition
+Configuración Escudo inválida	Invalid Shield configuration
+Configuración VFX inválida	Invalid VFX configuration
+Configuración de pisada inválida	Invalid footstep configuration
+Configuración magia agrícola inválida	Invalid farming magic configuration
+Contorno de charca fuera de rango.	Pond outline out of range.
+Dimensiones HDR fuera de rango.	HDR dimensions out of range.
+El cielo requiere Radiance RGBE.	The sky requires Radiance RGBE.
+Entidades inválidas	Invalid entities
+Espera de puerta inválida	Invalid gate wait
+Falta la acción original	The original action is missing
+Falta la caja original de transporte	The original transport crate is missing
+Fila RGBE no válida.	Invalid RGBE row.
+Geometría de centro desconocida	Unknown centre geometry
+Libro monetario inválido	Invalid money ledger
+Módulo de defensa inválido	Invalid defence module
+Orientación HDR no admitida.	Unsupported HDR orientation.
+Origen de cosecha inválido	Invalid harvest origin
+Paso DEST inválido	Invalid DEST step
+Paso VFX inválido	Invalid VFX step
+Portador de caja inválido	Invalid crate carrier
+Posición inválida	Invalid position
+RLE inválido.	Invalid RLE.
+Reloj inválido	Invalid clock
+Respuesta de chunk con coordenadas incorrectas	Chunk response has incorrect coordinates
+Saldo inválido	Invalid balance
+Superficie VFX inválida	Invalid VFX surface
+Tiempo VFX inválido	Invalid VFX time
+Trabajador sin carga	Worker has no load
+Transformación de casa DEST no compatible	Unsupported DEST house transform
+Trazado de muralla inválido	Invalid wall layout
+Tutorial inválido	Invalid tutorial
+Daño DEST no finito	Non-finite DEST damage
+Daño visual no finito	Non-finite visual damage
+DEST requiere la malla original de una sola primitiva	DEST requires the original single-primitive mesh
+Comenzar partida en {biome} con cultura {culture}	Start game in {biome} with {culture} culture
+Contratar una {profile} menos	Hire one fewer {profile}
+Contratar una {profile} más	Hire one more {profile}
+Agua, lava o pendiente no edificable	Water, lava or unbuildable slope
+Zona común	Common area
+No se pudieron generar todos los chunks	Could not generate all chunks
+Canto del disco	Disc edge
+Cargando materiales y clasificando los 40 estados…	Loading materials and classifying the 40 stages…
+Con caja	With crate
+GLB preparado. Incluye el modelo real, el rig y las acciones seleccionadas.	GLB ready. Includes the actual model, rig and selected actions.
+Golpea el muro. Al 20 % colapsa hasta los escombros.	Hit the wall. At 20% it collapses into rubble.
+Huella SHA-256 del MP3 normalizado:	Normalised MP3 SHA-256 fingerprint:
+Llevar caja	Carry crate
+Mirar a los lados	Look around
+No se pudo cargar una textura integrada.	Could not load an embedded texture.
+No se pudo descodificar una textura.	Could not decode a texture.
+No se puede reparar durante el colapso. Espera a que queden los escombros.	Repairs are unavailable during collapse. Wait for the rubble to settle.
+Parcela recuperada del guardado local.	Plot restored from the local save.
+Preparando los ocho cultivos y sus cuarenta estados.	Preparing the eight crops and their forty stages.
+Preparando los shaders opacos y sus sombras…	Preparing opaque shaders and their shadows…
+Repara una pieza estable o reconstruye sus escombros. Un colapso en curso no se puede detener.	Repair a stable piece or rebuild its rubble. An ongoing collapse cannot be stopped.
+Retirar los escombros	Remove rubble
+Sin rig facial ni dedos individuales	No facial rig or individual fingers
+Solo mallas triangulares.	Triangle meshes only.
+por ciento	percent
+(tiempos y valores no coinciden).	(times and values do not match).
+01 / CONSTRUYE	01 / BUILD
+02 / ABRE UN PASO	02 / OPEN A PASSAGE
+02 / PRIMEROS IMPACTOS	02 / FIRST HITS
+03 / PONLO A PRUEBA	03 / TEST IT
+04 / EXPLORA	04 / EXPLORE
+05 / COLAPSO IRREVERSIBLE	05 / IRREVERSIBLE COLLAPSE
+5 materiales · 4 estados independientes	5 materials · 4 independent stages
+Accessor sparse no admitido en este visor.	Sparse accessor unsupported in this viewer.
+Amara / Amara joven	Amara / Young Amara
+Amara joven / Base v4	Young Amara / Base v4
+Amara mayor / Base v4	Older Amara / Base v4
+Atajos:	Shortcuts:
+CAPA NUEVA: ACCIONES · IK · ACCESORIOS · CAVAR: HERRAMIENTA FIJA · AGARRE CONTINUO	NEW LAYER: ACTIONS · IK · ACCESSORIES · DIGGING: FIXED TOOL · CONTINUOUS GRIP
+CULTIVO #	CROP #
+CULTIVO #1	CROP #1
+Clic / toque sobre la tierra	Click / tap the ground
+Clic / toque sobre un cultivo	Click / tap a crop
+Clic: plantar o seleccionar	Click: plant or select
+Colapso inevitable…	Collapse inevitable…
+Escena cargada:	Scene loaded:
+Este navegador no admite DecompressionStream	This browser does not support DecompressionStream
+Ganadero mayor / Base v4	Older herder / Base v4
+Grandma Amara / Amara mayor	Grandma Amara / Older Amara
+Horneando poses, agarres y accesorios a 30 fps…	Baking poses, grips and accessories at 30 fps…
+ID copiado:	ID copied:
+Kofi / Kofi joven	Kofi / Young Kofi
+Kofi joven / Base v4	Young Kofi / Base v4
+Modelo original · crecimiento V1	Original model · growth V1
+Modelo, texturas y efectos incluidos en este archivo.	Model, textures and effects included in this file.
+Muro ·	Wall ·
+No se encuentra el modelo embebido:	Embedded model not found:
+No se pudo cargar:	Could not load:
+No se pudo decodificar la textura integrada.	Could not decode the embedded texture.
+No se pudo exportar:	Could not export:
+No se pudo reproducir. Prueba a descargar el MP3 o abrir el HTML en Chrome.	Could not play. Try downloading the MP3 or opening the HTML in Chrome.
+PARCELA LIBRE · PLANTAR:	EMPTY PLOT · PLANT:
+PARCELA · SELECCIONAR CULTIVO ·	PLOT · SELECT CROP ·
+Parcela exportada: posiciones y progreso.	Plot exported: positions and progress.
+Preparando ZIP…	Preparing ZIP…
+Puente inexistente:	Bridge not found:
+Reconstruir [R]	Rebuild [R]
+Sunny Grandpa / Ganadero mayor	Sunny Grandpa / Older herder
+Texturas listas:	Textures ready:
+ZIP listo: 126 MP3 normalizados.	ZIP ready: 126 normalised MP3 files.
+desde este HTML…	from this HTML…
+dibujados ·	draw calls ·
+encuadrar ·	frame ·
+examinar ·	inspect ·
+golpear ·	hit ·
+pausa ·	pause ·
+primeras acciones ·	first actions ·
+reencuadra ·	reframe ·
+reparar ·	repair ·
+s simulados · ciclo de	s simulated · cycle of
+trazar ·	draw ·
+· Cargando…	· Loading…
+· Se puede deshacer	· Can be undone
+· ciclo de	· cycle of
+· listo	· ready
+Original v4 + Amara / Amara joven	Original v4 + Amara / Young Amara
+Original v4 + Grandma Amara / Amara mayor	Original v4 + Grandma Amara / Older Amara
+Original v4 + Kofi / Kofi joven	Original v4 + Kofi / Young Kofi
+Original v4 + Sunny Grandpa / Ganadero mayor	Original v4 + Sunny Grandpa / Older herder
+1 edificio disponible	1 building available
+Acero mate	Matte steel
+Casa Mapungubwe	Mapungubwe house
+Casa musgum	Musgum house
+Casa saheliana	Sahelian house
+Colapso inevitable	Collapse inevitable
+Copiar ID	Copy ID
+Datos GLB incompletos.	Incomplete GLB data.
+Disco salvia	Sage disc
+Eliminar esta pieza	Remove this piece
+Escena local recuperada	Local scene restored
+Esmalte verde azulado	Teal enamel
+Este navegador no admite Web Audio.	This browser does not support Web Audio.
+Evento o secuencia	Event or sequence
+Faltan datos en el GLB.	Missing GLB data.
+GLB incompleto.	Incomplete GLB.
+Ganancia lineal	Linear gain
+Guardado en este navegador	Saved in this browser
+Guardado local no disponible	Local save unavailable
+Imagen pendiente de	Image pending for
+Impacto localizado	Localised impact
+Manzanas verdes	Green apples
+No se pudo crear la imagen.	Could not create the image.
+No se pudo iniciar el laboratorio.	Could not start the lab.
+No se puede detener un colapso	A collapse cannot be stopped
+Nombre e imagen definitivos pendientes	Final name and image pending
+Parcela recuperada.	Plot restored.
+Pico verdadero	True peak
+Primeros impactos	First hits
+Ramas entrelazadas	Interwoven branches
+Reanudar el tiempo	Resume time
+Reconstruir la pieza desde sus escombros	Rebuild the piece from its rubble
+Resistencia de	Durability of
+Sonoridad final	Final loudness
+Tierra compactada	Compacted earth
+Tierra y estructura	Earth and structure
+Tomates maduros	Ripe tomatoes
+Verde hoja	Leaf green
+cm al agarre	cm from grip
+cultivo recolectado	crop harvested
+cultivos recolectados	crops harvested
+edificios disponibles	buildings available
+Girar	Rotate
+Rueda	Scroll
+acercar	zoom in
+girar	rotate
+rueda	scroll
+siguiente	next
+Mover cámara · C. Arrastra para orbitar; Shift para desplazar	Move camera · C. Drag to orbit; Shift to pan
+Arrastrar: girar · rueda: acercar	Drag: rotate · scroll: zoom
+. Abre el archivo completo en un navegador con WebGL y descompresión gzip (Chrome, Edge, Firefox o Safari recientes).	. Open the complete file in a browser with WebGL and gzip decompression (recent Chrome, Edge, Firefox or Safari).
+. El sombrero, la ropa y la cara forman parte de la malla original: no son sustitutos procedurales.	. The hat, clothing and face belong to the original mesh: they are not procedural replacements.
+; el brazo izquierdo queda libre. Al caer, el cuerpo permanece apoyado en el suelo: se permite que la cabeza o el sombrero lo atraviesen ligeramente, sin levantar todo el personaje.	; the left arm stays free. When falling, the body remains on the ground: the head or hat may intersect it slightly without lifting the entire character.
+Al cambiar una resistencia se conserva el porcentaje de vida de cada pieza. El archivo de escena guarda la disposición, los daños y los colapsos en curso; vuelve a cargarlo desde este HTML. El guardado local depende de los permisos de tu navegador.	Changing durability preserves each piece's health percentage. The scene file stores layout, damage and ongoing collapses; load it again from this HTML. Local saving depends on your browser permissions.
+Al completar una figura cerrada, el sistema convierte un tramo en puerta. Funciona con un trazo o con varios conectados. La elección es determinista; su resistencia es el 60 % de la del muro.	Closing a shape converts a segment into a gate. This works with one stroke or several connected strokes. The choice is deterministic; its durability is 60% of the wall's.
+Base v4. Transferencia calibrada sobre la carrera común; cada pista conserva sus tiempos y su número de muestras.	Base v4. Transfer calibrated against the common run; each track retains its timing and sample count.
+Colapso irreversible en curso. La pieza caerá hasta el 0 %; no se puede reparar mientras cae.	Irreversible collapse in progress. The piece will fall to 0%; it cannot be repaired while falling.
+Con Examinar, toca una pieza y pulsa Eliminar pieza. Funciona también con puertas y escombros; Deshacer recupera lo eliminado. Dos dedos desplazan y amplían. Con la mano, arrastra para girar. En ordenador: rueda para zoom, botón derecho para orbitar, Shift + arrastrar para desplazar.	With Inspect, touch a piece and press Remove piece. This also works with gates and rubble; Undo restores removed pieces. Two fingers pan and zoom. With the hand tool, drag to rotate. On desktop: scroll to zoom, right button to orbit, Shift + drag to pan.
+El puente contiene las dos topologías, pero las caras de las partes ausentes colapsan hasta tener área cero. La entrada y la salida conservan la geometría y las UV de los originales. Las regiones son aproximaciones automáticas: durante el breve morph puede haber intersecciones o solapamiento de hojas; no es una correspondencia botánica manual ni un morph único durante todo el ciclo.	The bridge contains both topologies, but faces belonging to absent parts collapse to zero area. The start and end preserve the original geometry and UVs. Regions are automatic approximations: the brief morph may show intersections or overlapping leaves; this is neither a manually authored botanical correspondence nor a single morph throughout the cycle.
+La caída admite intersección de cabeza/sombrero con el suelo; pelvis anclada tras el impacto	Falling allows the head/hat to intersect the ground; pelvis anchored after impact
+Los ambientes conservan un plano de fondo: brisa suave y noche tienen una referencia de −34 LUFS; el viento más intenso y el agua, aproximadamente −28 LUFS. Los efectos y avisos usan referencias distintas según su función.	Ambience retains a background layer: gentle breeze and night use a −34 LUFS reference; stronger wind and water use approximately −28 LUFS. Effects and alerts use different references according to their function.
+Los muros recorren intacto → dañado (50 % de vida) → destruido. Las puertas recorren puerta → destruido. El daño deforma continuamente regiones de las dos topologías: la anterior se repliega hacia anclajes y la siguiente se despliega. Las caras ausentes tienen área cero. No hay dithering, ruido de cobertura ni transparencia en los muros o sus sombras. Las UV se conservan. Las regiones son aproximaciones automáticas y pueden intersectarse durante el morph; no es una simulación estructural de fractura.	Walls progress from intact to damaged (50% health) to destroyed. Gates progress from gate to destroyed. Damage continuously deforms regions of both topologies: the previous one folds toward anchors and the next unfolds. Absent faces have zero area. Walls and their shadows use no dithering, coverage noise or transparency. UVs are preserved. Regions are automatic approximations and may intersect during the morph; this is not a structural fracture simulation.
+Manos adelantadas y separadas del torso al bajar y al incorporarse. Semillas delante del cuerpo.	Hands forward and away from the torso when lowering and rising. Seeds in front of the body.
+Motor, geometrías, texturas, miniaturas y shaders están dentro del HTML. No se usan servidores, CDN ni llamadas de red. Las geometrías y texturas se reutilizan; el renderizado agrupa ejemplares de la misma especie y etapa mediante instancing.	Engine, geometry, textures, thumbnails and shaders are inside the HTML. No servers, CDN or network calls are used. Geometry and textures are reused; rendering groups instances of the same species and stage using instancing.
+Riega solo con la mano derecha; el brazo izquierdo queda libre al costado. Agua desde la boquilla.	Waters with the right hand only; the left arm stays free at the side. Water from the nozzle.
+Running nativo de Amara joven. Carrera en el sitio; recorrido opcional para comprobar la lectura.	Young Amara's native Running. Runs in place; optional route to check readability.
+Running nativo de Amara mayor. Carrera en el sitio; recorrido opcional para comprobar la lectura.	Older Amara's native Running. Runs in place; optional route to check readability.
+Running nativo de Kofi joven. Carrera en el sitio; recorrido opcional para comprobar la lectura.	Young Kofi's native Running. Runs in place; optional route to check readability.
+Running nativo del ganadero mayor. Carrera en el sitio; recorrido opcional para comprobar la lectura.	The older herder's native Running. Runs in place; optional route to check readability.
+Se conservan la geometría, las UV y las texturas de Kofi joven. En esta revisión se corrigen los pesos de 87 vértices de la mano izquierda que estaban vinculados al muslo izquierdo; no se eliminan dedos ni se bloquean sus huesos. La carrera es su clip nativo. Saltitos, Alerta y Caer se han transferido desde el visor original con calibración sobre la carrera común y tiempos independientes por pista. La exportación no incluye el escenario, la luz ni las partículas.	Young Kofi's geometry, UVs and textures are preserved. This revision corrects the weights of 87 left-hand vertices linked to the left thigh; fingers are not removed and their bones are not locked. Running is his native clip. Skipping, Alert and Fall were transferred from the original viewer with calibration against the common run and independent timing per track. Export excludes the scenery, lighting and particles.
+Skip Forward en piernas y torso; brazos adaptados con IK a la caja de frutas.	Skip Forward on legs and torso; arms adapted to the fruit crate with IK.
+Techo general de −2 dBTP en los MP3 finales, más bajo para los sonidos discretos. Se ha aplicado limitación acotada solo cuando ayuda; los golpes muy breves pueden quedar por debajo de la referencia para no aplastarlos.	General ceiling of −2 dBTP in the final MP3 files, lower for subtle sounds. Limited compression was applied only where helpful; very brief hits may remain below the reference to avoid flattening them.
+Visor 3D interactivo. Arrastra para girar; pulsa para dañar el edificio.	Interactive 3D viewer. Drag to rotate; press to damage the building.
+cierra ventanas. Arrastra para rotar; rueda o dos dedos para acercarte.	closes windows. Drag to rotate; scroll or use two fingers to zoom.
+se basan en las animaciones del visor original y en la carrera nativa de Kofi joven. «Alerta» sustituye a «Con saco» como acción; el saco sigue disponible como accesorio. Las otras acciones se calculan sobre el esqueleto. En la caja, la regadera y la azada, la	are based on the original viewer animations and young Kofi's native run. “Alert” replaces “With sack” as an action; the sack remains available as an accessory. Other actions are calculated on the skeleton. For the crate, watering can and hoe,
+se basan en las animaciones del visor original y en la carrera nativa del ganadero mayor. «Alerta» sustituye a «Con saco» como acción; el saco sigue disponible como accesorio. Las otras acciones se calculan sobre el esqueleto. En la caja, la regadera y la azada, la	are based on the original viewer animations and the older herder's native run. “Alert” replaces “With sack” as an action; the sack remains available as an accessory. Other actions are calculated on the skeleton. For the crate, watering can and hoe,
+Reposo	Idle
+Saltitos	Skipping
+Golpe	Hit
+Ninguno	None
+Frutas	Fruit
+Empalizada	Palisade
+Madera y cuerda	Wood and rope
+Muro intacto de {material}	Intact {material} wall
+El colapso ya está en marcha; no necesita más golpes.	Collapse is already underway; no more hits are needed.
+Guardar / recuperar una parcela	Save / restore a plot
+Puerta · 60 % del muro ·	Gate · 60% of wall ·
+Todos los cultivos:	All crops:
+· ciclo de demostración de	· demonstration cycle of
+· listo para destruir	· ready to destroy
+Archivo	File
+Cargando	Loading
+Cenizas	Ashes
+Cuerda	Rope
+Derecha	Right
+Formato	Format
+Izquierda	Left
+Leyendo	Reading
+Naranjas	Oranges
+Preparando	Preparing
+Procesamiento	Processing
+Uso	Use
