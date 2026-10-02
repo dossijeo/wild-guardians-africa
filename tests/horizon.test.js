@@ -1,3 +1,4 @@
+import {NativeContacts} from '../src/rendering/contacts.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -34,8 +35,10 @@ test('native canyon and desert horizons preserve every original position, normal
 test('streaming uses the eye and original resident radii, including negative boundaries',()=>{
   for(const quality of ['muy_baja','baja','media','alta']){
     const r=quality==='alta'?3:2,region=nativeNearRegion({x:-24.01,z:24},quality);assert.deepEqual(region,{cx:-1,cz:1,range:r,bounds:[(-1-r)*48-24,(1-r)*48-24,(-1+r)*48+24,(1+r)*48+24]});
-    const world=Object.create(WorldScene.prototype),config={biome:'savanna'};Object.assign(world,{nav:{config},pack:{profile:{}},camera:{position:{x:-24.01,z:24}},controls:{target:{x:999,z:999}},quality,prototypes:[],scene:new THREE.Scene(),chunks:new Map(),terrainMeshes:[],horizon:{update(c,p,near){assert.deepEqual(near,region);}},terrain:()=>new THREE.Group()});
+    const world=Object.create(WorldScene.prototype),config={biome:'savanna',layers:Array(6).fill(true)},contacts=new NativeContacts();Object.assign(world,{contacts,chunkRevision:0,contactPrototypes:Array.from({length:20},()=>({radius:1,group:0})),nav:{config},pack:{profile:{}},camera:{position:{x:-24.01,z:24}},controls:{target:{x:999,z:999}},quality,prototypes:[],scene:new THREE.Scene(),chunks:new Map(),terrainMeshes:[],horizon:{update(c,p,near){assert.deepEqual(near,region);}},terrain:()=>{const g=new THREE.Group();g.userData.contactInstances=Array.from({length:20},()=>[]);return g;}});
     world.syncChunks();assert.equal(world.chunks.size,(2*r+1)**2);assert.ok(world.chunks.has('-1,1'));assert.equal(world.chunks.has('20,20'),false);
+    assert.deepEqual(contacts.uniforms.uContactBounds.value.toArray(),[region.bounds[0],region.bounds[1],(2*r+1)*48,(2*r+1)*48]);assert.equal(contacts.uploads,1);
+    world.syncChunks();assert.equal(contacts.uploads,1);world.syncChunks(true);assert.equal(contacts.uploads,2);contacts.dispose();
   }
 });
 

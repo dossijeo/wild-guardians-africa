@@ -53,7 +53,7 @@ test('unloading a chunk releases private instance buffers and retains shared wat
   const world=Object.create(WorldScene.prototype),group=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=paintedWaterMaterial('#49aeb6'),asset=new THREE.InstancedMesh(geometry,material,1),riverGeometry=new THREE.PlaneGeometry(2,2),river=new THREE.Mesh(riverGeometry,material);
   group.add(asset,river);let instances=0,sharedGeometry=0,localGeometry=0,sharedMaterial=0;
   asset.addEventListener('dispose',()=>instances++);geometry.addEventListener('dispose',()=>sharedGeometry++);riverGeometry.addEventListener('dispose',()=>localGeometry++);material.addEventListener('dispose',()=>sharedMaterial++);
-  Object.assign(world,{nav:{config:{}},pack:{profile:{}},horizon:{update(){}},camera:{position:{x:0,z:0}},prototypes:[],quality:'media',controls:{target:{x:0,z:0}},scene:new THREE.Scene(),chunks:new Map([['99,99',group]]),terrainMeshes:[],fluidMaterial:material,terrain:()=>new THREE.Group()});world.scene.add(group);world.syncChunks();
+  Object.assign(world,{nav:{config:{}},pack:{profile:{}},horizon:{update(){}},contacts:{update(){}},chunkRevision:0,camera:{position:{x:0,z:0}},prototypes:[],quality:'media',controls:{target:{x:0,z:0}},scene:new THREE.Scene(),chunks:new Map([['99,99',group]]),terrainMeshes:[],fluidMaterial:material,terrain:()=>new THREE.Group()});world.scene.add(group);world.syncChunks();
   assert.equal(instances,1);assert.equal(localGeometry,1);assert.equal(sharedGeometry,0);assert.equal(sharedMaterial,0);assert.equal(world.chunks.has('99,99'),false);assert.equal(world.chunks.size,25);
   geometry.dispose();material.dispose();
 });

@@ -9,6 +9,7 @@ export class AfricanToon {
   constructor(){
     this.uniforms={uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.materials=new WeakSet();
+    this.contactUniforms={uContactMap:{value:null},uContactBounds:{value:new THREE.Vector4(0,0,1,1)},uContactOn:{value:0}};
     this.environmentUniforms={uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
   }
   environment(textures,yaw){const u=this.environmentUniforms;u.uEnvDay.value=textures?.[0]??null;u.uEnvNight.value=textures?.[1]??null;u.uNativeEnvEnabled.value=textures?.length===2?1:0;this.environmentYaw=yaw;u.uEnvYaw.value=yaw?.value??0;}
@@ -18,7 +19,7 @@ export class AfricanToon {
     this.materials.add(material);
     const original=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
     material.onBeforeCompile=(shader,renderer)=>{
-      original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.nativeSurface?.type??1};
+      original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.nativeSurface?.type??1};
       shader.vertexShader='varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
         vec4 toonPosition=vec4(transformed,1.0);
@@ -33,7 +34,7 @@ export class AfricanToon {
       shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
-      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?groundLightingFunctions:'')+'\nvoid main() {');
+      shader.fragmentShader=shader.fragmentShader.replace('void main() {',environmentFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+groundLightingFunctions:'')+'\nvoid main() {');
       if(material.userData.horizonBounds){
         shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
@@ -52,7 +53,7 @@ export class AfricanToon {
           groundVisibility=1.-(1.-getShadowMask())*.93;
         #endif`}
         vec3 groundReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,toonN),groundRough):vec3(0.);
-        vec3 groundLit=nativeGroundLight4(groundAlbedo,toonN,toonV,groundRough,groundVisibility,groundReflection);
+        vec3 groundLit=nativeGroundLight4(groundAlbedo,toonN,toonV,groundRough,groundVisibility,groundReflection,nativeContact4(vToonWorld));
         outgoingLight=toLinear4(africanToon4(groundLit,groundAlbedo,toonN,toonV,uLightDir,groundReflection,groundRough,groundVisibility,0.,groundWet,0.,max(dot(toonN,toonV),0.),vToonWorld));
         #include <opaque_fragment>
       `:`

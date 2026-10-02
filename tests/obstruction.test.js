@@ -59,7 +59,7 @@ test('streaming releases the private coverage geometry once while retaining anot
   const original=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial(),kept=obstructionGeometry(original,[instance()],prototype,0),retired=obstructionGeometry(original,[instance(48000)],prototype,0);
   const group=geometry=>{const g=new THREE.Group();g.add(new THREE.InstancedMesh(geometry,material,1));return g;},a=group(kept),b=group(retired),scene=new THREE.Scene();scene.add(a,b);
   let releases=0,sourceReleases=0;retired.addEventListener('dispose',()=>releases++);original.addEventListener('dispose',()=>sourceReleases++);
-  const world={nav:{config:{},field:{seed:42}},prototypes:[],pack:{profile:{colors:{water:'#88bbcc'}}},camera:new THREE.PerspectiveCamera(),quality:'media',horizon:{update(){}},chunks:new Map([['0,0',a],['999,999',b]]),terrainMeshes:[],scene,terrain:()=>new THREE.Group()};
+  const world={nav:{config:{},field:{seed:42}},prototypes:[],pack:{profile:{colors:{water:'#88bbcc'}}},camera:new THREE.PerspectiveCamera(),quality:'media',horizon:{update(){}},contacts:{update(){}},chunkRevision:0,chunks:new Map([['0,0',a],['999,999',b]]),terrainMeshes:[],scene,terrain:()=>new THREE.Group()};
   WorldScene.prototype.syncChunks.call(world);WorldScene.prototype.syncChunks.call(world);
   assert.equal(releases,1);assert.equal(sourceReleases,0);assert.equal(world.chunks.get('0,0'),a);assert.equal(b.parent,null);assert.equal(kept.getAttribute('nativeVisibility').count,1);assert.equal(kept.getAttribute('position'),original.getAttribute('position'));
   kept.dispose();original.dispose();material.dispose();
