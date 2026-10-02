@@ -10,7 +10,8 @@ let batchSerial=0;
 export function createAssetLod(group,levels,instances,asset,slot,clipBounds=null){
   const bounds=levels[0].geometry.boundingBox;
   const prototype={...asset,size:bounds.getSize(new THREE.Vector3()).toArray(),centerY:(bounds.min.y+bounds.max.y)/2};
-  const batch={uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,clip:!!clipBounds,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
+  const chunkOrigin=group.userData.nativeChunkOrigin??[0,0];
+  const batch={chunkOrigin,uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,clip:!!clipBounds,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
   for(const [level,original] of levels.entries()){
     const geometry=clipBounds?assetClipGeometry(original.geometry,clipBounds,instances.length):obstructionGeometry(original.geometry,instances,asset,slot,levels[0].geometry);
     if(clipBounds)assetClipMaterial(original.material);
@@ -44,7 +45,7 @@ export function updateAssetLods(chunks,camera,quality){
         const order=bins[level],old=batch.orders[level];
         if(order.length!==old.length||order.some((i,j)=>i!==old[j])){
           dummy??=new THREE.Object3D();
-          for(const [j,i] of order.entries()){const p=batch.instances[i];dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(j,dummy.matrix);}
+          for(const [j,i] of order.entries()){const p=batch.instances[i];dummy.position.set(p.x-batch.chunkOrigin[0],p.y,p.z-batch.chunkOrigin[1]);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(j,dummy.matrix);}
           mesh.count=order.length;mesh.instanceMatrix.needsUpdate=true;mesh.boundingBox=null;mesh.boundingSphere=null;batch.orders[level]=order;stats.updates++;
         }
       }

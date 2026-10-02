@@ -5,7 +5,7 @@ const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const MARKS=[.065,.27,.53,.78,1];
 export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
- const state={morphSeconds:2};
+ const state={morphSeconds:2},renderOrigin={x:0,z:0};
  let models=[],bridges=[],counts=new Uint32Array(40),bridgeCounts=new Uint32Array(32);
  const uniforms={clock:{value:0},wind:{value:1}},tmpObj=new THREE.Object3D();
  const cycleDuration=crop=>cropSpec(ids[crop]).growth_seconds;
@@ -196,7 +196,7 @@ function transitionWindow(crop,stage){
 }
 function writeBridge(index,plant,part){
  const b=bridges[index],slot=bridgeCounts[index]++;if(slot>=MAX_PLANTS)return;
- tmpObj.position.set(plant.x,plant.y||0,plant.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();b.mesh.setMatrixAt(slot,tmpObj.matrix);
+ tmpObj.position.set(plant.x-renderOrigin.x,plant.y||0,plant.z-renderOrigin.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();b.mesh.setMatrixAt(slot,tmpObj.matrix);
  b.attr.setXYZW(slot,part.t,part.e,plant.seed||0,0);
 }
 
@@ -217,14 +217,15 @@ function stageSample(crop,growth){
 }
 function writeInstance(modelIndex,plant,part){
  const item=models[modelIndex],slot=counts[modelIndex]++;if(slot>=MAX_PLANTS)return;
- tmpObj.position.set(plant.x,plant.y||0,plant.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();item.mesh.setMatrixAt(slot,tmpObj.matrix);
+ tmpObj.position.set(plant.x-renderOrigin.x,plant.y||0,plant.z-renderOrigin.z);tmpObj.rotation.set(0,plant.rotation||0,0);tmpObj.scale.setScalar(1);tmpObj.updateMatrix();item.mesh.setMatrixAt(slot,tmpObj.matrix);
  item.growthAttr.setXYZW(slot,part.sy,part.sr,part.open,plant.seed||0);
 }
 
  prepareModels(gltf);prepareBridges(bridgeData);
  return {
   capacity:MAX_PLANTS,
-  update(plants,clock,ground) {
+  update(plants,clock,ground,origin={x:0,z:0}) {
+   renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges])model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);
    for(const entity of plants){
     const p={...entity,crop:ids.indexOf(entity.species),growth:entity.growth/cropSpec(entity.species).growth_seconds,y:ground(entity.x,entity.z),seed:Number(entity.id.replace(/\D/g,''))||0};

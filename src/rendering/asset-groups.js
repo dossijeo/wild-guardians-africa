@@ -18,7 +18,7 @@ export function nativeChunkBounds(group){
   group.updateMatrixWorld(true);const box=new THREE.Box3(),temp=new THREE.Box3(),dummy=new THREE.Object3D();
   for(const mesh of group.children)if(mesh.userData.ground){mesh.geometry.computeBoundingBox();box.union(temp.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld));}
   for(const batch of group.userData.lodBatches??[])for(const p of batch.instances){
-    dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();dummy.matrix.premultiply(group.matrixWorld);
+    dummy.position.set(p.x-batch.chunkOrigin[0],p.y,p.z-batch.chunkOrigin[1]);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();dummy.matrix.premultiply(group.matrixWorld);
     box.union(temp.copy(batch.levels[0].geometry.boundingBox).applyMatrix4(dummy.matrix));
   }
   group.userData.nativeAssetBounds=box;return box;
@@ -49,7 +49,7 @@ export class NativeAssetGroups{
     if(stamp!==g.stamp){
       const matrix=new THREE.Matrix4();let offset=0;
       for(const e of entries)for(let i=0;i<e.mesh.count;i++){
-        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
+        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
         if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.array[offset]=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
         offset++;
       }
@@ -59,7 +59,12 @@ export class NativeAssetGroups{
     stats.bytes+=capacity*(pass==='color'?68:64);
     if(pass==='shadow')this.shadowRoot.userData.lodBatches.push({shadow:g.mesh,meshes:[g.mesh]});
   }
-  update(chunks,camera){
+  update(chunks,camera,origin={x:0,z:0}){
+    if(!this.origin||this.origin.x!==origin.x||this.origin.z!==origin.z){
+      this.origin={x:origin.x,z:origin.z};this.root.position.set(origin.x,0,origin.z);
+      this.shadowRoot.position.copy(this.root.position);this.shadowRoot.updateMatrixWorld(true);
+      for(const cache of [this.colors,this.shadows])for(const group of cache.values())group.stamp=null;
+    }
     const stats={colorGroups:0,shadowGroups:0,visibleChunks:0,uploads:0,bytes:0,rawColorSlices:0};
     this.stats=stats;this.shadowRoot.userData.lodBatches=[];this.shadowChunks=new Map([['merged',this.shadowRoot]]);
     if(!this.enabled){this.clear();for(const group of chunks.values())for(const b of group.userData.lodBatches??[])for(const m of b.meshes)m.layers.set(0);return stats;}
