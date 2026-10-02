@@ -10,6 +10,15 @@ const source=read(manifest.source).toString().replace(/\r\n/g,'\n');
 const assets=JSON.parse(read('public/content/vfx.json'));
 const rects=createVfxAtlasRects(assets,...manifest.atlasDimensions);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+test('World surface replaces the demonstration crop bed and follows drifting sprite contacts',()=>{
+  const surface=(x,z)=>.18+.02*x-.01*z,fx=createNativeVfx('dig',rects,{surface});fx.advance(1.5);
+  assert.ok(fx.rigids.some(r=>r.landed));
+  for(const r of fx.rigids)assert.ok(r.p[1]>=surface(r.p[0],r.p[2])+r.size[1]*.36-1e-9);
+  for(const p of fx.parts){assert.equal(p.ground,surface(p.p[0],p.p[2]));if(p.orient!==1)assert.ok(p.p[1]>=p.ground+.025-1e-9);}
+  const frozen=JSON.stringify(fx.rigids);fx.advance(0);assert.equal(JSON.stringify(fx.rigids),frozen);
+  assert.throws(()=>createNativeVfx('dig',rects,{surface:12}),/Superficie/);
+  assert.throws(()=>createNativeVfx('dig',rects,{surface:()=>NaN}).advance(1),/Superficie/);
+});
 const json=value=>JSON.parse(JSON.stringify(value));
 const section=(start,end)=>{const a=source.indexOf(start);return source.slice(a,source.indexOf(end,a));};
 function oracle(id){

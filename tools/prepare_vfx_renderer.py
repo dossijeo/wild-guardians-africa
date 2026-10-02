@@ -38,6 +38,8 @@ rigid_pack = rigid_pack.rstrip()[:-1]+'return rigidPacked;}\n'
 geometry = 'let fxVertices=[];\n'+section('function fxTri(', 'function paintGeometryFX(')
 simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
+simulation = simulation.replace('function floorAt(p){return ', "function floorAt(p){if(surface){const y=surface(p[0],p[2]);if(!Number.isFinite(y))throw new Error('Superficie VFX inválida');return y;}return ")
+simulation = simulation.replace('if(p.p[1]<p.ground+.025', 'if(surface)p.ground=floorAt(p.p);if(p.p[1]<p.ground+.025')
 combat = section('const DUST_TEXTURES=', 'const paths=')
 combat = combat.replace("if(!isSeeking)window.dispatchEvent(new CustomEvent('wgvfx:impact',{detail:{...lastImpact}}));", 'contacts.push({...lastImpact});')
 rects = section('const spriteRects={};', 'const MAX_SPRITES=')
@@ -52,11 +54,12 @@ environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
 module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
 module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
 module += '''
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={}}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 '''+random+settings+'''
  if(!Number.isFinite(density)||density<=0||!Number.isFinite(wind))throw new Error('Configuración VFX inválida');
+ if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 '''+simulation+geometry+combat+rigid_pack+'''

@@ -4,9 +4,32 @@ import fs from 'node:fs';
 import * as THREE from 'three';
 import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
+import {TerrainField} from '../src/world/terrain.js';
 import {vfxDefinitions,vfxEnvironment,createVfxGeometries,packVfxSprites} from '../src/rendering/vfx-native.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url))),texture=new THREE.Texture({width:4096,height:2048});texture.flipY=false;
 function setup(){const renderer={shadowMap:{enabled:true},getDrawingBufferSize:v=>v.set(1280,720)},pipeline=new BuildingDestructionPass(renderer),library=new VfxLibrary(catalog,texture),camera=new THREE.PerspectiveCamera(43,1280/720,.2,400);camera.position.set(4,3,8);camera.lookAt(0,1,0);camera.updateMatrixWorld();return {pipeline,library,camera};}
+
+test('Terrain contact maps world heights into a translated, rotated and scaled effect frame',()=>{
+  const {library,pipeline}=setup(),surface=(x,z)=>12+.01*x+.02*z,fx=library.create('dig',pipeline,{worldSurface:surface}),parent=new THREE.Group();
+  parent.position.set(30,surface(30,-20),-20);parent.rotation.y=Math.PI/2;parent.scale.setScalar(2);parent.add(fx);fx.seek(1.5);
+  assert.ok(fx.native.rigids.some(r=>r.landed));
+  for(const r of fx.native.rigids){const world=new THREE.Vector3(...r.p).applyMatrix4(fx.matrixWorld);assert.ok(world.y>=surface(world.x,world.z)+r.size[1]*.36*2-1e-9);}
+  const p=new THREE.Vector3(1,fx.localSurface(1,-1),-1).applyMatrix4(fx.matrixWorld);assert.ok(Math.abs(p.y-surface(p.x,p.z))<1e-9);
+  parent.position.y+=3;fx.seek(1.5);const q=new THREE.Vector3(1,fx.localSurface(1,-1),-1).applyMatrix4(fx.matrixWorld);assert.ok(Math.abs(q.y-surface(q.x,q.z))<1e-9);
+  library.dispose();pipeline.dispose();
+});
+
+test('Native debris follows original terrain heights in all six biomes without changing domain state',()=>{
+  const {library,pipeline}=setup();
+  for(const biome of ['savanna','grand_river','mangrove','volcanoes','canyons','desert']){
+    const field=new TerrainField({seed:'712',biome,relief:1,density:1,river:true}),surface=(x,z)=>field.surface(x,z),fx=library.create('stone',pipeline,{worldSurface:surface});
+    fx.position.set(-29.3,surface(-29.3,-56.2),-56.2);fx.rotation.y=.7;fx.scale.setScalar(2);fx.seek(1.2);
+    assert.ok(fx.native.rigids.length>0,biome);
+    for(const r of fx.native.rigids){const p=new THREE.Vector3(...r.p).applyMatrix4(fx.matrixWorld);assert.ok(p.y>=surface(p.x,p.z)+r.size[1]*.36*2-1e-8,biome);}
+    fx.dispose();
+  }
+  library.dispose();pipeline.dispose();
+});
 
 test('All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing',()=>{
   const {library,pipeline,camera}=setup();

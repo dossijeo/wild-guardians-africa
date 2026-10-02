@@ -79,13 +79,14 @@ export const vfxDefinitions=[
 {id:'spirit',name:'Espíritu',title:'La presencia del guardián',group:'Espíritu',duration:5.5,icon:'spirit',desc:'Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.',chips:['Kenney · halo y estela','Trayectorias 3D','Dos luces locales']},
 ];
 
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={}}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 let seed=7131;function random(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t^=t+Math.imul(t^t>>>7,61|t);return ((t^t>>>14)>>>0)/4294967296}const rand=(a=0,b=1)=>a+(b-a)*random();const choose=a=>a[Math.floor(random()*a.length)];
 const settings={density:1,speed:1,wind:.3,nightFill:.14,quality:'high',cycleDuration:60,showProxy:true,showTarget:true,shake:false,layers:{telegraph:true,textures:true,ribbons:true,dust:true,fragments:true,lights:true}};
 
  if(!Number.isFinite(density)||density<=0||!Number.isFinite(wind))throw new Error('Configuración VFX inválida');
+ if(surface!==null&&typeof surface!=='function')throw new Error('Superficie VFX inválida');
  settings.density=density;settings.wind=wind;Object.assign(settings.layers,layers);
  let toolModel=M.I(),toolVisible=false,wallVisible=true,lightPos0=[0,1,0],lightPos1=[0,1,0],lightCol0=[0,0,0],lightCol1=[0,0,0];
 let current=definitions[0],clock=0,paused=false,looping=true,events=[],eventIndex=0,parts=[],rigids=[],wetness=0,hitTime=-10;
@@ -104,9 +105,9 @@ function twinkle(p,n=6,c='#eac886'){for(let i=0;i<count(n);i++){let a=rand(0,TAU
 function harvest(){for(let i=0;i<4;i++){const start=[i%2?.78:-.86,.98,i<2?-.62:.58];solid('corn',start,[0,0,0],[.11,.32,.11],'#dbad52',{life:1.2,flight:{start,end:[-1.75,.37,1.07],duration:1.05+i*.07,arc:.65+i*.09},spin:[1,3,1]});for(let j=0;j<count(3);j++){solid('leaf',V.add(start,[rand(-.08,.08),-.1,rand(-.08,.08)]),[rand(-.55,.55),rand(.7,1.5),rand(-.55,.55)],[.24,.32,.32],choose(['#88a04b','#6d913f','#a3b66a']),{life:2.5,gravity:2.4,bounce:.04,drag:.6});}}}
 function toolPose(){if(current.id==='water'){const amount=smooth(.2,.64,clock)*(1-smooth(2.15,2.7,clock));toolModel=M.model([-1.48,1.35,0],[0,0,-.2-.6*amount],[1,1,1]);toolVisible=true;}else if(current.id==='dig'){const angle=-.92*(1-smooth(.2,.56,clock))+.6*smooth(.72,1.42,clock);toolModel=M.model([.12,1.08,.07],[0,.22,angle],[1,1,1]);toolVisible=true;}else toolVisible=false;}
 function restartEffect(rebuild=false){seed=2481+definitions.indexOf(current)*379;parts=[];rigids=[];clock=0;events=[];eventIndex=0;wetness=0;wallVisible=true;hitTime=-10;lastImpact=null;lightCol0=[0,0,0];lightCol1=[0,0,0];seed=2481+definitions.indexOf(current)*379;toolPose();const at=(t,fn)=>events.push({t,fn});switch(current.id){case'dust':at(.25,()=>stepDust(-.72,.17));at(.57,()=>stepDust(0,-.06));at(.93,()=>stepDust(.75,.17));break;case'dig':at(.56,dig);break;case'water':for(let i=0;i<43;i++)at(.52+i*.037,waterDrop);break;case'harvest':at(.48,harvest);break;case'wood':case'adobe':case'stone':at(.42,()=>strike(current.id));break;default:scheduleCombat(at);break;}events.sort((a,b)=>a.t-b.t);}
-function floorAt(p){return ['dig','water','harvest'].includes(current.id)&&Math.abs(p[0])<1.25&&Math.abs(p[2])<1.06?.15:0;}
+function floorAt(p){if(surface){const y=surface(p[0],p[2]);if(!Number.isFinite(y))throw new Error('Superficie VFX inválida');return y;}return ['dig','water','harvest'].includes(current.id)&&Math.abs(p[0])<1.25&&Math.abs(p[2])<1.06?.15:0;}
 function simulate(dt){clock+=dt;toolPose();while(eventIndex<events.length&&events[eventIndex].t<=clock+1e-7){events[eventIndex++].fn();}
- for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.age+=dt;if(p.age>p.life){parts.splice(i,1);continue;}p.v[0]+=settings.wind*.15*dt;p.v[1]-=p.gravity*dt;p.v[2]+=Math.sin(p.phase+p.age*2)*.05*dt;const drag=Math.exp(-p.drag*dt);for(let k=0;k<3;k++){p.v[k]*=drag;p.p[k]+=p.v[k]*dt;}if(p.p[1]<p.ground+.025&&p.orient!==1){p.p[1]=p.ground+.025;p.v[1]=Math.max(0,p.v[1]);}p.angle+=p.spin*dt;}
+ for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.age+=dt;if(p.age>p.life){parts.splice(i,1);continue;}p.v[0]+=settings.wind*.15*dt;p.v[1]-=p.gravity*dt;p.v[2]+=Math.sin(p.phase+p.age*2)*.05*dt;const drag=Math.exp(-p.drag*dt);for(let k=0;k<3;k++){p.v[k]*=drag;p.p[k]+=p.v[k]*dt;}if(surface)p.ground=floorAt(p.p);if(p.p[1]<p.ground+.025&&p.orient!==1){p.p[1]=p.ground+.025;p.v[1]=Math.max(0,p.v[1]);}p.angle+=p.spin*dt;}
  for(let i=rigids.length-1;i>=0;i--){const r=rigids[i];r.age+=dt;
   if(r.flight){const t=clamp(r.age/r.flight.duration),s=r.flight.start,e=r.flight.end;r.p=V.lerp(s,e,t);r.p[1]+=Math.sin(t*Math.PI)*r.flight.arc;r.rot[0]+=dt*2;r.rot[1]+=dt*3;if(t>=1){rigids.splice(i,1);twinkle(e,3,'#e3c17c');}continue;}
   if(r.age>=r.life){rigids.splice(i,1);continue;}
