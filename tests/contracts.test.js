@@ -79,6 +79,16 @@ test('Fractional wallet balances and settled ledger entries are rejected while a
   const balance=JSON.parse(text);balance.ledger.balance=rational(1001,2);assert.throws(()=>serialize(balance),/Saldo/);
   const entry=JSON.parse(text);entry.ledger.entries['wrong-charge']=rational(-945,100);assert.throws(()=>serialize(entry),/monetario/);
 });
+
+test('New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield',()=>{
+  const {s,crate,plant}=carrying();crate.sourcePlantId=plant.id;crate.species=plant.species;const text=serialize(s);
+  assert.equal(deserialize(text).crates[0].sourcePlantId,plant.id);
+  for(const corrupt of [state=>state.crates[0].sourcePlantId='missing',state=>state.crates[0].species='yuca',state=>state.plants[0].alive=true,
+    state=>state.crates.push({...state.crates[0],id:'duplicate-yield',carrierId:null})]){
+    const bad=JSON.parse(text);corrupt(bad);assert.throws(()=>deserialize(JSON.stringify(bad)),/Origen de cosecha/);
+  }
+  const legacy=JSON.parse(text);delete legacy.crates[0].sourcePlantId;delete legacy.crates[0].species;assert.doesNotThrow(()=>serialize(legacy));
+});
 test('A corrupt latest carrier relation falls back to the last valid saved snapshot',()=>{
   const map=new Map(),storage={getItem:key=>map.get(key)??null,setItem:(key,value)=>map.set(key,value),removeItem:key=>map.delete(key)},repository=new SaveRepository(storage);
   const {s}=carrying();repository.save(s);s.savedAt=2;repository.save(s);

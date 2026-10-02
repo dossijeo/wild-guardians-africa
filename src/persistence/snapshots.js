@@ -15,8 +15,15 @@ export function validateSnapshot(state) {
       if(['plants','structures','workers','crates','villages','spells'].includes(name) && (!Number.isFinite(e.x)||!Number.isFinite(e.z)))throw new Error('Posición inválida');
     }
   }
-  const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c]));
+  const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
+  const harvested=new Set();
   for(const crate of state.crates){
+    // Older version-1 snapshots lack provenance. Validate it whenever present.
+    if(crate.sourcePlantId!==undefined){
+      const plant=plants.get(crate.sourcePlantId);
+      if(!plant||plant.alive||plant.species!==crate.species||harvested.has(plant.id))throw new Error('Origen de cosecha inválido');
+      harvested.add(plant.id);
+    }
     if(crate.carrierId){
       const worker=workers.get(crate.carrierId);
       if(crate.delivered||!worker||worker.crateId!==crate.id||worker.status!=='carrying')throw new Error('Portador de caja inválido');
