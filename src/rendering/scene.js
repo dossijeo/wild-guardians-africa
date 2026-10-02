@@ -10,6 +10,7 @@ import {applyAnimalPose,prepareAnimalClips,animalGroundSamples} from './animal-a
 import {NativeHands} from './hands.js';
 import {tutorialHandTarget} from './tutorial-hand-target.js';
 import {NativeWall} from './walls.js';
+import {WallDrawing} from './wall-drawing.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -25,11 +26,29 @@ export class WorldScene {
     this.scene.add(this.sun,this.sun.target);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.ambient);
     this.raycaster=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.terrainMeshes=[];
     this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
-    let down=null;canvas.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;});
+    this.strokeLine=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineDashedMaterial({color:'#49623d',dashSize:.5,gapSize:.25,depthWrite:false}));this.strokeLine.visible=false;this.scene.add(this.strokeLine);
+    this.wallDrawing=new WallDrawing(canvas,{point:e=>this.pick(e).point,stroke:points=>this.onWallStroke?.(points),tap:e=>onPick(this.pick(e)),preview:points=>this.showWallStroke(points),gesture:(old,next)=>this.wallCameraGesture(old,next)});
+    let down=null;canvas.addEventListener('pointerdown',e=>{if(e.button===0&&!e.shiftKey)down=[e.clientX,e.clientY];});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;});
+    canvas.addEventListener('pointercancel',()=>{down=null;});
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();});canvas.addEventListener('webglcontextrestored',()=>this.onContextRestored?.());
   }
   resize() {const r=this.canvas.getBoundingClientRect();this.renderer.setSize(Math.max(1,r.width),Math.max(1,r.height),false);this.camera.aspect=r.width/Math.max(1,r.height);this.camera.updateProjectionMatrix();}
+  showWallStroke(points){
+    this.strokeLine.geometry.dispose();this.strokeLine.geometry=new THREE.BufferGeometry().setFromPoints(points.map(([x,z])=>new THREE.Vector3(x,this.nav?.field.surface(x,z)+.06,z)));this.strokeLine.computeLineDistances();this.strokeLine.visible=points.length>1;
+  }
+  wallCameraGesture(old,next){
+    const a=this.pick({clientX:old.x,clientY:old.y}).point,b=this.pick({clientX:next.x,clientY:next.y}).point;
+    if(a&&b){const delta=new THREE.Vector3(a.x-b.x,0,a.z-b.z);this.controls.target.add(delta);this.camera.position.add(delta);}
+    const offset=this.camera.position.clone().sub(this.controls.target),distance=offset.length(),ratio=old.distance/Math.max(10,next.distance);
+    offset.multiplyScalar(Math.max(this.controls.minDistance,Math.min(this.controls.maxDistance,distance*ratio))/distance);this.camera.position.copy(this.controls.target).add(offset);this.controls.update();
+  }
+  showWallPreview(plan){
+    this.clearWallPreview();this.wallPreview=new THREE.Group();
+    for(const entity of plan.previewPieces??plan.pieces){const wall=new NativeWall(this.wallPrototypes,entity);wall.position.set(entity.x,this.nav.field.surface(entity.x,entity.z)+.025,entity.z);wall.rotation.y=entity.yaw;for(const {mesh} of wall.parts){mesh.material.transparent=true;mesh.material.opacity=.55;mesh.material.depthWrite=false;mesh.material.color.set('#9cb67b');}this.wallPreview.add(wall);}
+    this.scene.add(this.wallPreview);
+  }
+  clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {this.quality=quality;this.renderer.setPixelRatio(Math.min(devicePixelRatio,{muy_baja:1,baja:1,media:1.5,alta:2}[quality]??1.5));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);this.sun.shadow.mapSize.set(quality==='alta'?2048:1024,quality==='alta'?2048:1024);this.resize();}
   async load(state,nav,villagePayload) {
     this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json');this.prototypes=await this.assets.biome(this.pack);
@@ -206,5 +225,5 @@ export class WorldScene {
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
   render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.renderer.render(this.scene,this.camera);}
-  dispose() {this.hands?.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+  dispose() {this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
 }

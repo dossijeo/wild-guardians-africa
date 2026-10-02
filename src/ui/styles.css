@@ -11,3 +11,9 @@
 #stage .native-panel-host{position:absolute;z-index:30;top:calc(var(--header) + 7px);right:calc(var(--action-w) + 23px);width:min(603px,calc(100vw - var(--action-w) - 36px));--panel-max:calc(100dvh - var(--header) - var(--reserve) - 16px);color:#624024}
 #stage .hire-card h3{font-family:'Trebuchet MS',Arial,sans-serif}
 #stage #panel .action-panel{top:var(--header);right:calc(var(--action-w) + 26px);bottom:auto;max-height:calc(100dvh - var(--header) - var(--reserve));overflow:auto}
+
+/* Keep contextual controls clear of native HUD actions and Spirit reserve. */
+#stage #context{position:absolute;inset:0;pointer-events:none;z-index:30}
+#stage #context .context{pointer-events:auto;right:calc(var(--action-w) + 26px);top:calc(var(--header) + 7px);bottom:auto;width:min(290px,calc(100vw - var(--action-w) - 40px));max-height:calc(100dvh - var(--header) - var(--reserve) - 16px);overflow:auto}
+
+#stage #context .context button.ghost{color:var(--ink)}

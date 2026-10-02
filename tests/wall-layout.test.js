@@ -40,6 +40,11 @@ test('Paid chain closes with one gate, no surcharge and exactly one idempotent d
   const walls=state.structures.filter(p=>p.kind==='wall');assert.equal(walls.length,15);assert.equal(walls.filter(p=>p.autoGate).length,1);assert.equal(walls.find(p=>p.autoGate).maxHp,60);assert.equal(state.ledger.balance.n,'50');
   const saved=serialize(state);assert.equal(Game.buildWallChain(state,'chain','zarzas',square,nav),false);assert.equal(serialize(state),saved);assert.equal(serialize(deserialize(saved)),saved);
 });
+test('Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it',()=>{
+  const {state,nav}=fixture(),before=serialize(state),plan=Game.previewWallChain(state,'zarzas',square,nav,{smooth:false,snap:false});
+  assert.equal(plan.cost,150);assert.equal(plan.gates,1);assert.equal(serialize(state),before);
+  state.raid={animals:[]};assert.throws(()=>Game.buildWallChain(state,'confirm','zarzas',square,nav),/disponible/);assert.equal(state.ledger.balance.n,'200');assert.equal(state.structures.length,1);
+});
 test('Invalid terrain, crop intersection and insufficient money leave state unchanged',()=>{
   for(const reason of ['terrain','crop','money']){
     const {state,nav}=fixture();if(reason==='terrain')nav.wallPlacement=()=>({valid:false,reason:'no terreno'});if(reason==='crop')state.plants.push({id:'p',alive:true,x:1,z:0});
