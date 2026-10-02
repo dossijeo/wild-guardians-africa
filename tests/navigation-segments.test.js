@@ -4,7 +4,7 @@ import {Navigation} from '../src/world/navigation.js';
 import {repairRoute} from '../src/world/work-points.js';
 function flat(props=[],obstacles=[]){
   const nav=Object.create(Navigation.prototype);nav.field={blocked:()=>false,slope:()=>0};
-  nav.obstacles=obstacles;nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.propsAt=()=>props;return nav;
+  nav.obstacles=obstacles;nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.searchedRegions=[];nav.propsAt=()=>props;return nav;
 }
 function checkRoute(nav,start,end,radius=.1){
   const path=nav.path(start,end,radius,null,true);assert.ok(path);let previous=start;
@@ -35,6 +35,37 @@ test('Failed routes are reused only for identical endpoints and clear when an ob
   assert.ok(nav.path(a,b,.28,null,true));assert.equal(searches,2);
   state.spells=[];nav.setState(state);assert.equal(nav.failedPaths.size,0);
   assert.ok(nav.path(a,b,.28,null,false));assert.equal(searches,3);
+});
+test('Exhaustively explored enclosed regions reject other unreachable targets without another flood search',()=>{
+  const box=(x0,z0,x1,z1)=>[{x:x0,z:z0},{x:x1,z:z0},{x:x1,z:z1},{x:x0,z:z1}];
+  const walls=[box(-3,-3,-2.5,3),box(2.5,-3,3,3),box(-3,-3,3,-2.5),box(-3,2.5,3,3)];
+  const nav=flat(),state={structures:[],villages:[{buildings:walls.map((footprint,i)=>({key:`wall-${i}`,kind:'house',footprint}))}],spells:[],suppressed:[]};
+  nav.setState(state);const start={x:0,z:0};
+  assert.equal(nav.path(start,{x:20,z:0},.28,null,false),null);assert.ok(nav.closedRegions.size>0);
+  const cachedSize=nav.segmentCache.size;
+  assert.equal(nav.path({x:.1,z:.1},{x:21,z:2},.28,null,false),null);
+  assert.ok(nav.segmentCache.size<=cachedSize+9,'Known closed region avoids exploring grid edges again');
+  assert.ok(nav.path(start,{x:1,z:1},.28,null,false),'Destinations inside the region remain reachable');
+  state.villages=[];nav.setState(state);assert.equal(nav.closedRegions.size,0);
+  assert.ok(nav.path(start,{x:21,z:2},.28,null,false),'Removing the enclosure permits departure');
+});
+test('A search touching corridor bounds does not certify a globally closed region',()=>{
+  const nav=flat([],[{id:'barrier',kind:'house',footprint:[{x:4,z:-100},{x:5,z:-100},{x:5,z:100},{x:4,z:100}]}]);
+  assert.equal(nav.path({x:0,z:0},{x:10,z:0},.28,null,false),null);
+  assert.equal(nav.closedRegions.size,0);
+  assert.equal(nav.searchedRegions.length,1);
+  let expanded=0;const original=nav.testSegmentClear.bind(nav);nav.testSegmentClear=(...args)=>{expanded++;return original(...args);};
+  assert.equal(nav.path({x:0,z:0},{x:9,z:0},.28,null,false),null);
+  assert.ok(expanded<12,'Contained failed corridor reuses exhaustive reachability');
+  assert.ok(nav.path({x:0,z:0},{x:-5,z:0},.28,null,false),'Reachable same-side destinations remain valid');
+});
+test('Region reuse matches fresh searches across origins, endpoints, radii and actor permissions',()=>{
+  const obstacles=[{id:'barrier',kind:'house',footprint:[{x:4,z:-100},{x:5,z:-100},{x:5,z:100},{x:4,z:100}]}];
+  const cached=flat([],obstacles),fresh=flat([],obstacles);
+  for(const radius of [.28,.45,.8])for(const worker of [true,false])for(const start of [{x:0,z:0},{x:.3,z:.2},{x:1,z:1}])for(const end of [{x:10,z:0},{x:9,z:0},{x:-2,z:1},{x:3,z:3}]){
+    fresh.closedRegions.clear();fresh.searchedRegions=[];fresh.failedPaths.clear();
+    assert.deepEqual(cached.path(start,end,radius,null,worker),fresh.path(start,end,radius,null,worker),JSON.stringify({radius,worker,start,end}));
+  }
 });
 test('A diagonal grid edge with valid corners still detours around an intervening prop',()=>{
   const nav=flat([{slot:0,x:.5,z:.5,radius:.1}]);

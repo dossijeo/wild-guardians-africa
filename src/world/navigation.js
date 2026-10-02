@@ -1,11 +1,12 @@
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
+import {SearchFrontier} from './search-frontier.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
-    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();
+    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];
   }
   chunk(cx,cz) {
     const key=`${cx},${cz}`;
@@ -28,6 +29,8 @@ export class Navigation {
     this.walkCache.clear();
     this.segmentCache.clear();
     this.failedPaths.clear();
+    this.closedRegions.clear();
+    this.searchedRegions=[];
     this.suppressed=new Set(state.suppressed);
     this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>({...s,radius:s.kind==='center'?2.6:.7}));
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
@@ -100,15 +103,35 @@ export class Navigation {
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const margin=16,minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
-    const open=[],costs=new Map(),previous=new Map();
+    const open=new SearchFrontier(),costs=new Map(),previous=new Map();
     for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
       const point={x:sx+dx,z:sz+dz};
       if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.segmentClear(start,point,radius,ignore,worker))continue;
       const g=distance(start,point);open.push({...point,g,f:g+Math.hypot(ex-point.x,ez-point.z)});costs.set(key(point.x,point.z),g);
     }
-    let visited=0;
+    const regionKey=k=>`${radius}:${ignore}:${worker}|${k}`;
+    const reachesEnd=region=>{
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+        const point={x:ex+dx,z:ez+dz};
+        if(region.has(key(point.x,point.z))&&this.segmentClear(point,end,radius,ignore,worker))return true;
+      }
+      return false;
+    };
+    // An exhausted bounded search also proves failures for contained corridors,
+    // provided every new origin connector belongs to its explored region.
+    for(const searched of this.searchedRegions){
+      if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
+        minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
+      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))&&!reachesEnd(searched.nodes))return null;
+    }
+    const known=open.values().map(p=>this.closedRegions.get(regionKey(key(p.x,p.z))));
+    if(known.length&&known.every(Boolean)){
+      if(![...new Set(known)].some(reachesEnd))return null;
+    }
+    let visited=0,touchesBoundary=false;
     while(open.length&&visited++<12000) {
-      open.sort((a,b)=>a.f-b.f);const cur=open.shift(),ck=key(cur.x,cur.z);
+      const cur=open.pop(),ck=key(cur.x,cur.z);
+      if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)touchesBoundary=true;
       if(Math.hypot(cur.x-ex,cur.z-ez)<1.5&&this.segmentClear(cur,end,radius,ignore,worker)) {
         const route=[{x:end.x,z:end.z}];let k=ck;
         while(true){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});if(!previous.has(k))break;k=previous.get(k);}
@@ -122,6 +145,17 @@ export class Navigation {
         if(g>=(costs.get(k)??Infinity))continue;
         if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
         costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
+      }
+    }
+    // Only an exhaustive search wholly inside the corridor proves a finite,
+    // closed grid region. Time/bounds limited failures never prove isolation.
+    if(!open.length&&visited<12000&&costs.size){
+      const region=new Set(costs.keys());
+      while(this.searchedRegions.length&&(this.searchedRegions.length>=32||this.searchedRegions.reduce((sum,r)=>sum+r.nodes.size,0)+region.size>50000))this.searchedRegions.shift();
+      this.searchedRegions.push({nodes:region,minX,maxX,minZ,maxZ,radius,ignore,worker});
+      if(!touchesBoundary){
+        if(this.closedRegions.size+costs.size>50000)this.closedRegions.clear();
+        for(const k of region)this.closedRegions.set(regionKey(k),region);
       }
     }
     return null;
