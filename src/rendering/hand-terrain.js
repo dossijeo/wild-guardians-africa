@@ -1,7 +1,7 @@
-// Clip the whole hand plane against the actual 1.5 m terrain triangles.
+// Clip the whole hand plane against the actual 1 m terrain triangles.
 // The maximum of a linear height difference occurs at a clipped vertex.
 export function terrainTriangleHeight(x,z,surface){
-  const step=1.5,origin=-24,loX=origin+Math.floor((x-origin)/step)*step,loZ=origin+Math.floor((z-origin)/step)*step,u=(x-loX)/step,v=(z-loZ)/step;
+  const step=1,origin=-24,loX=origin+Math.floor((x-origin)/step)*step,loZ=origin+Math.floor((z-origin)/step)*step,u=(x-loX)/step,v=(z-loZ)/step;
   const a=Math.fround(surface(loX,loZ)),b=Math.fround(surface(loX,loZ+step)),c=Math.fround(surface(loX+step,loZ));
   if(u+v<=1)return a+u*(c-a)+v*(b-a);
   const d=Math.fround(surface(loX+step,loZ+step));return d+(1-u)*(b-d)+(1-v)*(c-d);
@@ -22,7 +22,7 @@ function clipTriangle(points,triangle){
 }
 export function quadTerrainLift(corners,surface,margin=.035){
   let required=0;
-  const step=1.5,origin=-24,minX=Math.min(...corners.map(p=>p[0])),maxX=Math.max(...corners.map(p=>p[0])),minZ=Math.min(...corners.map(p=>p[2])),maxZ=Math.max(...corners.map(p=>p[2]));
+  const step=1,origin=-24,minX=Math.min(...corners.map(p=>p[0])),maxX=Math.max(...corners.map(p=>p[0])),minZ=Math.min(...corners.map(p=>p[2])),maxZ=Math.max(...corners.map(p=>p[2]));
   const loX=origin+Math.floor((minX-origin)/step)*step,loZ=origin+Math.floor((minZ-origin)/step)*step;
   for(let z=loZ;z<=maxZ;z+=step)for(let x=loX;x<=maxX;x+=step){
     // Float32 matches the vertices actually submitted by WorldScene.terrain.

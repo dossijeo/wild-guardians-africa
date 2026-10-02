@@ -29,6 +29,7 @@ export class AfricanToon {
         ${material.isMeshBasicMaterial?'vToonLowNormal=inverseTransformDirection(normalMatrix*normal,viewMatrix);':''}`);
       shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome;uniform vec3 uLightDir;\n'+toonFunctions+'\n'+shader.fragmentShader;
       if(material.userData.toonGround)shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+        ${material.userData.nativeGroundColor?'diffuseColor.rgb=toLinear4(diffuseColor.rgb);':''}
         float coarse=materialNoise(vToonWorld*.32),fine=materialNoise(vToonWorld*2.6);
         float detailAA=1.-smoothstep(.2,1.,max(length(dFdx(vToonWorld)),length(dFdy(vToonWorld))));
         diffuseColor.rgb*=.94+.10*coarse+.05*(fine-.5)*detailAA;

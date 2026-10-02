@@ -45,7 +45,7 @@ test('Cancelling a task immediately releases its VFX and leaves no static ribbon
 test('Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams',()=>{
   const field={surface:(x,z)=>x*x*.3-z*z*.2+x*z*.1};
   for(const [x,z] of [[.3,.3],[1.2,1.1],[-24.3,47.9],[-48.1,-24.6],[24,48]]){
-    const step=1.5,x0=Math.floor(x/step)*step,z0=Math.floor(z/step)*step,u=(x-x0)/step,v=(z-z0)/step,tri=u+v<=1?[[x0,z0,1-u-v],[x0+step,z0,u],[x0,z0+step,v]]:[[x0+step,z0+step,u+v-1],[x0+step,z0,1-v],[x0,z0+step,1-u]];
+    const step=1,x0=Math.floor(x/step)*step,z0=Math.floor(z/step)*step,u=(x-x0)/step,v=(z-z0)/step,tri=u+v<=1?[[x0,z0,1-u-v],[x0+step,z0,u],[x0,z0+step,v]]:[[x0+step,z0+step,u+v-1],[x0+step,z0,1-v],[x0,z0+step,1-u]];
     const expected=tri.reduce((y,[xx,zz,w])=>y+field.surface(xx,zz)*w,0);assert.ok(Math.abs(renderedTerrainSurface(field,x,z)-expected)<1e-9);
   }
 });

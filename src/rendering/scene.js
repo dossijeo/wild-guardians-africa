@@ -25,6 +25,7 @@ import {AgricultureVfx} from './agriculture-vfx.js';
 import {MaterialVfx} from './material-vfx.js';
 import {LocomotionVfx} from './locomotion-vfx.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
+import {nativeGroundGeometry} from './terrain-geometry.js';
 const cropIds=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
@@ -90,16 +91,10 @@ export class WorldScene {
   }
   focus(point) {const y=this.nav?.field.surface(point.x,point.z)??0;this.controls.target.set(point.x,y,point.z);this.camera.position.set(point.x+34,y+32,point.z+40);this.controls.update();}
   terrain(cx,cz) {
-    const group=new THREE.Group(),x0=cx*48-24,z0=cz*48-24,n=32,positions=[],indices=[],colors=[];
-    const base=new THREE.Color(this.pack.profile.colors.soil),grass=new THREE.Color(this.pack.profile.colors.grass);
-    for(let z=0;z<=n;z++)for(let x=0;x<=n;x++) {
-      const wx=x0+x*48/n,wz=z0+z*48/n,h=this.nav.field.surface(wx,wz);positions.push(wx,h,wz);
-      const color=base.clone().lerp(grass,.2+.25*Math.sin(wx*.12)*Math.sin(wz*.13));colors.push(color.r,color.g,color.b);
-    }
-    for(let z=0;z<n;z++)for(let x=0;x<n;x++){const a=z*(n+1)+x,b=a+n+1;indices.push(a,b,a+1,a+1,b,b+1);}
-    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();
+    const group=new THREE.Group(),x0=cx*48-24,z0=cz*48-24;
+    const geometry=nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=this.quality==='muy_baja'?new THREE.MeshBasicMaterial({vertexColors:true}):new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
-    material.userData.toonGround=true;const ground=new THREE.Mesh(geometry,material);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
+    material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(cx*48,0,cz*48);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
     const waterGeometry=nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
     if(waterGeometry){const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(cx*48,0,cz*48);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
     const chunk=this.nav.chunk(cx,cz);

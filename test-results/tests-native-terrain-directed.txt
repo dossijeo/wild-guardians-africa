@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 6.3941
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 4.6221
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 1.7106
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.4851
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 5 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 8.263
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 6 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 19.9586
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 7 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 19.6139
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 8 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 6.8363
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 9 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 86.8243
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 10 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.9923
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 11 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 59.2434
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 12 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 4.0998
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 13 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 4.9187
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 14 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 4.0305
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 15 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 36.4471
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 16 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.9142
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 17 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.4169
+  ...
+# (node:1160) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native hand source, reproducible module and all six original textures retain registered hashes
+ok 18 - Native hand source, reproducible module and all six original textures retain registered hashes
+  ---
+  duration_ms: 7.195
+  ...
+# Subtest: Native tap pivot and motion exactly match V8 across camera orientations
+ok 19 - Native tap pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 57.0523
+  ...
+# Subtest: Native press pivot and motion exactly match V8 across camera orientations
+ok 20 - Native press pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 44.56
+  ...
+# Subtest: Native pinch pivot and motion exactly match V8 across camera orientations
+ok 21 - Native pinch pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 34.3864
+  ...
+# Subtest: Native point pivot and motion exactly match V8 across camera orientations
+ok 22 - Native point pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 31.0113
+  ...
+# Subtest: Native drag pivot and motion exactly match V8 across camera orientations
+ok 23 - Native drag pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 36.3956
+  ...
+# Subtest: Native open pivot and motion exactly match V8 across camera orientations
+ok 24 - Native open pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 26.5989
+  ...
+# Subtest: Quad protection catches a building crossing the middle while every corner lies outside its footprint
+ok 25 - Quad protection catches a building crossing the middle while every corner lies outside its footprint
+  ---
+  duration_ms: 1.0037
+  ...
+# Subtest: Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+ok 26 - Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+  ---
+  duration_ms: 23.5403
+  ...
+# Subtest: Terrain protection includes interior ridges between low quad corners
+ok 27 - Terrain protection includes interior ridges between low quad corners
+  ---
+  duration_ms: 2.7673
+  ...
+# Subtest: Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+ok 28 - Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+  ---
+  duration_ms: 2.2587
+  ...
+# Subtest: Day-one hand targets map six kinds to actual entities and never modify game state
+ok 29 - Day-one hand targets map six kinds to actual entities and never modify game state
+  ---
+  duration_ms: 1.723
+  ...
+# Subtest: The delivery hand follows the actual carrier instead of introducing a demonstration cart
+ok 30 - The delivery hand follows the actual carrier instead of introducing a demonstration cart
+  ---
+  duration_ms: 0.4175
+  ...
+# Subtest: Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+ok 31 - Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+  ---
+  duration_ms: 12.3497
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 32 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 3667.3794
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 33 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 469.7901
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 34 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 1.4181
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 35 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 3.9884
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 36 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 194.2646
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 37 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 23.526
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 38 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 1.0582
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4412.911
