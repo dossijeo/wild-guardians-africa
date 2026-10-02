@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {AfricanToon,paintedWaterMaterial} from './african-toon.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {Assets,json} from './assets.js';
@@ -26,7 +27,7 @@ const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',young
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
   constructor(canvas,onPick) {
-    this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.mixers=new Map();this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#cbd5be');
+    this.toon=new AfricanToon();this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.mixers=new Map();this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#cbd5be');
     this.camera=new THREE.PerspectiveCamera(42,1,.1,600);this.camera.position.set(40,35,50);
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
@@ -94,7 +95,7 @@ export class WorldScene {
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){const a=z*(n+1)+x,b=a+n+1;indices.push(a,b,a+1,a+1,b,b+1);}
     const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();
     const material=this.quality==='muy_baja'?new THREE.MeshBasicMaterial({vertexColors:true}):new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
-    const ground=new THREE.Mesh(geometry,material);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
+    material.userData.toonGround=true;const ground=new THREE.Mesh(geometry,material);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);
     // Water cells follow the original TerrainField surface/mask, including desert exclusion.
     const waterPositions=[];
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){
@@ -102,7 +103,7 @@ export class WorldScene {
       if(!info.inside)continue;const loX=wx-.75,hiX=wx+.75,loZ=wz-.75,hiZ=wz+.75,y=info.level+.035;
       waterPositions.push(loX,y,loZ,loX,y,hiZ,hiX,y,loZ,hiX,y,loZ,loX,y,hiZ,hiX,y,hiZ);
     }
-    if(waterPositions.length){const waterGeometry=new THREE.BufferGeometry();waterGeometry.setAttribute('position',new THREE.Float32BufferAttribute(waterPositions,3));waterGeometry.computeVertexNormals();group.add(new THREE.Mesh(waterGeometry,new THREE.MeshStandardMaterial({color:this.pack.profile.colors.water,roughness:.4,metalness:.1,side:THREE.DoubleSide})));}
+    if(waterPositions.length){const waterGeometry=new THREE.BufferGeometry();waterGeometry.setAttribute('position',new THREE.Float32BufferAttribute(waterPositions,3));waterGeometry.computeVertexNormals();group.add(new THREE.Mesh(waterGeometry,paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes')));}
     const chunk=this.nav.chunk(cx,cz);
     for(let i=0;i<20;i++) {
       const instances=chunk.instances[i].filter(p=>!this.nav.suppressed.has(p.id));if(!instances.length)continue;
@@ -246,6 +247,7 @@ export class WorldScene {
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
-  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
+  render(dt) {this.controls.update();this.syncChunks();const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(this.state.time>=300,this.sun,this.state.biome);this.toon.apply(this.scene);this.scene.traverse(o=>{for(const m of o.isMesh?(Array.isArray(o.material)?o.material:[o.material]):[]){if(m.userData.paintUniforms)m.userData.paintUniforms.uTime.value=this.state.elapsed;}});this.renderer.render(this.scene,this.camera);this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});}
   dispose() {this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokeLine.geometry.dispose();this.strokeLine.material.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});this.renderer.dispose();this.state=null;}
+
 }

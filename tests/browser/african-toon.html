@@ -1,0 +1,38 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA African Toon V4.1.4</title><style>body{margin:0;font:14px system-ui;background:#fff9ed}header{position:absolute;z-index:2;padding:8px;background:#fff9ed}canvas{width:100vw;height:100vh;display:block}button{padding:8px}#status{display:block}</style><header>QA aislada: terreno y poblado originales; personajes a escala nativa 1; sin guardados.<br><button id="next">Siguiente combinación</button><button id="night">Día / noche</button><button id="actors">Ver personajes</button><button id="village">Ver poblado</button><button id="step">Pose +0,1s</button><button id="materials">Cultivos y defensas</button><button id="damage">Daño DEST</button><label>Calidad <select id="quality"><option value="media">Media</option><option value="muy_baja">Muy baja</option><option value="alta">Alta</option></select></label><span id="status">Cargando…</span></header><canvas id="world"></canvas><script type="module">
+import * as THREE from 'three';
+import {cropSpec,hitStructure} from '../../src/simulation/rules.js';
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const cultures=['mapungubwe','suajili','musgum','saheliana','etiope'],biomes=Object.keys(BIOME_IDS),payloads=await json('/content/villages.json');
+let world,index=Number(new URL(document.URL).searchParams.get('case')??1)-1,night=false,actors=false,ready=false,errors=[];
+const status=document.querySelector('#status');
+const error=e=>{errors.push(String(e.message??e));status.textContent=errors.join(' · ');};
+addEventListener('error',error);addEventListener('unhandledrejection',e=>error(e.reason));
+const originalError=console.error;console.error=(...args)=>{errors.push(args.join(' '));originalError(...args);};
+async function load(){ready=false;document.querySelectorAll('button').forEach(b=>b.disabled=true);world?.dispose();
+ const biome=biomes[Math.floor(index/5)],culture=cultures[index%5],payload=payloads.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));if(!payload)throw new Error('Cultura no encontrada '+culture);
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),state=Game.newGame({biome,culture,seed:712}),nav=new Navigation(712,biome,pack.profile),location=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=error;world.qualitySetting(new URL(document.URL).searchParams.get('q')??'media');document.querySelector('#quality').value=world.quality;await world.load(state,nav,payload);
+ const center=location.center;Game.resume(state,'intro');Game.placeStructure(state,'qa-center',center,nav);Game.pause(state,'qa');state.tutorial.step='done';
+ // Explicit visual fixture actors, not a claimed gameplay scenario. No persistence.
+ const profiles=['olderMale','olderFemale','youngMale','youngFemale'];
+ state.workers=profiles.map((profile,i)=>({id:'qa-worker-'+profile,profile,x:center.x+(i-1.5)*3,z:center.z+10,status:'idle',path:[],taskId:null}));
+ state.raid={animals:['warthog','hyena','buffalo','lion','rhino'].map((species,i)=>({id:'qa-animal-'+species,species,x:center.x+(i-2)*4,z:center.z+17,status:'idle',hitsRemaining:4,path:[],heading:0}))};
+ const crops=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
+ state.plants=crops.flatMap((species,i)=>[1,.4806].map((ratio,j)=>({id:'qa-plant-'+i+'-'+j,species,alive:true,growth:cropSpec(species).growth_seconds*ratio,x:center.x+30+(i-3.5)*2,z:center.z+10+j*3})));
+ for(const [i,material] of ['zarzas','empalizada','adobe','reforzado','piedra'].entries())for(const gate of [false,true])state.structures.push({id:'qa-wall-'+material+'-'+gate,kind:'wall',material,gate,x:center.x+30+(i-2)*4,z:center.z+18+(gate?4:0),yaw:0,hp:100,maxHp:100,status:'intact',collapseRemaining:0,gateOpen:.4});
+ nav.setState(state);world.sync(0);await Promise.all([...world.assets.cache.values()]);await Promise.resolve();
+ camera();ready=true;document.querySelectorAll('button').forEach(b=>b.disabled=false);draw();
+}
+function camera(){for(const g of world.chunks.values())g.traverse(o=>{if(o.isInstancedMesh)o.visible=!actors;});for(const v of world.state.villages)world.objects.get(v.id).visible=!actors;const p=world.state.villages[0];if(actors==='materials'){const c=world.state.structures[0],y=world.nav.field.surface(c.x+30,c.z+16);world.controls.target.set(c.x+30,y+1,c.z+16);world.camera.position.set(c.x+30,y+13,c.z+37);}else if(actors){const c=world.state.structures[0],y=world.nav.field.surface(c.x,c.z+13);world.controls.target.set(c.x,y+1.3,c.z+13);world.camera.position.set(c.x,y+11,c.z+36);}else{world.focus({x:p.x,z:p.z});}world.controls.update();}
+document.querySelector('#next').onclick=()=>{location.href='?case='+((index+1)%30+1);};document.querySelector('#night').onclick=()=>{night=!night;draw();};document.querySelector('#actors').onclick=()=>{actors=true;camera();draw();};document.querySelector('#village').onclick=()=>{actors=false;camera();draw();};
+document.querySelector('#materials').onclick=()=>{actors='materials';camera();draw();};document.querySelector('#damage').onclick=()=>{hitStructure(world.state.structures[0],250);world.focus(world.state.structures[0]);draw();};
+document.querySelector('#quality').onchange=e=>{location.href='?case='+(index+1)+'&q='+e.target.value;};
+document.querySelector('#step').onclick=()=>{world.state.elapsed+=.1;for(const w of world.state.workers){w.status='walking';w.running=true;}draw();};
+function draw(){if(ready){world.state.time=night?350:150;world.render(.016);status.textContent=`${index+1}/30 · ${biomes[Math.floor(index/5)]} / ${cultures[index%5]} · ${night?'noche':'día'} · ${actors==='materials'?'8 cultivos (etapas originales y morph) + 5 muros/5 puertas':actors?'4 trabajadores + 5 bestias, escala 1':'poblado + terreno + centro'} · puentes ${world.scene.children.filter(o=>o.name.startsWith('puente_')&&o.visible).reduce((n,o)=>n+o.count,0)} · ${world.quality} / ${world.terrainMeshes[0]?.material.type} / sombras ${world.renderer.shadowMap.enabled} · errores ${errors.length}`;}}
+load().catch(error);
+</script></html>
