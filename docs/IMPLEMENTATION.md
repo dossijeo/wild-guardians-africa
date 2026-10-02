@@ -194,3 +194,16 @@ Las aclaraciones del usuario están registradas en `content/balance/clarificatio
 - Rendimiento de acciones y cultivos: las herramientas conservan terreno y actualizan slots de props suprimidos; matrices y crecimiento se suben solo al cambiar, con rangos activos. 629/629 locales y CI 44669d8 aprobada; navegador 25/25 terrenos conservados y cero uploads de cultivos en 210 frames. [QA](qa-performance-actions.md), [prioridades restantes](performance-priorities.md).
 
 - Superficie de VFX independiente de la proyección relativa: la cúpula de Escudo y las bendiciones agrícolas conservan alturas globales al generar su geometría. Prueba reproduce el fallo y confirma vértices invariantes; cúpula formada y ataque natural comprobados visualmente. 630/630 locales y CI 14f2e6d aprobada; build y paquete. [QA](qa-render-origin-window.md).
+
+### 3 de octubre: aislamiento del ruido fino
+
+Publicado d5ab255 en main: diagnóstico uniforme compartido por suelo Standard/Basic,
+objetos, cultivos, personajes, DEST y escombros; ruido original activado por defecto
+y shader recibido intacto. [Evidencia A–B–B–A y límites](qa-fine-noise.md):
+GPU 44.40 frente a 39.11 ms en Sabana/Mapungubwe media, misma cámara,
+111 calls y 1,560,185 triángulos. Sin errores WebGL; compilación adicional
+Basic, agujeros/escombros, volcanes, cuatro trabajadores y cinco bestias.
+Tests 632/632; build y verificación web aprobados. No se cambia calidad ni
+se acredita mejora móvil, matriz visual completa o cumplimiento de los 159
+casos del Plan Maestro. Pendiente receta barata/textura, culling por unidad,
+caras por categoría, profundidad VFX y diagnóstico de resolución.

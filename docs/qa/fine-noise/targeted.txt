@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 5.273
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 4.4422
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 2.2664
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.7611
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 5 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 15.1271
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 6 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 3.0416
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 7 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 7.6657
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 8 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 17.6831
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 9 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 18.9143
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 10 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.1352
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 11 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 91.8165
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 12 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 2.0956
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 13 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 56.5833
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 14 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 4.1254
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 15 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 8.289
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 16 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 4.5696
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 17 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 40.8367
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 18 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.1513
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 19 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 0.9609
+  ...
+# Subtest: noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+ok 20 - noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+  ---
+  duration_ms: 2.3046
+  ...
+# Subtest: both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+ok 21 - both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+  ---
+  duration_ms: 1.5684
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2501.5054
