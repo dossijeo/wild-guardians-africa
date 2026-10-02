@@ -1,6 +1,7 @@
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 import {SearchFrontier} from './search-frontier.js';
+import {gateFrameFootprints} from './gate-passages.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -52,7 +53,8 @@ export class Navigation {
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
     if(!this.terrainValid(x,z,radius))return false;
     if(this.obstacles.some(o=>{
-      if(o.id===ignore||worker&&(o.gate||o.kind==='shield'))return false;
+      if(o.id===ignore||worker&&o.kind==='shield')return false;
+      if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
       if(o.kind==='wall'){
         const dx=x-o.x,dz=z-o.z,c=Math.cos(o.yaw??0),s=Math.sin(o.yaw??0);
         const localX=dx*c-dz*s,localZ=dx*s+dz*c;
@@ -182,7 +184,8 @@ export class Navigation {
   }
   testSegmentClear(start,end,radius,ignore,worker) {
     for(const obstacle of this.obstacles){
-      if(obstacle.id===ignore||worker&&(obstacle.gate||obstacle.kind==='shield'))continue;
+      if(obstacle.id===ignore||worker&&obstacle.kind==='shield')continue;
+      if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
       if(obstacle.kind==='wall'){
         const scale=obstacle.gate?(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1,width=1.09*(obstacle.baseScaleX??1)*scale+radius;
         const depth=.22*scale+radius,c=Math.cos(obstacle.yaw??0),s=Math.sin(obstacle.yaw??0);
