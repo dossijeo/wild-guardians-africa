@@ -1,4 +1,5 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Biblioteca · Wild Guardians</title></head><body><p>Preparando el laboratorio original…</p><script type="module">
+await import('./i18n/runtime.js');
 const get=async(url,type='json')=>{const response=await fetch(url);if(!response.ok)throw new Error('No se pudo cargar '+url);return response[type]();};
 const base64=bytes=>{let text='';for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(text);};
 async function restore(value){

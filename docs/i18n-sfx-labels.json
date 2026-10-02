@@ -1,0 +1,1030 @@
+{
+  "categories": [
+    "Ambiente",
+    "Movimiento de personajes",
+    "Agricultura",
+    "Construcción",
+    "Murallas y destrucción",
+    "Bestias · comunes",
+    "Bestias · león",
+    "Bestias · hiena",
+    "Bestias · búfalo",
+    "Bestias · rinoceronte",
+    "Bestias · facóquero",
+    "Granjero / NPC",
+    "Espíritu / jugador",
+    "Interfaz",
+    "Economía / recursos",
+    "Feedback de gameplay"
+  ],
+  "items": [
+    {
+      "number": 1,
+      "id": "amb_wind_soft",
+      "name": "Viento suave",
+      "category": "Ambiente",
+      "profile": "Ambiente tenue",
+      "assignment_note": null
+    },
+    {
+      "number": 2,
+      "id": "amb_wind_strong",
+      "name": "Viento fuerte",
+      "category": "Ambiente",
+      "profile": "Viento moderado",
+      "assignment_note": null
+    },
+    {
+      "number": 3,
+      "id": "amb_insects",
+      "name": "Insectos",
+      "category": "Ambiente",
+      "profile": "Insectos de fondo",
+      "assignment_note": null
+    },
+    {
+      "number": 4,
+      "id": "amb_birds",
+      "name": "Pájaros",
+      "category": "Ambiente",
+      "profile": "Aves de fondo",
+      "assignment_note": null
+    },
+    {
+      "number": 5,
+      "id": "amb_night",
+      "name": "Ambiente nocturno",
+      "category": "Ambiente",
+      "profile": "Ambiente tenue",
+      "assignment_note": null
+    },
+    {
+      "number": 6,
+      "id": "amb_river",
+      "name": "Agua de río",
+      "category": "Ambiente",
+      "profile": "Agua y lluvia de fondo",
+      "assignment_note": null
+    },
+    {
+      "number": 7,
+      "id": "amb_coast_mangrove",
+      "name": "Agua de costa / manglar",
+      "category": "Ambiente",
+      "profile": "Agua y lluvia de fondo",
+      "assignment_note": null
+    },
+    {
+      "number": 8,
+      "id": "amb_rain",
+      "name": "Lluvia",
+      "category": "Ambiente",
+      "profile": "Agua y lluvia de fondo",
+      "assignment_note": null
+    },
+    {
+      "number": 9,
+      "id": "amb_thunder",
+      "name": "Truenos",
+      "category": "Ambiente",
+      "profile": "Trueno lejano",
+      "assignment_note": null
+    },
+    {
+      "number": 10,
+      "id": "step_dry_soil",
+      "name": "Pasos · tierra seca",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 11,
+      "id": "step_grass",
+      "name": "Pasos · hierba",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 12,
+      "id": "step_mud",
+      "name": "Pasos · barro",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 13,
+      "id": "step_sand",
+      "name": "Pasos · arena",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 14,
+      "id": "step_stone",
+      "name": "Pasos · piedra",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 15,
+      "id": "step_wood",
+      "name": "Pasos · madera",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 16,
+      "id": "run_surface_set",
+      "name": "Carrera · variaciones por superficie",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 17,
+      "id": "movement_land",
+      "name": "Pequeño aterrizaje / salto",
+      "category": "Movimiento de personajes",
+      "profile": "Movimiento",
+      "assignment_note": null
+    },
+    {
+      "number": 18,
+      "id": "farm_hoe_dig",
+      "name": "Azada / cavar tierra",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 19,
+      "id": "farm_sow",
+      "name": "Sembrar",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 20,
+      "id": "farm_seeds_drop",
+      "name": "Semillas cayendo",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 21,
+      "id": "farm_watering_can",
+      "name": "Regadera vertiendo agua",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": "021 usa la toma que antes pertenecía a 022 · Agua golpeando tierra."
+    },
+    {
+      "number": 22,
+      "id": "farm_water_soil",
+      "name": "Agua golpeando tierra",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": "022 usa la toma que antes pertenecía a 021 · Regadera vertiendo agua."
+    },
+    {
+      "number": 23,
+      "id": "farm_harvest_pick",
+      "name": "Recoger cultivo",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 24,
+      "id": "farm_plant_pull",
+      "name": "Arrancar planta",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 25,
+      "id": "farm_crop_to_crate",
+      "name": "Colocar cosecha en caja",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 26,
+      "id": "farm_crate_move",
+      "name": "Caja de fruta moviéndose",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 27,
+      "id": "farm_sack_handle",
+      "name": "Saco manipulándose",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 28,
+      "id": "farm_crop_interact",
+      "name": "Interacción genérica con cultivo",
+      "category": "Agricultura",
+      "profile": "Foley agrícola",
+      "assignment_note": null
+    },
+    {
+      "number": 29,
+      "id": "build_place",
+      "name": "Colocar elemento / edificio",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 30,
+      "id": "build_tool_hit",
+      "name": "Golpe de herramienta",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 31,
+      "id": "build_wood",
+      "name": "Construcción · madera",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 32,
+      "id": "build_stone",
+      "name": "Construcción · piedra",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 33,
+      "id": "build_adobe",
+      "name": "Construcción · adobe / barro",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 34,
+      "id": "build_complete",
+      "name": "Construcción terminada",
+      "category": "Construcción",
+      "profile": "Construcción terminada",
+      "assignment_note": null
+    },
+    {
+      "number": 35,
+      "id": "build_repair",
+      "name": "Reparación",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 36,
+      "id": "build_demolish_manual",
+      "name": "Demolición voluntaria",
+      "category": "Construcción",
+      "profile": "Construcción",
+      "assignment_note": null
+    },
+    {
+      "number": 37,
+      "id": "wall_hit_thorns",
+      "name": "Impacto · zarzas",
+      "category": "Murallas y destrucción",
+      "profile": "Impacto estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 38,
+      "id": "wall_hit_wood",
+      "name": "Impacto · madera",
+      "category": "Murallas y destrucción",
+      "profile": "Impacto estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 39,
+      "id": "wall_hit_stone",
+      "name": "Impacto · piedra",
+      "category": "Murallas y destrucción",
+      "profile": "Impacto estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 40,
+      "id": "wall_hit_adobe",
+      "name": "Impacto · adobe",
+      "category": "Murallas y destrucción",
+      "profile": "Impacto estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 41,
+      "id": "wall_hit_reinforced_adobe",
+      "name": "Impacto · adobe reforzado",
+      "category": "Murallas y destrucción",
+      "profile": "Impacto estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 42,
+      "id": "wall_crack_small",
+      "name": "Pequeñas grietas",
+      "category": "Murallas y destrucción",
+      "profile": "Detalle estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 43,
+      "id": "wall_debris_small",
+      "name": "Desprendimiento de fragmentos",
+      "category": "Murallas y destrucción",
+      "profile": "Detalle estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 44,
+      "id": "wall_structural_creak",
+      "name": "Crujido estructural",
+      "category": "Murallas y destrucción",
+      "profile": "Detalle estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 45,
+      "id": "wall_collapse_full",
+      "name": "Colapso completo",
+      "category": "Murallas y destrucción",
+      "profile": "Derrumbe",
+      "assignment_note": null
+    },
+    {
+      "number": 46,
+      "id": "wall_debris_ground",
+      "name": "Fragmentos cayendo al suelo",
+      "category": "Murallas y destrucción",
+      "profile": "Detalle estructural",
+      "assignment_note": null
+    },
+    {
+      "number": 47,
+      "id": "beast_step_light",
+      "name": "Pasos ligeros",
+      "category": "Bestias · comunes",
+      "profile": "Paso de bestia ligero",
+      "assignment_note": null
+    },
+    {
+      "number": 48,
+      "id": "beast_step_heavy",
+      "name": "Pasos pesados",
+      "category": "Bestias · comunes",
+      "profile": "Paso de bestia pesado",
+      "assignment_note": null
+    },
+    {
+      "number": 49,
+      "id": "beast_charge",
+      "name": "Carrera / carga",
+      "category": "Bestias · comunes",
+      "profile": "Carga",
+      "assignment_note": null
+    },
+    {
+      "number": 50,
+      "id": "beast_attack",
+      "name": "Ataque",
+      "category": "Bestias · comunes",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 51,
+      "id": "beast_hit_structure",
+      "name": "Impacto contra estructura",
+      "category": "Bestias · comunes",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 52,
+      "id": "beast_hit_character",
+      "name": "Impacto contra personaje",
+      "category": "Bestias · comunes",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 53,
+      "id": "beast_take_damage",
+      "name": "Recibir daño",
+      "category": "Bestias · comunes",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 54,
+      "id": "beast_vocal_neutral",
+      "name": "Vocalización neutra",
+      "category": "Bestias · comunes",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 55,
+      "id": "beast_vocal_aggressive",
+      "name": "Vocalización agresiva",
+      "category": "Bestias · comunes",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 56,
+      "id": "beast_retreat",
+      "name": "Huida / retirada",
+      "category": "Bestias · comunes",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 57,
+      "id": "beast_defeat",
+      "name": "Muerte / derrota",
+      "category": "Bestias · comunes",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 58,
+      "id": "lion_neutral",
+      "name": "León · vocalización neutra",
+      "category": "Bestias · león",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 59,
+      "id": "lion_aggressive",
+      "name": "León · rugido / agresiva",
+      "category": "Bestias · león",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 60,
+      "id": "lion_attack",
+      "name": "León · ataque",
+      "category": "Bestias · león",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 61,
+      "id": "lion_hurt",
+      "name": "León · daño",
+      "category": "Bestias · león",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 62,
+      "id": "lion_retreat",
+      "name": "León · retirada",
+      "category": "Bestias · león",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 63,
+      "id": "hyena_neutral",
+      "name": "Hiena · vocalización neutra",
+      "category": "Bestias · hiena",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 64,
+      "id": "hyena_aggressive",
+      "name": "Hiena · agresiva / risa",
+      "category": "Bestias · hiena",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 65,
+      "id": "hyena_attack",
+      "name": "Hiena · ataque",
+      "category": "Bestias · hiena",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 66,
+      "id": "hyena_hurt",
+      "name": "Hiena · daño",
+      "category": "Bestias · hiena",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 67,
+      "id": "hyena_retreat",
+      "name": "Hiena · retirada",
+      "category": "Bestias · hiena",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 68,
+      "id": "buffalo_neutral",
+      "name": "Búfalo · vocalización neutra",
+      "category": "Bestias · búfalo",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 69,
+      "id": "buffalo_aggressive",
+      "name": "Búfalo · agresiva",
+      "category": "Bestias · búfalo",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 70,
+      "id": "buffalo_charge",
+      "name": "Búfalo · carga",
+      "category": "Bestias · búfalo",
+      "profile": "Carga",
+      "assignment_note": null
+    },
+    {
+      "number": 71,
+      "id": "buffalo_hurt",
+      "name": "Búfalo · daño",
+      "category": "Bestias · búfalo",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 72,
+      "id": "buffalo_retreat",
+      "name": "Búfalo · retirada",
+      "category": "Bestias · búfalo",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 73,
+      "id": "rhino_neutral",
+      "name": "Rinoceronte · vocalización neutra",
+      "category": "Bestias · rinoceronte",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 74,
+      "id": "rhino_aggressive",
+      "name": "Rinoceronte · agresiva",
+      "category": "Bestias · rinoceronte",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 75,
+      "id": "rhino_charge",
+      "name": "Rinoceronte · carga",
+      "category": "Bestias · rinoceronte",
+      "profile": "Carga",
+      "assignment_note": null
+    },
+    {
+      "number": 76,
+      "id": "rhino_hurt",
+      "name": "Rinoceronte · daño",
+      "category": "Bestias · rinoceronte",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 77,
+      "id": "rhino_retreat",
+      "name": "Rinoceronte · retirada",
+      "category": "Bestias · rinoceronte",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 78,
+      "id": "warthog_neutral",
+      "name": "Facóquero · vocalización neutra",
+      "category": "Bestias · facóquero",
+      "profile": "Bestia en reposo",
+      "assignment_note": null
+    },
+    {
+      "number": 79,
+      "id": "warthog_aggressive",
+      "name": "Facóquero · agresiva",
+      "category": "Bestias · facóquero",
+      "profile": "Acción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 80,
+      "id": "warthog_charge",
+      "name": "Facóquero · carga",
+      "category": "Bestias · facóquero",
+      "profile": "Carga",
+      "assignment_note": null
+    },
+    {
+      "number": 81,
+      "id": "warthog_hurt",
+      "name": "Facóquero · daño",
+      "category": "Bestias · facóquero",
+      "profile": "Reacción de bestia",
+      "assignment_note": null
+    },
+    {
+      "number": 82,
+      "id": "warthog_retreat",
+      "name": "Facóquero · retirada",
+      "category": "Bestias · facóquero",
+      "profile": "Retirada",
+      "assignment_note": null
+    },
+    {
+      "number": 83,
+      "id": "npc_work_effort",
+      "name": "Esfuerzo trabajando",
+      "category": "Granjero / NPC",
+      "profile": "Personajes",
+      "assignment_note": null
+    },
+    {
+      "number": 84,
+      "id": "npc_danger_react",
+      "name": "Reacción al peligro",
+      "category": "Granjero / NPC",
+      "profile": "Personajes",
+      "assignment_note": null
+    },
+    {
+      "number": 85,
+      "id": "npc_flee_shout",
+      "name": "Grito breve al huir",
+      "category": "Granjero / NPC",
+      "profile": "Grito contenido",
+      "assignment_note": null
+    },
+    {
+      "number": 86,
+      "id": "npc_hit",
+      "name": "Recibir golpe",
+      "category": "Granjero / NPC",
+      "profile": "Personajes",
+      "assignment_note": null
+    },
+    {
+      "number": 87,
+      "id": "npc_fall",
+      "name": "Caída",
+      "category": "Granjero / NPC",
+      "profile": "Personajes",
+      "assignment_note": null
+    },
+    {
+      "number": 88,
+      "id": "npc_acknowledge",
+      "name": "Confirmación vocal discreta",
+      "category": "Granjero / NPC",
+      "profile": "Personajes",
+      "assignment_note": null
+    },
+    {
+      "number": 89,
+      "id": "spirit_appear",
+      "name": "Aparición",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 90,
+      "id": "spirit_disappear",
+      "name": "Desaparición",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 91,
+      "id": "spirit_move",
+      "name": "Movimiento espiritual",
+      "category": "Espíritu / jugador",
+      "profile": "Movimiento espiritual",
+      "assignment_note": null
+    },
+    {
+      "number": 92,
+      "id": "spirit_select",
+      "name": "Seleccionar",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 93,
+      "id": "spirit_touch",
+      "name": "Tocar / interactuar",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 94,
+      "id": "spirit_drag",
+      "name": "Arrastrar",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 95,
+      "id": "spirit_drop",
+      "name": "Soltar",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 96,
+      "id": "spirit_valid",
+      "name": "Acción válida",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 97,
+      "id": "spirit_invalid",
+      "name": "Acción inválida",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 98,
+      "id": "spirit_power_activate",
+      "name": "Poder activado",
+      "category": "Espíritu / jugador",
+      "profile": "Poder del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 99,
+      "id": "spirit_power_charge",
+      "name": "Poder cargándose",
+      "category": "Espíritu / jugador",
+      "profile": "Carga del poder",
+      "assignment_note": null
+    },
+    {
+      "number": 100,
+      "id": "spirit_tutorial_cue",
+      "name": "Tutorial / indicación especial",
+      "category": "Espíritu / jugador",
+      "profile": "Interacción del espíritu",
+      "assignment_note": null
+    },
+    {
+      "number": 101,
+      "id": "ui_click",
+      "name": "Click",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 102,
+      "id": "ui_panel_open",
+      "name": "Abrir panel",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 103,
+      "id": "ui_panel_close",
+      "name": "Cerrar panel",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 104,
+      "id": "ui_tab",
+      "name": "Cambiar pestaña",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 105,
+      "id": "ui_buy",
+      "name": "Comprar",
+      "category": "Interfaz",
+      "profile": "Interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 106,
+      "id": "ui_sell",
+      "name": "Vender",
+      "category": "Interfaz",
+      "profile": "Interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 107,
+      "id": "ui_error",
+      "name": "Error",
+      "category": "Interfaz",
+      "profile": "Interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 108,
+      "id": "ui_confirm",
+      "name": "Confirmación",
+      "category": "Interfaz",
+      "profile": "Interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 109,
+      "id": "ui_objective_complete",
+      "name": "Objetivo completado",
+      "category": "Interfaz",
+      "profile": "Confirmación de interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 110,
+      "id": "ui_reward",
+      "name": "Recompensa",
+      "category": "Interfaz",
+      "profile": "Confirmación de interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 111,
+      "id": "ui_unlock",
+      "name": "Desbloqueo",
+      "category": "Interfaz",
+      "profile": "Confirmación de interfaz",
+      "assignment_note": null
+    },
+    {
+      "number": 112,
+      "id": "ui_pause",
+      "name": "Pausa",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 113,
+      "id": "ui_resume",
+      "name": "Volver al juego",
+      "category": "Interfaz",
+      "profile": "Interfaz discreta",
+      "assignment_note": null
+    },
+    {
+      "number": 114,
+      "id": "eco_gain",
+      "name": "Ganar recurso",
+      "category": "Economía / recursos",
+      "profile": "Economía",
+      "assignment_note": null
+    },
+    {
+      "number": 115,
+      "id": "eco_spend",
+      "name": "Gastar recurso",
+      "category": "Economía / recursos",
+      "profile": "Economía",
+      "assignment_note": null
+    },
+    {
+      "number": 116,
+      "id": "eco_crop_sold",
+      "name": "Cosecha vendida",
+      "category": "Economía / recursos",
+      "profile": "Economía",
+      "assignment_note": null
+    },
+    {
+      "number": 117,
+      "id": "eco_item_pickup",
+      "name": "Objeto recogido",
+      "category": "Economía / recursos",
+      "profile": "Economía",
+      "assignment_note": null
+    },
+    {
+      "number": 118,
+      "id": "eco_big_reward",
+      "name": "Recompensa importante",
+      "category": "Economía / recursos",
+      "profile": "Economía",
+      "assignment_note": null
+    },
+    {
+      "number": 119,
+      "id": "game_attack_alert",
+      "name": "Alerta de ataque",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso de juego",
+      "assignment_note": null
+    },
+    {
+      "number": 120,
+      "id": "game_enemy_detected",
+      "name": "Enemigo detectado",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso discreto",
+      "assignment_note": null
+    },
+    {
+      "number": 121,
+      "id": "game_building_attacked",
+      "name": "Edificio bajo ataque",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso de juego",
+      "assignment_note": null
+    },
+    {
+      "number": 122,
+      "id": "game_wall_critical",
+      "name": "Muralla crítica",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso de juego",
+      "assignment_note": null
+    },
+    {
+      "number": 123,
+      "id": "game_farmer_hurt",
+      "name": "Granjero herido",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso de granjero",
+      "assignment_note": null
+    },
+    {
+      "number": 124,
+      "id": "game_attack_over",
+      "name": "Ataque terminado",
+      "category": "Feedback de gameplay",
+      "profile": "Aviso de juego",
+      "assignment_note": null
+    },
+    {
+      "number": 125,
+      "id": "game_victory",
+      "name": "Victoria / objetivo completado",
+      "category": "Feedback de gameplay",
+      "profile": "Cierre de partida",
+      "assignment_note": null
+    },
+    {
+      "number": 126,
+      "id": "game_major_loss",
+      "name": "Derrota / pérdida importante",
+      "category": "Feedback de gameplay",
+      "profile": "Cierre de partida",
+      "assignment_note": null
+    }
+  ]
+}

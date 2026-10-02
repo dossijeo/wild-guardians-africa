@@ -6,9 +6,9 @@ const itemById=new Map(items.map(i=>[i.id,i]));
 const icon=name=>`<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-const seconds=v=>new Intl.NumberFormat('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1}).format(v)+' s';
-const number=v=>Number(v).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1});
-const bytes=v=>v>=1048576?(v/1048576).toLocaleString('es-ES',{maximumFractionDigits:1})+' MB':(v/1024).toLocaleString('es-ES',{maximumFractionDigits:1})+' KB';
+const seconds=v=>new Intl.NumberFormat(window.WildGuardiansLanguage.locale(),{minimumFractionDigits:1,maximumFractionDigits:1}).format(v)+' s';
+const number=v=>Number(v).toLocaleString(window.WildGuardiansLanguage.locale(),{minimumFractionDigits:1,maximumFractionDigits:1});
+const bytes=v=>v>=1048576?(v/1048576).toLocaleString(window.WildGuardiansLanguage.locale(),{maximumFractionDigits:1})+' MB':(v/1024).toLocaleString(window.WildGuardiansLanguage.locale(),{maximumFractionDigits:1})+' KB';
 const clock=v=>`${Math.floor(Math.max(0,v)/60)}:${(Math.max(0,v)%60).toFixed(1).padStart(4,'0')}`;
 const pad=v=>String(v).padStart(3,'0');
 let category='',query='',filter='all',sort='number',visible=[...items];
@@ -29,8 +29,8 @@ function detailHTML(i){
 function rowHTML(i){const selected=current?.id===i.id;const active=selected&&playing;const isLoading=selected&&loading;const info=openInfo.has(i.id);return `<article class="item" data-id="${i.id}"><div class="row${selected?' selected':''}${active?' playing':''}" id="row-${i.id}"><span class="num">${pad(i.number)}</span><button class="icon play-btn${active?' playing':''}${isLoading?' loading':''}" data-action="play" data-id="${i.id}" aria-label="${active?'Pausar':'Reproducir'} ${escapeHTML(i.name)}" title="${active?'Pausar':'Reproducir'}">${icon(active?'pause':'play')}</button><div><div class="name">${escapeHTML(i.name)}${i.loop?'<span class="tag">Bucle</span>':''}</div><div class="subname">${escapeHTML(i.id)}</div></div><div class="metric"><span class="duration">${seconds(i.duration)}</span><small>${number(i.lufs)} LUFS</small></div><button class="icon info-btn" data-action="info" data-id="${i.id}" aria-expanded="${info}" aria-controls="info-${i.id}" aria-label="Ficha técnica: ${escapeHTML(i.name)}" title="Ficha técnica">${icon('info')}</button><button class="icon download-btn" data-action="download" data-id="${i.id}" aria-label="Descargar ${escapeHTML(i.filename)}" title="Descargar MP3">${icon('down')}</button></div><div class="details-panel" id="info-${i.id}"${info?'':' hidden'}>${detailHTML(i)}</div></article>`;}
 function render(){
  const terms=norm(query).trim().split(/\s+/).filter(Boolean);
- visible=items.filter(i=>!category||i.category===category).filter(i=>filter==='all'||(filter==='loops'?i.loop:!i.loop)).filter(i=>{const text=norm(`${pad(i.number)} ${i.number} ${i.name} ${i.id} ${i.category}`);return terms.every(t=>text.includes(t));});
- if(sort==='name')visible.sort((a,b)=>a.name.localeCompare(b.name,'es'));else if(sort==='duration')visible.sort((a,b)=>a.duration-b.duration||a.number-b.number);else visible.sort((a,b)=>a.number-b.number);
+ visible=items.filter(i=>!category||i.category===category).filter(i=>filter==='all'||(filter==='loops'?i.loop:!i.loop)).filter(i=>{const text=norm(`${pad(i.number)} ${i.number} ${i.name} ${window.WildGuardiansLanguage.translate(i.name,'en')} ${i.id} ${i.category} ${window.WildGuardiansLanguage.translate(i.category,'en')}`);return terms.every(t=>text.includes(t));});
+ if(sort==='name')visible.sort((a,b)=>window.WildGuardiansLanguage.translate(a.name).localeCompare(window.WildGuardiansLanguage.translate(b.name),window.WildGuardiansLanguage.locale()));else if(sort==='duration')visible.sort((a,b)=>a.duration-b.duration||a.number-b.number);else visible.sort((a,b)=>a.number-b.number);
  $('resultCount').textContent=`${visible.length} de ${items.length} sonidos${category?' · '+category:''}`;
  $('empty').hidden=visible.length>0;
  const groups=sort==='number'?BANK.categories.filter(cat=>visible.some(i=>i.category===cat)):['Resultados'];
@@ -100,3 +100,5 @@ $('downloadCurrent').addEventListener('click',()=>current&&downloadOne(current))
 window.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select,button,summary')||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='/'){e.preventDefault();$('search').focus();}else if(e.code==='Space'&&current){e.preventDefault();selectAndPlay(current.id);}else if(e.key==='ArrowRight'&&current){e.preventDefault();jump(1);}else if(e.key==='ArrowLeft'&&current){e.preventDefault();jump(-1);}});
 window.addEventListener('resize',draw);window.addEventListener('pagehide',stop);
 render();draw();
+
+window.addEventListener('wild-guardians:language-change',()=>{render();updateButtons();draw();});

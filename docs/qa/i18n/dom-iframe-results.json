@@ -1,0 +1,53 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "name": "existing text translated",
+      "pass": true
+    },
+    {
+      "name": "ARIA and title translated",
+      "pass": true
+    },
+    {
+      "name": "new DOM node interpolated",
+      "pass": true
+    },
+    {
+      "name": "source updated during English runtime",
+      "pass": true
+    },
+    {
+      "name": "English to Spanish retains newest source",
+      "pass": true
+    },
+    {
+      "name": "user input untouched",
+      "pass": true
+    },
+    {
+      "name": "Spanish to English second switch",
+      "pass": true
+    },
+    {
+      "name": "direct iframe follows parent",
+      "pass": true
+    },
+    {
+      "name": "nested iframe follows parent",
+      "pass": true
+    },
+    {
+      "name": "nested iframe reverses without reload",
+      "pass": true
+    },
+    {
+      "name": "invalid locale rejected",
+      "pass": true
+    },
+    {
+      "name": "nodes retained across changes",
+      "pass": true
+    }
+  ]
+}

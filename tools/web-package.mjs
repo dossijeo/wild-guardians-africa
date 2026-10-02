@@ -10,7 +10,7 @@ export function publicText(text,path,manifest){
   // JSON and injected library scripts resolve from the game/library document.
   // Stylesheets and nested menu/selector pages resolve from their own directory.
   const prefix=path.endsWith('.css')?'../'.repeat(path.split('/').length-1):path.startsWith('menu/')||path.startsWith('selector/')?'../':'';
-  return text.replace(/(?<![.\w/:+-])\/(assets|content|library|menu|selector|runtime)(?=\/|\.html)/g,prefix+'$1');
+  return text.replace(/(?<![.\w/:+-])\/(assets|content|library|menu|selector|runtime|i18n)(?=\/|\.html)/g,prefix+'$1');
 }
 export function webPackagePlugin(){
   let config;const manifest=()=>JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));

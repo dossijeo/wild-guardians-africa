@@ -380,7 +380,7 @@ async function loadBuildingModel(building){
  if(ground){gl.deleteVertexArray(ground.vao);gl.deleteBuffer(ground.buffer);}
  const plinthRadius=building.fitGround?Math.max(6.3,...hull.map(p=>Math.hypot(p[0],p[1])*1.18)):6.3;
  ground=makeGround(plinthRadius);
- $('triangles').textContent=triangleCount.toLocaleString('es-ES');stats.triangles=triangleCount;
+ $('triangles').textContent=triangleCount.toLocaleString(window.WildGuardiansLanguage.locale());stats.triangles=triangleCount;
  if(dataNode)dataNode.remove();
 }
 await loadBuildingModel(activeBuilding);

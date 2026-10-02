@@ -25,9 +25,9 @@ export function transact(ledger,id,delta) {
   ledger.entries[id]=delta;
   return true;
 }
-export function formatMoney(value) {
+export function formatMoney(value,locale='es-ES') {
   const n=numberOf(value);
   const scale=n>=1e9?1e9:n>=1e6?1e6:n>=1e3?1e3:1;
   const suffix=scale===1e9?'B':scale===1e6?'M':scale===1e3?'K':'';
-  return new Intl.NumberFormat('es-ES',{maximumFractionDigits:2}).format(n/scale)+suffix;
+  return new Intl.NumberFormat(locale,{maximumFractionDigits:2}).format(n/scale)+suffix;
 }

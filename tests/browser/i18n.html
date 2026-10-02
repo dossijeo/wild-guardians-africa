@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>I18n DOM QA</title><script src="/i18n/loader.js"></script>
+<style>body{font:16px system-ui;padding:20px;background:#203629;color:#fff}button,select{padding:12px;margin:5px}iframe{background:white;width:100%;max-width:600px;height:220px}pre{white-space:pre-wrap}</style></head><body>
+<h1>Wild Guardians · EN / ES DOM QA</h1>
+<label>Idioma<select data-language-select id="language"><option value="en">English</option><option value="es">Español</option></select></label>
+<button id="run" data-no-i18n>Run DOM and iframe checks</button>
+<p id="dynamic" title="El Espíritu">Día 12 · Cultivos</p>
+<input id="user-data" value="Mi Cultivos Mijo" aria-label="Nombre de tu granja">
+<iframe id="child" src="./i18n-frame.html?nested=1" title="Biblioteca"></iframe>
+<pre id="report" data-no-i18n>Ready</pre>
+<script type="module">
+await window.WildGuardiansLanguageReady;
+const api=window.WildGuardiansLanguage,$=id=>document.getElementById(id);
+$('language').value=api.getLanguage();
+const flush=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+const wait=async(predicate)=>{for(let attempt=0;attempt<120;attempt++){if(predicate())return;await flush();}throw Error('Timed out waiting for frame language');};
+$('run').onclick=async()=>{
+ const rows=[],assert=(name,condition)=>{rows.push({name,pass:!!condition});if(!condition)throw Error(name);};
+ const original=api.getLanguage();$('run').disabled=true;
+ try{
+  api.setLanguage('en',{persist:false});await flush();
+  assert('existing text translated',$('dynamic').textContent==='Day 12 · Crops');
+  assert('ARIA and title translated',$('dynamic').title==='The Spirit'&&$('user-data').getAttribute('aria-label')==='Farm name');
+  const added=document.createElement('p');added.id='new-label';added.textContent='Contratar un hombre joven menos';document.body.append(added);await flush();
+  assert('new DOM node interpolated',added.textContent==='Hire one fewer young man');
+  $('dynamic').textContent='Día 99 · Magias';await flush();
+  assert('source updated during English runtime',$('dynamic').textContent==='Day 99 · Powers');
+  api.setLanguage('es',{persist:false});await flush();
+  assert('English to Spanish retains newest source',$('dynamic').textContent==='Día 99 · Magias'&&added.textContent==='Contratar un hombre joven menos');
+  assert('user input untouched',$('user-data').value==='Mi Cultivos Mijo');
+  api.setLanguage('en',{persist:false});await flush();
+  assert('Spanish to English second switch',$('dynamic').textContent==='Day 99 · Powers');
+  const label=$('child').contentDocument?.querySelector('#label');
+  await wait(()=>label?.textContent==='Day 5 · Crops');
+  assert('direct iframe follows parent',label.textContent==='Day 5 · Crops');
+  const grandchild=$('child').contentDocument.querySelector('#nested');
+  await wait(()=>grandchild?.contentDocument?.documentElement.lang==='en');
+  assert('nested iframe follows parent',grandchild.contentDocument.querySelector('#label').textContent==='Day 5 · Crops');
+  api.setLanguage('es',{persist:false});await wait(()=>grandchild.contentDocument.documentElement.lang==='es');
+  assert('nested iframe reverses without reload',grandchild.contentDocument.querySelector('#label').textContent==='Día 5 · Cultivos');
+  assert('invalid locale rejected',api.setLanguage('fr')===false&&api.getLanguage()==='es');
+  const retained=added;api.setLanguage('en',{persist:false});await flush();api.setLanguage('es',{persist:false});await flush();
+  assert('nodes retained across changes',document.querySelector('#new-label')===retained);
+  added.remove();
+ }catch(error){rows.push({error:error.message});}
+ finally{api.setLanguage(original,{persist:false});$('run').disabled=false;$('report').textContent=JSON.stringify({pass:rows.every(row=>row.pass===true),checks:rows},null,2);}
+};
+</script></body></html>

@@ -142,7 +142,7 @@
     $('confirmLabel').textContent = isCulture ? 'Comenzar partida' : 'Continuar';
     $('confirmIcon').setAttribute('href', '#i-arrow');
     $('confirmButton').setAttribute('aria-label', isCulture
-      ? `Comenzar partida simulada en ${biome.name} con cultura ${item.name}`
+      ? `Comenzar partida en ${biome.name} con cultura ${item.name}`
       : `Elegir ${item.name} y continuar al selector de cultura`);
     $('viewButton').setAttribute('aria-label', `Ver la ilustración completa de ${item.name}`);
     $('enterHint').textContent = isCulture ? 'Comenzar' : 'Continuar';

@@ -428,6 +428,7 @@ renderPanel=function(id){
   $$('[data-production-lab]').forEach(button=>button.onclick=()=>{$('#production-library').innerHTML=sectionFrame('/library.html?lab='+button.dataset.productionLab,button.textContent);});
  }
  if(id==='options'){
+  panel.insertAdjacentHTML('afterbegin','<label class="field"><span>Idioma</span><select data-language-select id="menu-language"><option value="en">English</option><option value="es">Español</option></select></label>');$('#menu-language').value=window.WildGuardiansLanguage?.getLanguage()??'en';
   panel.insertAdjacentHTML('beforeend','<div class="rule"></div><h2>Audio del juego</h2><label class="control">Sonidos<input id="production-sfx" type="range" min="0" max="1" step=".05"></label><label class="control">Música<input id="production-music" type="range" min="0" max="1" step=".05"></label><label class="field"><span>Calidad del juego</span><select id="production-quality"><option value="muy_baja">Muy baja</option><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></label>');sendProduction('request-settings');
   for(const id of ['production-sfx','production-music','production-quality'])$('#'+id).oninput=()=>sendProduction('settings-change',{settings:{sfx:Number($('#production-sfx').value),music:Number($('#production-music').value),quality:$('#production-quality').value}});
  }
