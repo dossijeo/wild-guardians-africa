@@ -12,7 +12,7 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_start,end)=>[{x:end.x,z:end.z}]};
 function farm(){
   const s=Game.newGame({seed:712,slotId:'acceptance-farming'});Game.resume(s,'intro');s.tutorial.step='center';
-  Game.placeStructure(s,'center',{x:4,z:0},nav);s.ledger.balance=rational(10000);s.day=5;s.postgame=true;s.initialPreparation=false;s.tutorial.step='done';return s;
+  Game.placeStructure(s,'center',{x:4,z:0},nav);s.ledger.balance=rational(10000);s.day=101;s.completedNights=100;s.postgame=true;s.initialPreparation=false;s.tutorial.step='done';return s;
 }
 function sow(s,species='mijo',x=8,z=0){Game.plant(s,`plant-${s.plants.length}`,species,x,z,nav);return s.plants.at(-1);}
 function firstCare(s,p){assert.equal(waterPlant(p),true);Game.rebuildTasks(s);}
@@ -37,13 +37,29 @@ test('QA-009/018: attended millet and banana require 140/570 daylight seconds ac
     const s=farm(),p=sow(s,species);firstCare(s,p);let real=0,daylight=0;
     while(!isMature(p)&&real<700){
       while(waterPlant(p)){}s.eventPlan=null;
-      if(s.pauses.includes('hiring'))Game.hire(s,`zero-${s.day}`,{});
+      if(s.pauses.includes('hiring')){if(species==='platano'&&s.completedNights===101)close(p.growth,300);Game.hire(s,`zero-${s.day}`,{});}
       const before=p.growth;Game.advanceReal(s,.05,nav);daylight+=p.growth-before;real+=.05;
     }
     assert.equal(isMature(p),true);close(p.growth,duration);close(daylight,duration);close(real,realDuration);
     assert.equal(p.water.length,cropSpec(species).total_waters);assert.ok(p.water.every(w=>w.status==='manual'));
     assert.equal(numberOf(s.ledger.balance),10000-cropSpec(species).plant_cost);
-    if(species==='platano'){assert.equal(s.completedNights,1);close(s.elapsed,870);close(s.time,270);}
+    if(species==='platano'){assert.equal(s.completedNights,101);close(s.elapsed,870);close(s.time,270);}
+  }
+});
+
+test('QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge',()=>{
+  for(const [species,waters] of [['mijo',2],['girasol',3],['sorgo',2],['maiz',3],['batata',2],['algodon',4],['yuca',2],['platano',6]]){
+    const s=farm(),p=sow(s,species);Game.openInitialHiring(s);Game.hire(s,'hire-101',{olderFemale:1});
+    for(let i=0;i<10000&&!isMature(p);i++){
+      s.eventPlan=null;if(s.pauses.includes('hiring'))Game.hire(s,`hire-${s.day}`,{olderFemale:1});
+      Game.advanceReal(s,.2,nav);if(p.water[0].status==='due')assert.equal(p.growth,0);
+      assert.ok(s.tasks.filter(t=>['initial','water'].includes(t.kind)&&t.targetId===p.id).length<=1);
+    }
+    assert.equal(isMature(p),true,species);assert.equal(p.water.length,waters);
+    assert.ok(p.water.every(w=>w.status==='manual'));assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===p.id).length,waters);
+    const wages=Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-')).length*100;
+    assert.equal(numberOf(s.ledger.balance),10000-cropSpec(species).plant_cost-wages);
+    assert.equal(s.crates.length,0);assert.equal(s.tasks.length,0);
   }
 });
 
@@ -78,11 +94,25 @@ test('QA-023: a mature unrequested plant remains stable through four dawns witho
 
 test('QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering',()=>{
   const s=farm(),p=sow(s,'yuca');grow(s,200);assert.equal(p.growth,0);assert.equal(p.water.length,2);
-  firstCare(s,p);s.time=0;grow(s,300);assert.equal(p.water[1].status,'due');close(p.water[1].wait,60);
-  s.time=0;s.nightPlan=null;grow(s,180);
+  firstCare(s,p);grow(s,100);close(p.growth,100);
+  s.eventPlan=null;Game.advanceReal(s,60,nav);Game.hire(s,'zero-day-102',{});grow(s,300);
+  assert.equal(p.water[1].status,'due');close(p.water[1].wait,160);close(p.growth,400);
+  s.eventPlan=null;Game.advanceReal(s,60,nav);Game.hire(s,'zero-day-103',{});grow(s,80);
   assert.equal(isMature(p),false);assert.ok(p.growth<480&&p.growth>479.99);
   assert.equal(p.water[1].status,'due');assert.ok(p.water[1].wait<288);
   waterPlant(p);Game.rebuildTasks(s);grow(s,.001);assert.equal(isMature(p),true);assert.equal(p.water.length,2);
+});
+
+test('QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once',()=>{
+  const s=farm();sow(s,'platano');Game.openInitialHiring(s);Game.hire(s,'hire-day-101',{olderFemale:1});
+  assert.equal(numberOf(s.ledger.balance),9750);
+  Game.advanceReal(s,1000,nav);assert.equal(s.day,102);assert.equal(s.pauses.includes('hiring'),true);
+  assert.equal(numberOf(s.ledger.balance),9750);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
+  Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9650);
+  assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
+  Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);
+  assert.equal(numberOf(s.ledger.balance),9650);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
+  assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 
 test('QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate',()=>{
