@@ -79,7 +79,7 @@ export class WorldScene {
   }
   showWallPreview(plan){
     this.clearWallPreview();this.wallPreview=new THREE.Group();
-    for(const entity of plan.previewPieces??plan.pieces){const wall=new NativeWall(this.wallPrototypes,entity);wall.position.set(entity.x,this.nav.field.surface(entity.x,entity.z)+.025,entity.z);wall.rotation.y=entity.yaw;for(const {mesh} of wall.parts){mesh.material.transparent=true;mesh.material.opacity=.55;mesh.material.depthWrite=false;mesh.material.color.set('#9cb67b');}this.wallPreview.add(wall);}
+    for(const entity of plan.previewPieces??plan.pieces){const wall=new NativeWall(this.wallPrototypes,entity);wall.position.set(entity.x,this.nav.field.surface(entity.x,entity.z)+.025,entity.z);wall.rotation.y=entity.yaw;for(const {mesh} of wall.parts){const previous=mesh.material;mesh.material=new THREE.MeshBasicMaterial({color:'#9cb67b',transparent:true,opacity:.55,depthWrite:false,side:previous.side,polygonOffset:previous.polygonOffset,polygonOffsetFactor:previous.polygonOffsetFactor,polygonOffsetUnits:previous.polygonOffsetUnits,toneMapped:false});previous.dispose();mesh.castShadow=mesh.receiveShadow=false;}this.wallPreview.add(wall);}
     this.scene.add(this.wallPreview);
   }
   showSpellPreview(draft){this.spellPreview.show(draft);}
