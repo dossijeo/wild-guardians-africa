@@ -342,8 +342,10 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {
-      const routes=s.villages.map(v=>({v,route:nav.path(centerServicePoint(center,s),v.entry??v,.28,null,true)})).filter(r=>r.route);
-      routes.sort((a,b)=>a.route.reduce((length,p,i)=>length+(i?dist(p,a.route[i-1]):0),0)-b.route.reduce((length,p,i)=>length+(i?dist(p,b.route[i-1]):0),0));
+      const departure=centerServicePoint(center,s);
+      const routes=s.villages.map(v=>({v,route:nav.path(departure,v.entry??v,.28,null,true)})).filter(r=>r.route);
+      for(const r of routes)r.length=r.route.reduce((length,p,i)=>length+dist(p,i?r.route[i-1]:departure),0);
+      routes.sort((a,b)=>a.length-b.length||a.v.id.localeCompare(b.v.id));
       if(routes[0]){center.culture??=centerCulture(center,s);center.villageId=routes[0].v.id;}
     }
     emit(s,'VillageFounded',{culture,x,z});

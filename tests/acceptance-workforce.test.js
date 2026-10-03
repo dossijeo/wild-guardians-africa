@@ -40,6 +40,11 @@ test('QA-042: tied scarcity uses creation order regardless of structure array or
   const s=farm([5,5,5]),oldest=s.structures[0].id;s.structures.reverse();Game.hire(s,'hire',{olderFemale:1});
   assert.equal(s.workers[0].centerId,oldest);assert.equal(s.workers.length,1);
 });
+test('QA-042: equal weights and creation timestamps break ties by persistent ID',()=>{
+  const s=farm([5,5,5]);s.structures.forEach(c=>{c.created=1;});
+  const first=[...s.structures].sort((a,b)=>a.id.localeCompare(b.id))[0].id;
+  s.structures.reverse();Game.hire(s,'hire',{olderFemale:1});assert.equal(s.workers[0].centerId,first);
+});
 test('QA-043: eight workers divide 3/3/2 among empty centers and create no work',()=>{
   const s=farm([0,0,0]);Game.hire(s,'hire',{youngFemale:8});assert.deepEqual(counts(s),[3,3,2]);
   Game.tick(s,10,nav);assert.equal(s.tasks.length,0);assert.equal(s.plants.length,0);assert.equal(s.crates.length,0);
@@ -76,4 +81,40 @@ test('QA-049/050/051: new crops and a midday center do not transfer existing sta
   assert.deepEqual(s.workers.map(w=>({id:w.id,centerId:w.centerId,villageId:w.villageId})),contracts);
   assert.ok(s.tasks.filter(t=>t.centerId===added).every(t=>t.workerId===null));
   assert.ok(s.plants.slice(1).every(p=>p.growth===0&&p.water[0].status==='due'));
+  s.eventPlan=null;Game.tick(s,300-s.time,nav);s.eventPlan=null;Game.tick(s,300,nav);
+  assert.equal(s.day,102);assert.ok(s.pauses.includes('hiring'));assert.ok(s.plants.every(p=>p.centerId===added));
+  assert.ok(s.tasks.every(t=>t.centerId===added));
+  const cash=numberOf(s.ledger.balance);Game.hire(s,'next-day',{olderMale:4});
+  assert.deepEqual(counts(s),[1,3]);assert.equal(numberOf(s.ledger.balance),cash-400);
+});
+test('QA-052/143: founding changes territorial center assignment while current staff return to their original village',()=>{
+  const s=farm([1]);Game.hire(s,'hire',{olderMale:1});Game.tick(s,60,nav);
+  const w=s.workers[0],center=s.structures[0],origin=w.villageId,contract=w.contractDay;
+  assert.ok(w.x>10);assert.equal(w.centerId,center.id);
+  const payload={units:[{key:'house',kind:'Edificio',min:[0,0,0],max:[.125,.125,.125]}]};
+  Game.foundVillage(s,'new-village','suajili',26,0,payload,nav);
+  const village=s.villages.at(-1);assert.equal(center.villageId,village.id);assert.equal(center.culture,'mapungubwe');
+  assert.equal(w.villageId,origin);assert.equal(w.centerId,center.id);assert.equal(w.contractDay,contract);
+  const loaded=deserialize(serialize(s));assert.equal(loaded.workers[0].villageId,origin);
+  Game.tick(s,240,nav);assert.equal(w.status,'home');assert.equal(w.x,0);assert.equal(w.z,0);
+  Game.tick(loaded,240,nav);assert.equal(serialize(loaded),serialize(s));
+  assert.equal(s.workers.length,1);assert.equal(s.events.filter(e=>e.type==='HiringConfirmed').length,1);
+  s.eventPlan=null;Game.tick(s,300,nav);assert.equal(s.day,102);
+  const cash=numberOf(s.ledger.balance);Game.hire(s,'next-day',{olderMale:1});
+  assert.equal(numberOf(s.ledger.balance),cash-100);assert.equal(s.workers.length,1);
+  assert.equal(s.workers[0].villageId,village.id);assert.equal(s.workers[0].x,village.entry.x);assert.equal(s.workers[0].z,village.entry.z);
+});
+test('QA-052: territorial choice respects full detours and excludes unreachable village routes',()=>{
+  for(const scenario of ['detour','new-unreachable','old-unreachable']){
+    const s=farm([1]);Game.hire(s,'hire',{olderMale:1});
+    const payload={units:[{key:'house',kind:'Edificio',min:[0,0,0],max:[.125,.125,.125]}]};
+    const routes={...nav,path:(a,b)=>{
+      if(scenario==='old-unreachable'&&b.x===0)return null;
+      if(b.x===26){if(scenario==='new-unreachable')return null;if(scenario==='detour')return [{x:100,z:100},{x:b.x,z:b.z}];}
+      return nav.path(a,b);
+    }};
+    Game.foundVillage(s,'found','suajili',26,0,payload,routes);
+    assert.equal(s.structures[0].villageId,scenario==='old-unreachable'?s.villages[1].id:s.villages[0].id);
+    assert.equal(s.workers[0].villageId,s.villages[0].id);
+  }
 });
