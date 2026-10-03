@@ -24,6 +24,42 @@ function fakeRenderer(){
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
 
+test('five native center envelopes contain intact/interior and falling vertices throughout collapse',()=>{
+  const point=new THREE.Vector3();
+  for(const template of templates){
+    const {kernel,body,culling}=template,positions=body.attributes.aPos,anchors=body.attributes.aAnchor,normals=body.attributes.aNormal;
+    for(const damage of [0,.79,.8,.85,.9,.95,1]){
+      kernel.setDamage(damage);
+      const sphere=damage>.79?culling.fall:culling.still;
+      for(let i=0;i<positions.count;i++){
+        const p=[positions.getX(i),positions.getY(i),positions.getZ(i)],g={anchor:[anchors.getX(i),anchors.getY(i),anchors.getZ(i)],seed:body.attributes.aSeed.getX(i)};
+        for(const inner of [0,1]){
+          const source=p.map((v,k)=>v-.21*inner*[normals.getX(i),normals.getY(i),normals.getZ(i)][k]);
+          const collapsed=kernel.collapsedPoint(source,g);collapsed[1]=Math.max(collapsed[1],.035);
+          point.fromArray(collapsed);assert.ok(sphere.containsPoint(point),`${template.building.id} damage ${damage} inner ${inner} vertex ${i}`);
+        }
+      }
+    }
+    for(const growth of [0,.25,.5,1])for(let i=0;i<template.ash.attributes.position.count;i++){
+      point.fromBufferAttribute(template.ash.attributes.position,i);point.x*=.15+.85*growth;point.z*=.15+.85*growth;point.y*=.3+.7*growth;
+      assert.ok(culling.ash.containsPoint(point),'ash contraction stays inside its independent envelope');
+    }
+    kernel.setDamage(0);
+    const pass=new BuildingDestructionPass(fakeRenderer()),entity={id:'bounds',hp:600,maxHp:600,status:'intact'},house=new NativeBuilding(template,entity,pass);
+    for(const mesh of [house.outer,house.inner,house.opening,house.ash])assert.equal(mesh.frustumCulled,true);
+    assert.equal(house.outer.boundingSphere,culling.still);assert.equal(house.ash.boundingSphere,culling.ash);
+    house.update({...entity,status:'collapsing',collapseRemaining:1},1);assert.equal(house.outer.boundingSphere,culling.fall);assert.equal(house.opening.boundingSphere,culling.fall);
+    house.update(entity,2);assert.equal(house.outer.boundingSphere,culling.still);
+    const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.set(0,4,20);camera.lookAt(0,3,0);camera.updateMatrixWorld();
+    const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+    house.updateMatrixWorld(true);assert.ok(frustum.intersectsObject(house.outer));house.position.x=300;house.updateMatrixWorld(true);assert.equal(frustum.intersectsObject(house.outer),false);
+    const lightCamera=new THREE.OrthographicCamera(-500,500,500,-500,.1,1000);lightCamera.position.set(0,500,0);lightCamera.lookAt(0,0,0);lightCamera.updateMatrixWorld();
+    const lightFrustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(lightCamera.projectionMatrix,lightCamera.matrixWorldInverse));
+    assert.ok(lightFrustum.intersectsObject(house.outer),'an offscreen center remains eligible inside the light volume');
+    house.dispose();pass.dispose();
+  }
+});
+
 test('all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure',()=>{
   const toon=new AfricanToon(),renderer=fakeRenderer(),pass=new BuildingDestructionPass(renderer);pass.environmentUniforms=toon.environmentUniforms;pass.fineNoiseUniform=toon.uniforms.uFineNoise;toon.uniforms.uFineNoise.value=0;
   const textures=[new THREE.Texture(),new THREE.Texture()];toon.environment(textures,{value:.25});assert.equal(toon.uniforms.uExposure.value,1);

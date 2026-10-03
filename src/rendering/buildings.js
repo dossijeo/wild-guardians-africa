@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {toonDestruction} from './african-toon.js';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
 import {BuildingEffects} from './building-effects.js';
+import {nativeBuildingBounds} from './building-bounds.js';
 
 const glsl=source=>source.replace('#version 300 es\n','');
 const clamp=value=>Math.max(0,Math.min(1,value));
@@ -32,7 +33,7 @@ export function prepareNativeBuilding(gltf,building){
   for(let axis=0;axis<3;axis++){bounds.min[axis]-=center[axis];bounds.max[axis]-=center[axis];}
   const kernel=createNativeDestruction(building,{positions,normals,uv,indices,bounds}),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
-  return {building,kernel,body,ash,noise,material:mesh.material,scale:1,
+  return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),
     dispose(){body.dispose();ash.dispose();noise.dispose();original.dispose();for(const texture of new Set(Object.values(mesh.material).filter(v=>v?.isTexture)))texture.dispose();mesh.material.dispose();}};
 }
 function shaderMaterial(uniforms,fragmentShader){
@@ -69,8 +70,9 @@ export class NativeBuilding extends THREE.Group {
     this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));
     this.opening=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionOpeningFragment));this.opening.matrixAutoUpdate=false;
     for(const mesh of [this.outer,this.inner,this.ash,this.opening]){
-      // Falling regions can move beyond the original static box.
-      mesh.frustumCulled=false;
+      // Bounds include native interior recession, collapse drift and ash scaling.
+      mesh.boundingSphere=mesh===this.ash?template.culling.ash:template.culling.still;
+      mesh.frustumCulled=true;
       mesh.onBeforeRender=(renderer,scene,camera)=>this.cameraUniforms(mesh,camera);
     }
     this.add(this.ash,this.outer,this.inner);pipeline.add(this);this.outer.raycast=(raycaster,hits)=>this.raycastBody(raycaster,hits);this.inner.raycast=()=>{};
@@ -92,6 +94,7 @@ export class NativeBuilding extends THREE.Group {
     this.uniforms.uQuality.value=this.pipeline.quality??1;
     this.rotation.y=entity.yaw??0;
     for(let i=0;i<8;i++){const site=this.template.kernel.hitSites[i],t=clamp((this.damage-site.birth)/(.91-site.birth)),radius=this.damage<=.0001?0:site.maxRadius*Math.pow(t,.70);this.uniforms.uHoles.value[i].set(...site.p,radius);}
+    for(const mesh of [this.outer,this.inner,this.opening])mesh.boundingSphere=this.damage>COLLAPSE_THRESHOLD?this.template.culling.fall:this.template.culling.still;
     this.outer.visible=this.damage<.9998;this.inner.visible=this.damage>.015&&this.damage<.9998;this.ash.visible=this.damage>.23;
     this.opening.visible=this.damage>.015&&this.damage<.9998;
     this.effects.update(this.damage,elapsed);

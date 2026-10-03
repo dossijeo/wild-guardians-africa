@@ -59,6 +59,8 @@ export function shadowSnapshot(renderer, light, scene, camera) {
         throw new Error('Untracked shadow callback');
       if (object.onAfterShadow !== THREE.Object3D.prototype.onAfterShadow) throw new Error('Untracked shadow callback');
       put(object); input(object.matrixWorld); put(object.frustumCulled); put(count);
+      const bounds=object.boundingSphere!==undefined?object.boundingSphere:object.geometry.boundingSphere;
+      put(bounds!=null);if(bounds){put(bounds.center.x);put(bounds.center.y);put(bounds.center.z);put(bounds.radius);}
       const geometry = object.geometry; put(geometry); put(geometry.drawRange.start); put(geometry.drawRange.count);
       for (const group of geometry.groups) { put(group.start); put(group.count); put(group.materialIndex); } put('groupsEnd');
       attribute(geometry.index, count);

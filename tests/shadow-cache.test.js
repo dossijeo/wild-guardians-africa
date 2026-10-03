@@ -40,6 +40,16 @@ test('unchanged instance uploads reuse shadows; active instance values, count an
   f.mesh.instanceMatrix.array[12]=3;f.draw();assert.equal(f.draws,5);f.close();depth.dispose();
 });
 
+test('geometry and per-object culling spheres invalidate depth without geometry or pose changes',()=>{
+  const f=fixture(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
+  f.mesh.castShadow=false;mesh.castShadow=true;mesh.geometry.computeBoundingSphere();f.scene.add(mesh);
+  f.draw();f.draw();assert.equal(f.draws,1);
+  mesh.geometry.boundingSphere.center.x+=5;f.draw();assert.equal(f.draws,2);
+  mesh.boundingSphere=new THREE.Sphere(new THREE.Vector3(),2);f.draw();assert.equal(f.draws,3);
+  mesh.boundingSphere.radius=4;f.draw();assert.equal(f.draws,4);f.draw();assert.equal(f.draws,4);
+  mesh.geometry.dispose();mesh.material.dispose();f.close();
+});
+
 test('skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate',()=>{
   const f=fixture(),bone=new THREE.Bone(),skin=new THREE.SkinnedMesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
   skin.add(bone);skin.bind(new THREE.Skeleton([bone]));skin.castShadow=true;f.scene.add(skin);
