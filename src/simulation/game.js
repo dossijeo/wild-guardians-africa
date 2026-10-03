@@ -280,7 +280,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 }
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
-    if(target.alive){waterPlant(target);target.toleranceBonus=0;emit(s,'WaterSatisfied',{targetId:target.id});}
+    if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{targetId:target.id});}
   } else if(t.kind==='harvest') {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);

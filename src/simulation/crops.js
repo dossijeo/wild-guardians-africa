@@ -4,10 +4,13 @@ export function createPlant(id,species,x,z,centerId) {
   return {id,species,x,z,centerId,alive:true,growth:0,harvestRequested:false,
     water:Array.from({length:c.total_waters},(_,i)=>({at:i*c.growth_seconds/c.total_waters,status:i?'future':'due',wait:0}))};
 }
+function satisfyWater(p,water,magic) {
+  water.status=magic?'magic':'manual';water.wait=0;p.toleranceBonus=0;
+}
 export function waterPlant(p,magic=false) {
   const due=p.water.find(w=>w.status==='due');
   if(!due)return false;
-  due.status=magic?'magic':'manual';due.wait=0;return true;
+  satisfyWater(p,due,magic);return true;
 }
 export function advancePlant(p,seconds,growthMagic=false) {
   if(!p.alive || p.growth>=cropSpec(p.species).growth_seconds || p.water[0].status==='due')return;
@@ -25,7 +28,7 @@ export function advancePlant(p,seconds,growthMagic=false) {
     due.forEach(w=>w.wait+=step);
     p.growth+=step*rate;left-=step;
     if(next && p.growth>=next.at-1e-9) {
-      next.status=magic?'magic':'due';
+      if(magic)satisfyWater(p,next,true);else next.status='due';
       if(!magic&&p.nextTolerancePenalty){next.wait=tolerance*p.nextTolerancePenalty;p.nextTolerancePenalty=0;}
     }
     if(p.growth>=spec.growth_seconds-1e-9) {

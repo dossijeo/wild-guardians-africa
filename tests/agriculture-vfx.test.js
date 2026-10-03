@@ -7,6 +7,8 @@ import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {waterPlant} from '../src/simulation/crops.js';
+import {rational} from '../src/simulation/money.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url)));
 const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function graphics(){const pipeline=new BuildingDestructionPass({shadowMap:{enabled:false},getDrawingBufferSize:v=>v.set(800,600)}),library=new VfxLibrary(catalog,new THREE.Texture({width:4096,height:2048})),scene=new THREE.Scene(),manager=new AgricultureVfx(library,pipeline,scene,(x,z)=>x*.04+z*.03);return {manager,library,scene,dispose(){manager.dispose();library.dispose();pipeline.dispose();}};}
@@ -22,4 +24,28 @@ for(const [kind,duration,cooldown] of [['growth',30,90],['multiply',15,120]])tes
  const oldTime=g.manager.effects.get(id).native.time;Game.pause(s,'qa');Game.tick(s,100,nav);g.manager.update(s);assert.equal(g.manager.effects.get(id).native.time,oldTime);Game.resume(s,'qa');
  g.dispose();s=deserialize(serialize(s));g=graphics();g.manager.update(s);assert.ok(Math.abs(g.manager.effects.get(id).native.time-oldTime)<1e-8);assert.ok(g.manager.effects.get(id).native.geometry().length>0);
  Game.tick(s,1,nav);g.manager.update(s);assert.equal(s.spells.length,0);assert.equal(g.manager.effects.size,0);assert.equal(g.library.instances.size,0);assert.equal(g.scene.children.length,0);assert.ok(Math.abs(s.cooldowns[kind]-(cooldown-duration))<1e-8);g.dispose();
+});
+
+for(const [kind,duration,cooldown] of [['growth',30,90],['multiply',15,120]])test(`QA-115: ${kind} crosses sunset on the real clock; native VFX continue without night agriculture`,()=>{
+ let s=Game.newGame({slotId:'sunset-magic',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
+ s.ledger.balance=rational(10000);s.day=101;s.completedNights=100;s.postgame=true;s.initialPreparation=false;s.tutorial.step='done';
+ Game.plant(s,'seed','platano',6,0,nav);waterPlant(s.plants[0]);s.plants[0].growth=30;
+ Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});Game.rebuildTasks(s);s.time=299;
+ Game.cast(s,'cast',kind,6,0,nav);const id=s.spells[0].id,g=graphics();
+ try {
+  Game.advanceReal(s,1.2,nav);assert.ok(Math.abs(s.time-301)<1e-7);
+  assert.ok(Math.abs(s.plants[0].growth-(kind==='growth'?31.5:31))<1e-7);
+  const plant=JSON.stringify(s.plants[0]),before=serialize(s);g.manager.update(s);assert.equal(serialize(s),before);
+  assert.ok(Math.abs(g.manager.effects.get(id).native.time-2)<1e-7);
+  Game.pause(s,'menu');Game.advanceReal(s,100,nav);g.manager.update(s);assert.equal(JSON.stringify(s.plants[0]),plant);
+  assert.ok(Math.abs(g.manager.effects.get(id).native.time-2)<1e-7);
+  s=deserialize(serialize(s));Game.resume(s,'menu');
+  const blocked=serialize(s);assert.throws(()=>Game.cast(s,'night-cast',kind,20,0,nav));assert.equal(serialize(s),blocked);
+  Game.advanceReal(s,(duration-3)/5,nav);g.manager.update(s);
+  assert.equal(JSON.stringify(s.plants[0]),plant);assert.ok(Math.abs(s.spells[0].remaining-1)<1e-7);
+  assert.ok(Math.abs(g.manager.effects.get(id).native.time-(duration-1))<1e-7);
+  assert.ok(g.manager.effects.get(id).native.sprites().length>0);
+  Game.advanceReal(s,.2,nav);g.manager.update(s);assert.equal(s.spells.length,0);assert.equal(g.manager.effects.size,0);
+  assert.equal(JSON.stringify(s.plants[0]),plant);assert.ok(Math.abs(s.cooldowns[kind]-(cooldown-duration))<1e-7);
+ } finally {g.dispose();}
 });
