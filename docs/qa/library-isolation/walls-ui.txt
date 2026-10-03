@@ -1,0 +1,133 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Biblioteca":
+    - button "Volver al santuario (Escape)":
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: El mundo que te rodea
+    - heading "Pequeños descubrimientos." [level=1]
+    - iframe [active]:
+      - banner:
+        - generic: BASTIÓN
+        - generic: LABORATORIO DE MURALLAS
+        - button "Deshacer" [disabled]:
+        - button "Rehacer" [disabled]:
+        - button "Ajustes y archivos":
+        - button "Cómo funciona":
+        - button "Guardar escena":
+          - generic: Guardar escena
+      - complementary "Materiales y herramientas":
+        - text: Elige un material
+        - generic: 01 / 05
+        - radiogroup "Tipo de muralla":
+          - radio "Muro intacto de zarzas Zarzas Ramas entrelazadas 100 PV":
+            - img "Muro intacto de zarzas"
+            - generic: Zarzas
+            - generic: Ramas entrelazadas
+            - generic: 100 PV
+          - radio "Muro intacto de empalizada Empalizada Madera y cuerda 200 PV":
+            - img "Muro intacto de empalizada"
+            - generic: Empalizada
+            - generic: Madera y cuerda
+            - generic: 200 PV
+          - radio "Muro intacto de adobe Adobe Tierra compactada 300 PV" [checked]:
+            - img "Muro intacto de adobe"
+            - generic: Adobe
+            - generic: Tierra compactada
+            - generic: 300 PV
+          - radio "Muro intacto de piedra Piedra Mampostería 500 PV":
+            - img "Muro intacto de piedra"
+            - generic: Piedra
+            - generic: Mampostería
+            - generic: 500 PV
+          - radio "Muro intacto de adobe reforzado Adobe reforzado Tierra y estructura 400 PV":
+            - img "Muro intacto de adobe reforzado"
+            - generic: Adobe reforzado
+            - generic: Tierra y estructura
+            - generic: 400 PV
+        - text: Dale forma
+        - generic: HERRAMIENTAS
+        - group "Herramientas":
+          - button "Trazar" [pressed]:
+            - text: Trazar
+          - button "Examinar":
+            - text: Examinar
+          - button "Golpear":
+            - text: Golpear
+          - button "Reparar":
+            - text: Reparar
+        - paragraph: Traza una línea o curva. Al cerrar un recinto, se añade una puerta automáticamente.
+        - generic: Fuerza de cada golpe
+        - strong: 20 PV
+        - slider "Fuerza de cada golpe 20 PV"
+        - generic: Toque ligero
+        - generic: Impacto fuerte
+        - text: 20 piezas sin peana · V2
+        - text: Sin conexión · WebGL2
+        - button "Guía":
+          - text: Guía
+      - main "Terreno de simulación 3D":
+        - 'generic "Lienzo 3D: dibuja con ratón o dedo para crear murallas"'
+        - heading "Atlas de materiales" [level=1]
+        - generic: 5 materiales · 4 estados independientes
+        - generic: /
+        - generic: Adobe
+        - navigation "Vista del laboratorio":
+          - button "Terreno":
+            - text: Terreno
+          - button "20 piezas" [active] [pressed]:
+            - text: 20 piezas
+        - button "Mover cámara":
+        - button "Vista cenital":
+        - button "Girar cámara":
+        - button "Acercar":
+        - button "Alejar":
+        - button "Encuadrar todas las piezas":
+        - button "Mostrar cuadrícula" [pressed]:
+        - button "Guardar imagen del terreno":
+        - strong: Las 20 piezas sin peana
+        - text: "De arriba abajo: intacto · puerta · dañado · escombros."
+        - text: Ejes alineados · geometría editada · UV conservadas.
+        - generic: 2 unidades de escena
+        - generic: Explora las 20 piezas sin peana. Arrastra para girar la vista.
+        - button "Restaurar escena de ejemplo" [disabled]:
+        - button "Limpiar" [disabled]:
+          - generic: Limpiar
+        - status
+    - paragraph:
+      - text: Ga Maamli · Banga · SIL OFL 1.1
+      - link "Ga Maamli":
+        - /url: ../licenses/ga.txt
+      - text: ·
+      - link "Banga":
+        - /url: ../licenses/banga.txt
+      - text: ·
+      - link "David Sargent":
+        - /url: ../licenses/bangaAuthors.txt
+  - status
+  - generic: Viajando a Biblioteca. Escape para regresar.
+  - text: ✦

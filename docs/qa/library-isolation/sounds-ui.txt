@@ -1,0 +1,1314 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Biblioteca":
+    - button "Volver al santuario (Escape)":
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: El mundo que te rodea
+    - heading "Pequeños descubrimientos." [level=1]
+    - iframe [active]:
+      - banner:
+        - generic: WILD GUARDIANS
+        - text: Archivo sonoro · Catálogo de consulta
+        - generic: V12
+        - button "Descargar los 126":
+          - text: Descargar los 126
+      - heading "Catálogo de efectos" [level=1]
+      - paragraph:
+        - text: Las tomas elegidas, normalizadas y listas para consultar.
+        - text: Busca un sonido, escúchalo y descarga su MP3.
+      - generic: Audio incrustado · Sin conexión
+      - generic "Resumen del catálogo":
+        - generic: "126"
+        - text: Efectos de sonido
+        - generic: "16"
+        - text: Categorías
+        - generic: "8"
+        - text: Ambientes en bucle
+        - generic: 5:36
+        - text: Duración total
+      - region "Buscar y filtrar":
+        - generic: Buscar por nombre, identificador o número
+        - searchbox "Buscar por nombre, identificador o número"
+        - generic: Categoría
+        - combobox "Categoría":
+          - option "Todas las categorías" [selected]
+          - option "Ambiente"
+          - option "Movimiento de personajes"
+          - option "Agricultura"
+          - option "Construcción"
+          - option "Murallas y destrucción"
+          - option "Bestias · comunes"
+          - option "Bestias · león"
+          - option "Bestias · hiena"
+          - option "Bestias · búfalo"
+          - option "Bestias · rinoceronte"
+          - option "Bestias · facóquero"
+          - option "Granjero / NPC"
+          - option "Espíritu / jugador"
+          - option "Interfaz"
+          - option "Economía / recursos"
+          - option "Feedback de gameplay"
+        - generic "Tipo de sonido":
+          - button "Todos" [pressed]
+          - button "Bucles"
+          - button "Eventos"
+        - generic: Orden
+        - combobox "Orden":
+          - option "Número original" [selected]
+          - option "Nombre · A–Z"
+          - option "Duración"
+        - status: 126 de 126 sonidos
+      - generic: Reproduce una sola toma cada vez · Volumen coherente por función
+      - generic: ⓘ Ficha técnica · ↓ MP3 normalizado
+      - main "Efectos de sonido":
+        - generic "▾ Ambiente 9 sonidos":
+          - text: ▾ Ambiente
+          - generic: 9 sonidos
+        - article:
+          - generic: "001"
+          - button "Reproducir Viento suave":
+          - text: Viento suave
+          - generic: Bucle
+          - generic: amb_wind_soft
+          - text: 12,0 s
+          - generic: "-34,7 LUFS"
+          - 'button "Ficha técnica: Viento suave"':
+          - button "Descargar 001_amb_wind_soft.mp3":
+        - article:
+          - generic: "002"
+          - button "Reproducir Viento fuerte":
+          - text: Viento fuerte
+          - generic: Bucle
+          - generic: amb_wind_strong
+          - text: 12,0 s
+          - generic: "-28,1 LUFS"
+          - 'button "Ficha técnica: Viento fuerte"':
+          - button "Descargar 002_amb_wind_strong.mp3":
+        - article:
+          - generic: "003"
+          - button "Reproducir Insectos":
+          - text: Insectos
+          - generic: Bucle
+          - generic: amb_insects
+          - text: 12,0 s
+          - generic: "-32,0 LUFS"
+          - 'button "Ficha técnica: Insectos"':
+          - button "Descargar 003_amb_insects.mp3":
+        - article:
+          - generic: "004"
+          - button "Reproducir Pájaros":
+          - text: Pájaros
+          - generic: Bucle
+          - generic: amb_birds
+          - text: 12,0 s
+          - generic: "-29,0 LUFS"
+          - 'button "Ficha técnica: Pájaros"':
+          - button "Descargar 004_amb_birds.mp3":
+        - article:
+          - generic: "005"
+          - button "Reproducir Ambiente nocturno":
+          - text: Ambiente nocturno
+          - generic: Bucle
+          - generic: amb_night
+          - text: 15,0 s
+          - generic: "-34,0 LUFS"
+          - 'button "Ficha técnica: Ambiente nocturno"':
+          - button "Descargar 005_amb_night.mp3":
+        - article:
+          - generic: "006"
+          - button "Reproducir Agua de río":
+          - text: Agua de río
+          - generic: Bucle
+          - generic: amb_river
+          - text: 12,0 s
+          - generic: "-28,1 LUFS"
+          - 'button "Ficha técnica: Agua de río"':
+          - button "Descargar 006_amb_river.mp3":
+        - article:
+          - generic: "007"
+          - button "Reproducir Agua de costa / manglar":
+          - text: Agua de costa / manglar
+          - generic: Bucle
+          - generic: amb_coast_mangrove
+          - text: 12,0 s
+          - generic: "-28,1 LUFS"
+          - 'button "Ficha técnica: Agua de costa / manglar"':
+          - button "Descargar 007_amb_coast_mangrove.mp3":
+        - article:
+          - generic: "008"
+          - button "Reproducir Lluvia":
+          - text: Lluvia
+          - generic: Bucle
+          - generic: amb_rain
+          - text: 12,0 s
+          - generic: "-27,9 LUFS"
+          - 'button "Ficha técnica: Lluvia"':
+          - button "Descargar 008_amb_rain.mp3":
+        - article:
+          - generic: "009"
+          - button "Reproducir Truenos":
+          - generic: Truenos
+          - generic: amb_thunder
+          - text: 6,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Truenos"':
+          - button "Descargar 009_amb_thunder.mp3":
+        - generic "▾ Movimiento de personajes 8 sonidos":
+          - text: ▾ Movimiento de personajes
+          - generic: 8 sonidos
+        - article:
+          - generic: "010"
+          - button "Reproducir Pasos · tierra seca":
+          - generic: Pasos · tierra seca
+          - generic: step_dry_soil
+          - text: 2,0 s
+          - generic: "-25,2 LUFS"
+          - 'button "Ficha técnica: Pasos · tierra seca"':
+          - button "Descargar 010_step_dry_soil.mp3":
+        - article:
+          - generic: "011"
+          - button "Reproducir Pasos · hierba":
+          - generic: Pasos · hierba
+          - generic: step_grass
+          - text: 2,0 s
+          - generic: "-24,5 LUFS"
+          - 'button "Ficha técnica: Pasos · hierba"':
+          - button "Descargar 011_step_grass.mp3":
+        - article:
+          - generic: "012"
+          - button "Reproducir Pasos · barro":
+          - generic: Pasos · barro
+          - generic: step_mud
+          - text: 2,0 s
+          - generic: "-24,9 LUFS"
+          - 'button "Ficha técnica: Pasos · barro"':
+          - button "Descargar 012_step_mud.mp3":
+        - article:
+          - generic: "013"
+          - button "Reproducir Pasos · arena":
+          - generic: Pasos · arena
+          - generic: step_sand
+          - text: 0,7 s
+          - generic: "-24,5 LUFS"
+          - 'button "Ficha técnica: Pasos · arena"':
+          - button "Descargar 013_step_sand.mp3":
+        - article:
+          - generic: "014"
+          - button "Reproducir Pasos · piedra":
+          - generic: Pasos · piedra
+          - generic: step_stone
+          - text: 2,0 s
+          - generic: "-29,7 LUFS"
+          - 'button "Ficha técnica: Pasos · piedra"':
+          - button "Descargar 014_step_stone.mp3":
+        - article:
+          - generic: "015"
+          - button "Reproducir Pasos · madera":
+          - generic: Pasos · madera
+          - generic: step_wood
+          - text: 2,0 s
+          - generic: "-24,5 LUFS"
+          - 'button "Ficha técnica: Pasos · madera"':
+          - button "Descargar 015_step_wood.mp3":
+        - article:
+          - generic: "016"
+          - button "Reproducir Carrera · variaciones por superficie":
+          - generic: Carrera · variaciones por superficie
+          - generic: run_surface_set
+          - text: 12,0 s
+          - generic: "-24,4 LUFS"
+          - 'button "Ficha técnica: Carrera · variaciones por superficie"':
+          - button "Descargar 016_run_surface_set.mp3":
+        - article:
+          - generic: "017"
+          - button "Reproducir Pequeño aterrizaje / salto":
+          - generic: Pequeño aterrizaje / salto
+          - generic: movement_land
+          - text: 1,0 s
+          - generic: "-24,6 LUFS"
+          - 'button "Ficha técnica: Pequeño aterrizaje / salto"':
+          - button "Descargar 017_movement_land.mp3":
+        - generic "▾ Agricultura 11 sonidos":
+          - text: ▾ Agricultura
+          - generic: 11 sonidos
+        - article:
+          - generic: "018"
+          - button "Reproducir Azada / cavar tierra":
+          - generic: Azada / cavar tierra
+          - generic: farm_hoe_dig
+          - text: 1,4 s
+          - generic: "-24,7 LUFS"
+          - 'button "Ficha técnica: Azada / cavar tierra"':
+          - button "Descargar 018_farm_hoe_dig.mp3":
+        - article:
+          - generic: "019"
+          - button "Reproducir Sembrar":
+          - generic: Sembrar
+          - generic: farm_sow
+          - text: 1,4 s
+          - generic: "-25,1 LUFS"
+          - 'button "Ficha técnica: Sembrar"':
+          - button "Descargar 019_farm_sow.mp3":
+        - article:
+          - generic: "020"
+          - button "Reproducir Semillas cayendo":
+          - generic: Semillas cayendo
+          - generic: farm_seeds_drop
+          - text: 0,8 s
+          - generic: "-25,1 LUFS"
+          - 'button "Ficha técnica: Semillas cayendo"':
+          - button "Descargar 020_farm_seeds_drop.mp3":
+        - article:
+          - generic: "021"
+          - button "Reproducir Regadera vertiendo agua":
+          - generic: Regadera vertiendo agua
+          - generic: farm_watering_can
+          - text: 4,0 s
+          - generic: "-27,9 LUFS"
+          - 'button "Ficha técnica: Regadera vertiendo agua"':
+          - button "Descargar 021_farm_watering_can.mp3":
+        - article:
+          - generic: "022"
+          - button "Reproducir Agua golpeando tierra":
+          - generic: Agua golpeando tierra
+          - generic: farm_water_soil
+          - text: 3,0 s
+          - generic: "-25,2 LUFS"
+          - 'button "Ficha técnica: Agua golpeando tierra"':
+          - button "Descargar 022_farm_water_soil.mp3":
+        - article:
+          - generic: "023"
+          - button "Reproducir Recoger cultivo":
+          - generic: Recoger cultivo
+          - generic: farm_harvest_pick
+          - text: 0,9 s
+          - generic: "-26,8 LUFS"
+          - 'button "Ficha técnica: Recoger cultivo"':
+          - button "Descargar 023_farm_harvest_pick.mp3":
+        - article:
+          - generic: "024"
+          - button "Reproducir Arrancar planta":
+          - generic: Arrancar planta
+          - generic: farm_plant_pull
+          - text: 1,2 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Arrancar planta"':
+          - button "Descargar 024_farm_plant_pull.mp3":
+        - article:
+          - generic: "025"
+          - button "Reproducir Colocar cosecha en caja":
+          - generic: Colocar cosecha en caja
+          - generic: farm_crop_to_crate
+          - text: 0,9 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Colocar cosecha en caja"':
+          - button "Descargar 025_farm_crop_to_crate.mp3":
+        - article:
+          - generic: "026"
+          - button "Reproducir Caja de fruta moviéndose":
+          - generic: Caja de fruta moviéndose
+          - generic: farm_crate_move
+          - text: 2,5 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Caja de fruta moviéndose"':
+          - button "Descargar 026_farm_crate_move.mp3":
+        - article:
+          - generic: "027"
+          - button "Reproducir Saco manipulándose":
+          - generic: Saco manipulándose
+          - generic: farm_sack_handle
+          - text: 1,7 s
+          - generic: "-25,8 LUFS"
+          - 'button "Ficha técnica: Saco manipulándose"':
+          - button "Descargar 027_farm_sack_handle.mp3":
+        - article:
+          - generic: "028"
+          - button "Reproducir Interacción genérica con cultivo":
+          - generic: Interacción genérica con cultivo
+          - generic: farm_crop_interact
+          - text: 0,7 s
+          - generic: "-25,7 LUFS"
+          - 'button "Ficha técnica: Interacción genérica con cultivo"':
+          - button "Descargar 028_farm_crop_interact.mp3":
+        - generic "▾ Construcción 8 sonidos":
+          - text: ▾ Construcción
+          - generic: 8 sonidos
+        - article:
+          - generic: "029"
+          - button "Reproducir Colocar elemento / edificio":
+          - generic: Colocar elemento / edificio
+          - generic: build_place
+          - text: 1,2 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Colocar elemento / edificio"':
+          - button "Descargar 029_build_place.mp3":
+        - article:
+          - generic: "030"
+          - button "Reproducir Golpe de herramienta":
+          - generic: Golpe de herramienta
+          - generic: build_tool_hit
+          - text: 0,8 s
+          - generic: "-23,5 LUFS"
+          - 'button "Ficha técnica: Golpe de herramienta"':
+          - button "Descargar 030_build_tool_hit.mp3":
+        - article:
+          - generic: "031"
+          - button "Reproducir Construcción · madera":
+          - generic: Construcción · madera
+          - generic: build_wood
+          - text: 1,4 s
+          - generic: "-23,5 LUFS"
+          - 'button "Ficha técnica: Construcción · madera"':
+          - button "Descargar 031_build_wood.mp3":
+        - article:
+          - generic: "032"
+          - button "Reproducir Construcción · piedra":
+          - generic: Construcción · piedra
+          - generic: build_stone
+          - text: 2,2 s
+          - generic: "-23,5 LUFS"
+          - 'button "Ficha técnica: Construcción · piedra"':
+          - button "Descargar 032_build_stone.mp3":
+        - article:
+          - generic: "033"
+          - button "Reproducir Construcción · adobe / barro":
+          - generic: Construcción · adobe / barro
+          - generic: build_adobe
+          - text: 1,4 s
+          - generic: "-27,0 LUFS"
+          - 'button "Ficha técnica: Construcción · adobe / barro"':
+          - button "Descargar 033_build_adobe.mp3":
+        - article:
+          - generic: "034"
+          - button "Reproducir Construcción terminada":
+          - generic: Construcción terminada
+          - generic: build_complete
+          - text: 2,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Construcción terminada"':
+          - button "Descargar 034_build_complete.mp3":
+        - article:
+          - generic: "035"
+          - button "Reproducir Reparación":
+          - generic: Reparación
+          - generic: build_repair
+          - text: 1,8 s
+          - generic: "-23,5 LUFS"
+          - 'button "Ficha técnica: Reparación"':
+          - button "Descargar 035_build_repair.mp3":
+        - article:
+          - generic: "036"
+          - button "Reproducir Demolición voluntaria":
+          - generic: Demolición voluntaria
+          - generic: build_demolish_manual
+          - text: 2,7 s
+          - generic: "-23,5 LUFS"
+          - 'button "Ficha técnica: Demolición voluntaria"':
+          - button "Descargar 036_build_demolish_manual.mp3":
+        - generic "▾ Murallas y destrucción 10 sonidos":
+          - text: ▾ Murallas y destrucción
+          - generic: 10 sonidos
+        - article:
+          - generic: "037"
+          - button "Reproducir Impacto · zarzas":
+          - generic: Impacto · zarzas
+          - generic: wall_hit_thorns
+          - text: 2,0 s
+          - generic: "-22,6 LUFS"
+          - 'button "Ficha técnica: Impacto · zarzas"':
+          - button "Descargar 037_wall_hit_thorns.mp3":
+        - article:
+          - generic: "038"
+          - button "Reproducir Impacto · madera":
+          - generic: Impacto · madera
+          - generic: wall_hit_wood
+          - text: 2,0 s
+          - generic: "-22,5 LUFS"
+          - 'button "Ficha técnica: Impacto · madera"':
+          - button "Descargar 038_wall_hit_wood.mp3":
+        - article:
+          - generic: "039"
+          - button "Reproducir Impacto · piedra":
+          - generic: Impacto · piedra
+          - generic: wall_hit_stone
+          - text: 2,0 s
+          - generic: "-22,5 LUFS"
+          - 'button "Ficha técnica: Impacto · piedra"':
+          - button "Descargar 039_wall_hit_stone.mp3":
+        - article:
+          - generic: "040"
+          - button "Reproducir Impacto · adobe":
+          - generic: Impacto · adobe
+          - generic: wall_hit_adobe
+          - text: 2,0 s
+          - generic: "-22,5 LUFS"
+          - 'button "Ficha técnica: Impacto · adobe"':
+          - button "Descargar 040_wall_hit_adobe.mp3":
+        - article:
+          - generic: "041"
+          - button "Reproducir Impacto · adobe reforzado":
+          - generic: Impacto · adobe reforzado
+          - generic: wall_hit_reinforced_adobe
+          - text: 2,0 s
+          - generic: "-22,5 LUFS"
+          - 'button "Ficha técnica: Impacto · adobe reforzado"':
+          - button "Descargar 041_wall_hit_reinforced_adobe.mp3":
+        - article:
+          - generic: "042"
+          - button "Reproducir Pequeñas grietas":
+          - generic: Pequeñas grietas
+          - generic: wall_crack_small
+          - text: 0,7 s
+          - generic: "-23,9 LUFS"
+          - 'button "Ficha técnica: Pequeñas grietas"':
+          - button "Descargar 042_wall_crack_small.mp3":
+        - article:
+          - generic: "043"
+          - button "Reproducir Desprendimiento de fragmentos":
+          - generic: Desprendimiento de fragmentos
+          - generic: wall_debris_small
+          - text: 1,3 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Desprendimiento de fragmentos"':
+          - button "Descargar 043_wall_debris_small.mp3":
+        - article:
+          - generic: "044"
+          - button "Reproducir Crujido estructural":
+          - generic: Crujido estructural
+          - generic: wall_structural_creak
+          - text: 2,2 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Crujido estructural"':
+          - button "Descargar 044_wall_structural_creak.mp3":
+        - article:
+          - generic: "045"
+          - button "Reproducir Colapso completo":
+          - generic: Colapso completo
+          - generic: wall_collapse_full
+          - text: 4,0 s
+          - generic: "-21,0 LUFS"
+          - 'button "Ficha técnica: Colapso completo"':
+          - button "Descargar 045_wall_collapse_full.mp3":
+        - article:
+          - generic: "046"
+          - button "Reproducir Fragmentos cayendo al suelo":
+          - generic: Fragmentos cayendo al suelo
+          - generic: wall_debris_ground
+          - text: 1,5 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Fragmentos cayendo al suelo"':
+          - button "Descargar 046_wall_debris_ground.mp3":
+        - generic "▾ Bestias · comunes 11 sonidos":
+          - text: ▾ Bestias · comunes
+          - generic: 11 sonidos
+        - article:
+          - generic: "047"
+          - button "Reproducir Pasos ligeros":
+          - generic: Pasos ligeros
+          - generic: beast_step_light
+          - text: 0,7 s
+          - generic: "-24,9 LUFS"
+          - 'button "Ficha técnica: Pasos ligeros"':
+          - button "Descargar 047_beast_step_light.mp3":
+        - article:
+          - generic: "048"
+          - button "Reproducir Pasos pesados":
+          - generic: Pasos pesados
+          - generic: beast_step_heavy
+          - text: 2,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Pasos pesados"':
+          - button "Descargar 048_beast_step_heavy.mp3":
+        - article:
+          - generic: "049"
+          - button "Reproducir Carrera / carga":
+          - generic: Carrera / carga
+          - generic: beast_charge
+          - text: 3,0 s
+          - generic: "-21,6 LUFS"
+          - 'button "Ficha técnica: Carrera / carga"':
+          - button "Descargar 049_beast_charge.mp3":
+        - article:
+          - generic: "050"
+          - button "Reproducir Ataque":
+          - generic: Ataque
+          - generic: beast_attack
+          - text: 2,0 s
+          - generic: "-22,5 LUFS"
+          - 'button "Ficha técnica: Ataque"':
+          - button "Descargar 050_beast_attack.mp3":
+        - article:
+          - generic: "051"
+          - button "Reproducir Impacto contra estructura":
+          - generic: Impacto contra estructura
+          - generic: beast_hit_structure
+          - text: 2,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Impacto contra estructura"':
+          - button "Descargar 051_beast_hit_structure.mp3":
+        - article:
+          - generic: "052"
+          - button "Reproducir Impacto contra personaje":
+          - generic: Impacto contra personaje
+          - generic: beast_hit_character
+          - text: 2,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Impacto contra personaje"':
+          - button "Descargar 052_beast_hit_character.mp3":
+        - article:
+          - generic: "053"
+          - button "Reproducir Recibir daño":
+          - generic: Recibir daño
+          - generic: beast_take_damage
+          - text: 2,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Recibir daño"':
+          - button "Descargar 053_beast_take_damage.mp3":
+        - article:
+          - generic: "054"
+          - button "Reproducir Vocalización neutra":
+          - generic: Vocalización neutra
+          - generic: beast_vocal_neutral
+          - text: 1,3 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Vocalización neutra"':
+          - button "Descargar 054_beast_vocal_neutral.mp3":
+        - article:
+          - generic: "055"
+          - button "Reproducir Vocalización agresiva":
+          - generic: Vocalización agresiva
+          - generic: beast_vocal_aggressive
+          - text: 1,4 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Vocalización agresiva"':
+          - button "Descargar 055_beast_vocal_aggressive.mp3":
+        - article:
+          - generic: "056"
+          - button "Reproducir Huida / retirada":
+          - generic: Huida / retirada
+          - generic: beast_retreat
+          - text: 2,5 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Huida / retirada"':
+          - button "Descargar 056_beast_retreat.mp3":
+        - article:
+          - generic: "057"
+          - button "Reproducir Muerte / derrota":
+          - generic: Muerte / derrota
+          - generic: beast_defeat
+          - text: 1,8 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Muerte / derrota"':
+          - button "Descargar 057_beast_defeat.mp3":
+        - generic "▾ Bestias · león 5 sonidos":
+          - text: ▾ Bestias · león
+          - generic: 5 sonidos
+        - article:
+          - generic: "058"
+          - button "Reproducir León · vocalización neutra":
+          - generic: León · vocalización neutra
+          - generic: lion_neutral
+          - text: 2,5 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: León · vocalización neutra"':
+          - button "Descargar 058_lion_neutral.mp3":
+        - article:
+          - generic: "059"
+          - button "Reproducir León · rugido / agresiva":
+          - generic: León · rugido / agresiva
+          - generic: lion_aggressive
+          - text: 3,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: León · rugido / agresiva"':
+          - button "Descargar 059_lion_aggressive.mp3":
+        - article:
+          - generic: "060"
+          - button "Reproducir León · ataque":
+          - generic: León · ataque
+          - generic: lion_attack
+          - text: 2,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: León · ataque"':
+          - button "Descargar 060_lion_attack.mp3":
+        - article:
+          - generic: "061"
+          - button "Reproducir León · daño":
+          - generic: León · daño
+          - generic: lion_hurt
+          - text: 2,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: León · daño"':
+          - button "Descargar 061_lion_hurt.mp3":
+        - article:
+          - generic: "062"
+          - button "Reproducir León · retirada":
+          - generic: León · retirada
+          - generic: lion_retreat
+          - text: 1,6 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: León · retirada"':
+          - button "Descargar 062_lion_retreat.mp3":
+        - generic "▾ Bestias · hiena 5 sonidos":
+          - text: ▾ Bestias · hiena
+          - generic: 5 sonidos
+        - article:
+          - generic: "063"
+          - button "Reproducir Hiena · vocalización neutra":
+          - generic: Hiena · vocalización neutra
+          - generic: hyena_neutral
+          - text: 1,8 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Hiena · vocalización neutra"':
+          - button "Descargar 063_hyena_neutral.mp3":
+        - article:
+          - generic: "064"
+          - button "Reproducir Hiena · agresiva / risa":
+          - generic: Hiena · agresiva / risa
+          - generic: hyena_aggressive
+          - text: 2,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Hiena · agresiva / risa"':
+          - button "Descargar 064_hyena_aggressive.mp3":
+        - article:
+          - generic: "065"
+          - button "Reproducir Hiena · ataque":
+          - generic: Hiena · ataque
+          - generic: hyena_attack
+          - text: 2,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Hiena · ataque"':
+          - button "Descargar 065_hyena_attack.mp3":
+        - article:
+          - generic: "066"
+          - button "Reproducir Hiena · daño":
+          - generic: Hiena · daño
+          - generic: hyena_hurt
+          - text: 1,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Hiena · daño"':
+          - button "Descargar 066_hyena_hurt.mp3":
+        - article:
+          - generic: "067"
+          - button "Reproducir Hiena · retirada":
+          - generic: Hiena · retirada
+          - generic: hyena_retreat
+          - text: 1,8 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Hiena · retirada"':
+          - button "Descargar 067_hyena_retreat.mp3":
+        - generic "▾ Bestias · búfalo 5 sonidos":
+          - text: ▾ Bestias · búfalo
+          - generic: 5 sonidos
+        - article:
+          - generic: "068"
+          - button "Reproducir Búfalo · vocalización neutra":
+          - generic: Búfalo · vocalización neutra
+          - generic: buffalo_neutral
+          - text: 1,8 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Búfalo · vocalización neutra"':
+          - button "Descargar 068_buffalo_neutral.mp3":
+        - article:
+          - generic: "069"
+          - button "Reproducir Búfalo · agresiva":
+          - generic: Búfalo · agresiva
+          - generic: buffalo_aggressive
+          - text: 1,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Búfalo · agresiva"':
+          - button "Descargar 069_buffalo_aggressive.mp3":
+        - article:
+          - generic: "070"
+          - button "Reproducir Búfalo · carga":
+          - generic: Búfalo · carga
+          - generic: buffalo_charge
+          - text: 2,5 s
+          - generic: "-21,5 LUFS"
+          - 'button "Ficha técnica: Búfalo · carga"':
+          - button "Descargar 070_buffalo_charge.mp3":
+        - article:
+          - generic: "071"
+          - button "Reproducir Búfalo · daño":
+          - generic: Búfalo · daño
+          - generic: buffalo_hurt
+          - text: 1,1 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Búfalo · daño"':
+          - button "Descargar 071_buffalo_hurt.mp3":
+        - article:
+          - generic: "072"
+          - button "Reproducir Búfalo · retirada":
+          - generic: Búfalo · retirada
+          - generic: buffalo_retreat
+          - text: 1,6 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Búfalo · retirada"':
+          - button "Descargar 072_buffalo_retreat.mp3":
+        - generic "▾ Bestias · rinoceronte 5 sonidos":
+          - text: ▾ Bestias · rinoceronte
+          - generic: 5 sonidos
+        - article:
+          - generic: "073"
+          - button "Reproducir Rinoceronte · vocalización neutra":
+          - generic: Rinoceronte · vocalización neutra
+          - generic: rhino_neutral
+          - text: 1,7 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Rinoceronte · vocalización neutra"':
+          - button "Descargar 073_rhino_neutral.mp3":
+        - article:
+          - generic: "074"
+          - button "Reproducir Rinoceronte · agresiva":
+          - generic: Rinoceronte · agresiva
+          - generic: rhino_aggressive
+          - text: 3,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Rinoceronte · agresiva"':
+          - button "Descargar 074_rhino_aggressive.mp3":
+        - article:
+          - generic: "075"
+          - button "Reproducir Rinoceronte · carga":
+          - generic: Rinoceronte · carga
+          - generic: rhino_charge
+          - text: 4,0 s
+          - generic: "-21,5 LUFS"
+          - 'button "Ficha técnica: Rinoceronte · carga"':
+          - button "Descargar 075_rhino_charge.mp3":
+        - article:
+          - generic: "076"
+          - button "Reproducir Rinoceronte · daño":
+          - generic: Rinoceronte · daño
+          - generic: rhino_hurt
+          - text: 2,0 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Rinoceronte · daño"':
+          - button "Descargar 076_rhino_hurt.mp3":
+        - article:
+          - generic: "077"
+          - button "Reproducir Rinoceronte · retirada":
+          - generic: Rinoceronte · retirada
+          - generic: rhino_retreat
+          - text: 1,8 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Rinoceronte · retirada"':
+          - button "Descargar 077_rhino_retreat.mp3":
+        - generic "▾ Bestias · facóquero 5 sonidos":
+          - text: ▾ Bestias · facóquero
+          - generic: 5 sonidos
+        - article:
+          - generic: "078"
+          - button "Reproducir Facóquero · vocalización neutra":
+          - generic: Facóquero · vocalización neutra
+          - generic: warthog_neutral
+          - text: 1,6 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Facóquero · vocalización neutra"':
+          - button "Descargar 078_warthog_neutral.mp3":
+        - article:
+          - generic: "079"
+          - button "Reproducir Facóquero · agresiva":
+          - generic: Facóquero · agresiva
+          - generic: warthog_aggressive
+          - text: 1,4 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Facóquero · agresiva"':
+          - button "Descargar 079_warthog_aggressive.mp3":
+        - article:
+          - generic: "080"
+          - button "Reproducir Facóquero · carga":
+          - generic: Facóquero · carga
+          - generic: warthog_charge
+          - text: 3,5 s
+          - generic: "-21,5 LUFS"
+          - 'button "Ficha técnica: Facóquero · carga"':
+          - button "Descargar 080_warthog_charge.mp3":
+        - article:
+          - generic: "081"
+          - button "Reproducir Facóquero · daño":
+          - generic: Facóquero · daño
+          - generic: warthog_hurt
+          - text: 2,5 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Facóquero · daño"':
+          - button "Descargar 081_warthog_hurt.mp3":
+        - article:
+          - generic: "082"
+          - button "Reproducir Facóquero · retirada":
+          - generic: Facóquero · retirada
+          - generic: warthog_retreat
+          - text: 4,0 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Facóquero · retirada"':
+          - button "Descargar 082_warthog_retreat.mp3":
+        - generic "▾ Granjero / NPC 6 sonidos":
+          - text: ▾ Granjero / NPC
+          - generic: 6 sonidos
+        - article:
+          - generic: "083"
+          - button "Reproducir Esfuerzo trabajando":
+          - generic: Esfuerzo trabajando
+          - generic: npc_work_effort
+          - text: 0,8 s
+          - generic: "-24,9 LUFS"
+          - 'button "Ficha técnica: Esfuerzo trabajando"':
+          - button "Descargar 083_npc_work_effort.mp3":
+        - article:
+          - generic: "084"
+          - button "Reproducir Reacción al peligro":
+          - generic: Reacción al peligro
+          - generic: npc_danger_react
+          - text: 0,9 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Reacción al peligro"':
+          - button "Descargar 084_npc_danger_react.mp3":
+        - article:
+          - generic: "085"
+          - button "Reproducir Grito breve al huir":
+          - generic: Grito breve al huir
+          - generic: npc_flee_shout
+          - text: 1,2 s
+          - generic: "-27,0 LUFS"
+          - 'button "Ficha técnica: Grito breve al huir"':
+          - button "Descargar 085_npc_flee_shout.mp3":
+        - article:
+          - generic: "086"
+          - button "Reproducir Recibir golpe":
+          - generic: Recibir golpe
+          - generic: npc_hit
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Recibir golpe"':
+          - button "Descargar 086_npc_hit.mp3":
+        - article:
+          - generic: "087"
+          - button "Reproducir Caída":
+          - generic: Caída
+          - generic: npc_fall
+          - text: 1,2 s
+          - generic: "-25,4 LUFS"
+          - 'button "Ficha técnica: Caída"':
+          - button "Descargar 087_npc_fall.mp3":
+        - article:
+          - generic: "088"
+          - button "Reproducir Confirmación vocal discreta":
+          - generic: Confirmación vocal discreta
+          - generic: npc_acknowledge
+          - text: 0,7 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Confirmación vocal discreta"':
+          - button "Descargar 088_npc_acknowledge.mp3":
+        - generic "▾ Espíritu / jugador 12 sonidos":
+          - text: ▾ Espíritu / jugador
+          - generic: 12 sonidos
+        - article:
+          - generic: "089"
+          - button "Reproducir Aparición":
+          - generic: Aparición
+          - generic: spirit_appear
+          - text: 1,6 s
+          - generic: "-25,2 LUFS"
+          - 'button "Ficha técnica: Aparición"':
+          - button "Descargar 089_spirit_appear.mp3":
+        - article:
+          - generic: "090"
+          - button "Reproducir Desaparición":
+          - generic: Desaparición
+          - generic: spirit_disappear
+          - text: 2,5 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Desaparición"':
+          - button "Descargar 090_spirit_disappear.mp3":
+        - article:
+          - generic: "091"
+          - button "Reproducir Movimiento espiritual":
+          - generic: Movimiento espiritual
+          - generic: spirit_move
+          - text: 1,6 s
+          - generic: "-27,0 LUFS"
+          - 'button "Ficha técnica: Movimiento espiritual"':
+          - button "Descargar 091_spirit_move.mp3":
+        - article:
+          - generic: "092"
+          - button "Reproducir Seleccionar":
+          - generic: Seleccionar
+          - generic: spirit_select
+          - text: 2,0 s
+          - generic: "-27,0 LUFS"
+          - 'button "Ficha técnica: Seleccionar"':
+          - button "Descargar 092_spirit_select.mp3":
+        - article:
+          - generic: "093"
+          - button "Reproducir Tocar / interactuar":
+          - generic: Tocar / interactuar
+          - generic: spirit_touch
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Tocar / interactuar"':
+          - button "Descargar 093_spirit_touch.mp3":
+        - article:
+          - generic: "094"
+          - button "Reproducir Arrastrar":
+          - generic: Arrastrar
+          - generic: spirit_drag
+          - text: 1,4 s
+          - generic: "-24,9 LUFS"
+          - 'button "Ficha técnica: Arrastrar"':
+          - button "Descargar 094_spirit_drag.mp3":
+        - article:
+          - generic: "095"
+          - button "Reproducir Soltar":
+          - generic: Soltar
+          - generic: spirit_drop
+          - text: 1,5 s
+          - generic: "-25,8 LUFS"
+          - 'button "Ficha técnica: Soltar"':
+          - button "Descargar 095_spirit_drop.mp3":
+        - article:
+          - generic: "096"
+          - button "Reproducir Acción válida":
+          - generic: Acción válida
+          - generic: spirit_valid
+          - text: 0,9 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Acción válida"':
+          - button "Descargar 096_spirit_valid.mp3":
+        - article:
+          - generic: "097"
+          - button "Reproducir Acción inválida":
+          - generic: Acción inválida
+          - generic: spirit_invalid
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Acción inválida"':
+          - button "Descargar 097_spirit_invalid.mp3":
+        - article:
+          - generic: "098"
+          - button "Reproducir Poder activado":
+          - generic: Poder activado
+          - generic: spirit_power_activate
+          - text: 2,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Poder activado"':
+          - button "Descargar 098_spirit_power_activate.mp3":
+        - article:
+          - generic: "099"
+          - button "Reproducir Poder cargándose":
+          - generic: Poder cargándose
+          - generic: spirit_power_charge
+          - text: 3,0 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Poder cargándose"':
+          - button "Descargar 099_spirit_power_charge.mp3":
+        - article:
+          - generic: "100"
+          - button "Reproducir Tutorial / indicación especial":
+          - generic: Tutorial / indicación especial
+          - generic: spirit_tutorial_cue
+          - text: 1,1 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Tutorial / indicación especial"':
+          - button "Descargar 100_spirit_tutorial_cue.mp3":
+        - generic "▾ Interfaz 13 sonidos":
+          - text: ▾ Interfaz
+          - generic: 13 sonidos
+        - article:
+          - generic: "101"
+          - button "Reproducir Click":
+          - generic: Click
+          - generic: ui_click
+          - text: 1,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Click"':
+          - button "Descargar 101_ui_click.mp3":
+        - article:
+          - generic: "102"
+          - button "Reproducir Abrir panel":
+          - generic: Abrir panel
+          - generic: ui_panel_open
+          - text: 2,0 s
+          - generic: "-25,1 LUFS"
+          - 'button "Ficha técnica: Abrir panel"':
+          - button "Descargar 102_ui_panel_open.mp3":
+        - article:
+          - generic: "103"
+          - button "Reproducir Cerrar panel":
+          - generic: Cerrar panel
+          - generic: ui_panel_close
+          - text: 2,0 s
+          - generic: "-25,1 LUFS"
+          - 'button "Ficha técnica: Cerrar panel"':
+          - button "Descargar 103_ui_panel_close.mp3":
+        - article:
+          - generic: "104"
+          - button "Reproducir Cambiar pestaña":
+          - generic: Cambiar pestaña
+          - generic: ui_tab
+          - text: 1,5 s
+          - generic: "-26,6 LUFS"
+          - 'button "Ficha técnica: Cambiar pestaña"':
+          - button "Descargar 104_ui_tab.mp3":
+        - article:
+          - generic: "105"
+          - button "Reproducir Comprar":
+          - generic: Comprar
+          - generic: ui_buy
+          - text: 1,0 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Comprar"':
+          - button "Descargar 105_ui_buy.mp3":
+        - article:
+          - generic: "106"
+          - button "Reproducir Vender":
+          - generic: Vender
+          - generic: ui_sell
+          - text: 1,2 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Vender"':
+          - button "Descargar 106_ui_sell.mp3":
+        - article:
+          - generic: "107"
+          - button "Reproducir Error":
+          - generic: Error
+          - generic: ui_error
+          - text: 2,0 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Error"':
+          - button "Descargar 107_ui_error.mp3":
+        - article:
+          - generic: "108"
+          - button "Reproducir Confirmación":
+          - generic: Confirmación
+          - generic: ui_confirm
+          - text: 2,0 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Confirmación"':
+          - button "Descargar 108_ui_confirm.mp3":
+        - article:
+          - generic: "109"
+          - button "Reproducir Objetivo completado":
+          - generic: Objetivo completado
+          - generic: ui_objective_complete
+          - text: 2,5 s
+          - generic: "-23,0 LUFS"
+          - 'button "Ficha técnica: Objetivo completado"':
+          - button "Descargar 109_ui_objective_complete.mp3":
+        - article:
+          - generic: "110"
+          - button "Reproducir Recompensa":
+          - generic: Recompensa
+          - generic: ui_reward
+          - text: 2,5 s
+          - generic: "-23,6 LUFS"
+          - 'button "Ficha técnica: Recompensa"':
+          - button "Descargar 110_ui_reward.mp3":
+        - article:
+          - generic: "111"
+          - button "Reproducir Desbloqueo":
+          - generic: Desbloqueo
+          - generic: ui_unlock
+          - text: 2,5 s
+          - generic: "-23,4 LUFS"
+          - 'button "Ficha técnica: Desbloqueo"':
+          - button "Descargar 111_ui_unlock.mp3":
+        - article:
+          - generic: "112"
+          - button "Reproducir Pausa":
+          - generic: Pausa
+          - generic: ui_pause
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Pausa"':
+          - button "Descargar 112_ui_pause.mp3":
+        - article:
+          - generic: "113"
+          - button "Reproducir Volver al juego":
+          - generic: Volver al juego
+          - generic: ui_resume
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Volver al juego"':
+          - button "Descargar 113_ui_resume.mp3":
+        - generic "▾ Economía / recursos 5 sonidos":
+          - text: ▾ Economía / recursos
+          - generic: 5 sonidos
+        - article:
+          - generic: "114"
+          - button "Reproducir Ganar recurso":
+          - generic: Ganar recurso
+          - generic: eco_gain
+          - text: 0,7 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Ganar recurso"':
+          - button "Descargar 114_eco_gain.mp3":
+        - article:
+          - generic: "115"
+          - button "Reproducir Gastar recurso":
+          - generic: Gastar recurso
+          - generic: eco_spend
+          - text: 0,7 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Gastar recurso"':
+          - button "Descargar 115_eco_spend.mp3":
+        - article:
+          - generic: "116"
+          - button "Reproducir Cosecha vendida":
+          - generic: Cosecha vendida
+          - generic: eco_crop_sold
+          - text: 2,0 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Cosecha vendida"':
+          - button "Descargar 116_eco_crop_sold.mp3":
+        - article:
+          - generic: "117"
+          - button "Reproducir Objeto recogido":
+          - generic: Objeto recogido
+          - generic: eco_item_pickup
+          - text: 2,0 s
+          - generic: "-24,1 LUFS"
+          - 'button "Ficha técnica: Objeto recogido"':
+          - button "Descargar 117_eco_item_pickup.mp3":
+        - article:
+          - generic: "118"
+          - button "Reproducir Recompensa importante":
+          - generic: Recompensa importante
+          - generic: eco_big_reward
+          - text: 2,0 s
+          - generic: "-21,9 LUFS"
+          - 'button "Ficha técnica: Recompensa importante"':
+          - button "Descargar 118_eco_big_reward.mp3":
+        - generic "▾ Feedback de gameplay 8 sonidos":
+          - text: ▾ Feedback de gameplay
+          - generic: 8 sonidos
+        - article:
+          - generic: "119"
+          - button "Reproducir Alerta de ataque":
+          - generic: Alerta de ataque
+          - generic: game_attack_alert
+          - text: 2,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Alerta de ataque"':
+          - button "Descargar 119_game_attack_alert.mp3":
+        - article:
+          - generic: "120"
+          - button "Reproducir Enemigo detectado":
+          - generic: Enemigo detectado
+          - generic: game_enemy_detected
+          - text: 2,0 s
+          - generic: "-24,0 LUFS"
+          - 'button "Ficha técnica: Enemigo detectado"':
+          - button "Descargar 120_game_enemy_detected.mp3":
+        - article:
+          - generic: "121"
+          - button "Reproducir Edificio bajo ataque":
+          - generic: Edificio bajo ataque
+          - generic: game_building_attacked
+          - text: 2,5 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Edificio bajo ataque"':
+          - button "Descargar 121_game_building_attacked.mp3":
+        - article:
+          - generic: "122"
+          - button "Reproducir Muralla crítica":
+          - generic: Muralla crítica
+          - generic: game_wall_critical
+          - text: 1,3 s
+          - generic: "-23,1 LUFS"
+          - 'button "Ficha técnica: Muralla crítica"':
+          - button "Descargar 122_game_wall_critical.mp3":
+        - article:
+          - generic: "123"
+          - button "Reproducir Granjero herido":
+          - generic: Granjero herido
+          - generic: game_farmer_hurt
+          - text: 2,0 s
+          - generic: "-25,0 LUFS"
+          - 'button "Ficha técnica: Granjero herido"':
+          - button "Descargar 123_game_farmer_hurt.mp3":
+        - article:
+          - generic: "124"
+          - button "Reproducir Ataque terminado":
+          - generic: Ataque terminado
+          - generic: game_attack_over
+          - text: 3,0 s
+          - generic: "-22,0 LUFS"
+          - 'button "Ficha técnica: Ataque terminado"':
+          - button "Descargar 124_game_attack_over.mp3":
+        - article:
+          - generic: "125"
+          - button "Reproducir Victoria / objetivo completado" [active]:
+          - generic: Victoria / objetivo completado
+          - generic: game_victory
+          - text: 4,0 s
+          - generic: "-21,0 LUFS"
+          - 'button "Ficha técnica: Victoria / objetivo completado"':
+          - button "Descargar 125_game_victory.mp3":
+        - article:
+          - generic: "126"
+          - button "Reproducir Derrota / pérdida importante":
+          - generic: Derrota / pérdida importante
+          - generic: game_major_loss
+          - text: 4,0 s
+          - generic: "-21,0 LUFS"
+          - 'button "Ficha técnica: Derrota / pérdida importante"':
+          - button "Descargar 126_game_major_loss.mp3":
+      - generic "Sobre la normalización y este catálogo"
+      - contentinfo:
+        - generic: Wild Guardians · Selección final V12 · 44,1 kHz · Estéreo · MP3 128 kb/s
+        - generic: / Buscar · Espacio Pausa · ← / → Anterior / siguiente
+      - complementary "Reproductor de efectos":
+        - generic: 125 · Victoria / objetivo completado
+        - generic: Feedback de gameplay · 4,0 s · -21,0 LUFS
+        - button "Copiar identificador del sonido":
+        - button "Descargar el MP3 actual":
+        - button "Detener y volver al inicio":
+        - button "Sonido anterior":
+        - button "Reproducir":
+        - button "Sonido siguiente":
+        - generic: Posición de reproducción
+        - slider "Posición de reproducción"
+        - generic: 0:04.0
+        - generic: 0:04.0
+        - button "Repetir desde el inicio":
+        - button "Reproducción en bucle":
+          - text: Bucle
+        - generic "Volumen general":
+          - generic: Volumen general
+          - slider "Volumen general"
+    - paragraph:
+      - text: Ga Maamli · Banga · SIL OFL 1.1
+      - link "Ga Maamli":
+        - /url: ../licenses/ga.txt
+      - text: ·
+      - link "Banga":
+        - /url: ../licenses/banga.txt
+      - text: ·
+      - link "David Sargent":
+        - /url: ../licenses/bangaAuthors.txt
+  - status
+  - generic: Viajando a Biblioteca. Escape para regresar.
+  - text: ✦

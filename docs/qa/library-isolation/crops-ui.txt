@@ -1,0 +1,125 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Biblioteca":
+    - button "Volver al santuario (Escape)":
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: El mundo que te rodea
+    - heading "Pequeños descubrimientos." [level=1]
+    - iframe [active]:
+      - generic "Parcela tridimensional. Clic para plantar, arrastrar para girar."
+      - banner:
+        - strong: BIOMA / LAB
+        - generic: CRECIMIENTO · CULTIVOS
+        - button "Ver etapas"
+        - button "Muestra"
+        - button "Ayuda": "?"
+      - complementary:
+        - text: Biblioteca de semillas
+        - heading "Elige qué cultivar." [level=1]
+        - paragraph: Selecciona una especie y haz clic sobre la tierra para plantarla.
+        - button "Maíz maduro Maíz Cereal · 90 s ✓":
+          - img "Maíz maduro"
+          - strong: Maíz
+          - generic: Cereal · 90 s
+          - text: ✓
+        - button "Algodón maduro Algodón Fibra · 120 s":
+          - img "Algodón maduro"
+          - strong: Algodón
+          - generic: Fibra · 120 s
+        - button "Girasol maduro Girasol Semilla · 80 s":
+          - img "Girasol maduro"
+          - strong: Girasol
+          - generic: Semilla · 80 s
+        - button "Plátano maduro Plátano Fruto · 150 s":
+          - img "Plátano maduro"
+          - strong: Plátano
+          - generic: Fruto · 150 s
+        - button "Sorgo maduro Sorgo Cereal · 85 s":
+          - img "Sorgo maduro"
+          - strong: Sorgo
+          - generic: Cereal · 85 s
+        - button "Mijo maduro Mijo Cereal · 70 s":
+          - img "Mijo maduro"
+          - strong: Mijo
+          - generic: Cereal · 70 s
+        - button "Yuca maduro Yuca Raíz · 130 s":
+          - img "Yuca maduro"
+          - strong: Yuca
+          - generic: Raíz · 130 s
+        - button "Batata maduro Batata Raíz · 100 s":
+          - img "Batata maduro"
+          - strong: Batata
+          - generic: Raíz · 100 s
+        - button "＋ Plantar"
+        - button "⌖ Seleccionar"
+        - button "Vaciar la parcela"
+      - generic: "0"
+      - generic: EN LA PARCELA
+      - generic: "0"
+      - generic: MADUROS
+      - generic: "8"
+      - generic: RECOLECTADOS
+      - generic: "PARCELA LIBRE · PLANTAR: MAÍZ"
+      - button "Centrar cámara": ⌂
+      - button "⊞"
+      - button "▦"
+      - button "≈"
+      - combobox "Calidad gráfica":
+        - option "Alta" [selected]
+        - option "Media"
+        - option "Baja"
+      - generic: ⌁
+      - strong: Todo empieza con un brote.
+      - paragraph: Elige un cultivo y toca cualquier punto de la parcela. El tiempo hará el resto.
+      - contentinfo:
+        - button "Pausar el tiempo": Ⅱ
+        - strong: 11:03
+        - generic: TIEMPO SIMULADO
+        - generic: VELOCIDAD DEL TIEMPO
+        - button "×1"
+        - button "×2"
+        - button "×5"
+        - button "×10"
+        - button "×25"
+        - button "Recolectar maduros · 0" [disabled]
+        - button "Guardar"
+        - button "Ajustes"
+      - status: 8 cultivos recolectados.
+    - paragraph:
+      - text: Ga Maamli · Banga · SIL OFL 1.1
+      - link "Ga Maamli":
+        - /url: ../licenses/ga.txt
+      - text: ·
+      - link "Banga":
+        - /url: ../licenses/banga.txt
+      - text: ·
+      - link "David Sargent":
+        - /url: ../licenses/bangaAuthors.txt
+  - status
+  - generic: Viajando a Biblioteca. Escape para regresar.
+  - text: ✦

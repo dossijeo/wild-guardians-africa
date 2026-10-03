@@ -1,0 +1,110 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Biblioteca":
+    - button "Volver al santuario (Escape)":
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: El mundo que te rodea
+    - heading "Pequeños descubrimientos." [level=1]
+    - iframe [active]:
+      - generic "Visor 3D interactivo. Arrastra para girar; pulsa para dañar el edificio."
+      - banner:
+        - generic: BIOMA / LAB
+        - heading "Destrucción procedural" [level=1]
+        - generic: HTML AUTÓNOMO
+      - button "Encuadrar":
+        - text: Encuadrar
+      - button "Orbitar":
+        - text: Orbitar
+      - button "Pantalla completa":
+      - generic: 06 / DESTRUCCIÓN TOTAL
+      - complementary:
+        - img "Render de referencia de Casa Suajili"
+        - generic: EDIFICIO
+        - combobox "Seleccionar edificio":
+          - option "Casa Suajili" [selected]
+          - option "Casa etíope"
+          - option "Casa Mapungubwe"
+          - option "Casa saheliana"
+          - option "Casa musgum"
+        - generic: 5 edificios disponibles
+        - generic: DAÑO ESTRUCTURAL
+        - generic: 100%
+        - generic: Cenizas
+        - slider "Porcentaje de daño"
+        - button "0"
+        - button "25"
+        - button "50"
+        - button "75"
+        - button "100"
+        - button "▶ Volver a reproducir"
+        - button "Reconstruir [R]":
+        - generic: Duración del ciclo
+        - generic: 24 s
+        - slider "Duración de la destrucción"
+        - generic: ATAQUES LOCALIZADOS
+        - button "✦ Añadir impacto" [disabled]
+        - button "Derrumbar" [disabled]
+        - generic: Golpear al pulsar el modelo
+        - checkbox "Golpear al pulsar el modelo" [checked]
+        - paragraph:
+          - text: Arrastra para girar · Rueda o pellizco para zoom.
+          - text: Los impactos abren y amplían agujeros reales en la imagen, sin transparencia gradual.
+        - generic: CAPAS DEL EFECTO
+        - text: Humo y polvo
+        - checkbox "Humo y polvo" [checked]
+        - text: Fragmentos
+        - checkbox "Fragmentos" [checked]
+        - text: Interior oscuro
+        - checkbox "Interior oscuro" [checked]
+        - text: Sombras
+        - checkbox "Sombras" [checked]
+        - generic "Ajustes del laboratorio +"
+        - option "Alta"
+        - option "Equilibrada" [selected]
+        - option "Baja"
+        - text: v1.5 · 4 edificios · Colapso automático desde el 79 % · Corrección de paredes por edificio · Cenizas ajustadas a la huella.
+        - text: Modelo y texturas originales embebidos. WebGL 2, sin bibliotecas ni red.
+      - generic: Casa Suajili
+      - text: Edificio original → daño localizado → colapso → cenizas
+      - text: Prototipo visual · Las colisiones no se reconstruyen
+      - text: 29 FPS · WEBGL 2
+      - text: 14.978 TRIÁNGULOS · 8/8 FOCOS
+      - status: Destrucción total · solo quedan cenizas
+    - paragraph:
+      - text: Ga Maamli · Banga · SIL OFL 1.1
+      - link "Ga Maamli":
+        - /url: ../licenses/ga.txt
+      - text: ·
+      - link "Banga":
+        - /url: ../licenses/banga.txt
+      - text: ·
+      - link "David Sargent":
+        - /url: ../licenses/bangaAuthors.txt
+  - status
+  - generic: Viajando a Biblioteca. Escape para regresar.
+  - text: ✦
