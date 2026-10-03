@@ -39,3 +39,44 @@ conserva el aviso de tamaño del bundle, que requiere una evaluación independie
 
 El verificador del paquete web pasa: 559 archivos, 379.783.517 bytes, 796 enlaces
 relativos y 20 GLB de runtime; sin duplicados originales.
+
+## Integración completa en navegador sobre `086dd7a`
+
+`tests/browser/wall-permissions.html` prepara únicamente slots QA en el origen
+local 5180, con terreno/poblado Sabana/Mapungubwe original, semilla 712, crédito
+QA explícito de 10000 monedas, centro (800), mijo (5) y mujer mayor (100)
+pagados mediante comandos reales. Marca los mensajes de tutorial reconocidos
+para aislar los permisos. El escenario de ataque llama a `spawnRaid` nativo;
+no introduce un objeto animal mínimo. No modifica los slots de la campaña del usuario.
+
+Se carga cada guardado desde Continuar en el menú original y se usa el HUD
+de la partida completa con WorldScene, chunks, edificios y modelos nativos:
+
+- «2» abre Construir de día (18:51), con centro y murallas habilitados. El
+  mismo panel, sin cerrarlo, los deshabilita de noche (21:21). El guardado
+  posterior conserva 9095 monedas y un centro, sin murallas.
+  [DOM](qa/wall-permissions/sunset-panel.txt), [imagen](qa/wall-permissions/sunset.png),
+  [snapshot](qa/wall-permissions/saved-sunset.json).
+- La incursión nativa guardada a tiempo 310 se carga con facóquero activo.
+  «2» abre Construir, con centro y murallas deshabilitados y aviso de incursión.
+  «H» enfoca el poblado y «P» abre pausa. Tras salir guardando, el tiempo es
+  331,4708 y el ataque sigue activo: ledger, commandIds y suppressed coinciden
+  exactamente con la preparación; no existe ninguna muralla.
+  [DOM](qa/wall-permissions/raid-panel.txt), [imagen](qa/wall-permissions/raid.png),
+  [comparación](qa/wall-permissions/comparison.json), snapshots
+  [inicial](qa/wall-permissions/prepared-raid.json) y [final](qa/wall-permissions/saved-raid.json).
+- En una segunda entrada, se abre Defensas a las 18:54. El intento de escoger
+  Zarzas al pasar la noche es rechazado por el botón ya deshabilitado. La captura
+  posterior se tomó al amanecer, con contratación bloqueante; se identifica
+  como tal y no se usa como imagen de noche:
+  [DOM de amanecer](qa/wall-permissions/dawn-materials.txt).
+
+[Consola](qa/wall-permissions/console.json): sin warnings/errors. El primer
+intento de enviar la tecla al canvas no pudo enfocarlo; se envió desde el botón
+Construir del HUD. El snapshot válido de la incursión se obtuvo después de
+salir guardando; una lectura anterior todavía correspondía al guardado inicial
+y no se utiliza para acreditar la persistencia de la partida avanzada.
+
+QA-084 permanece parcial: falta el trazado visible preparado de día y su
+confirmación durante noche/ataque, y el recorrido UI durante incursión diurna.
+Las pruebas del motor de ambos casos ya pasan, pero no sustituyen ese recorrido.

@@ -1,0 +1,111 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:05
+  - img "Dinero"
+  - generic: 9,1K
+  - generic "1/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 2
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - dialog "Defensas":
+      - heading "Defensas" [level=2]
+      - button "Cerrar": ×
+      - button "Zarzas 100 PV 10" [disabled]:
+        - strong: Zarzas
+        - generic: 100 PV
+        - generic: "10"
+      - button "Madera 200 PV 20" [disabled]:
+        - strong: Madera
+        - generic: 200 PV
+        - generic: "20"
+      - button "Adobe 300 PV 35" [disabled]:
+        - strong: Adobe
+        - generic: 300 PV
+        - generic: "35"
+      - button "Adobe reforzado 400 PV 55" [disabled]:
+        - strong: Adobe reforzado
+        - generic: 400 PV
+        - generic: "55"
+      - button "Piedra 500 PV 80" [disabled]:
+        - strong: Piedra
+        - generic: 500 PV
+        - generic: "80"
+      - checkbox "Colocar una puerta individual"
+      - text: Colocar una puerta individual
+      - paragraph: Arrastra sobre el suelo para trazar una muralla. Revisa los módulos y su coste antes de construir. Un recinto cerrado incluye su puerta sin recargo.
+  - complementary
+  - dialog "Contrata tu equipo":
+    - heading "Contrata tu equipo" [level=2]
+    - paragraph: Día 2 · 07:05 · nuevo amanecer
+    - generic: Ⅱ
+    - generic: Tiempo en pausa
+    - paragraph: Hemos recuperado tu última selección. Puedes ajustarla antes de pagar.
+    - article:
+      - img "Hombre joven"
+      - heading "Hombre joven" [level=3]
+      - strong: "120"
+      - generic: / día
+      - generic: Ritmo ×1,50
+      - generic: Cosecha +20 %
+      - generic: 10 h
+      - generic: 07:05–17:05
+      - button "Contratar un hombre joven menos": −
+      - 'spinbutton "Cantidad: Hombre joven"': "0"
+      - button "Contratar un hombre joven más": +
+    - article:
+      - img "Mujer joven"
+      - heading "Mujer joven" [level=3]
+      - strong: "120"
+      - generic: / día
+      - generic: Ritmo ×1,50
+      - generic: Cosecha base
+      - generic: 12 h · +20 %
+      - generic: 07:05–19:05
+      - button "Contratar una mujer joven menos": −
+      - 'spinbutton "Cantidad: Mujer joven"': "0"
+      - button "Contratar una mujer joven más": +
+    - article:
+      - img "Hombre mayor"
+      - heading "Hombre mayor" [level=3]
+      - strong: "100"
+      - generic: / día
+      - generic: Ritmo ×1,00
+      - generic: Cosecha +20 %
+      - generic: 10 h
+      - generic: 07:05–17:05
+      - button "Contratar un hombre mayor menos": −
+      - 'spinbutton "Cantidad: Hombre mayor"': "0"
+      - button "Contratar un hombre mayor más": +
+    - article:
+      - img "Mujer mayor"
+      - heading "Mujer mayor" [level=3]
+      - strong: "100"
+      - generic: / día
+      - generic: Ritmo ×1,00
+      - generic: Cosecha base
+      - generic: 12 h · +20 %
+      - generic: 07:05–19:05
+      - button "Contratar una mujer mayor menos": −
+      - 'spinbutton "Cantidad: Mujer mayor"': "1"
+      - button "Contratar una mujer mayor más": +
+    - generic "Cómo trabajan y qué se paga"
+    - generic: Disponible
+    - strong: 9,1K
+    - generic: Coste de hoy
+    - strong: "100"
+    - generic: Saldo restante
+    - strong: "8995"
+    - status: El salario se cobra una sola vez al confirmar.
+    - button "Poner a cero"
+    - button "Contratar y empezar"

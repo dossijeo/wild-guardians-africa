@@ -978,7 +978,7 @@
       "expected": "Rechazo común por permisos; no bloquear animales creando nuevas piezas.",
       "audit_status": "partial",
       "evidence": ["docs/qa-wall-permissions.md", "docs/qa/wall-permissions-directed.txt"],
-      "notes": "Native HUD shortcuts and live construction controls implemented; real commands reject night/day-raid/night-raid individual walls, gates and stale chains without campaign or navigation changes. Full production browser flow remains pending."
+      "notes": "Native HUD shortcuts and live construction controls implemented; real commands reject night/day-raid/night-raid individual walls, gates and stale chains without campaign or navigation changes. Full production browser proves sunset disables an open panel and active native raid blocks construction while H/P remain available; ledger, commandIds and suppression preserved with zero walls. Visible stale-chain confirmation and daytime-raid UI remain pending."
     },
     {
       "id": "QA-085",
