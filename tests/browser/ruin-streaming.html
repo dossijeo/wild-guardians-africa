@@ -1,0 +1,67 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA ruinas y streaming</title>
+<style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;left:0;top:0;background:#fffdeacc;padding:10px;max-width:460px}button{padding:8px;margin:3px}pre{max-height:200px;overflow:auto;font-size:11px}</style>
+<header><strong>Ruinas, chunks y previsualización · Sabana/Mapungubwe</strong><p>Crédito QA explícito: 10000. Dos centros y un muro de adobe pagados. No escribe guardados.</p>
+<button id="preview" disabled>Mostrar preview verde</button><button id="destroy" disabled>Destruir centro y muro</button><button id="far" disabled>Alejar 2048 m</button><button id="back" disabled>Volver a las ruinas</button><button id="reload" disabled>Recargar snapshot</button>
+<p id="status">Preparando terreno…</p><pre id="report"></pre><details><summary>Snapshot público</summary><pre id="snapshot"></pre></details></header><canvas id="world" aria-label="Ruinas en terreno nativo"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {hitStructure} from '../../src/simulation/rules.js';
+import {rational} from '../../src/simulation/money.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const status=document.querySelector('#status'),report=document.querySelector('#report'),steps=[];
+let state,nav,world,center,wall,snapshot,homeChunks,deadState,busy=true;
+const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+function assert(ok,message){if(!ok)throw new Error(message);}
+function camera(far=false){const y=nav.field.surface(wall.x,wall.z),dx=far?2048:0;world.controls.target.set(wall.x+dx,y+.7,wall.z+dx);world.camera.position.set(wall.x+dx+10,y+13,wall.z+dx+18);world.controls.update();}
+async function settle(){world.render(0);await world.whenChunksReady();world.render(0);}
+function publish(stage){
+ const targets=[center,wall];steps.push({stage,balance:state.ledger.balance.n,time:state.time,targets:targets.map(e=>({id:e.id,kind:e.kind,status:e.status,hp:e.hp,walkable:nav.walkable(e.x,e.z,.1),obstacle:nav.obstacles.some(o=>o.id===e.id),rendered:world.objects.has(e.id)})),chunks:[...world.chunks.keys()],preview:world.wallPreview?.children.length??0});
+ report.textContent=JSON.stringify(steps,null,2);document.querySelector('#snapshot').textContent=serialize(state);status.textContent=stage;
+}
+async function run(action){if(busy)return;busy=true;try{await action();}catch(e){status.textContent='FAIL: '+e.message;console.error(e);}finally{busy=false;}}
+try{
+ state=Game.newGame({seed:712,slotId:'qa-ruin-streaming'});nav=new Navigation(712,'sabana',pack.profile);
+ const place=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);state.ledger.balance=rational(10000);Game.resume(state,'intro');
+ Game.placeStructure(state,'paid-center-1',place.center,nav);center=state.structures[0];
+ let second;
+ for(let z=-24;z<=24&&!second;z+=4)for(let x=-24;x<=24&&!second;x+=4){const p={x:center.x+x,z:center.z+z};if(Game.previewCenter(state,p,nav).valid){Game.placeStructure(state,'paid-center-2',p,nav);second=state.structures.at(-1);}}
+ assert(second,'Falta sitio legal para el segundo centro');
+ for(let z=-12;z<=12&&!wall;z+=2)for(let x=6;x<=24&&!wall;x+=2){const p={kind:'wall',material:'adobe',x:center.x+x,z:center.z+z,yaw:0};if(nav.wallPlacement(p).valid){Game.placeStructure(state,'paid-adobe',p,nav);wall=state.structures.at(-1);}}
+ assert(wall,'Falta sitio legal para el muro');state.initialPreparation=false;state.tutorial.step='done';
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');await world.load(state,nav,payload);camera();await settle();homeChunks=new Set(world.chunks.keys());publish('Intactos');
+ for(const b of document.querySelectorAll('button'))b.disabled=false;busy=false;
+ document.querySelector('#preview').onclick=()=>run(async()=>{
+  const before=serialize(state);let candidate;for(const dx of [3,6,-3,-6])for(const dz of [0,3,-3]){const p={...wall,id:'preview-only',x:wall.x+dx,z:wall.z+dz};if(!candidate&&nav.wallPlacement(p).valid)candidate=p;}assert(candidate,'Falta sitio legal para preview');const plan={pieces:[candidate]};world.showWallPreview(plan);await settle();
+  assert(serialize(state)===before,'Preview modifica campaña');
+  for(const part of world.wallPreview.children[0].parts){assert(part.mesh.material.isMeshBasicMaterial&&part.mesh.material.transparent&&!part.mesh.castShadow&&!part.mesh.receiveShadow,'Material temporal incorrecto');assert(part.mesh.material.color.getHexString()==='9cb67b','Preview sin verde');}
+  publish('Preview verde, sin compra');
+ });
+ document.querySelector('#destroy').onclick=()=>run(async()=>{
+  world.clearWallPreview();hitStructure(center,center.hp,state.elapsed);hitStructure(wall,wall.hp,state.elapsed);nav.setState(state);Game.tick(state,Math.max(center.collapseRemaining,wall.collapseRemaining)+.1,nav);await settle();
+  assert(center.status==='ruined'&&wall.status==='ruined','No termina el colapso');
+  assert(!state.result,'El centro superviviente debe mantener la partida');
+  assert(!nav.obstacles.some(o=>o.id===center.id||o.id===wall.id),'Ruina conserva colisión');
+  assert(nav.walkable(center.x,center.z,.1)&&nav.walkable(wall.x,wall.z,.1),'Punto de ruina no queda libre');
+  deadState=serialize(state);snapshot=deadState;homeChunks=new Set(world.chunks.keys());publish('Ruinas sin colisión');
+ });
+ document.querySelector('#far').onclick=()=>run(async()=>{
+  assert(deadState,'Destruye antes de alejar');camera(true);await settle();
+  assert([...world.chunks.keys()].every(k=>!homeChunks.has(k)),'Chunks originales siguen residentes');
+  assert(serialize(state)===deadState,'Streaming cambia estado lógico');publish('Chunks originales descargados');
+ });
+ document.querySelector('#back').onclick=()=>run(async()=>{
+  camera();await settle();assert(serialize(state)===deadState,'Regreso cambia ruinas');
+  assert([...world.chunks.keys()].some(k=>homeChunks.has(k)),'No regresan chunks originales');publish('Ruinas tras regenerar chunks');
+ });
+ document.querySelector('#reload').onclick=()=>run(async()=>{
+  assert(snapshot,'Destruye antes de recargar');world.dispose();state=deserialize(snapshot);nav=new Navigation(712,'sabana',pack.profile);nav.setState(state);center=state.structures.find(e=>e.id===center.id);wall=state.structures.find(e=>e.id===wall.id);
+  world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');await world.load(state,nav,payload);camera();await settle();
+  assert(serialize(state)===snapshot,'Recarga modifica snapshot');assert(!nav.obstacles.some(o=>o.id===center.id||o.id===wall.id),'Recarga resucita colisión');publish('Ruinas tras recarga completa');
+ });
+}catch(e){status.textContent='FAIL: '+e.message;console.error(e);}
+function frame(){if(world&&!busy)world.render(0);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>

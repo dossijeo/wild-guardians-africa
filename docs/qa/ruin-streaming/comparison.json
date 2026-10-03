@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "stages": [
+    "Intactos",
+    "Ruinas sin colisión",
+    "Chunks originales descargados",
+    "Ruinas tras regenerar chunks",
+    "Ruinas tras recarga completa"
+  ],
+  "originalChunks": 25,
+  "farSharedChunks": 0,
+  "returnedOriginalChunks": 25,
+  "snapshotIdentical": true,
+  "balance": "8365",
+  "ruinedTargets": [
+    {
+      "id": "structure-2",
+      "kind": "center",
+      "status": "ruined",
+      "hp": 0,
+      "walkable": true,
+      "obstacle": false,
+      "rendered": true
+    },
+    {
+      "id": "structure-4",
+      "kind": "wall",
+      "status": "ruined",
+      "hp": 0,
+      "walkable": true,
+      "obstacle": false,
+      "rendered": true
+    }
+  ]
+}
