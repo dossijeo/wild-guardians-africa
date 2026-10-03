@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA aislamiento Biblioteca</title>
+<style>body{font:16px system-ui;margin:24px}button,a{padding:12px;margin:8px}pre{white-space:pre-wrap}</style>
+<h1>Aislamiento de Biblioteca</h1><p>Origen QA local. Sabana/Mapungubwe original, crédito explícito de 1000 monedas, centro y mijo pagados y una mujer mayor contratada mediante comandos reales. Escribe solo qa-library-isolation.</p>
+<button id="prepare" disabled>Preparar partida de QA</button><button id="read">Leer guardados</button><a href="../../">Abrir juego</a><p id="status">Preparando terreno…</p><pre id="summary"></pre><details><summary>Snapshots públicos</summary><pre id="snapshots"></pre></details>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {SaveRepository} from '../../src/persistence/snapshots.js';
+import {rational} from '../../src/simulation/money.js';
+import {json} from '../../src/rendering/assets.js';
+const repo=new SaveRepository(localStorage),status=document.querySelector('#status');
+function read(){const slots={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key.startsWith('wild-guardians:slot:'))slots[key]=localStorage.getItem(key);}const ordered=Object.fromEntries(Object.entries(slots).sort(([a],[b])=>a.localeCompare(b)));document.querySelector('#snapshots').textContent=JSON.stringify(ordered,null,2);document.querySelector('#summary').textContent=JSON.stringify(Object.entries(ordered).map(([key,text])=>{const s=JSON.parse(text);return {key,day:s.day,time:s.time,money:s.ledger.balance,plants:s.plants.length,workers:s.workers.length,events:s.events.length,savedAt:s.savedAt};}),null,2);status.textContent='Guardados leídos';}
+document.querySelector('#read').onclick=read;
+try {
+ const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,slotId:'qa-library-isolation'}),nav=new Navigation(712,'sabana',pack.profile),place=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);state.ledger.balance=rational(1000);Game.resume(state,'intro');Game.placeStructure(state,'qa-library-center',place.center,nav);
+ let site;for(let z=-6;z<=6&&!site;z+=1.5)for(let x=6;x<15&&!site;x+=1.5){const p={x:place.center.x+x,z:place.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}if(!site)throw new Error('Falta sitio legal para el cultivo');
+ Game.plant(state,'qa-library-mijo','mijo',site.x,site.z,nav);Game.pause(state,'hiring');Game.hire(state,'qa-library-contract',{olderFemale:1});state.tutorial.step='done';state.time=30;
+ document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{repo.save(state);read();status.textContent='Partida preparada';};status.textContent='Lista para preparar';read();
+}catch(e){status.textContent='Error: '+e.message;console.error(e);}
+</script></html>
