@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {Navigation} from '../src/world/navigation.js';
+import {repairRoute} from '../src/world/work-points.js';
 import {numberOf,rational,transact} from '../src/simulation/money.js';
 import {hitStructure} from '../src/simulation/rules.js';
 import {spawnRaid} from '../src/simulation/raids.js';
@@ -21,7 +22,7 @@ function fixture(){
 function until(s,nav,condition,limit=180){
  let elapsed=0;
  while(!condition()&&elapsed<limit&&!s.result&&!s.pauses.length){
-  const positions=s.workers.map(w=>({x:w.x,z:w.z})),approaches=s.workers.map(w=>w.taskApproach?.destination),repairs=s.events.filter(e=>e.type==='RepairApplied').length;
+  const positions=s.workers.map(w=>({x:w.x,z:w.z})),approaches=s.workers.map(w=>{const t=s.tasks.find(t=>t.id===w.taskId),target=s.structures.find(e=>e.id===t?.targetId);return w.taskApproach?.destination??(t?.kind==='repair'&&target?repairRoute(w,target,nav)?.destination:null);}),repairs=s.events.filter(e=>e.type==='RepairApplied').length;
   Game.tick(s,.05,nav);elapsed+=.05;
   for(const [i,w] of s.workers.entries())assert.ok(nav.segmentClear(positions[i],w,.28,null,true),'worker must follow collision-safe physical segments');
   if(s.events.filter(e=>e.type==='RepairApplied').length>repairs)assert.ok(s.workers.some((w,i)=>approaches[i]&&Math.hypot(w.x-approaches[i].x,w.z-approaches[i].z)<1e-7),'restoration must occur at the physical repair service point');
@@ -99,4 +100,16 @@ test('QA-083 settlement: replay, repeated ticks and reload after physical repair
  const loaded=deserialize(serialize(s));nav.setState(loaded);Game.tick(loaded,5,nav);
  assert.equal(numberOf(loaded.ledger.balance),50);assert.equal(loaded.events.filter(e=>e.type==='RepairApplied').length,1);
  assert.equal(loaded.structures.find(t=>t.id===target.id).hp,300);assert.ok(!loaded.tasks.some(t=>t.kind==='repair'));
+});
+
+test('QA-083: stale completion identity cannot restore later damage or emit a second repair burst',()=>{
+ const {s,nav,target,worker}=ordered(),stale={...s.tasks.find(t=>t.id===worker.taskId)};
+ until(s,nav,()=>target.hp===target.maxHp);assert.equal(numberOf(s.ledger.balance),50);
+ hitStructure(target,20);nav.setState(s);assert.equal(target.hp,280);
+ // Explicit callback replay fixture: same consumed task identity, not a new order.
+ // The worker still follows the normal reservation/arrival route.
+ s.tasks.push({...stale,workerId:null});
+ until(s,nav,()=>!s.tasks.some(t=>t.id===stale.id));
+ assert.equal(numberOf(s.ledger.balance),50);assert.equal(target.hp,280);
+ assert.equal(s.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,1);
 });
