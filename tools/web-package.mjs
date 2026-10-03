@@ -1,4 +1,4 @@
-import {readFileSync,readdirSync,statSync,writeFileSync,rmSync} from 'node:fs';
+import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync} from 'node:fs';
 import {resolve,extname,relative,sep} from 'node:path';
 export function publicText(text,path,manifest){
   for(const item of manifest.records)text=text.replaceAll('/'+item.source,'/'+item.runtime);
@@ -21,6 +21,15 @@ export function webPackagePlugin(){
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
       walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify(mapping,null,2)+'\n');
+      // Preserve the lab's demo village in the lossless source archive. The
+      // game uses its five native cultures and never requests those six files.
+      const biomeArchive=resolve(config.root,'content/manifests/biome-lab-update.json');
+      if(existsSync(biomeArchive))for(const url of JSON.parse(readFileSync(biomeArchive,'utf8')).archiveOnly){
+        if(!/^\/assets\/[a-f0-9]{64}\.(?:bin|png)$/.test(url))throw Error('Invalid biome archive path');
+        const target=resolve(dist,url.slice(1));
+        if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Biome archive path escapes package');
+        rmSync(target,{force:true});
+      }
     }
   };
 }

@@ -7,6 +7,15 @@ folder=root/'references/extracted/Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo'
 source=(folder/'script-28.js').read_text(encoding='utf-8')
 manifest=json.loads((root/'content/manifests/assets.json').read_text(encoding='utf-8'))
 record=next(s for s in manifest['sources'] if s['file']=='Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo.html')
+
+def prepare_archive_manifest():
+    geometry=json.loads((folder/'settlement-geometry.json').read_text(encoding='utf-8'))
+    urls=[p['url'] for p in record['payloads'] if p['id'].startswith('village-')]
+    urls += [geometry[role]['url'] for role in ('v','uv','i')]
+    result={'source':record['file'],'sha256':record['sha256'],'archiveOnly':urls}
+    (root/'content/manifests/biome-lab-update.json').write_bytes((json.dumps(result,indent=2)+'\n').encode('utf-8'))
+
+prepare_archive_manifest()
 def fragment(start,end):return source[source.index(start):source.index(end)]
 def write(path,text):
     (root/path).write_bytes(('\n'.join(line.rstrip() for line in text.splitlines())+'\n').encode('utf-8'))

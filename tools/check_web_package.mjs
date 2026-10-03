@@ -18,4 +18,7 @@ async function walk(dir){for(const name of await readdir(dir)){const path=resolv
   await values(JSON.parse(text));
  }
 }}
-await walk(root);assert(await exists(resolve(root,'index.html')));console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, 20 runtime GLBs, no original duplicates`);
+await walk(root);assert(await exists(resolve(root,'index.html')));assert(await exists(resolve(root,'content/ground-materials.json')),'Native ground material profiles missing');
+const biomeArchive=JSON.parse(await readFile('content/manifests/biome-lab-update.json','utf8'));
+for(const url of biomeArchive.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Demo village archive must not ship');
+console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, 20 runtime GLBs, no original duplicates or demo village archive`);
