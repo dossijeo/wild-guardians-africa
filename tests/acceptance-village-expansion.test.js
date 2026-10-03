@@ -88,3 +88,14 @@ test('QA-137: actually found villages through ordinal 100 with all five native c
  assert.ok(routeQueries<=198,'native routing remains active while distant candidates are bounded');
  console.log('QA-137: '+JSON.stringify({villages:s.villages.length,routeQueries,spent,balance:numberOf(s.ledger.balance)}));
 });
+
+
+test('QA-139: switching all native cultures and repositioning previews never pays or suppresses props',()=>{
+ const {s}=fixture(),props=[{id:'qa-draft-bush',slot:5,radius:.1,x:150,z:0}],nav=navigation(s,props),before=serialize(s),suppressed=[...nav.suppressed];
+ for(const culture of Game.CULTURES)for(const [x,z] of [[150,0],[230,80],[0,0],[150,0]]){
+  const preview=Game.previewVillage(s,culture,x,z,payload(culture),nav);
+  assert.equal(preview.culture,culture);assert.equal(preview.x,x);assert.equal(preview.z,z);assert.equal(preview.buildings.length,payload(culture).units.length);
+  assert.equal(serialize(s),before);assert.deepEqual([...nav.suppressed],suppressed);assert.equal(nav.propsAt(150,0,1).length,1);
+ }
+ assert.equal(s.villages.length,1);assert.equal(numberOf(s.ledger.balance),200000000);
+});

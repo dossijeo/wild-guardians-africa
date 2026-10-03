@@ -1,0 +1,44 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Fantasma nativo de poblado</title>
+<style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9ed;padding:12px;max-width:380px}pre{max-height:210px;overflow:auto}button,select{padding:8px}</style>
+<header>QA aislada: modelos, polígonos, previsualización y Toon de producción; suelo plano controlado, sin partidas guardadas. No simula una campaña.
+<label>Cultura<select id="culture"></select></label><button id="invalid" disabled>Invalidar una casa</button><button id="move" disabled>Recolocar</button><button id="rotate" disabled>Girar</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import * as Game from '../../src/simulation/game.js';
+import {rational} from '../../src/simulation/money.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const errors=[],fail=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent=errors.join('; ');};
+addEventListener('error',e=>fail(e.error??e));addEventListener('unhandledrejection',e=>fail(e.reason));
+const catalog=await json('/content/villages.json'),state=Game.newGame({seed:712,slotId:'qa-preview-memory'}),nav=new Navigation(712,'sabana',{});
+state.postgame=true;state.day=101;state.completedNights=100;state.initialPreparation=false;state.tutorial.step='done';Game.resume(state,'intro');state.ledger.balance=rational(200000);
+// Native state sits elsewhere; placement still performs real polygon/entry checks.
+state.villages[0].buildings=villageLayout(catalog.find(p=>p.id==='mapungubwe'),-150,0);state.villages[0].x=-150;
+nav.field.blocked=()=>false;nav.field.slope=()=>0;nav.field.surface=()=>0;
+const props=[{id:'qa-preserved-bush',slot:5,radius:.1,x:0,z:0}];nav.propsAt=()=>props.filter(p=>!nav.suppressed.has(p.id));nav.setState(state);
+const before=serialize(state),world=new WorldScene(document.querySelector('canvas'),()=>{});world.state=state;world.nav=nav;world.villageTemplates=new Map();
+world.renderer.shadowMap.enabled=false;await world.sky.load();world.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:'#827b57',roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;world.scene.add(floor);
+const select=document.querySelector('#culture');select.innerHTML=Game.CULTURES.map(c=>`<option>${c}</option>`).join('');
+let invalid=false,moved=false,angle=.7,revision=0;
+async function update(){
+ const ticket=++revision,culture=select.value,payload=catalog.find(p=>p.id===(culture==='saheliana'?'saheliano':culture));
+ if(!world.villageTemplates.has(culture))world.villageTemplates.set(culture,await world.assets.village(payload));if(ticket!==revision)return;
+ const x=moved?80:0,z=moved?40:0,layout=villageLayout(payload,x,z);let invalidUnits=0;
+ nav.field.blocked=()=>false;
+ if(invalid){let point;for(const b of layout){for(const p of b.footprint){nav.field.blocked=(px,pz)=>Math.hypot(px-p.x,pz-p.z)<.01;if(layout.filter(u=>!nav.placementFootprint(u).valid).length===1){point=p;break;}}if(point)break;}if(!point)throw new Error('No hay punto exclusivo de una casa');nav.field.blocked=(px,pz)=>Math.hypot(px-point.x,pz-point.z)<.01;}
+ invalidUnits=layout.filter(u=>!nav.placementFootprint(u).valid).length;
+ const preview=Game.previewVillage(state,culture,x,z,payload,nav);world.showVillagePreview(preview);
+ const box=new THREE.Box3().setFromObject(world.villagePreview),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),distance=Math.max(size.x,size.y,size.z)*2.5;
+ world.controls.target.copy(center);world.camera.position.set(center.x+Math.cos(angle)*distance,center.y+distance*.9,center.z+Math.sin(angle)*distance);world.camera.lookAt(center);world.resize();
+ world.toon.update(0,world.sun,'sabana');world.materialRegistry.update(0);world.renderer.render(world.scene,world.camera);
+ const materials=[];world.villagePreview.traverse(o=>{if(o.isMesh)materials.push({unit:o.userData.unit.key,color:'#'+o.material.color.getHexString(),opacity:o.material.opacity,depthWrite:o.material.depthWrite,drawCount:o.geometry.drawRange.count});});
+ document.querySelector('#status').textContent=preview.valid?'Conjunto válido':'Conjunto inválido';document.querySelector('#data').textContent=JSON.stringify({culture,x,z,valid:preview.valid,invalidUnits,buildings:preview.buildings.length,materials,stateUnchanged:serialize(state)===before,propsUnchanged:nav.propsAt().length===1,errors},null,2);
+ for(const el of document.querySelectorAll('button'))el.disabled=false;
+}
+select.onchange=()=>update().catch(fail);document.querySelector('#invalid').onclick=()=>{invalid=!invalid;update().catch(fail);};document.querySelector('#move').onclick=()=>{moved=!moved;update().catch(fail);};document.querySelector('#rotate').onclick=()=>{angle+=Math.PI/2;update().catch(fail);};
+await update();
+</script></html>

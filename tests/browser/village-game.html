@@ -1,0 +1,9 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Preparar expansión en juego</title>
+<p>Origen local de QA. Prepara Sabana/Mapungubwe nativa y un centro pagado, día 101 y 200000 monedas explícitas de prueba. No acredita haber sobrevivido la campaña. Solo guarda qa-village-ui en este origen.</p><button id="open" disabled>Abrir prueba en el juego</button><pre id="status">Preparando…</pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';import {Navigation} from '../../src/world/navigation.js';import {findInitialLocationAsync} from '../../src/world/villages.js';import {SaveRepository} from '../../src/persistence/snapshots.js';import {rational} from '../../src/simulation/money.js';import {json} from '../../src/rendering/assets.js';
+const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe'),state=Game.newGame({seed:712,slotId:'qa-village-ui'}),nav=new Navigation(712,'sabana',pack.profile),place=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'qa-paid-center',place.center,nav);
+state.day=101;state.completedNights=100;state.postgame=true;state.initialPreparation=false;state.tutorial.step='done';state.time=30;state.dayPlan={day:101,done:true};state.hiringPaidDay=101;state.ledger.balance=rational(200000);
+document.querySelector('#status').textContent=JSON.stringify({slot:state.slotId,day:state.day,money:state.ledger.balance,place},null,2);document.querySelector('#open').disabled=false;document.querySelector('#open').onclick=()=>{new SaveRepository(localStorage).save(state);location.href='../../';};
+</script></html>
