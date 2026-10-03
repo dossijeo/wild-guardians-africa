@@ -21,6 +21,8 @@ import {assetUrl} from '../rendering/asset-url.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 import {NativeGuardian} from '../ui/guardian.js';
+import {hudShortcut} from '../ui/hud-shortcuts.js';
+import {refreshBuildPermissions} from '../ui/build-permissions.js';
 import {TutorialController} from '../tutorial/controller.js';
 import {TutorialProfile} from '../tutorial/profile.js';
 import '../ui/tutorial.css';
@@ -171,6 +173,7 @@ function updateUI(force=false) {
     if(state.result||tool?.kind!=='spell'||tool.spell!==pendingSpell.kind)cancelSpellPreview();
     else {pendingSpell=Game.previewSpell(state,pendingSpell.kind,pendingSpell.x,pendingSpell.z,nav);world.showSpellPreview(pendingSpell);const confirm=document.querySelector('#confirm-spell');if(confirm)confirm.disabled=!pendingSpell.valid;commandFeedback=pendingSpell.reason??'';}
   }
+  refreshBuildPermissions(document,state);
   const confirmWall=document.querySelector('#confirm-wall');if(confirmWall)confirmWall.disabled=!permission(state,'wall')||!pendingWall||numberOf(state.ledger.balance)<pendingWall.plan.cost;
   const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
   if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
@@ -276,6 +279,7 @@ function libraryScreen() {
   bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{const iframe=document.createElement('iframe');iframe.src=assetUrl(`/library.html?lab=${el.dataset.demo}`);iframe.title='Laboratorio '+el.dataset.demo;iframe.style='position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee';app.querySelector('.library-grid').replaceWith(iframe);});
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
+document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation()?.blocking&&!document.querySelector('#modal')?.children.length}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(pendingWall){cancelWallPreview();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';document.querySelector('#panel').innerHTML='';}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});

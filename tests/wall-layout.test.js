@@ -75,6 +75,30 @@ test('No-center and raid restrictions reject chains and removal without mutating
     assert.throws(()=>Game.removeWall(state,'remove','nonexistent',nav));assert.equal(JSON.stringify(state),before);
   }
 });
+test('Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign',()=>{
+  for(const mode of ['night','day-raid','night-raid']){
+    const {state,nav}=fixture();nav.setState(state);
+    // A real paid preview exists before the permission changes.
+    const plan=Game.previewWallChain(state,'zarzas',square,nav,{smooth:false,snap:false});
+    assert.equal(plan.cost,150);
+    if(mode!=='day-raid')state.time=300;
+    if(mode!=='night')state.raid={animals:[{id:'qa-live-beast',x:0,z:-4,status:'approaching',hp:100}]};
+    const before=JSON.stringify(state),route=nav.path({x:0,z:-4},{x:0,z:4},.28),walkable=nav.walkable(0,0,.28);
+    assert.ok(route,'the animal corridor is initially open');
+    const commands=[
+      ()=>Game.placeStructure(state,'single',{kind:'wall',material:'zarzas',x:0,z:0},nav),
+      ()=>Game.placeStructure(state,'gate',{kind:'wall',material:'zarzas',gate:true,x:0,z:0},nav),
+      ()=>Game.previewWallChain(state,'zarzas',square,nav,{smooth:false,snap:false}),
+      ()=>Game.buildWallChain(state,'stale','zarzas',square,nav,{smooth:false,snap:false})
+    ];
+    for(const command of commands){
+      assert.throws(command,/Esta acción no está disponible ahora/);
+      assert.equal(JSON.stringify(state),before,'no debit, IDs, suppression, animal or geometry changes');
+      assert.equal(nav.walkable(0,0,.28),walkable);
+      assert.deepEqual(nav.path({x:0,z:-4},{x:0,z:4},.28),route,'no new obstacle blocks the animal corridor');
+    }
+  }
+});
 test('Removing a reserved repair releases its worker and preserves the ledger',()=>{
   const {state,nav}=fixture();Game.buildWallChain(state,'chain','zarzas',[[0,0],[4,0]],nav,{smooth:false,snap:false});const wall=state.structures.find(p=>p.kind==='wall');
   const worker={id:'qa-worker',taskId:'qa-task',status:'acting',path:[{x:1,z:0}],taskApproach:{x:1,z:0}};

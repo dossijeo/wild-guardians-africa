@@ -1,0 +1,165 @@
+TAP version 13
+# Subtest: an already open construction panel follows sunset, live raids, pauses, recovery and available coins
+ok 1 - an already open construction panel follows sunset, live raids, pauses, recovery and available coins
+  ---
+  duration_ms: 4.7952
+  ...
+# Subtest: refreshing permissions tolerates a closed construction panel
+ok 2 - refreshing permissions tolerates a closed construction panel
+  ---
+  duration_ms: 0.418
+  ...
+# Subtest: native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+ok 3 - native menu shortcuts use live click handlers, including village and pause, without synthesizing commands
+  ---
+  duration_ms: 4.1763
+  ...
+# Subtest: typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+ok 4 - typing, repeats, modified shortcuts and blocking overlays cannot activate HUD controls
+  ---
+  duration_ms: 0.3922
+  ...
+# Subtest: buttons becoming disabled or inert are observed at dispatch time and may become usable again
+ok 5 - buttons becoming disabled or inert are observed at dispatch time and may become usable again
+  ---
+  duration_ms: 0.4037
+  ...
+# Subtest: Dragging submits only the completed world-space stroke and preserves curved samples
+ok 6 - Dragging submits only the completed world-space stroke and preserves curved samples
+  ---
+  duration_ms: 4.7526
+  ...
+# Subtest: Pointer cancellation and disabling cannot submit a partial chain
+ok 7 - Pointer cancellation and disabling cannot submit a partial chain
+  ---
+  duration_ms: 0.5176
+  ...
+# Subtest: Two-finger pan and zoom cancel drawing and never build on finger release
+ok 8 - Two-finger pan and zoom cancel drawing and never build on finger release
+  ---
+  duration_ms: 0.5263
+  ...
+# Subtest: Short tap stays a tap while alternate camera buttons and Shift pass through
+ok 9 - Short tap stays a tap while alternate camera buttons and Shift pass through
+  ---
+  duration_ms: 0.4752
+  ...
+# Subtest: Coalesced input keeps the native minimum spacing and disposal removes all handlers
+ok 10 - Coalesced input keeps the native minimum spacing and disposal removes all handlers
+  ---
+  duration_ms: 0.4664
+  ...
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 11 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 2.4397
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 12 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 1.7234
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 13 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 22.828
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 14 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 15.2248
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 15 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 3.7592
+  ...
+# Subtest: Invalid terrain, crop intersection and insufficient money leave state unchanged
+ok 16 - Invalid terrain, crop intersection and insufficient money leave state unchanged
+  ---
+  duration_ms: 6.3718
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap without refund or replacement
+ok 17 - Removing an automatic gate opens a persistent gap without refund or replacement
+  ---
+  duration_ms: 4.9114
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 18 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 2.3954
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 19 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 1.1387
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 20 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 1.2532
+  ...
+# Subtest: Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+ok 21 - Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+  ---
+  duration_ms: 9.1142
+  ...
+# Subtest: Removing a reserved repair releases its worker and preserves the ledger
+ok 22 - Removing a reserved repair releases its worker and preserves the ledger
+  ---
+  duration_ms: 1.2965
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 23 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 2.4622
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 24 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 10.5582
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 25 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 736.421
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 26 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 194.1485
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 27 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 16.2102
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 28 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 21.7558
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 29 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 938.161
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 30 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 2073.6645
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 31 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 5969.9835
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10387.6429
