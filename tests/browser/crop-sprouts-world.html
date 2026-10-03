@@ -1,0 +1,35 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA ocho brotes en WorldScene</title>
+<style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9ed;padding:8px;max-width:95vw}pre{max-height:30vh;overflow:auto;font-size:11px}button{padding:8px}</style>
+<header><details open><summary>QA ocho brotes inmediatos</summary><p>WorldScene, navegación y terreno nativos. Crédito QA explícito de 1600 monedas; centro y semillas pagados. Sin trabajadores, avance de reloj ni guardados.</p><button id="plant" disabled>Plantar las ocho especies</button><button id="rotate" disabled>Girar cámara</button><span id="status">Cargando…</span><pre id="report"></pre></details></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {rational,numberOf} from '../../src/simulation/money.js';
+import {cropSpec} from '../../src/simulation/rules.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
+const status=document.querySelector('#status'),report=document.querySelector('#report'),errors=[];
+const fail=e=>{errors.push(String(e.message??e));status.textContent='FAIL: '+errors.join(' · ');};
+addEventListener('error',fail);addEventListener('unhandledrejection',e=>fail(e.reason));
+let world,state,nav,plots,turn=0,ledger=[];
+function focus(){const p=plots[3],q=plots[4],x=(p.x+q.x)/2,z=(p.z+q.z)/2,y=nav.field.surface(x,z);world.controls.target.set(x,y+.2,z);world.camera.position.set(x+Math.sin(turn)*7,y+5,z+Math.cos(turn)*7);world.controls.update();}
+async function draw(){world.updateCamera();world.syncChunks();await world.whenChunksReady();world.render(0);const glError=world.renderer.getContext().getError();if(glError)throw Error('WebGL '+glError);
+ const samples=state.plants.map(p=>({id:p.id,species:p.species,alive:p.alive,growth:p.growth,water:p.water,render:world.cropBatch.sample(p.species,p.growth)}));
+ const meshes=world.scene.children.filter(m=>m.isInstancedMesh&&m.visible&&m.count&&m.geometry.hasAttribute('iGrowth')).map(m=>({name:m.name,count:m.count,growth:Array.from(m.geometry.getAttribute('iGrowth').array.slice(0,4))}));
+ report.textContent=JSON.stringify({biome:state.biome,culture:state.culture,terrainVersion:state.terrainVersion,balance:numberOf(state.ledger.balance),elapsed:state.elapsed,workers:state.workers.length,plots,ledger,samples,meshes,errors},null,2);
+ status.textContent=`${samples.length}/8 brotes · saldo ${numberOf(state.ledger.balance)} · reloj ${state.elapsed} · errores ${errors.length}`;
+}
+try{
+ const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ state=Game.newGame({biome:'sabana',culture:'mapungubwe',seed:712,slotId:'qa-sprouts-no-save'});nav=new Navigation(712,'sabana',pack.profile);const place=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);
+ state.ledger.balance=rational(1600);Game.resume(state,'intro');Game.placeStructure(state,'qa-paid-center',place.center,nav);
+ search:for(let dz=-18;dz<=18;dz+=1.5)for(let dx=-18;dx<=18;dx+=1.5){const x=Math.round((place.center.x+dx)/1.5)*1.5,z=Math.round((place.center.z+dz)/1.5)*1.5,candidate=ids.map((_,i)=>({x:x+(i%4)*1.5,z:z+Math.floor(i/4)*1.5}));if(candidate.every(p=>nav.placement(p.x,p.z,.4).valid)){plots=candidate;break search;}}
+ if(!plots)throw Error('Faltan ocho parcelas legales contiguas');
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('media');await world.load(state,nav,payload);focus();await draw();
+ document.querySelector('#plant').disabled=false;document.querySelector('#plant').onclick=async()=>{try{document.querySelector('#plant').disabled=true;for(const [i,species] of ids.entries()){const before=numberOf(state.ledger.balance),p=plots[i];Game.plant(state,'qa-sprout-'+i,species,p.x,p.z,nav);ledger.push({species,expected:cropSpec(species).plant_cost,charged:before-numberOf(state.ledger.balance)});}world.syncResidentProps();await draw();document.querySelector('#rotate').disabled=false;}catch(e){fail(e);}};
+ document.querySelector('#rotate').onclick=async()=>{try{turn+=Math.PI/2;focus();await draw();}catch(e){fail(e);}};
+ addEventListener('pagehide',()=>world.dispose(),{once:true});
+}catch(e){fail(e);}
+</script></html>

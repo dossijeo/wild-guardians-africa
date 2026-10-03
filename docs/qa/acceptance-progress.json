@@ -195,11 +195,12 @@
       "area": "Agricultura",
       "scenario": "Plantar las ocho especies",
       "expected": "Precio canónico, ID estable y brote; no aparecen arroz, calabaza ni judías del HUD.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-agriculture.md"
+        "docs/qa-acceptance-agriculture.md",
+        "docs/qa/immediate-sprouts/README.md"
       ],
-      "notes": "Eight real Game.plant commands deduct exactly 309, preserve canonical IDs, create living zero-progress plants with initial tasks, and reject rice/pumpkin/beans without mutation. Original library gallery shows all eight sprouts. Remaining: verify all eight immediate sprouts in production game rendering."
+      "notes": "Existing canonical planting/domain and eight library-sprout evidence retained. Actual WorldScene on native Sabana/Mapungubwe terrain4.1.10.3: eight paid Game.plant commands, exact per-species charges totaling309, balance800 to491; no workers or clock advancement. Eight living growth0 plants with initial water due render eight distinct native *_01_brote meshes at count1, stage0. Front/side screenshots inspected; camera rotation preserves full report and console is clean. Explicit1600-coin QA credit and800-coin center; isolated renderer fixture, not a natural campaign or native HUD tool-flow claim."
     },
     {
       "id": "QA-018",
@@ -1568,12 +1569,13 @@
       "area": "Finales y expansión",
       "scenario": "Selección recordada cuesta más que saldo pero ruta mínima existe",
       "expected": "No Game Over por la selección; permitir ajustarla.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
-        "tests/acceptance-economic-boundaries.test.js"
+        "tests/acceptance-economic-boundaries.test.js",
+        "docs/qa/recalled-hiring/README.md"
       ],
-      "notes": "Actual Game at dawn with live crop/100 coins ignores expensive remembered selection for GameOver. Paying expensive selection rejects without mutation; SaveRepository reload then affordable olderFemale contract charges 100 once and resumes. Remaining: specifically exercise remembered selection adjustment in the real dialog."
+      "notes": "Real native HUD: natural paid first day leaves110 coins at dawn; remembered youngMale120 cannot confirm, no GameOver. Minus youngMale then plus olderMale100 enables confirmation, balance10 after exactly one debit. Additional funded real HUD fixture: recalled olderFemale2 costing200 against145 reduced to1 for100 leaves45. Native dialog/screenshots/snapshots and menu/settings pause comparison archived. Existing economic save/reload/domain coverage retained."
     },
     {
       "id": "QA-133",
