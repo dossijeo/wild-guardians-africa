@@ -349,18 +349,28 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     emit(s,'VillageFounded',{culture,x,z});
   });
 }
+function clockBoundaries(s){
+  return [250,300,600,...(s.dayPlan&&!s.dayPlan.done?[s.dayPlan.at]:[]),...(s.nightPlan&&!s.nightPlan.done?[s.nightPlan.at]:[])].filter(Number.isFinite);
+}
+function prepareClockEvents(s,nav){
+  if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
+  if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
+  if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
+}
 export function tick(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   if(s.initialPreparation)return;
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
+    prepareClockEvents(s,nav);
     const previousTime=s.time;
-    const boundaries=[250,300,600].filter(t=>t>s.time+1e-9).map(t=>t-s.time);
+    const clockEdges=clockBoundaries(s);
+    const boundaries=clockEdges.filter(t=>t>s.time+1e-9).map(t=>t-s.time);
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
-    s.time=[250,300,600].find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
+    s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns))s.cooldowns[kind]=Math.max(0,s.cooldowns[kind]-step);
     for(const structure of s.structures)if(structure.status==='collapsing') {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
@@ -376,18 +386,22 @@ export function tick(s,seconds,nav) {
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.length!==spellCount)nav.setState(s);
-    if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
-    if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
-    if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
     advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    // Arrival is an event at the end of this interval. Newly spawned animals
+    // must not move for time that elapsed before they existed.
+    prepareClockEvents(s,nav);
     if(s.time>=600 && !s.raid && !s.result)closeNight(s);
   }
 }
 export function advanceReal(s,seconds,nav) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
-    const real=Math.min(left,.02);left-=real;
-    tick(s,real*(s.time>=300&&!s.raid?5:1),nav);
+    if(s.initialPreparation)return;
+    prepareClockEvents(s,nav);
+    const speed=s.time>=300&&!s.raid?5:1;
+    const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
+    const real=Math.min(left,.02,untilBoundary);left-=real;
+    tick(s,real*speed,nav);
   }
 }
 export function clockLabel(s) {
