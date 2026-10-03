@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {AfricanToon} from '../src/rendering/african-toon.js';
+import {endpointEnvironment} from '../src/rendering/environment-endpoints.js';
 import {environmentFunctions} from '../src/rendering/fluid-lighting-source.js';
 import {nativeAssetMaterial} from '../src/rendering/asset-surface.js';
 import {obstructionMaterial} from '../src/rendering/obstruction.js';
@@ -12,7 +13,7 @@ const compile=(toon,material)=>{toon.material(material);const shader={uniforms:{
 test('world reflections retain the supplied equirectangular HDR sampling, roughness LOD and night fill',()=>{
   assert.equal(environmentFunctions,'const float PI4=3.14159265359;\n'+original.slice(original.indexOf('vec3 environment4('),original.indexOf('vec3 brdf4(')));
   const toon=new AfricanToon(),shader=compile(toon,new THREE.MeshStandardMaterial());
-  assert.ok(shader.fragmentShader.includes(environmentFunctions));assert.ok(shader.fragmentShader.includes('environment4(reflect(-toonV,toonN),roughnessFactor)'));
+  assert.ok(shader.fragmentShader.includes(endpointEnvironment(environmentFunctions)));assert.ok(shader.fragmentShader.includes('environment4(reflect(-toonV,toonN),roughnessFactor)'));
   assert.equal(shader.fragmentShader.split('vec3 environment4(').length,2);
 });
 
