@@ -1,8 +1,8 @@
 # Permisos de murallas y atajos nativos
 
-QA-084 sigue **parcial**: esta revisión prueba los comandos reales y el control
-de interfaz con dobles de DOM; queda pendiente el recorrido de la partida
-completa en navegador durante noche e incursión, incluido un trazado abierto.
+QA-084 **verificado**: pruebas de comandos y navegación, controles del HUD y
+partida completa en navegador durante noche, incursión nocturna y diurna,
+incluido un trazado preparado de día cuya confirmación se bloquea de noche.
 
 El HUD original `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html` define
 1/2/3/4 como hogar/construir/cultivar/magia, H para enfocar el poblado y P para
@@ -77,6 +77,55 @@ Construir del HUD. El snapshot válido de la incursión se obtuvo después de
 salir guardando; una lectura anterior todavía correspondía al guardado inicial
 y no se utiliza para acreditar la persistencia de la partida avanzada.
 
-QA-084 permanece parcial: falta el trazado visible preparado de día y su
+En esa revisión QA-084 permanecía parcial: faltaba el trazado visible preparado de día y su
 confirmación durante noche/ataque, y el recorrido UI durante incursión diurna.
 Las pruebas del motor de ambos casos ya pasan, pero no sustituyen ese recorrido.
+
+## Cierre: trazado pendiente e incursión diurna
+
+La preparación del escenario sunset pasa a tiempo 200 para permitir el gesto
+sin prisas. En la partida completa se elige Zarzas y se arrastra el terreno
+visible de (240,650) a (460,650), mediante entrada real de puntero. El preview
+contiene tres módulos por 30 monedas. A las 16:07 la confirmación está habilitada;
+a las 21:57, manteniendo el mismo trazado, está deshabilitada. Un click con
+`force:true` sobre el botón disabled no construye: no se modifica el DOM ni el
+atributo disabled desde la automatización. El siguiente estado muestra 06:38
+de la misma noche y el botón sigue bloqueado. Tras pausa y salida guardando,
+el tiempo es 589,6255: ledger, commandIds, suppressed y structures coinciden
+exactamente con el snapshot preparado. Ningún módulo de preview se convierte
+en obstáculo lógico o compra.
+
+[Día](qa/wall-permissions/stale-day.txt), [noche](qa/wall-permissions/stale-night.txt),
+[imagen de noche](qa/wall-permissions/stale-night.png),
+[comparación](qa/wall-permissions/stale-comparison.json), snapshots
+[preparado](qa/wall-permissions/prepared-stale.json) y [guardado](qa/wall-permissions/saved-stale.json).
+
+Para el ataque diurno se plantan 42 plátanos mediante Game.plant sobre terreno
+nativo legal; se pagan 6300 monedas adicionales. La atracción es 10089 y el
+saldo 2795. Se llama a spawnRaid con `daytime=true` hasta obtener un escenario
+QA aceptado: nueve intentos, dos facóqueros y un búfalo. Esta selección deliberada
+no es una medición de la probabilidad ni una campaña recorrida naturalmente.
+El guardado válido se carga desde el menú original. A las 15:33, «2» abre
+Construir con centro y murallas deshabilitados y aviso de incursión. Se pausa
+y sale guardando a tiempo 222,5299, todavía de día y con incursión activa:
+ledger, commandIds y suppressed no cambian, y no existe ninguna muralla.
+
+[DOM diurno](qa/wall-permissions/day-raid-panel.txt),
+[validación de preparación](qa/wall-permissions/prepared-day-check.json),
+[comparación final](qa/wall-permissions/day-comparison.json), snapshots
+[preparado](qa/wall-permissions/prepared-day-raid.json) y [guardado](qa/wall-permissions/saved-day-raid.json).
+La imagen diurna se tomó antes de terminar de pintar el marco del panel;
+el DOM registra los controles y sus permisos. Las imágenes de día/noche del
+trazado muestran el panel completamente pintado. [Consola final](qa/wall-permissions/console-complete.json): vacía.
+
+El primer ensayo del trazado se descartó al recargar Vite por una edición del
+HTML preparador. La evidencia final se obtiene después de terminar las ediciones,
+con un segundo trazado completo que cruza la noche sin recargar el juego.
+La apariencia oscura del preview se registra para revisión visual: el texto lo
+denomina verde, pero esta aceptación acredita los permisos y las compras,
+no la fidelidad cromática de esa previsualización.
+
+La prueba de comando cubre el mismo trazado obsoleto ante ataque diurno/nocturno;
+las pruebas de gesto acreditan que desactivar el dibujo cancela la cadena sin
+enviarla. Junto con los recorridos completos anteriores, esto satisface el rechazo
+común y la conservación de la navegación exigidos por QA-084.

@@ -976,9 +976,9 @@
       "area": "Defensas y reparación",
       "scenario": "Trazar muralla o usar atajo durante noche/ataque",
       "expected": "Rechazo común por permisos; no bloquear animales creando nuevas piezas.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": ["docs/qa-wall-permissions.md", "docs/qa/wall-permissions-directed.txt"],
-      "notes": "Native HUD shortcuts and live construction controls implemented; real commands reject night/day-raid/night-raid individual walls, gates and stale chains without campaign or navigation changes. Full production browser proves sunset disables an open panel and active native raid blocks construction while H/P remain available; ledger, commandIds and suppression preserved with zero walls. Visible stale-chain confirmation and daytime-raid UI remain pending."
+      "notes": "Native common permission rejects night/day-raid/night-raid individual walls, gates and stale chains without campaign/navigation changes. Full production browser covers sunset disabling an open panel, live native night/day raids through shortcut 2, and a real three-module day preview whose confirmation is disabled at night. Saved snapshots preserve ledger, commandIds, suppression and zero walls; H/P remain usable. Evidence and deliberate QA preparation limits in docs/qa-wall-permissions.md."
     },
     {
       "id": "QA-085",
