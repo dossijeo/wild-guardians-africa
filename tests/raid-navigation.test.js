@@ -57,7 +57,7 @@ test('A full legal five-animal composition changes entry side together when a la
   const nav=world((x,_z,radius)=>x>=0||radius<=.6),s=ready(nav),rng={rng:s.rng};
   const group=['warthog','warthog','warthog','buffalo','buffalo'];
   spawnRaid(s,{group},nav);assert.deepEqual(s.raid.animals.map(a=>a.species),group);
-  assert.ok(s.raid.animals.every(a=>a.spawn.x===46),'The group must use one common reachable side');
+  assert.ok(s.raid.animals.every(a=>a.spawn.x===118.65),'The group must use one common reachable side of the default active region');
   for(let i=0;i<6;i++)nextRandom(rng);assert.equal(s.rng,rng.rng,'Changing spatial entry must not reroll budgets or composition');
   for(let i=0;i<group.length;i++)for(let j=i+1;j<group.length;j++){
     const a=s.raid.animals[i],b=s.raid.animals[j];assert.ok(Math.hypot(a.x-b.x,a.z-b.z)>a.radius+b.radius+1);

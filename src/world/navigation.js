@@ -3,12 +3,20 @@ import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 import {SearchFrontier} from './search-frontier.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
+import {validActiveBounds} from './active-region.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
     this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];
+  }
+  setActiveBounds(bounds){
+    if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
+    // Presentation metadata: changing it must not invalidate logical routes,
+    // existing animals, reservations or their persisted spawn points.
+    if(this.activeBounds?.every((value,i)=>value===bounds[i]))return;
+    this.activeBounds=[...bounds];
   }
   chunk(cx,cz) {
     const key=`${cx},${cz}`;

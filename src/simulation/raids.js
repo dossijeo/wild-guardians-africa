@@ -10,6 +10,7 @@ import {contiguousGroup} from './crops.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
+import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
@@ -33,17 +34,25 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   if(!group?.length)return;
   const focus=s.structures.find(operational)??s.villages[0],preferredSide=randomInt(s,0,3);
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
+  const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
+  const inset=Math.max(...specs.map(({radius})=>radius))+.25;
+  const [minX,minZ,maxX,maxZ]=bounds;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
   let entries=null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;
     for(let attempt=0;attempt<31&&!entries;attempt++){
       const clusterOffset=attempt?Math.ceil(attempt/2)*(attempt%2?2:-2):0,points=[];
+      const spread=(group.length-1)*2+2;
+      const along=side<2?clamp(focus.z+clusterOffset,minZ+inset+spread,maxZ-inset-spread):clamp(focus.x+clusterOffset,minX+inset+spread,maxX-inset-spread);
       for(let i=0;i<specs.length;i++){
         const {radius}=specs[i];let spawn=null;
         for(const adjustment of [0,1,-1,2,-2]){
-          const offset=clusterOffset+(i-(group.length-1)/2)*4+adjustment;
-          const point={x:focus.x+(side<2?(side?1:-1)*46:offset),z:focus.z+(side>=2?(side===3?1:-1)*46:offset)};
-          if(nav.walkable(point.x,point.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&connectedEntry(s,{...point,radius},nav)){
+          const offset=(i-(group.length-1)/2)*4+adjustment;
+          const point=side<2?
+            {x:side?maxX-inset:minX+inset,z:along+offset}:
+            {x:along+offset,z:side===3?maxZ-inset:minZ+inset};
+          if(point.x-radius>=minX&&point.x+radius<=maxX&&point.z-radius>=minZ&&point.z+radius<=maxZ&&nav.walkable(point.x,point.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&connectedEntry(s,{...point,radius},nav)){
             spawn=point;break;
           }
         }

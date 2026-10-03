@@ -2,12 +2,10 @@ import * as THREE from 'three';
 import {makeCanyonHorizon,makeDesertHorizon} from './horizon-source.js';
 import {nativeTerrainBuffer} from './terrain-geometry.js';
 import {nativeGroundMaterial,updateGroundQuality} from './render-quality.js';
+import {activeChunkRegion} from '../world/active-region.js';
 
 // ChunkManager.plan centers resident terrain on the eye, not the point of interest.
-export function nativeNearRegion(eye,quality){
-  const cx=Math.floor((eye.x+24)/48),cz=Math.floor((eye.z+24)/48),range=quality==='alta'?3:2;
-  return {cx,cz,range,bounds:[(cx-range)*48-24,(cz-range)*48-24,(cx+range)*48+24,(cz+range)*48+24]};
-}
+export const nativeNearRegion=activeChunkRegion;
 
 export class NativeHorizon{
   constructor(scene,waterMaterial,onMaterialChange=null){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.group=null;this.key=null;}

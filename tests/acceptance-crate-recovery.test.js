@@ -43,7 +43,9 @@ test('QA-066/067/069/071: natural raid drops cargo, never targets it, and a diff
   assert.ok(s.time>=250);assert.ok(s.events.some(e=>e.type==='StructureHit'));assert.equal(s.structures[0].status,'intact');
   assert.equal(s.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id).length,1);
   let loaded=deserialize(serialize(s));assert.deepEqual(loaded.crates[0].value,rational(594,25));
-  Game.tick(loaded,300-loaded.time,nav);loaded.eventPlan=null;Game.tick(loaded,300,nav);assert.equal(loaded.day,22);
+  // Entry now starts at the actual active border; the raid can end after dusk.
+  // Advance to the next dawn rather than assuming an end before time 300.
+  loaded.eventPlan=null;Game.tick(loaded,600-loaded.time,nav);assert.equal(loaded.day,22);
   Game.hire(loaded,'next-hire',{olderFemale:1});loaded.dayPlan.done=true;
   assert.equal(loaded.plants.filter(p=>p.alive).length,0);assert.equal(loaded.workers.length,1);assert.equal(loaded.workers[0].centerId,loaded.structures[0].id);
   const paid=numberOf(loaded.ledger.balance);tickUntil(loaded,()=>loaded.workers[0].status==='carrying',60);

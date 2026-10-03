@@ -1,0 +1,44 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Borde activo de incursiones</title>
+<style>body{margin:0;font:14px system-ui;background:#efe8d4}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9edee;padding:10px;max-width:95vw}button{margin:3px}pre{max-height:170px;overflow:auto;font-size:11px;margin:5px 0}</style>
+<header>QA-094/095: terreno original, navegación y generación de incursiones de producción.
+<div><button id="spawn" disabled>Generar grupo legal de cinco</button><button id="entry" disabled>Enfocar entrada</button><button id="away" disabled>Alejar cámara</button><button id="restore" disabled>Recargar snapshot</button><button id="step" disabled>Avanzar 0,5 s</button></div>
+<output id="status">Cargando Sabana / Mapungubwe…</output><pre id="data"></pre></header><canvas id="world" aria-label="Terreno y bestias de la incursión"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+let state,nav,world,snapshot,entryBounds,entryAnimals,errors=[];
+const buttons=()=>document.querySelectorAll('button');
+const error=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent='ERROR: '+errors.join(' · ');};
+addEventListener('error',e=>error(e.error??e));addEventListener('unhandledrejection',e=>error(e.reason));
+function draw(){world.render(0);const animals=state.raid?.animals??[];
+ const records=animals.map(a=>({id:a.id,species:a.species,x:a.x,z:a.z,spawn:a.spawn,radius:a.radius,hits:a.hitsRemaining,status:a.status,meshPresent:world.objects.has(a.id),rigLoaded:world.objects.get(a.id)?.children.length>0}));
+ document.querySelector('#status').textContent=`${records.length} animales · ${state.events.filter(e=>e.type==='RaidSpawned').length} generaciones · tiempo ${state.elapsed.toFixed(2)} s · ${world.chunks.size} chunks · ${errors.length} errores`;
+ document.querySelector('#data').textContent=JSON.stringify({entryBounds,currentBounds:nav.activeBounds,entryAnimals,animals:records,errors},null,2);
+}
+async function action(fn){buttons().forEach(b=>b.disabled=true);try{await fn();draw();}catch(e){error(e);}finally{buttons().forEach(b=>b.disabled=false);document.querySelector('#spawn').disabled=!!state.raid;}}
+const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'raid-border-qa'});nav=new Navigation(712,'sabana',pack.profile);
+const location=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
+world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=error;world.qualitySetting('media');await world.load(state,nav,payload);
+Game.resume(state,'intro');Game.placeStructure(state,'qa-center',location.center,nav);
+// Prepared night and direct legal tier-5 composition, not a probability or
+// campaign-profitability test. No altered terrain, body sizes or hit budgets.
+state.day=21;state.completedNights=20;state.time=400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={at:150,done:true};state.nightPlan={at:323,group:[],done:true};Game.pause(state,'qa');
+document.querySelector('#spawn').onclick=()=>action(async()=>{
+ world.render(0);entryBounds=[...nav.activeBounds];spawnRaid(state,{group:['warthog','warthog','warthog','buffalo','buffalo']},nav);
+ if(!state.raid)throw new Error(state.messages.at(-1)?.text??'No se generó la incursión');
+ entryAnimals=state.raid.animals.map(a=>({id:a.id,spawn:{...a.spawn},radius:a.radius,hits:a.hitsRemaining}));snapshot=serialize(state);
+ world.sync(0);await Promise.all([...world.assets.cache.values()]);
+});
+document.querySelector('#entry').onclick=()=>action(()=>{const a=state.raid?.animals[0];if(a)world.focus(a);});
+document.querySelector('#away').onclick=()=>action(()=>{const c=state.structures[0];world.focus({x:c.x+1000,z:c.z+1000});});
+document.querySelector('#restore').onclick=()=>action(()=>{if(!snapshot)return;state=deserialize(snapshot);world.state=state;world.simElapsed=state.elapsed;nav.setState(state);});
+document.querySelector('#step').onclick=()=>action(()=>{Game.resume(state,'qa');try{Game.tick(state,.5,nav);}finally{Game.pause(state,'qa');}});
+await world.whenChunksReady();buttons().forEach(b=>b.disabled=false);draw();
+let last=0;requestAnimationFrame(function frame(now){if(now-last>100){draw();last=now;}requestAnimationFrame(frame);});
+</script></html>

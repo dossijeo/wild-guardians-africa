@@ -139,7 +139,7 @@ export class WorldScene {
   whenChunksReady(){return this.chunkStream?.whenIdle()??Promise.resolve({cancelled:false});}
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
-    const region=nativeNearRegion(this.camera.position,this.quality),{cx,cz,range}=region;this.nearBounds=region.bounds;
+    const region=nativeNearRegion(this.camera.position,this.quality),{cx,cz,range}=region;this.nearBounds=region.bounds;this.nav.setActiveBounds?.(region.bounds);
     this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh));
     this.horizon.update(this.nav.config,this.pack.profile,region,this.quality,force);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
