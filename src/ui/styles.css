@@ -17,3 +17,5 @@
 #stage #context .context{pointer-events:auto;right:calc(var(--action-w) + 26px);top:calc(var(--header) + 7px);bottom:auto;width:min(290px,calc(100vw - var(--action-w) - 40px));max-height:calc(100dvh - var(--header) - var(--reserve) - 16px);overflow:auto}
 
 #stage #context .context button.ghost{color:var(--ink)}
+
+.command-feedback{display:block;color:#823629;font-size:13px;line-height:1.35;margin:8px 0}#placementBanner .command-feedback{color:#ffd4b8;margin:4px 0 0;font-weight:600}
