@@ -22,6 +22,16 @@ export function workVfxPlans(state){
     const definition=definitions.get(id);
     plans.push({key:`${worker.id}/${task.id}/${kind}`,id,x:target.x,z:target.z,yaw:worker.heading??0,time:Math.min(definition.duration,elapsed/duration*definition.duration)});
   }
+  // Repairs settle on arrival, without an acting phase. Present the committed
+  // result at its service point; old saves without presentation do not replay it.
+  const seen=new Set();
+  for(const event of state.events??[]){
+    const p=event.presentation;
+    if(event.type!=='RepairApplied'||typeof event.id!=='string'||seen.has(event.id)||!p||![p.elapsed,p.x,p.z,p.yaw,state.elapsed].every(Number.isFinite))continue;
+    seen.add(event.id);const age=state.elapsed-p.elapsed;
+    if(age<0||age>=definitions.get('dust').duration)continue;
+    plans.push({key:`repair/${event.id}`,id:'dust',x:p.x,z:p.z,yaw:p.yaw,time:Math.max(1e-6,age),stepMode:true});
+  }
   return plans;
 }
 
@@ -31,7 +41,7 @@ export class WorkVfx {
     const desired=new Set(),environment=vfxEnvironment(state.time>=300?1:0);
     for(const plan of workVfxPlans(state)){
       desired.add(plan.key);let effect=this.effects.get(plan.key);
-      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface});this.effects.set(plan.key,effect);this.scene.add(effect);}
+      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
       effect.position.set(plan.x,this.surface(plan.x,plan.z),plan.z);effect.rotation.y=plan.yaw;effect.environment=environment;
       if(plan.time<effect.native.time||effect.native.time===0)effect.seek(plan.time);else effect.advance(plan.time-effect.native.time);
     }

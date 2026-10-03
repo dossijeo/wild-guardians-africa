@@ -278,7 +278,7 @@ function completeTask(s,w,t,target,nav) {
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
-    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);emit(s,'RepairApplied',{targetId:target.id});if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}}
+    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);emit(s,'RepairApplied',{targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}}
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
