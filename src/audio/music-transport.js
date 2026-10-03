@@ -8,7 +8,7 @@ export class MusicTransport {
     this.decks=[];this.history=[];this.lastJumpAt=-Infinity;this.lastEdge=null;this.jumps=0;this.loops=0;
     this.policy=MUSIC_POLICIES[pack];this.scene=audio.musicScene??'day';
     this.primary=this.createDeck(audio.context.currentTime+.1,offset,.06);
-    this.mixer=new MusicMixer(pack,bank,this.primary.voices,this.primary.start-offset,this.scene);
+    this.mixer=new MusicMixer(pack,bank,this.primary.voices,this.primary.start-offset,this.scene,{automatic:true});
     audio.mixer=this.mixer;this.section=this.sectionFor(offset);this.visit('start');
   }
   sectionFor(position){return this.nav.sections.find(s=>position>=s.start-.001&&position<s.end-.001)||this.nav.sections.at(-1);}
@@ -44,7 +44,8 @@ export class MusicTransport {
     return {target:natural,kind:'natural'};
   }
   update(scene,now){
-    this.mixer.update(scene,now);
+    const nearSplice=this.plan&&this.plan.kind!=='natural'&&this.plan.at-now<240/this.policy.bpm*2;
+    this.mixer.update(scene,now,{nearSplice,protectedUntil:this.busyUntil??0});
     // A scene change can replan an uncommitted edge, matching chooseScene in the lab.
     if(scene!==this.scene){this.scene=scene;if(!this.plan?.deck)this.plan=null;}
     if(!this.plan){const at=this.primary.start+this.section.end-this.primary.offset;this.plan={...this.choose(Math.max(now,at)),from:this.section,at};}
@@ -59,6 +60,7 @@ export class MusicTransport {
           for(const source of this.primary.sources)source.stop(plan.at+.012);
           this.primary.stopAt=plan.at+.015;
           const bar=240/this.policy.bpm,busyUntil=plan.at+bar*this.nav.protectAfterJumpBars;
+          this.busyUntil=busyUntil;
           for(const task of this.mixer.pending)if(task.when>=plan.at-bar*2&&task.when<busyUntil)task.when=busyUntil;
           this.mixer.pending.sort((a,b)=>a.when-b.when);
         }else if(now>=plan.at-.02){

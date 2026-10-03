@@ -79,18 +79,18 @@ export class AudioSystem {
         const source=this.startBuffer(buffer,{loop:true,music:true,loopEnd:bank.duration,gain:(bank.safetyGain??.5)*.45*level,when});
         if(source&&track.id)voices.set(track.id,this.voices.get(source).volume.gain);
       }
-      if(voices.size)this.mixer=new MusicMixer(pack,bank,voices,when,scene);
+      if(voices.size)this.mixer=new MusicMixer(pack,bank,voices,when,scene,{automatic:true});
     }catch(error){if(this.pack===pack&&generation===this.generation)this.stop();throw error;}
   }
   updateMusic(state){
     this.musicScene=gameplayMusicScene(state);
-    if(this.context?.state==='running'){try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);}catch(error){this.stop();this.musicError=error;}}
+    if(this.context?.state==='running'){try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stop();this.musicError=error;}}
   }
   async sound(id) {
     if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
   }
-  process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
+  process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.transport?.dispose();this.transport=null;this.mixer=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.transport?.dispose();this.transport=null;this.mixer=null;this.musicEvent=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();this.context?.close();}
 }

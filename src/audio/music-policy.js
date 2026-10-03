@@ -7,6 +7,8 @@ export const MUSIC_POLICIES={
     "gridOffset": 1.437,
     "quantize": 1,
     "fade": 2,
+    "cadence": 16,
+    "density": 3,
     "anchors": [
       "s2",
       "s4"
@@ -117,6 +119,8 @@ export const MUSIC_POLICIES={
     "gridOffset": 1.211,
     "quantize": 1,
     "fade": 2,
+    "cadence": 16,
+    "density": 3,
     "anchors": [
       "s2",
       "s4"
@@ -222,3 +226,11 @@ export const MUSIC_POLICIES={
   }
 };
 export const gameplayMusicScene=state=>state.raid?'attack':state.time>=300?'night':'day';
+
+// Native temporary arrangements: eight bars, 2.4 s fade; never new melodies.
+export function musicEventLevels(pack,kind){
+  const policy=MUSIC_POLICIES[pack],levels=[...policy.levels[kind==='success'?'activity':'night']];
+  const overrides=pack==='a'?(kind==='success'?{s9:.9,s8:.38}:{s4:.13,s0:0,s1:.13,s9:.5}):(kind==='success'?{s9:.9,s8:.45,s4:.8}:{s1:.04,s2:.18,s5:.08,s9:.55});
+  for(const [id,value] of Object.entries(overrides))levels[Number(id.slice(1))]=value;
+  return levels;
+}
