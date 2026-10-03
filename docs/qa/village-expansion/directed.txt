@@ -1,0 +1,311 @@
+TAP version 13
+# QA-137: {"villages":100,"routeQueries":99,"spent":126225000,"balance":73775000}
+# Subtest: QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+ok 1 - QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 410.6084
+  ...
+# Subtest: QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+ok 2 - QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 435.9164
+  ...
+# Subtest: QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+ok 3 - QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 262.9547
+  ...
+# Subtest: QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+ok 4 - QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 322.4386
+  ...
+# Subtest: QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+ok 5 - QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 428.092
+  ...
+# Subtest: QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+ok 6 - QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 167.2273
+  ...
+# Subtest: QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+ok 7 - QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 256.6674
+  ...
+# Subtest: QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+ok 8 - QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 154.9358
+  ...
+# Subtest: QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+ok 9 - QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 226.5988
+  ...
+# Subtest: QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+ok 10 - QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 317.4455
+  ...
+# Subtest: QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+ok 11 - QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 389.3329
+  ...
+# Subtest: QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+ok 12 - QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 601.0342
+  ...
+# Subtest: QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+ok 13 - QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 334.6372
+  ...
+# Subtest: QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+ok 14 - QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 533.06
+  ...
+# Subtest: QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+ok 15 - QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 792.8098
+  ...
+# Subtest: QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+ok 16 - QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+  ---
+  duration_ms: 196203.6534
+  ...
+# Subtest: Native footprint preserves walkable space outside its building edges
+ok 17 - Native footprint preserves walkable space outside its building edges
+  ---
+  duration_ms: 2.0222
+  ...
+# Subtest: Building overlap includes crossing edges and containment
+ok 18 - Building overlap includes crossing edges and containment
+  ---
+  duration_ms: 0.8299
+  ...
+# Subtest: bounding rejection preserves the prior exact overlap for mutable, rotated, concave and almost-touching polygons
+ok 19 - bounding rejection preserves the prior exact overlap for mutable, rotated, concave and almost-touching polygons
+  ---
+  duration_ms: 11.3738
+  ...
+# Subtest: Full occupied interior is checked for water, not just building bounds
+ok 20 - Full occupied interior is checked for water, not just building bounds
+  ---
+  duration_ms: 0.7609
+  ...
+# Subtest: Large props beside the native footprint survive; occupied props block placement
+ok 21 - Large props beside the native footprint survive; occupied props block placement
+  ---
+  duration_ms: 3.3373
+  ...
+# Subtest: Asynchronous initial search preserves deterministic positions and suppression
+ok 22 - Asynchronous initial search preserves deterministic positions and suppression
+  ---
+  duration_ms: 3.9603
+  ...
+# Subtest: Departure search restores existing obstacles even if route evaluation fails
+ok 23 - Departure search restores existing obstacles even if route evaluation fails
+  ---
+  duration_ms: 0.9842
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 24 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 11.502
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 25 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 7.3558
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 26 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.4226
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 27 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.4462
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 28 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 1.618
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 29 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 10.7156
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 30 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.6158
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 31 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 3.9372
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 32 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 1.1099
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 33 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.5819
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 34 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 29.7437
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 35 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.8066
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 36 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.0007
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 37 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.5931
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 38 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 8.1694
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 39 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.6369
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 40 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.0101
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 41 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.8448
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 42 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.1044
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 43 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.4637
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 44 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.5566
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 45 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.7702
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 46 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 1.3976
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 47 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 6.9802
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 48 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 0.5918
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 49 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.8297
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 50 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 6.1572
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 51 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 50.0298
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 52 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 838.7476
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 53 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 0.8125
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 54 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 0.5228
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 55 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 0.7119
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 56 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 2.596
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 57 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.4244
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 58 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 106.0711
+  ...
+# Subtest: route bound retains reachable detours and stable ties; distant candidates alone are pruned
+ok 59 - route bound retains reachable detours and stable ties; distant candidates alone are pruned
+  ---
+  duration_ms: 22.7846
+  ...
+# Subtest: an unreachable nearer village cannot cap the search and no reachable route returns null
+ok 60 - an unreachable nearer village cannot cap the search and no reachable route returns null
+  ---
+  duration_ms: 0.4263
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 202049.5789

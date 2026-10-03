@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "b3e8232",
+  "implementation_commit": "7ff5398",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1621,18 +1621,22 @@
       "area": "Finales y expansión",
       "scenario": "Construir poblados 2/3/4/10/20/50/100",
       "expected": "Costes 50K/75K/100K/250K/500K/1,25M/2,5M sin límite artificial.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Actual native foundations 2 through 100 across five cultures; all milestone prices, paid command/event counts, total 126225000 and final balance 73775000 from explicit QA 200M, full SaveRepository reload and ordinal 101 preview. Controlled flat terrain; no browser/rendering or real-biome performance claim."
     },
     {
       "id": "QA-138",
       "area": "Finales y expansión",
       "scenario": "Previsualizar poblado con una sola casa inválida",
       "expected": "Conjunto inválido entero, sin pago parcial ni cambios persistentes.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Five native cultures: exactly one invalid unit makes the whole layout invalid; confirmation rejects without debit or persistent changes. Remaining: visual whole-ghost invalid color in actual UI."
     },
     {
       "id": "QA-139",
@@ -1648,27 +1652,33 @@
       "area": "Finales y expansión",
       "scenario": "Confirmar poblado con saldo gastado desde previsualización",
       "expected": "Revalida y rechaza sin crear medias aldeas.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Five cultures: real paid 35-coin wall spends funds after valid 50000 preview; confirmation rejects at 49965 with complete post-wall snapshot unchanged and no village command inserted."
     },
     {
       "id": "QA-141",
       "area": "Finales y expansión",
       "scenario": "Colocar poblados contiguos sin solapar",
       "expected": "Permitido; no radio mínimo artificial entre centros de poblado.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Five native cultures: adjacent whole layouts separated by 0.05m accepted despite overlapping aggregate circles, exact footprint pairs do not overlap; 50000/75000 paid once and real SaveRepository reload equals complete state."
     },
     {
       "id": "QA-142",
       "area": "Finales y expansión",
       "scenario": "Confirmar poblado y guardar/cargar",
       "expected": "Coste, ordinal, edificios, cultura y supresiones aparecen una sola vez.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Five native cultures: pure preview, exact paid native descriptors/culture/suppressions, real SaveRepository reload equality; repeated command returns false before occupied-site revalidation, in original and loaded state. Next ordinal price checked."
     },
     {
       "id": "QA-143",

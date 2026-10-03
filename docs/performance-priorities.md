@@ -122,3 +122,17 @@ no resuelve todos los casos; ese cambio no se aplica al renderer de producción.
 Pasan 47 pruebas dirigidas, build y paquete. La ruta normal conserva cero
 diferencias en los seis daños comprobados. Esta prioridad sigue pendiente;
 no se acredita un ahorro GPU de la ampliación ni se activa en partida.
+
+## Regresión y expansión sobre `7ff5398`
+
+Las sugerencias siguen registradas con sus límites anteriores. Pasan **54/54
+pruebas dirigidas**, cero fallos u omisiones, 815,7999 ms: props residentes,
+subidas de cultivos, caché/cámara de sombras, bounds de poblados, registros,
+obstrucciones, ruido, Toon, profundidad, calidad y resolución.
+[Salida completa](qa/performance-actions/integrated-expansion.txt). Esta selección
+no repite todos los analizadores anteriores ni añade medición GPU o visual.
+
+La [expansión nativa](qa-village-expansion.md) añade descarte conservador por cajas
+a polígonos y cotas inferiores para buscar la ruta más corta al poblado. El ensayo
+de 100 poblados registra 99 rutas reales; no se afirma una mejora temporal ni de FPS.
+Los experimentos pendientes de caras, ruido y profundidad conservan su estado.
