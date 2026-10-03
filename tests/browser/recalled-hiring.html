@@ -1,0 +1,27 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA contratación recordada</title><h1>Contratación recordada demasiado cara</h1>
+<p>Sabana/Mapungubwe, semilla 712. Crédito QA explícito de 1150 monedas; centro, mijo y dos mujeres mayores pagados. Cierre de noche nativo sin incursión. Guarda únicamente qa-recalled-hiring.</p>
+<button id="prepare" disabled>Preparar jornada 2</button><button id="read">Leer ranura</button><a href="../../">Abrir juego</a><p id="status">Preparando terreno…</p><pre id="report"></pre><details><summary>Snapshot público</summary><pre id="snapshot"></pre></details>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {rational} from '../../src/simulation/money.js';
+import {SaveRepository,serialize} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {TUTORIAL_IDS} from '../../src/tutorial/messages.js';
+import {json} from '../../src/rendering/assets.js';
+const repo=new SaveRepository(localStorage),slotId='qa-recalled-hiring',status=document.querySelector('#status');let prepared;
+function read(){const state=repo.load(slotId);document.querySelector('#snapshot').textContent=serialize(state);document.querySelector('#report').textContent=JSON.stringify({day:state.day,time:state.time,pauses:state.pauses,balance:state.ledger.balance,selection:state.hiringSelection,hiringPaidDay:state.hiringPaidDay,workers:state.workers.length,people:state.people.length,entries:state.ledger.entries,result:state.result},null,2);}
+document.querySelector('#read').onclick=read;
+try{
+ const profile=(await json('/content/biome-savanna.json')).profile,payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,slotId}),nav=new Navigation(712,'sabana',profile),place=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);state.ledger.balance=rational(1150);Game.resume(state,'intro');Game.placeStructure(state,'paid-centre',place.center,nav);
+ let plot;for(let z=-9;z<=9&&!plot;z+=1.5)for(let x=4.5;x<=15&&!plot;x+=1.5){const p={x:place.center.x+x,z:place.center.z+z};if(nav.placement(p.x,p.z,.4).valid)plot=p;}
+ if(!plot)throw Error('Falta parcela legal');Game.plant(state,'paid-mijo','mijo',plot.x,plot.z,nav);Game.openInitialHiring(state);Game.hire(state,'paid-day-1',{olderFemale:2});
+ state.tutorial.step='done';state.tutorial.basicSkipped=true;state.tutorial.seen=[...TUTORIAL_IDS];
+ // Explicit calm-night fixture; domain tick still performs the real dawn transition.
+ state.nightPlan={done:true};Game.tick(state,600,nav);
+ if(state.day!==2||!state.pauses.includes('hiring')||state.result||state.ledger.balance.n!=='145')throw Error('No se llega a contratación con saldo 145');
+ prepared=state;document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{repo.save(prepared);read();status.textContent='Jornada 2 preparada: selección 200, saldo 145';};status.textContent='Lista para guardar jornada 2';
+}catch(e){status.textContent='FAIL: '+e.message;console.error(e);}
+</script></html>

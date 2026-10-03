@@ -3,9 +3,11 @@
 <p>Sabana / Mapungubwe / semilla 712. Partida normal: centro 800, cinco mijos 25, joven 120, cinco entregas 55. Día 2, saldo 110, selección anterior 120.</p>
 <p>Este lanzador solo guarda la ranura qa-remembered-hiring en el origen de QA 127.0.0.1:5176. El JSON se generó con simulateOpening y las órdenes, terreno y trabajadores reales, sin financiación añadida.</p>
 <button id="prepare">Preparar ranura de QA</button><output id="result"></output>
+<button id="read">Leer ranura</button><details><summary>Snapshot público</summary><pre id="snapshot"></pre></details>
 <p><a href="/">Abrir juego de QA</a></p>
 <script type="module">
-import {SaveRepository,deserialize} from '../../src/persistence/snapshots.js';
+import {SaveRepository,deserialize,serialize} from '../../src/persistence/snapshots.js';
+document.querySelector('#read').onclick=()=>{document.querySelector('#snapshot').textContent=serialize(new SaveRepository(localStorage).load('qa-remembered-hiring'));};
 document.querySelector('#prepare').onclick=async()=>{
  const out=document.querySelector('#result');
  if(location.hostname!=='127.0.0.1'||location.port!=='5176'){out.textContent='Origen incorrecto: no se guardó nada.';return;}

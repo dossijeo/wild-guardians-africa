@@ -1,0 +1,6 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA visibilidad real</title><h1>Estado real del documento</h1><pre id="report"></pre>
+<script>
+const events=[];
+function capture(kind){events.push({kind,hidden:document.hidden,visibility:document.visibilityState,focus:document.hasFocus(),at:performance.now()});document.querySelector('#report').textContent=JSON.stringify(events,null,2);}
+for(const kind of ['visibilitychange','focus','blur','pageshow','pagehide'])addEventListener(kind,()=>capture(kind));capture('initial');
+</script></html>
