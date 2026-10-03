@@ -33,6 +33,12 @@ export function notice(s,text,target=null) {s.messages.push({id:`message-${s.seq
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const profile=w=>PROFILES.find(p=>p.id===w.profile);
 const nearest=(list,point)=>[...list].sort((a,b)=>dist(a,point)-dist(b,point)||a.id.localeCompare(b.id))[0];
+function enqueueLooseCrates(s) {
+  const centers=s.structures.filter(operational);
+  for(const crate of s.crates.filter(c=>!c.delivered&&!c.carrierId)) {
+    const center=nearest(centers,crate);if(center)enqueue(s,center.id,'crate',crate.id);
+  }
+}
 export function commit(s,id,action,operation) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(!permission(s,action))throw new Error('Esta acción no está disponible ahora');
@@ -74,7 +80,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     const maxHp=structureHealth(kind,material,gate);
     s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind});
-    if(kind==='center')recoverDisplacedWorkers(s);
+    if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
 }
@@ -180,9 +186,7 @@ export function rebuildTasks(s) {
     else if(p.water.some(w=>w.status==='due'))enqueue(s,p.centerId,'water',p.id);
     if(isMature(p)&&p.harvestRequested)enqueue(s,p.centerId,'harvest',p.id);
   }
-  for(const crate of s.crates.filter(c=>!c.delivered&&!c.carrierId)) {
-    const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);
-  }
+  enqueueLooseCrates(s);
 }
 // Destruction is the only intraday reassignment exception. Quotas describe
 // vacancies; workers of surviving centers keep their existing assignments.
@@ -274,7 +278,7 @@ function completeTask(s,w,t,target,nav) {
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
-    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);emit(s,'RepairApplied',{targetId:target.id});if(target.kind==='center')recoverDisplacedWorkers(s);}
+    try {transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)));target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);emit(s,'RepairApplied',{targetId:target.id});if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}}
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
