@@ -1,3 +1,5 @@
+import {resumeLoadedWorld} from './resume-loaded-world.js';
+import {toolLabel} from './tool-label.js';
 import '../ui/styles.css';
 import {autosaveEventAfter} from './autosave-events.js';
 import {saveGame} from './save-game.js';
@@ -88,7 +90,7 @@ async function startGame(loaded=null) {
     nav.setState(next);
     for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
     state=next;audio.remember(state.events);
-    state.pauses=state.pauses.filter(reason=>!['menu','hidden','context-lost'].includes(reason));
+    resumeLoadedWorld(state);
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
     app.innerHTML=`<main class="game" id="stage"><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
@@ -190,8 +192,8 @@ function updateUI(force=false) {
   refreshCommandFeedback();
 }
 function refreshCommandFeedback(){
-  const label=tool?(tool.kind==='center'?'Coloca el centro de trabajo':tool.kind==='plant'?`Plantar ${cropSpec(tool.species).name} · ${cropSpec(tool.species).plant_cost} monedas`:tool.kind==='wall'?`${tool.gate?'Coloca una puerta':'Arrastra para trazar una muralla'} de ${B.walls.find(w=>w.id===tool.material).name}`:`Colocar ${B.spells.find(s=>s.id===tool.spell).name}`):'';
-  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(pendingSpell)cancelSpellPreview();tool=null;commandFeedback='';if(pendingWall)cancelWallPreview();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
+  const label=toolLabel(tool);
+  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();if(pendingSpell)cancelSpellPreview();tool=null;commandFeedback='';if(pendingWall)cancelWallPreview();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
 
 function buildPanel(){
@@ -200,13 +202,14 @@ function buildPanel(){
  bind('native-center',()=>{tool={kind:'center'};document.querySelector('#panel').innerHTML='';});bind('native-wall',()=>toolPanel('wall'));bind('native-hire',()=>Game.openInitialHiring(state));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
  document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');document.querySelector('#native-hire').disabled=state.hiringPaidDay===state.day||!state.plants.some(p=>p.alive)||!state.structures.some(operational);
 }
+function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;document.querySelector('#panel').innerHTML='';}
 function villageCulturePanel() {
   document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Un nuevo poblado</h3><p>Coste: ${localMoney({n:String(50000+25000*(state.villages.length-1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`;
   document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);tool={kind:'village',culture};if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else document.querySelector('#panel').innerHTML='';}));
 }
 function villageConfirmPanel() {
   const p=pendingVillage;document.querySelector('#panel').innerHTML=`<div class="action-panel"><h3>Fundar poblado</h3><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`;document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
-  bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncResidentProps();});bind('cancel-village',()=>{world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';});
+  bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function contextPanel() {
   const el=document.querySelector('#context');const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
