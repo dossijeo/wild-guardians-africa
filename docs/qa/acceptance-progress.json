@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "1090300",
+  "implementation_commit": "6793595",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1387,27 +1387,33 @@
       "area": "Tutorial y eventos",
       "scenario": "Evento agrícola nocturno sorteado",
       "expected": "Máximo uno, anunciado al amanecer como sorpresa; severidad y destinatario se guardan.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-agricultural-events.md"
+      ],
+      "notes": "Actual Game.tick night entry covers 27 legal type/scope/intensity combinations using persisted PRNG seeds; one stable plan, no night announcement, one dawn message/event, quantitative effects and paid-state economy preserved. No-event night does not reroll. Remaining: inspect dawn surprise announcement in production UI. Funded attack-free postcampaign fixture; terrain/navigation doubles."
     },
     {
       "id": "QA-127",
       "area": "Tutorial y eventos",
       "scenario": "Cargar antes/después de aplicar un evento",
       "expected": "No se vuelve a sortear ni a aplicar dos veces.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-agricultural-events.md"
+      ],
+      "notes": "All 27 natural type/scope/intensity plans saved/loaded via production SaveRepository on an in-memory storage adapter. Continuation and reload yield identical full snapshots after dawn, including RNG, unique target IDs, effects, messages, ledger and task queues. After-application save/load and repeated applyEvent do not mutate state; hiring pause prevents replay. Does not claim browser storage or UI coverage."
     },
     {
       "id": "QA-128",
       "area": "Tutorial y eventos",
       "scenario": "Evento específico sin cinco plantas de una especie elegible",
       "expected": "No escogerla; resolver selección/fallback dentro de C01.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-agricultural-events.md"
+      ],
+      "notes": "2,000 persisted PRNG seeds: with four living millet, five living banana and dead sunflower, every specific event selects banana only. With four living plants per species, no specific recipient is selected; the specific branch with no eligible species produces no event. Global events remain possible; dead plants never qualify. Pure selection contract, independent of renderer/terrain."
     },
     {
       "id": "QA-129",
