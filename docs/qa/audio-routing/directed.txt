@@ -1,0 +1,79 @@
+TAP version 13
+# (node:36348) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 1 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 31.9012
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 2 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 2.2673
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 3 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 5.1092
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 4 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.3168
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 5 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 2925.4469
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 6 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 8.0451
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 7 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 6.3341
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 8 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.3101
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 9 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 6.6721
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 10 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.0614
+  ...
+# (node:19512) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 11 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 8.0698
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 12 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.2816
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 13 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 0.7684
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3246.7622

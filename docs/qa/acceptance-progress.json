@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "0871e0e",
+  "implementation_commit": "362829c",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1789,18 +1789,22 @@
       "area": "Guardado y presentación",
       "scenario": "Mapear los 126 SFX",
       "expected": "Cada ID tiene destino o reserva explícita; 021/022 conservan los bytes intercambiados aprobados.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-audio-routing.md"
+      ],
+      "notes": "All126 runtime IDs have explicit route/reserve,20 connected clips/21 event types and106 retained Library reserves; reserves expressly do not claim dedicated gameplay emitters. Every final MP3 read and byte/hash/number/filename compared with original plan catalogue. Approved swapped021/022 hashes asserted literally."
     },
     {
       "id": "QA-153",
       "area": "Guardado y presentación",
       "scenario": "Reproducir acción con variantes genéricas/específicas",
       "expected": "Evitar disparar todas juntas; un ingreso o golpe sigue siendo uno.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-audio-routing.md"
+      ],
+      "notes": "Actual paid opening delivers one crop; processing history twice chooses one eco_crop_sold. Five species actual native-navigation raids advanced to one physical StructureHit, one beast_hit_structure source each under duplicate processing. Full serialize incl damage, ledger and RNG unchanged by audio. WebAudio doubles record sources; no claim of hearing reserved species variants."
     },
     {
       "id": "QA-154",
@@ -1816,9 +1820,11 @@
       "area": "Guardado y presentación",
       "scenario": "Acumular muchos agricultores, animales y colapsos",
       "expected": "Mezcla con prioridad y límites, sin explosión de voces o partículas.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-audio-routing.md"
+      ],
+      "notes": "Decode-completion race fixed:20 SFX cap,4 per clip ID,critical danger/result replaces only lower-priority routine; deterministic oldest tie. Doubles and real muted AudioContext browser:100 same clip=>4,100 distinct families=>20,attack/victory admitted at20,stop=>0 nodes registered; stems gain/source cleanup included. Remaining: integrated many-worker/animal/collapse perceptual mix,independent per-emitter policy and particle concurrency. Technical limits are presentation configuration,not audited balance or measured listening quality."
     },
     {
       "id": "QA-156",
