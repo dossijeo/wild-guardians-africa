@@ -1,0 +1,30 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:05
+  - img "Dinero"
+  - generic: 200K
+  - generic "100/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 101
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - region "El Espíritu":
+    - img "El Espíritu"
+    - paragraph: Has sobrevivido a cien noches y la maldición ha terminado. Esta misma finca queda en paz. Puedes cerrar la historia o seguir cultivando, sin ataques, y fundar nuevos poblados con tu explotación actual.
+  - dialog:
+    - generic: El Espíritu
+    - heading "La maldición ha terminado" [level=2]
+    - paragraph: "Has sobrevivido a cien noches. La tierra queda libre: puedes seguir cultivando y fundar nuevos poblados en paz."
+    - button "Volver al menú"
+    - button "Seguir en este mundo"

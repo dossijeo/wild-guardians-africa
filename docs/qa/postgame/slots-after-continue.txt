@@ -1,0 +1,41 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Continuar":
+    - button "Volver al santuario (Escape)":
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: Tu refugio
+    - heading "Volver a casa." [level=1]
+    - strong: Mapungubwe
+    - text: Día 101 · Sabana · 200K monedas
+    - button "Continuar →"
+    - strong: Mapungubwe
+    - text: Día 101 · Sabana · 200K monedas
+    - button "Continuar →"
+  - status
+  - generic: Viajando a Continuar. Escape para regresar.
+  - text: ✦

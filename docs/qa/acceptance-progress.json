@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "3b02c36",
+  "implementation_commit": "0871e0e",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1603,18 +1603,22 @@
       "area": "Finales y expansión",
       "scenario": "Completar noche 100",
       "expected": "Narración de maldición levantada y continuación opcional en la misma partida.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-postgame.md"
+      ],
+      "notes": "Actual native Sabana/Mapungubwe browser: prepared night100 last .1s, production clock resolves dawn/victory, liberation narration, optional same-world continuation, day101 hiring, expansion enabled, same qa-victory-ui slot saved/reloaded without repeated victory. Five native culture domain cases preserve structures/plants/ledger/villages/seed/slot across continue and emit once. Earlier99 nights/funds explicitly prepared, not a natural100-night browser campaign."
     },
     {
       "id": "QA-136",
       "area": "Finales y expansión",
       "scenario": "Continuar postgame cientos de noches",
       "expected": "Cero ataques nocturnos y diurnos; no relanzar tutorial del facóquero.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-postgame.md"
+      ],
+      "notes": "300 full postgame nights per five native cultures (1500 total), Native Navigation controlled flat ground, 42 paid banana seeds yield attraction10080, zero-worker daily hiring; actual day/night plan boundaries and zero raids checked each30s. Events collected before bounded200 history expiry: zero spawns/hits/first-raid tutorial, victory/continuation once, expansion once, 300 dawns/nightstarts, 300 nightly SaveRepository roundtrips and12 paused-hiring reloads per culture. Final day401/night400, intact centre, plants alive, exact192900 balance. Does not claim crop production/rendering performance or all biome paths."
     },
     {
       "id": "QA-137",
