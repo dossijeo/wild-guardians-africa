@@ -1,0 +1,55 @@
+{
+  "depthStateAnomalies": [
+    {
+      "name": "",
+      "type": "RawShaderMaterial",
+      "depthTest": true,
+      "depthFunc": 2,
+      "features": []
+    }
+  ],
+  "preserveOrder": false,
+  "biome": "volcanes",
+  "culture": "etiope",
+  "scope": "auxiliary",
+  "elapsed": 0,
+  "growth": 0,
+  "damage": 1,
+  "stats": {
+    "specialized": 2,
+    "fallback": 1258,
+    "excluded": 6
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "arriving",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [],
+  "result": {
+    "mode": "original-vs-specialized",
+    "differentPixels": 2,
+    "differentBytes": 2,
+    "maxDepthDelta": 0.000004291534423828125,
+    "differences": [
+      {
+        "x": 1093,
+        "y": 874,
+        "baseline": 0.9993371963500977,
+        "optimized": 0.9993347525596619
+      },
+      {
+        "x": 1094,
+        "y": 875,
+        "baseline": 0.9993377923965454,
+        "optimized": 0.9993335008621216
+      }
+    ],
+    "nonUniformPixels": 1439990,
+    "pixels": 1440000
+  },
+  "benchmark": null,
+  "errors": []
+}

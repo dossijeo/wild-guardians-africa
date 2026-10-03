@@ -111,3 +111,14 @@ Se mantienen pendientes los experimentos de caras por categoría y LOD, receta
 barata de ruido y profundidad de interiores/ceniza. No se desactiva por defecto
 el ruido ni se sustituyen globalmente materiales por FrontSide. La separación
 entre sombras estáticas y dinámicas sigue siendo una mejora posterior.
+
+## Interior y ceniza: ensayo con salvaguarda
+
+Sobre `0a499fc`, `bc6811b` incorpora una ruta experimental de profundidad para
+interior y ceniza, desactivada por defecto. [Evidencia y contraejemplos](qa-auxiliary-depth.md):
+84 comparaciones en cuatro culturas coinciden, pero la ampliación a Etíope
+y giros adicionales presenta diferencias pequeñas. La conservación del orden
+no resuelve todos los casos; ese cambio no se aplica al renderer de producción.
+Pasan 47 pruebas dirigidas, build y paquete. La ruta normal conserva cero
+diferencias en los seis daños comprobados. Esta prioridad sigue pendiente;
+no se acredita un ahorro GPU de la ampliación ni se activa en partida.
