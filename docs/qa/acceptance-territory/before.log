@@ -1,0 +1,92 @@
+TAP version 13
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 1 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 6.6075
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 2 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 16.3651
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 3 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 12.37
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 4 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 3.9327
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 5 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 0.7781
+  ...
+# Subtest: QA-042: equal weights and creation timestamps break ties by persistent ID
+ok 6 - QA-042: equal weights and creation timestamps break ties by persistent ID
+  ---
+  duration_ms: 13.6661
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 7 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 14.2008
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 8 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 1.0076
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 9 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 3.1933
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 10 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 8.3639
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 11 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 155.915
+  ...
+# Subtest: QA-052/143: founding changes territorial center assignment while current staff return to their original village
+not ok 12 - QA-052/143: founding changes territorial center assignment while current staff return to their original village
+  ---
+  duration_ms: 19.2528
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-workforce.test.js:90:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'village-1'
+    - 'village-8'
+               ^
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'village-8'
+  actual: 'village-1'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-workforce.test.js:96:42)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 572.3498

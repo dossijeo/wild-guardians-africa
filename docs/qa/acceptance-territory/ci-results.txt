@@ -1,0 +1,16 @@
+validate	Run npm run verify:assets	2026-10-03T03:03:18.3586136Z PASS: 23 sources, 484 resources, 126 exact SFX matches
+validate	Run npm run verify:assets	2026-10-03T03:03:18.3587656Z PASS: four full worker libraries exported by the original labs, 48 actions with provenance
+validate	Run npm run verify:web-assets	2026-10-03T03:03:42.2936600Z PASS: all GLBs, byte-exact geometry/animation, textures/alpha, local decoder and conformance
+validate	Run npm run verify:plan	2026-10-03T03:03:43.7398025Z PASS · 123,048 aserciones · 5000 escenarios de reparto · 20 combinaciones de contexto/presupuesto
+validate	Run npm test	2026-10-03T03:07:49.7779197Z # Subtest: Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+validate	Run npm test	2026-10-03T03:07:49.7779965Z ok 246 - Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+validate	Run npm test	2026-10-03T03:07:49.8181743Z # Subtest: PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+validate	Run npm test	2026-10-03T03:07:49.8182391Z ok 469 - PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+validate	Run npm test	2026-10-03T03:07:59.1110443Z # tests 688
+validate	Run npm test	2026-10-03T03:07:59.1111022Z # pass 688
+validate	Run npm test	2026-10-03T03:07:59.1111547Z # fail 0
+validate	Run npm test	2026-10-03T03:07:59.1115494Z # skipped 0
+validate	Run npm test	2026-10-03T03:07:59.1116143Z # duration_ms 255220.109871
+validate	Run npm run build	2026-10-03T03:08:03.4229692Z ^[[32m✓ built in 3.97s^[[39m
+validate	Run npm run test:web-package	2026-10-03T03:08:03.7983891Z PASS: 554 files / 379673513 bytes, 794 relative links, 20 runtime GLBs, no original duplicates
+validate	Run actions/upload-artifact@v4	2026-10-03T03:08:16.9912653Z With the provided path, there will be 554 files uploaded

@@ -1,0 +1,445 @@
+TAP version 13
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 1 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 16.5522
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 2 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 19.9034
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 3 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 14.2332
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 4 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 5.0593
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 5 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 1.1824
+  ...
+# Subtest: QA-042: equal weights and creation timestamps break ties by persistent ID
+ok 6 - QA-042: equal weights and creation timestamps break ties by persistent ID
+  ---
+  duration_ms: 22.1835
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 7 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 19.7566
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 8 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 1.6964
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 9 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 5.1639
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 10 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 10.5487
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 11 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 178.252
+  ...
+# Subtest: QA-052/143: founding changes territorial center assignment while current staff return to their original village
+ok 12 - QA-052/143: founding changes territorial center assignment while current staff return to their original village
+  ---
+  duration_ms: 83.3314
+  ...
+# Subtest: QA-052: territorial choice respects full detours and excludes unreachable village routes
+ok 13 - QA-052: territorial choice respects full detours and excludes unreachable village routes
+  ---
+  duration_ms: 0.7994
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 14 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 107.551
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 15 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 10.8744
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 16 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.4229
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 17 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 6.5387
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 18 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 1.4718
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 19 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 0.7675
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 20 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 1.115
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 21 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 3.081
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 22 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.5558
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 23 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 5.702
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 24 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 2.0139
+  ...
+# Subtest: Generated balance matches authoritative received JSON exactly
+ok 25 - Generated balance matches authoritative received JSON exactly
+  ---
+  duration_ms: 7.4627
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 26 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 1.4194
+  ...
+# Subtest: Money formatter never changes accounting
+ok 27 - Money formatter never changes accounting
+  ---
+  duration_ms: 21.9455
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 28 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 0.7736
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 29 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 0.2524
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 30 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.2906
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 31 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.2804
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 32 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 111.481
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 33 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 1.241
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 34 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 1.0848
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 35 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.4745
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 36 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.5612
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 37 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 1.2688
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 38 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3388
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 39 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2798
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 40 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2944
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 41 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2801
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 42 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.4451
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 43 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2209
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 44 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.9778
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 45 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2348
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 46 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1247
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 47 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1183
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 48 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1467
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 49 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.112
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 50 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.2031
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 51 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.5315
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 52 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 0.7878
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+ok 53 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 0.4099
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 54 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.6286
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 55 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.3207
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 56 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.306
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 57 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3621
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 58 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 2.8732
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 59 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 9.261
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 60 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 10.1859
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 61 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 1.3274
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 62 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 3.3369
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 63 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 1.1089
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 64 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 0.6253
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 65 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 8.8898
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 66 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 5.3906
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 67 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 2.7676
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 68 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 2.1872
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 69 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 2.2148
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 70 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 22.4248
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 71 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 2.6235
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 72 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 4.7659
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 73 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.7891
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 74 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.5006
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 75 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 35.4841
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 76 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 2.101
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 77 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 0.9902
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 78 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.2657
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 79 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 5.8247
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 80 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.6012
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 81 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.0581
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 82 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 2.3734
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 83 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 3.7413
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 84 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.2085
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 85 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.5654
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 86 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 4.3965
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 87 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.6646
+  ...
+1..87
+# tests 87
+# suites 0
+# pass 87
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 601.3292

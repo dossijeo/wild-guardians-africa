@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "12c521a",
+  "implementation_commit": "4890c6d",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -463,11 +463,12 @@
       "area": "Trabajadores y colas",
       "scenario": "Empate de plantas con personal escaso",
       "expected": "Desempate determinista por antigüedad/ID.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-workforce.md"
+        "docs/qa-acceptance-workforce.md",
+        "docs/qa-acceptance-territory.md"
       ],
-      "notes": "Three centers with five plants each and one worker choose oldest creation even after structure array reversal. Remaining: equal creation timestamps resolved by ID."
+      "notes": "Equal living plant counts tested with both oldest creation order and equal timestamps resolved by persistent ID; reversing structure array does not change allocation."
     },
     {
       "id": "QA-043",
@@ -547,11 +548,12 @@
       "area": "Trabajadores y colas",
       "scenario": "Nuevo centro al mediodía junto a cultivos existentes",
       "expected": "No migra plantas ni tareas; reasociación al siguiente amanecer.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-workforce.md"
+        "docs/qa-acceptance-workforce.md",
+        "docs/qa-acceptance-territory.md"
       ],
-      "notes": "New nearby center preserves original crop binding and existing workforce during day. Remaining: actual dawn in this scenario must reassociate crop."
+      "notes": "Actual midday construction preserves old crop and staff bindings; advancing through day and night reassigns all thirteen crops and their tasks to nearer center at dawn. Four new workers allocate 1/3 and cost 400 once."
     },
     {
       "id": "QA-051",
@@ -569,9 +571,11 @@
       "area": "Trabajadores y colas",
       "scenario": "Nuevo poblado cambia centro de residencia territorial",
       "expected": "Trabajador de hoy conserva residencia de salida y vuelve allí.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-territory.md"
+      ],
+      "notes": "Actual founding changes center territorial association while existing worker retains culture, contract and origin, physically returns home and survives save/reload identically. Following-day hire starts at new village entry. Full route cost tested for direct path, detour and inaccessible endpoints; navigation fixtures do not prove real terrain connectivity."
     },
     {
       "id": "QA-053",
@@ -1388,9 +1392,11 @@
       "area": "Finales y expansión",
       "scenario": "Construir un poblado durante jornada",
       "expected": "Nueva asociación territorial no cambia la residencia ni centro de trabajadores de hoy.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-territory.md"
+      ],
+      "notes": "Actual postgame founding during worker jornada changes territorial association without moving current origin/center. Worker physically returns to original home; next day starts new worker at new territory entry with normal single wage."
     },
     {
       "id": "QA-144",
