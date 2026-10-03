@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 1 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 8.8017
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 2 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 5.3986
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 3 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.1795
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 4 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.5055
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 5 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 1.7601
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 6 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 9.0243
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 7 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 0.8585
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 8 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 2.1011
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 9 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.7978
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 10 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.6883
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 11 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 22.2066
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 12 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.9336
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 13 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 0.9364
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 14 - New midday center does not move plants or employees
+  ---
+  duration_ms: 0.9537
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 15 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 4.0215
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 16 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.4569
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 17 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 0.8234
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 18 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 2.7639
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 19 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.0745
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 20 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 0.6617
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 21 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.5066
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 22 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5051
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 23 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4215
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 24 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 1.3842
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 25 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.1476
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 26 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.1929
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 27 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 70.0311
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 28 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 12.4542
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 29 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 15.2004
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 30 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.4114
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 31 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.3436
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 32 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 4.7782
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 33 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 1.6339
+  ...
+# Subtest: The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+ok 34 - The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+  ---
+  duration_ms: 103.1313
+  ...
+# Subtest: Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+ok 35 - Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+  ---
+  duration_ms: 103.4529
+  ...
+# Subtest: Production shield mesh follows the world floor and has no incoming demonstration bolt
+ok 36 - Production shield mesh follows the world floor and has no incoming demonstration bolt
+  ---
+  duration_ms: 11.1483
+  ...
+# Subtest: Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+ok 37 - Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+  ---
+  duration_ms: 23.8547
+  ...
+# Subtest: Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+ok 38 - Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+  ---
+  duration_ms: 7.4681
+  ...
+# Subtest: Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+ok 39 - Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+  ---
+  duration_ms: 8.0217
+  ...
+# Subtest: Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+ok 40 - Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+  ---
+  duration_ms: 2.1995
+  ...
+# Subtest: Shield preview rejects an animal touching its area without moving or repelling it
+ok 41 - Shield preview rejects an animal touching its area without moving or repelling it
+  ---
+  duration_ms: 0.4841
+  ...
+# Subtest: One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+ok 42 - One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+  ---
+  duration_ms: 7.3454
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 482.0852

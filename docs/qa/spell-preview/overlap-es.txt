@@ -1,0 +1,28 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 11:41
+  - img "Dinero"
+  - generic: "295"
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 5
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - dialog "Escudo":
+      - heading "Escudo" [level=2]
+      - button "Cerrar": ×
+      - paragraph: La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.
+      - button "Activar poder" [disabled]
+      - button "Cancelar"
+      - alert: Las áreas mágicas no pueden solaparse
+  - complementary

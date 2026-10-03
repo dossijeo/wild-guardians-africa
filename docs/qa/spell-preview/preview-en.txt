@@ -1,0 +1,27 @@
+- main:
+  - generic "Wild Guardians Africa world"
+  - img "Sun clock"
+  - generic: 12:04
+  - img "Money"
+  - generic: "295"
+  - generic "0/100 nights survived":
+    - img "Survival"
+    - generic: Day 5
+  - button "Open pause menu"
+  - navigation "Farm actions":
+    - button "Back":
+      - generic: Back
+    - button "Build":
+      - generic: Build
+    - button "Grow crops":
+      - generic: Grow crops
+    - button "Power":
+      - generic: Power
+  - complementary:
+    - dialog "Shield":
+      - heading "Shield" [level=2]
+      - button "Close": ×
+      - paragraph: The marked area is a preview. Tap another spot to move it. Confirm to activate the power.
+      - button "Activate power"
+      - button "Cancel"
+  - complementary

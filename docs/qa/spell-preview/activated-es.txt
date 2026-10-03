@@ -1,0 +1,35 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 10:41
+  - img "Dinero"
+  - generic: "295"
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 5
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia" [active]:
+      - generic: Magia
+  - complementary:
+    - dialog "Magias del Espíritu":
+      - heading "Magias del Espíritu" [level=2]
+      - button "Cerrar": ×
+      - button "Escudo 20 s · recarga 90 s":
+        - strong: Escudo
+        - generic: 20 s · recarga 90 s
+      - button "90 Crecimiento 30 s · recarga 90 s":
+        - generic: "90"
+        - strong: Crecimiento
+        - generic: 30 s · recarga 90 s
+      - button "Multiplicar 15 s · recarga 120 s":
+        - strong: Multiplicar
+        - generic: 15 s · recarga 120 s
+      - paragraph: Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.
+  - complementary
