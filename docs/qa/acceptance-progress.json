@@ -11,9 +11,10 @@
       "expected": "Dos pasos, selección conservada y combinación válida; no se crea una sexta cultura.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-acceptance-selector.md"
       ],
-      "notes": "Native two-step Sabana/Mapungubwe selection completed. Unit test covers 30 canonical combinations. Remaining: UI selection and world entry in all 30 combinations."
+      "notes": "All 30 combinations exercised in actual native selector: correct biome/culture, checked radio, enabled matching Start, exactly 5 cultures. Desert/Ethiopian choices retained after back and reopening. World entry observed for Sabana/Mapungubwe and Desert/Ethiopian. Remaining: actual world entry in other 28 combinations."
     },
     {
       "id": "QA-002",
@@ -22,9 +23,10 @@
       "expected": "Un mundo y una ranura; el inicio simulado del lab no se ejecuta detrás.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-acceptance-selector.md"
       ],
-      "notes": "First activation produced one world and one saved slot. Locator double-click ended when iframe detached; delivery of second click is not proven. Source cancels lab demo before timers. Remaining: deliberate double activation verified end-to-end."
+      "notes": "Coordinate double-click also aborted when iframe detached; second click delivery remains unproven. Result: one world, zero native-menu iframes; saved-slot list grew from one to two exactly, retaining prior 95-coin slot. Source cancels lab demonstration before timers. Remaining: both activation events actually delivered."
     },
     {
       "id": "QA-003",
@@ -42,11 +44,12 @@
       "area": "Inicio y UI",
       "scenario": "Colocación de centro inválida o cancelada",
       "expected": "No se cobra ni se suprimen props; se conserva la partida anterior.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-acceptance-selector.md"
       ],
-      "notes": "Village overlap rejected at 1000; Cancel cleared tool with 1000 unchanged. Directed domain test asserts no structures or suppression on invalid placement. Remaining: preservation of another existing slot during new-game cancellation."
+      "notes": "Invalid overlap and Cancel leave 1000 unchanged. Domain test verifies no structure or suppression mutation. Cancelling the new-game selector preserved the existing Sabana/Mapungubwe slot at 95; subsequent separate Desert/Ethiopian start created exactly one additional slot and kept the first at 95."
     },
     {
       "id": "QA-005",

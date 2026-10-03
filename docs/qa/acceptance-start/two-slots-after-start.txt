@@ -1,0 +1,41 @@
+- iframe [active] [id="native-menu"]:
+  - generic "3D diorama. Select the glowing symbols or their named buttons."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: A small farm. A world to protect.
+  - generic: ✦THE SANCTUARY
+  - generic: Where your story begins
+  - navigation "Tools":
+    - button "Mute music" [pressed]:
+    - button "Navigation help":
+  - navigation "Main menu":
+    - button "Continue":
+      - generic: Continue ›
+    - button "New game":
+      - generic: New game ›
+    - button "Options":
+      - generic: Options ›
+    - button "Library":
+      - generic: Library ›
+    - button "Exit":
+      - generic: Exit ›
+  - contentinfo:
+    - generic: SAVANNA · DUSK
+    - paragraph: Every story starts with a seed.
+    - text: Touch the glowing symbols
+    - generic: THE SPIRIT'S JOURNEY · V2.8
+  - dialog "Continue":
+    - button "Return to sanctuary (Escape)" [active]:
+      - text: Return to sanctuary
+      - generic: (Escape)
+    - generic: Your refuge
+    - heading "Coming home." [level=1]
+    - strong: Ethiopian
+    - text: Day 1 · Desert · 1K coins
+    - button "Continue →"
+    - strong: Mapungubwe
+    - text: Day 1 · Savanna · 95 coins
+    - button "Continue →"
+  - status
+  - generic: Travelling to Continue. Escape to return.
+  - text: ✦
