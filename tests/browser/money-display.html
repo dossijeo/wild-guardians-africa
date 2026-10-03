@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>QA — large money display</title>
+<h1>Saldo grande en el HUD real</h1>
+<p>Dos snapshots explícitamente financiados para comprobar formato, sin demostrar rentabilidad. Se preparan solo en 127.0.0.1:5176, ranuras qa-money-150000 y qa-money-1234567.</p>
+<button data-total="150000">Preparar 150.000</button>
+<button data-total="1234567">Preparar 1.234.567</button>
+<button id="read">Leer saldos guardados exactos</button>
+<output id="result"></output><p><a href="/">Abrir juego de QA</a></p>
+<script type="module">
+import {SaveRepository,deserialize} from '../../src/persistence/snapshots.js';
+const repo=new SaveRepository(localStorage),out=document.querySelector('#result');
+const allowed=()=>location.hostname==='127.0.0.1'&&location.port==='5176';
+document.querySelectorAll('[data-total]').forEach(button=>button.onclick=async()=>{
+ if(!allowed()){out.textContent='Origen incorrecto: no se guardó nada.';return;}
+ const states=await(await fetch('./money-display-states.json')).json(),state=deserialize(JSON.stringify(states[button.dataset.total]));
+ repo.save(state);out.textContent=`Preparada ${state.slotId}: ${state.ledger.balance.n}/${state.ledger.balance.d} monedas exactas.`;
+});
+document.querySelector('#read').onclick=()=>{
+ if(!allowed())return;
+ out.textContent=[150000,1234567].map(total=>{try{const s=repo.load(`qa-money-${total}`);return `${s.slotId}: ${s.ledger.balance.n}/${s.ledger.balance.d}`;}catch{return `${total}: sin preparar`;}}).join(' · ');
+};
+</script>

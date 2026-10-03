@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "2ce78c1",
+  "implementation_commit": "b04af38",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -719,54 +719,77 @@
       "area": "Cajas y contabilidad",
       "scenario": "Ataque sorprende portador",
       "expected": "Caja cae en su posición y no es objetivo animal.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crate-recovery.md",
+        "tests/acceptance-crate-recovery.test.js",
+        "docs/qa/crate-recovery/tests.txt"
+      ],
+      "notes": "Actual warthog raid interrupts a physically carrying worker: drop at worker position, cleared carrier, no income; no animal targets or consumes the crate throughout attack and retreat. Funded campaign/clear navigation fixture, not rendered acceptance."
     },
     {
       "id": "QA-067",
       "area": "Cajas y contabilidad",
       "scenario": "Volver tras ataque con cajas sueltas",
       "expected": "Tarea de transporte reservable individualmente cuando exista centro válido.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crate-recovery.md",
+        "tests/acceptance-crate-recovery.test.js",
+        "docs/qa/crate-recovery/tests.txt"
+      ],
+      "notes": "After real raid exit, one crate task survives rebuild/reload; next-day older female physically reserves, picks up and delivers the original crate once. Separate regression preserves existing transport reservation when building another center."
     },
     {
       "id": "QA-068",
       "area": "Cajas y contabilidad",
       "scenario": "Caja sin centro operativo",
       "expected": "Persiste sin convertirse en ingresos ni tarea hasta infraestructura válida.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crate-recovery.md",
+        "tests/acceptance-crate-recovery.test.js",
+        "docs/qa/crate-recovery/tests.txt"
+      ],
+      "notes": "No operational center: crate retains value and position across reload/rebuild/wait without task or income. Replacement center now selectively enqueues transport, recovers displaced employee, and physical delivery pays 11 once. Explicit destruction/exhausted raid budget isolate recovery."
     },
     {
       "id": "QA-069",
       "area": "Cajas y contabilidad",
       "scenario": "Centro con cero plantas y cajas",
       "expected": "Usa su trabajador base; no crea una planta ficticia para calcular el reparto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crate-recovery.md",
+        "tests/acceptance-crate-recovery.test.js",
+        "docs/qa/crate-recovery/tests.txt"
+      ],
+      "notes": "Next real dawn hiring with no live plants retains the center base worker; she reserves and physically delivers loose crate. No fictitious plant added to staffing weights."
     },
     {
       "id": "QA-070",
       "area": "Cajas y contabilidad",
       "scenario": "Mostrar 150.000 y cantidades de millones",
       "expected": "HUD abreviado sin desbordamiento; saldo real no pierde precisión.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-money-display.md",
+        "docs/qa/money-display/saved-balances.txt"
+      ],
+      "notes": "Actual native menu/game HUD shows 150K and 1,23M for explicitly financed QA snapshots. Desktop and mobile CSS portrait/landscape text fits panel with no horizontal overflow. Normal save-and-return retains exactly 150000/1 and 1234567/1. Desktop viewport emulation, not physical mobile performance."
     },
     {
       "id": "QA-071",
       "area": "Cajas y contabilidad",
       "scenario": "Combinación de bonus produce una fracción monetaria",
       "expected": "C02 decide redondeo una vez; no importar Math.round del lab silenciosamente.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crate-recovery.md",
+        "tests/acceptance-crate-recovery.test.js",
+        "docs/qa/crate-recovery/tests.txt"
+      ],
+      "notes": "Male yield, Multiply activated during physical harvest and explicit fertile event fix rational crate value 594/25. Power expires before another profile delivers; only settlement rounds upward to 24 once. Reload during transport/rebuild after delivery preserve value without double payment."
     },
     {
       "id": "QA-072",

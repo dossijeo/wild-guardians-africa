@@ -1,0 +1,9 @@
+- heading "Saldo grande en el HUD real" [level=1]
+- paragraph: Dos snapshots explícitamente financiados para comprobar formato, sin demostrar rentabilidad. Se preparan solo en 127.0.0.1:5176, ranuras qa-money-150000 y qa-money-1234567.
+- button "Preparar 150.000"
+- button "Preparar 1.234.567"
+- button "Leer saldos guardados exactos" [active]
+- status: "qa-money-150000: 150000/1 · qa-money-1234567: 1234567/1"
+- paragraph:
+  - link "Abrir juego de QA":
+    - /url: /

@@ -1,0 +1,255 @@
+TAP version 13
+# Subtest: QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+ok 1 - QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+  ---
+  duration_ms: 132.8966
+  ...
+# Subtest: QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+ok 2 - QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+  ---
+  duration_ms: 96.9962
+  ...
+# Subtest: New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+ok 3 - New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+  ---
+  duration_ms: 55.4607
+  ...
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 4 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 273.5126
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 5 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 113.0919
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 6 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 53.7522
+  ...
+# Subtest: QA-056/057/064/065: dawn retains only ordered harvest, pickup fixes unpaid value, reload and replay pay once
+ok 7 - QA-056/057/064/065: dawn retains only ordered harvest, pickup fixes unpaid value, reload and replay pay once
+  ---
+  duration_ms: 76.9698
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 8 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 136.2654
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 9 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 2.0453
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 10 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 94.8351
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 11 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 8.4996
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 12 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.5013
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 13 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 6.8969
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 14 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 1.9808
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 15 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 0.8532
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 16 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 1.4142
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 17 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 3.1808
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 18 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.5662
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 19 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.4393
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 20 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 1.6345
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 21 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 7.3173
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 22 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 13.0425
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 23 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 1.4426
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 24 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 3.2062
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 25 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 1.1727
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 26 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 0.6985
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 27 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 10.3394
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 28 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 6.6436
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 29 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.4434
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 30 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.3749
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 31 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 2.2783
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 32 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 20.0211
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 33 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.4818
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 34 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 7.7832
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 35 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 1.1174
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 36 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.6796
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 37 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 40.6264
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 38 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.4797
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 39 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.4696
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 40 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.3646
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 41 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 5.1538
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 42 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.5435
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 43 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.285
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 44 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 2.306
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 45 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.7973
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 46 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.2865
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 47 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.5414
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 48 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.6483
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 49 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4332
+  ...
+1..49
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 868.0136
