@@ -81,7 +81,9 @@ cancelaciones u omisiones, 4.841,1621 ms; incluye reparto laboral, contratos,
 guardados pagados, paseos y desplazados. Tras añadir la protección del personal
 normal al construir otro centro y la caja interrumpida, [cobertura final](qa/worker-routing/targeted-final.txt):
 **20/20**, cero fallos/cancelaciones/omisiones, 1.648,272 ms. No se suman ambas
-salidas como pruebas distintas. La nueva CI de `04691f2` sigue en curso.
+salidas como pruebas distintas. La CI de `04691f2` terminó correctamente: **896/896**, cero fallos,
+404.315,59401 ms, verificaciones, build y paquete web aprobados.
+[Log](qa/worker-routing/ci-log.txt), [estado](qa/worker-routing/ci.json).
 
 La CI económica anterior `85d89d8` terminó correctamente: **876/876**, cero fallos,
 398.285,452411 ms, verificaciones, build y paquete web aprobados.
