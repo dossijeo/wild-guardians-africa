@@ -1,0 +1,400 @@
+TAP version 13
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 1 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 12.4957
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 2 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 89.2077
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 3 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 12.9449
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 4 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 4.4924
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 5 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 0.9999
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 6 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 44.0144
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 7 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 1.4394
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 8 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 14.4854
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 9 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 12.3381
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 10 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 45.039
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 11 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 174.2856
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 12 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 7.6146
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 13 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 1.6788
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 14 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 17.5657
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 15 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 10.8196
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 16 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 0.8302
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 17 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 0.7849
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 18 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 4.5895
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 19 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.274
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 20 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 1.999
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 21 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 3.2777
+  ...
+# Subtest: Generated balance matches authoritative received JSON exactly
+ok 22 - Generated balance matches authoritative received JSON exactly
+  ---
+  duration_ms: 58.6043
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 23 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 4.4787
+  ...
+# Subtest: Money formatter never changes accounting
+ok 24 - Money formatter never changes accounting
+  ---
+  duration_ms: 56.8567
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 25 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 0.6505
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 26 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 0.2056
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 27 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.2175
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 28 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.2152
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 29 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 123.6758
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 30 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 0.9855
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 31 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 2.2887
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 32 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2613
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 33 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2934
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 34 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1771
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 35 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.133
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 36 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.117
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 37 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1184
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 38 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1596
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 39 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2727
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 40 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.14
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 41 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2768
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 42 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1128
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 43 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.0881
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 44 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.076
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 45 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1037
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 46 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.0818
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 47 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.1782
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 48 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.3471
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 49 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 0.9691
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+ok 50 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 0.2994
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 51 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.5939
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 52 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.2541
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 53 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.2243
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 54 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3369
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 55 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 11.6249
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 56 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 76.6216
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 57 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 16.1915
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 58 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 7.3907
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 59 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 4.6502
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 60 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 1.1549
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 61 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 0.5067
+  ...
+# Subtest: All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+ok 62 - All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+  ---
+  duration_ms: 105.0066
+  ...
+# Subtest: FIFO assignment interrupts an ambient route immediately without losing a reservation
+ok 63 - FIFO assignment interrupts an ambient route immediately without losing a reservation
+  ---
+  duration_ms: 1.3621
+  ...
+# Subtest: Unreachable or nonlocal detours never become ambient movement
+ok 64 - Unreachable or nonlocal detours never become ambient movement
+  ---
+  duration_ms: 69.5899
+  ...
+# Subtest: A changed navigation version invalidates a blocked paseo before moving
+ok 65 - A changed navigation version invalidates a blocked paseo before moving
+  ---
+  duration_ms: 0.5606
+  ...
+# Subtest: Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+ok 66 - Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+  ---
+  duration_ms: 37.3363
+  ...
+# Subtest: A waiting employee returns physically at shift end and does not prolong the contract
+ok 67 - A waiting employee returns physically at shift end and does not prolong the contract
+  ---
+  duration_ms: 40.9854
+  ...
+# Subtest: Receiving queued work prevents even one extra ambient step
+ok 68 - Receiving queued work prevents even one extra ambient step
+  ---
+  duration_ms: 38.7
+  ...
+# Subtest: Ambient paths stay inside the local radius and original terrain/building footprints
+ok 69 - Ambient paths stay inside the local radius and original terrain/building footprints
+  ---
+  duration_ms: 6790.3706
+  ...
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 70 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 30.6842
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 71 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 0.6027
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 72 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.1869
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 73 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 0.2142
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 74 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.2688
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 75 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 1.1927
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 76 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 19.4952
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 77 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 5.4126
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 78 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 333.9152
+  ...
+1..78
+# tests 78
+# suites 0
+# pass 78
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8046.9794

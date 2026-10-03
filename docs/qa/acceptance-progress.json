@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "5dc3e31",
+  "implementation_commit": "12c521a",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -410,9 +410,11 @@
       "area": "Trabajadores y colas",
       "scenario": "Confirmar plantilla mayor/joven del mismo sexo o sexo distinto",
       "expected": "100/120 de salario por edad, no por sexo, pago único por jornada.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Actual hiring of two employees for each profile charges 100/120 by age, preserves sex-independent wage and contract day, and repeated confirmation leaves serialized state unchanged."
     },
     {
       "id": "QA-038",
@@ -428,72 +430,88 @@
       "area": "Trabajadores y colas",
       "scenario": "Confirmar cero trabajadores con partida recuperable",
       "expected": "Jornada continúa sin plantilla; no reembolso ni producción ficticia.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Confirming zero workers advances 120 simulated seconds on a funded recoverable farm without watering, growth, crates, income or defeat."
     },
     {
       "id": "QA-040",
       "area": "Trabajadores y colas",
       "scenario": "6 contratados y centros con 100/20/0 plantas",
       "expected": "Reparto 4/1/1 con desempate por antigüedad; el centro vacío conserva su base.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Actual Game planting and hiring: 100/20/0 live crops, six workers, exact quotas 4/1/1 including the empty center."
     },
     {
       "id": "QA-041",
       "area": "Trabajadores y colas",
       "scenario": "Menos trabajadores que centros y números de plantas distintos",
       "expected": "Uno a cada centro mayor hasta agotarlos; nunca dos en uno antes de ese reparto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Actual hiring: 1/100/20 crops, two workers, exact quotas 0/1/1; no second worker before covering higher weights."
     },
     {
       "id": "QA-042",
       "area": "Trabajadores y colas",
       "scenario": "Empate de plantas con personal escaso",
       "expected": "Desempate determinista por antigüedad/ID.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Three centers with five plants each and one worker choose oldest creation even after structure array reversal. Remaining: equal creation timestamps resolved by ID."
     },
     {
       "id": "QA-043",
       "area": "Trabajadores y colas",
       "scenario": "Todos los centros tienen cero plantas",
       "expected": "Personal repartido equilibradamente; queda esperando tareas reales.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Eight employees at three empty centers produce 3/3/2; advancing time generates no tasks, plants or crates."
     },
     {
       "id": "QA-044",
       "area": "Trabajadores y colas",
       "scenario": "Mismo número de plantas con especies, precios y riegos diferentes",
       "expected": "Mismo peso de reparto; no optimiza carga ni bonus ocultamente.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Six plants each of millet/cotton/banana with differing biological state give equal 2/2/2 quotas; species price and watering needs do not alter plant weights."
     },
     {
       "id": "QA-045",
       "area": "Trabajadores y colas",
       "scenario": "Poblados con tamaños muy distintos",
       "expected": "Reparto directo por centros del mundo, no 50/50 por poblado.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Synthetic large and small village populations in Game state produce global plant quotas 4/1/1; no village-first allocation. This test does not render population meshes."
     },
     {
       "id": "QA-046",
       "area": "Trabajadores y colas",
       "scenario": "Cuatro perfiles con cupos desiguales",
       "expected": "Mezcla equilibrada dentro de lo posible; no asignación por bonus de cosecha.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Actual 9/2/1 quotas with three of each profile now yield 2/2/2/3 in largest center, two different profiles in two-slot center, conserved totals and save roundtrip. Previous round robin produced 1/2/3/3; production fix 12c521a."
     },
     {
       "id": "QA-047",
@@ -518,27 +536,33 @@
       "area": "Trabajadores y colas",
       "scenario": "Crear muchas tareas nuevas en centro con plantilla fija",
       "expected": "No mueve trabajadores de otro centro durante la jornada.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Adding twelve crops at a new midday center and advancing 30 seconds preserves all existing employee assignments and origins; no cross-center transfer."
     },
     {
       "id": "QA-050",
       "area": "Trabajadores y colas",
       "scenario": "Nuevo centro al mediodía junto a cultivos existentes",
       "expected": "No migra plantas ni tareas; reasociación al siguiente amanecer.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "New nearby center preserves original crop binding and existing workforce during day. Remaining: actual dawn in this scenario must reassociate crop."
     },
     {
       "id": "QA-051",
       "area": "Trabajadores y colas",
       "scenario": "Nueva planta junto a centro recién construido",
       "expected": "Se vincula al centro más cercano ahora; espera si ese centro no tiene plantilla.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-workforce.md"
+      ],
+      "notes": "Twelve new crops bind to nearest current center with no employees, retain unreserved initial tasks and zero growth after 30 seconds; existing employees do not transfer."
     },
     {
       "id": "QA-052",
