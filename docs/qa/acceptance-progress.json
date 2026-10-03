@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "362829c",
+  "implementation_commit": "e26deed",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1771,18 +1771,22 @@
       "area": "Guardado y presentación",
       "scenario": "Salir a menú y entrar repetidamente",
       "expected": "Liberar audio, WebGL, listeners y timers de la escena anterior.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-audio-lifecycle.md"
+      ],
+      "notes": "Audio generation guards prevent late unlock/JSON/menu and old pack A from starting or stopping a newer scene. Twenty controlled menu cycles release source/gain nodes; partial stem start failure cleans up. Real WebAudio delayed-menu test ends at zero voices without an extra audio fetch. Remaining: integrated repeated menu/game lifecycle for WebGL, DOM listeners and timers."
     },
     {
       "id": "QA-151",
       "area": "Guardado y presentación",
       "scenario": "Cargar recursos faltantes o audio sin permiso inicial",
       "expected": "Error o fallback controlado; no pantalla infinita ni mundo corrupto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-audio-lifecycle.md"
+      ],
+      "notes": "Network/decode failures and SFX bank rejection release failed cache promises; same-day music and same-clip retry succeed. Real muted AudioContext: injected HTTP404 yields zero voices and no cached failure, second native MP3 decode/play succeeds at rate1. Controlled resume rejection can retry; app gesture listener no longer once-only. Remaining: actual browser denied-unlock flow and controlled missing model/shader/terrain/other asset entry in integrated game."
     },
     {
       "id": "QA-152",

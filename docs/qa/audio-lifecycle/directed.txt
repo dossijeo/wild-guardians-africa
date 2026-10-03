@@ -1,0 +1,126 @@
+TAP version 13
+# (node:19512) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: leaving during menu JSON cannot start or decode stale music
+ok 1 - leaving during menu JSON cannot start or decode stale music
+  ---
+  duration_ms: 5.0937
+  ...
+# Subtest: leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+ok 2 - leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+  ---
+  duration_ms: 0.3213
+  ...
+# Subtest: late pack A loading and rejection cannot start A or stop the newer B stems
+ok 3 - late pack A loading and rejection cannot start A or stop the newer B stems
+  ---
+  duration_ms: 3.2473
+  ...
+# Subtest: failed network and failed decoder caches are evicted and one later request can retry
+ok 4 - failed network and failed decoder caches are evicted and one later request can retry
+  ---
+  duration_ms: 1.3033
+  ...
+# Subtest: failed SFX catalogue is coalesced, released and retryable
+ok 5 - failed SFX catalogue is coalesced, released and retryable
+  ---
+  duration_ms: 0.5101
+  ...
+# Subtest: failed stem allows same-day retry and partial playback start is cleaned up
+ok 6 - failed stem allows same-day retry and partial playback start is cleaned up
+  ---
+  duration_ms: 0.7356
+  ...
+# Subtest: suspending during decode does not falsely mark an inaudible pack as playing
+ok 7 - suspending during decode does not falsely mark an inaudible pack as playing
+  ---
+  duration_ms: 1.6372
+  ...
+# Subtest: twenty menu enter/exit cycles release all source and volume nodes
+ok 8 - twenty menu enter/exit cycles release all source and volume nodes
+  ---
+  duration_ms: 1.4653
+  ...
+# Subtest: a rejected resume leaves audio idle and the next gesture can unlock the same context
+ok 9 - a rejected resume leaves audio idle and the next gesture can unlock the same context
+  ---
+  duration_ms: 0.4045
+  ...
+# (node:2828) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 10 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 29.5638
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 11 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.6033
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 12 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 1.5122
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 13 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.2242
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 14 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 2788.4966
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 15 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 13.9389
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 16 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 6.1205
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 17 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.3543
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 18 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 5.7385
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 19 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 6.1105
+  ...
+# (node:28704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 20 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 7.5846
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 21 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.3207
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 22 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 0.6491
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3092.0556
