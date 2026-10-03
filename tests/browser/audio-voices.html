@@ -1,0 +1,16 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Voces WebAudio reales</title>
+<p>Salida silenciada: comprueba nodos WebAudio, prioridades y liberación; no evalúa auditivamente la mezcla. No guarda partidas.</p><button id="run">Probar voces concurrentes</button><output id="status">Listo</output><pre id="data"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';import {json} from '../../src/rendering/assets.js';
+const audio=new AudioSystem({sfx:0,music:0}),errors=[];addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const report=()=>({active:audio.active.length,sfx:[...audio.voices.values()].filter(v=>!v.music).length,priorities:[...audio.voices.values()].map(v=>v.priority),rates:audio.active.map(s=>s.playbackRate.value),context:audio.context.state});
+document.querySelector('#run').onclick=async()=>{const button=document.querySelector('#run');button.disabled=true;document.querySelector('#status').textContent='Ejecutando…';try{
+ await audio.unlock();audio.stop();audio.sfx=await json('/content/sfx.json');const item=audio.sfx.items.find(i=>i.id==='farm_watering_can');
+ const familyResults=await Promise.all(Array.from({length:100},()=>audio.sound(item.id))),family=report();audio.stop();
+ const totalResults=await Promise.all(Array.from({length:100},(_,i)=>audio.play(item.audio.url,{family:'qa-emitter-'+i}))),total=report();
+ const alert=await audio.sound('game_attack_alert'),withAlert=report();const victory=await audio.sound('game_victory'),withVictory=report();audio.stop();const stopped=report();
+ const result={familyAccepted:familyResults.filter(Boolean).length,family,totalAccepted:totalResults.filter(Boolean).length,total,alertAccepted:!!alert,withAlert,victoryAccepted:!!victory,withVictory,stopped,errors};
+ document.querySelector('#data').textContent=JSON.stringify(result,null,2);document.querySelector('#status').textContent='Terminado';
+ }catch(e){errors.push(String(e));document.querySelector('#status').textContent='Error: '+e;}finally{button.disabled=false;}};
+addEventListener('pagehide',()=>audio.dispose());
+</script></html>
