@@ -15,10 +15,10 @@ function world(walkable=()=>true){
 function ready(nav){const s=Game.newGame({seed:712,slotId:'raid-route'});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);s.time=400;s.initialPreparation=false;return s;}
 
 for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals))test(`${species}: native body radius controls entry, approach, shield exclusion and survives reload`,()=>{
-  const expected=library.presentation.footprint.radius,calls=[],nav=world();
+  const expected=library.presentation.footprint.radius,calls=[],nav=world(),s=ready(nav);
   nav.walkable=(_x,_z,r)=>{calls.push(r);return true;};
   nav.path=(_a,b,r)=>{calls.push(r);return [{x:b.x,z:b.z}];};
-  const s=ready(nav);spawnRaid(s,{group:[species]},nav);const animal=s.raid.animals[0];
+  spawnRaid(s,{group:[species]},nav);const animal=s.raid.animals[0];
   assert.equal(animal.radius,expected);assert.ok(calls.length>0);assert.ok(calls.every(r=>r===expected));
   const shield={id:'shield',x:0,z:0,radius:4};
   const approach=reachableApproach(animal,s.structures[0],nav,shield);
