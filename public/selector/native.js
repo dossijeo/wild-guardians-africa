@@ -150,7 +150,7 @@
       ? '05 culturas · Todas combinables con tu bioma'
       : '06 territorios · Una historia por empezar';
     $('selectionHint').textContent = isCulture
-      ? 'Selecciona una cultura y pulsa Comenzar partida para iniciar la simulación. Puedes volver al bioma sin perder tus elecciones.'
+      ? 'Selecciona una cultura y pulsa Comenzar partida. Puedes volver al bioma sin perder tus elecciones.'
       : 'Selecciona un bioma y pulsa Continuar. Después elegirás la cultura. Usa las flechas para cambiar e Intro para continuar.';
     changeBackdrop(item, initial);
     if (artDialog.open) updateViewer();
