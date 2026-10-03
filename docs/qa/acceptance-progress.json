@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "fc94ba9",
+  "implementation_commit": "b112d8d",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -21,12 +21,13 @@
       "area": "Inicio y UI",
       "scenario": "Doble pulsación en Comenzar",
       "expected": "Un mundo y una ranura; el inicio simulado del lab no se ejecuta detrás.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
-        "docs/qa-acceptance-selector.md"
+        "docs/qa-acceptance-selector.md",
+        "docs/qa-double-start.md"
       ],
-      "notes": "Coordinate double-click also aborted when iframe detached; second click delivery remains unproven. Result: one world, zero native-menu iframes; saved-slot list grew from one to two exactly, retaining prior 95-coin slot. Source cancels lab demonstration before timers. Remaining: both activation events actually delivered."
+      "notes": "Both original confirmButton activations delivered through two synchronous DOM clicks, not physical pointer double-click: two cancelled native launch events and two original-menu start messages per attempt. One-shot early biome-fetch rejection returns menu with zero worlds/new slots; retry creates exactly one world canvas and one additional1000-coin slot, preserving eight previous slots. Zero lab game-started events; source cancellation precedes demonstration timers. Console clean. QA fixture imports actual app/main.js; no fabricated start messages or bypassed origin/source/loading guards."
     },
     {
       "id": "QA-003",
