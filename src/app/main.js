@@ -283,7 +283,7 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events);updateUI();guardian?.update();}
+    try {tutorial?.update();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events);audio.updateMusic(state);updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }

@@ -1,0 +1,18 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA mezclas musicales nativas</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px;margin:4px}pre{white-space:pre-wrap;font-size:14px}</style>
+<h1>Mezclas musicales A/B · WebAudio real</h1><p>Salida silenciada. Diez MP3 originales por pack; no modifica partidas.</p>
+<button id="a">Cargar A</button><button id="b">Cargar B</button><button id="night">Noche</button><button id="attack">Ataque</button><button id="day">Día</button><button id="stop">Parar</button>
+<p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '/src/audio/audio.js';
+const audio=new AudioSystem({music:0,sfx:0}),state={time:100,raid:null},errors=[],history=[];
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+let timer;
+function snapshot(){return {pack:audio.pack??null,scene:audio.mixer?.scene??null,active:audio.active.length,rates:audio.active.map(s=>s.playbackRate.value),pending:audio.mixer?.pending.map(p=>({...p}))??[],levels:audio.mixer?audio.mixer.bank.tracks.map(t=>({id:t.id,value:audio.voices.get(audio.active[audio.mixer.bank.tracks.indexOf(t)])?.volume.gain.value})):[],errors,history};}
+function paint(){audio.updateMusic(state);report.textContent=JSON.stringify(snapshot(),null,2);}
+async function load(day){status.textContent='Cargando';try{await audio.unlock();await audio.gameplay(day);history.push({action:'load',pack:audio.pack,active:audio.active.length});status.textContent='Listo';clearInterval(timer);timer=setInterval(paint,100);paint();}catch(e){errors.push(e.message);status.textContent='Error';paint();}}
+document.querySelector('#a').onclick=()=>load(1);document.querySelector('#b').onclick=()=>load(2);
+for(const scene of ['day','night','attack'])document.querySelector('#'+scene).onclick=()=>{state.time=scene==='day'?100:350;state.raid=scene==='attack'?{animals:[{}]}:null;paint();history.push({action:scene,active:audio.active.length});paint();};
+document.querySelector('#stop').onclick=()=>{audio.stop();clearInterval(timer);history.push({action:'stop',active:audio.active.length,voices:audio.voices.size});status.textContent='Parado';paint();};
+window.addEventListener('pagehide',()=>{clearInterval(timer);audio.dispose();});
+</script></html>

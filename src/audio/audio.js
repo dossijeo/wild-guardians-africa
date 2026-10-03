@@ -1,4 +1,6 @@
 import {json,bytes} from '../rendering/assets.js';
+import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
+import {MusicMixer} from './music-mixer.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'farm_seeds_drop',WaterSatisfied:'farm_watering_can',CropPicked:'farm_harvest_pick',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4});
 export const soundPriority=id=>['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
@@ -69,14 +71,24 @@ export class AudioSystem {
       if(this.pack!==pack||generation!==this.generation)return;
       if(this.context.state!=='running'){this.pack=null;return;}
       const when=this.context.currentTime+.1;
-      for(const {buffer} of loaded)this.startBuffer(buffer,{loop:true,music:true,loopEnd:bank.duration,gain:(bank.safetyGain??.5)*.45,when});
+      const scene=this.musicScene??'day',policy=MUSIC_POLICIES[pack],voices=new Map();
+      for(const {track,buffer} of loaded){
+        const index=bank.tracks.indexOf(track),level=track.id?policy.levels[scene][index]:1;
+        const source=this.startBuffer(buffer,{loop:true,music:true,loopEnd:bank.duration,gain:(bank.safetyGain??.5)*.45*level,when});
+        if(source&&track.id)voices.set(track.id,this.voices.get(source).volume.gain);
+      }
+      if(voices.size)this.mixer=new MusicMixer(pack,bank,voices,when,scene);
     }catch(error){if(this.pack===pack&&generation===this.generation)this.stop();throw error;}
+  }
+  updateMusic(state){
+    this.musicScene=gameplayMusicScene(state);
+    if(this.context?.state==='running')this.mixer?.update(this.musicScene,this.context.currentTime);
   }
   async sound(id) {
     if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
   }
   process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.mixer=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();this.context?.close();}
 }
