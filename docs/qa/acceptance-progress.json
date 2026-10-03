@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "043abdb",
+  "implementation_commit": "854a03a",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1115,8 +1115,10 @@
       "scenario": "Elegir objetivos con reservas ya tomadas",
       "expected": "Ignora objetivos reservados; no comparte cultivo/grupo/tramo/conjunto/centro activo.",
       "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "evidence": [
+        "docs/qa-daytime-raids.md"
+      ],
+      "notes": "Incomplete: production targetFor reserves defensive pieces individually and ranks their individual cost. Plan13.7 requires defensive-set aggregate value and exclusivity. A legally paid five-piece adobe chain plus native centre, three explicit live warthogs, flat Navigation selects two pieces of the same chain simultaneously. Need implement native connected defensive groups, aggregate priority and exclusive reservations, including topology changes/reload; individual ID uniqueness is insufficient."
     },
     {
       "id": "QA-097",
@@ -1176,18 +1178,26 @@
       "area": "Incursiones e IA",
       "scenario": "Tirada diurna con candidato antes/después de cruzar 10.000",
       "expected": "Solo importa atracción al candidato; única tirada de 10%, sin sondeo repetido.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-daytime-raids.md",
+        "tests/acceptance-daytime-raids.test.js",
+        "docs/qa/daytime-raids/directed.txt"
+      ],
+      "notes": "70 real Game cases across five native centre cultures: legally paid crops give exact attraction9999/10000 and cross10008 before/after actual PlanDay candidate. Seeds1/4 accept10% roll,712/123456789 reject; underthreshold consumes no attack draw, after crossing never retries through299s. SaveRepository fresh Navigation full state equality at candidate. Seeds1/4 physically complete daytime raid, then naturally plan/start/end an independent night raid same day, reload plan with exact outcome and two distinct raid IDs. Funded flat field, no workers, no WebGL/biome obstacle claim."
     },
     {
       "id": "QA-103",
       "area": "Incursiones e IA",
       "scenario": "Ataque diurno y nocturno el mismo día",
       "expected": "Pueden coexistir en el calendario como eventos independientes.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-daytime-raids.md",
+        "tests/acceptance-daytime-raids.test.js",
+        "docs/qa/daytime-raids/directed.txt"
+      ],
+      "notes": "70 real Game cases across five native centre cultures: legally paid crops give exact attraction9999/10000 and cross10008 before/after actual PlanDay candidate. Seeds1/4 accept10% roll,712/123456789 reject; underthreshold consumes no attack draw, after crossing never retries through299s. SaveRepository fresh Navigation full state equality at candidate. Seeds1/4 physically complete daytime raid, then naturally plan/start/end an independent night raid same day, reload plan with exact outcome and two distinct raid IDs. Funded flat field, no workers, no WebGL/biome obstacle claim."
     },
     {
       "id": "QA-104",
