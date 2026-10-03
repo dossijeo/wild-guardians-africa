@@ -1,0 +1,450 @@
+TAP version 13
+# Subtest: QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints
+ok 1 - QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints
+  ---
+  duration_ms: 6.3015
+  ...
+# Subtest: QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night
+ok 2 - QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night
+  ---
+  duration_ms: 316.079
+  ...
+# Subtest: QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge
+ok 3 - QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge
+  ---
+  duration_ms: 494.8573
+  ...
+# Subtest: QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue
+ok 4 - QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue
+  ---
+  duration_ms: 7.0993
+  ...
+# Subtest: QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight
+ok 5 - QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight
+  ---
+  duration_ms: 19.5762
+  ...
+# Subtest: QA-023: a mature unrequested plant remains stable through four dawns without water or deterioration
+ok 6 - QA-023: a mature unrequested plant remains stable through four dawns without water or deterioration
+  ---
+  duration_ms: 119.3405
+  ...
+# Subtest: QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering
+ok 7 - QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering
+  ---
+  duration_ms: 30.297
+  ...
+# Subtest: QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once
+ok 8 - QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once
+  ---
+  duration_ms: 104.0068
+  ...
+# Subtest: QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+ok 9 - QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+  ---
+  duration_ms: 3.6103
+  ...
+# Subtest: QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task
+ok 10 - QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task
+  ---
+  duration_ms: 1.4541
+  ...
+# Subtest: QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task
+ok 11 - QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task
+  ---
+  duration_ms: 3.1053
+  ...
+# Subtest: QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect
+ok 12 - QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect
+  ---
+  duration_ms: 43.8254
+  ...
+# Subtest: QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic
+ok 13 - QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic
+  ---
+  duration_ms: 8.989
+  ...
+# Subtest: QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once
+ok 14 - QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once
+  ---
+  duration_ms: 25.4969
+  ...
+# Subtest: QA-027: group request inserts nearest-to-centre first while retaining an older watering task ahead of it
+ok 15 - QA-027: group request inserts nearest-to-centre first while retaining an older watering task ahead of it
+  ---
+  duration_ms: 0.4994
+  ...
+# Subtest: QA-033: Multiply requested before harvest does not reward a pickup after the effect expires
+ok 16 - QA-033: Multiply requested before harvest does not reward a pickup after the effect expires
+  ---
+  duration_ms: 7.2911
+  ...
+# Subtest: QA-034: male pickup within Multiply fixes one 21.6-valued crate, rounds delivery to 22 and survives reload
+ok 17 - QA-034: male pickup within Multiply fixes one 21.6-valued crate, rounds delivery to 22 and survives reload
+  ---
+  duration_ms: 9.2527
+  ...
+# Subtest: season expires at the next magical watering for all eight species and three intensities
+ok 18 - season expires at the next magical watering for all eight species and three intensities
+  ---
+  duration_ms: 12.1814
+  ...
+# Subtest: successful manual or magical water clears season, but a request without due water does not
+ok 19 - successful manual or magical water clears season, but a request without due water does not
+  ---
+  duration_ms: 0.2455
+  ...
+# Subtest: Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+ok 20 - Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+  ---
+  duration_ms: 19.5141
+  ...
+# Subtest: a worker consumes season on physical first care without a second charge
+ok 21 - a worker consumes season on physical first care without a second charge
+  ---
+  duration_ms: 8.4382
+  ...
+# Subtest: growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 22 - growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 158.463
+  ...
+# Subtest: multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 23 - multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 52.1627
+  ...
+# Subtest: QA-115: growth crosses sunset on the real clock; native VFX continue without night agriculture
+ok 24 - QA-115: growth crosses sunset on the real clock; native VFX continue without night agriculture
+  ---
+  duration_ms: 23.2659
+  ...
+# Subtest: QA-115: multiply crosses sunset on the real clock; native VFX continue without night agriculture
+ok 25 - QA-115: multiply crosses sunset on the real clock; native VFX continue without night agriculture
+  ---
+  duration_ms: 25.1709
+  ...
+# Subtest: Generated balance matches authoritative received JSON exactly
+ok 26 - Generated balance matches authoritative received JSON exactly
+  ---
+  duration_ms: 5.062
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 27 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 1.2064
+  ...
+# Subtest: Money formatter never changes accounting
+ok 28 - Money formatter never changes accounting
+  ---
+  duration_ms: 24.636
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 29 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 0.7702
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 30 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 1.0327
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 31 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.2752
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 32 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.3229
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 33 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 106.9099
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 34 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 1.0019
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 35 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.7795
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 36 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.3284
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 37 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3067
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 38 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1824
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 39 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.214
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 40 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1253
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 41 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1378
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 42 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.6529
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 43 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3732
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 44 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1701
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 45 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3068
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 46 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1555
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 47 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1045
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 48 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.0952
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 49 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1466
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 50 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1112
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 51 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.1815
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 52 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.441
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 53 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 0.7098
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+ok 54 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 0.419
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 55 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.4843
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 56 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.3296
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 57 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.3337
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 58 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3353
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 59 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 3.2253
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 60 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 10.2018
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 61 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 4.3862
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 62 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.8209
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 63 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.6444
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 64 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 1.6998
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 65 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 11.0405
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 66 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.1757
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 67 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 2.804
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 68 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.869
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 69 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.5191
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 70 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 30.6387
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 71 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 2.9933
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 72 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 0.9344
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 73 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.3628
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 74 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 5.5039
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 75 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.4936
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 76 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.099
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 77 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.5181
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 78 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 1.8002
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 79 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 0.6071
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 80 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.6272
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 81 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5532
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 82 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.3868
+  ...
+# Subtest: Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+ok 83 - Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+  ---
+  duration_ms: 31.7424
+  ...
+# Subtest: Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+ok 84 - Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+  ---
+  duration_ms: 10.6898
+  ...
+# Subtest: Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+ok 85 - Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+  ---
+  duration_ms: 12.3386
+  ...
+# Subtest: Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+ok 86 - Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+  ---
+  duration_ms: 4.0583
+  ...
+# Subtest: Shield preview rejects an animal touching its area without moving or repelling it
+ok 87 - Shield preview rejects an animal touching its area without moving or repelling it
+  ---
+  duration_ms: 0.4944
+  ...
+# Subtest: One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+ok 88 - One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+  ---
+  duration_ms: 6.1284
+  ...
+1..88
+# tests 88
+# suites 0
+# pass 88
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1431.018

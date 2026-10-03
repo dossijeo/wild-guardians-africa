@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "2586978",
+  "implementation_commit": "1090300",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1265,9 +1265,11 @@
       "area": "Magias",
       "scenario": "Campo atraviesa cambio día/noche",
       "expected": "Respetar permisos de activación y regla nocturna de cultivos; VFX no avanza agricultura por sí mismo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-agriculture-season.md"
+      ],
+      "notes": "Growth and Multiply cross sunset with Game.advanceReal at day x1/night x5: daylight-only growth, night activation rejected without state mutation, durations/cooldowns continue, blocking pause and snapshot preserved. Native VFX manager does not mutate simulation. Funded attack-free postcampaign fixture with straight-route navigation and renderer doubles. Remaining: Shield and integrated visual acceptance."
     },
     {
       "id": "QA-116",
@@ -1329,9 +1331,11 @@
       "area": "Magias",
       "scenario": "Duración de VFX demo distinta del efecto lógico",
       "expected": "La presentación persiste/reconfigura hasta durar 20/30/15 s según magia; no dicta gameplay.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-agriculture-season.md"
+      ],
+      "notes": "Native agricultural blessing geometry and sprites persist beyond the original 5-second demo to 30/15 simulated seconds, including sunset, blocking pause and reload phase; removed exactly at logical expiry without driving agriculture. Remaining: complete Shield and actual rendered duration acceptance."
     },
     {
       "id": "QA-121",

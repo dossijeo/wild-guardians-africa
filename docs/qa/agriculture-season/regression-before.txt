@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: season expires at the next magical watering for all eight species and three intensities
+not ok 1 - season expires at the next magical watering for all eight species and three intensities
+  ---
+  duration_ms: 4.5255
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:23:1'
+  failureType: 'testCodeFailure'
+  error: 'mijo, season 0.1'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 0.1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:29:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: successful manual or magical water clears season, but a request without due water does not
+not ok 2 - successful manual or magical water clears season, but a request without due water does not
+  ---
+  duration_ms: 0.922
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0.3 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 0.3
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:37:51)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+not ok 3 - Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+  ---
+  duration_ms: 3.2109
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:42:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0.3 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 0.3
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/agriculture-event-water.test.js:46:65)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: a worker consumes season on physical first care without a second charge
+ok 4 - a worker consumes season on physical first care without a second charge
+  ---
+  duration_ms: 8.7583
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 1
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 158.8643
