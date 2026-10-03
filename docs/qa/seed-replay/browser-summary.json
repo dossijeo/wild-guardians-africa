@@ -1,0 +1,92 @@
+{
+  "sameCommands": true,
+  "sameEvents": true,
+  "sameTrace": true,
+  "sameFinal": true,
+  "sameBounds": true,
+  "visualCalls": 29,
+  "extraFrames": 174,
+  "runs": [
+    {
+      "day": 3,
+      "result": null,
+      "rng": 1618194146,
+      "checkpoints": 29,
+      "commands": 28,
+      "events": 114,
+      "agricultural": [
+        {
+          "id": "event-121",
+          "type": "AgriculturalEventApplied",
+          "kind": "fertile",
+          "targets": [
+            "plant-23",
+            "plant-29",
+            "plant-17",
+            "plant-15",
+            "plant-25",
+            "plant-7",
+            "plant-9",
+            "plant-19",
+            "plant-5",
+            "plant-3",
+            "plant-27",
+            "plant-31",
+            "plant-11",
+            "plant-21",
+            "plant-13"
+          ],
+          "day": 2,
+          "noticeId": "message-120"
+        }
+      ],
+      "raids": [
+        {
+          "id": "event-166",
+          "type": "RaidSpawned"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "result": null,
+      "rng": 1618194146,
+      "checkpoints": 29,
+      "commands": 28,
+      "events": 114,
+      "agricultural": [
+        {
+          "id": "event-121",
+          "type": "AgriculturalEventApplied",
+          "kind": "fertile",
+          "targets": [
+            "plant-23",
+            "plant-29",
+            "plant-17",
+            "plant-15",
+            "plant-25",
+            "plant-7",
+            "plant-9",
+            "plant-19",
+            "plant-5",
+            "plant-3",
+            "plant-27",
+            "plant-31",
+            "plant-11",
+            "plant-21",
+            "plant-13"
+          ],
+          "day": 2,
+          "noticeId": "message-120"
+        }
+      ],
+      "raids": [
+        {
+          "id": "event-166",
+          "type": "RaidSpawned"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
