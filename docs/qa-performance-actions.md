@@ -42,7 +42,10 @@ Sabana/Mapungubwe, media, Intel UHD/ANGLE:
   ni una finca grande o un benchmark del poblado completo; no acredita mejora
   porcentual ni FPS de campaña.
 
-Validación completa final y CI se registran al finalizar las comprobaciones.
-Siguen pendientes los registros de materiales/agua y las demás prioridades.
+El registro de materiales/agua y la caché de obstrucciones se implementaron después
+de esta medición; sus pruebas y límites están en
+[QA del registro](qa-material-registry.md) y
+[QA de obstrucciones](qa-obstruction-cache.md). El estado de las ocho prioridades
+se mantiene en [el plan de rendimiento](performance-priorities.md).
 
 Tras la correcci�n de superficie VFX del origen relativo: regresi�n integrada **630/630**, CI 37077302380 aprobada y paquete de 379.665.147 bytes; v�ase [QA de proyecci�n y VFX](qa-render-origin-window.md).

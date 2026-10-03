@@ -40,5 +40,6 @@ del cambio 300ddb0: 720/720, sin fallos ni casos omitidos.
 
 Esto ofrece un intercambio explícito de nitidez por rendimiento; no acredita
 FPS nuevos. Los ensayos GPU anteriores y sus límites siguen documentados en
-[el diagnóstico DPR 1](qa-resolution.md). La pasada de profundidad específica,
-la sustitución del ruido y los cambios de caras por categoría siguen pendientes.
+[el diagnóstico DPR 1](qa-resolution.md). La pasada de profundidad específica
+se amplió después de esta prueba: [rutas y medición final](qa-standard-depth.md).
+La sustitución del ruido y los cambios de caras por categoría siguen pendientes.

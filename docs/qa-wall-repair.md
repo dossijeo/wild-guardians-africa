@@ -26,8 +26,10 @@ vértices; ninguna mutación del snapshot por el renderer. También siguen pasan
 las pruebas de golpes, puertas pagadas, caída, pausa, reparación fallida y replay.
 
 [Compilación y paquete](qa/wall-repair/build.txt): 554 archivos, 379685902 bytes,
-794 enlaces relativos, 20 GLB de ejecución y ningún original duplicado. El CI de
-6450398 sigue en curso al redactar este informe. La suite local anterior pasa
+794 enlaces relativos, 20 GLB de ejecución y ningún original duplicado. El
+[CI de 6450398](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37107624618)
+terminó correctamente: 774/774 pruebas, cero fallos, 216193,457403 ms, junto con
+las verificaciones, compilación y empaquetado. La suite local anterior pasa
 [773/773 pruebas](qa/wall-reload/full-tests.txt), en 550162,228 ms; no se atribuye
 ese recuento anterior a la nueva reparación.
 

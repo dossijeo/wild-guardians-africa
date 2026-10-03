@@ -41,3 +41,26 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
 
 Origen relativo y cambios 1/6 publicados; [alcance y evidencia de acciones](qa-performance-actions.md). Estas prioridades no
 sustituyen la auditoría funcional completa del Plan Maestro ni acreditan móvil.
+
+## Revisión integrada del 3 de octubre
+
+Sobre `79f99c5`, las 33 pruebas dirigidas de props residentes, subidas de cultivos,
+caché de sombras, calidad, profundidad y composición African Toon pasan sin
+fallos ni omisiones. Esta repetición comprueba regresiones; no añade una nueva
+medición GPU ni demuestra una mejora de FPS.
+
+La evidencia de navegador ya registrada distingue los resultados:
+
+| Prioridad | Resultado comprobado | Límite |
+| --- | --- | --- |
+| Paisaje | Retirar un prop conserva 25/25 terrenos y reemplaza un slot | No mide el tiempo de cada acción de campaña |
+| Sombras | 1 pasada y 209 reutilizaciones frente a 210 pasadas en escena detenida | Viento y actores en movimiento invalidan el mapa |
+| Ruido fino | GPU media 44,40 → 39,11 ms en el diagnóstico | Cambia el detalle; no se desactiva por defecto |
+| Cultivos | 210 frames sin subir matrices ni crecimiento con reloj fijo | No elimina todos los recorridos CPU de plantas |
+| Profundidad VFX | Captura media 29,07 → 21,76 ms; cero diferencias en las seis vistas finales | Alpha sin receta acreditada conserva la pasada completa |
+| Resolución | DPR 1 conserva HUD y reduce de 1600×900 a 1280×720 | Pierde nitidez del mundo; no promete FPS proporcionales |
+
+Los siguientes experimentos pendientes son una receta de ruido más barata con
+comparación visual, caras por categoría/LOD y profundidad de interiores/ceniza.
+La separación de sombras estáticas/dinámicas requiere una prueba independiente.
+No se convierten estos diagnósticos en cambios visuales globales sin validarlos.
