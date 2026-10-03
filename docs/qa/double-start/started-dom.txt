@@ -1,0 +1,35 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:05
+  - img "Dinero"
+  - generic: 1K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - dialog "El Espíritu":
+    - img "El Espíritu"
+    - paragraph: "Soy el Espíritu que cuida estas tierras. Una maldición inquieta a los animales al caer el sol. Junto al poblado levantarás una finca: construiremos un centro, sembrarás y tu comunidad cuidará los cultivos."
+    - button "Continuar":
+- complementary:
+  - strong: QA-002 · Production entry
+  - paragraph: Uses the original menu and selector. Two synchronous DOM clicks exercise both native handlers before the parent removes the iframe. Writes normal QA-origin campaign slots.
+  - checkbox "Fail the next biome fetch once"
+  - text: Fail the next biome fetch once
+  - paragraph:
+    - button "Activate native Start twice"
+    - button "Read evidence" [active]
+  - paragraph: Both native click handlers dispatched; wait for production loading.
+  - generic: "{ \"attempts\": [ { \"clicks\": 2, \"cancelledLaunches\": 2, \"simulatedStarts\": 0, \"selection\": { \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 } }, \"states\": [ { \"step\": \"culture\", \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 }, \"simulation\": true }, { \"step\": \"culture\", \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 }, \"simulation\": true } ] }, { \"clicks\": 2, \"cancelledLaunches\": 2, \"simulatedStarts\": 0, \"selection\": { \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 } }, \"states\": [ { \"step\": \"culture\", \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 }, \"simulation\": true }, { \"step\": \"culture\", \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 }, \"simulation\": true } ] } ], \"messages\": [ { \"type\": \"wild-guardians:menu\", \"action\": \"start\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"at\": 53188.69999998808 }, { \"type\": \"wild-guardians:menu\", \"action\": \"start\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"at\": 53304.69999998808 }, { \"type\": \"wild-guardians:menu\", \"action\": \"start\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"at\": 100493 }, { \"type\": \"wild-guardians:menu\", \"action\": \"start\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"at\": 100570.30000001192 } ], \"failCount\": 1, \"worldCanvasCreations\": 1, \"liveWorldCanvases\": 1, \"liveNativeMenuFrames\": 0, \"initialSlotCount\": 8, \"currentSlotCount\": 9, \"addedSlots\": [ { \"key\": \"wild-guardians:slot:6a656672-e603-4b7b-a401-cb243137e7da\", \"slotId\": \"6a656672-e603-4b7b-a401-cb243137e7da\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"money\": { \"n\": \"1000\", \"d\": \"1\" }, \"time\": 0, \"structures\": 0, \"pauses\": [ \"intro\", \"tutorial-reading\" ] } ], \"oldUnchanged\": true, \"errors\": [] }"

@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Native double start</title>
+<script src="/i18n/loader.js"></script><div id="app"></div>
+<aside style="position:fixed;right:8px;top:8px;width:330px;max-height:55vh;overflow:auto;z-index:100000;background:#fffdeae8;color:#18231e;padding:10px;font:13px system-ui">
+<strong>QA-002 · Production entry</strong><p>Uses the original menu and selector. Two synchronous DOM clicks exercise both native handlers before the parent removes the iframe. Writes normal QA-origin campaign slots.</p>
+<label><input type="checkbox" id="fail">Fail the next biome fetch once</label><p><button id="double">Activate native Start twice</button> <button id="read">Read evidence</button></p><p id="status">Choose New Game and reach the culture step first.</p><pre id="report" style="white-space:pre-wrap"></pre>
+</aside>
+<script type="module">
+const messages=[],attempts=[],canvases=new Set(),errors=[],initialSlots=slots();let failCount=0;
+function slots(){return Object.fromEntries(Object.keys(localStorage).filter(k=>/^wild-guardians:slot:/.test(k)&&!/:backup$|:pending$/.test(k)).sort().map(k=>[k,JSON.parse(localStorage.getItem(k))]));}
+const originalFetch=window.fetch.bind(window);
+window.fetch=(input,options)=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(document.querySelector('#fail').checked&&/^\/content\/biome-[^/]+\.json$/.test(url.pathname)){document.querySelector('#fail').checked=false;failCount++;return Promise.reject(new Error('QA: one-shot biome load failure'));}return originalFetch(input,options);};
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='wild-guardians:menu'&&e.data.action==='start'){messages.push({...e.data,at:performance.now()});paint();}});
+new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.id==='world')canvases.add(node);for(const canvas of node.querySelectorAll?.('canvas#world')??[])canvases.add(canvas);}paint();}).observe(document.querySelector('#app'),{childList:true,subtree:true});
+function paint(){const current=slots(),oldUnchanged=Object.entries(initialSlots).every(([key,value])=>JSON.stringify(current[key])===JSON.stringify(value));document.querySelector('#report').textContent=JSON.stringify({attempts,messages,failCount,worldCanvasCreations:canvases.size,liveWorldCanvases:document.querySelectorAll('#world').length,liveNativeMenuFrames:document.querySelectorAll('#native-menu').length,initialSlotCount:Object.keys(initialSlots).length,currentSlotCount:Object.keys(current).length,addedSlots:Object.entries(current).filter(([key])=>!Object.hasOwn(initialSlots,key)).map(([key,s])=>({key,slotId:s.slotId,biome:s.biome,culture:s.culture,money:s.ledger.balance,time:s.time,structures:s.structures.length,pauses:s.pauses})),oldUnchanged,errors},null,2);}
+document.querySelector('#read').onclick=paint;
+document.querySelector('#double').onclick=()=>{
+ try{
+  const menu=document.querySelector('#native-menu').contentDocument,frame=menu.querySelector('iframe.production-section'),doc=frame.contentDocument,win=frame.contentWindow,button=doc.querySelector('#confirmButton');
+  if(!button||button.disabled||win.WildGuardiansNewGameMenu.getState().step!=='culture')throw new Error('Reach the culture step first');
+  const attempt={clicks:0,cancelledLaunches:0,simulatedStarts:0,selection:win.WildGuardiansNewGameMenu.getSelection(),states:[]};attempts.push(attempt);
+  button.addEventListener('click',()=>attempt.clicks++,{capture:true});
+  win.addEventListener('wildguardians:new-game',e=>{if(e.defaultPrevented)attempt.cancelledLaunches++;});win.addEventListener('wildguardians:game-started',()=>attempt.simulatedStarts++);
+  button.click();attempt.states.push(win.WildGuardiansNewGameMenu.getState());button.click();attempt.states.push(win.WildGuardiansNewGameMenu.getState());
+  document.querySelector('#status').textContent='Both native click handlers dispatched; wait for production loading.';paint();
+ }catch(e){errors.push(String(e));document.querySelector('#status').textContent=e.message;paint();}
+};
+await import('../../src/app/main.js');paint();
+</script></html>
