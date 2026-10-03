@@ -18,6 +18,16 @@ function fixture(){
 const attribute=m=>m.geometry.attributes.iGrowth??m.geometry.attributes.iBridge;
 const ranges=m=>{m.instanceMatrix.clearUpdateRanges();attribute(m).clearUpdateRanges();};
 
+test('retiring a crop batch releases InstancedMesh buffers for every stage and bridge',()=>{
+  const f=fixture(),meshes=[...f.scene.children],retired=[];
+  assert.equal(meshes.length,72); // Forty original stages and thirty-two bridges.
+  for(const mesh of meshes)mesh.addEventListener('dispose',()=>retired.push(mesh));
+  f.close();
+  assert.equal(f.scene.children.length,0);
+  assert.equal(new Set(retired).size,72);
+  assert.ok(meshes.every(mesh=>retired.includes(mesh)));
+});
+
 test('mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone',()=>{
   const f=fixture(),plants=[f.plant(1),f.plant(2,.065+(.27-.065)*.81)];f.batch.update(plants,1,()=>2);
   const before=f.active().map(m=>({m,matrix:m.instanceMatrix.version,growth:attribute(m).version}));before.forEach(({m})=>ranges(m));
