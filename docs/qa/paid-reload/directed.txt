@@ -1,0 +1,230 @@
+TAP version 13
+# Subtest: QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+ok 1 - QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+  ---
+  duration_ms: 152.1922
+  ...
+# Subtest: QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+ok 2 - QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+  ---
+  duration_ms: 121.9896
+  ...
+# Subtest: New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+ok 3 - New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+  ---
+  duration_ms: 57.2023
+  ...
+# Subtest: QA-146: olderMale reload keeps a paid initial action and intraday assignments
+ok 4 - QA-146: olderMale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 58.2407
+  ...
+# Subtest: QA-146: olderFemale reload keeps a paid initial action and intraday assignments
+ok 5 - QA-146: olderFemale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 33.8246
+  ...
+# Subtest: QA-146: youngMale reload keeps a paid initial action and intraday assignments
+ok 6 - QA-146: youngMale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 30.6577
+  ...
+# Subtest: QA-146: youngFemale reload keeps a paid initial action and intraday assignments
+ok 7 - QA-146: youngFemale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 25.2165
+  ...
+# Subtest: QA-147: olderMale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 8 - QA-147: olderMale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 92.4489
+  ...
+# Subtest: QA-147: olderFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 9 - QA-147: olderFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 86.0079
+  ...
+# Subtest: QA-147: youngMale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 10 - QA-147: youngMale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 62.0388
+  ...
+# Subtest: QA-147: youngFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 11 - QA-147: youngFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 53.5482
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 12 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 94.1958
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 13 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 15.2694
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 14 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.3085
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 15 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 6.2758
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 16 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 2.0775
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 17 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 1.3505
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 18 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 0.9871
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 19 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 4.1618
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 20 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.2066
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 21 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.4108
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 22 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 1.5483
+  ...
+# Subtest: failed staging, backup or primary writes never announce success or lose the previous playable save
+ok 23 - failed staging, backup or primary writes never announce success or lose the previous playable save
+  ---
+  duration_ms: 6.5353
+  ...
+# Subtest: autosave is silent; an explicit confirmation is emitted only after a successful write
+ok 24 - autosave is silent; an explicit confirmation is emitted only after a successful write
+  ---
+  duration_ms: 1.1683
+  ...
+# Subtest: loading a valid snapshot under the wrong slot key recovers only that slot backup
+ok 25 - loading a valid snapshot under the wrong slot key recovers only that slot backup
+  ---
+  duration_ms: 5.247
+  ...
+# Subtest: a wrong-slot primary cannot replace the last valid backup during a new save
+ok 26 - a wrong-slot primary cannot replace the last valid backup during a new save
+  ---
+  duration_ms: 1.2027
+  ...
+# Subtest: wrong-slot primary and backup fail explicitly instead of loading another campaign
+ok 27 - wrong-slot primary and backup fail explicitly instead of loading another campaign
+  ---
+  duration_ms: 1.2942
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 28 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 4.9626
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 29 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 240.2481
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 30 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 37.8177
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 31 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 1.1429
+  ...
+# Subtest: Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+ok 32 - Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+  ---
+  duration_ms: 101.8401
+  ...
+# Subtest: Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+ok 33 - Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+  ---
+  duration_ms: 0.5189
+  ...
+# Subtest: youngMale: Three loads and applies every native action to its real rig
+ok 34 - youngMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 280.715
+  ...
+# Subtest: olderMale: Three loads and applies every native action to its real rig
+ok 35 - olderMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 176.6847
+  ...
+# Subtest: olderFemale: Three loads and applies every native action to its real rig
+ok 36 - olderFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 102.182
+  ...
+# Subtest: youngFemale: Three loads and applies every native action to its real rig
+ok 37 - youngFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 102.1525
+  ...
+# Subtest: youngMale: native action tracks are finite and preserve their last key
+ok 38 - youngMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 35.7607
+  ...
+# Subtest: olderMale: native action tracks are finite and preserve their last key
+ok 39 - olderMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 39.7658
+  ...
+# Subtest: olderFemale: native action tracks are finite and preserve their last key
+ok 40 - olderFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 20.1576
+  ...
+# Subtest: youngFemale: native action tracks are finite and preserve their last key
+ok 41 - youngFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 22.62
+  ...
+# Subtest: Combined initial work shows planting followed by first watering for both age speeds
+ok 42 - Combined initial work shows planting followed by first watering for both age speeds
+  ---
+  duration_ms: 0.6478
+  ...
+# Subtest: Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+ok 43 - Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+  ---
+  duration_ms: 0.2613
+  ...
+# Subtest: Carrying uses the original crate and idle uses the supplied resting pose
+ok 44 - Carrying uses the original crate and idle uses the supplied resting pose
+  ---
+  duration_ms: 0.1749
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1087.3885
