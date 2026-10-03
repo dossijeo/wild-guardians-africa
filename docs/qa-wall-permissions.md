@@ -35,3 +35,7 @@ Pasan **31/31 pruebas**, sin fallos, cancelaciones u omisiones, 10.387,6429 ms.
 Los animales del ensayo de comandos son estados mínimos de prueba: no se
 presentan como una incursión completa renderizada. Vite build pasa (5,59 s);
 conserva el aviso de tamaño del bundle, que requiere una evaluación independiente.
+
+
+El verificador del paquete web pasa: 559 archivos, 379.783.517 bytes, 796 enlaces
+relativos y 20 GLB de runtime; sin duplicados originales.
