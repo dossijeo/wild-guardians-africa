@@ -7,6 +7,7 @@ import argparse, base64, gzip, hashlib, json, pathlib, re, struct
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source', default=r'C:\Users\PC\Desktop\Wild Guardians New')
+parser.add_argument('--file', help='Extract one lab and preserve the existing manifest')
 args = parser.parse_args()
 repo = pathlib.Path(__file__).resolve().parents[1]
 assets = repo/'public'/'assets'
@@ -14,6 +15,12 @@ refs = repo/'references'/'extracted'
 assets.mkdir(parents=True, exist_ok=True)
 refs.mkdir(parents=True, exist_ok=True)
 inventory, resources, clips = [], {}, []
+manifest_path=repo/'content/manifests/assets.json'
+if args.file and manifest_path.exists():
+    previous=json.loads(manifest_path.read_text(encoding='utf-8'))
+    inventory=[s for s in previous['sources'] if s['file']!=args.file]
+    resources={r['sha256']:r for r in previous['resources']}
+    clips=previous['models']
 
 def digest(data): return hashlib.sha256(data).hexdigest()
 
@@ -61,6 +68,7 @@ def transform(value,origin,key=''):
     return value
 
 for path in sorted(pathlib.Path(args.source).glob('*.html')):
+    if args.file and path.name!=args.file: continue
     raw=path.read_bytes()
     source=raw.decode('utf-8')
     slug=path.stem
@@ -94,6 +102,11 @@ for path in sorted(pathlib.Path(args.source).glob('*.html')):
             record['payloads'].append({'id':identifier,'url':url})
         else:
             code=data_pattern.sub(lambda m:replace_data(m,origin),body)
+            inline=re.search(r'const VILLAGE_GEOM_DATA=(\{.*?\});',code)
+            if inline:
+                payload=transform(json.loads(inline.group(1)),origin+':VILLAGE_GEOM_DATA')
+                (folder/'settlement-geometry.json').write_text(json.dumps(payload,separators=(',',':')),encoding='utf-8')
+                code=code[:inline.start(1)]+json.dumps(payload,separators=(',',':'))+code[inline.end(1):]
             out=folder/(identifier+'.js')
             out.write_text(code,encoding='utf-8')
             record['code'].append(out.relative_to(repo).as_posix())
