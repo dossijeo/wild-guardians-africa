@@ -11,6 +11,27 @@ const source=readFileSync('references/extracted/Bioma_Lab_V4_0_Materiales_Luz_Op
 const method=source.match(/ resize\(\)\{[^\n]+/)[0];
 const resize=Function('canvas','devicePixelRatio','state','const mode="terrain";return ({'+method.trim()+'}).resize();');
 
+test('independent DPR cap reduces pixels without changing the quality profile or scene state',()=>{
+ const original=nativeRenderResolution(1280,720,1.25,'media'),limited=nativeRenderResolution(1280,720,1.25,'media',1);
+ assert.deepEqual([original.width,original.height],[1600,900]);assert.deepEqual([limited.width,limited.height],[1280,720]);
+ assert.equal(limited.width*limited.height/(original.width*original.height),.64);
+ for(const quality of ['muy_baja','baja','media','alta']){
+  const r=nativeRenderResolution(1280,720,2,quality,1);assert.deepEqual([r.width,r.height],[1280,720]);
+  assert.deepEqual(nativeRenderResolution(1280,720,.75,quality,1),nativeRenderResolution(1280,720,.75,quality));
+ }
+ for(const limit of [0,-1,NaN])assert.throws(()=>nativeRenderResolution(1280,720,2,'media',limit),RangeError);
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(),nativeGroundMaterial('media')),chunks=new Map([['0,0',new THREE.Group()]]),state={money:217,time:150};
+ const canvas={width:0,height:0,getBoundingClientRect:()=>({width:1280,height:720})},camera=new THREE.PerspectiveCamera();
+ let calls=0;const shadowMap={enabled:true};const world={canvas,camera,quality:'media',chunks,state,terrainMeshes:[ground],renderer:{shadowMap,setSize(w,h){calls++;canvas.width=w;canvas.height=h;}}};
+ const geometry=ground.geometry,material=ground.material,snapshot=JSON.stringify(state),previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');
+ Object.defineProperty(globalThis,'devicePixelRatio',{value:1.25,configurable:true});
+ try{
+  for(const limit of [undefined,1,1,undefined]){world.pixelRatioLimit=limit;WorldScene.prototype.resize.call(world);}
+  assert.equal(calls,3);assert.deepEqual([canvas.width,canvas.height],[1600,900]);
+  assert.equal(world.quality,'media');assert.equal(world.chunks,chunks);assert.equal(ground.geometry,geometry);assert.equal(ground.material,material);assert.equal(world.renderer.shadowMap,shadowMap);assert.equal(shadowMap.enabled,true);assert.equal(JSON.stringify(state),snapshot);
+ }finally{if(previous)Object.defineProperty(globalThis,'devicePixelRatio',previous);else delete globalThis.devicePixelRatio;}
+});
+
 test('physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions',()=>{
  for(const [width,height] of [[0,0],[320,640],[640,320],[1280,720],[1920,1080],[3840,2160],[5120,2880]])for(const ratio of [.75,1,1.25,2,4])for(const quality of ['muy_baja','baja','media','alta']){
   const canvas={width:0,height:0,getBoundingClientRect:()=>({width,height})},expected=resize(canvas,ratio,{quality:quality==='alta'?'high':quality==='media'?'normal':'eco'}),actual=nativeRenderResolution(width,height,ratio,quality);

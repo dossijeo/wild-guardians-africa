@@ -2,8 +2,9 @@ import * as THREE from 'three';
 
 // Terrain-mode resize from Bioma Lab V4.0. The fourth game profile shares
 // eco's DPR cap but additionally selects the unlit ground material.
-export function nativeRenderResolution(width,height,deviceRatio,quality){
-  const dpr=Math.min(deviceRatio||1,['baja','muy_baja'].includes(quality)?1:quality==='alta'?2:1.5);
+export function nativeRenderResolution(width,height,deviceRatio,quality,pixelRatioLimit=Infinity){
+  if(!(pixelRatioLimit>0))throw new RangeError('Pixel ratio limit must be positive');
+  const dpr=Math.min(deviceRatio||1,['baja','muy_baja'].includes(quality)?1:quality==='alta'?2:1.5,pixelRatioLimit);
   const cap=Math.min(1,Math.sqrt(2600000/Math.max(1,width*height*dpr*dpr))),actual=dpr*cap;
   return {width:Math.max(1,Math.round(width*actual)),height:Math.max(1,Math.round(height*actual)),dpr:actual,cssWidth:width,cssHeight:height};
 }
