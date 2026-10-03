@@ -23,7 +23,7 @@ snapshot con presupuesto y entrada intactos; copias/validación de bounds y regi
 demasiado pequeña. Las ocho pruebas espaciales usan navegación controlada y un
 grupo de estrés de cinco especies; no prueban su selección por presupuesto.
 
-Las 74 pruebas dirigidas pasan, incluidas las cadenas físicas de trabajadores,
+Las [74 pruebas dirigidas](qa/raid-border/targeted.txt) pasan, incluidas las cadenas físicas de trabajadores,
 reparaciones, cajas, reloj y navegación de incursiones. La prueba de cajas avanza
 ahora al siguiente amanecer desde la hora real de salida: ya no presupone que
 una incursión desde el borde termine antes del anochecer.
@@ -57,7 +57,12 @@ y una sola generación. [Comparación exacta](qa/raid-border/comparison.json),
 La acción inicial excedió el timeout de observación del click; se leyó su
 resultado posterior sin repetirla. No se acredita mejora de tiempo de entrada.
 
-Build y paquete web pasan: 554 archivos, 379,678,658 bytes, 794 enlaces relativos
+Las dos campañas activas de cien noches (girasol y mezcla de ocho cultivos) pasan
+con contratación pagada, entregas, incursiones completas y victoria única.
+La suite completa sigue ejecutándose con las demás campañas; no se declara aún
+que haya terminado.
+
+[Build y paquete web](qa/raid-border/build.txt) pasan: 554 archivos, 379,678,658 bytes, 794 enlaces relativos
 y 20 GLB runtime sin duplicados originales. La suite completa se registra tras
 terminar. La comprobación visual cubre Sabana/Mapungubwe, no la matriz de 30 mundos.
 El servidor QA 5176 y su pestaña se cerraron; 5173 permaneció intacto.

@@ -1,0 +1,382 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 9.2433
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 1.9379
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 120.1793
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.7031
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 60.2406
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 1.4341
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.7167
+  ...
+# Subtest: QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+ok 8 - QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value
+  ---
+  duration_ms: 245.2722
+  ...
+# Subtest: QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+ok 9 - QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built
+  ---
+  duration_ms: 104.2129
+  ...
+# Subtest: New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+ok 10 - New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues
+  ---
+  duration_ms: 47.852
+  ...
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 11 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 268.7309
+  ...
+# Subtest: QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+ok 12 - QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 37.2883
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 13 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 183.7637
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 14 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 126.5001
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 15 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 131.6294
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 16 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 216.412
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 17 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 95.8446
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+ok 18 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 72.4476
+  ...
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 19 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 348.1172
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 20 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 136.8107
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 21 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 65.3321
+  ...
+# Subtest: QA-056/057/064/065: dawn retains only ordered harvest, pickup fixes unpaid value, reload and replay pay once
+ok 22 - QA-056/057/064/065: dawn retains only ordered harvest, pickup fixes unpaid value, reload and replay pay once
+  ---
+  duration_ms: 100.7534
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 23 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 175.4349
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 24 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 2.2867
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 25 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 14.3327
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 26 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 9.6752
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 27 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.6348
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 28 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.6301
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 29 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 6.0008
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 30 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 9.8614
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 31 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.4126
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 32 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 3.8219
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 33 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 1.0758
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 34 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.6749
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 35 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 35.3806
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 36 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.7034
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 37 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.0482
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 38 - New midday center does not move plants or employees
+  ---
+  duration_ms: 2.7336
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 39 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 7.3293
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 40 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.5635
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 41 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.0736
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 42 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 2.432
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 43 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 5.302
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 44 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.2791
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 45 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.7134
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 46 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5679
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 47 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4156
+  ...
+# (node:20728) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-094: media complete group enters side 0 of the camera's active region
+ok 48 - QA-094: media complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 8.302
+  ...
+# Subtest: QA-094: media complete group enters side 1 of the camera's active region
+ok 49 - QA-094: media complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 1.4661
+  ...
+# Subtest: QA-094: media complete group enters side 2 of the camera's active region
+ok 50 - QA-094: media complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 1.2248
+  ...
+# Subtest: QA-094: media complete group enters side 3 of the camera's active region
+ok 51 - QA-094: media complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 1.0256
+  ...
+# Subtest: QA-094: alta complete group enters side 0 of the camera's active region
+ok 52 - QA-094: alta complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 0.8871
+  ...
+# Subtest: QA-094: alta complete group enters side 1 of the camera's active region
+ok 53 - QA-094: alta complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 0.6411
+  ...
+# Subtest: QA-094: alta complete group enters side 2 of the camera's active region
+ok 54 - QA-094: alta complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 1.0276
+  ...
+# Subtest: QA-094: alta complete group enters side 3 of the camera's active region
+ok 55 - QA-094: alta complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 1.2573
+  ...
+# Subtest: QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+ok 56 - QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+  ---
+  duration_ms: 6.8827
+  ...
+# Subtest: active bounds are copied, validated, and retained independently of route invalidation
+ok 57 - active bounds are copied, validated, and retained independently of route invalidation
+  ---
+  duration_ms: 4.2698
+  ...
+# Subtest: a region too small for the complete epic bodies cancels entry instead of spawning outside it
+ok 58 - a region too small for the complete epic bodies cancels entry instead of spawning outside it
+  ---
+  duration_ms: 1.204
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 59 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 11.8163
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 60 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.3098
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 61 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.8866
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 62 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.7639
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 63 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.2247
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 64 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.8154
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 65 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4729
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 66 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.557
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 67 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2809
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 68 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.9776
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 69 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.8856
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 70 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 4.8866
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 71 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.7333
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 72 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 1.2436
+  ...
+# Subtest: Structure connectivity preflight leaves the actual crop target priority unchanged
+ok 73 - Structure connectivity preflight leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 2.4597
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 74 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.471
+  ...
+1..74
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1341.4153
