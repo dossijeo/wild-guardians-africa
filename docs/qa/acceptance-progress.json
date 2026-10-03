@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "99cee68",
+  "implementation_commit": "85d89d8",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1427,54 +1427,72 @@
       "area": "Finales y expansión",
       "scenario": "Fin de ataque con cero centros y 799 monedas",
       "expected": "Game Over inmediato tras concluir incursión.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "Five cultures: actual Rhino hits remove the only operational center, animal physically exits, RaidEnded precedes one immediate GameOver at 799; save/load terminal state remains frozen. Flat production Navigation, explicit raid group/boundary credit; no natural threat/terrain or WebGL claim."
     },
     {
       "id": "QA-130",
       "area": "Finales y expansión",
       "scenario": "Fin de ataque con cero centros y 800 monedas",
       "expected": "No derrota inmediata por D141; recuperación solo en fase legal.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "Five cultures: 800 avoids immediate last-center defeat; night rebuild rejects unchanged, empty next dawn still requires 905. At a daylight clock an explicit physical raid ends and one replacement center costs exactly 800. Tests the phase permission, not the 10% daytime planner."
     },
     {
       "id": "QA-131",
       "area": "Finales y expansión",
       "scenario": "Amanecer en cada combinación de centro y recursos",
       "expected": "Umbrales 100/105/900/905 exactos antes de contratar.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "225 exact dawn cases: 5 cultures x intact/collapsing/ruined center x none/living/dead/loose-crate/delivered-crate x threshold -1/0/+1. Expected independent 100/105/900/905 table; actual Game dawn and SaveRepository reload continuations identical, checks occur before hiring/payment. No UI/terrain equivalence claim."
     },
     {
       "id": "QA-132",
       "area": "Finales y expansión",
       "scenario": "Selección recordada cuesta más que saldo pero ruta mínima existe",
       "expected": "No Game Over por la selección; permitir ajustarla.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "Actual Game at dawn with live crop/100 coins ignores expensive remembered selection for GameOver. Paying expensive selection rejects without mutation; SaveRepository reload then affordable olderFemale contract charges 100 once and resumes. Remaining: specifically exercise remembered selection adjustment in the real dialog."
     },
     {
       "id": "QA-133",
       "area": "Finales y expansión",
       "scenario": "Saldo en umbral con único cultivo lento",
       "expected": "Medir viabilidad real de varios días; conservar regla aprobada y registrar riesgo, no presumir demostración matemática.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "Actual worker/care continuation: paid banana seed and center, 100 coins pays one olderFemale day; next dawn has growth 262.10/570, three manual waters, zero crates and cash zero, resulting in defeat. Approved threshold preserved. Counterexample/risk recorded; minimum does not prove multi-day solvency. Explicit flat postcampaign fixture excludes attack/event randomness."
     },
     {
       "id": "QA-134",
       "area": "Finales y expansión",
       "scenario": "Llegar al inicio de noche 100",
       "expected": "Aún no victoria; hay que completar la noche y resolver lo que corresponda.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-economic-boundaries.md",
+        "tests/acceptance-economic-boundaries.test.js"
+      ],
+      "notes": "Five cultures: actual start of night 100 and 599.9 do not win; complete quiet night does. Actual last-center raid starts at 599.5, clock holds at 600 with completedNights 99 until physical exit. At 799 defeat before closing; 800 defeat after closing but before victory; 905 wins once after RaidEnded. Save/load terminal results frozen. Narration/postgame remain independent QA-135."
     },
     {
       "id": "QA-135",

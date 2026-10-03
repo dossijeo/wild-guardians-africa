@@ -1,0 +1,126 @@
+TAP version 13
+# Subtest: QA-129/130: mapungubwe a real last-center attack settles at exactly 799/800 before dawn
+ok 1 - QA-129/130: mapungubwe a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 30.442
+  ...
+# Subtest: QA-129/130: saheliana a real last-center attack settles at exactly 799/800 before dawn
+ok 2 - QA-129/130: saheliana a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 15.458
+  ...
+# Subtest: QA-129/130: suajili a real last-center attack settles at exactly 799/800 before dawn
+ok 3 - QA-129/130: suajili a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 11.044
+  ...
+# Subtest: QA-129/130: musgum a real last-center attack settles at exactly 799/800 before dawn
+ok 4 - QA-129/130: musgum a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 12.3284
+  ...
+# Subtest: QA-129/130: etiope a real last-center attack settles at exactly 799/800 before dawn
+ok 5 - QA-129/130: etiope a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 15.0325
+  ...
+# Subtest: QA-131: mapungubwe dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 6 - QA-131: mapungubwe dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 47.5882
+  ...
+# Subtest: QA-131: saheliana dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 7 - QA-131: saheliana dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 34.6507
+  ...
+# Subtest: QA-131: suajili dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 8 - QA-131: suajili dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 31.4075
+  ...
+# Subtest: QA-131: musgum dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 9 - QA-131: musgum dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 34.7647
+  ...
+# Subtest: QA-131: etiope dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 10 - QA-131: etiope dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 26.4511
+  ...
+# Subtest: QA-130: mapungubwe 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 11 - QA-130: mapungubwe 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 1.6727
+  ...
+# Subtest: QA-130: saheliana 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 12 - QA-130: saheliana 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 1.3605
+  ...
+# Subtest: QA-130: suajili 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 13 - QA-130: suajili 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 3.2081
+  ...
+# Subtest: QA-130: musgum 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 14 - QA-130: musgum 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 3.4484
+  ...
+# Subtest: QA-130: etiope 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 15 - QA-130: etiope 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 1.6331
+  ...
+# Subtest: QA-134/C07: mapungubwe a last-night raid crossing dawn resolves before defeat or victory
+ok 16 - QA-134/C07: mapungubwe a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 8.8695
+  ...
+# Subtest: QA-134/C07: saheliana a last-night raid crossing dawn resolves before defeat or victory
+ok 17 - QA-134/C07: saheliana a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 6.7743
+  ...
+# Subtest: QA-134/C07: suajili a last-night raid crossing dawn resolves before defeat or victory
+ok 18 - QA-134/C07: suajili a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 7.6561
+  ...
+# Subtest: QA-134/C07: musgum a last-night raid crossing dawn resolves before defeat or victory
+ok 19 - QA-134/C07: musgum a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 7.6152
+  ...
+# Subtest: QA-134/C07: etiope a last-night raid crossing dawn resolves before defeat or victory
+ok 20 - QA-134/C07: etiope a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 5.954
+  ...
+# Subtest: QA-132: an unaffordable remembered selection does not defeat an otherwise viable farm and can be adjusted
+ok 21 - QA-132: an unaffordable remembered selection does not defeat an otherwise viable farm and can be adjusted
+  ---
+  duration_ms: 2.6873
+  ...
+# Subtest: QA-134: starting night 100 is not a victory even when no attack is selected
+ok 22 - QA-134: starting night 100 is not a victory even when no attack is selected
+  ---
+  duration_ms: 33.5701
+  ...
+# Subtest: QA-133: the approved 100-coin threshold admits one slow banana but does not guarantee multi-day solvency
+ok 23 - QA-133: the approved 100-coin threshold admits one slow banana but does not guarantee multi-day solvency
+  ---
+  duration_ms: 182.3374
+  ...
+# {"day":102,"result":"defeat","money":0,"species":"platano","growth":262.0999999999827,"requiredGrowth":570,"waters":[{"at":0,"status":"manual","wait":0},{"at":95,"status":"manual","wait":0},{"at":190,"status":"manual","wait":0},{"at":285,"status":"future","wait":0},{"at":380,"status":"future","wait":0},{"at":475,"status":"future","wait":0}],"crates":0}
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 725.2537

@@ -68,5 +68,7 @@ restauración de contexto perdido ni el flujo completo del menú de ranuras.
 El resto de los 159 casos conserva su alcance independiente.
 
 La [CI del commit de pruebas](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37115114052)
-estaba en curso al registrar esta evidencia. No se repite build para cambios
-exclusivos de pruebas y documentación.
+terminó correctamente: **853/853**, cero fallos, 219.903,649006 ms. Verificaciones
+de assets, plan y rutas web, build y paquete aprobados. [Log completo](qa/crop-native-reload/ci-log.txt),
+[estado del run](qa/crop-native-reload/ci.json). No se repite build local para
+cambios exclusivos de pruebas y documentación.

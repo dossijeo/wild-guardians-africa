@@ -1,0 +1,430 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 16.2987
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 2.807
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 113.8184
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.6433
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 20.5086
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 1.6556
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.7655
+  ...
+# Subtest: QA-129/130: mapungubwe a real last-center attack settles at exactly 799/800 before dawn
+ok 8 - QA-129/130: mapungubwe a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 48.995
+  ...
+# Subtest: QA-129/130: saheliana a real last-center attack settles at exactly 799/800 before dawn
+ok 9 - QA-129/130: saheliana a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 27.3527
+  ...
+# Subtest: QA-129/130: suajili a real last-center attack settles at exactly 799/800 before dawn
+ok 10 - QA-129/130: suajili a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 20.0527
+  ...
+# Subtest: QA-129/130: musgum a real last-center attack settles at exactly 799/800 before dawn
+ok 11 - QA-129/130: musgum a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 20.4059
+  ...
+# Subtest: QA-129/130: etiope a real last-center attack settles at exactly 799/800 before dawn
+ok 12 - QA-129/130: etiope a real last-center attack settles at exactly 799/800 before dawn
+  ---
+  duration_ms: 21.3345
+  ...
+# Subtest: QA-131: mapungubwe dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 13 - QA-131: mapungubwe dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 54.844
+  ...
+# Subtest: QA-131: saheliana dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 14 - QA-131: saheliana dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 38.4824
+  ...
+# Subtest: QA-131: suajili dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 15 - QA-131: suajili dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 26.615
+  ...
+# Subtest: QA-131: musgum dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 16 - QA-131: musgum dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 39.6394
+  ...
+# Subtest: QA-131: etiope dawn checks operational centers and living/undelivered resources at each exact boundary
+ok 17 - QA-131: etiope dawn checks operational centers and living/undelivered resources at each exact boundary
+  ---
+  duration_ms: 32.1132
+  ...
+# Subtest: QA-130: mapungubwe 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 18 - QA-130: mapungubwe 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 2.9716
+  ...
+# Subtest: QA-130: saheliana 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 19 - QA-130: saheliana 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 4.1951
+  ...
+# Subtest: QA-130: suajili 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 20 - QA-130: suajili 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 2.8737
+  ...
+# Subtest: QA-130: musgum 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 21 - QA-130: musgum 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 3.7917
+  ...
+# Subtest: QA-130: etiope 800 permits a new center after an explicit raid at a daylight clock has physically ended
+ok 22 - QA-130: etiope 800 permits a new center after an explicit raid at a daylight clock has physically ended
+  ---
+  duration_ms: 3.9502
+  ...
+# Subtest: QA-134/C07: mapungubwe a last-night raid crossing dawn resolves before defeat or victory
+ok 23 - QA-134/C07: mapungubwe a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 10.105
+  ...
+# Subtest: QA-134/C07: saheliana a last-night raid crossing dawn resolves before defeat or victory
+ok 24 - QA-134/C07: saheliana a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 9.8341
+  ...
+# Subtest: QA-134/C07: suajili a last-night raid crossing dawn resolves before defeat or victory
+ok 25 - QA-134/C07: suajili a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 8.1223
+  ...
+# Subtest: QA-134/C07: musgum a last-night raid crossing dawn resolves before defeat or victory
+ok 26 - QA-134/C07: musgum a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 9.595
+  ...
+# Subtest: QA-134/C07: etiope a last-night raid crossing dawn resolves before defeat or victory
+ok 27 - QA-134/C07: etiope a last-night raid crossing dawn resolves before defeat or victory
+  ---
+  duration_ms: 5.9111
+  ...
+# Subtest: QA-132: an unaffordable remembered selection does not defeat an otherwise viable farm and can be adjusted
+ok 28 - QA-132: an unaffordable remembered selection does not defeat an otherwise viable farm and can be adjusted
+  ---
+  duration_ms: 2.2897
+  ...
+# Subtest: QA-133: the approved 100-coin threshold admits one slow banana but does not guarantee multi-day solvency
+ok 29 - QA-133: the approved 100-coin threshold admits one slow banana but does not guarantee multi-day solvency
+  ---
+  duration_ms: 227.6853
+  ...
+# Subtest: an idle frame or unrelated new worker event never reuses an old dawn
+ok 30 - an idle frame or unrelated new worker event never reuses an old dawn
+  ---
+  duration_ms: 3.2413
+  ...
+# Subtest: fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+ok 31 - fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+  ---
+  duration_ms: 0.6404
+  ...
+# Subtest: actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+ok 32 - actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+  ---
+  duration_ms: 10.939
+  ...
+# Subtest: actual raid exit saves its final state once, with reservations and queues resolved
+ok 33 - actual raid exit saves its final state once, with reservations and queues resolved
+  ---
+  duration_ms: 4.1329
+  ...
+# Subtest: economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+ok 34 - economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+  ---
+  duration_ms: 1.8042
+  ...
+# Subtest: hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+ok 35 - hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+  ---
+  duration_ms: 1.0526
+  ...
+# Subtest: purchase and return-to-menu snapshots preserve the current slot and command identities
+ok 36 - purchase and return-to-menu snapshots preserve the current slot and command identities
+  ---
+  duration_ms: 2.0484
+  ...
+# Subtest: Generated balance matches authoritative received JSON exactly
+ok 37 - Generated balance matches authoritative received JSON exactly
+  ---
+  duration_ms: 6.5152
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 38 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 1.3459
+  ...
+# Subtest: Money formatter never changes accounting
+ok 39 - Money formatter never changes accounting
+  ---
+  duration_ms: 26.5705
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 40 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 3.7009
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 41 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 0.2968
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 42 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.2888
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 43 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.2897
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 44 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 102.1411
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 45 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 2.4026
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 46 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 1.4582
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 47 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.3635
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 48 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.5549
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 49 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2598
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 50 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3307
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 51 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2927
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 52 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2275
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 53 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.257
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 54 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3819
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 55 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1822
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 56 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3294
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 57 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1477
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 58 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1154
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 59 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1112
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 60 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1323
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 61 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2025
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 62 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.7638
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 63 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.7377
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 64 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 1.7174
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+ok 65 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 0.6612
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 66 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.3246
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 67 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.3748
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 68 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.3014
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 69 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3205
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 70 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 3.0116
+  ...
+# Subtest: Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 71 - Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 4110.4624
+  ...
+# Subtest: Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 72 - Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 6892.1854
+  ...
+# Subtest: Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 73 - Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 5112.0188
+  ...
+# Subtest: Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 74 - Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 6170.9173
+  ...
+# Subtest: Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 75 - Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 5583.5704
+  ...
+# Subtest: entry searches the full active edge when only a distant corner admits the body and its exit
+ok 76 - entry searches the full active edge when only a distant corner admits the body and its exit
+  ---
+  duration_ms: 4.2097
+  ...
+# Subtest: a blocked entry-to-exit corridor cancels the entire group without allocating animals
+ok 77 - a blocked entry-to-exit corridor cancels the entire group without allocating animals
+  ---
+  duration_ms: 2.1036
+  ...
+# Subtest: native reverse approach search preserves endpoints and swept collision on a real detour
+ok 78 - native reverse approach search preserves endpoints and swept collision on a real detour
+  ---
+  duration_ms: 3.5412
+  ...
+# Subtest: legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+ok 79 - legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+  ---
+  duration_ms: 1.588
+  ...
+# Subtest: failed staging, backup or primary writes never announce success or lose the previous playable save
+ok 80 - failed staging, backup or primary writes never announce success or lose the previous playable save
+  ---
+  duration_ms: 6.0566
+  ...
+# Subtest: autosave is silent; an explicit confirmation is emitted only after a successful write
+ok 81 - autosave is silent; an explicit confirmation is emitted only after a successful write
+  ---
+  duration_ms: 0.4608
+  ...
+# Subtest: loading a valid snapshot under the wrong slot key recovers only that slot backup
+ok 82 - loading a valid snapshot under the wrong slot key recovers only that slot backup
+  ---
+  duration_ms: 7.0542
+  ...
+# Subtest: a wrong-slot primary cannot replace the last valid backup during a new save
+ok 83 - a wrong-slot primary cannot replace the last valid backup during a new save
+  ---
+  duration_ms: 0.9993
+  ...
+# Subtest: wrong-slot primary and backup fail explicitly instead of loading another campaign
+ok 84 - wrong-slot primary and backup fail explicitly instead of loading another campaign
+  ---
+  duration_ms: 0.9223
+  ...
+1..84
+# tests 84
+# suites 0
+# pass 84
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28138.5269
