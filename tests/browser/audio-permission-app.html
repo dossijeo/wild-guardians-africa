@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Production audio permission retry</title>
+<script src="/i18n/loader.js"></script><div id="app"></div>
+<aside style="position:fixed;right:8px;top:8px;width:330px;max-height:55vh;overflow:auto;z-index:100000;background:#fffdeae8;color:#18231e;padding:10px;font:13px system-ui">
+<strong>QA-151 · Production audio permission retry</strong><p>Uses the original menu and selector. A single original Start handler loads the production app. The parent AudioContext.resume rejects with a controlled NotAllowedError until enabled. Writes normal QA-origin campaign slots.</p>
+<label><input type="checkbox" id="deny" checked>Reject parent AudioContext.resume with NotAllowedError</label><p><button id="double">Activate native Start once</button> <button id="allow">Allow audio retry</button> <button id="retry">Retry through production pointer listener</button> <button id="read">Read evidence</button></p><p id="status">Reach the native culture step first. Output is muted; real assets and WebAudio are used on retry.</p><pre id="report" style="white-space:pre-wrap"></pre>
+</aside>
+<script type="module">
+const messages=[],attempts=[],canvases=new Set(),errors=[],initialSlots=slots();
+function slots(){return Object.fromEntries(Object.keys(localStorage).filter(k=>/^wild-guardians:slot:/.test(k)&&!/:backup$|:pending$/.test(k)).sort().map(k=>[k,JSON.parse(localStorage.getItem(k))]));}
+import {AudioSystem} from '../../src/audio/audio.js';
+const settingsKey='wild-guardians:settings',originalSettings=localStorage.getItem(settingsKey);
+localStorage.setItem(settingsKey,JSON.stringify({...JSON.parse(originalSettings??'{}'),sfx:0,music:0}));
+const resumes=[],unlocks=[],systems=new Set(),nativeResume=AudioContext.prototype.resume,nativeUnlock=AudioSystem.prototype.unlock;
+AudioContext.prototype.resume=async function(){if(document.querySelector('#deny').checked){await this.suspend();const error=new DOMException('QA controlled initial audio permission rejection','NotAllowedError');resumes.push({accepted:false,name:error.name,state:this.state});return Promise.reject(error);}return nativeResume.call(this).then(()=>{resumes.push({accepted:true,state:this.state});paint();});};
+AudioSystem.prototype.unlock=async function(){systems.add(this);try{await nativeUnlock.call(this);unlocks.push({accepted:true});}catch(error){unlocks.push({accepted:false,name:error.name});throw error;}finally{paint();}};
+document.querySelector('#allow').onclick=()=>{document.querySelector('#deny').checked=false;paint();};
+document.querySelector('#retry').onclick=()=>{document.querySelector('#status').textContent='Production document pointer listener handled retry; read after real audio loads.';paint();};
+addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+addEventListener('pagehide',()=>{if(originalSettings===null)localStorage.removeItem(settingsKey);else localStorage.setItem(settingsKey,originalSettings);});
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='wild-guardians:menu'&&e.data.action==='start'){messages.push({...e.data,at:performance.now()});paint();}});
+new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.id==='world')canvases.add(node);for(const canvas of node.querySelectorAll?.('canvas#world')??[])canvases.add(canvas);}paint();}).observe(document.querySelector('#app'),{childList:true,subtree:true});
+function paint(){const current=slots(),oldUnchanged=Object.entries(initialSlots).every(([key,value])=>JSON.stringify(current[key])===JSON.stringify(value));document.querySelector('#report').textContent=JSON.stringify({attempts,messages,audioDenied:document.querySelector('#deny').checked,resumes,unlocks,audio:[...systems].map(a=>({context:a.context?.state,voices:a.voices.size,musicVoices:[...a.voices.values()].filter(v=>v.music).length,pack:a.pack,transport:!!a.transport,rates:a.active.map(v=>v.playbackRate.value),musicGain:a.musicGain?.gain.value,sfxGain:a.sfxGain?.gain.value})),worldCanvasCreations:canvases.size,liveWorldCanvases:document.querySelectorAll('#world').length,liveNativeMenuFrames:document.querySelectorAll('#native-menu').length,initialSlotCount:Object.keys(initialSlots).length,currentSlotCount:Object.keys(current).length,addedSlots:Object.entries(current).filter(([key])=>!Object.hasOwn(initialSlots,key)).map(([key,s])=>({key,slotId:s.slotId,biome:s.biome,culture:s.culture,money:s.ledger.balance,time:s.time,structures:s.structures.length,pauses:s.pauses})),oldUnchanged,errors},null,2);}
+document.querySelector('#read').onclick=paint;
+document.querySelector('#double').onclick=()=>{
+ try{
+  const menu=document.querySelector('#native-menu').contentDocument,frame=menu.querySelector('iframe.production-section'),doc=frame.contentDocument,win=frame.contentWindow,button=doc.querySelector('#confirmButton');
+  if(!button||button.disabled||win.WildGuardiansNewGameMenu.getState().step!=='culture')throw new Error('Reach the culture step first');
+  const attempt={clicks:0,cancelledLaunches:0,simulatedStarts:0,selection:win.WildGuardiansNewGameMenu.getSelection(),states:[]};attempts.push(attempt);
+  button.addEventListener('click',()=>attempt.clicks++,{capture:true});
+  win.addEventListener('wildguardians:new-game',e=>{if(e.defaultPrevented)attempt.cancelledLaunches++;});win.addEventListener('wildguardians:game-started',()=>attempt.simulatedStarts++);
+  button.click();attempt.states.push(win.WildGuardiansNewGameMenu.getState());
+  document.querySelector('#status').textContent='Native Start dispatched; wait for production result.';paint();
+ }catch(e){errors.push(String(e));document.querySelector('#status').textContent=e.message;paint();}
+};
+await import('../../src/app/main.js');paint();
+</script></html>

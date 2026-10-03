@@ -1791,13 +1791,14 @@
       "area": "Guardado y presentación",
       "scenario": "Cargar recursos faltantes o audio sin permiso inicial",
       "expected": "Error o fallback controlado; no pantalla infinita ni mundo corrupto.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-lifecycle.md",
         "docs/qa/resource-retry/README.md",
-        "docs/qa/shader-retry/README.md"
+        "docs/qa/shader-retry/README.md",
+        "docs/qa/audio-permission-app/README.md"
       ],
-      "notes": "Audio network/decode/cache rejection retry and CPU controlled unlock failure previously verified. Actual app/native selector: HTTP404 for sky catalogue, terrain binary and compressed GLB returns menu with zero worlds/new slots; normal retry loads one1000-coin world. Real GPU compiler now rejects one injected vertex shader (COMPILE_STATUS false), displays one recovery alert and returns menu without saving; prior slot unchanged. Clean retry renders before saving one additional valid slot. First render/additional villages validated before save; shader link failure enters loading/runtime error path, runtime failure stops repeated frames. 13 directed shader/disposal/i18n tests pass. Remaining: integrated initial audio permission/unlock acceptance; QA-151 stays partial."
+      "notes": "Audio network/decode/cache rejection retry and CPU controlled unlock failure previously verified. Actual app/native selector: HTTP404 for sky catalogue, terrain binary and compressed GLB returns menu with zero worlds/new slots; normal retry loads one1000-coin world. Real GPU compiler now rejects one injected vertex shader (COMPILE_STATUS false), displays one recovery alert and returns menu without saving; prior slot unchanged. Clean retry renders before saving one additional valid slot. First render/additional villages validated before save; shader link failure enters loading/runtime error path, runtime failure stops repeated frames. 13 directed shader/disposal/i18n tests pass. Remaining: integrated initial audio permission/unlock acceptance; QA-151 stays partial. Actual production app/native Start with controlled NotAllowedError after real AudioContext.suspend: world/tutorial render, one valid1000/time0 slot and three old slots unchanged; no voices while suspended. Original document pointer listener retry resumes native context and loads ten real packA MusicTransport stems at rate1, muted gain0, same world/slot. Zero console/global errors. Controlled denial, no actual browser permission-dialog or perceptual listening claim. Combined resource/GPU failure plus audio fallback now verifies QA-151."
     },
     {
       "id": "QA-152",

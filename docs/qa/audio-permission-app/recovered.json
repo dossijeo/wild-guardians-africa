@@ -1,0 +1,140 @@
+{
+  "attempts": [
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 23528
+    }
+  ],
+  "audioDenied": false,
+  "resumes": [
+    {
+      "accepted": false,
+      "name": "NotAllowedError",
+      "state": "suspended"
+    },
+    {
+      "accepted": false,
+      "name": "NotAllowedError",
+      "state": "suspended"
+    },
+    {
+      "accepted": false,
+      "name": "NotAllowedError",
+      "state": "suspended"
+    },
+    {
+      "accepted": true,
+      "state": "running"
+    },
+    {
+      "accepted": true,
+      "state": "running"
+    }
+  ],
+  "unlocks": [
+    {
+      "accepted": false,
+      "name": "NotAllowedError"
+    },
+    {
+      "accepted": false,
+      "name": "NotAllowedError"
+    },
+    {
+      "accepted": false,
+      "name": "NotAllowedError"
+    },
+    {
+      "accepted": true
+    },
+    {
+      "accepted": true
+    }
+  ],
+  "audio": [
+    {
+      "context": "running",
+      "voices": 10,
+      "musicVoices": 10,
+      "pack": "a",
+      "transport": true,
+      "rates": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "musicGain": 0,
+      "sfxGain": 0
+    }
+  ],
+  "worldCanvasCreations": 1,
+  "liveWorldCanvases": 1,
+  "liveNativeMenuFrames": 0,
+  "initialSlotCount": 3,
+  "currentSlotCount": 4,
+  "addedSlots": [
+    {
+      "key": "wild-guardians:slot:6fa1951b-52a1-452e-9166-52e19f7e8f7e",
+      "slotId": "6fa1951b-52a1-452e-9166-52e19f7e8f7e",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "money": {
+        "n": "1000",
+        "d": "1"
+      },
+      "time": 0,
+      "structures": 0,
+      "pauses": [
+        "intro",
+        "tutorial-reading"
+      ]
+    }
+  ],
+  "oldUnchanged": true,
+  "errors": []
+}
