@@ -204,7 +204,7 @@ export class WorldScene {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
         if(e.kind==='center')mesh=this.centerMesh(e);
-        else if(e.kind==='wall')mesh=new NativeWall(this.wallPrototypes,e);
+        else if(e.kind==='wall')mesh=new NativeWall(this.wallPrototypes,e,s.elapsed);
         else if(e.species&&'growth' in e)mesh=new THREE.Group();
         else if('value' in e){mesh=new THREE.Group();this.objects.set(e.id,mesh);this.crate(e).catch(error=>this.onError?.(error));}
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();this.objects.set(e.id,mesh);this.actor(e,'profile' in e?'worker':'animal').catch(error=>this.onError?.(error));}
@@ -215,7 +215,7 @@ export class WorldScene {
       mesh.position.set(e.x,this.nav.field.surface(e.x,e.z)+.025,e.z);
       if('value' in e)mesh.visible=!e.carrierId;
       if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
-      if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt);}
+      if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}
       else if(e.kind==='center')mesh.update(e,s.elapsed);
       if(e.species&&'growth' in e) {
         const growth=e.growth/cropSpec(e.species).growth_seconds,stage=growth>=1?4:Math.max(0,marks.findIndex(m=>growth<m)-1),key=`${cropIds.indexOf(e.species)}:${stage}`;

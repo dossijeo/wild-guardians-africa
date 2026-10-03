@@ -131,7 +131,7 @@ export function updateRaid(s,dt,nav) {
           const shield=spellAt(s,'shield',target);
           if(!shield){
             if('alive' in target){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
-            else {hitStructure(target,animalSpec(a.species).structure_hit_damage);emit(s,'StructureHit',{targetId:target.id});}
+            else {hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);emit(s,'StructureHit',{targetId:target.id});}
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.

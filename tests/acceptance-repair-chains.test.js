@@ -43,9 +43,9 @@ function spendFiftyFive(s,nav){
 
 test('QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival',()=>{
  const {s,nav,target}=ordered();assert.deepEqual(Game.repairCost(target),rational(189,20));
- hitStructure(target,51);nav.setState(s);assert.equal(target.hp,168);assert.deepEqual(Game.repairCost(target),rational(77,5));
+ hitStructure(target,51,s.elapsed);nav.setState(s);assert.equal(target.hp,168);assert.deepEqual(Game.repairCost(target),rational(77,5));
  until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'));
- assert.equal(target.hp,300);assert.equal(target.status,'intact');assert.equal(numberOf(s.ledger.balance),44);
+ assert.equal(target.hp,300);assert.equal(target.status,'intact');assert.equal(target.wallPresentation,undefined);assert.equal(numberOf(s.ledger.balance),44);
  assert.deepEqual(Object.values(s.ledger.entries).filter(v=>v.n==='-16'),[rational(-16)]);
 });
 

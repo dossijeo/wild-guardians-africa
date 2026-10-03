@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {wallVisualAt} from '../simulation/structure-presentation.js';
 import {wallStages,morphedWallPositions} from './walls-native.js';
 import {nativeGateLeaves} from '../world/gate-frames-native.js';
 import {splitGateBridge,articulateGate} from './gate-articulation.js';
@@ -16,15 +17,16 @@ export function wallBridge(source,destination=null){
 }
 
 export class NativeWall extends THREE.Group {
-  constructor(prototypes,entity){
+  constructor(prototypes,entity,elapsed){
     super();this.prototypes=prototypes;this.entityId=entity.id;this.parts=[];
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
-    this.update(entity);
+    this.update(entity,undefined,elapsed);
   }
-  update(entity,seconds){
+  update(entity,seconds,elapsed){
     const target=entity.hp/entity.maxHp;let visual=target;
-    if(entity.status==='ruined')visual=0;
+    if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
+    else if(entity.status==='ruined')visual=0;
     else if(entity.status==='collapsing'){
       if(this.lastStatus!=='collapsing')this.collapseFromVisual=this.visual??target;
       const t=Math.max(0,Math.min(1,1-entity.collapseRemaining/1.4));visual=this.collapseFromVisual*(1-t*t*(3-2*t));

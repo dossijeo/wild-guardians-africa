@@ -280,7 +280,7 @@ function completeTask(s,w,t,target,nav) {
   else if(t.kind==='repair') {
     try {
       if(transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)))){
-        target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);
+        delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);
         emit(s,'RepairApplied',{targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }

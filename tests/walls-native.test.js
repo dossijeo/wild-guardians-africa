@@ -6,6 +6,10 @@ import vm from 'node:vm';
 import * as THREE from 'three';
 import {wallStages,morphedWallPositions} from '../src/rendering/walls-native.js';
 import {NativeWall,wallBridge} from '../src/rendering/walls.js';
+import * as Game from '../src/simulation/game.js';
+import {hitStructure} from '../src/simulation/rules.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {Navigation} from '../src/world/navigation.js';
 const manifest=JSON.parse(readFileSync(new URL('../content/manifests/walls-native.json',import.meta.url)));
 const source=readFileSync(new URL('../'+manifest.source,import.meta.url),'utf8');
 const context=vm.createContext({});
@@ -75,4 +79,19 @@ test('Articulated leaves retain finite native damage bridges and reconstruct the
     entity.status='ruined';entity.hp=0;wall.update(entity);assert.match(wall.stageKey,/destruido/);
     entity.status='intact';entity.hp=60;entity.gateOpen=0;wall.update(entity);assert.deepEqual(wall.parts[0].mesh.geometry.attributes.position.array,closed);wall.dispose();
   }
+});
+
+// Recreate the renderer from a real snapshot, not another copy first created
+// halfway through collapse. This catches dependence on the old renderer's fade.
+test('wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload',()=>{
+ for(const material of ['zarzas','empalizada','adobe','reforzado','piedra'])for(const gate of [false,true]){
+  const s=Game.newGame({seed:712,slotId:'wall-visual-reload'}),nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];Game.resume(s,'intro');
+  Game.placeStructure(s,'center',{x:-20,z:-20},nav);Game.placeStructure(s,'wall',{kind:'wall',material,gate,x:0,z:0},nav);s.tutorial.step='done';s.initialPreparation=false;s.time=320;s.nightPlan={at:320,done:true,group:[]};
+  const e=s.structures.at(-1),live=new NativeWall(prototypes(),e,s.elapsed);
+  const equalReload=()=>{const before=serialize(s),copy=deserialize(before),restored=new NativeWall(prototypes(),copy.structures.at(-1),copy.elapsed);assert.equal(restored.visual,live.visual,material+' gate='+gate+' visual at '+s.elapsed);assert.equal(restored.stageKey,live.stageKey);for(let i=0;i<live.parts.length;i++){assert.deepEqual(restored.parts[i].mesh.geometry.attributes.position.array,live.parts[i].mesh.geometry.attributes.position.array);assert.deepEqual(restored.parts[i].mesh.geometry.attributes.normal.array,live.parts[i].mesh.geometry.attributes.normal.array);}assert.equal(serialize(s),before,'rendering must not mutate persisted presentation');restored.dispose();};
+  hitStructure(e,e.maxHp*.4,s.elapsed);live.update(e,0,s.elapsed);Game.tick(s,.24,nav);live.update(e,.24,s.elapsed);equalReload();
+  hitStructure(e,e.maxHp*.4,s.elapsed);live.update(e,0,s.elapsed);Game.tick(s,.35,nav);live.update(e,.35,s.elapsed);equalReload();
+  Game.pause(s,'qa');const paused=live.visual;Game.tick(s,20,nav);live.update(e,0,s.elapsed);assert.equal(live.visual,paused);equalReload();Game.resume(s,'qa');
+  Game.tick(s,1.05,nav);live.update(e,1.05,s.elapsed);assert.equal(e.status,'ruined');equalReload();live.dispose();
+ }
 });

@@ -1,4 +1,5 @@
 import {BALANCE as B} from './balance.js';
+import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
 export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)throw new Error('Animal desconocido'); return c; };
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
@@ -43,12 +44,14 @@ export function dawnMinimum(state) {
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }
-export function hitStructure(s,damage) {
+export function hitStructure(s,damage,elapsed) {
   if(s.status!=='intact')return false;
+  const visual=s.kind==='wall'&&Number.isFinite(elapsed)?wallVisualAt(s,elapsed):null;
   s.hp=Math.max(0,s.hp-damage);
   if(s.hp<=collapseThreshold(s)+1e-9) {
     s.status='collapsing'; s.collapseRemaining=s.kind==='center'?3.2:1.4;
   }
+  if(visual!==null)recordWallPresentation(s,visual,elapsed);
   return true;
 }
 export function nextRandom(state) {
