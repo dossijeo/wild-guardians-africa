@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA permisos de murallas</title>
 <style>body{font:16px system-ui;margin:24px}button,a{padding:12px;margin:8px}pre{white-space:pre-wrap}</style>
 <h1>Permisos de murallas</h1><p>Origen QA local. Sabana/Mapungubwe original, crédito explícito de 10000 monedas, centro y mijo pagados y una mujer mayor contratada mediante comandos reales. Escribe solo qa-wall-permissions.</p>
-<label>Escenario <select id="mode"><option value="sunset">Antes del anochecer</option><option value="night">Noche</option><option value="raid">Incursión nocturna</option></select></label><button id="prepare" disabled>Preparar partida de QA</button><button id="read">Leer guardados</button><a href="../../">Abrir juego</a><p id="status">Preparando terreno…</p><pre id="summary"></pre><details><summary>Snapshots públicos</summary><pre id="snapshots"></pre></details>
+<label>Escenario <select id="mode"><option value="sunset">Antes del anochecer</option><option value="night">Noche</option><option value="raid">Incursión nocturna</option><option value="day-raid">Incursión diurna con 42 plátanos pagados</option></select></label><button id="prepare" disabled>Preparar partida de QA</button><button id="read">Leer guardados</button><a href="../../">Abrir juego</a><p id="status">Preparando terreno…</p><p>Intentos de generación diurna (QA, no medición de probabilidad): <output id="attempts">0</output></p><pre id="summary"></pre><details><summary>Snapshots públicos</summary><pre id="snapshots"></pre></details>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {spawnRaid} from '../../src/simulation/raids.js';
@@ -19,7 +19,22 @@ try {
  const state=Game.newGame({seed:712,slotId:'qa-wall-permissions'}),nav=new Navigation(712,'sabana',pack.profile),place=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);state.ledger.balance=rational(10000);Game.resume(state,'intro');Game.placeStructure(state,'qa-library-center',place.center,nav);
  let site;for(let z=-6;z<=6&&!site;z+=1.5)for(let x=6;x<15&&!site;x+=1.5){const p={x:place.center.x+x,z:place.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}if(!site)throw new Error('Falta sitio legal para el cultivo');
- Game.plant(state,'qa-library-mijo','mijo',site.x,site.z,nav);Game.pause(state,'hiring');Game.hire(state,'qa-library-contract',{olderFemale:1});state.tutorial.step='done';state.tutorial.basicSkipped=true;state.tutorial.seen=[...TUTORIAL_IDS];state.time=280;
- document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{const draft=structuredClone(state),mode=document.querySelector('#mode').value;draft.slotId='qa-wall-permissions-'+mode;draft.time=mode==='sunset'?280:310;if(mode==='raid'){spawnRaid(draft,{group:['warthog']},nav);if(!draft.raid)throw new Error('No se pudo generar la incursión nativa');}repo.save(draft);read();status.textContent='Partida preparada: '+mode;};status.textContent='Lista para preparar';read();
+ Game.plant(state,'qa-library-mijo','mijo',site.x,site.z,nav);Game.pause(state,'hiring');Game.hire(state,'qa-library-contract',{olderFemale:1});state.tutorial.step='done';state.tutorial.basicSkipped=true;state.tutorial.seen=[...TUTORIAL_IDS];state.time=200;
+ document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{const draft=structuredClone(state),mode=document.querySelector('#mode').value;draft.slotId='qa-wall-permissions-'+mode;draft.time=mode==='sunset'||mode==='day-raid'?200:310;
+ if(mode==='day-raid'){
+  draft.time=0;nav.setState(draft);let count=0;
+  for(let z=-30;z<=30&&count<42;z+=2)for(let x=-30;x<=30&&count<42;x+=2){
+   const p={x:place.center.x+x,z:place.center.z+z};
+   if(!nav.placement(p.x,p.z,.4).valid||draft.plants.some(c=>Math.hypot(c.x-p.x,c.z-p.z)<1.1))continue;
+   Game.plant(draft,'qa-day-banana-'+count,'platano',p.x,p.z,nav);count++;
+  }
+  if(count!==42)throw new Error('No hay terreno para 42 plátanos legales');
+  draft.time=200;draft.dayPlan={at:200,done:true};let attempts=0;
+  while(!draft.raid&&attempts++<100)spawnRaid(draft,{},nav,true);
+  if(!draft.raid)throw new Error('No se pudo generar incursión diurna');
+  document.querySelector('#attempts').textContent=String(attempts);
+  nav.setState(state);
+ }
+ if(mode==='raid'){spawnRaid(draft,{group:['warthog']},nav);if(!draft.raid)throw new Error('No se pudo generar la incursión nativa');}repo.save(draft);read();status.textContent='Partida preparada: '+mode;};status.textContent='Lista para preparar';read();
 }catch(e){status.textContent='Error: '+e.message;console.error(e);}
 </script></html>

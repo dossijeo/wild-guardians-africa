@@ -1,0 +1,31 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 15:33
+  - img "Dinero"
+  - generic: 2,8K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir" [active]:
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - dialog "Construir":
+      - heading "Construir" [level=2]
+      - button "Cerrar": ×
+      - button "Centro de trabajo 800 monedas" [disabled]:
+        - strong: Centro de trabajo
+        - generic: 800 monedas
+      - button "Murallas" [disabled]:
+        - strong: Murallas
+      - button "Contratar equipo" [disabled]
+  - complementary
+  - button "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."

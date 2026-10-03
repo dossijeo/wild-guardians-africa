@@ -1,0 +1,28 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 16:07
+  - img "Dinero"
+  - generic: 9,1K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - dialog "Construir muralla":
+      - heading "Construir muralla" [level=2]
+      - button "Cerrar": ×
+      - paragraph: 3 módulos · 30 monedas
+      - paragraph: El trazado verde aún no está construido. Confirma para pagar y colocarlo.
+      - button "Construir por 30 monedas"
+      - button "Cancelar trazado"
+  - complementary
