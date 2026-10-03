@@ -46,13 +46,17 @@ for(const culture of Game.CULTURES)for(const profile of profiles)test(`QA-106–
 for(const profile of profiles)test(`QA-107/111/112: ${profile} actual injured person rehired with a healthy colleague, ordinary recovery and emergency Run`,()=>{
  let {s,nav,w}=fixture('mapungubwe',profile);until(s,nav,()=>w.incapacitated);const personId=w.personId;
  until(s,nav,()=>w.status==='home'&&!s.raid);assert.equal(s.people.find(p=>p.id===personId).recoveryUntil,4);
- Game.placeStructure(s,'replacement',{x:-12,z:12},nav);Game.tick(s,600,nav);assert.equal(s.day,4);assert.ok(s.pauses.includes('hiring'));
+ if(!s.structures.some(c=>c.status==='intact'))Game.placeStructure(s,'replacement',{x:-12,z:12},nav);
+ Game.tick(s,600,nav);assert.equal(s.day,4);assert.ok(s.pauses.includes('hiring'));
  s=saved(s);nav=navigation(s);Game.hire(s,'hire-day-4',{[profile]:2});s.dayPlan={done:true};s.nightPlan={done:true};
  assert.equal(s.workers.length,2);w=s.workers.find(w=>w.personId===personId);const healthy=s.workers.find(w=>w.personId!==personId);
  assert.ok(w&&healthy);assert.equal(w.recovering,true);assert.equal(w.incapacitated,false);assert.equal(healthy.recovering,false);assert.equal(s.people.length,2);
  for(let i=0;i<5;i++)Game.plant(s,'urgent-'+i,'mijo',8+i*2,8,nav);
  const allowance=w.runRemaining,walk=w.walkPhase??0;Game.tick(s,.5,nav);
  assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);assert.ok(Math.abs(w.walkPhase-walk-.5)<1e-8);assert.equal(workerPose(w,null,s.elapsed,libraries[profile]).name,'Walk_Skip');assert.equal(healthy.running,true);
+ until(s,nav,()=>w.status==='acting');const assigned=s.tasks.find(t=>t.id===w.taskId),crop=s.plants.find(p=>p.id===assigned.targetId);
+ assert.equal(assigned.kind,'initial');assert.equal(w.recovering,true);assert.equal(w.runRemaining,allowance);
+ until(s,nav,()=>crop.water[0].status==='manual');assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===crop.id).length,1);assert.equal(w.runRemaining,allowance);
  // Exhausted allowance is an explicit precondition; recovering people still
  // use emergency Run, without consuming or replenishing ordinary metres.
  w.runRemaining=0;spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);const run=w.runPhase??0;Game.tick(s,.05,nav);
