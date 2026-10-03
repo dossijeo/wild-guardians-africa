@@ -1510,5 +1510,10 @@ export const messages = {
   "Preparando": "Preparing",
   "Procesamiento": "Processing",
   "Uso": "Use",
-  "El centro no tiene un camino válido al poblado": "The work center has no valid path to a village"
+  "El centro no tiene un camino válido al poblado": "The work center has no valid path to a village",
+  "Resolución del mundo": "World resolution",
+  "Según calidad": "Follow quality",
+  "Ahorro alto": "High savings",
+  "Ahorro máximo": "Maximum savings",
+  "Reduce la nitidez del mundo 3D; el HUD conserva su resolución.": "Reduces the sharpness of the 3D world; the HUD keeps its resolution."
 };

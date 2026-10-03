@@ -1,4 +1,5 @@
 import '../ui/styles.css';
+import {WORLD_RESOLUTIONS,worldResolution,applyWorldResolution} from './world-resolution.js';
 import {renderCommandFeedback} from '../ui/command-feedback.js';
 import {BALANCE as B} from '../simulation/balance.js';
 import * as Game from '../simulation/game.js';
@@ -23,6 +24,7 @@ const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
+settings.resolution=worldResolution(settings.resolution);
 const audio=new AudioSystem(settings);
 let commandFeedback='',hudSize='',frameImages=null,guardian=null,tutorial=null,tutorialInert=null,tutorialFocus=null,pendingWall=null;
 const tutorialProfile=new TutorialProfile(localStorage);
@@ -48,7 +50,7 @@ window.addEventListener('message',event=>{
    if(data.action==='load-slot')return startGame(saves.load(data.slotId));
    if(data.action==='start'&&Game.BIOMES.includes(data.biome)&&Game.CULTURES.includes(data.culture)){selectedBiome=data.biome;selectedCulture=data.culture;return startGame();}
    if(data.action==='request-settings')respond({settings});
-   if(data.action==='settings-change'&&['muy_baja','baja','media','alta'].includes(data.settings?.quality)&&[data.settings.sfx,data.settings.music].every(value=>Number.isFinite(value)&&value>=0&&value<=1)){Object.assign(settings,data.settings);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();}
+   if(data.action==='settings-change'&&['muy_baja','baja','media','alta'].includes(data.settings?.quality)&&[data.settings.sfx,data.settings.music].every(value=>Number.isFinite(value)&&value>=0&&value<=1)){Object.assign(settings,data.settings);settings.resolution=worldResolution(settings.resolution);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();}
   });
 });
 let selectedBiome='sabana',selectedCulture='mapungubwe';
@@ -92,7 +94,7 @@ async function startGame(loaded=null) {
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>toolPanel('plant'));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(buildPanel);
-    world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#stats');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>wallPreview(points));world.qualitySetting(settings.quality);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
+    world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#stats');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>wallPreview(points));world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     await world.load(state,nav,payload);tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
   } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}
@@ -234,10 +236,10 @@ function pauseDialog() {
   bind('resume',()=>{Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';});bind('save',()=>{save();Game.notice(state,'Partida guardada.');});bind('game-settings',()=>settingsDialog(true));bind('exit',menu);
 }
 function settingsDialog(inGame=false) {
-  const html=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>A tu ritmo</h2><label class="settings-row">Idioma<select data-language-select id="game-language"><option value="en">English</option><option value="es">Español</option></select></label><label class="settings-row">Sonidos<input id="sfx-volume" type="range" min="0" max="1" step=".05" value="${settings.sfx}"></label><label class="settings-row">Música<input id="music-volume" type="range" min="0" max="1" step=".05" value="${settings.music}"></label><label class="settings-row">Calidad<select id="quality">${[['muy_baja','Muy baja'],['baja','Baja'],['media','Media'],['alta','Alta']].map(([id,label])=>`<option value="${id}" ${settings.quality===id?'selected':''}>${label}</option>`).join('')}</select></label><div class="dialog-actions">${button('close-settings','Volver')}</div></section></div>`;
+  const html=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>A tu ritmo</h2><label class="settings-row">Idioma<select data-language-select id="game-language"><option value="en">English</option><option value="es">Español</option></select></label><label class="settings-row">Sonidos<input id="sfx-volume" type="range" min="0" max="1" step=".05" value="${settings.sfx}"></label><label class="settings-row">Música<input id="music-volume" type="range" min="0" max="1" step=".05" value="${settings.music}"></label><label class="settings-row">Calidad<select id="quality">${[['muy_baja','Muy baja'],['baja','Baja'],['media','Media'],['alta','Alta']].map(([id,label])=>`<option value="${id}" ${settings.quality===id?'selected':''}>${label}</option>`).join('')}</select></label><label class="settings-row">Resolución del mundo<select id="world-resolution">${WORLD_RESOLUTIONS.map(([id,label])=>`<option value="${id}" ${settings.resolution===id?'selected':''}>${label}</option>`).join('')}</select></label><p>Reduce la nitidez del mundo 3D; el HUD conserva su resolución.</p><div class="dialog-actions">${button('close-settings','Volver')}</div></section></div>`;
   if(inGame)document.querySelector('#modal').innerHTML=html;else {const el=document.createElement('div');el.id='settings-overlay';el.innerHTML=html;app.append(el);}
   document.querySelector('#game-language').value=window.WildGuardiansLanguage.getLanguage();
-  for(const id of ['sfx-volume','music-volume','quality'])document.getElementById(id).oninput=()=>{settings.sfx=Number(document.querySelector('#sfx-volume').value);settings.music=Number(document.querySelector('#music-volume').value);const previous=settings.quality;settings.quality=document.querySelector('#quality').value;localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();if(world&&previous!==settings.quality){world.qualitySetting(settings.quality);world.syncChunks();}};
+  for(const id of ['sfx-volume','music-volume','quality','world-resolution'])document.getElementById(id).oninput=()=>{settings.sfx=Number(document.querySelector('#sfx-volume').value);settings.music=Number(document.querySelector('#music-volume').value);const previous=settings.quality;settings.quality=document.querySelector('#quality').value;settings.resolution=worldResolution(document.querySelector('#world-resolution').value);if(world)applyWorldResolution(world,settings.resolution);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();if(world&&previous!==settings.quality){world.qualitySetting(settings.quality);world.syncChunks();}};
   bind('close-settings',()=>inGame?pauseDialog():document.querySelector('#settings-overlay').remove());
 }
 function resultDialog() {

@@ -32,8 +32,8 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    y reempaquetado al cambiar LOD; otros recorridos CPU siguen pendientes.
 7. **Profundidad VFX:** estudiar ruta específica conservando alpha test, clipping,
    skinning, morph, crecimiento y agujeros DEST. No explica una vista sin efectos.
-8. **Resolución (diagnóstico medido):** [DPR 1 manteniendo calidad media](qa-resolution.md),
-   36 % menos de píxeles; selector del mundo separado del HUD pendiente.
+8. **Resolución (diagnóstico medido y selector implementado):** [DPR 1 manteniendo calidad media](qa-resolution.md),
+   36 % menos de píxeles; [selector persistente separado del HUD](qa-resolution-settings.md).
    Intercambia nitidez por rendimiento; variación GPU y alcance preservados.
 
 Origen relativo y cambios 1/6 publicados; [alcance y evidencia de acciones](qa-performance-actions.md). Estas prioridades no
