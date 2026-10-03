@@ -13,7 +13,7 @@ test('authored depth route shares live deformation uniforms and restores origina
  assert.equal(mesh.material,source);assert.equal(source.colorWrite,true);assert.equal(source.visible,true);assert.equal(depth.colorWrite,true);assert.equal(depth.visible,false);
 });
 test('unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes',()=>{
- for(const change of [f=>delete f.depth.userData.worldDepthCompatible,f=>f.source.clippingPlanes=[new THREE.Plane()],f=>f.source.alphaTest=.3,f=>f.source.alphaHash=true,f=>f.source.wireframe=true,f=>f.source.displacementMap=new THREE.Texture(),f=>f.source.polygonOffset=true,f=>f.depth.side=THREE.FrontSide,f=>f.mesh.material=[f.source]]){
+ for(const change of [f=>delete f.depth.userData.worldDepthCompatible,f=>f.source.visible=false,f=>f.source.clippingPlanes=[new THREE.Plane()],f=>f.source.alphaTest=.3,f=>f.source.alphaHash=true,f=>f.source.wireframe=true,f=>f.source.displacementMap=new THREE.Texture(),f=>f.source.polygonOffset=true,f=>f.depth.side=THREE.FrontSide,f=>f.mesh.material=[f.source]]){
   const f=fixture();change(f);const original=f.mesh.material;
   const stats=withDepthCaptureMaterials(f.world,()=>assert.equal(f.mesh.material,original));assert.equal(stats.specialized,0);assert.equal(stats.fallback,1);assert.equal(f.mesh.material,original);
  }

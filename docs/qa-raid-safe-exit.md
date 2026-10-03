@@ -43,8 +43,10 @@ instantes de planificación y aparición para poder guardar incluso una
 incursión corta. La [suite completa](qa/raid-safe-exit/full-tests.txt) pasa:
 748/748, cero fallos, cancelaciones u omisiones, 501565.78 ms. Incluye las 30
 campañas mínimas de seis biomas por cinco culturas y las dos fincas activas
-de 100 noches. El CI remoto de este cambio sigue en ejecución al redactar
-este informe; no se acredita todavía su resultado.
+de 100 noches. El [CI del commit de implementación](qa/raid-safe-exit/ci.json)
+terminó correctamente: validaciones, 748 pruebas, compilación, paquete web,
+ZIP itch y artefactos publicados. También terminó correctamente el CI del
+commit de documentación `26e7a0e`.
 
 Verificaciones de assets, assets web y plan aprobadas. Compilación y paquete
 web aprobados: 554 archivos, 379679088 bytes, 794 enlaces relativos y 20 GLB

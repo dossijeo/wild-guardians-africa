@@ -1,0 +1,170 @@
+TAP version 13
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 1 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 3176.8333
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 2 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 8.3663
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 3 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 2.8639
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 4 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 7.1582
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 5 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 20.1063
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 6 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 17.893
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 7 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 3.0923
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 8 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 111.2151
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 9 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.9256
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 10 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 68.4405
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 11 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 14.6622
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 12 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 10.1897
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 13 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 4.2127
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 14 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 40.2195
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 15 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.0936
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 16 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 0.9081
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 17 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 34.529
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 18 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 16.1048
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 19 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 14.5963
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 20 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 10.1217
+  ...
+# Subtest: authored depth route shares live deformation uniforms and restores original objects and materials after failure
+ok 21 - authored depth route shares live deformation uniforms and restores original objects and materials after failure
+  ---
+  duration_ms: 4.9336
+  ...
+# Subtest: unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+ok 22 - unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+  ---
+  duration_ms: 4.7721
+  ...
+# Subtest: transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+ok 23 - transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+  ---
+  duration_ms: 1.0118
+  ...
+# Subtest: Terrain contact maps world heights into a translated, rotated and scaled effect frame
+ok 24 - Terrain contact maps world heights into a translated, rotated and scaled effect frame
+  ---
+  duration_ms: 51.1187
+  ...
+# Subtest: Native debris follows original terrain heights in all six biomes without changing domain state
+ok 25 - Native debris follows original terrain heights in all six biomes without changing domain state
+  ---
+  duration_ms: 42.3278
+  ...
+# Subtest: All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+ok 26 - All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+  ---
+  duration_ms: 162.2374
+  ...
+# Subtest: Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+ok 27 - Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+  ---
+  duration_ms: 24.5163
+  ...
+# Subtest: Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+ok 28 - Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+  ---
+  duration_ms: 18.5828
+  ...
+# Subtest: Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+ok 29 - Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+  ---
+  duration_ms: 30.4457
+  ...
+# Subtest: Effects never participate in interaction raycasts and release private resources before the shared atlas
+ok 30 - Effects never participate in interaction raycasts and release private resources before the shared atlas
+  ---
+  duration_ms: 16.4278
+  ...
+# Subtest: Native environment retains distinct day, sunset and night lighting for particles
+ok 31 - Native environment retains distinct day, sunset and night lighting for particles
+  ---
+  duration_ms: 0.4687
+  ...
+# Subtest: Two native local lights retain source positions/colors on world materials and disappear when stopped
+ok 32 - Two native local lights retain source positions/colors on world materials and disappear when stopped
+  ---
+  duration_ms: 10.4726
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5779.3699
