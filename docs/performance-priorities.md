@@ -91,3 +91,23 @@ Esta revisión confirma que las modificaciones posteriores de eventos agrícolas
 autosaves, contratos y cosechas guardadas no introducen regresiones en esas
 pruebas. No es una nueva medición de FPS, GPU ni equivalencia visual en navegador.
 Las pruebas y mediciones pendientes de las ocho prioridades permanecen abiertas.
+
+## Revisión de las sugerencias recibidas sobre `4cf2678`
+
+Se contrastaron de nuevo los ocho puntos con la implementación actual. Las
+acciones de herramientas, murallas y fundación usan `syncResidentProps()`;
+no llaman a `syncChunks(true)`. El cambio conserva las supresiones de navegación
+y actualiza únicamente los slots residentes afectados.
+
+Pasan **58/58 pruebas dirigidas**, cero fallos, cancelaciones u omisiones,
+1.045,2277 ms: props residentes, buffers de cultivos, caché y cámara de sombras,
+bounds de poblados, materiales, obstrucciones, ruido, Toon, profundidad,
+calidad, análisis de caras y resolución del mundo.
+[Salida completa](qa/performance-actions/integrated-4cf2678.txt).
+Esta selección no incluye todas las pruebas de la revisión anterior de 69 casos;
+no es una medición nueva de FPS ni una comparación visual nueva.
+
+Se mantienen pendientes los experimentos de caras por categoría y LOD, receta
+barata de ruido y profundidad de interiores/ceniza. No se desactiva por defecto
+el ruido ni se sustituyen globalmente materiales por FrontSide. La separación
+entre sombras estáticas y dinámicas sigue siendo una mejora posterior.
