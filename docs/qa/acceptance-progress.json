@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "f51ea33",
+  "implementation_commit": "26b80c6",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1141,9 +1141,13 @@
       "area": "Incursiones e IA",
       "scenario": "Llegar al objetivo dentro de finca y retirarse",
       "expected": "Entra corriendo, se mueve caminando dentro y sale corriendo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-motion-shield.md",
+        "tests/acceptance-raid-motion-shield.test.js",
+        "docs/qa/raid-motion-shield/directed.txt"
+      ],
+      "notes": "25 actual paid native-centre/crop incursions across five species and five cultures; physical trajectories checked each50ms, native Running entry/exit and Walking farm, calibrated full-speed samples3.8/1.5m/s and motion-phase limits, all physical exits once. Transition tick with zero budget uses exit speed. Complementary real native GLB rig tests pass. Funded flat Navigation fixtures, explicit groups, no new WebGL/biome obstacle inspection."
     },
     {
       "id": "QA-099",
@@ -1163,18 +1167,26 @@
       "area": "Incursiones e IA",
       "scenario": "Agotar último golpe",
       "expected": "No ejecuta un ataque extra por colisión con trabajador; salida mantiene separación física.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-motion-shield.md",
+        "tests/acceptance-raid-motion-shield.test.js",
+        "docs/qa/raid-motion-shield/directed.txt"
+      ],
+      "notes": "Five cultural seed21 actual paid olderFemale sowing and explicit warthog with natural budget2; two real worker encounters exhaust hits during committed agricultural animation. Save atzero, fresh Navigation, full state equality every tick until real retreat; swept relative native body separation, no third worker hit, no agricultural hit/miss/damage, livecrop and one end. Actor-motion covers all five native radii in controlled blocked-passages. Funded flat Navigation fixtures, explicit groups, no new WebGL/biome obstacle inspection."
     },
     {
       "id": "QA-101",
       "area": "Incursiones e IA",
       "scenario": "Encontrar Escudo",
       "expected": "No lo atraviesa; golpea borde, gasta cupo y no daña lo protegido.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-motion-shield.md",
+        "tests/acceptance-raid-motion-shield.test.js",
+        "docs/qa/raid-motion-shield/directed.txt"
+      ],
+      "notes": "25 actual legal Shield casts near live approach across five species/five cultures. Every physical approach segment stays outside radius1.95 plus native body; attack begins at border+0.1. SaveRepository reload/pause freezes duration/cooldown/clip; full states equal until one protected logicalhit spends one budget, with livecrop/intactcentre and no CropDestroyed/StructureHit. Shield stillactive; whole-raid coverage not claimed. Funded flat Navigation fixtures, explicit groups, no new WebGL/biome obstacle inspection."
     },
     {
       "id": "QA-102",
