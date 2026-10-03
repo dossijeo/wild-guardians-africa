@@ -77,3 +77,17 @@ del Escudo; es una comprobación de regresión, no una nueva medición GPU.
 La [CI de esa base](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37110777079)
 aprueba 787/787 pruebas y el paquete web. Los experimentos pendientes
 indicados arriba conservan su estado: no quedan acreditados por esta suite.
+
+## Regresión tras los cambios de gameplay y guardado
+
+Sobre `7cd4481` pasan **69/69 pruebas dirigidas**, cero fallos, cancelaciones
+u omisiones, 1.025,3525 ms. [Salida completa](qa/performance-actions/integrated-7cd4481.txt).
+Se comprueban props residentes, subidas de cultivos, caché y cámara de sombras,
+bounds de las cinco culturas, registro de materiales, obstrucciones, diagnóstico
+de ruido, extremos HDR, profundidad, calidad y composición Toon. Se incluyen
+también el analizador conservador de caras y la resolución independiente del HUD.
+
+Esta revisión confirma que las modificaciones posteriores de eventos agrícolas,
+autosaves, contratos y cosechas guardadas no introducen regresiones en esas
+pruebas. No es una nueva medición de FPS, GPU ni equivalencia visual en navegador.
+Las pruebas y mediciones pendientes de las ocho prioridades permanecen abiertas.
