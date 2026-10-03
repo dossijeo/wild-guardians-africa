@@ -8,7 +8,10 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    props del streaming del suelo. Conservar navegación, guardado, agua de assets,
    contactos, LOD, ocultación y sombras. Plantar y lanzar magia no deben retirar
    todos los chunks ni forzar el horizonte.
-2. **Caras:** experimentar por categorías con FrontSide en geometría cerrada;
+2. **Caras (props auditados):** [informe conservador](qa-face-sides.md), 120 props/360 LOD;
+   sin candidato cerrado acreditado en todos sus LOD, materiales conservados.
+   Pendiente prueba visual y GPU por prop/LOD y otras categorias.
+    experimentar por categorías con FrontSide en geometría cerrada;
    mantener hojas, planos y superficies abiertas. Revisar shadowSide y edificios
    dañados con cámara girada; comparar GPU e imágenes.
 3. **Caché de sombras (implementada):** [evidencia y límites](qa-shadow-cache.md).

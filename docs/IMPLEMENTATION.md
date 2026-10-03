@@ -264,3 +264,12 @@ cultivos, defensas, DEST, personajes y Basic sin errores.
 [Evidencia y límites](qa-hdr-endpoints.md). CI e988b6e aprobada; CI actual
 pendiente. Sigue pendiente auditoría completa del Plan Maestro y demás
 prioridades de rendimiento; esto no acredita matriz visual completa ni móvil.
+
+### 3 de octubre: auditoria de caras de props
+
+Analizador reproducible de posiciones exactas, aristas orientadas y volumen por
+componente: 120 props/360 LOD, atlas opacos; cuatro LOD superan el criterio,
+ningun prop completo ni LOD final de sombra. Se conservan materiales hasta
+comprobar casos concretos visualmente. Cuatro pruebas dirigidas aprobadas;
+no hay cambio runtime ni benchmark GPU de caras.
+[Evidencia y limites](qa-face-sides.md). CI 7241dc9 aprobada.
