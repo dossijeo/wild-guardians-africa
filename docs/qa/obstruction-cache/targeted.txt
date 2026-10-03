@@ -1,0 +1,101 @@
+TAP version 13
+# (node:33048) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+ok 1 - native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+  ---
+  duration_ms: 116.6302
+  ...
+# Subtest: render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+ok 2 - render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+  ---
+  duration_ms: 16.5665
+  ...
+# Subtest: short vegetation distance culling does not remove logical instances and reappears when the camera returns
+ok 3 - short vegetation distance culling does not remove logical instances and reappears when the camera returns
+  ---
+  duration_ms: 3.3324
+  ...
+# Subtest: cached coverage matches every previous frame through fades, tiny camera moves, lens, target, toggle, distance and snap
+ok 4 - cached coverage matches every previous frame through fades, tiny camera moves, lens, target, toggle, distance and snap
+  ---
+  duration_ms: 133.8417
+  ...
+# Subtest: settled population performs no further prop queries or coverage packing until camera or population changes
+ok 5 - settled population performs no further prop queries or coverage packing until camera or population changes
+  ---
+  duration_ms: 33.4786
+  ...
+# Subtest: explicit fresh population, replaced records and external coverage upload invalidate settled coverage
+ok 6 - explicit fresh population, replaced records and external coverage upload invalidate settled coverage
+  ---
+  duration_ms: 0.9096
+  ...
+# (node:34320) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 7 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 13.3431
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 8 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 9.8337
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 9 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 3.091
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 10 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 1.5227
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 11 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 3.4748
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 12 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 2.1516
+  ...
+# (node:31444) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+ok 13 - unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 25.9959
+  ...
+# Subtest: unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+ok 14 - unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 18.4984
+  ...
+# Subtest: suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+ok 15 - suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+  ---
+  duration_ms: 15.5926
+  ...
+# Subtest: navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+ok 16 - navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+  ---
+  duration_ms: 6.4185
+  ...
+# Subtest: an affected asset pool retires its material and instance buffer while preserving shared water geometry
+ok 17 - an affected asset pool retires its material and instance buffer while preserving shared water geometry
+  ---
+  duration_ms: 1.2369
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 674.4981
