@@ -35,9 +35,15 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    // A fresh navigator must share the saved route epoch. Rebuilding the same
+    // world is not a geometry change: recomputing a persisted local actor
+    // detour can otherwise select different waypoints immediately after load.
+    // Legacy saves have no epoch and conservatively invalidate their routes.
+    const restored=this.version===undefined&&Number.isSafeInteger(state.navigationVersion)&&state.navigationVersion>0;
+    this.version=restored?state.navigationVersion:(this.version??0)+1;
+    state.navigationVersion=this.version;
     this.state=state;
     this.portalGraphs=new Map();
-    this.version=(this.version??0)+1;
     this.walkCache.clear();
     this.segmentCache.clear();
     this.failedPaths.clear();
