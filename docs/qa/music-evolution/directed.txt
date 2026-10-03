@@ -1,0 +1,257 @@
+TAP version 13
+# (node:37872) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: leaving during menu JSON cannot start or decode stale music
+ok 1 - leaving during menu JSON cannot start or decode stale music
+  ---
+  duration_ms: 4.9743
+  ...
+# Subtest: leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+ok 2 - leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+  ---
+  duration_ms: 0.4013
+  ...
+# Subtest: late pack A loading and rejection cannot start A or stop the newer B stems
+ok 3 - late pack A loading and rejection cannot start A or stop the newer B stems
+  ---
+  duration_ms: 4.1462
+  ...
+# Subtest: failed network and failed decoder caches are evicted and one later request can retry
+ok 4 - failed network and failed decoder caches are evicted and one later request can retry
+  ---
+  duration_ms: 1.9793
+  ...
+# Subtest: failed SFX catalogue is coalesced, released and retryable
+ok 5 - failed SFX catalogue is coalesced, released and retryable
+  ---
+  duration_ms: 0.5597
+  ...
+# Subtest: failed stem allows same-day retry and partial playback start is cleaned up
+ok 6 - failed stem allows same-day retry and partial playback start is cleaned up
+  ---
+  duration_ms: 0.8476
+  ...
+# Subtest: suspending during decode does not falsely mark an inaudible pack as playing
+ok 7 - suspending during decode does not falsely mark an inaudible pack as playing
+  ---
+  duration_ms: 1.759
+  ...
+# Subtest: twenty menu enter/exit cycles release all source and volume nodes
+ok 8 - twenty menu enter/exit cycles release all source and volume nodes
+  ---
+  duration_ms: 2.3998
+  ...
+# Subtest: a rejected resume leaves audio idle and the next gesture can unlock the same context
+ok 9 - a rejected resume leaves audio idle and the next gesture can unlock the same context
+  ---
+  duration_ms: 0.5025
+  ...
+# (node:19180) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 10 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 41.6315
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 11 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 7.5535
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 12 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 2.9834
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 13 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.5266
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 14 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 3912.189
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 15 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 20.2505
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 16 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.9127
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 17 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 8.5318
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 18 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.8172
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 19 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 9.6062
+  ...
+# (node:16888) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 20 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 11.0389
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 21 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.4949
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 22 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 1.044
+  ...
+# (node:11612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a: native evolution changes one eligible layer on its grid and keeps anchors and quiet stems
+ok 23 - a: native evolution changes one eligible layer on its grid and keeps anchors and quiet stems
+  ---
+  duration_ms: 7.957
+  ...
+# Subtest: a: evolution waits for transitions, temporary arrangements and protected section cuts
+ok 24 - a: evolution waits for transitions, temporary arrangements and protected section cuts
+  ---
+  duration_ms: 1.3914
+  ...
+# Subtest: a: repeated result arrangements preserve the evolved snapshot and return progressively
+ok 25 - a: repeated result arrangements preserve the evolved snapshot and return progressively
+  ---
+  duration_ms: 2.1825
+  ...
+# Subtest: a: overlapping decks receive the same result curves and later voices inherit their remaining ramp
+ok 26 - a: overlapping decks receive the same result curves and later voices inherit their remaining ramp
+  ---
+  duration_ms: 1.6891
+  ...
+# Subtest: b: native evolution changes one eligible layer on its grid and keeps anchors and quiet stems
+ok 27 - b: native evolution changes one eligible layer on its grid and keeps anchors and quiet stems
+  ---
+  duration_ms: 2.1311
+  ...
+# Subtest: b: evolution waits for transitions, temporary arrangements and protected section cuts
+ok 28 - b: evolution waits for transitions, temporary arrangements and protected section cuts
+  ---
+  duration_ms: 0.5589
+  ...
+# Subtest: b: repeated result arrangements preserve the evolved snapshot and return progressively
+ok 29 - b: repeated result arrangements preserve the evolved snapshot and return progressively
+  ---
+  duration_ms: 0.9918
+  ...
+# Subtest: b: overlapping decks receive the same result curves and later voices inherit their remaining ramp
+ok 30 - b: overlapping decks receive the same result curves and later voices inherit their remaining ramp
+  ---
+  duration_ms: 1.0544
+  ...
+# Subtest: result integration deduplicates events, survives suspension and applies after the new scene without mutating state
+ok 31 - result integration deduplicates events, survives suspension and applies after the new scene without mutating state
+  ---
+  duration_ms: 0.8914
+  ...
+# (node:37440) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native A/B use independent audited grids and presets in the original ten-track order
+ok 32 - native A/B use independent audited grids and presets in the original ten-track order
+  ---
+  duration_ms: 2.6148
+  ...
+# Subtest: a: scene changes preserve stems, quantize on its grid and reach the native target
+ok 33 - a: scene changes preserve stems, quantize on its grid and reach the native target
+  ---
+  duration_ms: 8.5592
+  ...
+# Subtest: b: scene changes preserve stems, quantize on its grid and reach the native target
+ok 34 - b: scene changes preserve stems, quantize on its grid and reach the native target
+  ---
+  duration_ms: 3.7692
+  ...
+# Subtest: alternating packs cleans all old stems; scene mixing reads but never mutates game state
+ok 35 - alternating packs cleans all old stems; scene mixing reads but never mutates game state
+  ---
+  duration_ms: 2.1407
+  ...
+# (node:32188) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a: a partial splice failure releases both decks without throwing into simulation and can retry
+ok 36 - a: a partial splice failure releases both decks without throwing into simulation and can retry
+  ---
+  duration_ms: 8.1918
+  ...
+# Subtest: a: each of the three registered edges preserves exact destination and shared offsets
+ok 37 - a: each of the three registered edges preserves exact destination and shared offsets
+  ---
+  duration_ms: 7.5958
+  ...
+# Subtest: a: all natural sections reuse the original ten stems; global return crossfades together
+ok 38 - a: all natural sections reuse the original ten stems; global return crossfades together
+  ---
+  duration_ms: 6.1842
+  ...
+# Subtest: a: only its registered branches move together with native preroll and cooldown
+ok 39 - a: only its registered branches move together with native preroll and cooldown
+  ---
+  duration_ms: 7.6948
+  ...
+# Subtest: a: stop during prepared wrap releases both decks and all gain nodes
+ok 40 - a: stop during prepared wrap releases both decks and all gain nodes
+  ---
+  duration_ms: 0.7463
+  ...
+# Subtest: a: late callback preserves recording instead of a late branch; at end it restarts cleanly
+ok 41 - a: late callback preserves recording instead of a late branch; at end it restarts cleanly
+  ---
+  duration_ms: 1.4367
+  ...
+# Subtest: b: a partial splice failure releases both decks without throwing into simulation and can retry
+ok 42 - b: a partial splice failure releases both decks without throwing into simulation and can retry
+  ---
+  duration_ms: 1.852
+  ...
+# Subtest: b: each of the three registered edges preserves exact destination and shared offsets
+ok 43 - b: each of the three registered edges preserves exact destination and shared offsets
+  ---
+  duration_ms: 2.3171
+  ...
+# Subtest: b: all natural sections reuse the original ten stems; global return crossfades together
+ok 44 - b: all natural sections reuse the original ten stems; global return crossfades together
+  ---
+  duration_ms: 4.4381
+  ...
+# Subtest: b: only its registered branches move together with native preroll and cooldown
+ok 45 - b: only its registered branches move together with native preroll and cooldown
+  ---
+  duration_ms: 4.2395
+  ...
+# Subtest: b: stop during prepared wrap releases both decks and all gain nodes
+ok 46 - b: stop during prepared wrap releases both decks and all gain nodes
+  ---
+  duration_ms: 0.5665
+  ...
+# Subtest: b: late callback preserves recording instead of a late branch; at end it restarts cleanly
+ok 47 - b: late callback preserves recording instead of a late branch; at end it restarts cleanly
+  ---
+  duration_ms: 0.3854
+  ...
+1..47
+# tests 47
+# suites 0
+# pass 47
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4435.7982

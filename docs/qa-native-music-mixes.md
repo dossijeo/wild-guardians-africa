@@ -62,3 +62,9 @@ Por ello no se afirma que este cambio reproduzca todavía todo el motor musical.
 La base fd524ac incorpora decks, grafo y retorno global: véase
 [transporte musical nativo](qa-native-music-transport.md). Los límites indicados
 en este informe describen la base 6d056f3, no el estado posterior.
+
+## Continuacion: evolucion y resultados
+
+`8798a1b` integra la evolucion de una capa y los arreglos temporales nativos.
+[Evidencia y limites](qa-native-music-evolution.md). Se conserva QA-156 parcial
+por la escucha de empalmes candidatos y la alternancia dentro de campaña.

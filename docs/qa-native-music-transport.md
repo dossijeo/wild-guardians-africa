@@ -59,3 +59,9 @@ validación auditiva de los enlaces candidatos y alternancia A/B en campaña int
 La selección impar/par por día sigue siendo una decisión técnica de integración;
 los labs independientes no prescriben una regla A/B para la campaña.
 No se afirma que una salida silenciada valide fraseo o calidad musical perceptiva.
+
+## Continuacion: evolucion y resultados
+
+`8798a1b` integra la evolucion de una capa y los arreglos temporales nativos.
+[Evidencia y limites](qa-native-music-evolution.md). Se conserva QA-156 parcial
+por la escucha de empalmes candidatos y la alternancia dentro de campaña.
