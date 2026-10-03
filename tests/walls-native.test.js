@@ -10,6 +10,7 @@ import * as Game from '../src/simulation/game.js';
 import {hitStructure} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
+import {transact,rational,numberOf} from '../src/simulation/money.js';
 const manifest=JSON.parse(readFileSync(new URL('../content/manifests/walls-native.json',import.meta.url)));
 const source=readFileSync(new URL('../'+manifest.source,import.meta.url),'utf8');
 const context=vm.createContext({});
@@ -93,5 +94,17 @@ test('wall/gate damage and collapse geometry resume identically in a fresh rende
   hitStructure(e,e.maxHp*.4,s.elapsed);live.update(e,0,s.elapsed);Game.tick(s,.35,nav);live.update(e,.35,s.elapsed);equalReload();
   Game.pause(s,'qa');const paused=live.visual;Game.tick(s,20,nav);live.update(e,0,s.elapsed);assert.equal(live.visual,paused);equalReload();Game.resume(s,'qa');
   Game.tick(s,1.05,nav);live.update(e,1.05,s.elapsed);assert.equal(e.status,'ruined');equalReload();live.dispose();
+ }
+});
+
+test('paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer',()=>{
+ // Explicit QA funding covers all prices; movement/payment use production tasks.
+ for(const material of ['zarzas','empalizada','adobe','reforzado','piedra'])for(const gate of [false,true])for(const ruined of [false,true]){
+  const s=Game.newGame({seed:712,slotId:'repair-visual-reload'}),nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];Game.resume(s,'intro');
+  transact(s.ledger,'qa-repair-funding',rational(200));Game.placeStructure(s,'center',{x:10,z:0},nav);Game.placeStructure(s,'wall',{kind:'wall',material,gate,x:35,z:0},nav);Game.plant(s,'crop','mijo',20,10,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});s.tutorial.step='done';s.dayPlan.done=true;
+  const e=s.structures.at(-1),live=new NativeWall(prototypes(),e,s.elapsed);hitStructure(e,e.maxHp*.2,s.elapsed);live.update(e,0,s.elapsed);Game.tick(s,.5,nav);live.update(e,.5,s.elapsed);assert.equal(live.visual,.8);if(ruined){hitStructure(e,e.hp,s.elapsed);Game.tick(s,1.4,nav);live.update(e,1.4,s.elapsed);assert.equal(e.status,'ruined');assert.equal(live.visual,0);}
+  const balance=numberOf(s.ledger.balance),price={zarzas:10,empalizada:20,adobe:35,reforzado:55,piedra:80}[material],expected=ruined?price:Math.ceil(price*.2);Game.requestRepair(s,'repair',e.id);assert.equal(numberOf(s.ledger.balance),balance);for(let i=0;i<3000&&!s.events.some(x=>x.type==='RepairApplied');i++){Game.tick(s,.05,nav);live.update(e,.05,s.elapsed);}assert.ok(s.events.some(x=>x.type==='RepairApplied'),material+' repair must reach the wall physically');assert.ok(live.visual<1&&live.visual>=(ruined?0:.8),'BAST repair must retain its ascending 480 ms fade');assert.equal(numberOf(s.ledger.balance),balance-expected);const payments=Object.entries(s.ledger.entries).filter(([id])=>id.startsWith('repair:'));assert.equal(payments.length,1);assert.equal(numberOf(payments[0][1]),-expected);
+  for(const dt of [0,.1,.38]){Game.tick(s,dt,nav);live.update(e,dt,s.elapsed);const stored=serialize(s),copy=deserialize(stored),restored=new NativeWall(prototypes(),copy.structures.at(-1),copy.elapsed);assert.equal(restored.visual,live.visual,material+' gate='+gate+' repair fade at '+s.elapsed);assert.equal(restored.stageKey,live.stageKey);for(let i=0;i<live.parts.length;i++)assert.deepEqual(restored.parts[i].mesh.geometry.attributes.position.array,live.parts[i].mesh.geometry.attributes.position.array);assert.equal(serialize(s),stored);restored.dispose();}
+  assert.equal(e.hp,e.maxHp);assert.equal(live.visual,1);assert.equal(s.events.filter(x=>x.type==='RepairApplied').length,1);live.dispose();
  }
 });

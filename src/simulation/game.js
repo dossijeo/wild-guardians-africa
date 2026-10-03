@@ -2,6 +2,7 @@ import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {BALANCE as B} from './balance.js';
+import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,multiply,negate,transact,compare} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
@@ -280,7 +281,9 @@ function completeTask(s,w,t,target,nav) {
   else if(t.kind==='repair') {
     try {
       if(transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)))){
-        delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;nav.setState(s);
+        const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
+        delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
+        if(visual!==null)recordWallPresentation(target,visual,s.elapsed);nav.setState(s);
         emit(s,'RepairApplied',{targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
