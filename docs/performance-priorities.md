@@ -30,9 +30,9 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    reenviar matrices. Después: registros de materiales/agua y cachés de CPU.
 7. **Profundidad VFX:** estudiar ruta específica conservando alpha test, clipping,
    skinning, morph, crecimiento y agujeros DEST. No explica una vista sin efectos.
-8. **Resolución:** diagnóstico con DPR 1 conservando calidad media. Posible control
-   de resolución 3D separado del HUD HTML, explícitamente como intercambio de
-   nitidez por rendimiento.
+8. **Resolución (diagnóstico medido):** [DPR 1 manteniendo calidad media](qa-resolution.md),
+   36 % menos de píxeles; selector del mundo separado del HUD pendiente.
+   Intercambia nitidez por rendimiento; variación GPU y alcance preservados.
 
 Origen relativo y cambios 1/6 publicados; [alcance y evidencia de acciones](qa-performance-actions.md). Estas prioridades no
 sustituyen la auditoría funcional completa del Plan Maestro ni acreditan móvil.

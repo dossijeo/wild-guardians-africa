@@ -273,3 +273,17 @@ ningun prop completo ni LOD final de sombra. Se conservan materiales hasta
 comprobar casos concretos visualmente. Cuatro pruebas dirigidas aprobadas;
 no hay cambio runtime ni benchmark GPU de caras.
 [Evidencia y limites](qa-face-sides.md). CI 7241dc9 aprobada.
+
+### 3 de octubre: diagnostico de resolucion independiente
+
+Publicado 69e4053: limite opcional de DPR exclusivo del mundo, default nativo
+intacto y control QA reversible. Suite 645/645, dirigidas 6/6, build y paquete
+aprobados. Sabana/Mapungubwe, media: 1600x900 frente a 1280x720, misma camara,
+111 calls/1,560,185 triangulos; promedio GPU 48.52 frente a 42.23 ms, con
+variacion importante. Cache conservada, estado fijo, sin errores; warning
+ANGLE f_environment4 archivado y pendiente de investigar.
+[Evidencia y limites](qa-resolution.md). Caras auditadas en 3c3281f, sin
+cambio de materiales por falta de candidatos acreditados en todos los LOD.
+CI 3c3281f aprobada; CI actual pendiente. Pendientes: pruebas por prop/categoria,
+ruido barato, registros CPU, profundidad VFX, selector persistente de resolucion
+y aceptacion completa del Plan Maestro.
