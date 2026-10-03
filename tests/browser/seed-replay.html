@@ -1,0 +1,39 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA semilla y comandos</title>
+<style>body{margin:0;background:#ead9ad;color:#30281b;font:15px system-ui}header{padding:12px}button{padding:10px;margin:6px}canvas{display:block;width:100%;height:65vh}pre{white-space:pre-wrap;font-size:12px;padding:12px}</style>
+<header><h1>Reproducibilidad de dominio y diversidad visual</h1><p>Terreno/renderer de producción, semilla 781, quince cultivos y dos trabajadores pagados. Crédito explícito QA de 10000 monedas; dos noches con paso fijo, sin escrituras de guardados. La vista y los límites activos se conservan.</p><button id="run">Ejecutar las dos reproducciones</button><p id="status">Preparado</p></header>
+<canvas id="world"></canvas><pre id="report"></pre><details><summary>Datos completos de reproducción</summary><pre id="snapshots"></pre></details>
+<script type="module">
+import {prepareReplay,runReplay} from '../../tools/replay_campaign.mjs';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {MusicMixer} from '../../src/audio/music-mixer.js';
+const read=name=>json('/content/'+name+'.json'),errors=[],runs=[];let world,visualCalls=0,extraFrames=0;
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+const publish=data=>{report.textContent=JSON.stringify({...data,errors},null,2);};
+async function execute(decorated){
+ const run=await prepareReplay(read,{seed:781});world?.dispose();world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('media');await world.load(run.state,run.nav,run.payload);world.render(0);await world.whenChunksReady();
+ const bank=await read('music-a'),mixer=new MusicMixer('a',bank,new Map(bank.tracks.map(t=>[t.id,{cancelScheduledValues(){},setValueAtTime(){},linearRampToValueAtTime(){}}])),0,'day',{automatic:true,random:()=>.99});
+ const result=await runReplay(run,{visual:async(r,step)=>{
+  world.state=r.state;const before=serialize(r.state);
+  if(decorated){
+   for(let i=0;i<200;i++)Math.random();mixer.update(r.state.raid?'attack':r.state.time>=300?'night':'day',r.state.elapsed);
+   const center=r.state.structures[0],fx=world.vfxLibrary.create('dig',world.destructionPass,{density:step%2?.3:1,wind:step%2?1.7:.1});fx.position.set(center.x,run.nav.field.surface(center.x,center.z),center.z);world.scene.add(fx);fx.seek(1.5);fx.prepare(world.camera);
+   for(let i=0;i<6;i++){world.render(0);extraFrames++;}fx.dispose();visualCalls++;
+  }
+  world.render(0);if(serialize(r.state)!==before)throw new Error('Renderer mutated domain at '+step);
+  status.textContent=`${decorated?'Con diversidad visual':'Base'} · día ${r.state.day} · ${r.state.elapsed.toFixed(1)} s · checkpoint ${r.checkpoint}`;
+  publish({decorated,step,day:r.state.day,elapsed:r.state.elapsed,rng:r.state.rng,activeBounds:run.nav.activeBounds,visualCalls,extraFrames});await new Promise(resolve=>setTimeout(resolve,0));
+ }});
+ return {commands:result.commands,events:result.events,trace:result.trace,final:serialize(result.state),activeBounds:run.nav.activeBounds,day:result.state.day,result:result.state.result,rng:result.state.rng,checkpoints:result.checkpoints};
+}
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;status.textContent='Preparando reproducción base';
+ try{runs.push(await execute(false));status.textContent='Preparando diversidad visual';runs.push(await execute(true));
+  const sameCommands=JSON.stringify(runs[0].commands)===JSON.stringify(runs[1].commands),sameEvents=JSON.stringify(runs[0].events)===JSON.stringify(runs[1].events),sameTrace=JSON.stringify(runs[0].trace)===JSON.stringify(runs[1].trace),sameFinal=runs[0].final===runs[1].final,sameBounds=JSON.stringify(runs[0].activeBounds)===JSON.stringify(runs[1].activeBounds);
+  const result={sameCommands,sameEvents,sameTrace,sameFinal,sameBounds,visualCalls,extraFrames,runs:runs.map(r=>({day:r.day,result:r.result,rng:r.rng,checkpoints:r.checkpoints,commands:r.commands.length,events:r.events.length,agricultural:r.events.filter(e=>e.type==='AgriculturalEventApplied'),raids:r.events.filter(e=>e.type==='RaidSpawned')}))};
+  document.querySelector('#snapshots').textContent=JSON.stringify(runs,null,2);publish(result);status.textContent=sameCommands&&sameEvents&&sameTrace&&sameFinal&&sameBounds&&!errors.length?'PASS: dominio idéntico':'FAIL: revisar datos';
+ }catch(e){errors.push(e.message);status.textContent='Error';publish({visualCalls,extraFrames});}finally{document.querySelector('#run').disabled=false;}
+};addEventListener('pagehide',()=>world?.dispose());
+</script></html>
