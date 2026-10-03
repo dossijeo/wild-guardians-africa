@@ -1519,5 +1519,6 @@ export const messages = {
   "La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.": "The marked area is a preview. Tap another spot to move it. Confirm to activate the power.",
   "Activar poder": "Activate power",
   "Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.": "Choose a power and tap an area to preview it before confirming.",
-  "La partida guardada pertenece a otra ranura.": "The saved game belongs to another slot."
+  "La partida guardada pertenece a otra ranura.": "The saved game belongs to another slot.",
+  "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.": "Could not draw the world. Return to the menu to try again."
 };
