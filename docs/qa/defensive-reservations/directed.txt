@@ -1,0 +1,717 @@
+TAP version 13
+# Subtest: QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 1 - QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 143.1691
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 2 - QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 88.2959
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 3 - QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 285.9121
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 4 - QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 61.0593
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 5 - QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 62.7301
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 6 - QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 211.025
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 7 - QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 34.2362
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 8 - QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 42.373
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 9 - QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 190.7711
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 10 - QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 69.8531
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 11 - QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 103.031
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 12 - QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 158.8229
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 13 - QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 18.5997
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 14 - QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 32.341
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 15 - QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 155.1411
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 16 - QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 21.653
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 17 - QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 38.8566
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 18 - QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 126.5463
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 19 - QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 22.5267
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 20 - QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 28.6529
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 21 - QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 131.1151
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 22 - QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 51.3622
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 23 - QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 68.311
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 24 - QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 124.4745
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 25 - QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 27.2112
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 26 - QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 32.3942
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 27 - QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 135.6878
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 28 - QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 26.1611
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 29 - QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 28.151
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 30 - QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 140.0406
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 31 - QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 23.0072
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 32 - QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 26.9188
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 33 - QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 118.2324
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 34 - QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 73.2251
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 35 - QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 71.4941
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 36 - QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 146.1499
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 37 - QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 20.8124
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 38 - QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 27.0087
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 39 - QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 146.8479
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 40 - QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 24.8511
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 41 - QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 35.3072
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 42 - QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 115.0702
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 43 - QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.7141
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 44 - QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 30.3955
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 45 - QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 113.1485
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 46 - QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 55.9639
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 47 - QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 70.0427
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 48 - QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 150.6415
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 49 - QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.8386
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 50 - QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 32.9214
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 51 - QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 130.2929
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 52 - QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 24.7158
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 53 - QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 31.6598
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 54 - QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 133.6532
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 55 - QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 19.7676
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 56 - QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 27.5907
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 57 - QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 120.0947
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 58 - QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 55.1848
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 59 - QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 63.5164
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 60 - QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 119.5812
+  ...
+# Subtest: QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+ok 61 - QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 188.423
+  ...
+# Subtest: QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+ok 62 - QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 233.65
+  ...
+# Subtest: QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+ok 63 - QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 128.2087
+  ...
+# Subtest: QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+ok 64 - QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 186.8867
+  ...
+# Subtest: QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+ok 65 - QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 110.1681
+  ...
+# Subtest: QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+ok 66 - QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 180.9694
+  ...
+# Subtest: QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+ok 67 - QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 113.2818
+  ...
+# Subtest: QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+ok 68 - QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 186.7765
+  ...
+# Subtest: QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+ok 69 - QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 115.0603
+  ...
+# Subtest: QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+ok 70 - QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 190.7874
+  ...
+# Subtest: QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+ok 71 - QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 513.1022
+  ...
+# Subtest: QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+ok 72 - QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 696.7721
+  ...
+# Subtest: QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+ok 73 - QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 480.5467
+  ...
+# Subtest: QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+ok 74 - QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 400.6344
+  ...
+# Subtest: QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+ok 75 - QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 484.0459
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 76 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+  ---
+  duration_ms: 12.4839
+  ...
+# Subtest: QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+ok 77 - QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+  ---
+  duration_ms: 55.9465
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+ok 78 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 733.6285
+  ...
+# (node:25120) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-145: warthog six live checkpoints reload identically across all five native center cultures
+ok 79 - QA-145: warthog six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 695.8866
+  ...
+# Subtest: QA-145: hyena six live checkpoints reload identically across all five native center cultures
+ok 80 - QA-145: hyena six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 562.4915
+  ...
+# Subtest: QA-145: buffalo six live checkpoints reload identically across all five native center cultures
+ok 81 - QA-145: buffalo six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 380.6673
+  ...
+# Subtest: QA-145: lion six live checkpoints reload identically across all five native center cultures
+ok 82 - QA-145: lion six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 408.5948
+  ...
+# Subtest: QA-145: rhino six live checkpoints reload identically across all five native center cultures
+ok 83 - QA-145: rhino six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 484.2021
+  ...
+# Subtest: QA-099: warthog both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 84 - QA-099: warthog both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 20.442
+  ...
+# Subtest: QA-099: hyena both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 85 - QA-099: hyena both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 17.4485
+  ...
+# Subtest: QA-099: buffalo both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 86 - QA-099: buffalo both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 26.1955
+  ...
+# Subtest: QA-099: lion both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 87 - QA-099: lion both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 24.4032
+  ...
+# Subtest: QA-099: rhino both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 88 - QA-099: rhino both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 21.262
+  ...
+# Subtest: QA-097: warthog a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 89 - QA-097: warthog a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 37.1473
+  ...
+# Subtest: QA-097: hyena a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 90 - QA-097: hyena a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 27.4739
+  ...
+# Subtest: QA-097: buffalo a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 91 - QA-097: buffalo a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 39.5471
+  ...
+# Subtest: QA-097: lion a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 92 - QA-097: lion a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 34.4939
+  ...
+# Subtest: QA-097: rhino a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 93 - QA-097: rhino a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 32.7597
+  ...
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 94 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 267.9575
+  ...
+# Subtest: QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+ok 95 - QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 47.9146
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 96 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 185.6189
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 97 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 147.3426
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 98 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 131.4008
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 99 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 276.3724
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 100 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 123.8382
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+ok 101 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 121.0166
+  ...
+# Subtest: warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 102 - warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 16.6063
+  ...
+# Subtest: hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 103 - hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 3.6043
+  ...
+# Subtest: buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 104 - buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 3.7249
+  ...
+# Subtest: lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 105 - lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.8991
+  ...
+# Subtest: rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 106 - rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.589
+  ...
+# Subtest: An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+ok 107 - An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+  ---
+  duration_ms: 11.9373
+  ...
+# Subtest: Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+ok 108 - Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+  ---
+  duration_ms: 10.092
+  ...
+# Subtest: A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+ok 109 - A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+  ---
+  duration_ms: 7.9782
+  ...
+# Subtest: Two native animals crossing opposite ways maintain separation and both finish
+ok 110 - Two native animals crossing opposite ways maintain separation and both finish
+  ---
+  duration_ms: 4.3202
+  ...
+# Subtest: Saving midway through a detour preserves its route and deterministic motion
+ok 111 - Saving midway through a detour preserves its route and deterministic motion
+  ---
+  duration_ms: 8.5293
+  ...
+# Subtest: Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+ok 112 - Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+  ---
+  duration_ms: 0.8133
+  ...
+# Subtest: Legacy overlaps may escape continuously but cannot move deeper or across the other body
+ok 113 - Legacy overlaps may escape continuously but cannot move deeper or across the other body
+  ---
+  duration_ms: 0.3282
+  ...
+# Subtest: Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+ok 114 - Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+  ---
+  duration_ms: 69.5076
+  ...
+# Subtest: warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 115 - warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 321.1589
+  ...
+# Subtest: hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 116 - hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 190.4349
+  ...
+# Subtest: buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 117 - buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 187.6933
+  ...
+# Subtest: lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 118 - lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 171.2052
+  ...
+# Subtest: rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 119 - rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 172.3139
+  ...
+# Subtest: Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+ok 120 - Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+  ---
+  duration_ms: 5.591
+  ...
+# Subtest: Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+ok 121 - Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+  ---
+  duration_ms: 28.1972
+  ...
+# Subtest: Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+ok 122 - Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+  ---
+  duration_ms: 1.0269
+  ...
+# Subtest: Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+ok 123 - Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+  ---
+  duration_ms: 4.107
+  ...
+# Subtest: Original native endpoints form chain, crossing and T groups; separated walls and a missing link split them
+ok 124 - Original native endpoints form chain, crossing and T groups; separated walls and a missing link split them
+  ---
+  duration_ms: 5.1641
+  ...
+# Subtest: Gate and shortened native scales participate, while a real gap does not join
+ok 125 - Gate and shortened native scales participate, while a real gap does not join
+  ---
+  duration_ms: 2.6629
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 126 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 9.1767
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 127 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.8505
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 128 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 2.3471
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 129 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.7121
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 130 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.9466
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 131 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.6583
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 132 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3859
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 133 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5048
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 134 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.253
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 135 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4237
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 136 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.8541
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 137 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 8.5684
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 138 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.4769
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 139 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 3.5008
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 140 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 1.9073
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 141 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 0.9936
+  ...
+1..141
+# tests 141
+# suites 0
+# pass 141
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6630.4214

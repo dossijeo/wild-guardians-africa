@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "854a03a",
+  "implementation_commit": "f51ea33",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1114,11 +1114,14 @@
       "area": "Incursiones e IA",
       "scenario": "Elegir objetivos con reservas ya tomadas",
       "expected": "Ignora objetivos reservados; no comparte cultivo/grupo/tramo/conjunto/centro activo.",
-      "audit_status": "pending",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-daytime-raids.md"
+        "docs/qa-defensive-reservations.md",
+        "tests/acceptance-defensive-reservations.test.js",
+        "tests/defensive-groups.test.js",
+        "docs/qa/defensive-reservations/directed.txt"
       ],
-      "notes": "Incomplete: production targetFor reserves defensive pieces individually and ranks their individual cost. Plan13.7 requires defensive-set aggregate value and exclusivity. A legally paid five-piece adobe chain plus native centre, three explicit live warthogs, flat Navigation selects two pieces of the same chain simultaneously. Need implement native connected defensive groups, aggregate priority and exclusive reservations, including topology changes/reload; individual ID uniqueness is insufficient."
+      "notes": "Fixed Plan13.7 gap: native Bastion endpoints/scales/EPS0.10 connect defensive sets, aggregate original cost competes with centres, one owner per set, blocked-crop nearest barrier policy retained. Five paid cultural centres/chains and actual three-warthog navigation: centre and chain each one owner, free third retreats with budget; SaveRepository fresh Navigation exact every50ms until exit. Paid higher-value chain outranks centre. Prepared topology loss and conflicting legacy claim preserve live owner/rekey and reload. Three paid two-crop groups remain exclusive through six destructions. Cached components invalidate on geometry/status/cost; funded flat fixtures, explicit compositions, no new WebGL/performance measurement."
     },
     {
       "id": "QA-097",
