@@ -27,3 +27,10 @@ Plantar y lanzar magia siguen sin reconstruir el paisaje. Cambiar calidad conser
 Los tests `biome-update.test.js` comparan alturas, agua, distribución y máscaras con las funciones del **nuevo lab** en los seis biomas y chunks negativos. Acreditan continuidad entre halos, conservación/liberación de máscaras al cambiar calidad y recreación de la navegación con la plataforma guardada.
 
 La matriz visual en `qa/biome-v4-1-10-3/matrix.json` y sus capturas documenta los casos realmente completados. Es una escena de QA con WorldScene, assets, worker, poblados, centro y actores reales; no equivale a una campaña jugada. Las mediciones anteriores de ruido fino y coste GPU no se extrapolan a este material nuevo.
+
+
+Resultados finales: 30 combinaciones × día/noche, 60 capturas, cero errores de renderizado; prueba adicional de trabajadores y bestias en manglar y cambio Media → Muy baja → Media. La consola archivada incluye advertencias ANGLE X4000 del compilador HDR; no se ocultan ni se cuentan como errores.
+
+La [CI de 9481512](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37154214266) pasa **1.205/1.205** tests, verifica los 505 recursos y los 20 GLB, construye y valida el paquete web. Las seis pruebas que dependían del mapa antiguo se ejecutan explícitamente con terreno legacy; cinco casos nuevos comprueban la incursión y salida física en manglar con plataforma.
+
+Tras excluir seis recursos exclusivos del poblado demostrativo, la comprobación local del paquete pasa: **575 archivos, 403.778.267 bytes, 813 enlaces relativos**. El ZIP para itch.io contiene **351.685.314 bytes**, con CRCs verificados. Las tres pruebas de empaquetado también pasan. El archivo de referencia conserva íntegros esos recursos.

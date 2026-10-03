@@ -182,3 +182,8 @@ atribuyen nuevos ahorros GPU a esta comprobación. Continúan pendientes las
 comparaciones visuales/GPU de caras por categoría y LOD, una receta de ruido
 más barata, profundidad de interiores/ceniza y separación de sombras estáticas
 y dinámicas. La resolución sigue siendo un ajuste explícito de nitidez.
+
+
+## Materiales del lab V4.1.10.3
+
+La integración del nuevo lab sustituye la receta del suelo y la iluminación de props/poblados. Los ensayos anteriores de ruido fino y GPU no cuantifican esta versión. Se conservan los mapas nativos y el parallax cercano para mantener su apariencia; cualquier variante más barata necesita una nueva comparación visual y GPU. El paquete elimina únicamente los seis recursos del poblado demostrativo que no usa el juego (21.075.266 bytes), sin alterar los assets de las cinco culturas.
