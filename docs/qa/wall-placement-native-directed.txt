@@ -1,0 +1,70 @@
+TAP version 13
+# {"biome":"sabana","propId":"0:10:-3","slot":0,"points":[[133.91979038568385,-44.857974131114915],[142.40507175992244,-36.37269275687635]],"legalModules":3,"rejectedModules":3,"balance":"9200"}
+# Subtest: QA-085 sabana: native large prop rejects a chain containing legal modules without partial purchase
+ok 1 - QA-085 sabana: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 6503.5569
+  ...
+# {"biome":"gran-rio","propId":"0:4:-3","slot":1,"points":[[48.70653838072903,-35.449924847111106],[60.70653838072903,-35.449924847111106]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# Subtest: QA-085 gran-rio: native large prop rejects a chain containing legal modules without partial purchase
+ok 2 - QA-085 gran-rio: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 2179.2076
+  ...
+# {"biome":"manglares","propId":"0:-3:-6","slot":0,"points":[[-38.80373346662569,-75.5703797800169],[-26.80373346662569,-75.5703797800169]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# Subtest: QA-085 manglares: native large prop rejects a chain containing legal modules without partial purchase
+ok 3 - QA-085 manglares: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 1461.0222
+  ...
+# {"biome":"volcanes","propId":"0:-6:1","slot":1,"points":[[-87.28930730405264,19.151833411250266],[-75.28930730405264,19.151833411250266]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# {"biome":"gran-canon","propId":"canyon:mesa:-1:1","slot":2,"points":[[13.726054762039013,-78.9786083754152],[25.726054762039013,-78.9786083754152]],"legalModules":3,"rejectedModules":3,"balance":"9200"}
+# Subtest: QA-085 volcanes: native large prop rejects a chain containing legal modules without partial purchase
+ok 4 - QA-085 volcanes: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 5398.5352
+  ...
+# Subtest: QA-085 gran-canon: native large prop rejects a chain containing legal modules without partial purchase
+ok 5 - QA-085 gran-canon: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 303.6324
+  ...
+# {"biome":"desierto","propId":"desert:5:1:-2","slot":18,"points":[[52.2539413589393,-89.65259827609128],[60.73922273317787,-81.16731690185271]],"legalModules":3,"rejectedModules":3,"balance":"9200"}
+# Subtest: QA-085 desierto: native large prop rejects a chain containing legal modules without partial purchase
+ok 6 - QA-085 desierto: native large prop rejects a chain containing legal modules without partial purchase
+  ---
+  duration_ms: 1385.2524
+  ...
+# {"biome":"gran-rio","terrain":[[-18.524275432333173,-113.05250942356136],[-10.038994058094602,-104.5672280493228]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# Subtest: QA-085 gran-rio: native water, lava or slope rejects the complete chain after a legal prefix
+ok 7 - QA-085 gran-rio: native water, lava or slope rejects the complete chain after a legal prefix
+  ---
+  duration_ms: 1433.1841
+  ...
+# {"biome":"manglares","terrain":[[-87.77332974640646,-169.31748562369074],[-75.77332974640646,-169.31748562369074]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# Subtest: QA-085 manglares: native water, lava or slope rejects the complete chain after a legal prefix
+ok 8 - QA-085 manglares: native water, lava or slope rejects the complete chain after a legal prefix
+  ---
+  duration_ms: 678.65
+  ...
+# {"biome":"volcanes","terrain":[[-30.63623335308067,-71.55336937268783],[-18.63623335308067,-71.55336937268783]],"legalModules":4,"rejectedModules":2,"balance":"9200"}
+# {"biome":"gran-canon","terrain":[[-77,-160],[-65,-160]],"legalModules":5,"rejectedModules":1,"balance":"9200"}
+# Subtest: QA-085 volcanes: native water, lava or slope rejects the complete chain after a legal prefix
+ok 9 - QA-085 volcanes: native water, lava or slope rejects the complete chain after a legal prefix
+  ---
+  duration_ms: 4725.435
+  ...
+# Subtest: QA-085 gran-canon: native water, lava or slope rejects the complete chain after a legal prefix
+ok 10 - QA-085 gran-canon: native water, lava or slope rejects the complete chain after a legal prefix
+  ---
+  duration_ms: 255.4859
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24488.3798
