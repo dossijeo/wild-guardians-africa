@@ -13,6 +13,7 @@ renderPanel=function(id){
  }
  if(id==='library'){
   replace('<div class="sectionmark">El mundo que te rodea</div><h1>Pequeños descubrimientos.</h1><div id="production-library">'+[['crops','Cultivos'],['walls','Bastión'],['destruction','Destrucción'],['sfx','Sonidos']].map(([key,title])=>`<button class="secondary" data-production-lab="${key}">${title} →</button>`).join('')+'</div>');
+  panel.insertAdjacentHTML('beforeend','<p class="fineprint">Ga Maamli · Banga · SIL OFL 1.1<br><a href="../licenses/ga.txt" target="_blank" rel="noopener">Ga Maamli</a> · <a href="../licenses/banga.txt" target="_blank" rel="noopener">Banga</a> · <a href="../licenses/bangaAuthors.txt" target="_blank" rel="noopener">David Sargent</a></p>');
   $$('[data-production-lab]').forEach(button=>button.onclick=()=>{$('#production-library').innerHTML=sectionFrame('/library.html?lab='+button.dataset.productionLab,button.textContent);});
  }
  if(id==='options'){

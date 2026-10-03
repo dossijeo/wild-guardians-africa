@@ -1,0 +1,15 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA tipografía original</title>
+<link rel="stylesheet" href="../../content/fonts.css">
+<style>body{font:400 18px Banga,sans-serif;background:#f7efd9;color:#203629;margin:30px}h1{font:400 36px 'Ga Maamli',serif}.sample{padding:12px;border-bottom:1px solid #caba8d;white-space:nowrap}.italic{font-style:italic}.weight-200{font-weight:200}.weight-400{font-weight:400}.weight-700{font-weight:700}.weight-800{font-weight:800}a{margin-right:15px;color:inherit}</style>
+<h1>Ga Maamli · Ñandú, raíz y cosecha</h1><p>Banga variable original · 200–800 · normal y cursiva</p>
+<div class="sample weight-200">200 · Español: ¡Qué día! Acción, pingüino, ñ · 123.456.789 monedas</div>
+<div class="sample weight-400">400 · English: Workers, harvest and defence · 123,456,789 coins</div>
+<div class="sample weight-700">700 · Cultivos, contratación y reparación · 999.999.999 monedas</div>
+<div class="sample weight-800">800 · Day 100 · 100 % · ×5 · +30 % · −10 % · €</div>
+<div class="sample italic weight-200">200 cursiva · ¡Qué día! Acción, pingüino, ñ · 123.456.789 monedas</div>
+<div class="sample italic weight-400">400 italic · Workers, harvest and defence · 123,456,789 coins</div>
+<div class="sample italic weight-700">700 cursiva · Cultivos, contratación y reparación</div>
+<div class="sample italic weight-800">800 italic · Day 100 · 100 % · ×5 · +30 % · −10 % · €</div>
+<p><a href="../../licenses/ga.txt">Ga Maamli · OFL 1.1</a><a href="../../licenses/banga.txt">Banga · OFL 1.1</a><a href="../../licenses/bangaAuthors.txt">David Sargent</a></p>
+<p id="status">Cargando fuentes</p><pre id="faces"></pre>
+<script>document.fonts.ready.then(()=>{document.querySelector('#faces').textContent=JSON.stringify([...document.fonts].map(f=>({family:f.family,weight:f.weight,style:f.style,status:f.status})),null,2);document.querySelector('#status').textContent='Fuentes listas';});</script></html>

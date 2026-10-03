@@ -1,5 +1,6 @@
 """Produce lazy runtime manifests from extracted originals."""
 import json,pathlib,shutil,re
+from font_styles import font_faces
 root=pathlib.Path(__file__).resolve().parents[1]
 refs=root/'references/extracted';out=root/'public/content';out.mkdir(exist_ok=True)
 def read(folder,file):return json.loads((refs/folder/file).read_text(encoding='utf-8'))
@@ -10,6 +11,9 @@ cultures=read('Wild_Guardians_Nueva_Partida_V2','cultureData.json')
 fonts=read('Wild_Guardians_Tipografia_Autocontenido','font-payload.json')
 write('selector.json',{'biomes':biomes,'cultures':cultures})
 write('fonts.json',fonts)
+(out/'fonts.css').write_bytes(font_faces(fonts).encode('utf-8'))
+web_licenses=root/'public/licenses';web_licenses.mkdir(exist_ok=True)
+for name,text in fonts['licences'].items():(web_licenses/(name+'.txt')).write_bytes(text.encode('utf-8'))
 write('models.json',assets['models'])
 write('crop-thumbnails.json',read('Bioma_Cultivos_Lab_V3_Morph_Local','thumbnailData.json'))
 write('sfx.json',read('Wild_Guardians_SFX_Lab_V12_Catalogo','bankData.json'))

@@ -1,12 +1,13 @@
 """Extract original HUD artwork, layout and hiring frame without its demo world."""
 import pathlib,re,json
+from font_styles import typography_css
 root=pathlib.Path(__file__).resolve().parents[1]
 ref=root/'references/extracted/Wild_Guardians_HUD_Lab_Contratacion_Diaria'
 markup=(ref/'markup.html').read_text(encoding='utf-8')
 code=(ref/'script-3.js').read_text(encoding='utf-8')
 assets=(ref/'script-0.js').read_text(encoding='utf-8').strip()
 css=re.search(r'<style>([\s\S]*?)</style>',markup)[1]
-(root/'public/content/hud.css').write_text(css,encoding='utf-8')
+(root/'public/content/hud.css').write_text(typography_css(css),encoding='utf-8')
 hud=re.search(r'<div id="hud">([\s\S]*?)</nav></div>',markup)[0]
 hud=hud.replace('14:35','07:05').replace('1.240','1.000').replace('Día 17','Día 1')
 hire=code[code.index('function hiringMarkup(){'):code.index('function updateHiringTotals(){')]

@@ -1,9 +1,10 @@
 """Adapt supplied V2.8 menu, preserving its renderer, routes and artwork."""
 import json,pathlib
+from font_styles import typography_markup
 root=pathlib.Path(__file__).resolve().parents[1]
 manifest=json.loads((root/'content/manifests/assets.json').read_text(encoding='utf-8'))
 source=next(s for s in manifest['sources'] if 'Africa_Menu_V2_8' in s['file'])
-markup=(root/source['markup']).read_text(encoding='utf-8')
+markup=typography_markup((root/source['markup']).read_text(encoding='utf-8'))
 code=(root/source['code'][0]).read_text(encoding='utf-8')
 code=code.replace("const b=decode64(el.textContent);", "if(el.textContent.trim().startsWith('/assets/'))return await (await fetch(el.textContent.trim())).arrayBuffer();const b=decode64(el.textContent);")
 code=code.replace("async function imageFromData(data){", "async function imageFromData(data){if(data.startsWith('/assets/'))return await createImageBitmap(await (await fetch(data)).blob(),{premultiplyAlpha:'none',colorSpaceConversion:'none'});")

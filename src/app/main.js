@@ -28,6 +28,7 @@ import '../ui/tutorial.css';
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
+const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
 const audio=new AudioSystem(settings);
