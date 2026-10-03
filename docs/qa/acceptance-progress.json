@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "2222037",
+  "implementation_commit": "2ce78c1",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -423,9 +423,11 @@
       "area": "Trabajadores y colas",
       "scenario": "Editar cantidades o recordar selección impagable",
       "expected": "No se descuenta; confirmar se bloquea hasta que el coste sea asumible.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Actual native HUD at day 2: naturally generated Sabana/Mapungubwe/712 game begins with 1000, delivers five millet crates, ends with 110 and remembered youngMale=1 costing 120. Confirm disabled. Editing to olderMale=1 keeps wallet 110, enables cost 100, and confirmation leaves 10. Independent QA origin 5176; user origin 5173 preserved."
     },
     {
       "id": "QA-039",
@@ -611,36 +613,44 @@
       "area": "Trabajadores y colas",
       "scenario": "Rehacer cola al amanecer o regreso de ataque",
       "expected": "Usar necesidades reales; no regenerar reparaciones manuales.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Actual scripted campaign raid start/end releases reservations and cancels manual repair; exhausted animal budget drives real exit/rebuild. Only current initial care, watering debt and expressly ordered harvest regenerate. Repeated rebuilds and reload do not duplicate tasks. Real dawn also removes manual repair. This isolates queue behavior, not natural raid probability or damage."
     },
     {
       "id": "QA-057",
       "area": "Trabajadores y colas",
       "scenario": "Rehacer cola con cosecha ya ordenada",
       "expected": "Aplicar C05 expresamente; madurez sola nunca se convierte en orden automática.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Two physically attended mature crops: only the explicitly ordered one regenerates a harvest task after real dawn or scripted raid exit. Logical order survives repeated queue rebuilds and save/reload; unordered mature crop generates no harvest."
     },
     {
       "id": "QA-058",
       "area": "Trabajadores y colas",
       "scenario": "Finalizar turno camino de tarea aún no ejecutada",
       "expected": "Se libera reserva y no comienza tarea nueva fuera del turno.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "All four profiles physically walk to a distant unstarted task at shift boundary 250/300, atomically release reservation, start returning and leave crop unwatered with zero growth. No positional/time teleport used; clear-path funded integration fixture."
     },
     {
       "id": "QA-059",
       "area": "Trabajadores y colas",
       "scenario": "Finalizar turno durante ejecución física",
       "expected": "Completa esa tarea según la regla de jornada y se retira.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "All four profiles physically begin initial care shortly before their shift boundary, finish that committed care after the boundary exactly once, then return without taking the second queued plant. Clear-path funded integration; visual native animation inspection is separate."
     },
     {
       "id": "QA-060",
@@ -665,36 +675,44 @@
       "area": "Trabajadores y colas",
       "scenario": "Carrera de trabajo agotada",
       "expected": "No sigue corriendo por urgencia ordinaria; restaura reserva al amanecer.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Three pending tasks cause real ordinary running until distance reserve is exhausted; subsequent motion is exactly walking and contracts unchanged. Returning worker retained at real dawn receives full reserve while old contract remains expired; fresh contract receives full reserve with distinct person while old one returns."
     },
     {
       "id": "QA-063",
       "area": "Trabajadores y colas",
       "scenario": "Urgencia de cola bajo/por encima de 2 por trabajador",
       "expected": "Solo afecta carrera ordinaria, nunca distribución de plantilla.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Equal living plant counts at two centers with 2 versus 3 tasks retain equal one-worker quotas and stable assignments. Worker with ratio 2 walks without reserve use; ratio 3 runs and consumes reserve. Unordered mature plant remains a weight without becoming a harvest task."
     },
     {
       "id": "QA-064",
       "area": "Cajas y contabilidad",
       "scenario": "Recoger una planta sin entregar la caja",
       "expected": "No aumenta el dinero; valor fijado y planta retirada una vez.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Actual male millet pickup after physical care and ordered harvest removes source once and freezes a pending crate value 54/5, while wallet remains unchanged until physical delivery. Crate provenance and carrying state survive reload."
     },
     {
       "id": "QA-065",
       "area": "Cajas y contabilidad",
       "scenario": "Entregar una caja y repetir callback/carga",
       "expected": "Un solo ingreso y caja entregada no recuperable otra vez.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-chains.md"
+      ],
+      "notes": "Physical delivery after carrying save/reload pays ceil(54/5)=11 exactly once. Replaying exact settlement ID leaves serialized state unchanged. Loading delivered snapshot and rebuilding/advancing creates no crate or harvest recovery task, no second payment."
     },
     {
       "id": "QA-066",

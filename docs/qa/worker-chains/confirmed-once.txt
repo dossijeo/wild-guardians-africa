@@ -1,0 +1,25 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:05
+  - img "Dinero"
+  - generic: "10"
+  - generic "1/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 2
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - dialog "El Espíritu":
+    - img "El Espíritu"
+    - paragraph: Tu primera caja ha llegado al centro. Ya conoces el trabajo de la finca. Conserva monedas para la próxima jornada y escucha al poblado cuando aparezca algo nuevo.
+    - button "Continuar" [active]:

@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>QA — remembered hiring</title>
+<h1>Partida de QA para contratación recordada</h1>
+<p>Sabana / Mapungubwe / semilla 712. Partida normal: centro 800, cinco mijos 25, joven 120, cinco entregas 55. Día 2, saldo 110, selección anterior 120.</p>
+<p>Este lanzador solo guarda la ranura qa-remembered-hiring en el origen de QA 127.0.0.1:5176. El JSON se generó con simulateOpening y las órdenes, terreno y trabajadores reales, sin financiación añadida.</p>
+<button id="prepare">Preparar ranura de QA</button><output id="result"></output>
+<p><a href="/">Abrir juego de QA</a></p>
+<script type="module">
+import {SaveRepository,deserialize} from '../../src/persistence/snapshots.js';
+document.querySelector('#prepare').onclick=async()=>{
+ const out=document.querySelector('#result');
+ if(location.hostname!=='127.0.0.1'||location.port!=='5176'){out.textContent='Origen incorrecto: no se guardó nada.';return;}
+ try {
+  const state=deserialize(await (await fetch('./remembered-hiring-state.json')).text());
+  new SaveRepository(localStorage).save(state);out.textContent='Preparada: día 2, 110 monedas, contratación pausada.';
+ }catch(error){out.textContent=error.message;}
+};
+</script>
