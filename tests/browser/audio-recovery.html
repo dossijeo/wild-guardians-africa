@@ -1,0 +1,15 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Reintento y salida de audio</title><p>QA de WebAudio real, salida silenciada. Fuerza una petición 404 de prueba y libera una carga de menú después de parar. No modifica assets ni partidas.</p><button id="run">Probar fallo y reintento</button><output id="status">Listo</output><pre id="data"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';import {json,bytes} from '../../src/rendering/assets.js';import {assetUrl} from '../../src/rendering/asset-url.js';
+const errors=[],expectedFailures=[];addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{const button=document.querySelector('#run');button.disabled=true;document.querySelector('#status').textContent='Ejecutando…';let audio;try{
+ let attempts=0,missingStatus=null,holdMenu=false,releaseMenu,enteredMenu;const entered=new Promise(resolve=>enteredMenu=resolve),held=new Promise(resolve=>releaseMenu=resolve);
+ audio=new AudioSystem({sfx:0,music:0},{json:async url=>{if(holdMenu&&url==='/content/menu.json'){enteredMenu();return held;}return json(url);},bytes:async url=>{attempts++;if(attempts===1){const response=await fetch(assetUrl('/content/qa-missing-audio.mp3'),{headers:{Accept:'audio/mpeg'}});missingStatus=response.status;if(!response.ok)throw new Error('QA audio HTTP '+response.status);return response.arrayBuffer();}return bytes(url);}});
+ await audio.unlock();const bank=await json('/content/sfx.json');audio.sfx=bank;const item=bank.items.find(i=>i.id==='farm_watering_can');
+ try{await audio.sound(item.id);}catch(e){expectedFailures.push(String(e.message));}
+ const afterFailure={active:audio.active.length,cachedFailure:audio.buffers.has(item.audio.url),context:audio.context.state};
+ const recovered=await audio.sound(item.id),afterRetry={accepted:!!recovered,active:audio.active.length,rate:recovered?.playbackRate.value,attempts};audio.stop();
+ const menuData=await json('/content/menu.json');holdMenu=true;const pending=audio.menu();await entered;audio.stop();releaseMenu(menuData);await pending;
+ const result={missingStatus,afterFailure,afterRetry,afterLateMenu:{active:audio.active.length,voices:audio.voices.size,attempts},expectedFailures,errors};document.querySelector('#data').textContent=JSON.stringify(result,null,2);document.querySelector('#status').textContent='Terminado: reintento correcto; menú tardío sin voces';
+ }catch(e){errors.push(String(e));document.querySelector('#status').textContent='Error: '+e;}finally{audio?.dispose();button.disabled=false;}};
+</script></html>

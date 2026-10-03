@@ -3,14 +3,29 @@ export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementC
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4});
 export const soundPriority=id=>['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
 export class AudioSystem {
-  constructor(settings){this.settings=settings;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;}
+  constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;}
   async unlock() {
     this.context??=new AudioContext();await this.context.resume();
     if(!this.sfxGain){this.sfxGain=this.context.createGain();this.sfxGain.connect(this.context.destination);this.musicGain=this.context.createGain();this.musicGain.connect(this.context.destination);}
     this.volume();
   }
   volume(){if(this.sfxGain)this.sfxGain.gain.value=this.settings.sfx;if(this.musicGain)this.musicGain.gain.value=this.settings.music;}
-  async buffer(url){if(!this.buffers.has(url))this.buffers.set(url,bytes(url).then(data=>this.context.decodeAudioData(data)));return this.buffers.get(url);}
+  async buffer(url){
+    if(!this.buffers.has(url)){
+      const pending=Promise.resolve().then(()=>this.resources.bytes(url)).then(data=>this.context.decodeAudioData(data));
+      this.buffers.set(url,pending);
+      pending.catch(()=>{if(this.buffers.get(url)===pending)this.buffers.delete(url);});
+    }
+    return this.buffers.get(url);
+  }
+  async sfxBank(){
+    if(this.sfx)return this.sfx;
+    if(!this.sfxPromise){
+      const pending=Promise.resolve().then(()=>this.resources.json('/content/sfx.json')).then(bank=>{this.sfx=bank;return bank;});
+      this.sfxPromise=pending;const clear=()=>{if(this.sfxPromise===pending)this.sfxPromise=null;};pending.then(clear,clear);
+    }
+    return this.sfxPromise;
+  }
   releaseVoice(source){
     const voice=this.voices.get(source);if(!voice)return;
     this.voices.delete(source);this.active=this.active.filter(s=>s!==source);source.disconnect();voice.volume.disconnect();
@@ -35,19 +50,30 @@ export class AudioSystem {
     if(generation!==this.generation||this.context.state!=='running')return null;
     return this.startBuffer(buffer,options);
   }
-  async menu(){await this.unlock();this.stop();const data=await json('/content/menu.json');if(data.music)await this.play(data.music,{loop:true,music:true,gain:.7});}
+  async menu(){
+    const request=this.generation;await this.unlock();if(request!==this.generation)return;
+    this.stop();const generation=this.generation,data=await this.resources.json('/content/menu.json');
+    if(generation!==this.generation)return;
+    if(data.music)await this.play(data.music,{loop:true,music:true,gain:.7});
+  }
   async gameplay(day) {
-    if(!this.context)return;
+    if(!this.context||this.context.state!=='running')return;
     const pack=day%2?'a':'b';if(this.pack===pack)return;
-    this.stop();this.pack=pack;const generation=this.generation;this.sfx??=await json('/content/sfx.json');
-    const bank=await json(`/content/music-${pack}.json`);
-    // Schedule original synchronized stems on one WebAudio clock, one pack at a time.
-    const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>({track:t,buffer:await this.buffer(t.data.url)})));
-    if(this.pack!==pack||generation!==this.generation)return;const when=this.context.currentTime+.1;
-    for(const {buffer} of loaded)this.startBuffer(buffer,{loop:true,music:true,loopEnd:bank.duration,gain:(bank.safetyGain??.5)*.45,when});
+    this.stop();this.pack=pack;const generation=this.generation;
+    try{
+      await this.sfxBank();if(this.pack!==pack||generation!==this.generation)return;
+      const bank=await this.resources.json(`/content/music-${pack}.json`);
+      if(this.pack!==pack||generation!==this.generation)return;
+      // Schedule original synchronized stems on one WebAudio clock, one pack at a time.
+      const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>({track:t,buffer:await this.buffer(t.data.url)})));
+      if(this.pack!==pack||generation!==this.generation)return;
+      if(this.context.state!=='running'){this.pack=null;return;}
+      const when=this.context.currentTime+.1;
+      for(const {buffer} of loaded)this.startBuffer(buffer,{loop:true,music:true,loopEnd:bank.duration,gain:(bank.safetyGain??.5)*.45,when});
+    }catch(error){if(this.pack===pack&&generation===this.generation)this.stop();throw error;}
   }
   async sound(id) {
-    const generation=this.generation;this.sfx??=await json('/content/sfx.json');if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
+    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
   }
   process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   remember(events){this.seen=new Set(events.map(event=>event.id));}
