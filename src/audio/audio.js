@@ -1,6 +1,7 @@
 import {json,bytes} from '../rendering/assets.js';
 import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
+import {MusicTransport} from './music-transport.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'farm_seeds_drop',WaterSatisfied:'farm_watering_can',CropPicked:'farm_harvest_pick',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4});
 export const soundPriority=id=>['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
@@ -33,7 +34,7 @@ export class AudioSystem {
     this.voices.delete(source);this.active=this.active.filter(s=>s!==source);source.disconnect();voice.volume.disconnect();
   }
   stopVoice(source){try{source.stop();}catch{}this.releaseVoice(source);}
-  startBuffer(buffer,{loop=false,music=false,gain=1,priority=1,family='generic',when,loopEnd}={}){
+  startBuffer(buffer,{loop=false,music=false,gain=1,priority=1,family='generic',when,loopEnd,destination,offset=0,stopAt}={}){
     if(!this.context||this.context.state!=='running')return null;
     if(!music){
       const voices=[...this.voices].filter(([,v])=>!v.music),same=voices.filter(([,v])=>v.family===family);
@@ -42,9 +43,9 @@ export class AudioSystem {
     }
     const source=this.context.createBufferSource(),volume=this.context.createGain();source.buffer=buffer;source.loop=loop;if(loopEnd!==undefined)source.loopEnd=loopEnd;
     // Simulation speed changes event cadence, never the sample clock or pitch.
-    source.playbackRate.value=1;volume.gain.value=gain;source.connect(volume);volume.connect(music?this.musicGain:this.sfxGain);
+    source.playbackRate.value=1;volume.gain.value=gain;source.connect(volume);volume.connect(destination??(music?this.musicGain:this.sfxGain));
     this.voices.set(source,{volume,music,priority,family});this.active.push(source);source.onended=()=>this.releaseVoice(source);
-    try{source.start(when);}catch(error){this.releaseVoice(source);throw error;}return source;
+    try{source.start(when,offset);if(stopAt!==undefined)source.stop(stopAt);}catch(error){this.stopVoice(source);throw error;}return source;
   }
   async play(url,options={}) {
     if(!this.context||this.context.state!=='running')return null;
@@ -61,7 +62,7 @@ export class AudioSystem {
   async gameplay(day) {
     if(!this.context||this.context.state!=='running')return;
     const pack=day%2?'a':'b';if(this.pack===pack)return;
-    this.stop();this.pack=pack;const generation=this.generation;
+    this.stop();this.musicError=null;this.pack=pack;const generation=this.generation;
     try{
       await this.sfxBank();if(this.pack!==pack||generation!==this.generation)return;
       const bank=await this.resources.json(`/content/music-${pack}.json`);
@@ -70,6 +71,7 @@ export class AudioSystem {
       const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>({track:t,buffer:await this.buffer(t.data.url)})));
       if(this.pack!==pack||generation!==this.generation)return;
       if(this.context.state!=='running'){this.pack=null;return;}
+      if(bank.navigation?.sections?.length){this.transport=new MusicTransport(this,pack,bank,loaded,this.resources.musicTransport);return;}
       const when=this.context.currentTime+.1;
       const scene=this.musicScene??'day',policy=MUSIC_POLICIES[pack],voices=new Map();
       for(const {track,buffer} of loaded){
@@ -82,13 +84,13 @@ export class AudioSystem {
   }
   updateMusic(state){
     this.musicScene=gameplayMusicScene(state);
-    if(this.context?.state==='running')this.mixer?.update(this.musicScene,this.context.currentTime);
+    if(this.context?.state==='running'){try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);}catch(error){this.stop();this.musicError=error;}}
   }
   async sound(id) {
     if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
   }
   process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.mixer=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.transport?.dispose();this.transport=null;this.mixer=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();this.context?.close();}
 }

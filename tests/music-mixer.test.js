@@ -8,7 +8,7 @@ const banks=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync
 function fixture(){
  const sources=[],gains=[];
  const audio=new AudioSystem({sfx:1,music:1},{json:async url=>banks[url.includes('music-a')?'a':'b'],bytes:async url=>({url})});
- audio.context={state:'running',currentTime:1,async decodeAudioData(data){return data;},createGain(){const gain={value:0,calls:[],cancelScheduledValues(at){this.calls.push(['cancel',at]);},setValueAtTime(value,at){this.calls.push(['set',value,at]);},linearRampToValueAtTime(value,at){this.calls.push(['ramp',value,at]);}};const node={gain,connect(){},disconnect(){this.closed=true;}};gains.push(node);return node;},createBufferSource(){const source={playbackRate:{value:0},connect(){},disconnect(){this.closed=true;},start(when){this.when=when;},stop(){this.stopped=true;}};sources.push(source);return source;}};
+ audio.context={state:'running',currentTime:1,async decodeAudioData(data){return data;},createGain(){const gain={value:0,calls:[],cancelScheduledValues(at){this.calls.push(['cancel',at]);},setValueAtTime(value,at){this.calls.push(['set',value,at]);},linearRampToValueAtTime(value,at){this.calls.push(['ramp',value,at]);}};const node={gain,connect(){},disconnect(){this.closed=true;}};gains.push(node);return node;},createBufferSource(){const source={playbackRate:{value:0},connect(){},disconnect(){this.closed=true;},start(when){this.when=when;},stop(at){if(at===undefined)this.stopped=true;else this.stopAt=at;}};sources.push(source);return source;}};
  audio.sfx={items:[]};audio.sfxGain={};audio.musicGain={};return {audio,sources,gains};
 }
 
@@ -28,7 +28,7 @@ test('native A/B use independent audited grids and presets in the original ten-t
 for(const pack of ['a','b'])test(`${pack}: scene changes preserve stems, quantize on its grid and reach the native target`,async()=>{
  const {audio,sources,gains}=fixture(),day=pack==='a'?1:2;await audio.gameplay(day);const policy=MUSIC_POLICIES[pack],scale=banks[pack].safetyGain*.45;
  assert.equal(sources.length,10);assert.ok(sources.every(s=>s.when===1.1&&s.playbackRate.value===1));
- assert.deepEqual(gains.map(g=>g.gain.value),policy.levels.day.map(v=>v*scale));
+ for(let i=0;i<10;i++)assert.ok(Math.abs(audio.voices.get(sources[i]).volume.gain.value-policy.levels.day[i]*scale)<1e-12);
  audio.updateMusic({time:350,raid:null});const planned=audio.mixer.pending.map(p=>({...p}));assert.ok(planned.length>0);
  const first=planned[0].when,origin=1.1+policy.gridOffset,bar=240/policy.bpm;
  assert.ok(Math.abs((first-origin)/bar-Math.round((first-origin)/bar))<1e-10);
