@@ -106,5 +106,9 @@ conservan como diagnóstico previo, sin confundirlas con el anuncio corregido.
 [68 pruebas dirigidas](qa/agricultural-events/notice-tests.txt), cero fallos ni
 omisiones, 2.977,7479 ms. [Build/paquete](qa/agricultural-events/notice-build.txt)
 aprobados: 554 archivos, 379.689.920 bytes, 794 enlaces relativos y 20 GLB runtime.
-El CI de esta corrección se comprobará cuando termine; estos resultados no son
-una suite completa de esta revisión.
+La [CI 37112966943](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37112966943)
+sobre `6543fbb`, que incluye la corrección `541c551`, terminó correctamente:
+**824/824 pruebas**, cero fallos, 301.495,637088 ms. Verificadores, build y paquete
+aprobados; [log](qa/agricultural-events/notice-ci-log.txt) y
+[metadatos](qa/agricultural-events/notice-ci.json). No acredita las correcciones
+posteriores de guardado.

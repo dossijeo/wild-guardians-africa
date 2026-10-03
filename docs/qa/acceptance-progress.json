@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "541c551",
+  "implementation_commit": "9315daf",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1558,9 +1558,11 @@
       "area": "Guardado y presentación",
       "scenario": "Guardar desde cada disparador aprobado",
       "expected": "Snapshot del slot actual; sin sobrescribir otra ranura.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-save-isolation.md"
+      ],
+      "notes": "Production SaveRepository now enforces the requested slot identity in staging, primary and backup; wrong-slot snapshots cannot replace a valid backup or load another campaign. Explicit staging/backup/primary failures preserve last valid save and do not announce success; retry succeeds once. App menu exit checks save result before discarding current state/scene. In-memory storage adapter, not browser quota/UI fault injection. Remaining: integrated four approved save triggers and their error presentation."
     },
     {
       "id": "QA-145",
