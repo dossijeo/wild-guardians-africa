@@ -1,0 +1,1519 @@
+{
+  "schema": "wg-sfx-routing-v1",
+  "scope": "Actual one-shot gameplay event routes and explicit retained reserves. Reserved is not implemented gameplay.",
+  "items": [
+    {
+      "number": 1,
+      "id": "amb_wind_soft",
+      "filename": "001_amb_wind_soft.mp3",
+      "sha256": "d127943dd85b02978ce88e72a2e88f1b714dae95f283949a50bd5a7baf8bd161",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Fondo de brisa; bucle espacial/ambiental de baja presencia."
+    },
+    {
+      "number": 2,
+      "id": "amb_wind_strong",
+      "filename": "002_amb_wind_strong.mp3",
+      "sha256": "1e35f531c4e0bc0e53c8a9375e7d2200ace9b5fe67b3dfa72edc8483d479708f",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Variante de viento perceptible; mezcla de ambiente sin monopolizar el paisaje."
+    },
+    {
+      "number": 3,
+      "id": "amb_insects",
+      "filename": "003_amb_insects.mp3",
+      "sha256": "4a0e5e869eceac026546cae91165f431393f8a93d7d7fa23902b51840e2f7909",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Insectos ambientales; activar por zona y limitar su densidad."
+    },
+    {
+      "number": 4,
+      "id": "amb_birds",
+      "filename": "004_amb_birds.mp3",
+      "sha256": "230c1bd9d8c5b75dea38065612cd6754ed6161dae600ebd9197179d50f632576",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aves diurnas; ambiente, no entidades jugables nuevas."
+    },
+    {
+      "number": 5,
+      "id": "amb_night",
+      "filename": "005_amb_night.mp3",
+      "sha256": "356c34bb7de554deafcf1efb4b1caf8580bcb37cc10ac77b054c12ab605573d9",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Fondo nocturno; fundido al cambiar de fase, sin duplicar el bucle."
+    },
+    {
+      "number": 6,
+      "id": "amb_river",
+      "filename": "006_amb_river.mp3",
+      "sha256": "8cc8b5e845b0c101437fcb2bd1aad44402e8abfef682565b6267fd42996550d5",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Proximidad a agua fluvial; atenuación según distancia."
+    },
+    {
+      "number": 7,
+      "id": "amb_coast_mangrove",
+      "filename": "007_amb_coast_mangrove.mp3",
+      "sha256": "cd608df484aad2790e15a67b5f5a6a0e43fb626fd8e2ea45ebd24a27321ab70a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Proximidad a costa/manglares; no superponer a máximo con todos los otros ambientes."
+    },
+    {
+      "number": 8,
+      "id": "amb_rain",
+      "filename": "008_amb_rain.mp3",
+      "sha256": "ab88d114b8cc3953878f78d587308e281939f7cf5cd70a314fcd182f80a7da5b",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva de ambiente de lluvia; no crear un sistema meteorológico no aprobado."
+    },
+    {
+      "number": 9,
+      "id": "amb_thunder",
+      "filename": "009_amb_thunder.mp3",
+      "sha256": "69451d167b3458186fc987beb2d5a8e8361bf27aa605fdc3f60e71adff037bae",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva de trueno; no implica evento climático ni daño."
+    },
+    {
+      "number": 10,
+      "id": "step_dry_soil",
+      "filename": "010_step_dry_soil.mp3",
+      "sha256": "ed0c918c33f4d664b6b1272ba1854ab7271ee16e486ef2164e9e69891df42604",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre tierra seca."
+    },
+    {
+      "number": 11,
+      "id": "step_grass",
+      "filename": "011_step_grass.mp3",
+      "sha256": "6ac80454edead375948379195a4c15f17daf39750c081bf55006f5058ece5dd1",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre hierba."
+    },
+    {
+      "number": 12,
+      "id": "step_mud",
+      "filename": "012_step_mud.mp3",
+      "sha256": "0174d36e806fb565ee46e2a90d495079d91901d80bd3a851d7bd1b3528deb9be",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre barro."
+    },
+    {
+      "number": 13,
+      "id": "step_sand",
+      "filename": "013_step_sand.mp3",
+      "sha256": "832f1c05c9568d8e71a20b067ef04dde28dcf09da514359a95286ce7d14b79c1",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre arena."
+    },
+    {
+      "number": 14,
+      "id": "step_stone",
+      "filename": "014_step_stone.mp3",
+      "sha256": "1f1b51f768b1192b1bd56d016060a13453ddfa39a1f9d500439253ca00a3d283",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre piedra."
+    },
+    {
+      "number": 15,
+      "id": "step_wood",
+      "filename": "015_step_wood.mp3",
+      "sha256": "9f1ac0db6a6984531b243b7cd10da94b95d5d2f9796b4b730f72186cdb23e402",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo de pie de trabajador sobre madera."
+    },
+    {
+      "number": 16,
+      "id": "run_surface_set",
+      "filename": "016_run_surface_set.mp3",
+      "sha256": "5446cf28cd8b193aac2d923609abc5d9a2b12051849671e52f9c788da54ba0df",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Carrera de personajes; usar la toma aprobada, no inventar variantes de superficie ausentes."
+    },
+    {
+      "number": 17,
+      "id": "movement_land",
+      "filename": "017_movement_land.mp3",
+      "sha256": "9cc6394f2f8f59711dc4e95be67783fb7fd1c0541ca01ce96f99d5ede813527c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyo/aterrizaje de una animación existente, por ejemplo caída; no añade un salto controlable."
+    },
+    {
+      "number": 18,
+      "id": "farm_hoe_dig",
+      "filename": "018_farm_hoe_dig.mp3",
+      "sha256": "a5df3d10ad71bcb6bc7194d0bd612bf63207bbd7ae350d1790a7fcc293577671",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Contacto de azada durante la atención inicial; sincronizar con el clip."
+    },
+    {
+      "number": 19,
+      "id": "farm_sow",
+      "filename": "019_farm_sow.mp3",
+      "sha256": "6bbd3f0932a31c533200957fe4e0043ebea8a2a35bd83784e29954287f9ddb60",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Gesto de siembra inicial que realiza el trabajador."
+    },
+    {
+      "number": 20,
+      "id": "farm_seeds_drop",
+      "filename": "020_farm_seeds_drop.mp3",
+      "sha256": "d134c7fd6402523ccf23745790f873bcb5b614be3f9f1cfce0a0e9cecff90a76",
+      "status": "connected",
+      "destination": [
+        "CropPlaced"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Detalle de semillas al sembrar; alternativa/capa tenue de farm_sow."
+    },
+    {
+      "number": 21,
+      "id": "farm_watering_can",
+      "filename": "021_farm_watering_can.mp3",
+      "sha256": "932df6a774847cf39bc2de324f6b8db4abea41eedfcf575a4caa5ddb91bf1290",
+      "status": "connected",
+      "destination": [
+        "WaterSatisfied"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Vertido de regadera; conservar exactamente la asignación 021 aprobada."
+    },
+    {
+      "number": 22,
+      "id": "farm_water_soil",
+      "filename": "022_farm_water_soil.mp3",
+      "sha256": "5c554b7ec30d174fec8becafcfa44472d1c6e65f0522a90dc643a876d4896381",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Contacto de agua con tierra; conservar exactamente la asignación 022 aprobada."
+    },
+    {
+      "number": 23,
+      "id": "farm_harvest_pick",
+      "filename": "023_farm_harvest_pick.mp3",
+      "sha256": "d883c29c9fdcfd9bbabce569ec6b74dc46e6c170544924fe1e4940f2983a140c",
+      "status": "connected",
+      "destination": [
+        "CropPicked"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Contacto de recogida de una planta madura."
+    },
+    {
+      "number": 24,
+      "id": "farm_plant_pull",
+      "filename": "024_farm_plant_pull.mp3",
+      "sha256": "1d8011467db71c9fed7fd6eae23227b11ea877bd5cff13ba7ed755cd88ed31f3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Extracción de raíz/planta en cosecha; alternativa por especie, no segundo ingreso."
+    },
+    {
+      "number": 25,
+      "id": "farm_crop_to_crate",
+      "filename": "025_farm_crop_to_crate.mp3",
+      "sha256": "4778bbeccee26212e9bd0e5390b8cb3a98e3d1054c1304cd9344a4e630dfce13",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Depósito de producto en la caja durante la cadena de cosecha."
+    },
+    {
+      "number": 26,
+      "id": "farm_crate_move",
+      "filename": "026_farm_crate_move.mp3",
+      "sha256": "20ba7460680f89f3c3e945dc088396e5a1166e15194d42bd94fb21d3eacf820b",
+      "status": "connected",
+      "destination": [
+        "CrateDropped"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Levantar/dejar una caja; una toma por acción, no por fotograma."
+    },
+    {
+      "number": 27,
+      "id": "farm_sack_handle",
+      "filename": "027_farm_sack_handle.mp3",
+      "sha256": "581c16d0a33a31b21daace30319d4cc165f1f239d4e98ff48bd4f26bfa99fea2",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva de manejo de saco; no hay un objeto saco jugable aprobado."
+    },
+    {
+      "number": 28,
+      "id": "farm_crop_interact",
+      "filename": "028_farm_crop_interact.mp3",
+      "sha256": "69ba3658f420c93dd432a8d247f29d3a96efd1a97e5b7a13641f3fc66392f80a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Interacción ligera con vegetación; variante contextual de agricultura."
+    },
+    {
+      "number": 29,
+      "id": "build_place",
+      "filename": "029_build_place.mp3",
+      "sha256": "6fc6103b2bd25042bffb607076c18418d032e0e5b515a5d6dd777aa443a0445b",
+      "status": "connected",
+      "destination": [
+        "PlacementCommitted",
+        "WallChainBuilt"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Confirmación de una colocación válida; nunca al mover el fantasma."
+    },
+    {
+      "number": 30,
+      "id": "build_tool_hit",
+      "filename": "030_build_tool_hit.mp3",
+      "sha256": "afb50a73fec302a47a197b2da658c2e135775ca8baaf8e6fc871966d4ca8aee3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Contacto de herramienta de construcción/reparación cuando exista en la animación."
+    },
+    {
+      "number": 31,
+      "id": "build_wood",
+      "filename": "031_build_wood.mp3",
+      "sha256": "09c3ba040284ac4e4c90e5baf8fc123dc32850c0b4f3a0e030a7a3fdb15ca1b6",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Textura sonora de obra de madera; alternativa por material."
+    },
+    {
+      "number": 32,
+      "id": "build_stone",
+      "filename": "032_build_stone.mp3",
+      "sha256": "8336442c759b84ee549c6d882890b073ffe0ade4e2031123a71a709de9634176",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Textura sonora de obra de piedra; alternativa por material."
+    },
+    {
+      "number": 33,
+      "id": "build_adobe",
+      "filename": "033_build_adobe.mp3",
+      "sha256": "08be9e6f5024829198c4a903c3b366013feff2399c91cb9a414e1487407830d9",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Textura sonora de obra de adobe; alternativa por material."
+    },
+    {
+      "number": 34,
+      "id": "build_complete",
+      "filename": "034_build_complete.mp3",
+      "sha256": "89090ec32b2c9cd4252da3681ccba523a718b28e08dc6393a8354ba0adc26fd4",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Construcción confirmada y terminada; no cobrar aquí una segunda vez."
+    },
+    {
+      "number": 35,
+      "id": "build_repair",
+      "filename": "035_build_repair.mp3",
+      "sha256": "13c0391ae00ac853a43c347e3722d7944d23a830f10e8b3651e029765f0ba99b",
+      "status": "connected",
+      "destination": [
+        "RepairApplied"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Reparación ejecutada tras comprobar y descontar el coste al llegar."
+    },
+    {
+      "number": 36,
+      "id": "build_demolish_manual",
+      "filename": "036_build_demolish_manual.mp3",
+      "sha256": "bdabcac9544cec663be4de5a07ead7ba70ac5e3ea132af23023e30b62d434499",
+      "status": "connected",
+      "destination": [
+        "WallRemoved"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Eliminación manual permitida de una defensa; no decide reembolsos ni costes."
+    },
+    {
+      "number": 37,
+      "id": "wall_hit_thorns",
+      "filename": "037_wall_hit_thorns.mp3",
+      "sha256": "acb6fd4f7a48cfbbae72c9c49c12f2b88f54b9c280c305fed6509751a376f488",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Impacto lógico en zarzas."
+    },
+    {
+      "number": 38,
+      "id": "wall_hit_wood",
+      "filename": "038_wall_hit_wood.mp3",
+      "sha256": "2a175b00e5091e3aa8603db4241a7023b4ce82ba0abbaa7e12eb9cbf8cf56d0d",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Impacto lógico en madera."
+    },
+    {
+      "number": 39,
+      "id": "wall_hit_stone",
+      "filename": "039_wall_hit_stone.mp3",
+      "sha256": "eb752329e086e84a4dbdc2eb7f72a8fb063cc84c435a1f5161eec7bbddadb33e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Impacto lógico en piedra."
+    },
+    {
+      "number": 40,
+      "id": "wall_hit_adobe",
+      "filename": "040_wall_hit_adobe.mp3",
+      "sha256": "596a6a2e36654d5572a92893e70ef667fb987b9c7f68a8f6c72a9da0e2cf122a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Impacto lógico en adobe."
+    },
+    {
+      "number": 41,
+      "id": "wall_hit_reinforced_adobe",
+      "filename": "041_wall_hit_reinforced_adobe.mp3",
+      "sha256": "3009a2998abffaade460014c6808c3b85d09c27774eebce14339304e81a66c48",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Impacto lógico en adobe reforzado."
+    },
+    {
+      "number": 42,
+      "id": "wall_crack_small",
+      "filename": "042_wall_crack_small.mp3",
+      "sha256": "a4d145f5c8b8d645f819fbd452a13bfb7154818d30aa1388515a8af72d0a8433",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Pequeña rotura en contacto válido; no se reproduce como daño autónomo."
+    },
+    {
+      "number": 43,
+      "id": "wall_debris_small",
+      "filename": "043_wall_debris_small.mp3",
+      "sha256": "b2ca93228468fb5b827d3e721f4b65bec1254030163e022f529be1ee12c902b0",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Caída de fragmentos decorativos; limitar voces simultáneas."
+    },
+    {
+      "number": 44,
+      "id": "wall_structural_creak",
+      "filename": "044_wall_structural_creak.mp3",
+      "sha256": "64cc4f0b748b990bb12fab9c17f967789198aaa3fb2d1c1b00f858a187ac1bbf",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Crujido al alcanzar daño estructural alto; disparador de estado, no continuo."
+    },
+    {
+      "number": 45,
+      "id": "wall_collapse_full",
+      "filename": "045_wall_collapse_full.mp3",
+      "sha256": "79da83e0c763b5d78314f562c0e0aca66940a2ddd2f7ed2f7903e7658c4e318e",
+      "status": "connected",
+      "destination": [
+        "StructureRuined"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Colapso estructural iniciado por el motor de destrucción; una vez por colapso."
+    },
+    {
+      "number": 46,
+      "id": "wall_debris_ground",
+      "filename": "046_wall_debris_ground.mp3",
+      "sha256": "610a041ed3f0447a4068aa8cc7647e7d2ced468d08f25fa18b5f462a4f7f1d2d",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Contacto final de restos con el suelo; presentación del colapso."
+    },
+    {
+      "number": 47,
+      "id": "beast_step_light",
+      "filename": "047_beast_step_light.mp3",
+      "sha256": "1b15c8789022a4577ae6380b411645d296185e2c97cd53880d2b128ac95cb125",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyos de bestia ligera; marcadores de animación."
+    },
+    {
+      "number": 48,
+      "id": "beast_step_heavy",
+      "filename": "048_beast_step_heavy.mp3",
+      "sha256": "7744efbeecc44000028140a582004a2f1b417cf2b389752b00e57bca12070c98",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Apoyos de bestia pesada; marcadores de animación."
+    },
+    {
+      "number": 49,
+      "id": "beast_charge",
+      "filename": "049_beast_charge.mp3",
+      "sha256": "8638ecd91ee96ea53f7748889917a14678ea6051edc15aa82029fe1eea6c3f73",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Carga genérica; alternativa cuando no se usa la carga específica de la especie."
+    },
+    {
+      "number": 50,
+      "id": "beast_attack",
+      "filename": "050_beast_attack.mp3",
+      "sha256": "08382c194bbd6839ae7e6e58ff75be27b063c583a613c44bb623441a8cedeeab",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Ataque genérico; alternativa a la toma específica, no repetición de daño."
+    },
+    {
+      "number": 51,
+      "id": "beast_hit_structure",
+      "filename": "051_beast_hit_structure.mp3",
+      "sha256": "d307625c9e610c7266a4a9126262f599599b03e60adf434a7c42d6eda291fb2c",
+      "status": "connected",
+      "destination": [
+        "StructureHit"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Contacto de bestia contra estructura; combinar con material solo si la mezcla lo necesita."
+    },
+    {
+      "number": 52,
+      "id": "beast_hit_character",
+      "filename": "052_beast_hit_character.mp3",
+      "sha256": "579bc0efaf41058d2f22c02a05928383ac637f5fe4c667ddef728929bbc0a9c3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Contacto de bestia contra trabajador; una agresión lógica."
+    },
+    {
+      "number": 53,
+      "id": "beast_take_damage",
+      "filename": "053_beast_take_damage.mp3",
+      "sha256": "e5199165da7506a5841a1d5cfc836dce7e1262f3a16d68a00c5e47a4d3acc06e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: recibir daño animal no tiene sistema de salud ofensivo acreditado."
+    },
+    {
+      "number": 54,
+      "id": "beast_vocal_neutral",
+      "filename": "054_beast_vocal_neutral.mp3",
+      "sha256": "f9ac4e5230d7b20bbbc7c6ad1c7deb6885755a61d5f2d258cb5b01e0bb0364f0",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización animal neutra genérica; alternativa, baja frecuencia."
+    },
+    {
+      "number": 55,
+      "id": "beast_vocal_aggressive",
+      "filename": "055_beast_vocal_aggressive.mp3",
+      "sha256": "68c02509d3e4689f571b4606d4025033c133b9f2a8f48fd790aad4562e027e53",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización agresiva genérica; alternativa a la especie."
+    },
+    {
+      "number": 56,
+      "id": "beast_retreat",
+      "filename": "056_beast_retreat.mp3",
+      "sha256": "5d3cb438b2dbc01d0e0c7cc684823b173c920e997978086852e38f0b0b210f7e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada genérica; alternativa a la especie."
+    },
+    {
+      "number": 57,
+      "id": "beast_defeat",
+      "filename": "057_beast_defeat.mp3",
+      "sha256": "4401cea15acb415412ea4e03e0d5478909ab6191de4165553ece03b0b80b004a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: derrota/muerte animal no forma parte del combate aprobado."
+    },
+    {
+      "number": 58,
+      "id": "lion_neutral",
+      "filename": "058_lion_neutral.mp3",
+      "sha256": "66fc9416d4367dc286572f680121d4c03c790a7194fc92b9aaf9d0bf98d43995",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización neutra del león durante espera o aproximación; limitar frecuencia."
+    },
+    {
+      "number": 59,
+      "id": "lion_aggressive",
+      "filename": "059_lion_aggressive.mp3",
+      "sha256": "45ca634baa1df2e9514b2cbe1d892f3fa7bff93f27bf9eb060161e4c09f70820",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aviso agresivo/rugido del león; no añade una habilidad de área."
+    },
+    {
+      "number": 60,
+      "id": "lion_attack",
+      "filename": "060_lion_attack.mp3",
+      "sha256": "cefb9bf1eb9f32251a30ce6a9b3b92ce0a62f52e62717e0f2580ec4bde19ae8c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Animación de ataque del león; varios sonidos decorativos no multiplican daño."
+    },
+    {
+      "number": 61,
+      "id": "lion_hurt",
+      "filename": "061_lion_hurt.mp3",
+      "sha256": "d9a157700032a3fe29ae65d6f5cdc72fa4b3688648602037587ea116ec70d4dd",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: león herido, sin mecánica de daño al animal acreditada."
+    },
+    {
+      "number": 62,
+      "id": "lion_retreat",
+      "filename": "062_lion_retreat.mp3",
+      "sha256": "72dc4588da3f20ec4e1f7f5385fe0c990fca094506a03b4c4f99c2a01e3576c3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada del león por cupo agotado o sin objetivo libre."
+    },
+    {
+      "number": 63,
+      "id": "hyena_neutral",
+      "filename": "063_hyena_neutral.mp3",
+      "sha256": "a7f0da2a6e3f72f52573452e42c540e639fd6a5a45ee55c430e83b87db0c4d7b",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización neutra de hiena."
+    },
+    {
+      "number": 64,
+      "id": "hyena_aggressive",
+      "filename": "064_hyena_aggressive.mp3",
+      "sha256": "64ea509a9241e43f90ada70d7786309691d7eedec52f9dd83335011e76f94c3b",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aviso agresivo de hiena."
+    },
+    {
+      "number": 65,
+      "id": "hyena_attack",
+      "filename": "065_hyena_attack.mp3",
+      "sha256": "9187f2e241992d682db157ffc4caf628b6828f93ced13f85678e8daa6ffe03c2",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Ataque de hiena, sincronizado con la acción válida."
+    },
+    {
+      "number": 66,
+      "id": "hyena_hurt",
+      "filename": "066_hyena_hurt.mp3",
+      "sha256": "2b9a9bdd98a5d48f35b1ec5d8f5601b1c23d4293fb1687cc7bbb44e420d7bac6",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: hiena herida, sin mecánica de daño al animal acreditada."
+    },
+    {
+      "number": 67,
+      "id": "hyena_retreat",
+      "filename": "067_hyena_retreat.mp3",
+      "sha256": "57f59825f0b719fac94fbf12fb6e7874645e884f3e797e19e4d6dbdc41287116",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada de hiena."
+    },
+    {
+      "number": 68,
+      "id": "buffalo_neutral",
+      "filename": "068_buffalo_neutral.mp3",
+      "sha256": "13c0146a05652d788197eb15ce62c0eb3a92690f49d199ca863c6a84662fc4a3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización neutra de búfalo."
+    },
+    {
+      "number": 69,
+      "id": "buffalo_aggressive",
+      "filename": "069_buffalo_aggressive.mp3",
+      "sha256": "cfe51f9e3a4eca9048438ab39cbba704bb9c9b7578dbb913833b9df925f976e1",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aviso agresivo de búfalo."
+    },
+    {
+      "number": 70,
+      "id": "buffalo_charge",
+      "filename": "070_buffalo_charge.mp3",
+      "sha256": "8503208b8f39098c8e04489d2a6d16422bea115f9a58b4a71b6842597b131b79",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Carga/ataque de búfalo; no añade un golpe lógico extra."
+    },
+    {
+      "number": 71,
+      "id": "buffalo_hurt",
+      "filename": "071_buffalo_hurt.mp3",
+      "sha256": "e879b37b884537764bed82ecca9a9fcbf4b067b7392b0c8f099639d699390a9e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: búfalo herido, sin mecánica de daño al animal acreditada."
+    },
+    {
+      "number": 72,
+      "id": "buffalo_retreat",
+      "filename": "072_buffalo_retreat.mp3",
+      "sha256": "a8de3582eb32a24402e187868c3c840aa9e6629da7e5567fb7a892a52190104d",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada de búfalo."
+    },
+    {
+      "number": 73,
+      "id": "rhino_neutral",
+      "filename": "073_rhino_neutral.mp3",
+      "sha256": "04fb877b5392f7ba78dfe22622ec2d2749c51baa88a3d468e1c9784ffde1e6c5",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización neutra de rinoceronte."
+    },
+    {
+      "number": 74,
+      "id": "rhino_aggressive",
+      "filename": "074_rhino_aggressive.mp3",
+      "sha256": "75516374bfbcc74dc11d6e977ae111663882b2e962bdcdf1f8fc7e29494fc2b3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aviso agresivo de rinoceronte."
+    },
+    {
+      "number": 75,
+      "id": "rhino_charge",
+      "filename": "075_rhino_charge.mp3",
+      "sha256": "93da40c038d4d7dc03c1e05894389a9db48e7396ff088fccaf27a963b1a0b3ba",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Carga/ataque de rinoceronte."
+    },
+    {
+      "number": 76,
+      "id": "rhino_hurt",
+      "filename": "076_rhino_hurt.mp3",
+      "sha256": "7b9c0bac781226ef5e16b3cbfad3bcbdd6d52fa4841239d2b821292b3b5591a6",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: rinoceronte herido, sin mecánica de daño al animal acreditada."
+    },
+    {
+      "number": 77,
+      "id": "rhino_retreat",
+      "filename": "077_rhino_retreat.mp3",
+      "sha256": "bcf447156459b2d7130dc6ca5eb8829033d36e322eb477f0d067f79888cfa626",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada de rinoceronte."
+    },
+    {
+      "number": 78,
+      "id": "warthog_neutral",
+      "filename": "078_warthog_neutral.mp3",
+      "sha256": "cacab2e2231fdc2c10408699e9f891428d7479ad90550b9abd5729ef477f44c0",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Vocalización neutra de facóquero."
+    },
+    {
+      "number": 79,
+      "id": "warthog_aggressive",
+      "filename": "079_warthog_aggressive.mp3",
+      "sha256": "c196360bb62b494902c90349a29c47cc9178456622cdb9fd19f9e0b2f5534d9e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Aviso agresivo de facóquero."
+    },
+    {
+      "number": 80,
+      "id": "warthog_charge",
+      "filename": "080_warthog_charge.mp3",
+      "sha256": "e52179b754dc4ae80c6f9c26d5857c1133fba2287b118f0a7730376e1dda0fa6",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Carga/ataque de facóquero."
+    },
+    {
+      "number": 81,
+      "id": "warthog_hurt",
+      "filename": "081_warthog_hurt.mp3",
+      "sha256": "3f82b70c94ee0d857568db3ee3129ae673aaab04e6bdeb4a7b4a8b6515091857",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva: facóquero herido, sin mecánica de daño al animal acreditada."
+    },
+    {
+      "number": 82,
+      "id": "warthog_retreat",
+      "filename": "082_warthog_retreat.mp3",
+      "sha256": "4c89d168503bef3c6f61cbc99e7f7bc3e3a1887f491be4354f0cbb3d14b9a69c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Retirada de facóquero."
+    },
+    {
+      "number": 83,
+      "id": "npc_work_effort",
+      "filename": "083_npc_work_effort.mp3",
+      "sha256": "b768b38bba1440ddc673d8cd0cc8faf572b8f7b8d5afcb31f6465d1a48895b20",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Esfuerzo breve al trabajar; cadencia limitada por trabajador y cámara."
+    },
+    {
+      "number": 84,
+      "id": "npc_danger_react",
+      "filename": "084_npc_danger_react.mp3",
+      "sha256": "04280fa38853943a8adfd436091524ce7e53bbe0f0ad189a45ce256b43603a5e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reacción al peligro al entrar en huida; no repetir en cada evaluación de IA."
+    },
+    {
+      "number": 85,
+      "id": "npc_flee_shout",
+      "filename": "085_npc_flee_shout.mp3",
+      "sha256": "d7773e2858a0db7b80de2c51a0db9b98465c8d246e5591a1bb9541b12bfbe967",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Grito de huida contenido; mantener su normalización y limitar multitud."
+    },
+    {
+      "number": 86,
+      "id": "npc_hit",
+      "filename": "086_npc_hit.mp3",
+      "sha256": "96946a8f666fe765ebbcf8136118ac826fdb503ab77e9e8ee2f12f246dc818bd",
+      "status": "connected",
+      "destination": [
+        "WorkerHit"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Recepción de un golpe por un trabajador."
+    },
+    {
+      "number": 87,
+      "id": "npc_fall",
+      "filename": "087_npc_fall.mp3",
+      "sha256": "e8ec21251bfbd4904d8dbc1d9461e0aa64b96ccbe574a4c6132008e1d2603565",
+      "status": "connected",
+      "destination": [
+        "WorkerIncapacitated"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Caída del trabajador, ligada a la transición de lesión."
+    },
+    {
+      "number": 88,
+      "id": "npc_acknowledge",
+      "filename": "088_npc_acknowledge.mp3",
+      "sha256": "25c41890d1fa8d7ef038873a4019e4549822dc0faa91faa242af3bd1cecccc8d",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Acuse de tarea/reacción breve de NPC; no usar todos a la vez tras contratación."
+    },
+    {
+      "number": 89,
+      "id": "spirit_appear",
+      "filename": "089_spirit_appear.mp3",
+      "sha256": "e2ab2f750331cafe69f71eecc533b4d94604ed121d6e46aa9b90c5b6b065643b",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Entrada del avatar del Espíritu o presencia narrativa; sin entidad física nueva."
+    },
+    {
+      "number": 90,
+      "id": "spirit_disappear",
+      "filename": "090_spirit_disappear.mp3",
+      "sha256": "69720083be6e05da8626f1269eec416be36fe18c1e25694c5921145b693dfa11",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Salida del avatar; conservar toma y detalle final aprobados."
+    },
+    {
+      "number": 91,
+      "id": "spirit_move",
+      "filename": "091_spirit_move.mp3",
+      "sha256": "a78814b0c03b7e8be82844da4b602897f4d168fb7e935366cf437ba4a97a7f2c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Movimiento de presencia/gesto del Espíritu; uso ambiental opcional, no loop obligatorio de cámara."
+    },
+    {
+      "number": 92,
+      "id": "spirit_select",
+      "filename": "092_spirit_select.mp3",
+      "sha256": "a92ddedc3cf3c1c91129aa0f85814d09ac65c5141f6326788768cf7a53bd995a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Selección con interacción espiritual; alternativa a ui_click."
+    },
+    {
+      "number": 93,
+      "id": "spirit_touch",
+      "filename": "093_spirit_touch.mp3",
+      "sha256": "3ecc526b962f07f5f1c77ff03b58a11684a73252157c99a0358aa5671db62224",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Toque guiado del tutorial o interacción espiritual; no duplicar todos los clics."
+    },
+    {
+      "number": 94,
+      "id": "spirit_drag",
+      "filename": "094_spirit_drag.mp3",
+      "sha256": "13a703472d07fd34e4026a76d03d7a090f07a474c77ac5d9f511814a868b7f9e",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Arrastre guiado/colocación; controlar inicio y fin, no disparar por cada pixel."
+    },
+    {
+      "number": 95,
+      "id": "spirit_drop",
+      "filename": "095_spirit_drop.mp3",
+      "sha256": "3379c36f9706766a1519a79916760b4fd3f7138a1c8f542ae83abd3c93ce2c5d",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Soltar una previsualización; no equivale todavía a una compra."
+    },
+    {
+      "number": 96,
+      "id": "spirit_valid",
+      "filename": "096_spirit_valid.mp3",
+      "sha256": "6b0fd4066801d95014478ecfe2f67160361ff17bd0e1f4db214df7ee76919b19",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Colocación/interacción válida; feedback distinto de pago."
+    },
+    {
+      "number": 97,
+      "id": "spirit_invalid",
+      "filename": "097_spirit_invalid.mp3",
+      "sha256": "041ea410b65a06a845b293c5d850e7f9ed941b71f95a41d09fdf57f6caf5bb02",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Colocación/interacción no válida; limitar repetición mientras permanece inválida."
+    },
+    {
+      "number": 98,
+      "id": "spirit_power_activate",
+      "filename": "098_spirit_power_activate.mp3",
+      "sha256": "df0a4c3bfd36aa1d581deea332b25eb77787ee2231481ad6077f2731a7cd1ebb",
+      "status": "connected",
+      "destination": [
+        "SpellActivated"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Activación de una de las tres magias; VFX/poder deciden el evento."
+    },
+    {
+      "number": 99,
+      "id": "spirit_power_charge",
+      "filename": "099_spirit_power_charge.mp3",
+      "sha256": "7410b48bcc226c1771e17f2ce82894322ef316c88324c06814ad48539e787362",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Preparación o disponibilidad de magia; variante de presentación, no alarga la activación."
+    },
+    {
+      "number": 100,
+      "id": "spirit_tutorial_cue",
+      "filename": "100_spirit_tutorial_cue.mp3",
+      "sha256": "e6155ce3c7ffef14bd38fd6423857ef1b5b66fec9243ffcae5ee74c62dff6202",
+      "status": "connected",
+      "destination": [
+        "TutorialMessageStarted"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Entrada de explicación del tutorial, sin avance automático de texto."
+    },
+    {
+      "number": 101,
+      "id": "ui_click",
+      "filename": "101_ui_click.mp3",
+      "sha256": "411cfa40a6c09732a2cffab73611fc8911761dbb93824cd2cf5f4bbf02b866d3",
+      "status": "connected",
+      "destination": [
+        "HarvestRequested"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Clic UI genérico cuando no se utiliza otra confirmación específica."
+    },
+    {
+      "number": 102,
+      "id": "ui_panel_open",
+      "filename": "102_ui_panel_open.mp3",
+      "sha256": "25be5772f11ddfc965f5e37be6321018ad54573e6c2ef530733e7009330ef644",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Abrir panel."
+    },
+    {
+      "number": 103,
+      "id": "ui_panel_close",
+      "filename": "103_ui_panel_close.mp3",
+      "sha256": "df05c56a7c1f6410790f30508bad7e279124ad124447630e1684754db795e7dd",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Cerrar panel."
+    },
+    {
+      "number": 104,
+      "id": "ui_tab",
+      "filename": "104_ui_tab.mp3",
+      "sha256": "a4aeb1b3adb95a16eb5b9c406badf7079c0f94681220b6d7a325225cfdb5610a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Cambiar pestaña/selección del menú."
+    },
+    {
+      "number": 105,
+      "id": "ui_buy",
+      "filename": "105_ui_buy.mp3",
+      "sha256": "4c480c2c9f5f83ad1a92d8738d57a8631dae6881a42476e6af8d5acddd1e3d7a",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Compra aceptada; alternativa a eco_spend, sin doble cargo."
+    },
+    {
+      "number": 106,
+      "id": "ui_sell",
+      "filename": "106_ui_sell.mp3",
+      "sha256": "7bfbfb932f3bd72e633437e72dfa1c06d6616e031bff772788e10c3e3003ae03",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Venta/ingreso al entregar caja; alternativa a eco_crop_sold, no comercio adicional."
+    },
+    {
+      "number": 107,
+      "id": "ui_error",
+      "filename": "107_ui_error.mp3",
+      "sha256": "efc0c62e4d77f8059fdfb7fb30fdfd73e5831aa0cdafebdc231ff2bcf10f1475",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Error, fondos insuficientes o comando no permitido; aviso no invasivo."
+    },
+    {
+      "number": 108,
+      "id": "ui_confirm",
+      "filename": "108_ui_confirm.mp3",
+      "sha256": "19eab6dfcb3dba9f8dffb97ded6fc5223620994bded24040ca94f030ef4696bc",
+      "status": "connected",
+      "destination": [
+        "HiringConfirmed"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Confirmación válida de modal, distinta de una simulación de compra."
+    },
+    {
+      "number": 109,
+      "id": "ui_objective_complete",
+      "filename": "109_ui_objective_complete.mp3",
+      "sha256": "ff2579d2d6dbcd12859812b4a7a95b409186788ee05c2a18c8ee1a78251f936c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Paso/tutorial u objetivo realmente completado; no crea misiones nuevas."
+    },
+    {
+      "number": 110,
+      "id": "ui_reward",
+      "filename": "110_ui_reward.mp3",
+      "sha256": "73e793e9ba453cff1b5019c6124eec606af96fdd56df44b0ed7bbad68406f292",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Feedback de recompensa narrativa ya existente; reserva si no hay evento que lo justifique."
+    },
+    {
+      "number": 111,
+      "id": "ui_unlock",
+      "filename": "111_ui_unlock.mp3",
+      "sha256": "4caf7733e081bdd68db69a7a0e05f211f5e31af5db802bbaf478a96d2acbb3f3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Desbloqueo de magia o postgame."
+    },
+    {
+      "number": 112,
+      "id": "ui_pause",
+      "filename": "112_ui_pause.mp3",
+      "sha256": "7e2c04d1129657b9db33732ea7075dc28369262521497a2204f7d6d07d0d8b03",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Pausa solicitada por el jugador."
+    },
+    {
+      "number": 113,
+      "id": "ui_resume",
+      "filename": "113_ui_resume.mp3",
+      "sha256": "c1a6bac6ec474d0cb7ff156a641349d4d5cf041dd424612564a6e6032b328151",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reanudar cuando ya no queden motivos de pausa."
+    },
+    {
+      "number": 114,
+      "id": "eco_gain",
+      "filename": "114_eco_gain.mp3",
+      "sha256": "e9e425e358e14c5f83deeff957080cd2d97d4872306df9837ce05cd00c5c08f3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Ingreso real de dinero; alternativa a sonidos específicos de venta."
+    },
+    {
+      "number": 115,
+      "id": "eco_spend",
+      "filename": "115_eco_spend.mp3",
+      "sha256": "06ef0d5110f552b0b15d9bcad1d4c142b5848a22b843da24f02a7a4f3be99904",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Gasto real; alternativa a compra específica, nunca al solicitar reparación."
+    },
+    {
+      "number": 116,
+      "id": "eco_crop_sold",
+      "filename": "116_eco_crop_sold.mp3",
+      "sha256": "c675e364e55236e1e338a9f0b22d417066d02bc37b2a24fdc65a256411a23698",
+      "status": "connected",
+      "destination": [
+        "CrateDelivered"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Caja entregada en centro y cosecha contabilizada."
+    },
+    {
+      "number": 117,
+      "id": "eco_item_pickup",
+      "filename": "117_eco_item_pickup.mp3",
+      "sha256": "7e826f77e077f0951a6cb774411124916304b040a5a56864027352c97f64e2ed",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Recogida física de caja/producto; no suma dinero."
+    },
+    {
+      "number": 118,
+      "id": "eco_big_reward",
+      "filename": "118_eco_big_reward.mp3",
+      "sha256": "7b08ce30de21f999f8ef11cbc612e3a6e137be1dbdaede37d825e0a6ee7ab078",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada."
+    },
+    {
+      "number": 119,
+      "id": "game_attack_alert",
+      "filename": "119_game_attack_alert.mp3",
+      "sha256": "5df036d73d614fa445d5fd567ca9cf35121f7a2d055da8b5f44219cf052bef3d",
+      "status": "connected",
+      "destination": [
+        "RaidSpawned"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Comienzo global de incursión; un aviso por grupo, no uno por animal."
+    },
+    {
+      "number": 120,
+      "id": "game_enemy_detected",
+      "filename": "120_game_enemy_detected.mp3",
+      "sha256": "107ae80e704de9891bd0dea9108d135b4c887b3127bb1e2b7461c1df7c81c59c",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Detección/localización de enemigo; variante local, sin repetir el aviso global."
+    },
+    {
+      "number": 121,
+      "id": "game_building_attacked",
+      "filename": "121_game_building_attacked.mp3",
+      "sha256": "e68e7475cd89041bd8887618c098251a2779ba48ecb16da494008c480a8468d3",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Centro/edificio bajo ataque; limitar recurrencia por estructura."
+    },
+    {
+      "number": 122,
+      "id": "game_wall_critical",
+      "filename": "122_game_wall_critical.mp3",
+      "sha256": "95eacfa6b46e84fcdf72f8b26eebf34aff556d1d444b1a050263cff75ec6c5ca",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Muralla crítica; una transición/aviso agrupado, no cada fotograma."
+    },
+    {
+      "number": 123,
+      "id": "game_farmer_hurt",
+      "filename": "123_game_farmer_hurt.mp3",
+      "sha256": "ef0aea49c571eb3b24e1df9ace05094ff229d7e7875fa151f9aadcb342f9b051",
+      "status": "reserved",
+      "destination": [
+        "sfx-library-preview"
+      ],
+      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "planned_trigger": "Trabajador lesionado; aviso agrupable y enlazable a posición."
+    },
+    {
+      "number": 124,
+      "id": "game_attack_over",
+      "filename": "124_game_attack_over.mp3",
+      "sha256": "3f08de11b2d56a937538016047d41afcca6496ab836b10b7df376fcb895a07de",
+      "status": "connected",
+      "destination": [
+        "RaidEnded"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Fin de incursión al retirarse el último animal."
+    },
+    {
+      "number": 125,
+      "id": "game_victory",
+      "filename": "125_game_victory.mp3",
+      "sha256": "b8984060ee43beefd2ee31911e9c0c0128afb533b7d1405be86e6f3da530de3c",
+      "status": "connected",
+      "destination": [
+        "CampaignWon"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Victoria al completar la noche 100."
+    },
+    {
+      "number": 126,
+      "id": "game_major_loss",
+      "filename": "126_game_major_loss.mp3",
+      "sha256": "e7c5c6efd75d511ecc854947fc9d47af5a1e31ade605d9dfb43579c8c82181e4",
+      "status": "connected",
+      "destination": [
+        "GameOver"
+      ],
+      "reservation_reason": null,
+      "planned_trigger": "Game Over o pérdida importante confirmada; evitar repetir al mostrar y guardar el resultado."
+    }
+  ]
+}
