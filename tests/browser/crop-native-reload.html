@@ -1,0 +1,66 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Cultivos nativos y reconstrucción</title>
+<style>body{margin:0;background:#ead9ad;font:14px system-ui;color:#30281b}header{padding:8px}button,select{padding:6px}canvas{display:block;width:100%;height:70vh}pre{max-height:16vh;overflow:auto;margin:8px;font-size:11px}</style>
+<header>QA aislada: ocho filas (maíz, algodón, girasol, plátano, sorgo, mijo, yuca, batata), cuatro columnas (transiciones 1→2, 2→3, 3→4, 4→5). Modelos, texturas, puentes y Toon de producción; suelo plano y luz de ensayo, sin paisaje, sombras ni campaña natural.<br>
+<label>Estado <select id="phase"><option value=".2">Morph 20 %</option><option value=".5" selected>Morph 50 %</option><option value=".8">Morph 80 %</option><option value="stage1">Original 1</option><option value="stage2">Original 2</option><option value="stage3">Original 3</option><option value="stage4">Original 4</option><option value="stage5">Original 5</option></select></label>
+<label>Vista <select id="species"><option value="all">Todas</option><option value="maiz">Maíz</option><option value="algodon">Algodón</option><option value="girasol">Girasol</option><option value="platano">Plátano</option><option value="sorgo">Sorgo</option><option value="mijo">Mijo</option><option value="yuca">Yuca</option><option value="batata">Batata</option></select></label>
+<button id="restore" disabled>Guardar y reconstruir renderer</button><button id="rotate" disabled>Girar cámara</button><span id="summary">Cargando…</span></header>
+<canvas id="world"></canvas><pre id="status"></pre>
+<script type="module">
+import * as THREE from 'three';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {createCropBatch} from '../../src/rendering/crop-batch.js';
+import {AfricanToon} from '../../src/rendering/african-toon.js';
+import * as Game from '../../src/simulation/game.js';
+import {advancePlant,waterPlant} from '../../src/simulation/crops.js';
+import {cropSpec} from '../../src/simulation/rules.js';
+import {rational} from '../../src/simulation/money.js';
+import {SaveRepository,serialize} from '../../src/persistence/snapshots.js';
+const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'],marks=[.065,.27,.53,.78,1];
+const canvas=document.querySelector('#world'),status=document.querySelector('#status'),summary=document.querySelector('#summary');
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const assets=new Assets(),models=await json('/content/models.json'),gltf=await assets.model(models.find(m=>m.source.includes('Cultivos')).url),bridges=await json('/content/crop-bridges.json');
+const repo=new SaveRepository(localStorage),slotId='qa-native-crop-reload';
+const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_start,end)=>[end]};
+let renderer,scene,camera,batch,toon,sun,state,rotation=0,report={};
+function destroy(){batch?.dispose();scene?.traverse(o=>{if(o.userData.qaGround){o.geometry.dispose();o.material.dispose();}});renderer?.dispose();}
+function create(){
+ destroy();renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(1280,800,false);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
+ scene=new THREE.Scene();scene.background=new THREE.Color('#ead9ad');camera=new THREE.OrthographicCamera(-17,17,13,-13,.1,150);
+ sun=new THREE.DirectionalLight(0xffefd6,3);sun.position.set(-30,55,25);scene.add(sun,sun.target,new THREE.HemisphereLight(0xffffff,0x756545,1.2));
+ const soil=new THREE.Mesh(new THREE.PlaneGeometry(32,32),new THREE.MeshStandardMaterial({color:0xb39b65,roughness:1}));soil.rotation.x=-Math.PI/2;soil.position.y=-.025;soil.userData.qaGround=true;scene.add(soil);
+ batch=createCropBatch(scene,renderer,gltf,bridges,4);toon=new AfricanToon();scene.traverse(o=>{if(o.isMesh&&!o.userData.qaGround)toon.material(o.material);});toon.update(0,sun,'sabana');
+}
+function prepare(){
+ state=Game.newGame({seed:712,slotId});Game.resume(state,'intro');state.ledger.balance=rational(10000);Game.placeStructure(state,'center',{x:60,z:60},nav);
+ state.day=101;state.completedNights=100;state.postgame=true;state.initialPreparation=false;state.tutorial.step='done';state.elapsed=12;
+ const phase=document.querySelector('#phase').value;
+ for(let row=0;row<8;row++)for(let col=0;col<4;col++){
+  Game.plant(state,'seed-'+row+'-'+col,ids[row],col*4-6,row*3.5-12.25,nav);const p=state.plants.at(-1),duration=cropSpec(p.species).growth_seconds;
+  const growth=phase.startsWith('stage')?marks[Number(phase.slice(5))-1]*duration:(marks[col]+.81*(marks[col+1]-marks[col]))*duration+(Number(phase)-.5)*2;
+  waterPlant(p);while(p.growth<growth-1e-9){while(waterPlant(p)){}const next=p.water.find(w=>w.status==='future');advancePlant(p,Math.min(growth-p.growth,next?next.at-p.growth:Infinity));}
+ }
+ Game.rebuildTasks(state);report={phase,rotation};
+}
+async function draw(){
+ const species=document.querySelector('#species').value,row=ids.indexOf(species),z=row<0?0:row*3.5-12.25,half=row<0?17:9;
+ camera.left=-half;camera.right=half;camera.top=half/1.6;camera.bottom=-half/1.6;camera.updateProjectionMatrix();
+ camera.position.set(Math.sin(rotation)*30,32,z+Math.cos(rotation)*30);camera.lookAt(0,0,z);camera.updateMatrixWorld();batch.update(state.plants.filter(p=>row<0||p.species===species),state.elapsed,()=>0);
+ await renderer.compileAsync(scene,camera);renderer.render(scene,camera);
+ const pixels=new Uint8Array(1280*800*4),gl=renderer.getContext();gl.readPixels(0,0,1280,800,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+ const visible=scene.children.filter(m=>m.isInstancedMesh&&m.visible&&m.count);
+ report={...report,species,slotId,plants:state.plants.length,clock:state.elapsed,visible:visible.map(m=>({name:m.name,count:m.count,opacity:m.material.opacity,transparent:m.material.transparent,alphaTest:m.material.alphaTest,alphaHash:m.material.alphaHash,map:!!m.material.map,normalMap:!!m.material.normalMap})),samples:state.plants.map(p=>({id:p.id,species:p.species,growth:p.growth,...batch.sample(p.species,p.growth)})),errors:[...errors]};
+ publish();return pixels;
+}
+function publish(){status.textContent=JSON.stringify(report,null,2);summary.textContent=report.pixelDifferences===undefined?`${report.plants} plantas · ${report.visible.length} lotes · ${errors.length} errores`:`Reconstrucción: ${report.pixelDifferences} píxeles distintos · dominio ${report.sameDomain?'idéntico':'DISTINTO'} · ${errors.length} errores`;}
+async function restore(){
+ const before=await draw(),snapshot=serialize(state);repo.save(state);state=repo.load(slotId);const sameDomain=serialize(state)===snapshot;create();const after=await draw();
+ let differences=0,min=255,max=0,maxDelta=0,totalDelta=0;for(let i=0;i<before.length;i+=4){if(before[i]!==after[i]||before[i+1]!==after[i+1]||before[i+2]!==after[i+2]||before[i+3]!==after[i+3])differences++;for(let k=0;k<4;k++){const delta=Math.abs(before[i+k]-after[i+k]);maxDelta=Math.max(maxDelta,delta);totalDelta+=delta;}min=Math.min(min,before[i],before[i+1],before[i+2]);max=Math.max(max,before[i],before[i+1],before[i+2]);}
+ report={...report,sameDomain,pixelDifferences:differences,maxChannelDelta:maxDelta,totalChannelDelta:totalDelta,comparedPixels:before.length/4,channelRange:[min,max],freshRenderer:true};publish();
+}
+create();prepare();await draw();document.querySelector('#restore').disabled=false;document.querySelector('#rotate').disabled=false;
+document.querySelector('#restore').onclick=()=>restore().catch(e=>{errors.push(String(e));report.errors=[...errors];publish();});
+document.querySelector('#phase').onchange=()=>{prepare();draw();};
+document.querySelector('#species').onchange=()=>{report={rotation,phase:document.querySelector('#phase').value};draw();};
+document.querySelector('#rotate').onclick=()=>{rotation+=Math.PI/2;report={rotation,phase:document.querySelector('#phase').value};draw();};
+addEventListener('pagehide',destroy);
+</script></html>
