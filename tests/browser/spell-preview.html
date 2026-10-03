@@ -1,0 +1,24 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Preparar previsualización de magia</title>
+<p>Fixture explícita de QA: semilla 712, Sabana/Mapungubwe, centro, cultivo y trabajador pagados. Adelanta al día 5 y añade 200 monedas para evitar la derrota económica durante la inspección; no acredita una campaña natural. Guarda solo el slot qa-spell-preview en este origen de QA.</p>
+<button id="open" disabled>Abrir partida de prueba en el juego</button><pre id="status">Preparando…</pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {rational,transact} from '../../src/simulation/money.js';
+import {SaveRepository} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {json} from '../../src/rendering/assets.js';
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712,slotId:'qa-spell-preview'}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');
+Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);
+let site;
+for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:location.center.x+x,z:location.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
+Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-contract',{olderMale:1});
+state.day=5;state.time=30;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={day:5,done:true};
+transact(state.ledger,'qa-inspection-credit',rational(200),{kind:'qa-inspection-credit'});
+state.workers.forEach(w=>w.contractDay=5);state.hiringPaidDay=5;
+document.querySelector('#status').textContent=JSON.stringify({day:state.day,time:state.time,balance:state.ledger.balance,center:location.center,site},null,2);
+document.querySelector('#open').disabled=false;
+document.querySelector('#open').onclick=()=>{new SaveRepository(localStorage).save(state);window.location.href='../../';};
+</script></html>

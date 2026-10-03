@@ -234,15 +234,28 @@ export function requestRepair(s,id,targetId) {
 }
 export const spellRadius=id=>({shield:1.95,growth:2.6,multiply:2.2})[id]; // Calibrated against 1.5 m planting pitch; area, not plant cap.
 export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);}
-export function cast(s,id,kind,x,z,nav) {
+export function previewSpell(s,kind,x,z,nav) {
+  const draft={kind,x,z,radius:spellRadius(kind),valid:false,reason:null};
+  try {
+    validateSpell(s,kind,x,z,nav);draft.valid=true;
+  } catch(error) {draft.reason=error.message;}
+  return draft;
+}
+function validateSpell(s,kind,x,z,nav) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   const unlocked=kind==='shield'?s.day>=2&&s.time>=300||s.day>2:kind==='growth'?s.day>=3:s.day>=5;
   if(!unlocked)throw new Error('El Espíritu todavía no ha revelado esta magia');
   if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
-  if(!nav.terrainValid(x,z,.2))throw new Error('Ubicación mágica inválida');
+  if(!Number.isFinite(x)||!Number.isFinite(z)||!nav.terrainValid(x,z,.2))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
   if(s.spells.some(a=>a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
+  if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
+  return spec;
+}
+export function cast(s,id,kind,x,z,nav) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  const spec=validateSpell(s,kind,x,z,nav),radius=spellRadius(kind);
   return commit(s,id,kind,()=>{
     s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });
