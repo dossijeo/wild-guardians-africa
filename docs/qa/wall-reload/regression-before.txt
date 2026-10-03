@@ -1,0 +1,67 @@
+TAP version 13
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 1 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 2.4862
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 2 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 5.9007
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 3 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 751.6417
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 4 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 170.7749
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 5 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 10.4546
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 6 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 33.8046
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 7 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 912.2937
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+not ok 8 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 79.292
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/walls-native.test.js:86:1'
+  failureType: 'testCodeFailure'
+  error: 'zarzas gate=false visual at 0.24'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0.6499999999999999
+  actual: 0.6
+  operator: 'strictEqual'
+  stack: |-
+    equalReload (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/walls-native.test.js:91:158)
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/walls-native.test.js:92:117)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2298.5851

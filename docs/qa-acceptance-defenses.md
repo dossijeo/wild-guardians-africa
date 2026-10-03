@@ -68,4 +68,5 @@ El guardado visual de esta fixture deserializa en memoria conservando WorldScene
 no acredita recreación completa del renderer durante una caída ni streaming.
 QA-086/148 siguen pendientes. En especial hay que cotejar la envolvente visual
 inicial de NativeWall con la de una caída restaurada en una escena nueva.
-El CI exacto de b97662a continúa pendiente al publicar este informe.
+El [CI exacto de b97662a](qa/defense-collapse/ci.json) pasa **769/769 pruebas**, verificaciones, build y ZIP. [Log](qa/defense-collapse/ci-log.txt).
+Actualización: [continuidad BAST con renderer nuevo](qa-wall-reload.md), corrección de un salto durante daño/caída. QA-148 sigue parcial.

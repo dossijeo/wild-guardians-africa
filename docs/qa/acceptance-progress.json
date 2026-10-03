@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "b97662a",
+  "implementation_commit": "9d7a907",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1557,9 +1557,11 @@
       "area": "Guardado y presentación",
       "scenario": "Guardar colapso o cooldown en curso",
       "expected": "Estado no reversible accidentalmente; restaurar duración/estado coherente.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-wall-reload.md"
+      ],
+      "notes": "Confirmed and fixed a real BAST fade jump from 0.65 to 0.60 after snapshot renderer recreation. Persisted simulated origins restore exact stage/positions/normals for five wall and gate materials through damage, collapse, pause and ruin. Actual browser disposes/recreates WorldScene through generations 1–4 with identical visual/remainder/time and retained ruin. Legacy snapshots remain readable with prior ratio fallback. Remaining: repair upward fade recreation, all DEST effects, cooldowns, open-gate states and chunk-streaming coverage; no broad QA-148 completion claim."
     },
     {
       "id": "QA-149",
