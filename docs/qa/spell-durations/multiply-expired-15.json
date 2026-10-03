@@ -1,0 +1,121 @@
+{
+  "elapsed": 14.999999999998849,
+  "time": 310.0000000000023,
+  "day": 5,
+  "balance": {
+    "n": "85",
+    "d": "1"
+  },
+  "pauses": [
+    "qa"
+  ],
+  "sites": [
+    {
+      "x": 88.5,
+      "z": -15
+    },
+    {
+      "x": 96,
+      "z": -15
+    },
+    {
+      "x": 100.5,
+      "z": -9
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell-14",
+      "kind": "shield",
+      "x": 88.5,
+      "z": -15,
+      "radius": 1.95,
+      "remaining": 5.000000000001098
+    },
+    {
+      "id": "spell-15",
+      "kind": "growth",
+      "x": 96,
+      "z": -15,
+      "radius": 2.6,
+      "remaining": 15.00000000000092
+    }
+  ],
+  "cooldowns": {
+    "shield": 75.00000000000196,
+    "growth": 75.00000000000196,
+    "multiply": 105.00000000000196
+  },
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "spell-14",
+      "definition": "shield",
+      "age": 14.999999999999163,
+      "visible": true,
+      "sprites": 10,
+      "rigids": 0
+    },
+    {
+      "key": "spell-15",
+      "definition": "heal",
+      "age": 14.999999999999275,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 7
+    }
+  ],
+  "pauseIdentical": true,
+  "reloadIdentical": true,
+  "renderDomainIdentical": true,
+  "errors": []
+}

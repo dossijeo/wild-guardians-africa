@@ -1,0 +1,137 @@
+{
+  "elapsed": 0,
+  "time": 295,
+  "day": 5,
+  "balance": {
+    "n": "85",
+    "d": "1"
+  },
+  "pauses": [
+    "qa"
+  ],
+  "sites": [
+    {
+      "x": 88.5,
+      "z": -15
+    },
+    {
+      "x": 96,
+      "z": -15
+    },
+    {
+      "x": 100.5,
+      "z": -9
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell-14",
+      "kind": "shield",
+      "x": 88.5,
+      "z": -15,
+      "radius": 1.95,
+      "remaining": 20
+    },
+    {
+      "id": "spell-15",
+      "kind": "growth",
+      "x": 96,
+      "z": -15,
+      "radius": 2.6,
+      "remaining": 30
+    },
+    {
+      "id": "spell-16",
+      "kind": "multiply",
+      "x": 100.5,
+      "z": -9,
+      "radius": 2.2,
+      "remaining": 15
+    }
+  ],
+  "cooldowns": {
+    "shield": 90,
+    "growth": 90,
+    "multiply": 120
+  },
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "spell-14",
+      "definition": "shield",
+      "age": 0,
+      "visible": true,
+      "sprites": 10,
+      "rigids": 0
+    },
+    {
+      "key": "spell-15",
+      "definition": "heal",
+      "age": 0,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 0
+    },
+    {
+      "key": "spell-16",
+      "definition": "heal",
+      "age": 0,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 0
+    }
+  ],
+  "pauseIdentical": null,
+  "reloadIdentical": null,
+  "renderDomainIdentical": true,
+  "errors": []
+}

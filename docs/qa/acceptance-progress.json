@@ -1368,11 +1368,12 @@
       "area": "Magias",
       "scenario": "Campo atraviesa cambio día/noche",
       "expected": "Respetar permisos de activación y regla nocturna de cultivos; VFX no avanza agricultura por sí mismo.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-agriculture-season.md"
+        "docs/qa-agriculture-season.md",
+        "docs/qa/spell-durations/README.md"
       ],
-      "notes": "Growth and Multiply cross sunset with Game.advanceReal at day x1/night x5: daylight-only growth, night activation rejected without state mutation, durations/cooldowns continue, blocking pause and snapshot preserved. Native VFX manager does not mutate simulation. Funded attack-free postcampaign fixture with straight-route navigation and renderer doubles. Remaining: Shield and integrated visual acceptance."
+      "notes": "Existing Growth/Multiply real-clock sunset and night-rejection tests retained. Shield now compared against no-field agriculture control across sunset, day x1/night x5, menu pause, load, expiry and full cooldown; nighttime Shield recast permitted. Actual WorldScene/native navigation: three paid crops and worker, all three fields cross sunset, crops stop night growth, render snapshots unchanged. Declared day5/time295 calm-night fixture, not a natural five-day campaign. Public captures and reports inspected, zero render errors."
     },
     {
       "id": "QA-116",
@@ -1434,11 +1435,12 @@
       "area": "Magias",
       "scenario": "Duración de VFX demo distinta del efecto lógico",
       "expected": "La presentación persiste/reconfigura hasta durar 20/30/15 s según magia; no dicta gameplay.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-agriculture-season.md"
+        "docs/qa-agriculture-season.md",
+        "docs/qa/spell-durations/README.md"
       ],
-      "notes": "Native agricultural blessing geometry and sprites persist beyond the original 5-second demo to 30/15 simulated seconds, including sunset, blocking pause and reload phase; removed exactly at logical expiry without driving agriculture. Remaining: complete Shield and actual rendered duration acceptance."
+      "notes": "Actual WorldScene VFX remain visible beyond original demo duration and match logical20/30/15 seconds: three at0/5/10, two at15, one at20/25, zero at30. Pause with60-real-second delta leaves exact snapshot; fresh Navigation/WorldScene load at10s preserves snapshot, ages within1e-7, and sprite/rigid counts. Render never mutates domain. Nine public reports and screenshots plus62 directed tests. ANGLE HDR warnings retained, zero console errors; no full-pixel equality claim."
     },
     {
       "id": "QA-121",
@@ -1756,9 +1758,10 @@
       "audit_status": "partial",
       "evidence": [
         "docs/qa-wall-reload.md",
-        "docs/qa-wall-repair.md"
+        "docs/qa-wall-repair.md",
+        "docs/qa/spell-durations/README.md"
       ],
-      "notes": "Fixed real BAST damage fade/reload and paid repair fade discontinuities. Persisted simulated origins restore exact stage/positions/normals for five materials, walls/gates, through damage, collapse, pause, repair and ruin rebuilding. Physical repair tests verify one canonical arrival debit and compare fresh renderers throughout the 480 ms upward fade. Actual browser disposes/recreates WorldScene and preserves damage/collapse/ruin, plus one paid native-terrain repair (85 -> 81 coins, same visual 0.801533 before/after recreation, final visual 1 without another payment). Legacy snapshots remain readable with prior ratio fallback. Remaining: other DEST states/effects, cooldowns, open gates and specific chunk streaming; no broad QA-148 completion claim."
+      "notes": "Fixed real BAST damage fade/reload and paid repair fade discontinuities. Persisted simulated origins restore exact stage/positions/normals for five materials, walls/gates, through damage, collapse, pause, repair and ruin rebuilding. Physical repair tests verify one canonical arrival debit and compare fresh renderers throughout the 480 ms upward fade. Actual browser disposes/recreates WorldScene and preserves damage/collapse/ruin, plus one paid native-terrain repair (85 -> 81 coins, same visual 0.801533 before/after recreation, final visual 1 without another payment). Legacy snapshots remain readable with prior ratio fallback. Remaining: other DEST states/effects, cooldowns, open gates and specific chunk streaming; no broad QA-148 completion claim. Spell-duration WorldScene fixture now recreates fresh navigation/renderer at10s: all three cooldowns/remaining durations and VFX phases preserved, exact snapshot equality. Other DEST states/open gates/streaming remain outstanding; QA-148 stays partial."
     },
     {
       "id": "QA-149",

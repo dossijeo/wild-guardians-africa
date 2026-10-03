@@ -1,0 +1,137 @@
+{
+  "elapsed": 9.999999999998867,
+  "time": 305.00000000000114,
+  "day": 5,
+  "balance": {
+    "n": "85",
+    "d": "1"
+  },
+  "pauses": [
+    "qa"
+  ],
+  "sites": [
+    {
+      "x": 88.5,
+      "z": -15
+    },
+    {
+      "x": 96,
+      "z": -15
+    },
+    {
+      "x": 100.5,
+      "z": -9
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell-14",
+      "kind": "shield",
+      "x": 88.5,
+      "z": -15,
+      "radius": 1.95,
+      "remaining": 10.00000000000108
+    },
+    {
+      "id": "spell-15",
+      "kind": "growth",
+      "x": 96,
+      "z": -15,
+      "radius": 2.6,
+      "remaining": 20.000000000000973
+    },
+    {
+      "id": "spell-16",
+      "kind": "multiply",
+      "x": 100.5,
+      "z": -9,
+      "radius": 2.2,
+      "remaining": 5.000000000001149
+    }
+  ],
+  "cooldowns": {
+    "shield": 80.00000000000168,
+    "growth": 80.00000000000168,
+    "multiply": 110.00000000000168
+  },
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "spell-14",
+      "definition": "shield",
+      "age": 9.999999999999021,
+      "visible": true,
+      "sprites": 10,
+      "rigids": 0
+    },
+    {
+      "key": "spell-15",
+      "definition": "heal",
+      "age": 9.999999999999044,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 7
+    },
+    {
+      "key": "spell-16",
+      "definition": "heal",
+      "age": 9.999999999998952,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 7
+    }
+  ],
+  "pauseIdentical": null,
+  "reloadIdentical": null,
+  "renderDomainIdentical": true,
+  "errors": []
+}

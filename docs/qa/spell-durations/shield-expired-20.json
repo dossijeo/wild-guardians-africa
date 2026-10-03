@@ -1,0 +1,105 @@
+{
+  "elapsed": 19.999999999998902,
+  "time": 315.0000000000034,
+  "day": 5,
+  "balance": {
+    "n": "85",
+    "d": "1"
+  },
+  "pauses": [
+    "qa"
+  ],
+  "sites": [
+    {
+      "x": 88.5,
+      "z": -15
+    },
+    {
+      "x": 96,
+      "z": -15
+    },
+    {
+      "x": 100.5,
+      "z": -9
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell-15",
+      "kind": "growth",
+      "x": 96,
+      "z": -15,
+      "radius": 2.6,
+      "remaining": 10.000000000000938
+    }
+  ],
+  "cooldowns": {
+    "shield": 70.00000000000225,
+    "growth": 70.00000000000225,
+    "multiply": 100.00000000000225
+  },
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "spell-15",
+      "definition": "heal",
+      "age": 19.9999999999989,
+      "visible": true,
+      "sprites": 16,
+      "rigids": 7
+    }
+  ],
+  "pauseIdentical": true,
+  "reloadIdentical": true,
+  "renderDomainIdentical": true,
+  "errors": []
+}
