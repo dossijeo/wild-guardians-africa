@@ -1,0 +1,323 @@
+TAP version 13
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 1 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 119.8749
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 2 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 6.8384
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 3 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 4.2821
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 4 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 1.7557
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 5 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 90.7971
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 6 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 31.2246
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 7 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 34.8269
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 8 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 34.8803
+  ...
+# Subtest: authored depth route shares live deformation uniforms and restores original objects and materials after failure
+ok 9 - authored depth route shares live deformation uniforms and restores original objects and materials after failure
+  ---
+  duration_ms: 14.998
+  ...
+# Subtest: unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+ok 10 - unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+  ---
+  duration_ms: 35.2494
+  ...
+# Subtest: transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+ok 11 - transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+  ---
+  duration_ms: 1.3226
+  ...
+# Subtest: endpoint guard leaves the complete received mix, UVs, LOD, scale and fill intact
+ok 12 - endpoint guard leaves the complete received mix, UVs, LOD, scale and fill intact
+  ---
+  duration_ms: 7.1257
+  ...
+# Subtest: Standard, Basic and painted fluid share a live endpoint switch without changing depth or recompiling
+ok 13 - Standard, Basic and painted fluid share a live endpoint switch without changing depth or recompiling
+  ---
+  duration_ms: 84.3943
+  ...
+# Subtest: native destruction and debris also use one guarded HDR recipe with the original mixed path
+ok 14 - native destruction and debris also use one guarded HDR recipe with the original mixed path
+  ---
+  duration_ms: 0.628
+  ...
+# Subtest: noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+ok 15 - noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+  ---
+  duration_ms: 15.0285
+  ...
+# Subtest: both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+ok 16 - both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+  ---
+  duration_ms: 4.0651
+  ...
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 17 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 62.5232
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 18 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 5.0588
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 19 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 3.2617
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 20 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 720.4005
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 21 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 2.2938
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 22 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 1.869
+  ...
+# Subtest: closed outward geometry remains eligible across duplicated UV seams and rigid transforms
+ok 23 - closed outward geometry remains eligible across duplicated UV seams and rigid transforms
+  ---
+  duration_ms: 13.6135
+  ...
+# Subtest: open, inverted, inconsistent, duplicate and degenerate faces are rejected separately
+ok 24 - open, inverted, inconsistent, duplicate and degenerate faces are rejected separately
+  ---
+  duration_ms: 3.7201
+  ...
+# Subtest: positive aggregate volume cannot conceal an inverted disconnected component
+ok 25 - positive aggregate volume cannot conceal an inverted disconnected component
+  ---
+  duration_ms: 2.2818
+  ...
+# Subtest: exact welding preserves small real gaps and rejects malformed inputs
+ok 26 - exact welding preserves small real gaps and rejects malformed inputs
+  ---
+  duration_ms: 46.9275
+  ...
+# Subtest: cached coverage matches every previous frame through fades, tiny camera moves, lens, target, toggle, distance and snap
+ok 27 - cached coverage matches every previous frame through fades, tiny camera moves, lens, target, toggle, distance and snap
+  ---
+  duration_ms: 234.6463
+  ...
+# Subtest: settled population performs no further prop queries or coverage packing until camera or population changes
+ok 28 - settled population performs no further prop queries or coverage packing until camera or population changes
+  ---
+  duration_ms: 98.6858
+  ...
+# Subtest: explicit fresh population, replaced records and external coverage upload invalidate settled coverage
+ok 29 - explicit fresh population, replaced records and external coverage upload invalidate settled coverage
+  ---
+  duration_ms: 17.0332
+  ...
+# (node:2144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent DPR cap reduces pixels without changing the quality profile or scene state
+ok 30 - independent DPR cap reduces pixels without changing the quality profile or scene state
+  ---
+  duration_ms: 70.6002
+  ...
+# Subtest: physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+ok 31 - physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+  ---
+  duration_ms: 2.078
+  ...
+# Subtest: live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+ok 32 - live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+  ---
+  duration_ms: 6.4898
+  ...
+# Subtest: live world quality and resize preserve simulation, ground geometry and existing chunk objects
+ok 33 - live world quality and resize preserve simulation, ground geometry and existing chunk objects
+  ---
+  duration_ms: 4.2121
+  ...
+# Subtest: static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+ok 34 - static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+  ---
+  duration_ms: 1.5185
+  ...
+# Subtest: canyon horizon changes only its ground material when the resident rectangle stays the same
+ok 35 - canyon horizon changes only its ground material when the resident rectangle stays the same
+  ---
+  duration_ms: 519.6658
+  ...
+# (node:3636) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+ok 36 - unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 36.8758
+  ...
+# Subtest: unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+ok 37 - unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 29.2138
+  ...
+# Subtest: suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+ok 38 - suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+  ---
+  duration_ms: 25.6685
+  ...
+# Subtest: navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+ok 39 - navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+  ---
+  duration_ms: 13.5467
+  ...
+# Subtest: an affected asset pool retires its material and instance buffer while preserving shared water geometry
+ok 40 - an affected asset pool retires its material and instance buffer while preserving shared water geometry
+  ---
+  duration_ms: 2.2019
+  ...
+# Subtest: static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+ok 41 - static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+  ---
+  duration_ms: 39.0072
+  ...
+# Subtest: unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+ok 42 - unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+  ---
+  duration_ms: 11.0823
+  ...
+# Subtest: geometry and per-object culling spheres invalidate depth without geometry or pose changes
+ok 43 - geometry and per-object culling spheres invalidate depth without geometry or pose changes
+  ---
+  duration_ms: 9.8307
+  ...
+# Subtest: skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+ok 44 - skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+  ---
+  duration_ms: 8.3625
+  ...
+# Subtest: unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+ok 45 - unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+  ---
+  duration_ms: 7.3627
+  ...
+# Subtest: temporary asset proxies participate before cache comparison and wrappers release in reverse order
+ok 46 - temporary asset proxies participate before cache comparison and wrappers release in reverse order
+  ---
+  duration_ms: 7.4296
+  ...
+# Subtest: context loss/restoration invalidates cached textures and disposal removes listeners
+ok 47 - context loss/restoration invalidates cached textures and disposal removes listeners
+  ---
+  duration_ms: 8.598
+  ...
+# Subtest: instanced interleaved geometry compares its active prefix, including divisor and count
+ok 48 - instanced interleaved geometry compares its active prefix, including divisor and count
+  ---
+  duration_ms: 3.783
+  ...
+# Subtest: terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+ok 49 - terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+  ---
+  duration_ms: 17.4314
+  ...
+# Subtest: focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+ok 50 - focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+  ---
+  duration_ms: 1.2472
+  ...
+# Subtest: quality changes replace allocated targets once and same resolution retains GPU resources
+ok 51 - quality changes replace allocated targets once and same resolution retains GPU resources
+  ---
+  duration_ms: 1.3674
+  ...
+# Subtest: stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+ok 52 - stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+  ---
+  duration_ms: 21.5234
+  ...
+# Subtest: recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+ok 53 - recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+  ---
+  duration_ms: 2.6071
+  ...
+# Subtest: canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+ok 54 - canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+  ---
+  duration_ms: 1.023
+  ...
+# Subtest: unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+ok 55 - unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+  ---
+  duration_ms: 2.0268
+  ...
+# Subtest: source disposal releases its cached depth material once; successive stable captures reuse it
+ok 56 - source disposal releases its cached depth material once; successive stable captures reuse it
+  ---
+  duration_ms: 7.573
+  ...
+# Subtest: capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+ok 57 - capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+  ---
+  duration_ms: 1.5273
+  ...
+# (node:25188) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five village loaders bound every indexed unit without copying or restricting its shared geometry
+ok 58 - five village loaders bound every indexed unit without copying or restricting its shared geometry
+  ---
+  duration_ms: 643.4941
+  ...
+# (node:33456) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy or invalid persisted resolution preserves the authored quality profile
+ok 59 - legacy or invalid persisted resolution preserves the authored quality profile
+  ---
+  duration_ms: 2.9621
+  ...
+# Subtest: world resolution settings resize only the canvas and restore the original profile
+ok 60 - world resolution settings resize only the canvas and restore the original profile
+  ---
+  duration_ms: 3.879
+  ...
+# Subtest: both production settings surfaces expose and persist the same translated resolution options
+ok 61 - both production settings surfaces expose and persist the same translated resolution options
+  ---
+  duration_ms: 74.5205
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 61
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1998.1384

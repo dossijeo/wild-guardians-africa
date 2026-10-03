@@ -1,0 +1,25 @@
+TAP version 13
+# Subtest: supplied font bytes identify actual families, licenses and variable weight ranges
+ok 1 - supplied font bytes identify actual families, licenses and variable weight ranges
+  ---
+  duration_ms: 4.3972
+  ...
+# Subtest: Banga normal and italic expose independent 200–800 faces and full bundled notices
+ok 2 - Banga normal and italic expose independent 200–800 faces and full bundled notices
+  ---
+  duration_ms: 3.0942
+  ...
+# Subtest: native menu, selector and HUD use approved families with relative font resources
+ok 3 - native menu, selector and HUD use approved families with relative font resources
+  ---
+  duration_ms: 58.5839
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 150.2641

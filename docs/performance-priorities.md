@@ -136,3 +136,17 @@ La [expansión nativa](qa-village-expansion.md) añade descarte conservador por 
 a polígonos y cotas inferiores para buscar la ruta más corta al poblado. El ensayo
 de 100 poblados registra 99 rutas reales; no se afirma una mejora temporal ni de FPS.
 Los experimentos pendientes de caras, ruido y profundidad conservan su estado.
+
+## Regresión sobre `d89b184`
+
+Pasan **61/61 pruebas dirigidas**, cero fallos, cancelaciones u omisiones,
+1.998,1384 ms. [Salida completa](qa/performance-actions/integrated-d89b184.txt).
+La selección cubre props residentes, subidas de cultivos, caché/cámara de sombras,
+bounds del poblado, registros de materiales, obstrucciones, ruido, extremos HDR,
+Toon, profundidad, calidad, análisis de caras y resolución independiente del HUD.
+Las acciones actuales conservan `syncResidentProps()` sin regenerar el suelo.
+
+Es una comprobación de regresiones tras los cambios de audio y tipografía.
+No añade una medición GPU, FPS ni una comparación visual. Los experimentos
+de caras por categoría/LOD, ruido fino más barato, profundidad de interiores/ceniza
+y separación de sombras estáticas/dinámicas conservan los límites documentados.

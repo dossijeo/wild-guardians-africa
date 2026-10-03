@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "fd524ac",
+  "implementation_commit": "e195843",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1847,9 +1847,11 @@
       "area": "Guardado y presentación",
       "scenario": "Importar fuentes y créditos",
       "expected": "Comprobar nombres y licencias reales; no distribuir archivos tipográficos en este paquete documental.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-fonts.md"
+      ],
+      "notes": "Actual SFNT names/copyright/license/fvar/post/STAT audited for the three supplied fonts, byte hashes preserved. Banga normal and italic expose separate 200–800 variable ranges; incorrect italic-as-bold mapping fixed. Ga Maamli/Banga applied in native menu/selector/HUD; shared relative font URLs, full original OFL/authors notices bundled and HTTP200 byte-equal, reachable library credit links. Native FontFaceSet fixture reports all three loaded; desktop EN/ES character/long-number specimen and actual selector/HUD/crops panel have recorded computed styles/screenshots. Original documentary plan package unchanged; no font binaries added to docs."
     },
     {
       "id": "QA-158",
