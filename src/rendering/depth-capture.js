@@ -20,7 +20,9 @@ export function withDepthCaptureMaterials(world, render, {optimized=true}={}) {
       let candidate=null;
       if(optimized&&!world.overrideMaterial&&!Array.isArray(source)&&source.visible&&!source.transparent&&source.depthWrite){
         if(object.customDepthMaterial)candidate=object.customDepthMaterial;
-        else{if(!standards.has(source))standards.set(source,standardDepthMaterial(source));candidate=standards.get(source);}
+        // Keep textured alpha silhouettes on their native recipe until combined
+        // biome readbacks prove equivalence; authored crop depths remain eligible.
+        else if(!source.alphaTest){if(!standards.has(source))standards.set(source,standardDepthMaterial(source));candidate=standards.get(source);}
       }
       if(candidate&&compatible(source,candidate)){
         const depth=candidate;remember(depth);depth.visible=source.visible;

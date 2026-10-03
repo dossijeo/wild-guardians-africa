@@ -38,3 +38,9 @@ test('source disposal releases its cached depth material once; successive stable
  const stats=withDepthCaptureMaterials(world,()=>{for(const mesh of world.children)assert.equal(mesh.material,depth);});assert.equal(stats.specialized,50);assert.ok(reads<=2,'Shared recipe synchronizes properties once per capture, not once per mesh');
  source.dispose();assert.equal(disposed,1);source.dispose();assert.equal(disposed,1);geometry.dispose();
 });
+
+test('capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in',()=>{
+ const world=new THREE.Scene(),source=new THREE.MeshStandardMaterial({alphaTest:.35,map:new THREE.Texture()}),mesh=new THREE.Mesh(new THREE.BoxGeometry(),source);world.add(mesh);
+ const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,source));assert.equal(stats.specialized,0);assert.equal(stats.fallback,1);
+ const depth=standardDepthMaterial(source);mesh.customDepthMaterial=depth;withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,depth));assert.equal(mesh.material,source);
+});
