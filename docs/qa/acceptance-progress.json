@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "7ff5398",
+  "implementation_commit": "3b02c36",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1632,20 +1632,22 @@
       "area": "Finales y expansión",
       "scenario": "Previsualizar poblado con una sola casa inválida",
       "expected": "Conjunto inválido entero, sin pago parcial ni cambios persistentes.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-village-expansion.md"
       ],
-      "notes": "Five native cultures: exactly one invalid unit makes the whole layout invalid; confirmation rejects without debit or persistent changes. Remaining: visual whole-ghost invalid color in actual UI."
+      "notes": "Five native cultures: exactly one invalid unit invalidates the entire layout; failed founding preserves complete serialized state. Production WorldScene preview renders every native unit red (#f4a198, opacity .45) in a controlled Toon viewer; all five screenshots inspected. Actual Sabana HUD additionally shows invalid ghost and disabled confirm."
     },
     {
       "id": "QA-139",
       "area": "Finales y expansión",
       "scenario": "Cambiar cultura o recolocar fantasma",
       "expected": "No cobra ni borra props, no añade nuevas páginas de configuración inicial.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-village-expansion.md"
+      ],
+      "notes": "Twenty pure native culture/position previews preserve complete serialize, exact balance, village count and nav suppressions/prop. Toon browser viewer exercises five culture changes/moves/rotations with unchanged state. Actual Sabana day-101 QA slot: HUD culture switch regenerates ghost at selected position, five cultures, reposition/cancel, same world and no initial selector. Day101 and funds explicitly prepared, no claim of natural victory transition. Runtime village-label crash fixed; fresh reload clears only disposed-world technical pauses, final interval console has no errors."
     },
     {
       "id": "QA-140",

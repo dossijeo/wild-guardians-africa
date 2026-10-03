@@ -1,0 +1,29 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 11:24
+  - img "Dinero"
+  - generic: 200K
+  - generic "100/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 101
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - heading "Fundar poblado" [level=3]
+    - paragraph: "Ubicación inválida: Un árbol o roca grande ocupa este terreno"
+    - paragraph: 50K monedas. Toca otra posición para recolocar.
+    - button "Confirmar poblado" [disabled]
+    - button "Cambiar cultura"
+    - button "Cancelar"
+  - complementary
+  - generic: Fundar poblado
+  - button "Cancelar"

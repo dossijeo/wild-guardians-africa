@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: Native footprint preserves walkable space outside its building edges
+ok 1 - Native footprint preserves walkable space outside its building edges
+  ---
+  duration_ms: 3.1781
+  ...
+# Subtest: Building overlap includes crossing edges and containment
+ok 2 - Building overlap includes crossing edges and containment
+  ---
+  duration_ms: 0.993
+  ...
+# Subtest: bounding rejection preserves the prior exact overlap for mutable, rotated, concave and almost-touching polygons
+ok 3 - bounding rejection preserves the prior exact overlap for mutable, rotated, concave and almost-touching polygons
+  ---
+  duration_ms: 18.3353
+  ...
+# Subtest: Full occupied interior is checked for water, not just building bounds
+ok 4 - Full occupied interior is checked for water, not just building bounds
+  ---
+  duration_ms: 2.1687
+  ...
+# Subtest: Large props beside the native footprint survive; occupied props block placement
+ok 5 - Large props beside the native footprint survive; occupied props block placement
+  ---
+  duration_ms: 3.4102
+  ...
+# Subtest: Asynchronous initial search preserves deterministic positions and suppression
+ok 6 - Asynchronous initial search preserves deterministic positions and suppression
+  ---
+  duration_ms: 4.2722
+  ...
+# Subtest: Departure search restores existing obstacles even if route evaluation fails
+ok 7 - Departure search restores existing obstacles even if route evaluation fails
+  ---
+  duration_ms: 1.3584
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 8 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 18.019
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 9 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.4162
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 10 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.3088
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 11 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 70.6879
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 12 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 13.8847
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 13 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 15.6503
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 14 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.7506
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 15 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.6614
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 16 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 9.2443
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 17 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.387
+  ...
+# Subtest: village placement feedback cannot fall through to an absent spell lookup
+ok 18 - village placement feedback cannot fall through to an absent spell lookup
+  ---
+  duration_ms: 5.5488
+  ...
+# Subtest: reloading recovers a disposed-world runtime error while preserving blocking gameplay pauses
+ok 19 - reloading recovers a disposed-world runtime error while preserving blocking gameplay pauses
+  ---
+  duration_ms: 2.4445
+  ...
+# Subtest: route bound retains reachable detours and stable ties; distant candidates alone are pruned
+ok 20 - route bound retains reachable detours and stable ties; distant candidates alone are pruned
+  ---
+  duration_ms: 37.0978
+  ...
+# Subtest: an unreachable nearer village cannot cap the search and no reachable route returns null
+ok 21 - an unreachable nearer village cannot cap the search and no reachable route returns null
+  ---
+  duration_ms: 0.3855
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 423.0931
