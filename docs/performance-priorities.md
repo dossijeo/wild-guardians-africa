@@ -16,7 +16,7 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    Separar casters estáticos/dinámicos queda como mejora posterior.
 4. **Coste del shader (diagnóstico medido):** [evidencia y límites](qa-fine-noise.md). diagnóstico de ruido fino desactivado conservando bandas,
    paleta y contornos. Evaluar ruido de textura/receta barata/calidad/distancia
-   con comparación visual. Probar una sola lectura HDR en extremos día/noche.
+   con comparación visual. [Lectura HDR en extremos día/noche implementada](qa-hdr-endpoints.md).
    PCF compartido ya implementado; no duplicar ese trabajo.
 5. **Bounds y selección por luz (implementados):** [evidencia de las cinco culturas](qa-village-bounds.md);
    [envolvente conservadora de centros y colapso](qa-center-bounds.md) y

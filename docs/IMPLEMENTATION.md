@@ -249,3 +249,18 @@ normal conserva 210 hits/0 dibujos en QA; cero errores.
 [Evidencia y límites](qa-light-volume.md). CI 26639b4 aprobada; CI actual
 pendiente. Siguen pendientes caras por categoría, ruido barato, registros CPU,
 profundidad VFX, resolución independiente y aceptación completa del plan.
+
+### 3 de octubre: lectura HDR en extremos
+
+Publicado eda20d3: guard uniforme para tomar sólo el entorno diurno/nocturno
+en factores exactos 0/1; mezcla recibida intacta en el resto de valores.
+Aplicado en suelo Standard/Basic, objetos, agua/lava, DEST y debris, sin tocar
+shader archivado ni diorama. Suite 640/640, dirigidas 29/29, build/paquete
+aprobados. Gran Río/Mapungubwe charca: A–B–B–A GPU 22.54 frente a
+23.53 ms combinados, mismos 72 calls/677,321 triángulos, sin atribuir mejora
+general de FPS. Día/noche sin diferencias RGB en vista comparada; transición
+60 píxeles/max7 preservados. Caché funciona y compilación adicional de
+cultivos, defensas, DEST, personajes y Basic sin errores.
+[Evidencia y límites](qa-hdr-endpoints.md). CI e988b6e aprobada; CI actual
+pendiente. Sigue pendiente auditoría completa del Plan Maestro y demás
+prioridades de rendimiento; esto no acredita matriz visual completa ni móvil.
