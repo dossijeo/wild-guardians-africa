@@ -220,3 +220,18 @@ paquete web aprobados. [Evidencia y límites](qa-village-bounds.md).
 Pendientes envolvente de centros/colapso y selección de casters contra luz;
 no acredita matriz visual completa ni aceptación global del Plan Maestro.
 CI 4fced98 finalizada correctamente (632/632, assets, GLB web y paquete).
+
+### 3 de octubre: envolventes de centros y colapso
+
+Publicado 21b5491: esfera estable y de caída por mesh, ceniza independiente,
+culling en color/luz/apertura sin modificar geometría ni receta original.
+Incluye retranqueo interior y suelo; cache de sombras detecta cambios de bounds.
+Cinco GLB originales y todos sus vértices comprobados en siete fases; ceniza
+en cuatro escalas, reparación y frustum de luz independiente. Suite 635/635,
+dirigidas 24/24, build y paquete web aprobados. Navegador Sabana/Musgum recorre
+caída nativa sin errores; diferencias de píxeles se preservan, incluyendo
+variaciones con culling desactivado. No acredita identidad exacta, ahorro GPU,
+matriz visual completa ni pérdida real del último centro.
+[Evidencia y límites](qa-center-bounds.md). Pendiente selección de lotes contra
+volumen de luz y demás prioridades/aceptación completa del Plan Maestro.
+CI b020f37 finalizada correctamente; cambios actuales pendientes de CI.

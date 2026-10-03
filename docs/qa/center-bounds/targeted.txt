@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 1 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 6006.9309
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 2 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 11.3413
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 3 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 4.4735
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 4 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 17.0654
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 5 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 31.7191
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 6 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 29.2663
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 7 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 3.7116
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 8 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 158.7041
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 9 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 2.3795
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 10 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 92.2301
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 11 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 20.9161
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 12 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 10.9058
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 13 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 5.2576
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 14 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 73.3348
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 15 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 5.1938
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 16 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.5474
+  ...
+# Subtest: static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+ok 17 - static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+  ---
+  duration_ms: 30.7928
+  ...
+# Subtest: unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+ok 18 - unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+  ---
+  duration_ms: 4.4844
+  ...
+# Subtest: geometry and per-object culling spheres invalidate depth without geometry or pose changes
+ok 19 - geometry and per-object culling spheres invalidate depth without geometry or pose changes
+  ---
+  duration_ms: 22.469
+  ...
+# Subtest: skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+ok 20 - skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+  ---
+  duration_ms: 5.4703
+  ...
+# Subtest: unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+ok 21 - unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+  ---
+  duration_ms: 4.9131
+  ...
+# Subtest: temporary asset proxies participate before cache comparison and wrappers release in reverse order
+ok 22 - temporary asset proxies participate before cache comparison and wrappers release in reverse order
+  ---
+  duration_ms: 4.0933
+  ...
+# Subtest: context loss/restoration invalidates cached textures and disposal removes listeners
+ok 23 - context loss/restoration invalidates cached textures and disposal removes listeners
+  ---
+  duration_ms: 1.8966
+  ...
+# Subtest: instanced interleaved geometry compares its active prefix, including divisor and count
+ok 24 - instanced interleaved geometry compares its active prefix, including divisor and count
+  ---
+  duration_ms: 2.5475
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10812.9614

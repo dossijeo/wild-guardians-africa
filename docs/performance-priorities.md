@@ -18,8 +18,8 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    paleta y contornos. Evaluar ruido de textura/receta barata/calidad/distancia
    con comparación visual. Probar una sola lectura HDR en extremos día/noche.
    PCF compartido ya implementado; no duplicar ese trabajo.
-5. **Bounds (poblados implementados):** [evidencia de las cinco culturas](qa-village-bounds.md);
-   envolvente conservadora del centro según estado; seleccionar casters contra
+5. **Bounds (poblados y centros implementados):** [evidencia de las cinco culturas](qa-village-bounds.md);
+   [envolvente conservadora de centros y colapso](qa-center-bounds.md). Pendiente seleccionar casters contra
    volumen de luz, sin excluir sombras visibles de árboles fuera de cámara.
 6. **Cultivos (subidas implementadas):** matrices estables, atributos de crecimiento/morph
    separados, subidas únicamente de rangos cambiados. El viento usa reloj, sin
