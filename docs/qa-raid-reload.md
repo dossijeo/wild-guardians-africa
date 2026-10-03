@@ -62,3 +62,16 @@ la política de despacho, no escucha real ni desbloqueo de audio del navegador.
 
 La matriz no incluye trabajadores ni tareas agrícolas. La reconstrucción de
 necesidades al regreso sigue pendiente para cerrar QA-104 completamente.
+
+## Ampliación posterior
+
+La [aceptación de regreso físico](qa-raid-return.md), sobre `1ddee01`, completa
+la reconstrucción de las cuatro necesidades agrícolas y la excepción de
+reparaciones canceladas para las cinco culturas; QA-104 queda verificado con
+ambas evidencias. La limitación anterior describe únicamente la matriz inicial.
+
+La [CI de `503b7c9`](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37117492825)
+terminó correctamente: **911/911**, cero fallos, 293.169,636184 ms,
+verificaciones, build y paquete web aprobados. [Log](qa/raid-reload/ci-log.txt),
+[estado](qa/raid-reload/ci.json). La nueva CI del regreso, `37117809933`, estaba
+en curso al registrar esta ampliación; no se atribuye todavía su resultado.
