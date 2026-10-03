@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {buildNativeChunk} from '../src/rendering/chunk-data.js';
 
-test('real worker returns identical native terrain, water and populations in all biomes and transfers both buffers',async()=>{
+test('real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers',async()=>{
  const worker=new Worker(new URL('./fixtures/chunk-worker-node.mjs',import.meta.url));
  try{
   let serial=0;
@@ -18,7 +18,7 @@ test('real worker returns identical native terrain, water and populations in all
    const pack=JSON.parse(readFileSync('public/content/biome-'+biome+'.json','utf8')),config={seed:'712',biome,relief:1,density:1,river:true,n:1,layers:Array(6).fill(true)},id=++serial;
    const response=new Promise((resolve,reject)=>{let data,audit;const onError=e=>{worker.off('message',onMessage);reject(e);},onMessage=m=>{if(m.id!==id)return;if(m.audit)audit=m;else data=m;if(data&&audit){worker.off('message',onMessage);worker.off('error',onError);resolve({data,audit});}};worker.on('message',onMessage);worker.once('error',onError);});
    worker.postMessage({id,epoch:7,config,profile:pack.profile,cx,cz});const {data:message,audit}=await response;
-   assert.equal(message.error,undefined);assert.equal(message.epoch,7);assert.deepEqual(audit.lengths,[0,0]);
+   assert.equal(message.error,undefined);assert.equal(message.epoch,7);assert.deepEqual(audit.lengths,[0,0,0]);
    const field=new TerrainField(config),data=message.data;assert.deepEqual(data.terrain,buildGroundData(field,pack.profile,cx,cz));
    const water=nativeChunkWater(field,cx,cz,pack.profile);assert.deepEqual(data.water,water?.attributes.position.array??new Float32Array());water?.dispose();
    assert.deepEqual(data.instances,scatterWorld({...config,cx,cz},pack.profile,field).instances);assert.equal(data.cx,cx);assert.equal(data.cz,cz);

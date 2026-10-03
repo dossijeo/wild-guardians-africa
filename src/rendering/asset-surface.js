@@ -12,10 +12,12 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
   const material=new THREE.MeshStandardMaterial({map:textures.baseColor,normalMap:textures.normal,roughnessMap:textures.metallicRoughness,metalnessMap:textures.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:THREE.DoubleSide});
   material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);
   material.userData.nativeSurface=surface;
+  material.userData.artBounds={min:bounds.min.clone(),size:bounds.getSize(new THREE.Vector3()),crown:nativeAssetSurface(pack,asset,index).group===0?.68:.43};
   const uniforms={uNativeVolcanicGlow:{value:pack.material.volcanicGlow??0},uNativeSurface:{value:new THREE.Vector4(...surface.params)},uNativeMinY:{value:bounds.min.y},uNativeSizeY:{value:bounds.max.y-bounds.min.y}};
   material.userData.nativeVolcanicGlow=uniforms.uNativeVolcanicGlow;
   const previous=material.onBeforeCompile;material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);
+    if(surface.params[2]>.5)shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',THREE.ShaderChunk.map_fragment.replace('texture2D( map, vMapUv )','texture2D( map, vMapUv, .65 )'));
     shader.vertexShader='varying float vNativeHeight;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvNativeHeight=position.y;');
     shader.fragmentShader='varying float vNativeHeight;uniform vec4 uNativeSurface;uniform float uNativeMinY,uNativeSizeY,uNativeVolcanicGlow;\n'+shader.fragmentShader;
@@ -25,7 +27,7 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
       #endif
       vec3 nativeGlowTexel=sRGBTransferOETF(vec4(diffuseColor.rgb,1.)).rgb;
       vec3 nativeTexel=pow(max(diffuseColor.rgb,vec3(0.)),vec3(1./2.2));
-      float nativeLeaf=smoothstep(.018,.13,nativeTexel.g-nativeTexel.r*.87)*smoothstep(.06,.20,nativeTexel.g)*uNativeSurface.z;
+      float nativeLeaf=smoothstep(.013,.115,nativeTexel.g-nativeTexel.r*.85)*smoothstep(.028,.12,nativeTexel.g-nativeTexel.b*.85)*uNativeSurface.z;
       roughnessFactor=mix(roughnessFactor,.54,nativeLeaf);
       float nativeRelH=clamp((vNativeHeight-uNativeMinY)/max(uNativeSizeY,.05),0.,1.);
       float nativeWet=uNativeSurface.w*(1.-smoothstep(.04,.3,nativeRelH));

@@ -1,3 +1,4 @@
+import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
@@ -35,6 +36,16 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    // New worlds persist their platform once. Legacy saves retain their original
+    // relief and prop IDs; adding a visual material never migrates their terrain.
+    if(state.terrainVersion==='4.1.10.3'&&this.field instanceof TerrainField){
+      const village=state.villages[0];
+      if(village&&!village.terrainSite)village.terrainSite=villageTerrainSite(village,this.field);
+      const site=village?.terrainSite;
+      if(site&&JSON.stringify(this.config.settlementSite)!==JSON.stringify(site)){
+        this.config.settlementSite=structuredClone(site);this.field=new TerrainField(this.config);this.chunks.clear();
+      }
+    }
     // A fresh navigator must share the saved route epoch. Rebuilding the same
     // world is not a geometry change: recomputing a persisted local actor
     // detour can otherwise select different waypoints immediately after load.

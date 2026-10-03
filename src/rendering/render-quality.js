@@ -18,7 +18,7 @@ export function updateGroundQuality(meshes,quality,onMaterialChange=null){
   const basic=quality==='muy_baja',replacements=new Map();
   for(const mesh of meshes){
     const old=mesh.material;if(!!old.isMeshBasicMaterial===basic)continue;
-    if(!replacements.has(old)){const material=nativeGroundMaterial(quality);Object.assign(material.userData,old.userData);replacements.set(old,material);}
+    if(!replacements.has(old)){const material=nativeGroundMaterial(quality);Object.assign(material.userData,old.userData);material.userData.retainBiomeGround?.(material);replacements.set(old,material);}
     mesh.material=replacements.get(old);onMaterialChange?.(mesh);
   }
   for(const old of replacements.keys())old.dispose();return replacements.size;

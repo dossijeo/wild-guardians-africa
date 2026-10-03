@@ -10,11 +10,12 @@ import {numberOf} from '../src/simulation/money.js';
 import {permission} from '../src/simulation/rules.js';
 const read=name=>JSON.parse(readFileSync(new URL(`../public/content/${name}.json`,import.meta.url),'utf8'));
 const villages=read('villages');
-export function createOpeningWorld({seed=712,biome='sabana',culture='mapungubwe',slotId='opening'}={}){
+export function createOpeningWorld({seed=712,biome='sabana',culture='mapungubwe',slotId='opening',terrainVersion='4.1.10.3'}={}){
   const payload=villages.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
   if(!payload)throw new Error('Unknown culture');
   const nav=new Navigation(seed,biome,read('biome-'+BIOME_IDS[biome]).profile);
-  const location=findInitialLocation(nav,payload),s=Game.newGame({seed,biome,culture,slotId});
+  const location=findInitialLocation(nav,payload,{legacy:terrainVersion==='legacy'}),s=Game.newGame({seed,biome,culture,slotId});
+  if(terrainVersion==='legacy')delete s.terrainVersion;
   Object.assign(s.villages[0],location);s.suppressed.push(...location.suppress);nav.setState(s);
   Game.resume(s,'intro');s.tutorial.step='center';
   Game.placeStructure(s,'center',{x:location.center.x,z:location.center.z},nav);

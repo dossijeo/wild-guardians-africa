@@ -14,6 +14,8 @@ export function createRetreatReproduction(){
 const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url))).find(v=>v.id==='etiope');
 const pack=JSON.parse(readFileSync(new URL('../public/content/biome-savanna.json',import.meta.url)));
 const nav=new Navigation(712,'sabana',pack.profile),s=Game.newGame({seed:712,culture:'etiope'});
+// This archived failure predates village platforms; replay its original saved map.
+delete s.terrainVersion;
 const x=-58.927890563119334,z=-57.27265356351765,buildings=villageLayout(payload,x,z);
 Object.assign(s.villages[0],{x,z,buildings,entry:findVillageEntry(nav,buildings,x,z)});
 s.suppressed.push(...buildings.flatMap(b=>nav.placementFootprint(b).suppress??[]));nav.setState(s);Game.resume(s,'intro');

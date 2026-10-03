@@ -1,3 +1,5 @@
+import {TerrainField} from './terrain.js';
+import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint,centerServicePoint} from './centers.js';
 import {footprintsOverlap} from './footprints.js';
 export function nearestVillageRoute(nav,departure,villages){
@@ -34,13 +36,23 @@ export function findVillageEntry(nav,layout,x,z,destination=null,additionalObsta
     return null;
   }finally {nav.obstacles=oldObstacles;nav.walkCache?.clear();}
 }
-function* initialLocations(nav,payload) {
+function* initialLocations(nav,payload,legacy=false) {
+  const originalField=nav.field;
   // Keep candidate spacing consistent as the search expands. A fixed number of
   // rays skips most of the terrain between rays in the outer rings.
   for(let ring=0;ring<70;ring++)for(let angle=0,count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;angle<count;angle++) {
     yield;
     const x=Math.cos(angle/count*Math.PI*2)*ring*12+60,z=Math.sin(angle/count*Math.PI*2)*ring*12;
     const layout=villageLayout(payload,x,z);
+    // Validate paths and the future farm on the same padded map we will save.
+    // Choosing an entry first and levelling later can change mangrove habitats
+    // and place a new prop over the previously accepted route.
+    let terrainSite;
+    if(!legacy&&originalField instanceof TerrainField){
+      terrainSite=villageTerrainSite({x,z,buildings:layout},originalField);
+      nav.config.settlementSite=terrainSite;nav.field=new TerrainField(nav.config);nav.chunks.clear();
+      nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();nav.closedRegions.clear();nav.portalGraphs?.clear();
+    }
     const checks=[];
     for(const building of layout){const check=nav.placementFootprint(building);checks.push(check);if(!check.valid)break;}
     if(checks.some(c=>!c.valid))continue;
@@ -61,17 +73,17 @@ function* initialLocations(nav,payload) {
     }finally{nav.obstacles=oldObstacles;nav.suppressed=oldSuppressed;nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];}
     if(workable<12)continue;
     const entry=findVillageEntry(nav,layout,x,z,centerServicePoint(center,null,.8),[{id:'initial-center',kind:'center',...shape}]);
-    if(entry)return {x,z,buildings:layout,center,entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
+    if(entry)return {x,z,buildings:layout,center,entry,...(terrainSite?{terrainSite}:{}),suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
   }
   throw new Error('No se encontró una distribución inicial transitable; vuelve a generar la semilla.');
 }
-export function findInitialLocation(nav,payload) {
-  const search=initialLocations(nav,payload);let result;
+export function findInitialLocation(nav,payload,{legacy=false}={}) {
+  const search=initialLocations(nav,payload,legacy);let result;
   do {result=search.next();}while(!result.done);
   return result.value;
 }
-export async function findInitialLocationAsync(nav,payload) {
-  const search=initialLocations(nav,payload);let deadline=performance.now()+8;
+export async function findInitialLocationAsync(nav,payload,{legacy=false}={}) {
+  const search=initialLocations(nav,payload,legacy);let deadline=performance.now()+8;
   while(true){
     const result=search.next();if(result.done)return result.value;
     if(performance.now()>=deadline){await new Promise(resolve=>setTimeout(resolve,0));deadline=performance.now()+8;}

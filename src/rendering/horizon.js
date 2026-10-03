@@ -8,7 +8,7 @@ import {activeChunkRegion} from '../world/active-region.js';
 export const nativeNearRegion=activeChunkRegion;
 
 export class NativeHorizon{
-  constructor(scene,waterMaterial,onMaterialChange=null){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.group=null;this.key=null;}
+  constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.groundMaterial=groundMaterial;this.group=null;this.key=null;}
   update(config,profile,region,quality,force=false){
     const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range]);
     if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);return;}
@@ -17,6 +17,7 @@ export class NativeHorizon{
     const make=config.biome==='desert'?makeDesertHorizon:makeCanyonHorizon;
     const data=make(config,profile,region.cx,region.cz,region.bounds),group=new THREE.Group();group.name='native-horizon';group.position.set(region.cx*48,0,region.cz*48);
     const material=nativeGroundMaterial(quality);
+    this.groundMaterial?.(material,region.cx,region.cz);
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons')material.userData.horizonBounds=new THREE.Vector4(...region.bounds);
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';group.add(ground);

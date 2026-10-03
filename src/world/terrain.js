@@ -1,5 +1,5 @@
-// Adapted without changing terrain/scatter constants from BIOMA V4.0.
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), mix=(a,b,t)=>a+(b-a)*t;
+// Native Bioma Lab V4.1.10.3 generator; gameplay supplies the persisted village site.
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)}, TAU=Math.PI*2;
 const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], mul=(a,k)=>[a[0]*k,a[1]*k,a[2]*k];
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]], norm=a=>mul(a,1/(Math.hypot(...a)||1));
@@ -35,6 +35,37 @@ const SLOTS=[
 {id:'special_03',g:5,r:5.0,desc:'Asset estructural: primero crea una depresión en el campo de alturas; después coloca orilla y agua. No es un disco sobre terreno sin adaptar.'}
 ];
 const num=v=>Number(v.toFixed(4));
+function settlementBlend410(s,x,z){
+ const dx=x-s.x,dz=z-s.z,c=Math.cos(s.yaw),n=Math.sin(s.yaw);
+ const xx=dx*c-dz*n,zz=dx*n+dz*c;
+ const edge=Math.max(Math.abs(xx)-(s.hx||14),Math.abs(zz)-(s.hz||14));
+ return 1-smooth(0,6,edge);
+}
+const NO_SETTLEMENT_SITE=Object.freeze({x:1e30,z:1e30,y:0,yaw:0,clearRadius:0,softRadius:0,haloRadius:0});
+function findSettlementSite(field,b){return field.c.settlementSite||NO_SETTLEMENT_SITE;}
+function settlementInfluence(field,b,x,z,group,slot,radius){
+ const s=findSettlementSite(field,b),dx=x-s.x,dz=z-s.z,d=Math.hypot(dx,dz);
+ let probability=1,blocked=false;
+ if(d<s.clearRadius+radius*.7)return{site:s,d,probability:0,blocked:true};
+ const hard=s.clearRadius+(group===0?radius*1.0:group===5?radius*.8:group===3?radius*.55:radius*.35);
+ const soft=s.softRadius+radius*.35,halo=s.haloRadius+radius*.3;
+ if(d<hard){
+  if(group===0||group===4||group===5)blocked=true;
+  probability*=group===2?.05:group===1?.04:group===3?.10:.03;
+ }else if(d<soft){
+  probability*=group===0?.16:group===1?.28:group===2?.42:group===3?.48:group===4?.32:.38;
+ }else if(d<halo){
+  const t=1-smooth(soft,halo,d);
+  if(group===0)probability*=1.05+t*.14;
+  if(group===1||group===2)probability*=1.08+t*.18;
+ }
+ const road=Math.min(Math.abs(dx),Math.abs(dz)),roadWidth=2.3+radius*.35;
+ if(d<halo&&road<roadWidth){
+  probability*=group===0?.30:group===1?.16:group===2?.18:group===3?.28:group===4?.42:.34;
+  if((group===0||group===4)&&road<1.45+radius*.2&&d<soft+4)blocked=true;
+ }
+ return{site:s,d,probability,blocked};
+}
 function canyonFrame(field,z,side=1){
  const s=field.seed;
  return {waterHalf:5.8+noise(z*.009,14,s^5901)*1.8,
@@ -56,15 +87,16 @@ function canyonGroundColor(field,b,x,z){
  const y=field.height(x,z),dx=x-field.riverX(z),d=Math.abs(dx),cf=canyonFrame(field,z,dx<0?-1:1),h=y-field.riverLevel;
  const coarse=noise(x*.045,z*.045,field.seed^1930),grain=noise(x*.21,z*.21,field.seed^3001);
  let col=cmix(hex(b.colors.soil),hex('#dfad6d'),.20+coarse*.22);
- const wall=smooth(cf.wallStart-.8,cf.wallStart+4,d);
+ // Narrow the sand-to-wall blend so the join does not paint wide ring-like bands.
+ const wall=smooth(cf.wallStart+.35,cf.wallStart+2.35,d);
  const undulation=noise(x*.015,z*.022,field.seed^664)*1.5;
  const stripe=(h+undulation)%5.5;
  const band=smooth(3.65,3.95,stripe)*(1-smooth(4.6,4.95,stripe));
  const red=cmix(hex(b.colors.rock),hex('#89432e'),.14+.15*coarse);
  const rock=cmix(red,hex('#edbb80'),band*.58);
  col=cmix(col,rock,wall);
- const wet=(1-smooth(cf.waterHalf,cf.waterHalf+3.3,d));
- col=cmix(col,cmix(hex('#876f45'),hex(b.colors.grass),.18),wet*.4);
+ const wet=(1-smooth(cf.waterHalf,cf.waterHalf+2.4,d));
+ col=cmix(col,cmix(hex('#876f45'),hex(b.colors.grass),.18),wet*.32);
  return shade(col,.94+grain*.11);
 }
 function scatterCanyon(c,b,field,reverse=false){
@@ -78,7 +110,8 @@ function scatterCanyon(c,b,field,reverse=false){
    const radius=pb.radius*Math.max(sx,sz),side=x<field.riverX(z)?-1:1;
    y=Math.min(y,field.surface(x-side*radius*.67,z)-.34);
   }
-  const radius=pb.radius*Math.max(sx,sz);
+  const radius=pb.radius*Math.max(sx,sz),site=findSettlementSite(field,b);
+  if(Math.hypot(x-site.x,z-site.z)<site.clearRadius+radius+8)return;
   out[slot].push({id,slot,x,z,y,yaw,scale:Math.sqrt(sx*sz),sx,sy,sz,tint,radius,priority:0});
  }
  // Geological landmarks are placed on BOTH sides of the gorge independently of
@@ -130,6 +163,8 @@ function scatterCanyon(c,b,field,reverse=false){
    const sc=(gi===1||gi===2?.90:.76)+r()*(gi===1||gi===2?.48:.40),yaw=r()*TAU;
    const sx=sc*(.94+r()*.12),sy=sc*(.97+r()*.10),sz=sc*(.94+r()*.12);
    const pb=b.bounds[slot],radius=pb.radius*Math.max(sx,sz);
+   const settle=settlementInfluence(field,b,x,z,gi,slot,radius);
+   if(settle.blocked||Math.hypot(x-settle.site.x,z-settle.site.z)<settle.site.clearRadius+radius+4)continue;
    if(d-radius<cf.waterHalf+.3)continue;
    place('canyon:prop:'+gi+':'+ix+':'+iz,slot,x,z,yaw,sx,sy,sz,.95+r()*.10,gi===1||gi===2?-.018:gi===3?.14:.08);
   }
@@ -200,9 +235,11 @@ function scatterDesert(c,b,field,reverse=false){
   if(group===3){sy*=.78+r()*.25;sx*=.9+r()*.35;}
   if(group===5){const scale=.80+r()*.45;sx*=scale;sy*=scale;sz*=scale;}
   const yaw=r()*TAU,tint=.94+r()*.10,priority=r(),bb=b.bounds[index],radius=bb.radius*Math.max(sx,sz);
+  const settle=settlementInfluence(field,b,x,z,group,index,radius);
+  p*=settle.probability;
   const limits=[.30,.38,.48,.60,.30,.35];
   let item=null;
-  if(trial<Math.min(.9,p)&&slope<limits[group]){
+  if(!settle.blocked&&trial<Math.min(.9,p)&&slope<limits[group]){
    const foot=radius*(group===0?.25:group===2?.45:.65);
    let low=field.surface(x,z),hi=low;
    for(let i=0;i<8;i++){const a=i*TAU/8,h=field.surface(x+Math.cos(a)*foot,z+Math.sin(a)*foot);low=Math.min(low,h);hi=Math.max(hi,h);}
@@ -247,7 +284,7 @@ function desertSmoothNormals(field,vertices,ox,oz){
 
 class TerrainField{
  constructor(config){
-  this.c=config;this.seed=hashString(config.seed);this.phase=(hashCell(this.seed,9,7,63)/4294967296)*TAU;
+  this.settlementSite=config.settlementSite||null;this.c=config;this.seed=hashString(config.seed);this.phase=(hashCell(this.seed,9,7,63)/4294967296)*TAU;
   this.pondCache=new Map();this.heightCache=new Map();
   this.wetland=config.biome==='mangrove';
   this.desert=config.biome==='desert';this.desertWind=(hashCell(this.seed,3,9,7193)/4294967296-.5)*1.30;
@@ -317,7 +354,8 @@ class TerrainField{
   for(let zc=tz-span;zc<=tz+span;zc++)for(let xc=tx-span;xc<=tx+span;xc++)a.push(this.pond(xc,zc));
   return a;
  }
- wetlandMask(x,z){
+ wetlandMask(x,z){const w=this.naturalWetlandMask(x,z),s=this.settlementSite;return s?w*(1-settlementBlend410(s,x,z)):w;}
+ naturalWetlandMask(x,z){
   const wx=x+(noise(x*.0062,z*.0062,this.seed^9201)-.5)*26+(noise(x*.015,z*.015,this.seed^9203)-.5)*8;
   const wz=z+(noise(x*.0062,z*.0062,this.seed^9205)-.5)*26+(noise(x*.015,z*.015,this.seed^9207)-.5)*8;
   const chA=1-smooth(.024,.086,Math.abs(noise(wx*.018,wz*.018,this.seed^9211)-.5)*2);
@@ -334,7 +372,8 @@ class TerrainField{
  wetlandShore(mask){return Math.min(42,Math.abs(mask-.59)*52)}
  wetlandCluster(x,z){return smooth(.40,.74,fbm(x*.020+19,z*.020-13,this.seed^9263)*.64+noise(x*.041,z*.041,this.seed^9269)*.36)}
  wetlandPatch(x,z){return smooth(.42,.72,noise(x*.017+47,z*.017-29,this.seed^9273)*.55+fbm(x*.0105-8,z*.0105+12,this.seed^9279)*.45)}
- height(x,z){
+ height(x,z){const base=this.naturalHeight(x,z),s=this.settlementSite;return s?mix(base,s.y,settlementBlend410(s,x,z)):base;}
+ naturalHeight(x,z){
   if(this.desert)return desertHeight(this,x,z);
   if(this.canyon)return canyonHeight(this,x,z);
   const base=this.raw(x,z);let h=this.riverBase(x,z);
@@ -397,18 +436,18 @@ function scatterWorld(c,b,field,reverse=false){if(field.desert)return scatterDes
   const r=rand(hashCell(field.seed,ix,iz,301+group*71)),cell=GROUPS[group].cell;let x=(ix+.14+r()*.72)*cell,z=(iz+.14+r()*.72)*cell;
   const trial=r();let idx=gOffset[group]+weighted(b.weights[group],r()),scale=(.78+r()*.43)*(group===0?b.scale:1),yaw=r()*TAU,tint=.90+r()*.19,priority=r();
   const habitat=b.habitats?.[SLOTS[idx].id]||'land';
-  if((group===1||group===3)&&field.riverActive){const pull=clamp(field.moisture(x,z)*1.08-.38,0,.75),edge=field.canyon?8.7+r()*2.1:10.4+r()*2.7,sign=r()<.5?-1:1;x+=clamp((field.riverX(z)+sign*edge-x)*pull,-cell*.8,cell*.8);} 
+  if((group===1||group===3)&&field.riverActive){const pull=clamp(field.moisture(x,z)*1.08-.38,0,.75),edge=field.canyon?8.7+r()*2.1:10.4+r()*2.7,sign=r()<.5?-1:1;x+=clamp((field.riverX(z)+sign*edge-x)*pull,-cell*.8,cell*.8);}
   if(field.canyon&&(group===0||group===5)){
    const sign=r()<.5?-1:1,edge=(group===0?11.5+r()*7.5:13+r()*8.5),pull=group===0?.95:.82;
    x+=clamp((field.riverX(z)+sign*edge-x)*pull,-cell*.95,cell*.95);
   }
   if(field.wetland){
-   if(habitat==='mangrove'){[x,z]=seekWetBand(x,z,.64,cell*.96,12,false);} 
-   else if(group===0){[x,z]=seekWetBand(x,z,.26,cell*.88,10,true);} 
-   else if(group===1){[x,z]=seekWetBand(x,z,.24,cell*.92,12,true);} 
-   else if(group===2){[x,z]=seekWetBand(x,z,.20,cell*1.02,14,true);} 
-   else if(group===3||group===4){[x,z]=seekWetBand(x,z,.34,cell*.68,10,true);} 
-   else if(group===5){[x,z]=seekWetBand(x,z,habitat==='bank'?.34:.42,cell*.96,10,habitat==='bank');} 
+   if(habitat==='mangrove'){[x,z]=seekWetBand(x,z,.64,cell*.96,12,false);}
+   else if(group===0){[x,z]=seekWetBand(x,z,.26,cell*.88,10,true);}
+   else if(group===1){[x,z]=seekWetBand(x,z,.24,cell*.92,12,true);}
+   else if(group===2){[x,z]=seekWetBand(x,z,.20,cell*1.02,14,true);}
+   else if(group===3||group===4){[x,z]=seekWetBand(x,z,.34,cell*.68,10,true);}
+   else if(group===5){[x,z]=seekWetBand(x,z,habitat==='bank'?.34:.42,cell*.96,10,habitat==='bank');}
   }
   let slope=field.slope(x,z),wet=field.moisture(x,z),patch=noise(x*.045,z*.045,field.seed^((group+1)*7781));
   let probability=b.dens[group]*c.density*(.43+patch*.95);
@@ -423,14 +462,16 @@ function scatterWorld(c,b,field,reverse=false){if(field.desert)return scatterDes
   }
   let yBias=field.wetland?(group===1?.065:group===2?.075:-.005):field.canyon?(group===0?-.055:group===5?-.02:-.01):-.015;
   let sx=scale*(.90+r()*.18),sy=scale*(.91+r()*.18),sz=scale*(.90+r()*.18);
-  if(group===1){const spread=.50+r()*1.00;sx*=spread;sy*=.58+r()*.92;sz*=spread*(.90+r()*.20);if(field.wetland){sx*=1.14;sy*=1.28;sz*=1.14;yBias+=.025;}} 
-  if(group===2){const spread=.55+r()*1.00;sx*=spread;sy*=.55+r()*.75;sz*=spread*(.88+r()*.24);if(field.wetland){sx*=1.18;sy*=1.36;sz*=1.18;yBias+=.03;}} 
-  if(group===3){const spread=.72+r()*.78;sx*=spread*(.92+r()*.18);sy*=spread*(.70+r()*.40);sz*=spread*(.92+r()*.18);yBias-=Math.min(sy,.55+spread*.35)*(idx===11?.28:idx===10?.18:.14);} 
-  if(idx===(b.monumentSlot??2)&&group===0&&r()<.18){const monument=2.4+r()*.9;sx*=monument;sy*=monument;sz*=monument;tint*=1.02;yBias-=.08*monument;} 
+  if(group===1){const spread=.50+r()*1.00;sx*=spread;sy*=.58+r()*.92;sz*=spread*(.90+r()*.20);if(field.wetland){sx*=1.14;sy*=1.28;sz*=1.14;yBias+=.025;}}
+  if(group===2){const spread=.55+r()*1.00;sx*=spread;sy*=.55+r()*.75;sz*=spread*(.88+r()*.24);if(field.wetland){sx*=1.18;sy*=1.36;sz*=1.18;yBias+=.03;}}
+  if(group===3){const spread=.72+r()*.78;sx*=spread*(.92+r()*.18);sy*=spread*(.70+r()*.40);sz*=spread*(.92+r()*.18);yBias-=Math.min(sy,.55+spread*.35)*(idx===11?.28:idx===10?.18:.14);}
+  if(idx===(b.monumentSlot??2)&&group===0&&r()<.18){const monument=2.4+r()*.9;sx*=monument;sy*=monument;sz*=monument;tint*=1.02;yBias-=.08*monument;}
   const radius=SLOTS[idx].r*Math.max(sx,sz);
+  const settle=settlementInfluence(field,b,x,z,group,idx,radius);
+  probability*=settle.probability;
   const maxSlope=field.canyon?(group===0?3.2:group===5?2.4:group===4?.45:group===3?1.9:1.15):(group===0?.73:group===4?.28:group===5?.40:group===3?1.4:1.0);
   const margin=group===0?1.2:group===5?radius*.7:group===3?.06:group===1?.02:.1;
-  let allowed=!field.blocked(x,z,margin),y=field.surface(x,z)+yBias;
+  let allowed=!field.blocked(x,z,margin)&&!settle.blocked,y=field.surface(x,z)+yBias;
   const waterInfo=field.waterInfo(x,z),shore=waterInfo.shore;
   if(field.wetland){
    const cluster=field.wetlandCluster(x,z),mask=waterInfo.mask??(waterInfo.inside?1:0),bankBand=(1-smooth(1.0,16,shore)),patch=field.wetlandPatch(x,z),lowPatch=1-patch;
@@ -474,13 +515,12 @@ function scatterWorld(c,b,field,reverse=false){if(field.desert)return scatterDes
   if(reverse)coords.reverse();for(const[ix,iz]of coords){const a=accepted(group,ix,iz);if(a&&a.x>=bounds.minX&&a.x<bounds.maxX&&a.z>=bounds.minZ&&a.z<bounds.maxZ)out[a.slot].push(a)}
  }
  if(!field.wetland&&!field.canyon)for(let z=Math.floor(bounds.minZ/field.featureCell)-1;z<=Math.ceil(bounds.maxZ/field.featureCell)+1;z++)for(let x=Math.floor(bounds.minX/field.featureCell)-1;x<=Math.ceil(bounds.maxX/field.featureCell)+1;x++){
-  const p=field.pond(x,z);if(p.x+p.radius*(b.pondFootprint||1.25)>=bounds.minX&&p.x-p.radius*(b.pondFootprint||1.25)<bounds.maxX&&p.z+p.radius*(b.pondFootprint||1.25)>=bounds.minZ&&p.z-p.radius*(b.pondFootprint||1.25)<bounds.maxZ){const s=p.radius/4;out[19].push({id:p.id,slot:19,x:p.x,z:p.z,y:p.level,yaw:0,scale:s,sx:s,sy:1,sz:s,tint:1,radius:p.radius})}
+  const p=field.pond(x,z),site=findSettlementSite(field,b),pd=Math.hypot(p.x-site.x,p.z-site.z);if(pd>site.clearRadius+11&&p.x+p.radius*(b.pondFootprint||1.25)>=bounds.minX&&p.x-p.radius*(b.pondFootprint||1.25)<bounds.maxX&&p.z+p.radius*(b.pondFootprint||1.25)>=bounds.minZ&&p.z-p.radius*(b.pondFootprint||1.25)<bounds.maxZ){const s=p.radius/4;out[19].push({id:p.id,slot:19,x:p.x,z:p.z,y:p.level,yaw:0,scale:s,sx:s,sy:1,sz:s,tint:1,radius:p.radius})}
  }
  for(const a of out)a.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);return{instances:out,bounds};
 }
 function fingerprint(instances){let h=2166136261;for(const list of instances)for(const a of list){const s=[a.id,a.slot,num(a.x),num(a.y),num(a.z),num(a.yaw),num(a.sx),num(a.sy),num(a.sz),num(a.tint)].join('|');h=hashString(h+';'+s)}return(h>>>0).toString(16).padStart(8,'0').toUpperCase()}
 function terrainFingerprint(field,bounds){let h=2166136261;for(let z=bounds.minZ;z<=bounds.maxZ;z+=8)for(let x=bounds.minX;x<=bounds.maxX;x+=8)h=hashString(h+':'+field.height(x,z).toFixed(5));return h.toString(16).padStart(8,'0').toUpperCase()}
-
 
 
 export {TerrainField,scatterWorld,hashString,hashCell,noise,rand,SLOTS,GROUPS,hex,canyonFrame,canyonGroundColor,desertGroundColor};
