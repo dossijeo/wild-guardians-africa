@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "8f2bf23",
+  "implementation_commit": "5dc3e31",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -102,11 +102,12 @@
       "area": "Reloj",
       "scenario": "Avanzar 300 s diurnos a ×1",
       "expected": "Transcurre el periodo 07:05–19:05 y solo esos 300 s alimentan crecimiento.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-clock.md"
+        "docs/qa-acceptance-clock.md",
+        "docs/qa-acceptance-agriculture.md"
       ],
-      "notes": "Real Game.advanceReal reaches 300 simulated seconds after 300 real seconds: 07:05 -> 19:05. Fractional day/night crossing fixed and tested. Night-only crop freeze verified. Remaining: an explicitly attended plant measurement proving only 300 daytime seconds contribute across the full day/night cycle."
+      "notes": "Game.advanceReal with continuously attended banana asserts exactly 300 progress at first dawn, no night progress, then 270 more daylight to maturity. Clock test covers 07:05 -> 19:05 after 300 real seconds."
     },
     {
       "id": "QA-010",
@@ -168,11 +169,12 @@
       "area": "Reloj",
       "scenario": "Gran paso de tiempo cruza contratación o checkpoint",
       "expected": "La simulación se divide y no omite el evento ni cobra dos jornadas.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-clock.md"
+        "docs/qa-acceptance-clock.md",
+        "docs/qa-acceptance-agriculture.md"
       ],
-      "notes": "Large real-time advance crosses dawn, emits once, stops at hiring and repeated call changes nothing. Remaining: large-frame crop checkpoint and combined payment/continuation scenario."
+      "notes": "Single 180-second simulation call reaches banana checkpoint, waits exactly 23.75 and freezes without losing debt. Separate 1000-second real calls stop at successive hiring pauses; only explicit daily confirmation charges 100 once, replay returns false, no automatic next-day debit."
     },
     {
       "id": "QA-016",
@@ -190,162 +192,198 @@
       "area": "Agricultura",
       "scenario": "Plantar las ocho especies",
       "expected": "Precio canónico, ID estable y brote; no aparecen arroz, calabaza ni judías del HUD.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Eight real Game.plant commands deduct exactly 309, preserve canonical IDs, create living zero-progress plants with initial tasks, and reject rice/pumpkin/beans without mutation. Original library gallery shows all eight sprouts. Remaining: verify all eight immediate sprouts in production game rendering."
     },
     {
       "id": "QA-018",
       "area": "Agricultura",
       "scenario": "Mijo y plátano continuamente atendidos con día/noche",
       "expected": "Tiempos efectivos 140 y 570 s; la noche no los acorta.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Ideal manual attendance through the real game clock gives millet 140 daylight/real seconds and banana 570 daylight/630 real seconds across one 60-real-second night. Banana elapsed simulated time 870, next-day time 270."
     },
     {
       "id": "QA-019",
       "area": "Agricultura",
       "scenario": "Crear riegos inicial y posteriores",
       "expected": "Exactamente R checkpoints lógicos, inicial incluido, sin cobrar agua adicional ni duplicar tarea.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "An actual olderFemale worker cares for each of eight species through repeated real day/night cycles. Exact WaterSatisfied counts 2/3/2/3/2/4/2/6, all manual, no duplicate pending initial/water tasks, no growth before initial completion, final wallet equals seed plus explicit wages only."
     },
     {
       "id": "QA-020",
       "area": "Agricultura",
       "scenario": "Checkpoint del plátano con margen de tolerancia",
       "expected": "Margen derivado 23,75 s de tiempo diurno; no usar un porcentaje fijo de todo el ciclo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Banana checkpoint at 95, freezes at growth 118.75 with exactly 23.75 overdue daylight seconds; no full-cycle percentage substituted."
     },
     {
       "id": "QA-021",
       "area": "Agricultura",
       "scenario": "Agotar tolerancia por falta de agua",
       "expected": "Se detiene crecimiento, no muere la planta; un riego posterior reanuda.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Large step and further 50 seconds leave dry banana alive and growth fixed; manual water restores 10 seconds of growth without a debit."
     },
     {
       "id": "QA-022",
       "area": "Agricultura",
       "scenario": "Llegar la noche con deuda de agua y 10 s de margen restante",
       "expected": "Margen permanece igual hasta el día siguiente.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Banana due-water wait 13.75 leaves ten seconds; full accelerated night leaves growth and wait unchanged; ten more daylight seconds exhaust tolerance and freeze."
     },
     {
       "id": "QA-023",
       "area": "Agricultura",
       "scenario": "Llegar al 100% y dejar varias jornadas",
       "expected": "Madura estable sin agua ni deterioro, hasta orden de cosecha o ataque.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Actually matured millet stays byte-identical over four dawns without water, decay, harvest orders or crates. Weather/raids deliberately absent in fixture."
     },
     {
       "id": "QA-024",
       "area": "Agricultura",
       "scenario": "Primer cuidado y deuda que cruza madurez con tolerancia larga",
       "expected": "Cubrir C04 explícitamente; no añadir riegos ni eliminar deuda por intuición.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Paid sprout does not grow before initial care, including Growth. Cassava crosses two real nights, holds just below 480 with final water due and wait below 288; final watering allows maturity without adding or deleting checkpoints."
     },
     {
       "id": "QA-025",
       "area": "Agricultura",
       "scenario": "Seleccionar un grupo con plantas maduras e inmaduras",
       "expected": "Solo maduras generan tareas; plantas se recogen una a una.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Connected four-plant group contains two mature/two immature. Two harvest commands select only mature plants; workers pick individually, immature plants remain alive and unrequested."
     },
     {
       "id": "QA-026",
       "area": "Agricultura",
       "scenario": "Dos órdenes de cosecha del mismo grupo",
       "expected": "Una tarea reservable por planta, sin dos cajas ni doble ingreso.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Different command IDs requesting same group still create two distinct tasks/crates, two pickup events and exactly two settlements (+22 total male millet), with no repeated income."
     },
     {
       "id": "QA-027",
       "area": "Agricultura",
       "scenario": "Orden de grupo emitida al mismo instante",
       "expected": "Se inserta de cerca a lejos del centro y después respeta FIFO.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Harvest request from farthest member inserts near-to-far within centre after an already queued watering task; task-created order strictly increases."
     },
     {
       "id": "QA-028",
       "area": "Agricultura",
       "scenario": "Recogida individual con dos trabajadores",
       "expected": "Plantas y reservas distintas, posible ejecución paralela sin compartir objetivo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Real two-worker harvest loop observes two reserved tasks concurrently, different worker IDs and target IDs, then both physical crate deliveries."
     },
     {
       "id": "QA-029",
       "area": "Agricultura",
       "scenario": "Aplicar Crecimiento sobre cultivo con riego previo pendiente",
       "expected": "No cura la carencia ni avanza crecimiento hasta atención manual.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Initial unwatered sprout remains zero under Growth, retaining its initial task. Dry maize with pre-existing water debt stays frozen during effect until manually watered. Real-worker sunflower variant also stays frozen until care."
     },
     {
       "id": "QA-030",
       "area": "Agricultura",
       "scenario": "Cruzar uno o varios checkpoints dentro de Crecimiento",
       "expected": "Cada checkpoint cruzado queda satisfecho una vez; no aparece tarea atrasada al terminar.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Actual 30-second casts across all eight canonical species satisfy the crossed threshold, leave later thresholds future and create no deferred water tasks. Canonical 45 maximum progress cannot cross two thresholds whose smallest interval is 60; existing crop kernel tests cover multiple thresholds separately."
     },
     {
       "id": "QA-031",
       "area": "Agricultura",
       "scenario": "Riego manual llega mientras Crecimiento sigue activo",
       "expected": "Reanuda con ×1,5 y satisface automáticamente los siguientes checkpoints cruzados durante el efecto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "A real worker reaches dry sunflower during active Growth, manual watering resumes exactly 24 progress in 16 seconds and next checkpoint becomes magic; exactly one manual WaterSatisfied event."
     },
     {
       "id": "QA-032",
       "area": "Agricultura",
       "scenario": "Terminar Crecimiento justo al cruzar un checkpoint",
       "expected": "Orden temporal determinista; no regar dos veces por un mismo umbral.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Maize reaches checkpoint 90 at exact 30-second effect expiry: one magic status, later checkpoint future, no water task after expiry or queue rebuilding."
     },
     {
       "id": "QA-033",
       "area": "Agricultura",
       "scenario": "Cosecha con Multiplicar solicitado antes pero recogido después de caducar",
       "expected": "No recibe ×2; manda el instante de recogida.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Multiply active when requesting harvest expires before actual olderMale pickup: crate value 10.8, physical delivery pays 11, single pickup."
     },
     {
       "id": "QA-034",
       "area": "Agricultura",
       "scenario": "Cosecha dentro del área activa por hombre",
       "expected": "Aplicar +20% del recolector y ×2 según C02, fijando el valor una sola vez.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Multiply cast during actual male harvest action produces one 21.6-valued crate. Save/reload and subsequent expiry preserve value; delivery rounds once to 22, further time creates no second settlement."
     },
     {
       "id": "QA-035",
@@ -361,9 +399,11 @@
       "area": "Agricultura",
       "scenario": "Comparar estados originales y transición de cada especie",
       "expected": "Cuarenta modelos, puentes locales opacos y UV correctas; sin dithering de cultivos.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-agriculture.md"
+      ],
+      "notes": "Actual menu Library -> Crops lab loads without console errors. Five reference stages viewed for all eight crops and screenshots inspected. Remaining: compare production morph bridges and UVs against these 40 originals and verify opacity/no dithering in rendering."
     },
     {
       "id": "QA-037",
