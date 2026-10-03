@@ -40,6 +40,13 @@ export class Navigation {
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
   }
+  forBuildingPlacement(building,suppress=[]) {
+    // Route the proposed footprint without polluting live paths or caches.
+    return Object.assign(Object.create(this),{
+      obstacles:[...this.obstacles,building],suppressed:new Set([...(this.suppressed??[]),...suppress]),
+      walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),
+    });
+  }
   terrainValid(x,z,radius=.3) {
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
       if(this.field.blocked(x+dx,z+dz,.15)||this.field.slope(x+dx,z+dz)>.5)return false;

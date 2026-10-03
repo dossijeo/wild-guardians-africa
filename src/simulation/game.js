@@ -38,11 +38,34 @@ export function commit(s,id,action,operation) {
   if(!permission(s,action))throw new Error('Esta acción no está disponible ahora');
   operation();s.commandIds.push(id);return true;
 }
+export function previewCenter(s,{x,z,yaw=0},nav) {
+  const candidates=[],cultures=new Map();let failure=null,buildable=false;
+  const villages=[...s.villages].sort((a,b)=>dist(a,{x,z})-dist(b,{x,z})||a.id.localeCompare(b.id));
+  for(const village of villages){
+    const culture=village.culture??s.culture;
+    if(!cultures.has(culture)){
+      const candidate={kind:'center',x,z,yaw,culture},footprint=centerFootprint(candidate,s);
+      const check=nav.placementFootprint?.(footprint)??nav.placement(x,z,footprint.radius);
+      const crop=s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4);
+      cultures.set(culture,{candidate,footprint,check:crop?{valid:false,reason:'Un cultivo ocupa este terreno'}:check});
+    }
+    const {candidate,footprint,check}=cultures.get(culture);
+    if(!check.valid){failure??=check.reason;continue;}buildable=true;
+    const routes=nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav;
+    const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
+    const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
+    if(!inbound)continue;
+    const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
+    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:800});
+  }
+  candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
+  return candidates[0]??{valid:false,cost:800,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
+}
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
-  const village=nearest(s.villages,{x,z}),culture=village?.culture??s.culture;
-  const candidate={kind,x,z,yaw,culture},footprint=kind==='center'?centerFootprint(candidate,s):null;
-  const check=footprint?(nav.placementFootprint?.(footprint)??nav.placement(x,z,footprint.radius)):(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
-  if(footprint&&s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4))throw new Error('Un cultivo ocupa este terreno');
+  const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
+  const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
+  const candidate={kind,x,z,yaw,culture};
+  const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
   if(!check.valid)throw new Error(check.reason);
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?800:wallSpec(material).cost;

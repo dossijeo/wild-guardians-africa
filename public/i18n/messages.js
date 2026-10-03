@@ -1509,5 +1509,6 @@ export const messages = {
   "Naranjas": "Oranges",
   "Preparando": "Preparing",
   "Procesamiento": "Processing",
-  "Uso": "Use"
+  "Uso": "Use",
+  "El centro no tiene un camino válido al poblado": "The work center has no valid path to a village"
 };
