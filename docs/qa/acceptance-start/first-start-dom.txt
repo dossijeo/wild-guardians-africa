@@ -1,0 +1,25 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:05
+  - img "Dinero"
+  - generic: 1K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - dialog "El Espíritu":
+    - img "El Espíritu"
+    - paragraph: "Soy el Espíritu que cuida estas tierras. Una maldición inquieta a los animales al caer el sol. Junto al poblado levantarás una finca: construiremos un centro, sembrarás y tu comunidad cuidará los cultivos."
+    - button "Continuar" [active]:

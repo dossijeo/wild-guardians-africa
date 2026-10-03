@@ -1,0 +1,1455 @@
+{
+  "plan": "docs/plan/casos_prueba_integracion.json",
+  "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
+  "implementation_commit": "14c61f4",
+  "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
+  "cases": [
+    {
+      "id": "QA-001",
+      "area": "Inicio y UI",
+      "scenario": "Nueva partida con cada combinación de seis biomas y cinco culturas",
+      "expected": "Dos pasos, selección conservada y combinación válida; no se crea una sexta cultura.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Native two-step Sabana/Mapungubwe selection completed. Unit test covers 30 canonical combinations. Remaining: UI selection and world entry in all 30 combinations."
+    },
+    {
+      "id": "QA-002",
+      "area": "Inicio y UI",
+      "scenario": "Doble pulsación en Comenzar",
+      "expected": "Un mundo y una ranura; el inicio simulado del lab no se ejecuta detrás.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "First activation produced one world and one saved slot. Locator double-click ended when iframe detached; delivery of second click is not proven. Source cancels lab demo before timers. Remaining: deliberate double activation verified end-to-end."
+    },
+    {
+      "id": "QA-003",
+      "area": "Inicio y UI",
+      "scenario": "Entrar al tutorial con 1.000 monedas y sin centro",
+      "expected": "Se permite colocar el primer centro por 800; no bloquea la condición de infraestructura.",
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Actual new tutorial: 1000 coins, no centre, enabled 800-coin centre; valid placement produced 200 coins and next tutorial reading. Directed domain test also passes."
+    },
+    {
+      "id": "QA-004",
+      "area": "Inicio y UI",
+      "scenario": "Colocación de centro inválida o cancelada",
+      "expected": "No se cobra ni se suprimen props; se conserva la partida anterior.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Village overlap rejected at 1000; Cancel cleared tool with 1000 unchanged. Directed domain test asserts no structures or suppression on invalid placement. Remaining: preservation of another existing slot during new-game cancellation."
+    },
+    {
+      "id": "QA-005",
+      "area": "Inicio y UI",
+      "scenario": "Llegar al primer turno del día 1",
+      "expected": "Contratación en el momento del guion, no antes de colocar el centro.",
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Hire crew disabled before centre. After centre and first 5-coin millet planting the hiring reading appeared, hiring became available; one older man charged 100, balance 195 -> 95. Directed sequence/idempotency test passes."
+    },
+    {
+      "id": "QA-006",
+      "area": "Inicio y UI",
+      "scenario": "Pantallas pequeñas vertical/horizontal y texto largo",
+      "expected": "Precios, retratos, confirmación y texto no se cortan ni pisan la franja del Espíritu.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Placement error and cancel tested in English at 1280x720, 390x844 and 844x390; Spanish at desktop. Remaining: hiring cards, prices, long text and confirmation dialogs across small-screen layouts."
+    },
+    {
+      "id": "QA-007",
+      "area": "Inicio y UI",
+      "scenario": "Abrir varias causas de pausa y cerrar solo una",
+      "expected": "La simulación continúa pausada mientras quede otra causa activa.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Stacked-pause domain and tutorial tests pass. Remaining: integrated browser visibility plus menu/settings overlapping pauses."
+    },
+    {
+      "id": "QA-008",
+      "area": "Inicio y UI",
+      "scenario": "Mostrar un error de fondos o selección inválida",
+      "expected": "Feedback legible, sin restaurar toasts invasivos o ejecutar el comando rechazado.",
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-start.md"
+      ],
+      "notes": "Overlap and blocked-ground errors now readable in original placement banner, no rejected construction charged. English and Spanish desktop, English small portrait/landscape. Remaining: insufficient-funds and non-placement panel/modal branches."
+    },
+    {
+      "id": "QA-009",
+      "area": "Reloj",
+      "scenario": "Avanzar 300 s diurnos a ×1",
+      "expected": "Transcurre el periodo 07:05–19:05 y solo esos 300 s alimentan crecimiento.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-010",
+      "area": "Reloj",
+      "scenario": "Noche tranquila completa",
+      "expected": "Se acelera a ×5 sin consumir agua ni crecimiento; reloj interno correcto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-011",
+      "area": "Reloj",
+      "scenario": "Aparecer incursión durante ×5",
+      "expected": "Cambio a ×1 antes de procesar movimiento y contactos del ataque.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-012",
+      "area": "Reloj",
+      "scenario": "Retirarse primer animal mientras otros siguen presentes",
+      "expected": "No termina la incursión ni vuelve ×5 todavía.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-013",
+      "area": "Reloj",
+      "scenario": "Retirarse último animal durante la noche",
+      "expected": "Fin único del evento y ×5 si no queda otra pausa.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-014",
+      "area": "Reloj",
+      "scenario": "Ocultar pestaña y volver tras muchos minutos",
+      "expected": "No hay ganancias, daño, riego ni avance offline.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-015",
+      "area": "Reloj",
+      "scenario": "Gran paso de tiempo cruza contratación o checkpoint",
+      "expected": "La simulación se divide y no omite el evento ni cobra dos jornadas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-016",
+      "area": "Reloj",
+      "scenario": "Ataque nocturno cruza amanecer",
+      "expected": "Aplicar el contrato C07 cuando se cierre; no perder ataque, contratación ni control de terminales.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-017",
+      "area": "Agricultura",
+      "scenario": "Plantar las ocho especies",
+      "expected": "Precio canónico, ID estable y brote; no aparecen arroz, calabaza ni judías del HUD.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-018",
+      "area": "Agricultura",
+      "scenario": "Mijo y plátano continuamente atendidos con día/noche",
+      "expected": "Tiempos efectivos 140 y 570 s; la noche no los acorta.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-019",
+      "area": "Agricultura",
+      "scenario": "Crear riegos inicial y posteriores",
+      "expected": "Exactamente R checkpoints lógicos, inicial incluido, sin cobrar agua adicional ni duplicar tarea.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-020",
+      "area": "Agricultura",
+      "scenario": "Checkpoint del plátano con margen de tolerancia",
+      "expected": "Margen derivado 23,75 s de tiempo diurno; no usar un porcentaje fijo de todo el ciclo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-021",
+      "area": "Agricultura",
+      "scenario": "Agotar tolerancia por falta de agua",
+      "expected": "Se detiene crecimiento, no muere la planta; un riego posterior reanuda.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-022",
+      "area": "Agricultura",
+      "scenario": "Llegar la noche con deuda de agua y 10 s de margen restante",
+      "expected": "Margen permanece igual hasta el día siguiente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-023",
+      "area": "Agricultura",
+      "scenario": "Llegar al 100% y dejar varias jornadas",
+      "expected": "Madura estable sin agua ni deterioro, hasta orden de cosecha o ataque.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-024",
+      "area": "Agricultura",
+      "scenario": "Primer cuidado y deuda que cruza madurez con tolerancia larga",
+      "expected": "Cubrir C04 explícitamente; no añadir riegos ni eliminar deuda por intuición.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-025",
+      "area": "Agricultura",
+      "scenario": "Seleccionar un grupo con plantas maduras e inmaduras",
+      "expected": "Solo maduras generan tareas; plantas se recogen una a una.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-026",
+      "area": "Agricultura",
+      "scenario": "Dos órdenes de cosecha del mismo grupo",
+      "expected": "Una tarea reservable por planta, sin dos cajas ni doble ingreso.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-027",
+      "area": "Agricultura",
+      "scenario": "Orden de grupo emitida al mismo instante",
+      "expected": "Se inserta de cerca a lejos del centro y después respeta FIFO.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-028",
+      "area": "Agricultura",
+      "scenario": "Recogida individual con dos trabajadores",
+      "expected": "Plantas y reservas distintas, posible ejecución paralela sin compartir objetivo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-029",
+      "area": "Agricultura",
+      "scenario": "Aplicar Crecimiento sobre cultivo con riego previo pendiente",
+      "expected": "No cura la carencia ni avanza crecimiento hasta atención manual.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-030",
+      "area": "Agricultura",
+      "scenario": "Cruzar uno o varios checkpoints dentro de Crecimiento",
+      "expected": "Cada checkpoint cruzado queda satisfecho una vez; no aparece tarea atrasada al terminar.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-031",
+      "area": "Agricultura",
+      "scenario": "Riego manual llega mientras Crecimiento sigue activo",
+      "expected": "Reanuda con ×1,5 y satisface automáticamente los siguientes checkpoints cruzados durante el efecto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-032",
+      "area": "Agricultura",
+      "scenario": "Terminar Crecimiento justo al cruzar un checkpoint",
+      "expected": "Orden temporal determinista; no regar dos veces por un mismo umbral.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-033",
+      "area": "Agricultura",
+      "scenario": "Cosecha con Multiplicar solicitado antes pero recogido después de caducar",
+      "expected": "No recibe ×2; manda el instante de recogida.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-034",
+      "area": "Agricultura",
+      "scenario": "Cosecha dentro del área activa por hombre",
+      "expected": "Aplicar +20% del recolector y ×2 según C02, fijando el valor una sola vez.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-035",
+      "area": "Agricultura",
+      "scenario": "Cargar guardado de una planta en pleno morph",
+      "expected": "Misma fase/progreso y malla correcta; no reiniciar el crecimiento.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-036",
+      "area": "Agricultura",
+      "scenario": "Comparar estados originales y transición de cada especie",
+      "expected": "Cuarenta modelos, puentes locales opacos y UV correctas; sin dithering de cultivos.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-037",
+      "area": "Trabajadores y colas",
+      "scenario": "Confirmar plantilla mayor/joven del mismo sexo o sexo distinto",
+      "expected": "100/120 de salario por edad, no por sexo, pago único por jornada.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-038",
+      "area": "Trabajadores y colas",
+      "scenario": "Editar cantidades o recordar selección impagable",
+      "expected": "No se descuenta; confirmar se bloquea hasta que el coste sea asumible.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-039",
+      "area": "Trabajadores y colas",
+      "scenario": "Confirmar cero trabajadores con partida recuperable",
+      "expected": "Jornada continúa sin plantilla; no reembolso ni producción ficticia.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-040",
+      "area": "Trabajadores y colas",
+      "scenario": "6 contratados y centros con 100/20/0 plantas",
+      "expected": "Reparto 4/1/1 con desempate por antigüedad; el centro vacío conserva su base.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-041",
+      "area": "Trabajadores y colas",
+      "scenario": "Menos trabajadores que centros y números de plantas distintos",
+      "expected": "Uno a cada centro mayor hasta agotarlos; nunca dos en uno antes de ese reparto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-042",
+      "area": "Trabajadores y colas",
+      "scenario": "Empate de plantas con personal escaso",
+      "expected": "Desempate determinista por antigüedad/ID.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-043",
+      "area": "Trabajadores y colas",
+      "scenario": "Todos los centros tienen cero plantas",
+      "expected": "Personal repartido equilibradamente; queda esperando tareas reales.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-044",
+      "area": "Trabajadores y colas",
+      "scenario": "Mismo número de plantas con especies, precios y riegos diferentes",
+      "expected": "Mismo peso de reparto; no optimiza carga ni bonus ocultamente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-045",
+      "area": "Trabajadores y colas",
+      "scenario": "Poblados con tamaños muy distintos",
+      "expected": "Reparto directo por centros del mundo, no 50/50 por poblado.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-046",
+      "area": "Trabajadores y colas",
+      "scenario": "Cuatro perfiles con cupos desiguales",
+      "expected": "Mezcla equilibrada dentro de lo posible; no asignación por bonus de cosecha.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-047",
+      "area": "Trabajadores y colas",
+      "scenario": "Dos trabajadores libres y una tarea antigua",
+      "expected": "FIFO escoge tarea; la ejecuta el libre de ese centro más cercano.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-048",
+      "area": "Trabajadores y colas",
+      "scenario": "Dos agentes evalúan la misma planta/caja",
+      "expected": "Reserva atómica al aceptar; solo un propietario.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-049",
+      "area": "Trabajadores y colas",
+      "scenario": "Crear muchas tareas nuevas en centro con plantilla fija",
+      "expected": "No mueve trabajadores de otro centro durante la jornada.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-050",
+      "area": "Trabajadores y colas",
+      "scenario": "Nuevo centro al mediodía junto a cultivos existentes",
+      "expected": "No migra plantas ni tareas; reasociación al siguiente amanecer.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-051",
+      "area": "Trabajadores y colas",
+      "scenario": "Nueva planta junto a centro recién construido",
+      "expected": "Se vincula al centro más cercano ahora; espera si ese centro no tiene plantilla.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-052",
+      "area": "Trabajadores y colas",
+      "scenario": "Nuevo poblado cambia centro de residencia territorial",
+      "expected": "Trabajador de hoy conserva residencia de salida y vuelve allí.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-053",
+      "area": "Trabajadores y colas",
+      "scenario": "Destruir centro y quedar otro operativo del mismo poblado",
+      "expected": "Tras ataque se reasignan trabajadores desplazados según necesidad definida, sin cobrar otra jornada.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-054",
+      "area": "Trabajadores y colas",
+      "scenario": "Destruir último centro del poblado y no quedar destino",
+      "expected": "Regresan; no teletransportar a un poblado ajeno ni prolongar turno.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-055",
+      "area": "Trabajadores y colas",
+      "scenario": "Construir sustituto y haber desplazados aún disponibles",
+      "expected": "Aplicar excepción de destrucción, sin reasignar empleados normales de otros centros.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-056",
+      "area": "Trabajadores y colas",
+      "scenario": "Rehacer cola al amanecer o regreso de ataque",
+      "expected": "Usar necesidades reales; no regenerar reparaciones manuales.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-057",
+      "area": "Trabajadores y colas",
+      "scenario": "Rehacer cola con cosecha ya ordenada",
+      "expected": "Aplicar C05 expresamente; madurez sola nunca se convierte en orden automática.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-058",
+      "area": "Trabajadores y colas",
+      "scenario": "Finalizar turno camino de tarea aún no ejecutada",
+      "expected": "Se libera reserva y no comienza tarea nueva fuera del turno.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-059",
+      "area": "Trabajadores y colas",
+      "scenario": "Finalizar turno durante ejecución física",
+      "expected": "Completa esa tarea según la regla de jornada y se retira.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-060",
+      "area": "Trabajadores y colas",
+      "scenario": "Inactividad sin tarea",
+      "expected": "Alterna reposo/vigilar y paseos caminando a máximo aproximado 8 m.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-061",
+      "area": "Trabajadores y colas",
+      "scenario": "Aparecer tarea durante paseo",
+      "expected": "Cancela paseo y sale desde posición actual, sin teletransporte.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-062",
+      "area": "Trabajadores y colas",
+      "scenario": "Carrera de trabajo agotada",
+      "expected": "No sigue corriendo por urgencia ordinaria; restaura reserva al amanecer.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-063",
+      "area": "Trabajadores y colas",
+      "scenario": "Urgencia de cola bajo/por encima de 2 por trabajador",
+      "expected": "Solo afecta carrera ordinaria, nunca distribución de plantilla.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-064",
+      "area": "Cajas y contabilidad",
+      "scenario": "Recoger una planta sin entregar la caja",
+      "expected": "No aumenta el dinero; valor fijado y planta retirada una vez.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-065",
+      "area": "Cajas y contabilidad",
+      "scenario": "Entregar una caja y repetir callback/carga",
+      "expected": "Un solo ingreso y caja entregada no recuperable otra vez.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-066",
+      "area": "Cajas y contabilidad",
+      "scenario": "Ataque sorprende portador",
+      "expected": "Caja cae en su posición y no es objetivo animal.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-067",
+      "area": "Cajas y contabilidad",
+      "scenario": "Volver tras ataque con cajas sueltas",
+      "expected": "Tarea de transporte reservable individualmente cuando exista centro válido.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-068",
+      "area": "Cajas y contabilidad",
+      "scenario": "Caja sin centro operativo",
+      "expected": "Persiste sin convertirse en ingresos ni tarea hasta infraestructura válida.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-069",
+      "area": "Cajas y contabilidad",
+      "scenario": "Centro con cero plantas y cajas",
+      "expected": "Usa su trabajador base; no crea una planta ficticia para calcular el reparto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-070",
+      "area": "Cajas y contabilidad",
+      "scenario": "Mostrar 150.000 y cantidades de millones",
+      "expected": "HUD abreviado sin desbordamiento; saldo real no pierde precisión.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-071",
+      "area": "Cajas y contabilidad",
+      "scenario": "Combinación de bonus produce una fracción monetaria",
+      "expected": "C02 decide redondeo una vez; no importar Math.round del lab silenciosamente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-072",
+      "area": "Defensas y reparación",
+      "scenario": "Cerrar perímetro de cada material",
+      "expected": "Se genera la puerta determinista; misma compra y 60% de PV.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-073",
+      "area": "Defensas y reparación",
+      "scenario": "Golpear zarzas intactas dos veces a 40 PV",
+      "expected": "Al quedar 20 PV comienza el colapso; no exige un tercer golpe.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-074",
+      "area": "Defensas y reparación",
+      "scenario": "Golpear centro de 600 PV con cada especie",
+      "expected": "Colapso tras 12/10/7/6/4 golpes desde intacto sin reparación.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-075",
+      "area": "Defensas y reparación",
+      "scenario": "Entrar al umbral de BAST o DEST",
+      "expected": "Respeta 20% de vida/79% de daño respectivamente, sin unificación silenciosa.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-076",
+      "area": "Defensas y reparación",
+      "scenario": "Ordenar reparación con fondos suficientes",
+      "expected": "Se encola pero todavía no se cobra ni reserva dinero ficticio.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-077",
+      "area": "Defensas y reparación",
+      "scenario": "Ordenar reparación con fondos insuficientes en ese instante",
+      "expected": "Se rechaza la solicitud, sin tarea inválida añadida.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-078",
+      "area": "Defensas y reparación",
+      "scenario": "Daño aumenta antes de llegada del reparador",
+      "expected": "Coste se recalcula al llegar, no se mantiene la cotización inicial.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-079",
+      "area": "Defensas y reparación",
+      "scenario": "Objetivo pasa a ruina antes de ejecutar orden todavía válida",
+      "expected": "No se cancela solo por destruirse; coste 100% y se reconstruye si alcanza.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-080",
+      "area": "Defensas y reparación",
+      "scenario": "Saldo disminuye por otras compras antes de reparar",
+      "expected": "Revalida saldo al llegar; si no alcanza, cancela sin cargo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-081",
+      "area": "Defensas y reparación",
+      "scenario": "Ataque interrumpe una reparación en camino",
+      "expected": "Huida y reconstrucción de cola; esa reparación manual no se regenera sola.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-082",
+      "area": "Defensas y reparación",
+      "scenario": "Trabajador llega durante animación de colapso",
+      "expected": "Resolver C06 sin cancelar D144 ni confundir reset del lab con permiso de reparación.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-083",
+      "area": "Defensas y reparación",
+      "scenario": "Reparación exitosa repetida por callback",
+      "expected": "Pago y restauración únicos, VFX de polvo sin doble transformación.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-084",
+      "area": "Defensas y reparación",
+      "scenario": "Trazar muralla o usar atajo durante noche/ataque",
+      "expected": "Rechazo común por permisos; no bloquear animales creando nuevas piezas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-085",
+      "area": "Defensas y reparación",
+      "scenario": "Colocación atraviesa props grandes o terreno inválido",
+      "expected": "Sin compra parcial ni solapamiento visible.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-086",
+      "area": "Defensas y reparación",
+      "scenario": "Destruir estructura y descargar/cargar chunk",
+      "expected": "Estado y ruina persisten; colisiones no resucitan con el render.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-087",
+      "area": "Incursiones e IA",
+      "scenario": "Atracción en 0/1/499/500/1499/1500/3999/4000/9999/10000",
+      "expected": "Tabla exacta, sin dependencia del saldo ni valor de cajas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-088",
+      "area": "Incursiones e IA",
+      "scenario": "Noche 1 y noche 2 con atracción cero",
+      "expected": "Primera tranquila; segunda un facóquero tutorial garantizado.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-089",
+      "area": "Incursiones e IA",
+      "scenario": "Varias noches consecutivas con resultado igual",
+      "expected": "Tiradas independientes, sin sistema de compensación oculto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-090",
+      "area": "Incursiones e IA",
+      "scenario": "Presupuesto 3 con hiena desbloqueada",
+      "expected": "Composiciones válidas: tres facóqueros o una hiena.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-091",
+      "area": "Incursiones e IA",
+      "scenario": "Enumerar cada presupuesto de cada nivel",
+      "expected": "Al menos una composición, ≤5 animales, límites por especie y gasto 75–100%.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-092",
+      "area": "Incursiones e IA",
+      "scenario": "Permutar orden de generación del mismo grupo",
+      "expected": "No duplica su probabilidad; se elige composición, no orden de animales.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-093",
+      "area": "Incursiones e IA",
+      "scenario": "Intentar introducir especie todavía bloqueada",
+      "expected": "No aparece aunque el presupuesto permita pagarla.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-094",
+      "area": "Incursiones e IA",
+      "scenario": "Generar el grupo",
+      "expected": "Aparece simultáneamente en puntos separados de una misma zona del borde activo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-095",
+      "area": "Incursiones e IA",
+      "scenario": "Mover cámara durante aproximación",
+      "expected": "Animal no desaparece ni reinicia su cupo por salir del dibujo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-096",
+      "area": "Incursiones e IA",
+      "scenario": "Elegir objetivos con reservas ya tomadas",
+      "expected": "Ignora objetivos reservados; no comparte cultivo/grupo/tramo/conjunto/centro activo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-097",
+      "area": "Incursiones e IA",
+      "scenario": "Destruir objetivo y conservar golpes",
+      "expected": "Busca otro libre o se retira si ninguno es válido.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-098",
+      "area": "Incursiones e IA",
+      "scenario": "Llegar al objetivo dentro de finca y retirarse",
+      "expected": "Entra corriendo, se mueve caminando dentro y sale corriendo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-099",
+      "area": "Incursiones e IA",
+      "scenario": "Ejecutar cualquiera de los dos combos",
+      "expected": "Exactamente un golpe lógico y consumo de un cupo; varios contactos VFX son decorativos.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-100",
+      "area": "Incursiones e IA",
+      "scenario": "Agotar último golpe",
+      "expected": "No ejecuta un ataque extra por colisión con trabajador; salida mantiene separación física.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-101",
+      "area": "Incursiones e IA",
+      "scenario": "Encontrar Escudo",
+      "expected": "No lo atraviesa; golpea borde, gasta cupo y no daña lo protegido.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-102",
+      "area": "Incursiones e IA",
+      "scenario": "Tirada diurna con candidato antes/después de cruzar 10.000",
+      "expected": "Solo importa atracción al candidato; única tirada de 10%, sin sondeo repetido.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-103",
+      "area": "Incursiones e IA",
+      "scenario": "Ataque diurno y nocturno el mismo día",
+      "expected": "Pueden coexistir en el calendario como eventos independientes.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-104",
+      "area": "Incursiones e IA",
+      "scenario": "Finalizar última incursión",
+      "expected": "Aviso de fin único, liberar estado/reservas y reconstruir necesidades al regreso.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-105",
+      "area": "Lesiones",
+      "scenario": "Trabajador pasa por delante sin trayectoria de atravesar animal",
+      "expected": "Una tirada de 60% por encuentro; no una por frame.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-106",
+      "area": "Lesiones",
+      "scenario": "Trayectoria del trabajador cruzaría el volumen del animal",
+      "expected": "Agresión obligada cuando el animal puede atacar y empuje 1,5–2 m hacia posición válida.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-107",
+      "area": "Lesiones",
+      "scenario": "Huida con cupo de carrera ordinario agotado",
+      "expected": "Corre igualmente; la emergencia ignora esa limitación.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-108",
+      "area": "Lesiones",
+      "scenario": "Primer golpe al trabajador",
+      "expected": "Interrumpe tarea, caída/recuperación y huida con estado persistente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-109",
+      "area": "Lesiones",
+      "scenario": "Segundo golpe dentro de la misma incursión",
+      "expected": "Incapacitado el resto de esa jornada y excluido de nuevas agresiones.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-110",
+      "area": "Lesiones",
+      "scenario": "Retirada de incapacitado",
+      "expected": "Clip de correr ralentizado y desplazamiento lento coherente, no caminar saltarín.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-111",
+      "area": "Lesiones",
+      "scenario": "Trabajador en recuperación en la jornada siguiente",
+      "expected": "Trabaja con restricción ordinaria de carrera; huida sigue disponible.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-112",
+      "area": "Lesiones",
+      "scenario": "Recontratar un perfil que contiene un lesionado",
+      "expected": "Aplicar identidad según C08; no incapacitar a toda la categoría ni curarlo por cambiar cantidad.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-113",
+      "area": "Magias",
+      "scenario": "Apuntar, mover y cancelar magia",
+      "expected": "No activa el efecto ni consume cooldown.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-114",
+      "area": "Magias",
+      "scenario": "Superponer áreas de poderes iguales o diferentes",
+      "expected": "Colocación inválida mientras hay intersección de áreas activas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-115",
+      "area": "Magias",
+      "scenario": "Campo atraviesa cambio día/noche",
+      "expected": "Respetar permisos de activación y regla nocturna de cultivos; VFX no avanza agricultura por sí mismo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-116",
+      "area": "Magias",
+      "scenario": "Pausa, ×1 y ×5 durante recarga",
+      "expected": "Cooldown sigue el tiempo simulado y conserva estado al guardar.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-117",
+      "area": "Magias",
+      "scenario": "Multiplicar sin trabajadores o durante noche/ataque",
+      "expected": "Activación bloqueada.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-118",
+      "area": "Magias",
+      "scenario": "Escudo vence con animales aún con cupo",
+      "expected": "Continúan con objetivos válidos; no desaparecen automáticamente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-119",
+      "area": "Magias",
+      "scenario": "Plantar un Escudo con borde sobre un animal",
+      "expected": "Validar geometría y no teletransportar ni introducir poder Repulsión.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-120",
+      "area": "Magias",
+      "scenario": "Duración de VFX demo distinta del efecto lógico",
+      "expected": "La presentación persiste/reconfigura hasta durar 20/30/15 s según magia; no dicta gameplay.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-121",
+      "area": "Tutorial y eventos",
+      "scenario": "Mostrar los ocho gestos del Espíritu",
+      "expected": "Se usan identificadores reales de V8; manos y entrada/salida siguen sistemas separados.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-122",
+      "area": "Tutorial y eventos",
+      "scenario": "Mano tutorial junto a obstáculo con cámara girando",
+      "expected": "Protección del plano completo; no corta suelo ni pared.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-123",
+      "area": "Tutorial y eventos",
+      "scenario": "Mensaje posterior al día 1",
+      "expected": "Espíritu sí, manos básicas no.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-124",
+      "area": "Tutorial y eventos",
+      "scenario": "Omitir introducción ya completada en otra ranura",
+      "expected": "Mensajes todavía no vistos de magia/lesión siguen apareciendo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-125",
+      "area": "Tutorial y eventos",
+      "scenario": "Esperar acción de trabajador tras explicación",
+      "expected": "Lectura cerrada y simulación activa; no deadlock del tutorial.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-126",
+      "area": "Tutorial y eventos",
+      "scenario": "Evento agrícola nocturno sorteado",
+      "expected": "Máximo uno, anunciado al amanecer como sorpresa; severidad y destinatario se guardan.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-127",
+      "area": "Tutorial y eventos",
+      "scenario": "Cargar antes/después de aplicar un evento",
+      "expected": "No se vuelve a sortear ni a aplicar dos veces.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-128",
+      "area": "Tutorial y eventos",
+      "scenario": "Evento específico sin cinco plantas de una especie elegible",
+      "expected": "No escogerla; resolver selección/fallback dentro de C01.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-129",
+      "area": "Finales y expansión",
+      "scenario": "Fin de ataque con cero centros y 799 monedas",
+      "expected": "Game Over inmediato tras concluir incursión.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-130",
+      "area": "Finales y expansión",
+      "scenario": "Fin de ataque con cero centros y 800 monedas",
+      "expected": "No derrota inmediata por D141; recuperación solo en fase legal.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-131",
+      "area": "Finales y expansión",
+      "scenario": "Amanecer en cada combinación de centro y recursos",
+      "expected": "Umbrales 100/105/900/905 exactos antes de contratar.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-132",
+      "area": "Finales y expansión",
+      "scenario": "Selección recordada cuesta más que saldo pero ruta mínima existe",
+      "expected": "No Game Over por la selección; permitir ajustarla.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-133",
+      "area": "Finales y expansión",
+      "scenario": "Saldo en umbral con único cultivo lento",
+      "expected": "Medir viabilidad real de varios días; conservar regla aprobada y registrar riesgo, no presumir demostración matemática.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-134",
+      "area": "Finales y expansión",
+      "scenario": "Llegar al inicio de noche 100",
+      "expected": "Aún no victoria; hay que completar la noche y resolver lo que corresponda.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-135",
+      "area": "Finales y expansión",
+      "scenario": "Completar noche 100",
+      "expected": "Narración de maldición levantada y continuación opcional en la misma partida.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-136",
+      "area": "Finales y expansión",
+      "scenario": "Continuar postgame cientos de noches",
+      "expected": "Cero ataques nocturnos y diurnos; no relanzar tutorial del facóquero.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-137",
+      "area": "Finales y expansión",
+      "scenario": "Construir poblados 2/3/4/10/20/50/100",
+      "expected": "Costes 50K/75K/100K/250K/500K/1,25M/2,5M sin límite artificial.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-138",
+      "area": "Finales y expansión",
+      "scenario": "Previsualizar poblado con una sola casa inválida",
+      "expected": "Conjunto inválido entero, sin pago parcial ni cambios persistentes.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-139",
+      "area": "Finales y expansión",
+      "scenario": "Cambiar cultura o recolocar fantasma",
+      "expected": "No cobra ni borra props, no añade nuevas páginas de configuración inicial.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-140",
+      "area": "Finales y expansión",
+      "scenario": "Confirmar poblado con saldo gastado desde previsualización",
+      "expected": "Revalida y rechaza sin crear medias aldeas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-141",
+      "area": "Finales y expansión",
+      "scenario": "Colocar poblados contiguos sin solapar",
+      "expected": "Permitido; no radio mínimo artificial entre centros de poblado.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-142",
+      "area": "Finales y expansión",
+      "scenario": "Confirmar poblado y guardar/cargar",
+      "expected": "Coste, ordinal, edificios, cultura y supresiones aparecen una sola vez.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-143",
+      "area": "Finales y expansión",
+      "scenario": "Construir un poblado durante jornada",
+      "expected": "Nueva asociación territorial no cambia la residencia ni centro de trabajadores de hoy.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-144",
+      "area": "Guardado y presentación",
+      "scenario": "Guardar desde cada disparador aprobado",
+      "expected": "Snapshot del slot actual; sin sobrescribir otra ranura.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-145",
+      "area": "Guardado y presentación",
+      "scenario": "Cargar durante una incursión",
+      "expected": "Mismos animales, golpes restantes, daño y resultado programado; no nueva tirada.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-146",
+      "area": "Guardado y presentación",
+      "scenario": "Cargar durante jornada con empleados pagados",
+      "expected": "No nueva contratación ni nuevo cobro; mantiene asignaciones del día.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-147",
+      "area": "Guardado y presentación",
+      "scenario": "Guardar caja transportada y volver a cargar",
+      "expected": "Una caja, un portador y valor único; no crear dinero al restaurar la animación.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-148",
+      "area": "Guardado y presentación",
+      "scenario": "Guardar colapso o cooldown en curso",
+      "expected": "Estado no reversible accidentalmente; restaurar duración/estado coherente.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-149",
+      "area": "Guardado y presentación",
+      "scenario": "Abrir Biblioteca y volver",
+      "expected": "No cambia progreso ni ejecuta economía de la partida detrás de los labs.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-150",
+      "area": "Guardado y presentación",
+      "scenario": "Salir a menú y entrar repetidamente",
+      "expected": "Liberar audio, WebGL, listeners y timers de la escena anterior.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-151",
+      "area": "Guardado y presentación",
+      "scenario": "Cargar recursos faltantes o audio sin permiso inicial",
+      "expected": "Error o fallback controlado; no pantalla infinita ni mundo corrupto.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-152",
+      "area": "Guardado y presentación",
+      "scenario": "Mapear los 126 SFX",
+      "expected": "Cada ID tiene destino o reserva explícita; 021/022 conservan los bytes intercambiados aprobados.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-153",
+      "area": "Guardado y presentación",
+      "scenario": "Reproducir acción con variantes genéricas/específicas",
+      "expected": "Evitar disparar todas juntas; un ingreso o golpe sigue siendo uno.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-154",
+      "area": "Guardado y presentación",
+      "scenario": "Comparar audio a ×1/×5",
+      "expected": "Tono y velocidad de reproducción iguales; cambia cadencia lógica, no pitch.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-155",
+      "area": "Guardado y presentación",
+      "scenario": "Acumular muchos agricultores, animales y colapsos",
+      "expected": "Mezcla con prioridad y límites, sin explosión de voces o partículas.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-156",
+      "area": "Guardado y presentación",
+      "scenario": "Alternar Gameplay A/B",
+      "expected": "No fusionar stems incompatibles; se usa la política del lab musical al importarlo.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-157",
+      "area": "Guardado y presentación",
+      "scenario": "Importar fuentes y créditos",
+      "expected": "Comprobar nombres y licencias reales; no distribuir archivos tipográficos en este paquete documental.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-158",
+      "area": "Guardado y presentación",
+      "scenario": "Escena grande lejos del origen y tras descargar chunks",
+      "expected": "Colocaciones estables, colisiones y persistencia; perf se mide, no se infiere de MAX_PLANTS=240.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    },
+    {
+      "id": "QA-159",
+      "area": "Guardado y presentación",
+      "scenario": "Semilla y comandos repetidos",
+      "expected": "Mismos resultados del dominio; diversidad visual no altera azar de eventos económicos.",
+      "audit_status": "pending",
+      "evidence": [],
+      "notes": "Not audited against this full acceptance case yet."
+    }
+  ]
+}
