@@ -1,5 +1,9 @@
 # Resolución independiente: diagnóstico DPR 1
 
+Actualización: el [selector persistente del juego](qa-resolution-settings.md)
+ya está implementado y comprobado con el HUD nativo. El informe siguiente
+conserva el alcance del diagnóstico original y sus mediciones GPU.
+
 3 de octubre de 2026. `nativeRenderResolution` admite un límite opcional de DPR
 del mundo (`WorldScene.pixelRatioLimit`). El valor por defecto conserva la receta
 del lab. El botón **DPR 1 / perfil** del fixture African Toon alterna ese límite

@@ -34,7 +34,9 @@ La [consola](qa/resolution-settings/console.json) no contiene errores ni warning
 
 Las 19 pruebas dirigidas de resolución, renderizado e idiomas pasan. Build y
 verificación web pasan: 554 archivos, 379,678,054 bytes, 794 enlaces relativos,
-20 GLB runtime sin duplicados originales. La suite completa se registra aparte.
+20 GLB runtime sin duplicados originales. [Suite completa local](qa/resolution-settings/tests.txt)
+del cambio 300ddb0: 720/720, sin fallos ni casos omitidos.
+[Build y verificación web](qa/resolution-settings/build.txt).
 
 Esto ofrece un intercambio explícito de nitidez por rendimiento; no acredita
 FPS nuevos. Los ensayos GPU anteriores y sus límites siguen documentados en
