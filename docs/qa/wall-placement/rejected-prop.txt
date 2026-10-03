@@ -1,0 +1,24 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 16:34
+  - img "Dinero"
+  - generic: 9,1K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - generic: Arrastra para trazar una muralla de Zarzas
+  - alert: Un árbol o roca grande ocupa este terreno
+  - button "Cancelar"

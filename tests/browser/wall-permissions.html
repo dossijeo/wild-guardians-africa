@@ -1,26 +1,29 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA permisos de murallas</title>
 <style>body{font:16px system-ui;margin:24px}button,a{padding:12px;margin:8px}pre{white-space:pre-wrap}</style>
-<h1>Permisos de murallas</h1><p>Origen QA local. Sabana/Mapungubwe original, crédito explícito de 10000 monedas, centro y mijo pagados y una mujer mayor contratada mediante comandos reales. Escribe solo qa-wall-permissions.</p>
-<label>Escenario <select id="mode"><option value="sunset">Antes del anochecer</option><option value="night">Noche</option><option value="raid">Incursión nocturna</option><option value="day-raid">Incursión diurna con 42 plátanos pagados</option></select></label><button id="prepare" disabled>Preparar partida de QA</button><button id="read">Leer guardados</button><a href="../../">Abrir juego</a><p id="status">Preparando terreno…</p><p>Intentos de generación diurna (QA, no medición de probabilidad): <output id="attempts">0</output></p><pre id="summary"></pre><details><summary>Snapshots públicos</summary><pre id="snapshots"></pre></details>
+<h1>Permisos de murallas</h1><p>Origen QA local. <span id="biomeName">sabana</span>/Mapungubwe original, crédito explícito de 10000 monedas, centro y mijo pagados y una mujer mayor contratada mediante comandos reales. Escribe solo qa-wall-permissions.</p>
+<label>Escenario <select id="mode"><option value="sunset">Antes del anochecer</option><option value="night">Noche</option><option value="raid">Incursión nocturna</option><option value="day-raid">Incursión diurna con 42 plátanos pagados</option></select></label><button id="prepare" disabled>Preparar partida de QA</button><button id="read">Leer guardados</button><a href="../../">Abrir juego</a><a href="?biome=gran-rio">Preparar Gran Río</a><p id="status">Preparando terreno…</p><p>Intentos de generación diurna (QA, no medición de probabilidad): <output id="attempts">0</output></p><pre id="summary"></pre><details><summary>Snapshots públicos</summary><pre id="snapshots"></pre></details>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {spawnRaid} from '../../src/simulation/raids.js';
 import {TUTORIAL_IDS} from '../../src/tutorial/messages.js';
-import {Navigation} from '../../src/world/navigation.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {SaveRepository} from '../../src/persistence/snapshots.js';
 import {rational} from '../../src/simulation/money.js';
 import {json} from '../../src/rendering/assets.js';
 const repo=new SaveRepository(localStorage),status=document.querySelector('#status');
+const biome=new URLSearchParams(location.search).get('biome')??'sabana';
+if(!Game.BIOMES.includes(biome))throw new Error('Bioma QA desconocido');
+document.querySelector('#biomeName').textContent=biome;
 function read(){const slots={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key.startsWith('wild-guardians:slot:'))slots[key]=localStorage.getItem(key);}const ordered=Object.fromEntries(Object.entries(slots).sort(([a],[b])=>a.localeCompare(b)));document.querySelector('#snapshots').textContent=JSON.stringify(ordered,null,2);document.querySelector('#summary').textContent=JSON.stringify(Object.entries(ordered).map(([key,text])=>{const s=JSON.parse(text);return {key,day:s.day,time:s.time,money:s.ledger.balance,plants:s.plants.length,workers:s.workers.length,events:s.events.length,savedAt:s.savedAt};}),null,2);status.textContent='Guardados leídos';}
 document.querySelector('#read').onclick=read;
 try {
- const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
- const state=Game.newGame({seed:712,slotId:'qa-wall-permissions'}),nav=new Navigation(712,'sabana',pack.profile),place=await findInitialLocationAsync(nav,payload);
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,biome,slotId:'qa-wall-permissions'}),nav=new Navigation(712,biome,pack.profile),place=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);state.ledger.balance=rational(10000);Game.resume(state,'intro');Game.placeStructure(state,'qa-library-center',place.center,nav);
  let site;for(let z=-6;z<=6&&!site;z+=1.5)for(let x=6;x<15&&!site;x+=1.5){const p={x:place.center.x+x,z:place.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}if(!site)throw new Error('Falta sitio legal para el cultivo');
  Game.plant(state,'qa-library-mijo','mijo',site.x,site.z,nav);Game.pause(state,'hiring');Game.hire(state,'qa-library-contract',{olderFemale:1});state.tutorial.step='done';state.tutorial.basicSkipped=true;state.tutorial.seen=[...TUTORIAL_IDS];state.time=200;
- document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{const draft=structuredClone(state),mode=document.querySelector('#mode').value;draft.slotId='qa-wall-permissions-'+mode;draft.time=mode==='sunset'||mode==='day-raid'?200:310;
+ document.querySelector('#prepare').disabled=false;document.querySelector('#prepare').onclick=()=>{const draft=structuredClone(state),mode=document.querySelector('#mode').value;draft.slotId='qa-wall-permissions-'+(biome==='sabana'?'':biome+'-')+mode;draft.time=mode==='sunset'||mode==='day-raid'?200:310;
  if(mode==='day-raid'){
   draft.time=0;nav.setState(draft);let count=0;
   for(let z=-30;z<=30&&count<42;z+=2)for(let x=-30;x<=30&&count<42;x+=2){
