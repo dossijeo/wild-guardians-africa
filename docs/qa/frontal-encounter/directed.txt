@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: QA-105: mapungubwe real non-collision frontal hit rolls once and retains contact on reload
+ok 1 - QA-105: mapungubwe real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 110.2983
+  ...
+# Subtest: QA-105: mapungubwe real non-collision frontal rejection rolls once and retains contact on reload
+ok 2 - QA-105: mapungubwe real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 68.3295
+  ...
+# Subtest: QA-105: saheliana real non-collision frontal hit rolls once and retains contact on reload
+ok 3 - QA-105: saheliana real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 53.152
+  ...
+# Subtest: QA-105: saheliana real non-collision frontal rejection rolls once and retains contact on reload
+ok 4 - QA-105: saheliana real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 47.6525
+  ...
+# Subtest: QA-105: suajili real non-collision frontal hit rolls once and retains contact on reload
+ok 5 - QA-105: suajili real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 50.2441
+  ...
+# Subtest: QA-105: suajili real non-collision frontal rejection rolls once and retains contact on reload
+ok 6 - QA-105: suajili real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 46.405
+  ...
+# Subtest: QA-105: musgum real non-collision frontal hit rolls once and retains contact on reload
+ok 7 - QA-105: musgum real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 48.521
+  ...
+# Subtest: QA-105: musgum real non-collision frontal rejection rolls once and retains contact on reload
+ok 8 - QA-105: musgum real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 50.4029
+  ...
+# Subtest: QA-105: etiope real non-collision frontal hit rolls once and retains contact on reload
+ok 9 - QA-105: etiope real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 39.7032
+  ...
+# Subtest: QA-105: etiope real non-collision frontal rejection rolls once and retains contact on reload
+ok 10 - QA-105: etiope real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 30.7207
+  ...
+# Subtest: A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+ok 11 - A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+  ---
+  duration_ms: 5.0965
+  ...
+# Subtest: A non-overlapping passage behind the animal never rolls or spends a hit
+ok 12 - A non-overlapping passage behind the animal never rolls or spends a hit
+  ---
+  duration_ms: 0.3747
+  ...
+# Subtest: One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+ok 13 - One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+  ---
+  duration_ms: 1.4998
+  ...
+# Subtest: Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+ok 14 - Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+  ---
+  duration_ms: 1.5968
+  ...
+# Subtest: Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+ok 15 - Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+  ---
+  duration_ms: 0.6596
+  ...
+# Subtest: Physical pushes check their whole path and turn along a wall instead of crossing it
+ok 16 - Physical pushes check their whole path and turn along a wall instead of crossing it
+  ---
+  duration_ms: 0.4994
+  ...
+# Subtest: A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+ok 17 - A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+  ---
+  duration_ms: 0.3694
+  ...
+# Subtest: Retreating animals and exhausted hit budgets cannot create a free worker hit
+ok 18 - Retreating animals and exhausted hit budgets cannot create a free worker hit
+  ---
+  duration_ms: 0.4172
+  ...
+# Subtest: Recovery remains attached to the injured person during re-hiring and clears on the following day
+ok 19 - Recovery remains attached to the injured person during re-hiring and clears on the following day
+  ---
+  duration_ms: 66.7811
+  ...
+# Subtest: Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+ok 20 - Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+  ---
+  duration_ms: 53.613
+  ...
+# Subtest: Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+ok 21 - Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+  ---
+  duration_ms: 21.0824
+  ...
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 22 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 4.318
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 23 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 1.8445
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 741.7784

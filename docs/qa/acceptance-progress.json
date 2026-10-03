@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "dca7657",
+  "implementation_commit": "043abdb",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1210,13 +1210,14 @@
       "area": "Lesiones",
       "scenario": "Trabajador pasa por delante sin trayectoria de atravesar animal",
       "expected": "Una tirada de 60% por encuentro; no una por frame.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-live-injury.md",
+        "docs/qa-frontal-encounter.md",
+        "tests/acceptance-frontal-encounter.test.js",
         "tests/encounters.test.js",
-        "docs/qa/live-injury/directed.txt"
+        "docs/qa/frontal-encounter/directed.txt"
       ],
-      "notes": "Isolated production encounter tests verify no frame rerolls, rejected-contact reload persistence and approved 60% over 5000 samples. Live acceptance matrix covers mandatory physical collisions. A real frontal non-collision passage remains to be integrated."
+      "notes": "Ten actual paid olderFemale sowing/flight scenarios across five native centre cultures reach frontal non-collision encounter after prior physical contact. Actual seeds21/152 accept/reject at60% threshold, exactly one RNG step and one budget decrement only when accepted. SaveRepository load before/after, multiple actual nearby frames without reroll, pause frozen; complete state/routes/epochs match every tick until physical raid exit. Navigation now persists/restores route epoch on fresh-world reconstruction, while real state mutations and legacy epochs invalidate. Isolated 5000-sample probability and later mandatory collision also pass. Explicit warthog group, funded flat Navigation, no new browser visual claim."
     },
     {
       "id": "QA-106",
