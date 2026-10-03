@@ -51,6 +51,11 @@ export function validateSnapshot(state) {
 }
 export function serialize(state) { validateSnapshot(state);return JSON.stringify(state); }
 export function deserialize(text) { return validateSnapshot(JSON.parse(text)); }
+function slotSnapshot(text,slotId) {
+  const state=deserialize(text);
+  if(state.slotId!==slotId)throw new Error('La partida guardada pertenece a otra ranura.');
+  return state;
+}
 export class SaveRepository {
   constructor(storage) {this.storage=storage;}
   key(slotId) {return `wild-guardians:slot:${slotId}`;}
@@ -58,16 +63,20 @@ export class SaveRepository {
     const text=serialize(state),key=this.key(state.slotId);
     // Verify staging before replacing the last known valid snapshot.
     this.storage.setItem(key+':pending',text);
-    deserialize(this.storage.getItem(key+':pending'));
+    slotSnapshot(this.storage.getItem(key+':pending'),state.slotId);
     const previous=this.storage.getItem(key);
-    if(previous) {try {deserialize(previous);this.storage.setItem(key+':backup',previous);}catch { /* Keep existing backup. */ }}
+    if(previous) {
+      let valid=false;
+      try {slotSnapshot(previous,state.slotId);valid=true;}catch { /* Keep existing backup. */ }
+      if(valid)this.storage.setItem(key+':backup',previous);
+    }
     this.storage.setItem(key,text);
     this.storage.removeItem(key+':pending');
   }
   load(slotId) {
     const key=this.key(slotId);
-    try {return deserialize(this.storage.getItem(key));}
-    catch {return deserialize(this.storage.getItem(key+':backup'));}
+    try {return slotSnapshot(this.storage.getItem(key),slotId);}
+    catch {return slotSnapshot(this.storage.getItem(key+':backup'),slotId);}
   }
   list() {
     const result=[];

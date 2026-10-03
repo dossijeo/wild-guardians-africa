@@ -1518,5 +1518,6 @@ export const messages = {
   "Reduce la nitidez del mundo 3D; el HUD conserva su resolución.": "Reduces the sharpness of the 3D world; the HUD keeps its resolution.",
   "La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.": "The marked area is a preview. Tap another spot to move it. Confirm to activate the power.",
   "Activar poder": "Activate power",
-  "Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.": "Choose a power and tap an area to preview it before confirming."
+  "Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.": "Choose a power and tap an area to preview it before confirming.",
+  "La partida guardada pertenece a otra ranura.": "The saved game belongs to another slot."
 };
