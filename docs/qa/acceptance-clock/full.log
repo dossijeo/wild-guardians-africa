@@ -1,0 +1,3336 @@
+
+> wild-guardians-africa@0.1.0 test
+> node --test tests
+
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 17.3698
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 2.0617
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 134.1692
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.4623
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 28.4334
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 2.0382
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.6838
+  ...
+# Subtest: Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100
+ok 8 - Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100
+  ---
+  duration_ms: 167387.4146
+  ...
+# Subtest: Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100
+ok 9 - Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100
+  ---
+  duration_ms: 162898.7665
+  ...
+# Subtest: warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 10 - warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 21.0695
+  ...
+# Subtest: hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 11 - hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 2.6893
+  ...
+# Subtest: buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 12 - buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.841
+  ...
+# Subtest: lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 13 - lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 3.1557
+  ...
+# Subtest: rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 14 - rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.4869
+  ...
+# Subtest: An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+ok 15 - An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+  ---
+  duration_ms: 11.4582
+  ...
+# Subtest: Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+ok 16 - Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+  ---
+  duration_ms: 4.4476
+  ...
+# Subtest: A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+ok 17 - A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+  ---
+  duration_ms: 2.7301
+  ...
+# Subtest: Two native animals crossing opposite ways maintain separation and both finish
+ok 18 - Two native animals crossing opposite ways maintain separation and both finish
+  ---
+  duration_ms: 3.5231
+  ...
+# Subtest: Saving midway through a detour preserves its route and deterministic motion
+ok 19 - Saving midway through a detour preserves its route and deterministic motion
+  ---
+  duration_ms: 5.1154
+  ...
+# Subtest: Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+ok 20 - Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+  ---
+  duration_ms: 0.5033
+  ...
+# Subtest: Legacy overlaps may escape continuously but cannot move deeper or across the other body
+ok 21 - Legacy overlaps may escape continuously but cannot move deeper or across the other body
+  ---
+  duration_ms: 0.2309
+  ...
+# Subtest: Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+ok 22 - Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+  ---
+  duration_ms: 111.6951
+  ...
+# Subtest: user source is preserved byte-for-byte and extracted function bodies are authentic
+ok 23 - user source is preserved byte-for-byte and extracted function bodies are authentic
+  ---
+  duration_ms: 90.2728
+  ...
+# Subtest: toon composes with native vertex deformation, preserves textures and depth materials
+ok 24 - toon composes with native vertex deformation, preserves textures and depth materials
+  ---
+  duration_ms: 8.2394
+  ...
+# Subtest: transparent VFX, basic overlays and painted water keep their native shader paths
+ok 25 - transparent VFX, basic overlays and painted water keep their native shader paths
+  ---
+  duration_ms: 2.3051
+  ...
+# Subtest: very low ground receives authentic toon bands without Three lighting or shadow dependencies
+ok 26 - very low ground receives authentic toon bands without Three lighting or shadow dependencies
+  ---
+  duration_ms: 0.8067
+  ...
+# Subtest: growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 27 - growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 245.645
+  ...
+# Subtest: multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 28 - multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 56.3851
+  ...
+# Subtest: warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 29 - warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 10.0624
+  ...
+# Subtest: warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 30 - warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.1001
+  ...
+# Subtest: warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 31 - warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.553
+  ...
+# Subtest: warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 32 - warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8713
+  ...
+# Subtest: hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 33 - hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.1168
+  ...
+# Subtest: hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 34 - hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.0464
+  ...
+# Subtest: hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 35 - hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.0408
+  ...
+# Subtest: hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 36 - hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.6301
+  ...
+# Subtest: buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 37 - buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.0871
+  ...
+# Subtest: buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 38 - buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.0889
+  ...
+# Subtest: buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 39 - buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.6901
+  ...
+# Subtest: buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 40 - buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.7356
+  ...
+# Subtest: lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 41 - lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.5739
+  ...
+# Subtest: lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 42 - lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.6295
+  ...
+# Subtest: lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 43 - lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8372
+  ...
+# Subtest: lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 44 - lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.5019
+  ...
+# Subtest: rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 45 - rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.7261
+  ...
+# Subtest: rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 46 - rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.6933
+  ...
+# Subtest: rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 47 - rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.5262
+  ...
+# Subtest: rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 48 - rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.5709
+  ...
+# Subtest: An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+ok 49 - An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+  ---
+  duration_ms: 0.4937
+  ...
+# Subtest: Exhausting a budget during an attack finishes its presentation without granting another hit
+ok 50 - Exhausting a budget during an attack finishes its presentation without granting another hit
+  ---
+  duration_ms: 1.7968
+  ...
+# Subtest: Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+ok 51 - Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+  ---
+  duration_ms: 1.0755
+  ...
+# Subtest: warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 52 - warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 5393.2518
+  ...
+# Subtest: hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 53 - hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 4119.2525
+  ...
+# Subtest: buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 54 - buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 2901.5439
+  ...
+# Subtest: lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 55 - lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 3073.2126
+  ...
+# Subtest: rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 56 - rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 2825.8628
+  ...
+# Subtest: chunk clip preserves the original half-open FS predicate and biome exceptions
+ok 57 - chunk clip preserves the original half-open FS predicate and biome exceptions
+  ---
+  duration_ms: 8.9975
+  ...
+# Subtest: adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+ok 58 - adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+  ---
+  duration_ms: 19.7009
+  ...
+# Subtest: clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+ok 59 - clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+  ---
+  duration_ms: 2.918
+  ...
+# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+ok 60 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+  ---
+  duration_ms: 66.099
+  ...
+# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+ok 61 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+  ---
+  duration_ms: 12.2186
+  ...
+# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+ok 62 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+  ---
+  duration_ms: 16.5896
+  ...
+# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+ok 63 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+  ---
+  duration_ms: 5.7006
+  ...
+# Subtest: light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+ok 64 - light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+  ---
+  duration_ms: 13.9302
+  ...
+# Subtest: shadow selection includes bounds of the final native variant even if they exceed LOD0
+ok 65 - shadow selection includes bounds of the final native variant even if they exceed LOD0
+  ---
+  duration_ms: 4.1227
+  ...
+# (node:26356) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+ok 66 - native distance selection matches the complete lab method across categories, qualities, size and three-dimensional eye poses
+  ---
+  duration_ms: 149.8989
+  ...
+# Subtest: render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+ok 67 - render bins preserve authored transforms and coverage through level changes, retaining full logical geometry
+  ---
+  duration_ms: 15.1634
+  ...
+# Subtest: short vegetation distance culling does not remove logical instances and reappears when the camera returns
+ok 68 - short vegetation distance culling does not remove logical instances and reappears when the camera returns
+  ---
+  duration_ms: 3.0765
+  ...
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 69 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 60.2202
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 70 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 7.885
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 71 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 8.086
+  ...
+# (node:27228) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all 120 original surface classifications and every LOD tangent buffer match the native recipes
+ok 72 - all 120 original surface classifications and every LOD tangent buffer match the native recipes
+  ---
+  duration_ms: 2257.3777
+  ...
+# Subtest: native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+ok 73 - native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+  ---
+  duration_ms: 1814.8123
+  ...
+# Subtest: native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+ok 74 - native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+  ---
+  duration_ms: 102.1164
+  ...
+# Subtest: warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 75 - warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 481.2264
+  ...
+# Subtest: hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 76 - hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 262.7803
+  ...
+# Subtest: buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 77 - buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 359.3151
+  ...
+# Subtest: lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 78 - lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 271.4504
+  ...
+# Subtest: rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 79 - rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 211.2278
+  ...
+# Subtest: Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+ok 80 - Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+  ---
+  duration_ms: 2.5511
+  ...
+# Subtest: Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+ok 81 - Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+  ---
+  duration_ms: 26.4782
+  ...
+# Subtest: Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+ok 82 - Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+  ---
+  duration_ms: 0.8922
+  ...
+# Subtest: Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+ok 83 - Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+  ---
+  duration_ms: 5.0192
+  ...
+# (node:30464) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 84 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 142.7075
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 85 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.5884
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 86 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 1.4223
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 87 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 8128.4509
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 88 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 10.5802
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 89 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 3.9771
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 90 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 11.0997
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 91 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 77.1514
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 92 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 44.104
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 93 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 3.4618
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 94 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 345.4292
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 95 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 49.6652
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 96 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 201.4168
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 97 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 19.1771
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 98 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 34.7195
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 99 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 5.6926
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 100 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 177.7451
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 101 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 10.0701
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 102 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.6004
+  ...
+# Subtest: sabana/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 103 - sabana/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 15244.1371
+  ...
+# Subtest: sabana/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 104 - sabana/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 8925.8137
+  ...
+# Subtest: sabana/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 105 - sabana/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 7633.4572
+  ...
+# Subtest: sabana/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 106 - sabana/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 6286.5155
+  ...
+# Subtest: sabana/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 107 - sabana/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 7158.5008
+  ...
+# Subtest: gran-rio/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 108 - gran-rio/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 3586.6756
+  ...
+# Subtest: gran-rio/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 109 - gran-rio/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 6352.7541
+  ...
+# Subtest: gran-rio/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 110 - gran-rio/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 5553.851
+  ...
+# Subtest: gran-rio/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 111 - gran-rio/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 5681.5491
+  ...
+# Subtest: gran-rio/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 112 - gran-rio/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 5794.7838
+  ...
+# Subtest: manglares/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 113 - manglares/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2293.8
+  ...
+# Subtest: manglares/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 114 - manglares/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2242.944
+  ...
+# Subtest: manglares/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 115 - manglares/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2487.3681
+  ...
+# Subtest: manglares/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 116 - manglares/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2581.3737
+  ...
+# Subtest: manglares/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 117 - manglares/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2826.5785
+  ...
+# Subtest: volcanes/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 118 - volcanes/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 5681.8362
+  ...
+# Subtest: volcanes/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 119 - volcanes/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 8970.8227
+  ...
+# Subtest: volcanes/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 120 - volcanes/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 6340.6768
+  ...
+# Subtest: volcanes/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 121 - volcanes/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 9964.5844
+  ...
+# Subtest: volcanes/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 122 - volcanes/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 48269.4079
+  ...
+# Subtest: gran-canon/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 123 - gran-canon/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2355.582
+  ...
+# Subtest: gran-canon/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 124 - gran-canon/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 1688.4685
+  ...
+# Subtest: gran-canon/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 125 - gran-canon/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2073.2707
+  ...
+# Subtest: gran-canon/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 126 - gran-canon/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2229.0894
+  ...
+# Subtest: gran-canon/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 127 - gran-canon/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2861.3304
+  ...
+# Subtest: desierto/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 128 - desierto/mapungubwe: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2224.1901
+  ...
+# Subtest: desierto/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 129 - desierto/saheliana: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2342.6813
+  ...
+# Subtest: desierto/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 130 - desierto/suajili: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 1702.5982
+  ...
+# Subtest: desierto/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 131 - desierto/musgum: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 1903.3417
+  ...
+# Subtest: desierto/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+ok 132 - desierto/etiope: legal minimal campaign reaches night 100, reloads active raid and continues postgame
+  ---
+  duration_ms: 2174.5086
+  ...
+# Subtest: suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 133 - suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1963.5634
+  ...
+# Subtest: etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 134 - etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1822.4224
+  ...
+# Subtest: mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 135 - mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1537.0123
+  ...
+# Subtest: saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 136 - saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1504.6241
+  ...
+# Subtest: musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 137 - musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1547.8342
+  ...
+# (node:33956) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real worker returns identical native terrain, water and populations in all biomes and transfers both buffers
+ok 138 - real worker returns identical native terrain, water and populations in all biomes and transfers both buffers
+  ---
+  duration_ms: 6035.8932
+  ...
+# Subtest: queue dispatches one nearest scored request and ignores late IDs without completing the active job
+ok 139 - queue dispatches one nearest scored request and ignores late IDs without completing the active job
+  ---
+  duration_ms: 2.5127
+  ...
+# Subtest: travel and forced rebuild discard obsolete responses and regenerate the current epoch
+ok 140 - travel and forced rebuild discard obsolete responses and regenerate the current epoch
+  ---
+  duration_ms: 5.5731
+  ...
+# Subtest: worker failure preserves pending work in asynchronous local mode and dispose cancels it
+ok 141 - worker failure preserves pending work in asynchronous local mode and dispose cancels it
+  ---
+  duration_ms: 1.2792
+  ...
+# Subtest: generation and installation failures settle waiters and coordinate mismatches never enter the world
+ok 142 - generation and installation failures settle waiters and coordinate mismatches never enter the world
+  ---
+  duration_ms: 1.8918
+  ...
+# Subtest: scene installs transferred data without regenerating terrain or navigation population on the main thread
+ok 143 - scene installs transferred data without regenerating terrain or navigation population on the main thread
+  ---
+  duration_ms: 273.1558
+  ...
+# Subtest: initial readiness follows the native nine-chunk threshold while the outer queue continues
+ok 144 - initial readiness follows the native nine-chunk threshold while the outer queue continues
+  ---
+  duration_ms: 1.3478
+  ...
+# Subtest: native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+ok 145 - native contact pixels match the original rasterizer across biomes, bounds and filtered instances
+  ---
+  duration_ms: 345.3768
+  ...
+# Subtest: contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+ok 146 - contacts ignore grass and disabled layers, clamp radii and take the darkest overlapping stamp
+  ---
+  duration_ms: 6.1954
+  ...
+# Subtest: resident contact texture is stable, updates on streaming or removal and releases its owner resource
+ok 147 - resident contact texture is stable, updates on streaming or removal and releases its owner resource
+  ---
+  duration_ms: 5.1219
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 148 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 180.624
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 149 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 6.8669
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 150 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.8493
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 151 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 9.5234
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 152 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 1.6195
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 153 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 1.2294
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 154 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 0.9531
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 155 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 38.2383
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 156 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.546
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 157 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.4296
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 158 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 2.3351
+  ...
+# Subtest: Generated balance matches authoritative received JSON exactly
+ok 159 - Generated balance matches authoritative received JSON exactly
+  ---
+  duration_ms: 79.7192
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 160 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 1.3563
+  ...
+# Subtest: Money formatter never changes accounting
+ok 161 - Money formatter never changes accounting
+  ---
+  duration_ms: 23.7191
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 162 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 0.8544
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 163 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 0.3171
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 164 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.2841
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 165 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.3089
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 166 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 131.3526
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 167 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 1.0044
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 168 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 1.006
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 169 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.3537
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 170 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3321
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 171 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2954
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 172 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1673
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 173 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.168
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 174 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1595
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 175 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2388
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 176 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3926
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 177 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2342
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 178 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3731
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 179 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1348
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 180 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1189
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 181 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1042
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 182 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1377
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 183 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.4983
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 184 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.183
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 185 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.438
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 186 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 0.6561
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+ok 187 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 0.3507
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 188 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.3405
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 189 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.2804
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 190 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.2602
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 191 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3442
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 192 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 3.3156
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 193 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 51.9233
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 194 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 40.9201
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 195 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 16.7006
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 196 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 14.8805
+  ...
+# Subtest: DEST extraction and five original GLBs retain audited source hashes
+ok 197 - DEST extraction and five original GLBs retain audited source hashes
+  ---
+  duration_ms: 286.3064
+  ...
+# Subtest: Original GLSL masks, opening-depth guard and collapse programs are retained verbatim
+ok 198 - Original GLSL masks, opening-depth guard and collapse programs are retained verbatim
+  ---
+  duration_ms: 0.5764
+  ...
+# Subtest: All original triangle pivots follow exact native trajectories and six damage stages
+ok 199 - All original triangle pivots follow exact native trajectories and six damage stages
+  ---
+  duration_ms: 177.6874
+  ...
+# Subtest: Only native Sahelian roof patch adds geometry; original UVs and buffers stay unchanged
+ok 200 - Only native Sahelian roof patch adds geometry; original UVs and buffers stay unchanged
+  ---
+  duration_ms: 38.1262
+  ...
+# Subtest: Eight fitted damage sites and footprint ash regenerate deterministically after repair
+ok 201 - Eight fitted damage sites and footprint ash regenerate deterministically after repair
+  ---
+  duration_ms: 4305.8609
+  ...
+# Subtest: Native particle shaders and fragment geometry retain source hashes and exact source code
+ok 202 - Native particle shaders and fragment geometry retain source hashes and exact source code
+  ---
+  duration_ms: 9.0572
+  ...
+# Subtest: All five houses reproduce original ash scatter, emissions, gravity, bounce, friction and upload data
+ok 203 - All five houses reproduce original ash scatter, emissions, gravity, bounce, friction and upload data
+  ---
+  duration_ms: 1371.3054
+  ...
+# Subtest: Original smoke quality caps and 340-fragment cap remain bounded under repeated structural bursts
+ok 204 - Original smoke quality caps and 340-fragment cap remain bounded under repeated structural bursts
+  ---
+  duration_ms: 241.6995
+  ...
+# Subtest: Loaded collapse does not replay bursts; zero elapsed freezes particles and full repair clears emitters
+ok 205 - Loaded collapse does not replay bursts; zero elapsed freezes particles and full repair clears emitters
+  ---
+  duration_ms: 1.6853
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 206 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 7.484
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 207 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 13.1003
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 208 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 1.4441
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 209 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 3.3908
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 210 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 1.0699
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 211 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 0.6061
+  ...
+# Subtest: A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+ok 212 - A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+  ---
+  duration_ms: 4.8713
+  ...
+# Subtest: A non-overlapping passage behind the animal never rolls or spends a hit
+ok 213 - A non-overlapping passage behind the animal never rolls or spends a hit
+  ---
+  duration_ms: 0.3784
+  ...
+# Subtest: One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+ok 214 - One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+  ---
+  duration_ms: 0.5866
+  ...
+# Subtest: Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+ok 215 - Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+  ---
+  duration_ms: 2.7884
+  ...
+# Subtest: Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+ok 216 - Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+  ---
+  duration_ms: 0.6508
+  ...
+# Subtest: Physical pushes check their whole path and turn along a wall instead of crossing it
+ok 217 - Physical pushes check their whole path and turn along a wall instead of crossing it
+  ---
+  duration_ms: 0.4552
+  ...
+# Subtest: A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+ok 218 - A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+  ---
+  duration_ms: 0.312
+  ...
+# Subtest: Retreating animals and exhausted hit budgets cannot create a free worker hit
+ok 219 - Retreating animals and exhausted hit budgets cannot create a free worker hit
+  ---
+  duration_ms: 0.4834
+  ...
+# Subtest: Recovery remains attached to the injured person during re-hiring and clears on the following day
+ok 220 - Recovery remains attached to the injured person during re-hiring and clears on the following day
+  ---
+  duration_ms: 100.1146
+  ...
+# Subtest: Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+ok 221 - Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+  ---
+  duration_ms: 85.954
+  ...
+# Subtest: Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+ok 222 - Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+  ---
+  duration_ms: 19.853
+  ...
+# Subtest: endpoint guard leaves the complete received mix, UVs, LOD, scale and fill intact
+ok 223 - endpoint guard leaves the complete received mix, UVs, LOD, scale and fill intact
+  ---
+  duration_ms: 10.7115
+  ...
+# Subtest: Standard, Basic and painted fluid share a live endpoint switch without changing depth or recompiling
+ok 224 - Standard, Basic and painted fluid share a live endpoint switch without changing depth or recompiling
+  ---
+  duration_ms: 60.464
+  ...
+# Subtest: native destruction and debris also use one guarded HDR recipe with the original mixed path
+ok 225 - native destruction and debris also use one guarded HDR recipe with the original mixed path
+  ---
+  duration_ms: 0.7219
+  ...
+# Subtest: noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+ok 226 - noise adapter preserves every authored operation outside its uniform guard and rejects source drift
+  ---
+  duration_ms: 2.4197
+  ...
+# Subtest: both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+ok 227 - both ground qualities and volcanic objects share a live diagnostic uniform without recompilation
+  ---
+  duration_ms: 2.4763
+  ...
+# (node:35756) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HDR environment bytes match original radiance compression for both panoramas
+ok 228 - HDR environment bytes match original radiance compression for both panoramas
+  ---
+  duration_ms: 736.2318
+  ...
+# Subtest: complete Fresnel, environment BRDF and fluid branch retain user shader constants
+ok 229 - complete Fresnel, environment BRDF and fluid branch retain user shader constants
+  ---
+  duration_ms: 1.4499
+  ...
+# Subtest: water binds common night and yaw, keeps native exposure and avoids a second tone curve
+ok 230 - water binds common night and yaw, keeps native exposure and avoids a second tone curve
+  ---
+  duration_ms: 5.2175
+  ...
+# Subtest: Native footprint preserves walkable space outside its building edges
+ok 231 - Native footprint preserves walkable space outside its building edges
+  ---
+  duration_ms: 3.4301
+  ...
+# Subtest: Building overlap includes crossing edges and containment
+ok 232 - Building overlap includes crossing edges and containment
+  ---
+  duration_ms: 0.7723
+  ...
+# Subtest: Full occupied interior is checked for water, not just building bounds
+ok 233 - Full occupied interior is checked for water, not just building bounds
+  ---
+  duration_ms: 0.6505
+  ...
+# Subtest: Large props beside the native footprint survive; occupied props block placement
+ok 234 - Large props beside the native footprint survive; occupied props block placement
+  ---
+  duration_ms: 1.78
+  ...
+# Subtest: Asynchronous initial search preserves deterministic positions and suppression
+ok 235 - Asynchronous initial search preserves deterministic positions and suppression
+  ---
+  duration_ms: 4.2666
+  ...
+# Subtest: Departure search restores existing obstacles even if route evaluation fails
+ok 236 - Departure search restores existing obstacles even if route evaluation fails
+  ---
+  duration_ms: 0.9727
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 237 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 10.6231
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 238 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 6.4871
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 239 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.7555
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 240 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.6237
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 241 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 2.547
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 242 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 10.1301
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 243 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.3293
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 244 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 3.639
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 245 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.7914
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 246 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.5164
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 247 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 86.9529
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 248 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.7309
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 249 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 0.9272
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 250 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.4609
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 251 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 14.3332
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 252 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.5328
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 253 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 66.7365
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 254 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 2.6303
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 255 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 3.0569
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 256 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.3596
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 257 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.6093
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 258 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5463
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 259 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4718
+  ...
+# Subtest: Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+ok 260 - Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+  ---
+  duration_ms: 2.3984
+  ...
+# Subtest: Every closed native leaf preserves total source surface area, bounds and regional pivots
+ok 261 - Every closed native leaf preserves total source surface area, bounds and regional pivots
+  ---
+  duration_ms: 1053.6451
+  ...
+# Subtest: Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+ok 262 - Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+  ---
+  duration_ms: 880.6079
+  ...
+# Subtest: Full original gate geometry leaves a swept controller corridor when the leaf is open
+ok 263 - Full original gate geometry leaves a swept controller corridor when the leaf is open
+  ---
+  duration_ms: 939.7379
+  ...
+# Subtest: Production mesh applies opening changes without changing health, opacity or the closed source bridge
+ok 264 - Production mesh applies opening changes without changing health, opacity or the closed source bridge
+  ---
+  duration_ms: 923.5184
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 265 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 428.2094
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 266 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 9.0149
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 267 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 0.5625
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 268 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 0.7144
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 269 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.453
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 270 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 129.9959
+  ...
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 271 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 5.4296
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 272 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.6414
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 273 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 1.2388
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 274 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.8956
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 275 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.4927
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 276 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 77.5647
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 277 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 1523.2703
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 278 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 4.8947
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 279 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 98.9488
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 280 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.7429
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 281 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 665.0543
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 282 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 289.3264
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 283 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 391.5793
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 284 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 317.9687
+  ...
+# Subtest: unsupported extension or counter leaves the renderer untouched
+ok 285 - unsupported extension or counter leaves the renderer untouched
+  ---
+  duration_ms: 3.457
+  ...
+# Subtest: pending queries never read a result early and retain full numeric precision
+ok 286 - pending queries never read a result early and retain full numeric precision
+  ---
+  duration_ms: 2.4267
+  ...
+# Subtest: disjoint clears previously collected samples and outstanding queries
+ok 287 - disjoint clears previously collected samples and outstanding queries
+  ---
+  duration_ms: 0.4543
+  ...
+# Subtest: backpressure bounds resources without blocking and does not steal another timer
+ok 288 - backpressure bounds resources without blocking and does not steal another timer
+  ---
+  duration_ms: 0.7392
+  ...
+# Subtest: allocation failures skip timing without creating a pending measurement
+ok 289 - allocation failures skip timing without creating a pending measurement
+  ---
+  duration_ms: 0.3038
+  ...
+# Subtest: context loss invalidates samples and does not end a lost-context query
+ok 290 - context loss invalidates samples and does not end a lost-context query
+  ---
+  duration_ms: 0.4614
+  ...
+# Subtest: dispose closes active queries, releases pending resources exactly once, and blocks later polling
+ok 291 - dispose closes active queries, releases pending resources exactly once, and blocks later polling
+  ---
+  duration_ms: 0.2864
+  ...
+# Subtest: invalid numeric results are discarded rather than shown as zero
+ok 292 - invalid numeric results are discarded rather than shown as zero
+  ---
+  duration_ms: 1.8597
+  ...
+# Subtest: explicitly disabled profiling performs no extension or query calls
+ok 293 - explicitly disabled profiling performs no extension or query calls
+  ---
+  duration_ms: 0.3255
+  ...
+# Subtest: ground surface, Fresnel and BRDF preserve the supplied shader recipes
+ok 294 - ground surface, Fresnel and BRDF preserve the supplied shader recipes
+  ---
+  duration_ms: 4.504
+  ...
+# Subtest: both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+ok 295 - both ground quality paths share surface, HDR and native wet lighting without altering object surfaces
+  ---
+  duration_ms: 7.9423
+  ...
+# Subtest: Lifecycle preserves original transition timings in both motion modes
+ok 296 - Lifecycle preserves original transition timings in both motion modes
+  ---
+  duration_ms: 8.3945
+  ...
+# Subtest: Entrance leads to reading and rest without closing or advancing text
+ok 297 - Entrance leads to reading and rest without closing or advancing text
+  ---
+  duration_ms: 0.5891
+  ...
+# Subtest: Closing performs farewell and native exit, repeated hide calls do not restart it
+ok 298 - Closing performs farewell and native exit, repeated hide calls do not restart it
+  ---
+  duration_ms: 0.3314
+  ...
+# Subtest: New message cancels withdrawal and cannot be closed by a stale transition
+ok 299 - New message cancels withdrawal and cannot be closed by a stale transition
+  ---
+  duration_ms: 0.3228
+  ...
+# Subtest: Reduced motion still has explicit entry and exit and native neutral poses
+ok 300 - Reduced motion still has explicit entry and exit and native neutral poses
+  ---
+  duration_ms: 1.1011
+  ...
+# Subtest: Extracted renderer and native source retain their registered hashes
+ok 301 - Extracted renderer and native source retain their registered hashes
+  ---
+  duration_ms: 4.5097
+  ...
+# Subtest: Native greeting curves match the original V8 source at every sampled phase
+ok 302 - Native greeting curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 11.1343
+  ...
+# Subtest: Native speak curves match the original V8 source at every sampled phase
+ok 303 - Native speak curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.6547
+  ...
+# Subtest: Native acknowledge curves match the original V8 source at every sampled phase
+ok 304 - Native acknowledge curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 5.8495
+  ...
+# Subtest: Native curious curves match the original V8 source at every sampled phase
+ok 305 - Native curious curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.6727
+  ...
+# Subtest: Native warning curves match the original V8 source at every sampled phase
+ok 306 - Native warning curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.1881
+  ...
+# Subtest: Native reveal curves match the original V8 source at every sampled phase
+ok 307 - Native reveal curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.4982
+  ...
+# Subtest: Native idle curves match the original V8 source at every sampled phase
+ok 308 - Native idle curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.4052
+  ...
+# Subtest: Native farewell curves match the original V8 source at every sampled phase
+ok 309 - Native farewell curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.5654
+  ...
+# Subtest: Native ornament springs remain finite across reading, rest and gesture changes
+ok 310 - Native ornament springs remain finite across reading, rest and gesture changes
+  ---
+  duration_ms: 105.4663
+  ...
+# (node:13960) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native hand source, reproducible module and all six original textures retain registered hashes
+ok 311 - Native hand source, reproducible module and all six original textures retain registered hashes
+  ---
+  duration_ms: 6.6463
+  ...
+# Subtest: Native tap pivot and motion exactly match V8 across camera orientations
+ok 312 - Native tap pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 127.7451
+  ...
+# Subtest: Native press pivot and motion exactly match V8 across camera orientations
+ok 313 - Native press pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 77.0951
+  ...
+# Subtest: Native pinch pivot and motion exactly match V8 across camera orientations
+ok 314 - Native pinch pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 70.5539
+  ...
+# Subtest: Native point pivot and motion exactly match V8 across camera orientations
+ok 315 - Native point pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 102.3161
+  ...
+# Subtest: Native drag pivot and motion exactly match V8 across camera orientations
+ok 316 - Native drag pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 78.1414
+  ...
+# Subtest: Native open pivot and motion exactly match V8 across camera orientations
+ok 317 - Native open pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 58.0972
+  ...
+# Subtest: Quad protection catches a building crossing the middle while every corner lies outside its footprint
+ok 318 - Quad protection catches a building crossing the middle while every corner lies outside its footprint
+  ---
+  duration_ms: 1.4983
+  ...
+# Subtest: Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+ok 319 - Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+  ---
+  duration_ms: 137.636
+  ...
+# Subtest: Terrain protection includes interior ridges between low quad corners
+ok 320 - Terrain protection includes interior ridges between low quad corners
+  ---
+  duration_ms: 2.4766
+  ...
+# Subtest: Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+ok 321 - Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+  ---
+  duration_ms: 1.3997
+  ...
+# Subtest: Day-one hand targets map six kinds to actual entities and never modify game state
+ok 322 - Day-one hand targets map six kinds to actual entities and never modify game state
+  ---
+  duration_ms: 1.3845
+  ...
+# Subtest: The delivery hand follows the actual carrier instead of introducing a demonstration cart
+ok 323 - The delivery hand follows the actual carrier instead of introducing a demonstration cart
+  ---
+  duration_ms: 0.4107
+  ...
+# Subtest: Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+ok 324 - Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+  ---
+  duration_ms: 12.6514
+  ...
+# (node:11500) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native canyon and desert horizons preserve every original position, normal and color byte
+ok 325 - native canyon and desert horizons preserve every original position, normal and color byte
+  ---
+  duration_ms: 10309.3559
+  ...
+# Subtest: streaming uses the eye and original resident radii, including negative boundaries
+ok 326 - streaming uses the eye and original resident radii, including negative boundaries
+  ---
+  duration_ms: 33.1003
+  ...
+# Subtest: horizon resources survive static frames and are released once on travel, quality change and close
+ok 327 - horizon resources survive static frames and are released once on travel, quality change and close
+  ---
+  duration_ms: 1310.2157
+  ...
+# Subtest: native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+ok 328 - native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+  ---
+  duration_ms: 1249.3073
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 329 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 2.3863
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 330 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.2815
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 331 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.3611
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 332 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 107.1204
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 333 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 19.9302
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 334 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 23.5458
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 335 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.7424
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 336 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.6056
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 337 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 8.8147
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 338 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.566
+  ...
+# Subtest: All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+ok 339 - All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+  ---
+  duration_ms: 109.5863
+  ...
+# Subtest: FIFO assignment interrupts an ambient route immediately without losing a reservation
+ok 340 - FIFO assignment interrupts an ambient route immediately without losing a reservation
+  ---
+  duration_ms: 38.5042
+  ...
+# Subtest: Unreachable or nonlocal detours never become ambient movement
+ok 341 - Unreachable or nonlocal detours never become ambient movement
+  ---
+  duration_ms: 9.2871
+  ...
+# Subtest: A changed navigation version invalidates a blocked paseo before moving
+ok 342 - A changed navigation version invalidates a blocked paseo before moving
+  ---
+  duration_ms: 0.6367
+  ...
+# Subtest: Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+ok 343 - Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+  ---
+  duration_ms: 69.2733
+  ...
+# Subtest: A waiting employee returns physically at shift end and does not prolong the contract
+ok 344 - A waiting employee returns physically at shift end and does not prolong the contract
+  ---
+  duration_ms: 112.8048
+  ...
+# Subtest: Receiving queued work prevents even one extra ambient step
+ok 345 - Receiving queued work prevents even one extra ambient step
+  ---
+  duration_ms: 12.0851
+  ...
+# Subtest: Ambient paths stay inside the local radius and original terrain/building footprints
+ok 346 - Ambient paths stay inside the local radius and original terrain/building footprints
+  ---
+  duration_ms: 10620.49
+  ...
+# Subtest: youngMale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 347 - youngMale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 613.2734
+  ...
+# Subtest: olderMale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 348 - olderMale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 511.9407
+  ...
+# Subtest: olderFemale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 349 - olderFemale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 319.7993
+  ...
+# Subtest: youngFemale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 350 - youngFemale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 311.079
+  ...
+# Subtest: warthog: foot contacts reproduce original native toe trajectories and clip cycles
+ok 351 - warthog: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 337.0221
+  ...
+# Subtest: hyena: foot contacts reproduce original native toe trajectories and clip cycles
+ok 352 - hyena: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 290.9833
+  ...
+# Subtest: buffalo: foot contacts reproduce original native toe trajectories and clip cycles
+ok 353 - buffalo: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 200.1862
+  ...
+# Subtest: lion: foot contacts reproduce original native toe trajectories and clip cycles
+ok 354 - lion: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 184.8668
+  ...
+# Subtest: rhino: foot contacts reproduce original native toe trajectories and clip cycles
+ok 355 - rhino: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 393.8986
+  ...
+# Subtest: Paid walking emits only measured single-step dust, freezes on pause and does not invent a trail after reload or a long jump
+ok 356 - Paid walking emits only measured single-step dust, freezes on pause and does not invent a trail after reload or a long jump
+  ---
+  duration_ms: 236.9887
+  ...
+# Subtest: Waiting, falling, incapacitation, stationary animation and backwards time cannot generate footsteps
+ok 357 - Waiting, falling, incapacitation, stationary animation and backwards time cannot generate footsteps
+  ---
+  duration_ms: 65.9256
+  ...
+# Subtest: warthog: real animal movement phases drive native dust independently of combat budgets
+ok 358 - warthog: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 98.4646
+  ...
+# Subtest: hyena: real animal movement phases drive native dust independently of combat budgets
+ok 359 - hyena: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 51.6795
+  ...
+# Subtest: buffalo: real animal movement phases drive native dust independently of combat budgets
+ok 360 - buffalo: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 95.7554
+  ...
+# Subtest: lion: real animal movement phases drive native dust independently of combat budgets
+ok 361 - lion: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 69.9663
+  ...
+# Subtest: rhino: real animal movement phases drive native dust independently of combat budgets
+ok 362 - rhino: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 27.707
+  ...
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 363 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 60.3584
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 364 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 0.8097
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 365 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.3829
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 366 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 0.3621
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 367 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.3767
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 368 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 0.4955
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 369 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 9.0135
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 370 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 6.1919
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 371 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 546.2635
+  ...
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 372 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 10.5514
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 373 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 3.5098
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 374 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 1.823
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 375 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 838.039
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 376 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 1.0959
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 377 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 0.9738
+  ...
+# Subtest: Five wall materials and gates produce one native debris composition only after a real unshielded hit, with pause and reload
+ok 378 - Five wall materials and gates produce one native debris composition only after a real unshielded hit, with pause and reload
+  ---
+  duration_ms: 792.7719
+  ...
+# Subtest: Shield blocks, crop hits, centre hits and legacy/malformed facts cannot create material damage particles
+ok 379 - Shield blocks, crop hits, centre hits and legacy/malformed facts cannot create material damage particles
+  ---
+  duration_ms: 1.8232
+  ...
+# Subtest: Contacts use the oriented outer face of shortened walls and scaled gates, including corner approaches
+ok 380 - Contacts use the oriented outer face of shortened walls and scaled gates, including corner approaches
+  ---
+  duration_ms: 1.0746
+  ...
+# Subtest: closed outward geometry remains eligible across duplicated UV seams and rigid transforms
+ok 381 - closed outward geometry remains eligible across duplicated UV seams and rigid transforms
+  ---
+  duration_ms: 10.1376
+  ...
+# Subtest: open, inverted, inconsistent, duplicate and degenerate faces are rejected separately
+ok 382 - open, inverted, inconsistent, duplicate and degenerate faces are rejected separately
+  ---
+  duration_ms: 2.7811
+  ...
+# Subtest: positive aggregate volume cannot conceal an inverted disconnected component
+ok 383 - positive aggregate volume cannot conceal an inverted disconnected component
+  ---
+  duration_ms: 1.4949
+  ...
+# Subtest: exact welding preserves small real gaps and rejects malformed inputs
+ok 384 - exact welding preserves small real gaps and rejects malformed inputs
+  ---
+  duration_ms: 1.2045
+  ...
+# Subtest: PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+ok 385 - PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+  ---
+  duration_ms: 4.2998
+  ...
+# Subtest: shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+ok 386 - shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+  ---
+  duration_ms: 3.8867
+  ...
+# Subtest: native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+ok 387 - native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+  ---
+  duration_ms: 4.4448
+  ...
+# Subtest: disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+ok 388 - disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+  ---
+  duration_ms: 5.351
+  ...
+# Subtest: Standard direct lighting uses native PCF while spot and point shadows keep their own source
+ok 389 - Standard direct lighting uses native PCF while spot and point shadows keep their own source
+  ---
+  duration_ms: 0.6667
+  ...
+# Subtest: ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+ok 390 - ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+  ---
+  duration_ms: 3.9613
+  ...
+# Subtest: independent water retains one valid fallback across shader recompiles and releases it with the material
+ok 391 - independent water retains one valid fallback across shader recompiles and releases it with the material
+  ---
+  duration_ms: 1.1415
+  ...
+# Subtest: PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+ok 392 - PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+  ---
+  duration_ms: 0.9889
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 393 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 31.7157
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 394 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 4.4707
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 395 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 2.3045
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 396 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 8.0877
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 397 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 142.0906
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 398 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 2030.8902
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 399 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.2859
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 400 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 1.1949
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 401 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 1.4362
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 402 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 5.1683
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 403 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.9341
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 404 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 268.3754
+  ...
+# (node:21348) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 405 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 10.8227
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 406 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 6.2323
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 407 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 3.0988
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 408 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 1.2196
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 409 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 3.5345
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 410 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 2.8841
+  ...
+# Subtest: olderMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 411 - olderMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 10248.0411
+  ...
+# Subtest: olderMale: excessive first-day sowing cannot bypass the economic defeat check
+ok 412 - olderMale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 6221.8632
+  ...
+# Subtest: olderFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 413 - olderFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 4908.6175
+  ...
+# Subtest: olderFemale: excessive first-day sowing cannot bypass the economic defeat check
+ok 414 - olderFemale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 4862.1138
+  ...
+# Subtest: youngMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 415 - youngMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 4727.856
+  ...
+# Subtest: youngMale: excessive first-day sowing cannot bypass the economic defeat check
+ok 416 - youngMale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 4719.0204
+  ...
+# Subtest: youngFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 417 - youngFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 5110.0798
+  ...
+# Subtest: youngFemale: excessive first-day sowing cannot bypass the economic defeat check
+ok 418 - youngFemale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 5098.097
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 419 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 9.5105
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 420 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.7914
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 421 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 2.053
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 422 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.6934
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 423 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.0964
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 424 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.8402
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 425 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4783
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 426 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4694
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 427 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2493
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 428 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4332
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 429 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.6983
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 430 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 4.6608
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 431 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.5711
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 432 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 0.9495
+  ...
+# Subtest: Structure connectivity preflight leaves the actual crop target priority unchanged
+ok 433 - Structure connectivity preflight leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 1.8489
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 434 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.3269
+  ...
+# Subtest: all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+ok 435 - all passes see local camera/casters/bounds, returning globally identical transforms even on draw failure
+  ---
+  duration_ms: 12.0526
+  ...
+# Subtest: shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+ok 436 - shadow staging preserves a source world matrix under a translated scene instead of applying its origin twice
+  ---
+  duration_ms: 2.4517
+  ...
+# Subtest: global bounds are collected once without moving instances or changing material identities
+ok 437 - global bounds are collected once without moving instances or changing material identities
+  ---
+  duration_ms: 3.1162
+  ...
+# Subtest: local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+ok 438 - local clip attributes retain half-open edges at remote chunk coordinates without global Float32 cancellation
+  ---
+  duration_ms: 1.1084
+  ...
+# Subtest: PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+ok 439 - PCF and view vectors stay relative while pigment, ground detail, fluid phase and DEST receive anchored positions
+  ---
+  duration_ms: 2.7419
+  ...
+# Subtest: native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+ok 440 - native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+  ---
+  duration_ms: 3.2565
+  ...
+# Subtest: chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+ok 441 - chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+  ---
+  duration_ms: 16.6718
+  ...
+# Subtest: original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+ok 442 - original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+  ---
+  duration_ms: 92.8888
+  ...
+# (node:28864) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent DPR cap reduces pixels without changing the quality profile or scene state
+ok 443 - independent DPR cap reduces pixels without changing the quality profile or scene state
+  ---
+  duration_ms: 7.8985
+  ...
+# Subtest: physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+ok 444 - physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+  ---
+  duration_ms: 1.6326
+  ...
+# Subtest: live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+ok 445 - live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+  ---
+  duration_ms: 3.2514
+  ...
+# Subtest: live world quality and resize preserve simulation, ground geometry and existing chunk objects
+ok 446 - live world quality and resize preserve simulation, ground geometry and existing chunk objects
+  ---
+  duration_ms: 3.7532
+  ...
+# Subtest: static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+ok 447 - static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+  ---
+  duration_ms: 1.0608
+  ...
+# Subtest: canyon horizon changes only its ground material when the resident rectangle stays the same
+ok 448 - canyon horizon changes only its ground material when the resident rectangle stays the same
+  ---
+  duration_ms: 564.9893
+  ...
+# (node:12092) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+ok 449 - unchanged actions retain all 25 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 60.3734
+  ...
+# Subtest: unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+ok 450 - unchanged actions retain all 49 resident grounds, water, batches and shadow buffers
+  ---
+  duration_ms: 11.2075
+  ...
+# Subtest: suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+ok 451 - suppression updates one asset slot, its shadow/coverage/contact population and bounds without retiring terrain; restoration remains possible
+  ---
+  duration_ms: 28.2313
+  ...
+# Subtest: navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+ok 452 - navigation suppression changes invalidate contacts and hands only when resident props change; offscreen suppressions never force streaming
+  ---
+  duration_ms: 10.26
+  ...
+# Subtest: an affected asset pool retires its material and instance buffer while preserving shared water geometry
+ok 453 - an affected asset pool retires its material and instance buffer while preserving shared water geometry
+  ---
+  duration_ms: 1.2492
+  ...
+# Subtest: Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+ok 454 - Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+  ---
+  duration_ms: 4774.9687
+  ...
+# Subtest: Heap frontier matches stable sorting under interleaved insertions and removals
+ok 455 - Heap frontier matches stable sorting under interleaved insertions and removals
+  ---
+  duration_ms: 70.617
+  ...
+# Subtest: static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+ok 456 - static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+  ---
+  duration_ms: 89.9755
+  ...
+# Subtest: unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+ok 457 - unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+  ---
+  duration_ms: 7.1258
+  ...
+# Subtest: geometry and per-object culling spheres invalidate depth without geometry or pose changes
+ok 458 - geometry and per-object culling spheres invalidate depth without geometry or pose changes
+  ---
+  duration_ms: 4.5934
+  ...
+# Subtest: skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+ok 459 - skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+  ---
+  duration_ms: 5.0264
+  ...
+# Subtest: unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+ok 460 - unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+  ---
+  duration_ms: 4.2609
+  ...
+# Subtest: temporary asset proxies participate before cache comparison and wrappers release in reverse order
+ok 461 - temporary asset proxies participate before cache comparison and wrappers release in reverse order
+  ---
+  duration_ms: 3.0881
+  ...
+# Subtest: context loss/restoration invalidates cached textures and disposal removes listeners
+ok 462 - context loss/restoration invalidates cached textures and disposal removes listeners
+  ---
+  duration_ms: 1.5983
+  ...
+# Subtest: instanced interleaved geometry compares its active prefix, including divisor and count
+ok 463 - instanced interleaved geometry compares its active prefix, including divisor and count
+  ---
+  duration_ms: 14.5466
+  ...
+# Subtest: terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+ok 464 - terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+  ---
+  duration_ms: 9.4925
+  ...
+# Subtest: focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+ok 465 - focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+  ---
+  duration_ms: 0.9046
+  ...
+# Subtest: quality changes replace allocated targets once and same resolution retains GPU resources
+ok 466 - quality changes replace allocated targets once and same resolution retains GPU resources
+  ---
+  duration_ms: 0.863
+  ...
+# Subtest: The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+ok 467 - The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+  ---
+  duration_ms: 334.0343
+  ...
+# Subtest: Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+ok 468 - Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+  ---
+  duration_ms: 387.9536
+  ...
+# Subtest: Production shield mesh follows the world floor and has no incoming demonstration bolt
+ok 469 - Production shield mesh follows the world floor and has no incoming demonstration bolt
+  ---
+  duration_ms: 28.485
+  ...
+# (node:17628) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky shader and raw HDR decoder preserve the original lab output
+ok 470 - sky shader and raw HDR decoder preserve the original lab output
+  ---
+  duration_ms: 1921.4436
+  ...
+# Subtest: native exponential sky fade follows simulated day time and survives reload
+ok 471 - native exponential sky fade follows simulated day time and survives reload
+  ---
+  duration_ms: 0.743
+  ...
+# Subtest: sky keeps camera rotation independent of translation and restores renderer on failure
+ok 472 - sky keeps camera rotation independent of translation and restores renderer on failure
+  ---
+  duration_ms: 12.8119
+  ...
+# (node:11924) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 473 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 78.5524
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 474 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 2669.1433
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 475 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 2.323
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 476 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.444
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 477 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 10.7323
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 478 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.5698
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 479 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 10168.5827
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 480 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 628.7064
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 481 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 2.4076
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 482 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 7.3848
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 483 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 8243.9281
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 484 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 5502.9153
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 485 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.7029
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 486 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.3826
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 487 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.2888
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 488 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 1.1327
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 489 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.5648
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 490 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.9197
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 491 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.7207
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 492 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 2.0271
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 493 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3475
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 494 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.0423
+  ...
+# Subtest: sabana/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 495 - sabana/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 8800.9057
+  ...
+# Subtest: sabana/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 496 - sabana/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 6453.6797
+  ...
+# Subtest: sabana/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 497 - sabana/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 6067.7719
+  ...
+# Subtest: sabana/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 498 - sabana/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4907.3587
+  ...
+# Subtest: sabana/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 499 - sabana/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4725.8203
+  ...
+# Subtest: gran-rio/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 500 - gran-rio/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1509.2137
+  ...
+# Subtest: gran-rio/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 501 - gran-rio/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 5843.9387
+  ...
+# Subtest: gran-rio/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 502 - gran-rio/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4669.6635
+  ...
+# Subtest: gran-rio/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 503 - gran-rio/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4433.6483
+  ...
+# Subtest: gran-rio/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 504 - gran-rio/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4142.5198
+  ...
+# Subtest: manglares/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 505 - manglares/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 756.5009
+  ...
+# Subtest: manglares/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 506 - manglares/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1024.8733
+  ...
+# Subtest: manglares/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 507 - manglares/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 993.4914
+  ...
+# Subtest: manglares/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 508 - manglares/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 978.7171
+  ...
+# Subtest: manglares/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 509 - manglares/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 907.8316
+  ...
+# Subtest: volcanes/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 510 - volcanes/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4298.7638
+  ...
+# Subtest: volcanes/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 511 - volcanes/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 7806.1927
+  ...
+# Subtest: volcanes/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 512 - volcanes/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 4994.8257
+  ...
+# Subtest: volcanes/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 513 - volcanes/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 7490.7868
+  ...
+# Subtest: volcanes/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 514 - volcanes/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 40194.8387
+  ...
+# Subtest: gran-canon/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 515 - gran-canon/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 570.5567
+  ...
+# Subtest: gran-canon/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 516 - gran-canon/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 707.7319
+  ...
+# Subtest: gran-canon/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 517 - gran-canon/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 503.8564
+  ...
+# Subtest: gran-canon/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 518 - gran-canon/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 450.0837
+  ...
+# Subtest: gran-canon/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 519 - gran-canon/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 699.1424
+  ...
+# Subtest: desierto/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 520 - desierto/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 727.0983
+  ...
+# Subtest: desierto/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 521 - desierto/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1525.7367
+  ...
+# Subtest: desierto/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 522 - desierto/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 631.977
+  ...
+# Subtest: desierto/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 523 - desierto/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 747.2738
+  ...
+# Subtest: desierto/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 524 - desierto/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 973.9673
+  ...
+# Subtest: World surface replaces the demonstration crop bed and follows drifting sprite contacts
+ok 525 - World surface replaces the demonstration crop bed and follows drifting sprite contacts
+  ---
+  duration_ms: 18.9453
+  ...
+# Subtest: VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+ok 526 - VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+  ---
+  duration_ms: 50.9315
+  ...
+# Subtest: Day, sunset and night environment values match original source lighting and matrices
+ok 527 - Day, sunset and night environment values match original source lighting and matrices
+  ---
+  duration_ms: 5.7672
+  ...
+# Subtest: All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+ok 528 - All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+  ---
+  duration_ms: 4894.9038
+  ...
+# Subtest: Seven rigid particle geometries preserve every original position and normal
+ok 529 - Seven rigid particle geometries preserve every original position and normal
+  ---
+  duration_ms: 209.5094
+  ...
+# Subtest: Atlas frames retain original inset, flipped rows and interpolated final frame
+ok 530 - Atlas frames retain original inset, flipped rows and interpolated final frame
+  ---
+  duration_ms: 0.47
+  ...
+# Subtest: Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+ok 531 - Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+  ---
+  duration_ms: 58.7691
+  ...
+# Subtest: Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+ok 532 - Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+  ---
+  duration_ms: 201.0432
+  ...
+# Subtest: shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+ok 533 - shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+  ---
+  duration_ms: 252.0733
+  ...
+# Subtest: Terrain contact maps world heights into a translated, rotated and scaled effect frame
+ok 534 - Terrain contact maps world heights into a translated, rotated and scaled effect frame
+  ---
+  duration_ms: 138.6968
+  ...
+# Subtest: Native debris follows original terrain heights in all six biomes without changing domain state
+ok 535 - Native debris follows original terrain heights in all six biomes without changing domain state
+  ---
+  duration_ms: 114.587
+  ...
+# Subtest: All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+ok 536 - All 18 Three.js VFX preserve native solid, ribbon and sprite uploads before drawing
+  ---
+  duration_ms: 479.1901
+  ...
+# Subtest: Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+ok 537 - Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership
+  ---
+  duration_ms: 111.0126
+  ...
+# Subtest: Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+ok 538 - Root transforms orient particles and carry world camera planes, scale, fog and shadows into shaders
+  ---
+  duration_ms: 33.0652
+  ...
+# Subtest: Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+ok 539 - Paused VFX keep solid and ribbon buffers stable, clear stops static effects and source layers remain selective
+  ---
+  duration_ms: 116.4365
+  ...
+# Subtest: Effects never participate in interaction raycasts and release private resources before the shared atlas
+ok 540 - Effects never participate in interaction raycasts and release private resources before the shared atlas
+  ---
+  duration_ms: 16.5281
+  ...
+# Subtest: Native environment retains distinct day, sunset and night lighting for particles
+ok 541 - Native environment retains distinct day, sunset and night lighting for particles
+  ---
+  duration_ms: 0.8168
+  ...
+# Subtest: Two native local lights retain source positions/colors on world materials and disappear when stopped
+ok 542 - Two native local lights retain source positions/colors on world materials and disappear when stopped
+  ---
+  duration_ms: 20.5876
+  ...
+# (node:28452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five village loaders bound every indexed unit without copying or restricting its shared geometry
+ok 543 - five village loaders bound every indexed unit without copying or restricting its shared geometry
+  ---
+  duration_ms: 971.7358
+  ...
+# Subtest: volcanic mask and radiance retain authored constants; only cel emission transport is adapted
+ok 544 - volcanic mask and radiance retain authored constants; only cel emission transport is adapted
+  ---
+  duration_ms: 2.9281
+  ...
+# Subtest: volcanic activation follows all six original manifests and composes with cel, textures and coverage
+ok 545 - volcanic activation follows all six original manifests and composes with cel, textures and coverage
+  ---
+  duration_ms: 162.9349
+  ...
+# Subtest: Dragging submits only the completed world-space stroke and preserves curved samples
+ok 546 - Dragging submits only the completed world-space stroke and preserves curved samples
+  ---
+  duration_ms: 3.7735
+  ...
+# Subtest: Pointer cancellation and disabling cannot submit a partial chain
+ok 547 - Pointer cancellation and disabling cannot submit a partial chain
+  ---
+  duration_ms: 0.6216
+  ...
+# Subtest: Two-finger pan and zoom cancel drawing and never build on finger release
+ok 548 - Two-finger pan and zoom cancel drawing and never build on finger release
+  ---
+  duration_ms: 0.4746
+  ...
+# Subtest: Short tap stays a tap while alternate camera buttons and Shift pass through
+ok 549 - Short tap stays a tap while alternate camera buttons and Shift pass through
+  ---
+  duration_ms: 0.4774
+  ...
+# Subtest: Coalesced input keeps the native minimum spacing and disposal removes all handlers
+ok 550 - Coalesced input keeps the native minimum spacing and disposal removes all handlers
+  ---
+  duration_ms: 0.53
+  ...
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 551 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 6.9068
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 552 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 3.0494
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 553 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 66.9446
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 554 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 45.1548
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 555 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 5.3669
+  ...
+# Subtest: Invalid terrain, crop intersection and insufficient money leave state unchanged
+ok 556 - Invalid terrain, crop intersection and insufficient money leave state unchanged
+  ---
+  duration_ms: 9.2687
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap without refund or replacement
+ok 557 - Removing an automatic gate opens a persistent gap without refund or replacement
+  ---
+  duration_ms: 7.994
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 558 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 16.1293
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 559 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 2.7064
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 560 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 1.7588
+  ...
+# Subtest: Removing a reserved repair releases its worker and preserves the ledger
+ok 561 - Removing a reserved repair releases its worker and preserves the ledger
+  ---
+  duration_ms: 1.875
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 562 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 3.6238
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 563 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 71.6115
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 564 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 1741.0007
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 565 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 340.1671
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 566 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 32.1055
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 567 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 51.749
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 568 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 1938.7648
+  ...
+# (node:12488) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+ok 569 - river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+  ---
+  duration_ms: 476.8481
+  ...
+# Subtest: pond and lava pool fans preserve original outline, local level and transformed instance placement
+ok 570 - pond and lava pool fans preserve original outline, local level and transformed instance placement
+  ---
+  duration_ms: 10.6408
+  ...
+# Subtest: painted fluids evaluate transformed world coordinates for instanced pools
+ok 571 - painted fluids evaluate transformed world coordinates for instanced pools
+  ---
+  duration_ms: 0.8856
+  ...
+# Subtest: unloading a chunk releases private instance buffers and retains shared water resources
+ok 572 - unloading a chunk releases private instance buffers and retains shared water resources
+  ---
+  duration_ms: 14.4581
+  ...
+# Subtest: pool fragments keep the original half-open chunk clip and independent bounds
+ok 573 - pool fragments keep the original half-open chunk clip and independent bounds
+  ---
+  duration_ms: 1.6165
+  ...
+# (node:25056) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all twenty original GLBs resolve to one distinct runtime variant
+ok 574 - all twenty original GLBs resolve to one distinct runtime variant
+  ---
+  duration_ms: 2.6857
+  ...
+# Subtest: native pages, injected scripts, JSON and stylesheets use their actual resolution context
+ok 575 - native pages, injected scripts, JSON and stylesheets use their actual resolution context
+  ---
+  duration_ms: 0.7299
+  ...
+# Subtest: native menu and library receive local decoding before their original parsers
+ok 576 - native menu and library receive local decoding before their original parsers
+  ---
+  duration_ms: 46.5857
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 577 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 3.6946
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 578 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 582.2539
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 579 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 114.4362
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 580 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 0.8785
+  ...
+# Subtest: youngMale: Three loads and applies every native action to its real rig
+ok 581 - youngMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 481.0413
+  ...
+# Subtest: olderMale: Three loads and applies every native action to its real rig
+ok 582 - olderMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 304.5605
+  ...
+# Subtest: olderFemale: Three loads and applies every native action to its real rig
+ok 583 - olderFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 254.215
+  ...
+# Subtest: youngFemale: Three loads and applies every native action to its real rig
+ok 584 - youngFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 303.6869
+  ...
+# Subtest: youngMale: native action tracks are finite and preserve their last key
+ok 585 - youngMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 50.5358
+  ...
+# Subtest: olderMale: native action tracks are finite and preserve their last key
+ok 586 - olderMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 61.4276
+  ...
+# Subtest: olderFemale: native action tracks are finite and preserve their last key
+ok 587 - olderFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 25.7664
+  ...
+# Subtest: youngFemale: native action tracks are finite and preserve their last key
+ok 588 - youngFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 24.4366
+  ...
+# Subtest: Combined initial work shows planting followed by first watering for both age speeds
+ok 589 - Combined initial work shows planting followed by first watering for both age speeds
+  ---
+  duration_ms: 0.63
+  ...
+# Subtest: Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+ok 590 - Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+  ---
+  duration_ms: 0.3803
+  ...
+# Subtest: Carrying uses the original crate and idle uses the supplied resting pose
+ok 591 - Carrying uses the original crate and idle uses the supplied resting pose
+  ---
+  duration_ms: 0.1851
+  ...
+# (node:4996) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fluid uniforms match the original renderer recipe for all biome palettes and seeds
+ok 592 - fluid uniforms match the original renderer recipe for all biome palettes and seeds
+  ---
+  duration_ms: 329.4877
+  ...
+# Subtest: animation uses integrated simulated time once and shader converts flat inks to linear
+ok 593 - animation uses integrated simulated time once and shader converts flat inks to linear
+  ---
+  duration_ms: 1.2222
+  ...
+# Subtest: toon retains the same fractional dusk phase as the sky after reload
+ok 594 - toon retains the same fractional dusk phase as the sky after reload
+  ---
+  duration_ms: 1.7263
+  ...
+# Subtest: world reflections retain the supplied equirectangular HDR sampling, roughness LOD and night fill
+ok 595 - world reflections retain the supplied equirectangular HDR sampling, roughness LOD and night fill
+  ---
+  duration_ms: 5.5274
+  ...
+# Subtest: already compiled world materials share radiance textures, simulated night and changing sky yaw without texture clones
+ok 596 - already compiled world materials share radiance textures, simulated night and changing sky yaw without texture clones
+  ---
+  duration_ms: 3.1185
+  ...
+# Subtest: native wet prop material composes reflected radiance with tangent normals, roughness, cel and coverage
+ok 597 - native wet prop material composes reflected radiance with tangent normals, roughness, cel and coverage
+  ---
+  duration_ms: 7.9979
+  ...
+# Subtest: Navigation refuses a blocked destination, including routes shorter than one step
+ok 598 - Navigation refuses a blocked destination, including routes shorter than one step
+  ---
+  duration_ms: 4.4286
+  ...
+# Subtest: sabana/mapungubwe/712: original terrain supports initial village and employee route
+ok 599 - sabana/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5703.2587
+  ...
+# Subtest: sabana/saheliana/712: original terrain supports initial village and employee route
+ok 600 - sabana/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5222.4255
+  ...
+# Subtest: sabana/suajili/712: original terrain supports initial village and employee route
+ok 601 - sabana/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5679.8621
+  ...
+# Subtest: sabana/musgum/712: original terrain supports initial village and employee route
+ok 602 - sabana/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4494.1144
+  ...
+# Subtest: sabana/etiope/712: original terrain supports initial village and employee route
+ok 603 - sabana/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4521.8994
+  ...
+# Subtest: gran-rio/mapungubwe/712: original terrain supports initial village and employee route
+ok 604 - gran-rio/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1239.3746
+  ...
+# Subtest: gran-rio/saheliana/712: original terrain supports initial village and employee route
+ok 605 - gran-rio/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5253.9754
+  ...
+# Subtest: gran-rio/suajili/712: original terrain supports initial village and employee route
+ok 606 - gran-rio/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4438.7598
+  ...
+# Subtest: gran-rio/musgum/712: original terrain supports initial village and employee route
+ok 607 - gran-rio/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4074.1203
+  ...
+# Subtest: gran-rio/etiope/712: original terrain supports initial village and employee route
+ok 608 - gran-rio/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3941.5161
+  ...
+# Subtest: manglares/mapungubwe/712: original terrain supports initial village and employee route
+ok 609 - manglares/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 505.3974
+  ...
+# Subtest: manglares/saheliana/712: original terrain supports initial village and employee route
+ok 610 - manglares/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 544.0127
+  ...
+# Subtest: manglares/suajili/712: original terrain supports initial village and employee route
+ok 611 - manglares/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 748.1492
+  ...
+# Subtest: manglares/musgum/712: original terrain supports initial village and employee route
+ok 612 - manglares/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 797.4801
+  ...
+# Subtest: manglares/etiope/712: original terrain supports initial village and employee route
+ok 613 - manglares/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 687.5679
+  ...
+# Subtest: volcanes/mapungubwe/712: original terrain supports initial village and employee route
+ok 614 - volcanes/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 3962.565
+  ...
+# Subtest: volcanes/saheliana/712: original terrain supports initial village and employee route
+ok 615 - volcanes/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 7187.2809
+  ...
+# Subtest: volcanes/suajili/712: original terrain supports initial village and employee route
+ok 616 - volcanes/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 4604.9868
+  ...
+# Subtest: volcanes/musgum/712: original terrain supports initial village and employee route
+ok 617 - volcanes/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 7113.9595
+  ...
+# Subtest: volcanes/etiope/712: original terrain supports initial village and employee route
+ok 618 - volcanes/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 38494.082
+  ...
+# Subtest: gran-canon/mapungubwe/712: original terrain supports initial village and employee route
+ok 619 - gran-canon/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 180.3594
+  ...
+# Subtest: gran-canon/saheliana/712: original terrain supports initial village and employee route
+ok 620 - gran-canon/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 217.1608
+  ...
+# Subtest: gran-canon/suajili/712: original terrain supports initial village and employee route
+ok 621 - gran-canon/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 180.6588
+  ...
+# Subtest: gran-canon/musgum/712: original terrain supports initial village and employee route
+ok 622 - gran-canon/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 237.8863
+  ...
+# Subtest: gran-canon/etiope/712: original terrain supports initial village and employee route
+ok 623 - gran-canon/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 334.7035
+  ...
+# Subtest: desierto/mapungubwe/712: original terrain supports initial village and employee route
+ok 624 - desierto/mapungubwe/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 488.3433
+  ...
+# Subtest: desierto/saheliana/712: original terrain supports initial village and employee route
+ok 625 - desierto/saheliana/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 715.298
+  ...
+# Subtest: desierto/suajili/712: original terrain supports initial village and employee route
+ok 626 - desierto/suajili/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 268.4194
+  ...
+# Subtest: desierto/musgum/712: original terrain supports initial village and employee route
+ok 627 - desierto/musgum/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 415.8015
+  ...
+# Subtest: desierto/etiope/712: original terrain supports initial village and employee route
+ok 628 - desierto/etiope/712: original terrain supports initial village and employee route
+  ---
+  duration_ms: 626.3942
+  ...
+# Subtest: sabana/mapungubwe/918271: original terrain supports initial village and employee route
+ok 629 - sabana/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1283.7359
+  ...
+# Subtest: sabana/saheliana/918271: original terrain supports initial village and employee route
+ok 630 - sabana/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1593.2628
+  ...
+# Subtest: sabana/suajili/918271: original terrain supports initial village and employee route
+ok 631 - sabana/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5974.9563
+  ...
+# Subtest: sabana/musgum/918271: original terrain supports initial village and employee route
+ok 632 - sabana/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1203.1826
+  ...
+# Subtest: sabana/etiope/918271: original terrain supports initial village and employee route
+ok 633 - sabana/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1487.9504
+  ...
+# Subtest: gran-rio/mapungubwe/918271: original terrain supports initial village and employee route
+ok 634 - gran-rio/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1185.4041
+  ...
+# Subtest: gran-rio/saheliana/918271: original terrain supports initial village and employee route
+ok 635 - gran-rio/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1199.5505
+  ...
+# Subtest: gran-rio/suajili/918271: original terrain supports initial village and employee route
+ok 636 - gran-rio/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 9221.3406
+  ...
+# Subtest: gran-rio/musgum/918271: original terrain supports initial village and employee route
+ok 637 - gran-rio/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 886.9991
+  ...
+# Subtest: gran-rio/etiope/918271: original terrain supports initial village and employee route
+ok 638 - gran-rio/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1170.2988
+  ...
+# Subtest: manglares/mapungubwe/918271: original terrain supports initial village and employee route
+ok 639 - manglares/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 725.8077
+  ...
+# Subtest: manglares/saheliana/918271: original terrain supports initial village and employee route
+ok 640 - manglares/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 655.0374
+  ...
+# Subtest: manglares/suajili/918271: original terrain supports initial village and employee route
+ok 641 - manglares/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 507.4754
+  ...
+# Subtest: manglares/musgum/918271: original terrain supports initial village and employee route
+ok 642 - manglares/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 881.7394
+  ...
+# Subtest: manglares/etiope/918271: original terrain supports initial village and employee route
+ok 643 - manglares/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 577.25
+  ...
+# Subtest: volcanes/mapungubwe/918271: original terrain supports initial village and employee route
+ok 644 - volcanes/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1058.7599
+  ...
+# Subtest: volcanes/saheliana/918271: original terrain supports initial village and employee route
+ok 645 - volcanes/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1026.8614
+  ...
+# Subtest: volcanes/suajili/918271: original terrain supports initial village and employee route
+ok 646 - volcanes/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 10415.4477
+  ...
+# Subtest: volcanes/musgum/918271: original terrain supports initial village and employee route
+ok 647 - volcanes/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 1968.4847
+  ...
+# Subtest: volcanes/etiope/918271: original terrain supports initial village and employee route
+ok 648 - volcanes/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 5326.0147
+  ...
+# Subtest: gran-canon/mapungubwe/918271: original terrain supports initial village and employee route
+ok 649 - gran-canon/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 173.8659
+  ...
+# Subtest: gran-canon/saheliana/918271: original terrain supports initial village and employee route
+ok 650 - gran-canon/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 236.3894
+  ...
+# Subtest: gran-canon/suajili/918271: original terrain supports initial village and employee route
+ok 651 - gran-canon/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 148.9831
+  ...
+# Subtest: gran-canon/musgum/918271: original terrain supports initial village and employee route
+ok 652 - gran-canon/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 210.7311
+  ...
+# Subtest: gran-canon/etiope/918271: original terrain supports initial village and employee route
+ok 653 - gran-canon/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 373.4049
+  ...
+# Subtest: desierto/mapungubwe/918271: original terrain supports initial village and employee route
+ok 654 - desierto/mapungubwe/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 363.2914
+  ...
+# Subtest: desierto/saheliana/918271: original terrain supports initial village and employee route
+ok 655 - desierto/saheliana/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 583.9881
+  ...
+# Subtest: desierto/suajili/918271: original terrain supports initial village and employee route
+ok 656 - desierto/suajili/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 196.8038
+  ...
+# Subtest: desierto/musgum/918271: original terrain supports initial village and employee route
+ok 657 - desierto/musgum/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 725.5846
+  ...
+# Subtest: desierto/etiope/918271: original terrain supports initial village and employee route
+ok 658 - desierto/etiope/918271: original terrain supports initial village and employee route
+  ---
+  duration_ms: 485.6769
+  ...
+1..658
+# tests 658
+# suites 0
+# pass 658
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 330548.9217

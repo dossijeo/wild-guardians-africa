@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "14c61f4",
+  "implementation_commit": "8f2bf23",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -67,11 +67,12 @@
       "area": "Inicio y UI",
       "scenario": "Pantallas pequeñas vertical/horizontal y texto largo",
       "expected": "Precios, retratos, confirmación y texto no se cortan ni pisan la franja del Espíritu.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-acceptance-mobile.md"
       ],
-      "notes": "Placement error and cancel tested in English at 1280x720, 390x844 and 844x390; Spanish at desktop. Remaining: hiring cards, prices, long text and confirmation dialogs across small-screen layouts."
+      "notes": "Hiring portraits, four profile prices, budget totals, rejected budget, enabled confirmation and expanded help verified at 390x844 and 844x390 in English and Spanish. Scrollable body retains footer; language switch preserves draft and wallet. English portrait pause label corrected. Placement/Spirit separation covered by prior screenshots."
     },
     {
       "id": "QA-007",
@@ -89,83 +90,100 @@
       "area": "Inicio y UI",
       "scenario": "Mostrar un error de fondos o selección inválida",
       "expected": "Feedback legible, sin restaurar toasts invasivos o ejecutar el comando rechazado.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-acceptance-mobile.md"
       ],
-      "notes": "Overlap and blocked-ground errors now readable in original placement banner, no rejected construction charged. English and Spanish desktop, English small portrait/landscape. Remaining: insufficient-funds and non-placement panel/modal branches."
+      "notes": "Overlap, blocked prop, crop obstruction and insufficient-funds errors observed in native placement banner. Free-ground centre purchase rejected at 95 without debit. Hiring draft of 200 at 195 disables confirmation with inline readable warning; valid 100-cost confirmation leaves 95."
     },
     {
       "id": "QA-009",
       "area": "Reloj",
       "scenario": "Avanzar 300 s diurnos a ×1",
       "expected": "Transcurre el periodo 07:05–19:05 y solo esos 300 s alimentan crecimiento.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Real Game.advanceReal reaches 300 simulated seconds after 300 real seconds: 07:05 -> 19:05. Fractional day/night crossing fixed and tested. Night-only crop freeze verified. Remaining: an explicitly attended plant measurement proving only 300 daytime seconds contribute across the full day/night cycle."
     },
     {
       "id": "QA-010",
       "area": "Reloj",
       "scenario": "Noche tranquila completa",
       "expected": "Se acelera a ×5 sin consumir agua ni crecimiento; reloj interno correcto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Actual Game.advanceReal: calm 300-second night takes 60 real seconds, opens one dawn hiring pause. Banana growth and pending watering wait unchanged through the full night; internal elapsed and clock asserted."
     },
     {
       "id": "QA-011",
       "area": "Reloj",
       "scenario": "Aparecer incursión durante ×5",
       "expected": "Cambio a ×1 antes de procesar movimiento y contactos del ataque.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Regression reproduced: one 20ms frame at 399.95 gave 400.05 and 100ms of movement on attack spawn. Fixed: boundary at 400 before movement, remaining 10ms at x1, time 400.01. One frame matches two split frames, including positions and events."
     },
     {
       "id": "QA-012",
       "area": "Reloj",
       "scenario": "Retirarse primer animal mientras otros siguen presentes",
       "expected": "No termina la incursión ni vuelve ×5 todavía.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Two-animal raid: first gone leaves raid active, no RaidEnded, next 20ms remains x1."
     },
     {
       "id": "QA-013",
       "area": "Reloj",
       "scenario": "Retirarse último animal durante la noche",
       "expected": "Fin único del evento y ×5 si no queda otra pausa.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Last animal reaches its exit, one RaidEnded, following 20ms advances night by 100ms. No extra end event."
     },
     {
       "id": "QA-014",
       "area": "Reloj",
       "scenario": "Ocultar pestaña y volver tras muchos minutos",
       "expected": "No hay ganancias, daño, riego ni avance offline.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "1800-second blocked real-time advances leave entire game state identical with menu plus hidden, and after only hidden clears. Remaining: actual browser hidden/restored timing and clock reset without offline advancement."
     },
     {
       "id": "QA-015",
       "area": "Reloj",
       "scenario": "Gran paso de tiempo cruza contratación o checkpoint",
       "expected": "La simulación se divide y no omite el evento ni cobra dos jornadas.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "partial",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Large real-time advance crosses dawn, emits once, stops at hiring and repeated call changes nothing. Remaining: large-frame crop checkpoint and combined payment/continuation scenario."
     },
     {
       "id": "QA-016",
       "area": "Reloj",
       "scenario": "Ataque nocturno cruza amanecer",
       "expected": "Aplicar el contrato C07 cuando se cierre; no perder ataque, contratación ni control de terminales.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-clock.md"
+      ],
+      "notes": "Full-suite Game integration cases assert active raid holds clock at dawn, night completion/hiring wait for last departure, then close once; final-raid defeat precedes hundredth-night victory. Source closeNight applies event and economic check before victory/hiring."
     },
     {
       "id": "QA-017",

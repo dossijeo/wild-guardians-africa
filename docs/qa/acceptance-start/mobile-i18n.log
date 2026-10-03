@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 1 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 1.6162
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 2 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.1996
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 3 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.2103
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 4 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 66.0575
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 5 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 15.9906
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 6 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 12.6263
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 7 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.5244
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 8 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.4432
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 9 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 8.3162
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 10 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 4.0043
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 286.5815
