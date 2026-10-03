@@ -1,0 +1,270 @@
+TAP version 13
+# Subtest: QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 1 - QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 40.904
+  ...
+# Subtest: QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 2 - QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 14.1149
+  ...
+# Subtest: QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 3 - QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 11.511
+  ...
+# Subtest: QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 4 - QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 10.4362
+  ...
+# Subtest: QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 5 - QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 11.133
+  ...
+# Subtest: QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+ok 6 - QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+  ---
+  duration_ms: 17.2253
+  ...
+# Subtest: QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+ok 7 - QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+  ---
+  duration_ms: 58.6785
+  ...
+# Subtest: QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+ok 8 - QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+  ---
+  duration_ms: 45.761
+  ...
+# Subtest: QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+ok 9 - QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+  ---
+  duration_ms: 29.8789
+  ...
+# Subtest: QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+ok 10 - QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+  ---
+  duration_ms: 25.1241
+  ...
+# Subtest: QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+ok 11 - QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+  ---
+  duration_ms: 19.8486
+  ...
+# Subtest: QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+ok 12 - QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+  ---
+  duration_ms: 0.6198
+  ...
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 13 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 232.7845
+  ...
+# Subtest: QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+ok 14 - QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 35.8161
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 15 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 157.0668
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 16 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 110.1275
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 17 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 108.3067
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 18 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 207.8326
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 19 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 92.3772
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+ok 20 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 94.9301
+  ...
+# Subtest: warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 21 - warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 285.8309
+  ...
+# Subtest: hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 22 - hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 171.8166
+  ...
+# Subtest: buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 23 - buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 143.3178
+  ...
+# Subtest: lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 24 - lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 136.8358
+  ...
+# Subtest: rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 25 - rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 133.869
+  ...
+# Subtest: Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+ok 26 - Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+  ---
+  duration_ms: 2.149
+  ...
+# Subtest: Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+ok 27 - Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+  ---
+  duration_ms: 26.6129
+  ...
+# Subtest: Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+ok 28 - Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+  ---
+  duration_ms: 0.9544
+  ...
+# Subtest: Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+ok 29 - Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+  ---
+  duration_ms: 3.6263
+  ...
+# Subtest: successive impacts latch native cubic fade and collapse origin using simulated time without any renderer
+ok 30 - successive impacts latch native cubic fade and collapse origin using simulated time without any renderer
+  ---
+  duration_ms: 2.3366
+  ...
+# Subtest: legacy version-1 damage and collapse snapshots retain their original ratio fallback
+ok 31 - legacy version-1 damage and collapse snapshots retain their original ratio fallback
+  ---
+  duration_ms: 6.4077
+  ...
+# Subtest: snapshot rejects malformed or contradictory presentation state without inventing a new save version
+ok 32 - snapshot rejects malformed or contradictory presentation state without inventing a new save version
+  ---
+  duration_ms: 3.0516
+  ...
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 33 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 3.4748
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 34 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 3.1157
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 35 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 42.9506
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 36 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 24.293
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 37 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 6.1276
+  ...
+# Subtest: Invalid terrain, crop intersection and insufficient money leave state unchanged
+ok 38 - Invalid terrain, crop intersection and insufficient money leave state unchanged
+  ---
+  duration_ms: 11.0149
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap without refund or replacement
+ok 39 - Removing an automatic gate opens a persistent gap without refund or replacement
+  ---
+  duration_ms: 7.9946
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 40 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 2.3374
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 41 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 3.0932
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 42 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 3.495
+  ...
+# Subtest: Removing a reserved repair releases its worker and preserves the ledger
+ok 43 - Removing a reserved repair releases its worker and preserves the ledger
+  ---
+  duration_ms: 1.9883
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 44 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 3.7786
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 45 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 11.1911
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 46 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 870.2572
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 47 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 162.052
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 48 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 13.299
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 49 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 24.4808
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 50 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 984.044
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 51 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 2174.8421
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 52 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 6318.9295
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11374.1746

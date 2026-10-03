@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "9d7a907",
+  "implementation_commit": "6450398",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1559,9 +1559,10 @@
       "expected": "Estado no reversible accidentalmente; restaurar duración/estado coherente.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-wall-reload.md"
+        "docs/qa-wall-reload.md",
+        "docs/qa-wall-repair.md"
       ],
-      "notes": "Confirmed and fixed a real BAST fade jump from 0.65 to 0.60 after snapshot renderer recreation. Persisted simulated origins restore exact stage/positions/normals for five wall and gate materials through damage, collapse, pause and ruin. Actual browser disposes/recreates WorldScene through generations 1–4 with identical visual/remainder/time and retained ruin. Legacy snapshots remain readable with prior ratio fallback. Remaining: repair upward fade recreation, all DEST effects, cooldowns, open-gate states and chunk-streaming coverage; no broad QA-148 completion claim."
+      "notes": "Fixed real BAST damage fade/reload and paid repair fade discontinuities. Persisted simulated origins restore exact stage/positions/normals for five materials, walls/gates, through damage, collapse, pause, repair and ruin rebuilding. Physical repair tests verify one canonical arrival debit and compare fresh renderers throughout the 480 ms upward fade. Actual browser disposes/recreates WorldScene and preserves damage/collapse/ruin, plus one paid native-terrain repair (85 -> 81 coins, same visual 0.801533 before/after recreation, final visual 1 without another payment). Legacy snapshots remain readable with prior ratio fallback. Remaining: other DEST states/effects, cooldowns, open gates and specific chunk streaming; no broad QA-148 completion claim."
     },
     {
       "id": "QA-149",

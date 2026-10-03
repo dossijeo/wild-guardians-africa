@@ -1,5 +1,7 @@
 # Continuidad de daño y caída BAST al cargar
 
+Actualización: [transición de reparación/reconstrucción corregida y probada](qa-wall-repair.md). La suite local anterior terminó con 773/773 pruebas correctas; [salida](qa/wall-reload/full-tests.txt). El cuerpo conserva el alcance original de 9d7a907.
+
 Corrección `9d7a907`, relativa a QA-148. La prueba nueva reproduce un salto real
 antes del cambio: tras 0,24 s de daño, NativeWall tenía vida visual 0,65, pero
 crearlo desde el snapshot producía 0,60. La interpolación y el origen de colapso
