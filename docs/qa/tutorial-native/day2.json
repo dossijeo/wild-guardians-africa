@@ -1,0 +1,52 @@
+{
+  "data": {
+    "elapsed": 65.0000000000042,
+    "day": 2,
+    "reading": "mechanic.defenses",
+    "pauses": [
+      "tutorial-reading"
+    ],
+    "worker": {
+      "id": "worker-6",
+      "status": "idle",
+      "x": 227.0936382952636,
+      "z": 29.34991014827507,
+      "taskId": null
+    },
+    "plant": {
+      "id": "plant-3",
+      "growth": 2.760000000000002,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    "balance": {
+      "n": "95",
+      "d": "1"
+    },
+    "ledgerIds": [
+      "qa-center",
+      "qa-seed",
+      "qa-wage"
+    ],
+    "hands": {
+      "visible": false,
+      "kind": null
+    },
+    "errors": []
+  },
+  "guardian": {
+    "gesture": "warning",
+    "hidden": "false",
+    "role": "dialog"
+  }
+}

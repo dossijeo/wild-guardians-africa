@@ -1,0 +1,790 @@
+[
+  {
+    "action": "initial-reading",
+    "data": {
+      "elapsed": 0,
+      "day": 1,
+      "reading": "basic.introduction",
+      "pauses": [
+        "tutorial-reading"
+      ],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 199.5936382952636,
+        "z": 35.34991014827507,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": false,
+        "kind": "open"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "blocked-five-seconds",
+    "data": {
+      "elapsed": 0,
+      "day": 1,
+      "reading": "basic.introduction",
+      "pauses": [
+        "tutorial-reading"
+      ],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 199.5936382952636,
+        "z": 35.34991014827507,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": false,
+        "kind": "open"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "work-explanation",
+    "data": {
+      "elapsed": 0,
+      "day": 1,
+      "reading": "basic.work",
+      "pauses": [
+        "tutorial-reading"
+      ],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 199.5936382952636,
+        "z": 35.34991014827507,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": false,
+        "kind": "open"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "reading-closed",
+    "data": {
+      "elapsed": 0,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 199.5936382952636,
+        "z": 35.34991014827507,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": false,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-0",
+    "data": {
+      "elapsed": 4.999999999999981,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 203.03581846414409,
+        "z": 36.035818464144036,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-1",
+    "data": {
+      "elapsed": 9.999999999999876,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 205.82222783303035,
+        "z": 38,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-2",
+    "data": {
+      "elapsed": 14.999999999999769,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 209.42222783302907,
+        "z": 38,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-3",
+    "data": {
+      "elapsed": 19.999999999999662,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 212.02222783302827,
+        "z": 37,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-4",
+    "data": {
+      "elapsed": 24.999999999999556,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 215.62222783302698,
+        "z": 37,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-5",
+    "data": {
+      "elapsed": 29.99999999999945,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 218.8080142706536,
+        "z": 38,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-6",
+    "data": {
+      "elapsed": 34.99999999999987,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 222.4080142706523,
+        "z": 38,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-7",
+    "data": {
+      "elapsed": 40.000000000000654,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 226.00801427065102,
+        "z": 38,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-8",
+    "data": {
+      "elapsed": 45.000000000001435,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "arriving",
+        "x": 228,
+        "z": 36.39198572934947,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-9",
+    "data": {
+      "elapsed": 50.00000000000222,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "walking",
+        "x": 227.3667958123364,
+        "z": 32.95199507291371,
+        "taskId": "task-7"
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-10",
+    "data": {
+      "elapsed": 55.000000000003,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "walking",
+        "x": 227.09457799700365,
+        "z": 29.362301846324847,
+        "taskId": "task-7"
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-11",
+    "data": {
+      "elapsed": 60.00000000000378,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "acting",
+        "x": 227.0936382952636,
+        "z": 29.34991014827507,
+        "taskId": "task-7"
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  },
+  {
+    "action": "advance-12",
+    "data": {
+      "elapsed": 65.0000000000042,
+      "day": 1,
+      "reading": null,
+      "pauses": [],
+      "worker": {
+        "id": "worker-6",
+        "status": "idle",
+        "x": 227.0936382952636,
+        "z": 29.34991014827507,
+        "taskId": null
+      },
+      "plant": {
+        "id": "plant-3",
+        "growth": 2.760000000000002,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ]
+      },
+      "balance": {
+        "n": "95",
+        "d": "1"
+      },
+      "ledgerIds": [
+        "qa-center",
+        "qa-seed",
+        "qa-wage"
+      ],
+      "hands": {
+        "visible": true,
+        "kind": "drag"
+      },
+      "errors": []
+    }
+  }
+]

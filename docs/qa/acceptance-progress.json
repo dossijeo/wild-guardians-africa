@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "26b80c6",
+  "implementation_commit": "b3e8232",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1443,45 +1443,55 @@
       "area": "Tutorial y eventos",
       "scenario": "Mostrar los ocho gestos del Espíritu",
       "expected": "Se usan identificadores reales de V8; manos y entrada/salida siguen sistemas separados.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-tutorial-native.md"
+      ],
+      "notes": "All eight native V8 gestures rendered at prepared mid-phase and captured with matching DOM gesture/phase IDs. Source hashes and 600 original pose samples pass. Native close UI completes farewell/closed; lifecycle and independent world hands are verified separately."
     },
     {
       "id": "QA-122",
       "area": "Tutorial y eventos",
       "scenario": "Mano tutorial junto a obstáculo con cámara girando",
       "expected": "Protección del plano completo; no corta suelo ni pared.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-tutorial-native.md"
+      ],
+      "notes": "12 native Sabana/Mapungubwe views: open at village entry, point and press at the paid center, four 90-degree views each. Complete visible quad, real colliders, no intersections or residual terrain lift. QA framing respects the native grounded camera target. Not all cultures/biomes/angles."
     },
     {
       "id": "QA-123",
       "area": "Tutorial y eventos",
       "scenario": "Mensaje posterior al día 1",
       "expected": "Espíritu sí, manos básicas no.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-tutorial-native.md"
+      ],
+      "notes": "Same paid native farm after prepared day 2: production TutorialController shows mechanic.defenses in visible Spirit dialog while WorldScene removes basic hand mesh and kind. Presentation condition tested; this fixture does not simulate a dawn."
     },
     {
       "id": "QA-124",
       "area": "Tutorial y eventos",
       "scenario": "Omitir introducción ya completada en otra ranura",
       "expected": "Mensajes todavía no vistos de magia/lesión siguen apareciendo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-tutorial-native.md"
+      ],
+      "notes": "UI skips basic in slot 2 after prepared prior completion; unseen Shield/Growth/Multiply/recovery still appear, unfinished Growth survives save/load; acknowledged global messages do not repeat in slot 3. Shared in-memory profile only. Real paid completion and cross-slot controller behavior covered by tutorial domain suite."
     },
     {
       "id": "QA-125",
       "area": "Tutorial y eventos",
       "scenario": "Esperar acción de trabajador tras explicación",
       "expected": "Lectura cerrada y simulación activa; no deadlock del tutorial.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-tutorial-native.md"
+      ],
+      "notes": "Real paid native center/mijo/olderFemale farm: advance input remains at elapsed 0 and fixed worker position while reading; Continue removes tutorial-reading pause. Same Game.advanceReal moves/assigns task-7, acts at 60 s and manually waters at 65 s with growth 2.76, unchanged balance 95 and exactly three charges. No forced worker positions or task completion."
     },
     {
       "id": "QA-126",

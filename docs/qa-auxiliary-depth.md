@@ -51,7 +51,9 @@ en modo QA se validan uniforms, recortes, restauración ante fallo y liberación
 379693431 bytes, 794 enlaces relativos y 20 GLB de ejecución. Persiste el aviso
 del bundle mayor de 500 kB. [Seis comparaciones finales de la ruta normal](qa/auxiliary-depth/normal-final.json),
 Suajili/Sabana, dan cero diferencias y errores en todos los daños preparados.
-La [CI de bc6811b](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37121755615)
-se inició; su resultado no estaba disponible al registrar esta evidencia.
+La [CI exacta de bc6811b](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37121755615)
+terminó correctamente: **1103/1103 pruebas**, 306316,62776 ms, verificaciones de
+assets, plan, rutas web, build y paquete. [Metadatos](qa/auxiliary-depth/ci.json)
+y [log completo](qa/auxiliary-depth/ci-log.txt).
 
 ![Ruta normal con daño 60 %](qa/auxiliary-depth/normal-final.png)

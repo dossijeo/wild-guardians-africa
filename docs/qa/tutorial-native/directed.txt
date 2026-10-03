@@ -1,0 +1,237 @@
+TAP version 13
+# Subtest: Lifecycle preserves original transition timings in both motion modes
+ok 1 - Lifecycle preserves original transition timings in both motion modes
+  ---
+  duration_ms: 5.7095
+  ...
+# Subtest: Entrance leads to reading and rest without closing or advancing text
+ok 2 - Entrance leads to reading and rest without closing or advancing text
+  ---
+  duration_ms: 0.5643
+  ...
+# Subtest: Closing performs farewell and native exit, repeated hide calls do not restart it
+ok 3 - Closing performs farewell and native exit, repeated hide calls do not restart it
+  ---
+  duration_ms: 0.3135
+  ...
+# Subtest: New message cancels withdrawal and cannot be closed by a stale transition
+ok 4 - New message cancels withdrawal and cannot be closed by a stale transition
+  ---
+  duration_ms: 0.2899
+  ...
+# Subtest: Reduced motion still has explicit entry and exit and native neutral poses
+ok 5 - Reduced motion still has explicit entry and exit and native neutral poses
+  ---
+  duration_ms: 1.0996
+  ...
+# Subtest: Extracted renderer and native source retain their registered hashes
+ok 6 - Extracted renderer and native source retain their registered hashes
+  ---
+  duration_ms: 10.1015
+  ...
+# Subtest: Native greeting curves match the original V8 source at every sampled phase
+ok 7 - Native greeting curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 10.9959
+  ...
+# Subtest: Native speak curves match the original V8 source at every sampled phase
+ok 8 - Native speak curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.8878
+  ...
+# Subtest: Native acknowledge curves match the original V8 source at every sampled phase
+ok 9 - Native acknowledge curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 9.8768
+  ...
+# Subtest: Native curious curves match the original V8 source at every sampled phase
+ok 10 - Native curious curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.7425
+  ...
+# Subtest: Native warning curves match the original V8 source at every sampled phase
+ok 11 - Native warning curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.7932
+  ...
+# Subtest: Native reveal curves match the original V8 source at every sampled phase
+ok 12 - Native reveal curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 7.7415
+  ...
+# Subtest: Native idle curves match the original V8 source at every sampled phase
+ok 13 - Native idle curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.1476
+  ...
+# Subtest: Native farewell curves match the original V8 source at every sampled phase
+ok 14 - Native farewell curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.0314
+  ...
+# Subtest: Native ornament springs remain finite across reading, rest and gesture changes
+ok 15 - Native ornament springs remain finite across reading, rest and gesture changes
+  ---
+  duration_ms: 63.9859
+  ...
+# (node:31852) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native hand source, reproducible module and all six original textures retain registered hashes
+ok 16 - Native hand source, reproducible module and all six original textures retain registered hashes
+  ---
+  duration_ms: 13.9054
+  ...
+# Subtest: Native tap pivot and motion exactly match V8 across camera orientations
+ok 17 - Native tap pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 71.9682
+  ...
+# Subtest: Native press pivot and motion exactly match V8 across camera orientations
+ok 18 - Native press pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 46.8507
+  ...
+# Subtest: Native pinch pivot and motion exactly match V8 across camera orientations
+ok 19 - Native pinch pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 40.8783
+  ...
+# Subtest: Native point pivot and motion exactly match V8 across camera orientations
+ok 20 - Native point pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 38.5723
+  ...
+# Subtest: Native drag pivot and motion exactly match V8 across camera orientations
+ok 21 - Native drag pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 58.3269
+  ...
+# Subtest: Native open pivot and motion exactly match V8 across camera orientations
+ok 22 - Native open pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 39.1448
+  ...
+# Subtest: Quad protection catches a building crossing the middle while every corner lies outside its footprint
+ok 23 - Quad protection catches a building crossing the middle while every corner lies outside its footprint
+  ---
+  duration_ms: 1.7685
+  ...
+# Subtest: Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+ok 24 - Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+  ---
+  duration_ms: 41.633
+  ...
+# Subtest: Terrain protection includes interior ridges between low quad corners
+ok 25 - Terrain protection includes interior ridges between low quad corners
+  ---
+  duration_ms: 3.1843
+  ...
+# Subtest: Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+ok 26 - Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+  ---
+  duration_ms: 1.7636
+  ...
+# Subtest: Day-one hand targets map six kinds to actual entities and never modify game state
+ok 27 - Day-one hand targets map six kinds to actual entities and never modify game state
+  ---
+  duration_ms: 1.5869
+  ...
+# Subtest: The delivery hand follows the actual carrier instead of introducing a demonstration cart
+ok 28 - The delivery hand follows the actual carrier instead of introducing a demonstration cart
+  ---
+  duration_ms: 0.4316
+  ...
+# Subtest: Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+ok 29 - Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+  ---
+  duration_ms: 14.9531
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 30 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 5872.0977
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 31 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 705.9231
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 32 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 3.4368
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 33 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 10.4646
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 34 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 5733.206
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 35 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 5934.1276
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 36 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.9783
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 37 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.5772
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 38 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.3738
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 39 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 1.4856
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 40 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.4946
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 41 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.7234
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 42 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.7788
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 43 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 3.3553
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 44 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.4642
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 45 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.4582
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12032.3892
