@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "plants": 600,
+  "structures": 26,
+  "villages": 2,
+  "paidOperations": 627,
+  "streamingCycles": 3,
+  "measuredFrames": 300,
+  "residentChunks": 25,
+  "returnMemory": {
+    "geometries": 111,
+    "textures": 21
+  },
+  "snapshotBytes": 343323,
+  "snapshotSha256": "00b3da5199c729a0a7cb991d38b4df3b9052f867973d3a65ba1a9ba2ea386ec6",
+  "snapshotsByteIdentical": true,
+  "maxCropPositionError": 1.871344466053415e-06,
+  "viewport": {
+    "css": [
+      1280,
+      720
+    ],
+    "buffer": [
+      1600,
+      900
+    ],
+    "dpr": 1.25
+  },
+  "measurements": [
+    {
+      "stage": "Medici\u00f3n inicial",
+      "cpuRenderMeanMs": 12.38166666229566,
+      "frameMeanMs": 59.981666667262715,
+      "frameP95Ms": 66.19999998807907,
+      "drawCalls": 69,
+      "triangles": 2938760
+    },
+    {
+      "stage": "Medici\u00f3n tras streaming",
+      "cpuRenderMeanMs": 10.518333333730698,
+      "frameMeanMs": 68.32666666607062,
+      "frameP95Ms": 87,
+      "drawCalls": 69,
+      "triangles": 2938760
+    },
+    {
+      "stage": "Medici\u00f3n tras streaming",
+      "cpuRenderMeanMs": 8.636666668454806,
+      "frameMeanMs": 69.59833333392938,
+      "frameP95Ms": 82.5,
+      "drawCalls": 69,
+      "triangles": 2938760
+    },
+    {
+      "stage": "Medici\u00f3n tras streaming",
+      "cpuRenderMeanMs": 10.781666670242945,
+      "frameMeanMs": 71.20500000019868,
+      "frameP95Ms": 89.30000001192093,
+      "drawCalls": 69,
+      "triangles": 2938760
+    },
+    {
+      "stage": "Medici\u00f3n tras recarga",
+      "cpuRenderMeanMs": 9.806666669249534,
+      "frameMeanMs": 68.64666666686534,
+      "frameP95Ms": 84.89999997615814,
+      "drawCalls": 69,
+      "triangles": 2938760
+    }
+  ]
+}
