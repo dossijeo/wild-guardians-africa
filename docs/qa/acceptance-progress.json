@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "6793595",
+  "implementation_commit": "541c551",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1387,11 +1387,11 @@
       "area": "Tutorial y eventos",
       "scenario": "Evento agrícola nocturno sorteado",
       "expected": "Máximo uno, anunciado al amanecer como sorpresa; severidad y destinatario se guardan.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-agricultural-events.md"
       ],
-      "notes": "Actual Game.tick night entry covers 27 legal type/scope/intensity combinations using persisted PRNG seeds; one stable plan, no night announcement, one dawn message/event, quantitative effects and paid-state economy preserved. No-event night does not reroll. Remaining: inspect dawn surprise announcement in production UI. Funded attack-free postcampaign fixture; terrain/navigation doubles."
+      "notes": "27 legal type/scope/intensity combinations selected through real Game.tick/PRNG, one stable night plan and one dawn application/message. Production UI on original Sabana/Mapungubwe terrain confirms specific medium season event at day 102 dawn. Correction places readable notice inside native hiring before confirmation; English and Spanish screenshots, real slot load and fresh WorldScene preserve one event, twelve 20% bonuses, RNG and 5140 coins. Explicit funded postcampaign/end-of-night fixture, not a natural campaign or all-biome visual matrix."
     },
     {
       "id": "QA-127",

@@ -44,6 +44,8 @@ comprobación visual integrada correspondiente.
 
 [Build y paquete web](qa/agriculture-season/build.txt) aprobados: 554 archivos,
 379.689.497 bytes, 794 enlaces relativos, 20 GLB runtime sin duplicados originales.
-La [CI de la corrección](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37111587850)
-estaba en curso al registrar esta evidencia. Las 787 pruebas de la base anterior
-no se presentan como resultado de este cambio.
+La [CI de la corrección 1090300](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37111587850)
+terminó correctamente: **793/793 pruebas**, cero fallos, 387.956,221186 ms.
+Verificadores, build y paquete web aprobados. [Log completo](qa/agriculture-season/ci-log.txt)
+y [metadatos](qa/agriculture-season/ci.json). No se atribuye este resultado a
+las revisiones posteriores de eventos o su anuncio UI.

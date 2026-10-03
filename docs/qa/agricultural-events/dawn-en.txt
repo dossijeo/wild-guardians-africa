@@ -1,0 +1,46 @@
+- main:
+  - generic "Wild Guardians Africa world"
+  - img "Sun clock"
+  - generic: 07:17
+  - img "Money"
+  - generic: 5.14K
+  - generic "101/100 nights survived":
+    - img "Survival"
+    - generic: Day 102
+  - button "Open pause menu"
+  - navigation "Farm actions":
+    - button "Back":
+      - generic: Back
+    - button "Build":
+      - generic: Build
+    - button "Grow crops":
+      - generic: Grow crops
+    - button "Power":
+      - generic: Power
+  - complementary
+  - complementary
+  - 'button "Good season: more time until the next watering for 12 Millet plants."'
+  - dialog:
+    - heading "At your own pace" [level=2]
+    - text: Language
+    - combobox "Language":
+      - option "English" [selected]
+      - option "Español"
+    - text: Sound
+    - slider "Sound": "0.7"
+    - text: Music
+    - slider "Music": "0.4"
+    - text: Quality
+    - combobox "Quality":
+      - option "Very low"
+      - option "Low"
+      - option "Medium" [selected]
+      - option "High"
+    - text: World resolution
+    - combobox "World resolution":
+      - option "Follow quality" [selected]
+      - option "Economy"
+      - option "High savings"
+      - option "Maximum savings"
+    - paragraph: Reduces the sharpness of the 3D world; the HUD keeps its resolution.
+    - button "Back"

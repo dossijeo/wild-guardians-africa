@@ -1,0 +1,87 @@
+- main:
+  - generic "Wild Guardians Africa world"
+  - img "Sun clock"
+  - generic: 07:05
+  - img "Money"
+  - generic: 5.14K
+  - generic "101/100 nights survived":
+    - img "Survival"
+    - generic: Day 102
+  - button "Open pause menu"
+  - navigation "Farm actions":
+    - button "Back":
+      - generic: Back
+    - button "Build":
+      - generic: Build
+    - button "Grow crops":
+      - generic: Grow crops
+    - button "Power":
+      - generic: Power
+  - complementary
+  - complementary
+  - 'button "Good season: more time until the next watering for 12 Millet plants."'
+  - dialog "Hire your crew":
+    - heading "Hire your crew" [level=2]
+    - paragraph: Day 102 · 07:05 · new dawn
+    - generic: Ⅱ
+    - generic: Time paused
+    - status: "Good season: more time until the next watering for 12 Millet plants."
+    - paragraph: Your last selection has been restored. You can adjust it before paying.
+    - article:
+      - img "Young man"
+      - heading "Young man" [level=3]
+      - strong: "120"
+      - generic: / day
+      - generic: Pace ×1.50
+      - generic: Harvest +20 %
+      - generic: 10 h
+      - generic: 07:05–17:05
+      - button "Hire one fewer young man": −
+      - 'spinbutton "Count: Young man"': "0"
+      - button "Hire one more young man": +
+    - article:
+      - img "Young woman"
+      - heading "Young woman" [level=3]
+      - strong: "120"
+      - generic: / day
+      - generic: Pace ×1.50
+      - generic: Harvest base
+      - generic: 12 h · +20 %
+      - generic: 07:05–19:05
+      - button "Hire one fewer young woman": −
+      - 'spinbutton "Count: Young woman"': "0"
+      - button "Hire one more young woman": +
+    - article:
+      - img "Older man"
+      - heading "Older man" [level=3]
+      - strong: "100"
+      - generic: / day
+      - generic: Pace ×1.00
+      - generic: Harvest +20 %
+      - generic: 10 h
+      - generic: 07:05–17:05
+      - button "Hire one fewer older man": −
+      - 'spinbutton "Count: Older man"': "0"
+      - button "Hire one more older man": +
+    - article:
+      - img "Older woman"
+      - heading "Older woman" [level=3]
+      - strong: "100"
+      - generic: / day
+      - generic: Pace ×1.00
+      - generic: Harvest base
+      - generic: 12 h · +20 %
+      - generic: 07:05–19:05
+      - button "Hire one fewer older woman": −
+      - 'spinbutton "Count: Older woman"': "0"
+      - button "Hire one more older woman": +
+    - generic "How they work and what you pay"
+    - generic: Available
+    - strong: 5.14K
+    - generic: Today's cost
+    - strong: "0"
+    - generic: Remaining balance
+    - strong: 5,140
+    - status: Wages are charged once, when you confirm.
+    - button "Clear all"
+    - button "Hire and start"

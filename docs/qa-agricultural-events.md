@@ -1,8 +1,8 @@
 # Sorteo nocturno y persistencia de eventos agrícolas
 
 Pruebas `6793595`, sobre la lógica de eventos y la corrección agrícola `1090300`.
-QA-127 y QA-128 verificados en simulación/persistencia; QA-126 parcial hasta
-comprobar el anuncio en la interfaz real.
+QA-127 y QA-128 verificados en simulación/persistencia; QA-126 verificado
+con la continuación visual y corrección `541c551` descritas abajo.
 
 [97 pruebas dirigidas](qa/agricultural-events/directed.txt), cero fallos/omisiones,
 3.281,5029 ms. Incluyen eventos, tareas agrícolas, cosechas/cajas, economía,
@@ -61,3 +61,50 @@ La suite completa de CI de esta nueva cobertura todavía no se atribuye a estas
 pruebas. El build/paquete de la misma lógica publicado en `1090300` permanece
 documentado en [QA de riego mágico](qa-agriculture-season.md); este commit añade
 pruebas sin cambiar el juego.
+
+## Anuncio visible al amanecer, corrección 541c551
+
+La primera captura mostró el aviso desenfocado detrás de la contratación:
+[estado previo](qa/agricultural-events/dawn-es.png). El mensaje existía en DOM,
+pero esa imagen no acredita que el jugador pudiera leerlo antes de contratar.
+Ahora el evento aplicado conserva día e ID del aviso. La contratación muestra
+su texto dentro de la modal original, usando su tipografía existente, sin
+modificar la selección, el presupuesto ni el efecto agrícola. Avisos antiguos,
+no aplicados o retirados del historial no se presentan como eventos del día.
+
+Browser real en origen independiente 5179, Sabana/Mapungubwe, semilla de terreno
+712, doce posiciones legales con Navigation original, centro/semillas pagados,
+crédito de QA de 5000 monedas y noche preparada expresamente en 599,9 s.
+Los candidatos usan tiradas reales del PRNG; no se acredita la probabilidad
+estadística ni una campaña natural. Se encontró Buena temporada específica
+para mijo, intensidad media: bonus 20 %, sin mensaje ni aplicación en
+[el estado previo](qa/agricultural-events/before.json).
+
+La primera ejecución consumió cuatro lecturas de tutorial pendientes en el
+fixture tardío. La fixture final marca esos mensajes vistos explícitamente para
+centrar la prueba en el amanecer; no cambia el tutorial del juego.
+
+La partida se carga desde la sección Continuar del menú original. Al amanecer,
+la contratación sigue en pausa a las 07:05 del día 102 y el aviso es legible
+antes de contratar en [inglés](qa/agricultural-events/hiring-notice-en.png) y,
+tras guardar, cambiar idioma desde Opciones y cargar la misma ranura, en
+[español](qa/agricultural-events/hiring-notice-es.png). Se conserva el aviso
+habitual del HUD al cerrar contratación, como muestra la
+[recarga anterior](qa/agricultural-events/restored-en.png).
+
+El [estado recargado de la corrección](qa/agricultural-events/notice-restored.json)
+conserva tiempo 0, pausa hiring, saldo entero 5140, doce plantas vivas con
+crecimiento 14 y bonus 0,2; exactamente un AgriculturalEventApplied del día 102,
+con los doce destinatarios y el noticeId correspondiente. No se repite sorteo,
+aplicación ni cobro al recrear la WorldScene. Sólo se guarda la ranura
+qa-agricultural-events en este origen, sin tocar el origen del usuario en 5173.
+
+[Consola final](qa/agricultural-events/notice-console.json): cero errores y cero
+warnings. Pestañas de QA cerradas y Vite detenido. Las capturas iniciales se
+conservan como diagnóstico previo, sin confundirlas con el anuncio corregido.
+
+[68 pruebas dirigidas](qa/agricultural-events/notice-tests.txt), cero fallos ni
+omisiones, 2.977,7479 ms. [Build/paquete](qa/agricultural-events/notice-build.txt)
+aprobados: 554 archivos, 379.689.920 bytes, 794 enlaces relativos y 20 GLB runtime.
+El CI de esta corrección se comprobará cuando termine; estos resultados no son
+una suite completa de esta revisión.
