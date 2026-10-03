@@ -53,4 +53,8 @@ la frase compuesta de error también se traduce correctamente.
 Estos ensayos no simulan una cuota real del navegador ni comprueban el renderizado
 del aviso de error. El guard de salida de la aplicación se revisó en código;
 falta la prueba integrada de los cuatro disparadores de QA-144.
-El CI de esta corrección todavía no se atribuye a estos resultados.
+La [CI 37113331006](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37113331006)
+de `9315daf` terminó correctamente: **829/829 pruebas**, cero fallos,
+221.319,212879 ms, verificadores/build/paquete aprobados. [Log](qa/save-isolation/ci-log.txt)
+y [metadatos](qa/save-isolation/ci.json). No se atribuye esta suite a la
+corrección posterior del selector de autoguardado.

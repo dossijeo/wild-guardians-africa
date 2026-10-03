@@ -1,0 +1,20 @@
+{
+  "fixture": "No new events; prior frame ended with event-20",
+  "expected": [],
+  "actual": [
+    {
+      "id": "event-10",
+      "type": "Dawn"
+    }
+  ]
+}
+{
+  "fixture": "Unrelated worker event after already saved dawn",
+  "expected": [],
+  "actual": [
+    {
+      "id": "event-10",
+      "type": "Dawn"
+    }
+  ]
+}
