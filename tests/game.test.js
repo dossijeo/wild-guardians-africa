@@ -130,9 +130,9 @@ test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
   updateRaid(loaded,.1,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
 });
 test('Attack crossing dawn prevents events, hiring and night completion until departure',()=>{
-  const s=setup();s.ledger.balance=rational(200);s.time=599.9;s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0];a.status='retreating';a.x=0;a.z=0;a.spawn={x:200,z:0};
+  const s=setup();s.ledger.balance=rational(200);s.time=599.9;s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0];a.status='retreating';a.x=0;a.z=0;a.exit={x:200,z:0};
   tick(s,.2,nav);assert.equal(s.time,600);assert.equal(s.completedNights,0);assert.ok(!s.pauses.includes('hiring'));
-  a.spawn={x:a.x,z:a.z};a.path=null;tick(s,.1,nav);assert.equal(s.completedNights,1);assert.equal(s.day,2);assert.ok(s.pauses.includes('hiring'));
+  a.exit={x:a.x,z:a.z};a.path=null;tick(s,.1,nav);assert.equal(s.completedNights,1);assert.equal(s.day,2);assert.ok(s.pauses.includes('hiring'));
 });
 test('Final raid defeat takes precedence over hundredth night victory',()=>{
   const s=setup();s.time=600;s.completedNights=99;s.structures[0].status='ruined';s.ledger.balance=rational(0);s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);s.raid.animals.forEach(a=>a.status='gone');

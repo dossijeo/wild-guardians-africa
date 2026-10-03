@@ -58,7 +58,9 @@ test('QA-056/057: actual raid cancellation and end rebuild only live needs and l
   spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);assert.ok(s.workers.every(w=>w.status==='fleeing'&&w.taskId===null));
   assert.ok(s.tasks.every(t=>t.kind!=='repair'));assert.equal(a.harvestRequested,true);assert.equal(b.harvestRequested,false);
   // Scripted exhausted raid tests its real exit/rebuild flow, not animal damage.
-  s.raid.animals.forEach(animal=>{animal.hitsRemaining=0;});updateRaid(s,.1,nav);assert.equal(s.raid,null);
+  s.raid.animals.forEach(animal=>{animal.hitsRemaining=0;});
+  for(let elapsed=0;s.raid&&elapsed<10;elapsed+=.1)updateRaid(s,.1,nav);
+  assert.equal(s.raid,null);
   const needs=()=>s.tasks.map(t=>`${t.kind}:${t.targetId}`).sort(),expected=[`harvest:${a.id}`,`initial:${initial.id}`,`water:${debt.id}`].sort();
   assert.deepEqual(needs(),expected);assert.ok(s.tasks.every(t=>t.workerId===null));
   for(let i=0;i<10;i++)Game.rebuildTasks(s);assert.deepEqual(needs(),expected);

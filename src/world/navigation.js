@@ -126,6 +126,14 @@ export class Navigation {
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
     return result;
   }
+  approachPath(start,end,radius){
+    // Animal routes have symmetric terrain/solid collision rules. Search from
+    // the service point: an enclosed island then proves failure after exploring
+    // its finite component, rather than repeatedly exploring the outer land.
+    const reverse=this.path(end,start,radius,null,false);
+    if(!reverse)return null;
+    return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
+  }
   portalGraph(radius,ignore){
     this.portalGraphs??=new Map();const cacheKey=`${radius}:${ignore}`;
     if(this.portalGraphs.has(cacheKey))return this.portalGraphs.get(cacheKey);

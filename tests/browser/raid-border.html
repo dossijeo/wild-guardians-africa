@@ -6,33 +6,37 @@
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {spawnRaid} from '../../src/simulation/raids.js';
-import {Navigation} from '../../src/world/navigation.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+const query=new URLSearchParams(window.location.search),biome=query.get('biome')??'sabana',culture=query.get('culture')??'mapungubwe',tutorial=query.get('group')==='tutorial';
 let state,nav,world,snapshot,entryBounds,entryAnimals,errors=[];
 const buttons=()=>document.querySelectorAll('button');
 const error=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent='ERROR: '+errors.join(' · ');};
 addEventListener('error',e=>error(e.error??e));addEventListener('unhandledrejection',e=>error(e.reason));
 function draw(){world.render(0);const animals=state.raid?.animals??[];
- const records=animals.map(a=>({id:a.id,species:a.species,x:a.x,z:a.z,spawn:a.spawn,radius:a.radius,hits:a.hitsRemaining,status:a.status,meshPresent:world.objects.has(a.id),rigLoaded:world.objects.get(a.id)?.children.length>0}));
+ const records=animals.map(a=>({id:a.id,species:a.species,x:a.x,z:a.z,spawn:a.spawn,exit:a.exit,radius:a.radius,hits:a.hitsRemaining,status:a.status,meshPresent:world.objects.has(a.id),rigLoaded:world.objects.get(a.id)?.children.length>0}));
  document.querySelector('#status').textContent=`${records.length} animales · ${state.events.filter(e=>e.type==='RaidSpawned').length} generaciones · tiempo ${state.elapsed.toFixed(2)} s · ${world.chunks.size} chunks · ${errors.length} errores`;
- document.querySelector('#data').textContent=JSON.stringify({entryBounds,currentBounds:nav.activeBounds,entryAnimals,animals:records,errors},null,2);
+ document.querySelector('#data').textContent=JSON.stringify({biome,culture,tutorial,entryBounds,currentBounds:nav.activeBounds,entryAnimals,animals:records,centerHp:state.structures[0]?.hp,raidEnded:state.events.filter(e=>e.type==='RaidEnded').length,errors},null,2);
 }
 async function action(fn){buttons().forEach(b=>b.disabled=true);try{await fn();draw();}catch(e){error(e);}finally{buttons().forEach(b=>b.disabled=false);document.querySelector('#spawn').disabled=!!state.raid;}}
-const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
-state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'raid-border-qa'});nav=new Navigation(712,'sabana',pack.profile);
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
+state=Game.newGame({seed:712,biome,culture,slotId:'raid-border-qa'});nav=new Navigation(712,biome,pack.profile);
 const location=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
 world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=error;world.qualitySetting('media');await world.load(state,nav,payload);
 Game.resume(state,'intro');Game.placeStructure(state,'qa-center',location.center,nav);
 // Prepared night and direct legal tier-5 composition, not a probability or
 // campaign-profitability test. No altered terrain, body sizes or hit budgets.
-state.day=21;state.completedNights=20;state.time=400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={at:150,done:true};state.nightPlan={at:323,group:[],done:true};Game.pause(state,'qa');
+state.day=tutorial?2:21;state.completedNights=tutorial?1:20;state.time=tutorial?299:400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={at:150,done:true};state.nightPlan=tutorial?null:{at:323,group:[],done:true};Game.pause(state,'qa');
+if(tutorial)document.querySelector('#spawn').textContent='Generar incursión de segunda noche';
 document.querySelector('#spawn').onclick=()=>action(async()=>{
- world.render(0);entryBounds=[...nav.activeBounds];spawnRaid(state,{group:['warthog','warthog','warthog','buffalo','buffalo']},nav);
+ world.render(0);entryBounds=[...nav.activeBounds];
+ if(tutorial){Game.resume(state,'qa');try{Game.tick(state,1,nav);Game.tick(state,state.nightPlan.at-state.time,nav);}finally{Game.pause(state,'qa');}}
+ else spawnRaid(state,{group:['warthog','warthog','warthog','buffalo','buffalo']},nav);
  if(!state.raid)throw new Error(state.messages.at(-1)?.text??'No se generó la incursión');
- entryAnimals=state.raid.animals.map(a=>({id:a.id,spawn:{...a.spawn},radius:a.radius,hits:a.hitsRemaining}));snapshot=serialize(state);
+ entryAnimals=state.raid.animals.map(a=>({id:a.id,spawn:{...a.spawn},exit:{...a.exit},radius:a.radius,hits:a.hitsRemaining}));snapshot=serialize(state);
  world.sync(0);await Promise.all([...world.assets.cache.values()]);
 });
 document.querySelector('#entry').onclick=()=>action(()=>{const a=state.raid?.animals[0];if(a)world.focus(a);});

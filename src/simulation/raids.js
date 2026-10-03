@@ -38,31 +38,39 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
-  let entries=null;
+  let entries=null,exits=null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;
-    for(let attempt=0;attempt<31&&!entries;attempt++){
-      const clusterOffset=attempt?Math.ceil(attempt/2)*(attempt%2?2:-2):0,points=[];
-      const spread=(group.length-1)*2+2;
-      const along=side<2?clamp(focus.z+clusterOffset,minZ+inset+spread,maxZ-inset-spread):clamp(focus.x+clusterOffset,minX+inset+spread,maxX-inset-spread);
+    const spread=(group.length-1)*2+2,lo=(side<2?minZ:minX)+inset+spread,hi=(side<2?maxZ:maxX)-inset-spread;
+    if(lo>hi)continue;
+    const preferred=clamp(side<2?focus.z:focus.x,lo,hi),anchors=[preferred];
+    // Cover the entire edge, nearest to the farm first, without repeatedly
+    // clamping attempts to the same corner or resampling gameplay randomness.
+    for(let offset=2;offset<=Math.max(preferred-lo,hi-preferred);offset+=2){if(preferred+offset<=hi)anchors.push(preferred+offset);if(preferred-offset>=lo)anchors.push(preferred-offset);}
+    anchors.push(lo,hi);
+    for(const along of new Set(anchors)){
+      if(entries)break;
+      const points=[],retreats=[];
       for(let i=0;i<specs.length;i++){
         const {radius}=specs[i];let spawn=null;
         for(const adjustment of [0,1,-1,2,-2]){
           const offset=(i-(group.length-1)/2)*4+adjustment;
-          const point=side<2?
+          const exit=side<2?
             {x:side?maxX-inset:minX+inset,z:along+offset}:
             {x:along+offset,z:side===3?maxZ-inset:minZ+inset};
-          if(point.x-radius>=minX&&point.x+radius<=maxX&&point.z-radius>=minZ&&point.z+radius<=maxZ&&nav.walkable(point.x,point.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&connectedEntry(s,{...point,radius},nav)){
-            spawn=point;break;
+          const point={x:exit.x+(side===0?3:side===1?-3:0),z:exit.z+(side===2?3:side===3?-3:0)};
+          const clear=()=>nav.segmentClear?nav.segmentClear(point,exit,radius,null,false):!!nav.path(point,exit,radius,null,false);
+          if(point.x-radius>=minX&&point.x+radius<=maxX&&point.z-radius>=minZ&&point.z+radius<=maxZ&&nav.walkable(point.x,point.z,radius,null,false)&&nav.walkable(exit.x,exit.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&clear()){
+            spawn=point;retreats.push(exit);break;
           }
         }
         if(!spawn)break;points.push(spawn);
       }
-      if(points.length===specs.length)entries=points;
+      if(points.length===specs.length){entries=points;exits=retreats;}
     }
   }
   if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
-  const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},radius,
+  const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
     hitsRemaining:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
   for(const w of s.workers) {
@@ -75,14 +83,6 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   notice(s,'¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.',animals[0].id);emit(s,'RaidSpawned');
 }
 function release(s,a) {if(a.reservation)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-function connectedEntry(s,a,nav){
-  // Spawn only needs proof that some target is reachable. Check the larger
-  // structure service rings first; actual target priority is still targetFor.
-  for(const structure of s.structures.filter(c=>c.status==='intact'&&!s.raid?.reservations[`structure:${c.id}`])){
-    if(reachableApproach(a,structure,nav,spellAt(s,'shield',structure)))return true;
-  }
-  return !!targetFor(s,a,nav);
-}
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -90,7 +90,7 @@ export function reachableApproach(a,target,nav,shield=null){
     const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
-    const path=nav.path(a,point,a.radius,null,false);
+    const path=nav.approachPath?nav.approachPath(a,point,a.radius):nav.path(a,point,a.radius,null,false);
     if(path)return {point,path};
   }
   return null;
@@ -146,7 +146,7 @@ export function updateRaid(s,dt,nav) {
     }
     if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
     if(a.status==='retreating') {
-      if(walkTo(s,a,{...a.spawn,id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true}))a.status='gone';continue;
+      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));

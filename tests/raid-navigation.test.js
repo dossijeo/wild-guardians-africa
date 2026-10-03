@@ -57,7 +57,7 @@ test('A full legal five-animal composition changes entry side together when a la
   const nav=world((x,_z,radius)=>x>=0||radius<=.6),s=ready(nav),rng={rng:s.rng};
   const group=['warthog','warthog','warthog','buffalo','buffalo'];
   spawnRaid(s,{group},nav);assert.deepEqual(s.raid.animals.map(a=>a.species),group);
-  assert.ok(s.raid.animals.every(a=>a.spawn.x===118.65),'The group must use one common reachable side of the default active region');
+  assert.ok(s.raid.animals.every(a=>a.spawn.x===115.65&&a.exit.x===118.65),'The group must use one common side and distinct safe retirement slots');
   for(let i=0;i<6;i++)nextRandom(rng);assert.equal(s.rng,rng.rng,'Changing spatial entry must not reroll budgets or composition');
   for(let i=0;i<group.length;i++)for(let j=i+1;j<group.length;j++){
     const a=s.raid.animals[i],b=s.raid.animals[j];assert.ok(Math.hypot(a.x-b.x,a.z-b.z)>a.radius+b.radius+1);
@@ -69,11 +69,11 @@ test('An impossible full-group entry does not silently drop the animals that cou
   assert.equal(s.raid,null);assert.equal(s.nextId,nextId);
   assert.ok(s.messages.at(-1).text.includes('grupo completo'));
 });
-test('Structure connectivity preflight leaves the actual crop target priority unchanged',()=>{
+test('Local entry/exit validation leaves the actual crop target priority unchanged',()=>{
   const nav=world(),s=ready(nav);s.time=0;Game.plant(s,'crop','mijo',5,0,nav);s.time=400;
   const calls=[],path=nav.path.bind(nav);nav.path=(...args)=>{calls.push(args[1].id);return path(...args);};
   spawnRaid(s,{group:['warthog']},nav);
-  assert.ok(calls[0].startsWith(`approach-${s.structures[0].id}-`));
+  assert.ok(calls.every(id=>!id?.startsWith('approach-')),'Birth must not require a remote target to be reachable');
   updateRaid(s,.1,nav);assert.equal(s.raid.animals[0].targetId,s.plants[0].id);
   assert.ok(s.raid.animals[0].reservation.startsWith('crop:'));
 });

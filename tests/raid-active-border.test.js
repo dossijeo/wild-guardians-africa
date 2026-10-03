@@ -19,13 +19,14 @@ for(const quality of ['media','alta'])for(let side=0;side<4;side++)test(`QA-094:
  // Deliberately put the farm outside the rectangle, to test group placement
  // near corners without stacking each animal at a clamped projection.
  const bounds=activeChunkRegion({x:528,z:-432},quality).bounds;
- nav.setActiveBounds(bounds);const inset=1.8,axis=side<2?'x':'z',normal=side===0?bounds[0]+inset:side===1?bounds[2]-inset:side===2?bounds[1]+inset:bounds[3]-inset;
- nav.walkable=(x,z)=>Math.abs((axis==='x'?x:z)-normal)<1e-9;
+ nav.setActiveBounds(bounds);const inset=4.8,axis=side<2?'x':'z',normal=side===0?bounds[0]+inset:side===1?bounds[2]-inset:side===2?bounds[1]+inset:bounds[3]-inset;
+ nav.walkable=(x,z)=>Math.abs((axis==='x'?x:z)-normal)<=3+1e-9;nav.segmentClear=()=>true;
  const rng={rng:s.rng};spawnRaid(s,{group},nav);assert.ok(s.raid);
  assert.deepEqual(s.raid.animals.map(a=>a.species),group);
  assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
  for(const a of s.raid.animals){
   assert.ok(Math.abs(a[axis]-normal)<1e-9);assert.deepEqual(a.spawn,{x:a.x,z:a.z});assert.equal(a.status,'entering');
+  assert.ok(Math.abs(Math.hypot(a.x-a.exit.x,a.z-a.exit.z)-3)<1e-9);
   assert.ok(a.x-a.radius>=bounds[0]&&a.z-a.radius>=bounds[1]&&a.x+a.radius<=bounds[2]&&a.z+a.radius<=bounds[3]);
  }
  for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){

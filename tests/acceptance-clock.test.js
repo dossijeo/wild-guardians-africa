@@ -56,10 +56,10 @@ test('QA-010: a full calm night preserves growth and remaining water tolerance',
 
 test('QA-012/013: only the last animal leaving restores accelerated night and emits one end',()=>{
   const s=fixture();s.time=400;s.nightPlan={done:true,at:400};spawnRaid(s,{group:['warthog','lion']},nav);
-  const [first,last]=s.raid.animals;first.status='gone';last.status='retreating';last.spawn={x:last.x+100,z:last.z};
+  const [first,last]=s.raid.animals;first.status='gone';last.status='retreating';last.exit={x:last.x+100,z:last.z};
   advanceReal(s,.02,nav);close(s.time,400.02);assert.ok(s.raid);
   assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,0);
-  last.spawn={x:last.x,z:last.z};last.path=null;advanceReal(s,.02,nav);
+  last.exit={x:last.x,z:last.z};last.path=null;advanceReal(s,.02,nav);
   assert.equal(s.raid,null);close(s.time,400.04);
   advanceReal(s,.02,nav);close(s.time,400.14);
   assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
