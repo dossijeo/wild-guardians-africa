@@ -9,7 +9,7 @@ Fuente normativa: [Plan Maestro 2.0](plan/Wild_Guardians_Plan_Maestro_Definitivo
 - Implementación en curso: simulación, navegación, extracción de assets, escena 3D y persistencia.
 - Menú de producción: adaptación del diorama original `Wild_Guardians_Africa_Menu_V2_8_CORREGIDO_Balafons_Call.html`, conservando renderer, recorridos, iluminación, logo y música. Generador: `tools/prepare_menu.py`.
 - HUD de producción: artwork, disposición adaptable, retratos y marco de contratación de `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Generador: `tools/prepare_hud.py`. La simulación de demostración no se utiliza como motor del juego.
-- Los 159 casos recibidos son requisitos pendientes; no se contabilizan como pruebas ejecutadas.
+- Los 159 casos recibidos se auditan individualmente en [el registro de aceptación](qa/acceptance-progress.json); no se contabilizan automáticamente como pruebas ejecutadas. Los informes enlazados delimitan qué acredita cada ensayo y qué sigue pendiente.
 - Los commits y pushes se realizan directamente en `main`, por preferencia explícita del usuario. No utilizar ramas de transferencia ni commits sin cambios de archivos.
 - Incidencia de biblioteca corregida: el visor de cultivos espera `assetData` comprimido con gzip; el empaquetador había entregado el GLB descomprimido. El cargador restaura el envoltorio gzip. Comprobación en navegador: finaliza la carga y muestra las ocho plantas de ejemplo en la parcela original.
 
@@ -302,3 +302,5 @@ sincronizada incluso tras entradas nuevas. Variaciones RGB y warnings ANGLE
 archivados; [evidencia y limites](qa-material-registry.md). CI 720718d aprobada,
 CI actual pendiente. Siguen pendientes otros recorridos CPU, profundidad VFX,
 ruido barato/calidad y auditoria completa de aceptacion del Plan Maestro.
+
+- Reparaciones y reconstrucción (3 de octubre): [ocho cadenas físicas y polvo comprometido](qa-repair-chains.md), 71 pruebas dirigidas aprobadas. Navegación real sobre terreno plano declarado; pagos únicamente al llegar, recálculo de precio, fondos agotados por compras reales, D144 y cancelación por incursión completa. Se corrige una repetición de tarea que evitaba otro cobro pero restauraba gratis daño posterior; ahora la identidad contable también protege restauración y presentación. Polvo del atelier conectado a `RepairApplied`, con posición y tiempo simulado, pausa, carga y expiración. Navegador sobre terreno original Sabana/Suajili: una reparación, 95→41, 560→600 PV y cero errores. La aceptación sigue siendo incremental, no la conclusión del Plan Maestro.

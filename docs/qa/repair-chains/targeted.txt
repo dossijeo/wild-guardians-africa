@@ -1,0 +1,365 @@
+TAP version 13
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 1 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 239.7854
+  ...
+# Subtest: QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+ok 2 - QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 34.1401
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 3 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 195.3763
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 4 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 118.8567
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 5 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 111.7718
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 6 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 160.115
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 7 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 92.757
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+ok 8 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 83.6531
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 9 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 3704.8839
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 10 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 7.0384
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 11 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 3.1079
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 12 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 7.705
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 13 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 20.5497
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 14 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 18.1635
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 15 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.4458
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 16 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 108.2477
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 17 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.639
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 18 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 64.1873
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 19 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 12.3997
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 20 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 8.0303
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 21 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 4.0692
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 22 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 46.0842
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 23 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.5888
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 24 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 0.8385
+  ...
+# Subtest: A new center chooses a reachable village by complete path distance rather than straight-line proximity
+ok 25 - A new center chooses a reachable village by complete path distance rather than straight-line proximity
+  ---
+  duration_ms: 5.8137
+  ...
+# Subtest: No valid village route rejects a new center before debit, ID allocation, suppression or events
+ok 26 - No valid village route rejects a new center before debit, ID allocation, suppression or events
+  ---
+  duration_ms: 1.6867
+  ...
+# Subtest: Preview checks the selected culture hull and remains identical to committed native geometry
+ok 27 - Preview checks the selected culture hull and remains identical to committed native geometry
+  ---
+  duration_ms: 7.8419
+  ...
+# Subtest: Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+ok 28 - Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+  ---
+  duration_ms: 1.738
+  ...
+# Subtest: Real Navigation validates the proposed building and preserves live collision caches during preview
+ok 29 - Real Navigation validates the proposed building and preserves live collision caches during preview
+  ---
+  duration_ms: 69.1458
+  ...
+# Subtest: A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+ok 30 - A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+  ---
+  duration_ms: 141.146
+  ...
+# Subtest: The unreachable-center command explains its failure in English and Spanish
+ok 31 - The unreachable-center command explains its failure in English and Spanish
+  ---
+  duration_ms: 0.5388
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 32 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 99.3774
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 33 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 9.3802
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 34 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.9383
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 35 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 8.7443
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 36 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 1.8224
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 37 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 0.9067
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 38 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 1.0095
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 39 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 3.4998
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 40 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 4.9654
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 41 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.4099
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 42 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 1.9104
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 43 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 10.7863
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 44 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 6.0234
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 45 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.6426
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 46 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.759
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 47 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 1.8783
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 48 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 10.559
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 49 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.4225
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 50 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 3.8846
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 51 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 1.1038
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 52 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.8812
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 53 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 47.1975
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 54 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.6674
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 55 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 3.7116
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 56 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.639
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 57 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 5.9461
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 58 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.5609
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 59 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.0718
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 60 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 7.5647
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 61 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.3159
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 62 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.3226
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 63 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.6926
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 64 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.6234
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 65 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.5239
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 66 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 4.0654
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 67 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 248.3753
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 68 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 28.7597
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 69 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 0.9489
+  ...
+# Subtest: Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+ok 70 - Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+  ---
+  duration_ms: 127.3025
+  ...
+# Subtest: Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+ok 71 - Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+  ---
+  duration_ms: 1.3446
+  ...
+1..71
+# tests 71
+# suites 0
+# pass 71
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6755.9123

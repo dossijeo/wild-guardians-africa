@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 1 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 159.3805
+  ...
+# Subtest: QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+ok 2 - QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 24.5289
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 3 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 120.4734
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 4 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 90.9812
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 5 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 84.7335
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 6 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 128.992
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 7 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 84.9623
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+not ok 8 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 87.0435
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-repair-chains.test.js:105:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    300 !== 280
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 280
+  actual: 300
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-repair-chains.test.js:113:53)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 953.4704

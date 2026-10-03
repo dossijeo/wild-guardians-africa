@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "b04af38",
+  "implementation_commit": "20d3fd3",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -832,72 +832,104 @@
       "area": "Defensas y reparación",
       "scenario": "Ordenar reparación con fondos suficientes",
       "expected": "Se encola pero todavía no se cobra ni reserva dinero ficticio.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Native-footprint Navigation on declared flat clear terrain; first-day paid center/seed/wall/hire. Request and physical reservation retain wallet 60 without debit or reserved funds; repair applies at actual service-point arrival."
     },
     {
       "id": "QA-077",
       "area": "Defensas y reparación",
       "scenario": "Ordenar reparación con fondos insuficientes en ese instante",
       "expected": "Se rechaza la solicitud, sin tarea inválida añadida.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Actual five wall purchases and another seed leave 5 coins. Requesting damaged wall repair costing 9.45 fails without any snapshot mutation, task, command or payment."
     },
     {
       "id": "QA-078",
       "area": "Defensas y reparación",
       "scenario": "Daño aumenta antes de llegada del reparador",
       "expected": "Coste se recalcula al llegar, no se mantiene la cotización inicial.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "During physical reserved repair journey, damage raises exact price from 9.45 to 15.40. Actual arrival charges ceil=16 once and restores original HP; no frozen quotation."
     },
     {
       "id": "QA-079",
       "area": "Defensas y reparación",
       "scenario": "Objetivo pasa a ruina antes de ejecutar orden todavía válida",
       "expected": "No se cancela solo por destruirse; coste 100% y se reconstruye si alcanza.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Already-reserved manual wall repair survives explicit full destruction outside a raid, natural collapse to ruin and reload. Physical arrival reconstructs same target for full original 35. Flat terrain fixture; not a claim of an active raid preserving manual repair."
     },
     {
       "id": "QA-080",
       "area": "Defensas y reparación",
       "scenario": "Saldo disminuye por otras compras antes de reparar",
       "expected": "Revalida saldo al llegar; si no alcanza, cancela sin cargo.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Other genuine purchases while worker walks leave 5 coins. Existing reservation survives until actual arrival, which cancels without debit or restoration and reports insufficient funds."
     },
     {
       "id": "QA-081",
       "area": "Defensas y reparación",
       "scenario": "Ataque interrumpe una reparación en camino",
       "expected": "Huida y reconstrucción de cola; esa reparación manual no se regenera sola.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Actual warthog raid immediately releases walking repair, worker flees, full damage/retreat runs with native hit budget. After departure, rebuild and reload do not regenerate repair; no repair charge/event."
     },
     {
       "id": "QA-082",
       "area": "Defensas y reparación",
       "scenario": "Trabajador llega durante animación de colapso",
       "expected": "Resolver C06 sin cancelar D144 ni confundir reset del lab con permiso de reparación.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "C06 tested both ways: active raid cancels before arrival; outside a raid full destruction immediately before real arrival preserves still-valid order and reconstructs for full 35 during collapse. No delayed automatic repair or cancellation solely on target destruction."
     },
     {
       "id": "QA-083",
       "area": "Defensas y reparación",
       "scenario": "Reparación exitosa repetida por callback",
       "expected": "Pago y restauración únicos, VFX de polvo sin doble transformación.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-repair-chains.md",
+        "tests/acceptance-repair-chains.test.js",
+        "docs/qa/repair-chains/targeted.txt"
+      ],
+      "notes": "Real physical repair pays/restores once. Replaying consumed task ID after new damage formerly healed for free; fix now preserves later damage and emits no second RepairApplied/dust. Native atelier dust identity deduplicates presentation, freezes on pause, resumes same age on reload and expires. Actual Sabana/Swahili terrain browser confirms 95->41, 560->600 HP, one repair, no errors. Particle reload numeric tolerance 1e-4, not binary equivalence."
     },
     {
       "id": "QA-084",
