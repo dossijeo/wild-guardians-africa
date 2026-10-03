@@ -61,5 +61,9 @@ radios, velocidad, clip o duración de 20 s. No usa slots guardados del usuario.
 La [consola](qa/shield-expiry/console.json) registra cero errores y un warning
 de compilación ANGLE del shader de entorno, pendiente de revisar separadamente.
 Pestaña y Vite de QA cerrados; el origen del usuario en 5173 queda intacto.
-El CI del nuevo commit se encuentra en curso; no se atribuyen las 780 pruebas
-del commit anterior a esta corrección.
+La [CI 37110777079](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37110777079),
+sobre `0db52e8` que incluye la corrección `2586978`, terminó correctamente:
+**787/787 pruebas**, cero fallos/omisiones, 290.527,546528 ms. Verificación
+de assets y plan, build y paquete web aprobados: 554 archivos, 379.689.465
+bytes, 794 enlaces relativos y 20 GLB runtime sin duplicados originales.
+[Log completo](qa/shield-expiry/ci-log.txt) y [metadatos](qa/shield-expiry/ci.json).

@@ -64,3 +64,16 @@ Los siguientes experimentos pendientes son una receta de ruido más barata con
 comparación visual, caras por categoría/LOD y profundidad de interiores/ceniza.
 La separación de sombras estáticas/dinámicas requiere una prueba independiente.
 No se convierten estos diagnósticos en cambios visuales globales sin validarlos.
+
+## Comprobación sobre la implementación actual
+
+Sobre `0db52e8` pasan **51/51 pruebas dirigidas**, cero fallos/omisiones,
+1.074,6846 ms: props residentes, buffers de cultivos, sombras, bounds del
+poblado, registros de materiales, obstrucciones, ruido, HDR, profundidad,
+calidad y composición Toon. [Salida completa](qa/performance-actions/integrated-current.txt).
+Incluye las modificaciones posteriores de apuntado de magia y expiración
+del Escudo; es una comprobación de regresión, no una nueva medición GPU.
+
+La [CI de esa base](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37110777079)
+aprueba 787/787 pruebas y el paquete web. Los experimentos pendientes
+indicados arriba conservan su estado: no quedan acreditados por esta suite.
