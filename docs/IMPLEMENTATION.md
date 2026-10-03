@@ -287,3 +287,18 @@ cambio de materiales por falta de candidatos acreditados en todos los LOD.
 CI 3c3281f aprobada; CI actual pendiente. Pendientes: pruebas por prop/categoria,
 ruido barato, registros CPU, profundidad VFX, selector persistente de resolucion
 y aceptacion completa del Plan Maestro.
+
+### 3 de octubre: registro de materiales y reloj de agua
+
+Publicado 9083014: se sustituyen los dos recorridos dedicados a materiales/agua
+por listeners de entrada/salida y refresh de material en calidad residente y
+horizonte. Proxies temporales de sombra excluidos; referencias compartidas y
+listeners retirados al salir/cerrar. Suite final 651/651, dirigidas 18/18, build
+y paquete aprobados. QA Sabana: cero recorridos/escrituras con registro frente a 420/1,470
+por 210 frames; medias CPU 13.90/13.99 ms, sin mejora temporal demostrada.
+Cañones/desierto: Standard/Basic/horizonte, viaje y personajes/cultivos/defensas
+sin referencias obsoletas, materiales ausentes o elegibles sin shader; agua
+sincronizada incluso tras entradas nuevas. Variaciones RGB y warnings ANGLE
+archivados; [evidencia y limites](qa-material-registry.md). CI 720718d aprobada,
+CI actual pendiente. Siguen pendientes otros recorridos CPU, profundidad VFX,
+ruido barato/calidad y auditoria completa de aceptacion del Plan Maestro.

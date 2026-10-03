@@ -1,0 +1,102 @@
+TAP version 13
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 1 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 20.7392
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 2 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 8.694
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 3 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 7.7508
+  ...
+# Subtest: paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+ok 4 - paused frames do not traverse the graph or rewrite water clocks; late shared water is synchronized
+  ---
+  duration_ms: 7.7372
+  ...
+# Subtest: entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+ok 5 - entering nested actors, instanced meshes and reparenting retain single shader composition and borrowed ownership
+  ---
+  duration_ms: 3.2591
+  ...
+# Subtest: explicit refresh handles material arrays, replacement and late metadata without stale references
+ok 6 - explicit refresh handles material arrays, replacement and late metadata without stale references
+  ---
+  duration_ms: 1.6137
+  ...
+# Subtest: resident and unchanged-region horizon quality replacements are registered immediately
+ok 7 - resident and unchanged-region horizon quality replacements are registered immediately
+  ---
+  duration_ms: 317.8983
+  ...
+# Subtest: QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+ok 8 - QA fallback preserves old traversal semantics and returning to the registry resynchronizes time
+  ---
+  duration_ms: 2.0144
+  ...
+# Subtest: temporary excluded pass roots never register nested materials or leave event listeners
+ok 9 - temporary excluded pass roots never register nested materials or leave event listeners
+  ---
+  duration_ms: 1.0676
+  ...
+# (node:30040) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent DPR cap reduces pixels without changing the quality profile or scene state
+ok 10 - independent DPR cap reduces pixels without changing the quality profile or scene state
+  ---
+  duration_ms: 6.0309
+  ...
+# Subtest: physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+ok 11 - physical canvas sizing matches the original terrain resize at mobile, desktop, 4K, DPR and hidden dimensions
+  ---
+  duration_ms: 0.9392
+  ...
+# Subtest: live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+ok 12 - live ground switches keep geometry and shared materials, release replaced material once and recompose cel metadata
+  ---
+  duration_ms: 1.9695
+  ...
+# Subtest: live world quality and resize preserve simulation, ground geometry and existing chunk objects
+ok 13 - live world quality and resize preserve simulation, ground geometry and existing chunk objects
+  ---
+  duration_ms: 1.8191
+  ...
+# Subtest: static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+ok 14 - static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions
+  ---
+  duration_ms: 0.64
+  ...
+# Subtest: canyon horizon changes only its ground material when the resident rectangle stays the same
+ok 15 - canyon horizon changes only its ground material when the resident rectangle stays the same
+  ---
+  duration_ms: 311.3098
+  ...
+# Subtest: world reflections retain the supplied equirectangular HDR sampling, roughness LOD and night fill
+ok 16 - world reflections retain the supplied equirectangular HDR sampling, roughness LOD and night fill
+  ---
+  duration_ms: 4.5237
+  ...
+# Subtest: already compiled world materials share radiance textures, simulated night and changing sky yaw without texture clones
+ok 17 - already compiled world materials share radiance textures, simulated night and changing sky yaw without texture clones
+  ---
+  duration_ms: 1.9659
+  ...
+# Subtest: native wet prop material composes reflected radiance with tangent normals, roughness, cel and coverage
+ok 18 - native wet prop material composes reflected radiance with tangent normals, roughness, cel and coverage
+  ---
+  duration_ms: 8.6676
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 692.8228

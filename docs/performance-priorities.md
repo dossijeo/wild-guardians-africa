@@ -27,7 +27,8 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    fuera de cámara que siguen dentro del volumen de sombra.
 6. **Cultivos (subidas implementadas):** matrices estables, atributos de crecimiento/morph
    separados, subidas únicamente de rangos cambiados. El viento usa reloj, sin
-   reenviar matrices. Después: registros de materiales/agua y cachés de CPU.
+   reenviar matrices. Registro de materiales/agua implementado: [evidencia y límites](qa-material-registry.md).
+   Pendiente caché de obstrucciones y otros recorridos CPU.
 7. **Profundidad VFX:** estudiar ruta específica conservando alpha test, clipping,
    skinning, morph, crecimiento y agujeros DEST. No explica una vista sin efectos.
 8. **Resolución (diagnóstico medido):** [DPR 1 manteniendo calidad media](qa-resolution.md),
