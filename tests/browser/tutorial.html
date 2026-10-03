@@ -17,5 +17,9 @@ let slot=0;function fresh(){state=Game.newGame({seed:712,slotId:String(++slot)})
 document.querySelector('#completed').onclick=()=>{profile.record('basic.complete');fresh();};document.querySelector('#new').onclick=fresh;
 document.querySelector('#raid').onclick=()=>{state.day=2;state.raid={animals:[],reservations:{}};update();};document.querySelector('#growth').onclick=()=>{state.day=3;state.raid=null;update();};
 document.querySelector('#reload').onclick=()=>{state=deserialize(serialize(state));controller=new TutorialController(state,profile);actor.hide();update();};
+for(const [id,label,action] of [
+  ['multiply','Día 5 de prueba',()=>{state.day=5;state.raid=null;}],
+  ['injury','Lesión preparada de prueba',()=>{state.people.push({id:'qa-injured',profile:'olderMale',recoveryUntil:state.day+1});}]
+]){const button=document.createElement('button');button.id=id;button.textContent=label;button.onclick=()=>{action();update();};document.querySelector('nav').insertBefore(button,document.querySelector('#status'));}
 await actor.ready;fresh();function frame(){actor.update();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 </script></html>

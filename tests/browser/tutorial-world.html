@@ -1,0 +1,40 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Lectura y trabajo real</title>
+<style>body{margin:0;font:14px system-ui}#world{width:100vw;height:100vh;display:block}header{position:absolute;z-index:50;background:#fff9ed;padding:12px;max-width:440px}button{padding:8px}pre{max-height:170px;overflow:auto}</style>
+<header>Finca de QA: centro, semilla y trabajadora pagados. El avance usa la simulación real; la lectura lo bloquea. No usa el almacenamiento de tus partidas.
+<button id="advance" disabled>Avanzar 5 s de reloj de prueba</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas><div id="guardian"></div>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {centerServicePoint} from '../../src/world/centers.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {NativeGuardian} from '../../src/ui/guardian.js';
+import {TutorialController} from '../../src/tutorial/controller.js';
+import {TutorialProfile} from '../../src/tutorial/profile.js';
+import '../../src/ui/tutorial.css';
+const errors=[],fail=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent=errors.join('; ');};
+addEventListener('error',e=>fail(e.error??e));addEventListener('unhandledrejection',e=>fail(e.reason));
+const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
+const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712,slotId:'qa-reading-worker'}),nav=new Navigation(712,'sabana',pack.profile),place=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],place);state.suppressed.push(...place.suppress);nav.setState(state);Game.resume(state,'intro');
+Game.placeStructure(state,'qa-center',place.center,nav);const center=state.structures[0];let site;
+for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:center.x+x,z:center.z+z};if(nav.placement(p.x,p.z,.4).valid&&nav.path(centerServicePoint(center,state,.8),p,.28,null,true))site=p;}
+if(!site)throw new Error('No hay un cultivo alcanzable en la finca de prueba');
+Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-wage',{olderFemale:1});
+const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('media');await world.load(state,nav,payload);world.focus(center);
+const actor=new NativeGuardian(document.querySelector('#guardian'),fail);await actor.ready;
+const controller=new TutorialController(state,new TutorialProfile(storage));
+function update(){
+ controller.update();const m=controller.presentation();
+ if(m)actor.show({key:m.id+':'+m.blocking,text:m.text,gesture:m.gesture,blocking:m.blocking,advance:m.blocking?()=>{controller.acknowledge();update();}:null});else actor.hide();
+ const worker=state.workers[0],plant=state.plants[0];document.querySelector('#status').textContent=`${state.tutorial.reading??'Lectura cerrada'} · ${state.elapsed.toFixed(2)} s simulados · ${worker.status} · riegos ${plant.water.filter(w=>w.status==='manual').length}`;
+ document.querySelector('#data').textContent=JSON.stringify({elapsed:state.elapsed,day:state.day,reading:state.tutorial.reading,pauses:state.pauses,worker:{id:worker.id,status:worker.status,x:worker.x,z:worker.z,taskId:worker.taskId},plant:{id:plant.id,growth:plant.growth,water:plant.water},balance:state.ledger.balance,ledgerIds:Object.keys(state.ledger.entries),hands:{visible:world.hands.mesh.visible,kind:world.hands.hints.getState().kind},errors},null,2);
+}
+const day2=document.createElement('button');day2.textContent='Preparar día 2 de prueba';day2.onclick=()=>{state.day=2;world.render(0);update();};document.querySelector('header').insertBefore(day2,document.querySelector('#status'));
+document.querySelector('#advance').onclick=()=>{for(let i=0;i<50;i++){Game.advanceReal(state,.1,nav);controller.update();}world.render(.05);update();};
+await world.whenChunksReady();world.render(0);update();document.querySelector('#advance').disabled=false;
+requestAnimationFrame(function frame(){world.render(0);actor.update();requestAnimationFrame(frame);});
+addEventListener('pagehide',()=>{actor.dispose();world.dispose();});
+</script></html>
