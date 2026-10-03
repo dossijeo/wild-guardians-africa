@@ -1,0 +1,77 @@
+TAP version 13
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 1 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 2.2094
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 2 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.3002
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 3 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.3414
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 4 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 80.2159
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 5 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 14.0144
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 6 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 17.149
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 7 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.7301
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 8 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.5752
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 9 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 8.0805
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 10 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.4687
+  ...
+# Subtest: GPU link failure reaches the loading/runtime error path once with diagnostic details
+ok 11 - GPU link failure reaches the loading/runtime error path once with diagnostic details
+  ---
+  duration_ms: 3.47
+  ...
+# (node:31684) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: WorldScene partially loaded disposal releases once and detaches owned canvas events
+ok 12 - WorldScene partially loaded disposal releases once and detaches owned canvas events
+  ---
+  duration_ms: 7.3336
+  ...
+# Subtest: WorldScene loaded disposal releases once and detaches owned canvas events
+ok 13 - WorldScene loaded disposal releases once and detaches owned canvas events
+  ---
+  duration_ms: 1.2837
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 359.91

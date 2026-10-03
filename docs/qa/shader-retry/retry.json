@@ -1,0 +1,127 @@
+{
+  "attempts": [
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    },
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 117886.80000001192
+    },
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 240278.69999998808
+    }
+  ],
+  "failCount": 1,
+  "failures": [
+    {
+      "resource": "shader",
+      "canvas": "world"
+    }
+  ],
+  "shaderFailures": [
+    {
+      "compiled": false,
+      "log": "ERROR: 0:7: '' :  QA one-shot GPU compile failure\n"
+    }
+  ],
+  "alerts": [
+    "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo."
+  ],
+  "worldCanvasCreations": 2,
+  "liveWorldCanvases": 1,
+  "liveNativeMenuFrames": 0,
+  "initialSlotCount": 1,
+  "currentSlotCount": 2,
+  "addedSlots": [
+    {
+      "key": "wild-guardians:slot:78e64d6e-5a20-417f-992d-65f355355041",
+      "slotId": "78e64d6e-5a20-417f-992d-65f355355041",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "money": {
+        "n": "1000",
+        "d": "1"
+      },
+      "time": 0,
+      "structures": 0,
+      "pauses": [
+        "intro",
+        "tutorial-reading"
+      ]
+    }
+  ],
+  "oldUnchanged": true,
+  "errors": []
+}

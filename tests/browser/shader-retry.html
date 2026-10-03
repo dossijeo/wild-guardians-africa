@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Shader compile retry</title>
+<script src="/i18n/loader.js"></script><div id="app"></div>
+<aside style="position:fixed;right:8px;top:8px;width:330px;max-height:55vh;overflow:auto;z-index:100000;background:#fffdeae8;color:#18231e;padding:10px;font:13px system-ui">
+<strong>QA-151 · Shader compile retry</strong><p>Uses the original menu and selector. A single original Start handler loads the production app. One-shot real GPU compilation failure affects only the world canvas. Writes normal QA-origin campaign slots.</p>
+<label>Resource <select id="resource"><option value="shader">GPU shader compilation</option><option value="sky">Sky catalogue</option><option value="terrain">Terrain binary</option><option value="model">First world GLB</option></select></label><label><input type="checkbox" id="fail">Fail the selected resource once</label><p><button id="double">Activate native Start once</button> <button id="read">Read evidence</button></p><p id="status">Choose New Game and reach the culture step first.</p><pre id="report" style="white-space:pre-wrap"></pre>
+</aside>
+<script type="module">
+const messages=[],attempts=[],canvases=new Set(),errors=[],initialSlots=slots();const failures=[],shaderFailures=[],alerts=[];let failCount=0;
+function slots(){return Object.fromEntries(Object.keys(localStorage).filter(k=>/^wild-guardians:slot:/.test(k)&&!/:backup$|:pending$/.test(k)).sort().map(k=>[k,JSON.parse(localStorage.getItem(k))]));}
+const originalFetch=window.fetch.bind(window);
+window.fetch=(input,options)=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(document.querySelector('#fail').checked&&({sky:url.pathname==='/content/skies.json',terrain:url.pathname.endsWith('.bin'),model:url.pathname.endsWith('.glb')})[document.querySelector('#resource').value]){document.querySelector('#fail').checked=false;failCount++;failures.push({resource:document.querySelector('#resource').value,url:url.pathname});return Promise.resolve(new Response('QA one-shot missing resource',{status:404,statusText:'QA resource unavailable'}));}return originalFetch(input,options);};
+
+const gpu=WebGL2RenderingContext.prototype,originalSource=gpu.shaderSource,originalCompile=gpu.compileShader,injected=new Set();
+gpu.shaderSource=function(shader,source){
+ if(document.querySelector('#fail').checked&&document.querySelector('#resource').value==='shader'&&this.canvas.id==='world'&&this.getShaderParameter(shader,this.SHADER_TYPE)===this.VERTEX_SHADER){
+  document.querySelector('#fail').checked=false;failCount++;failures.push({resource:'shader',canvas:this.canvas.id});injected.add(shader);source+='\n#error QA one-shot GPU compile failure\n';
+ }
+ return originalSource.call(this,shader,source);
+};
+gpu.compileShader=function(shader){originalCompile.call(this,shader);if(injected.has(shader)){shaderFailures.push({compiled:this.getShaderParameter(shader,this.COMPILE_STATUS),log:this.getShaderInfoLog(shader)});paint();}};
+new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1&&node.getAttribute('role')==='alert'){alerts.push(node.textContent);paint();}}).observe(document.body,{childList:true});
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='wild-guardians:menu'&&e.data.action==='start'){messages.push({...e.data,at:performance.now()});paint();}});
+new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.id==='world')canvases.add(node);for(const canvas of node.querySelectorAll?.('canvas#world')??[])canvases.add(canvas);}paint();}).observe(document.querySelector('#app'),{childList:true,subtree:true});
+function paint(){const current=slots(),oldUnchanged=Object.entries(initialSlots).every(([key,value])=>JSON.stringify(current[key])===JSON.stringify(value));document.querySelector('#report').textContent=JSON.stringify({attempts,messages,failCount,failures,shaderFailures,alerts,worldCanvasCreations:canvases.size,liveWorldCanvases:document.querySelectorAll('#world').length,liveNativeMenuFrames:document.querySelectorAll('#native-menu').length,initialSlotCount:Object.keys(initialSlots).length,currentSlotCount:Object.keys(current).length,addedSlots:Object.entries(current).filter(([key])=>!Object.hasOwn(initialSlots,key)).map(([key,s])=>({key,slotId:s.slotId,biome:s.biome,culture:s.culture,money:s.ledger.balance,time:s.time,structures:s.structures.length,pauses:s.pauses})),oldUnchanged,errors},null,2);}
+document.querySelector('#read').onclick=paint;
+document.querySelector('#double').onclick=()=>{
+ try{
+  const menu=document.querySelector('#native-menu').contentDocument,frame=menu.querySelector('iframe.production-section'),doc=frame.contentDocument,win=frame.contentWindow,button=doc.querySelector('#confirmButton');
+  if(!button||button.disabled||win.WildGuardiansNewGameMenu.getState().step!=='culture')throw new Error('Reach the culture step first');
+  const attempt={clicks:0,cancelledLaunches:0,simulatedStarts:0,selection:win.WildGuardiansNewGameMenu.getSelection(),states:[]};attempts.push(attempt);
+  button.addEventListener('click',()=>attempt.clicks++,{capture:true});
+  win.addEventListener('wildguardians:new-game',e=>{if(e.defaultPrevented)attempt.cancelledLaunches++;});win.addEventListener('wildguardians:game-started',()=>attempt.simulatedStarts++);
+  button.click();attempt.states.push(win.WildGuardiansNewGameMenu.getState());
+  document.querySelector('#status').textContent='Native Start dispatched; wait for production result.';paint();
+ }catch(e){errors.push(String(e));document.querySelector('#status').textContent=e.message;paint();}
+};
+await import('../../src/app/main.js');paint();
+</script></html>

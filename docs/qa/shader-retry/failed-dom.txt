@@ -1,0 +1,45 @@
+- iframe [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - status
+  - generic: "Menú listo. Cinco símbolos interactivos: Continuar, Juego nuevo, Opciones, Biblioteca y Salir."
+  - text: ✦
+- complementary:
+  - strong: QA-151 · Shader compile retry
+  - paragraph: Uses the original menu and selector. A single original Start handler loads the production app. One-shot real GPU compilation failure affects only the world canvas. Writes normal QA-origin campaign slots.
+  - text: Resource
+  - combobox "Resource":
+    - option "GPU shader compilation" [selected]
+    - option "Sky catalogue"
+    - option "Terrain binary"
+    - option "First world GLB"
+  - checkbox "Fail the selected resource once"
+  - text: Fail the selected resource once
+  - paragraph:
+    - button "Activate native Start once"
+    - button "Read evidence" [active]
+  - paragraph: Native Start dispatched; wait for production result.
+  - generic: "{ \"attempts\": [ { \"clicks\": 1, \"cancelledLaunches\": 1, \"simulatedStarts\": 0, \"selection\": { \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 } }, \"states\": [ { \"step\": \"culture\", \"biome\": { \"id\": \"sabana\", \"name\": \"Sabana\", \"index\": 0 }, \"culture\": { \"id\": \"mapungubwe\", \"name\": \"Mapungubwe\", \"index\": 0 }, \"simulation\": true } ] } ], \"messages\": [ { \"type\": \"wild-guardians:menu\", \"action\": \"start\", \"biome\": \"sabana\", \"culture\": \"mapungubwe\", \"at\": 117886.80000001192 } ], \"failCount\": 1, \"failures\": [ { \"resource\": \"shader\", \"canvas\": \"world\" } ], \"shaderFailures\": [ { \"compiled\": false, \"log\": \"ERROR: 0:7: '' : QA one-shot GPU compile failure\\n\" } ], \"alerts\": [ \"No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.\" ], \"worldCanvasCreations\": 1, \"liveWorldCanvases\": 0, \"liveNativeMenuFrames\": 1, \"initialSlotCount\": 1, \"currentSlotCount\": 1, \"addedSlots\": [], \"oldUnchanged\": true, \"errors\": [] }"

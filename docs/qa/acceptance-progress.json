@@ -1794,9 +1794,10 @@
       "audit_status": "partial",
       "evidence": [
         "docs/qa-audio-lifecycle.md",
-        "docs/qa/resource-retry/README.md"
+        "docs/qa/resource-retry/README.md",
+        "docs/qa/shader-retry/README.md"
       ],
-      "notes": "Network/decode failures and SFX bank rejection release failed cache promises; same-day music and same-clip retry succeed. Real muted AudioContext: injected HTTP404 yields zero voices and no cached failure, second native MP3 decode/play succeeds at rate1. Controlled resume rejection can retry; app gesture listener no longer once-only. Remaining: actual browser denied-unlock flow and controlled missing model/shader/terrain/other asset entry in integrated game. Actual production app/native selector: one-shot HTTP404 for sky catalogue, terrain binary and first compressed world GLB returns original menu with zero live world canvases and zero slots. Normal retry creates exactly one real world/1000-coin slot at time0, intro/reading paused, no demonstration start; console clean. One premature QA-control activation recorded separately and sent no start. Shader compilation failure and actual denied audio unlock remain; transient terrain/model alerts were not captured, though recovery was observed."
+      "notes": "Audio network/decode/cache rejection retry and CPU controlled unlock failure previously verified. Actual app/native selector: HTTP404 for sky catalogue, terrain binary and compressed GLB returns menu with zero worlds/new slots; normal retry loads one1000-coin world. Real GPU compiler now rejects one injected vertex shader (COMPILE_STATUS false), displays one recovery alert and returns menu without saving; prior slot unchanged. Clean retry renders before saving one additional valid slot. First render/additional villages validated before save; shader link failure enters loading/runtime error path, runtime failure stops repeated frames. 13 directed shader/disposal/i18n tests pass. Remaining: integrated initial audio permission/unlock acceptance; QA-151 stays partial."
     },
     {
       "id": "QA-152",
