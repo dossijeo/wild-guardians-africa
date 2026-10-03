@@ -1,0 +1,210 @@
+TAP version 13
+# Subtest: QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints
+ok 1 - QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints
+  ---
+  duration_ms: 11.4586
+  ...
+# Subtest: QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night
+ok 2 - QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night
+  ---
+  duration_ms: 396.5728
+  ...
+# Subtest: QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge
+ok 3 - QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge
+  ---
+  duration_ms: 501.7566
+  ...
+# Subtest: QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue
+ok 4 - QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue
+  ---
+  duration_ms: 7.0938
+  ...
+# Subtest: QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight
+ok 5 - QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight
+  ---
+  duration_ms: 16.1389
+  ...
+# Subtest: QA-023: a mature unrequested plant remains stable through four dawns without water or deterioration
+ok 6 - QA-023: a mature unrequested plant remains stable through four dawns without water or deterioration
+  ---
+  duration_ms: 120.1796
+  ...
+# Subtest: QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering
+ok 7 - QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering
+  ---
+  duration_ms: 34.502
+  ...
+# Subtest: QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once
+ok 8 - QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once
+  ---
+  duration_ms: 128.8774
+  ...
+# Subtest: QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+ok 9 - QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+  ---
+  duration_ms: 5.7273
+  ...
+# Subtest: QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task
+ok 10 - QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task
+  ---
+  duration_ms: 2.7795
+  ...
+# Subtest: QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task
+ok 11 - QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task
+  ---
+  duration_ms: 4.5343
+  ...
+# Subtest: QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect
+ok 12 - QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect
+  ---
+  duration_ms: 47.7913
+  ...
+# Subtest: QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic
+ok 13 - QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic
+  ---
+  duration_ms: 13.6277
+  ...
+# Subtest: QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once
+ok 14 - QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once
+  ---
+  duration_ms: 25.4513
+  ...
+# Subtest: QA-027: group request inserts nearest-to-centre first while retaining an older watering task ahead of it
+ok 15 - QA-027: group request inserts nearest-to-centre first while retaining an older watering task ahead of it
+  ---
+  duration_ms: 0.4691
+  ...
+# Subtest: QA-033: Multiply requested before harvest does not reward a pickup after the effect expires
+ok 16 - QA-033: Multiply requested before harvest does not reward a pickup after the effect expires
+  ---
+  duration_ms: 7.1447
+  ...
+# Subtest: QA-034: male pickup within Multiply fixes one 21.6-valued crate, rounds delivery to 22 and survives reload
+ok 17 - QA-034: male pickup within Multiply fixes one 21.6-valued crate, rounds delivery to 22 and survives reload
+  ---
+  duration_ms: 10.4274
+  ...
+# Subtest: season expires at the next magical watering for all eight species and three intensities
+ok 18 - season expires at the next magical watering for all eight species and three intensities
+  ---
+  duration_ms: 13.3638
+  ...
+# Subtest: successful manual or magical water clears season, but a request without due water does not
+ok 19 - successful manual or magical water clears season, but a request without due water does not
+  ---
+  duration_ms: 0.2364
+  ...
+# Subtest: Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+ok 20 - Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+  ---
+  duration_ms: 31.0955
+  ...
+# Subtest: a worker consumes season on physical first care without a second charge
+ok 21 - a worker consumes season on physical first care without a second charge
+  ---
+  duration_ms: 11.2816
+  ...
+# Subtest: QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+ok 22 - QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+  ---
+  duration_ms: 999.9148
+  ...
+# Subtest: QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 23 - QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 712.1811
+  ...
+# Subtest: QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 24 - QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 599.0627
+  ...
+# Subtest: QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 25 - QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 541.3669
+  ...
+# Subtest: QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 26 - QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 624.9929
+  ...
+# Subtest: QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 27 - QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 609.2224
+  ...
+# Subtest: QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 28 - QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 617.5535
+  ...
+# Subtest: QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 29 - QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 649.4288
+  ...
+# Subtest: QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 30 - QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 557.5896
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 31 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 39.7506
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 32 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 21.9895
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 33 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 25.1623
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 34 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 18.784
+  ...
+# Subtest: native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+ok 35 - native origin keeps strict 144-unit hysteresis, snaps both axes to 48 and never changes target data
+  ---
+  duration_ms: 3.1284
+  ...
+# Subtest: chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+ok 36 - chunk-local and merged buffers preserve subunit positions far beyond Float32 world precision
+  ---
+  duration_ms: 22.7985
+  ...
+# Subtest: original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+ok 37 - original crop stages and opaque bridges use the same origin while surface queries and plant state stay global
+  ---
+  duration_ms: 41.0353
+  ...
+# Subtest: loading a valid snapshot under the wrong slot key recovers only that slot backup
+ok 38 - loading a valid snapshot under the wrong slot key recovers only that slot backup
+  ---
+  duration_ms: 7.991
+  ...
+# Subtest: a wrong-slot primary cannot replace the last valid backup during a new save
+ok 39 - a wrong-slot primary cannot replace the last valid backup during a new save
+  ---
+  duration_ms: 1.0609
+  ...
+# Subtest: wrong-slot primary and backup fail explicitly instead of loading another campaign
+ok 40 - wrong-slot primary and backup fail explicitly instead of loading another campaign
+  ---
+  duration_ms: 1.0228
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6384.7621

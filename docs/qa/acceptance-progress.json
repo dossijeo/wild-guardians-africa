@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "8827dda",
+  "implementation_commit": "99cee68",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -392,20 +392,27 @@
       "area": "Agricultura",
       "scenario": "Cargar guardado de una planta en pleno morph",
       "expected": "Misma fase/progreso y malla correcta; no reiniciar el crecimiento.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-crop-native-reload.md",
+        "tests/crop-native-reload.test.js",
+        "tests/browser/crop-native-reload.html"
+      ],
+      "notes": "Actual 40 GLB geometries and 32 regional bridges: every indexed position/normal/UV preserved; opaque, no alpha coverage. 96 SaveRepository reloads (8 species x 4 morphs x 3 phases) reconstruct identical native buffers and continue actual Game ticks. WebGL loads real maps, recreates renderer/batch after localStorage load: all 32 morphs at 20/50/80 percent and a rotated camera have zero pixel differences; domain identical. Five original-stage views and 16 close views inspected. Original-stage repeat has 3 differing pixels/max channel 7 or 8, retained alongside initial 2-pixel discrepancy; one compiler warning retained. Isolated flat scene, no landscape/shadows/context-loss or full menu-flow claim."
     },
     {
       "id": "QA-036",
       "area": "Agricultura",
       "scenario": "Comparar estados originales y transición de cada especie",
       "expected": "Cuarenta modelos, puentes locales opacos y UV correctas; sin dithering de cultivos.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-agriculture.md"
+        "docs/qa-acceptance-agriculture.md",
+        "docs/qa-crop-native-reload.md",
+        "tests/crop-native-reload.test.js",
+        "tests/browser/crop-native-reload.html"
       ],
-      "notes": "Actual menu Library -> Crops lab loads without console errors. Five reference stages viewed for all eight crops and screenshots inspected. Remaining: compare production morph bridges and UVs against these 40 originals and verify opacity/no dithering in rendering."
+      "notes": "Actual 40 GLB geometries and 32 regional bridges: every indexed position/normal/UV preserved; opaque, no alpha coverage. 96 SaveRepository reloads (8 species x 4 morphs x 3 phases) reconstruct identical native buffers and continue actual Game ticks. WebGL loads real maps, recreates renderer/batch after localStorage load: all 32 morphs at 20/50/80 percent and a rotated camera have zero pixel differences; domain identical. Five original-stage views and 16 close views inspected. Original-stage repeat has 3 differing pixels/max channel 7 or 8, retained alongside initial 2-pixel discrepancy; one compiler warning retained. Isolated flat scene, no landscape/shadows/context-loss or full menu-flow claim."
     },
     {
       "id": "QA-037",
