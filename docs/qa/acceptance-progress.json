@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "71dca14",
+  "implementation_commit": "db9b07c",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1817,9 +1817,11 @@
       "area": "Guardado y presentación",
       "scenario": "Comparar audio a ×1/×5",
       "expected": "Tono y velocidad de reproducción iguales; cambia cadencia lógica, no pitch.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-audio-speed.md"
+      ],
+      "notes": "Actual muted AudioContext and original MP3s, native Sabana/Mapungubwe Navigation and paid centre: A/B packs across day x1, quiet night x5 and native warthog raid x1. Six real-frame trials: exact submitted-delta simulation ratios 1/5/1; audio clock stays real, playbackRate=1/detune=0, same 4-second SFX ends after 4 audio seconds, ten stems with unchanged native bar periods. No storage writes or listening-quality claim. Clock boundary/exit/pause and audio transport regression:38/38 pass."
     },
     {
       "id": "QA-155",
