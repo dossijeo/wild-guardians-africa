@@ -10,10 +10,10 @@ export function nativeNearRegion(eye,quality){
 }
 
 export class NativeHorizon{
-  constructor(scene,waterMaterial){this.scene=scene;this.waterMaterial=waterMaterial;this.group=null;this.key=null;}
+  constructor(scene,waterMaterial,onMaterialChange=null){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.group=null;this.key=null;}
   update(config,profile,region,quality,force=false){
     const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range]);
-    if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality);return;}
+    if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);return;}
     this.dispose();this.key=key;
     if(!['canyons','desert'].includes(config.biome))return;
     const make=config.biome==='desert'?makeDesertHorizon:makeCanyonHorizon;

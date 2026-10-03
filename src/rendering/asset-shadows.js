@@ -30,6 +30,9 @@ export function disposeAssetShadows(group){for(const batch of group.userData.lod
 
 export function installAssetShadows(renderer,chunks){
   const map=renderer.shadowMap,original=map.render,proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';proxies.matrixAutoUpdate=false;
+  // These borrowed solid materials are temporary shadow-pass inputs, not world
+  // color materials or animated water. Avoid scene material discovery per pass.
+  proxies.userData.materialRegistryExcluded=true;
   // Native DVS/DFS project solid geometry without atlas alpha or visibility.
   // This shared source material is borrowed only during the shadow traversal.
   const solid=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
