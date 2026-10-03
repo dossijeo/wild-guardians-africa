@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {recordNativeDepthHook} from './depth-recipes.js';
 
 // Bioma Lab V4.0 main FS: minima included, maxima excluded. Its solid shadow
 // pass deliberately has no clipping. World bounds travel with each instance,
@@ -36,5 +37,5 @@ export function assetClipMaterial(material){
     shader.fragmentShader='varying vec4 vNativeClipBounds;varying vec3 vNativeClipWorld;uniform float uNativeClip;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\n'+nativeAssetClipFragment);
   };
-  material.customProgramCacheKey=()=>cache()+'|native-chunk-clip';material.needsUpdate=true;
+  recordNativeDepthHook(material,previous,'clip');material.customProgramCacheKey=()=>cache()+'|native-chunk-clip';material.needsUpdate=true;
 }

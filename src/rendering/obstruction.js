@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {SLOTS} from '../world/terrain.js';
 import {obstructionRecord,obstructionFrame,obstructionVisibility,coverageThreshold} from './obstruction-source.js';
+import {recordNativeDepthHook} from './depth-recipes.js';
 
 // Geometry views retain the shared immutable vertex/index arrays and add only
 // private GPU identities and per-instance coverage. Disposing a changed slot
@@ -34,7 +35,7 @@ export function obstructionMaterial(material){
     shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
       if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}`);
   };
-  material.customProgramCacheKey=()=>cache()+'|native-obstruction';material.needsUpdate=true;
+  recordNativeDepthHook(material,previous,'obstruction');material.customProgramCacheKey=()=>cache()+'|native-obstruction';material.needsUpdate=true;
 }
 
 // Records belong to an immutable prop population. Replacing a suppressed slot

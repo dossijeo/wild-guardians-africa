@@ -8,6 +8,7 @@ import {fluidLightingFunctions,environmentFunctions} from './fluid-lighting-sour
 import {groundLightingFunctions} from './ground-lighting-source.js';
 import {volcanicFunctions} from './volcanic-source.js';
 import {createNativeShadowUniforms,patchNativeShadow} from './native-shadow.js';
+import {recordNativeDepthHook} from './depth-recipes.js';
 
 const endpointFunctions=endpointEnvironment(environmentFunctions),endpointFluidFunctions=endpointEnvironment(fluidLightingFunctions);
 const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnosticPigment(volcanicFunctions);
@@ -80,6 +81,7 @@ export class AfricanToon {
 
     };
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
+    recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
     material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.toonGround?'ground':'object')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.

@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Profundidad especializada</title>
-<style>body{margin:0;font:13px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:absolute;background:#fff9edee;padding:10px;z-index:2;max-width:95vw}pre{max-height:160px;overflow:auto}</style>
+<style>body{margin:0;font:13px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:absolute;background:#fff9edee;padding:10px;z-index:2;max-width:360px}pre{max-height:160px;overflow:auto}</style>
 <header>Comparación de profundidad con reloj pausado y assets originales. El daño es una entrada controlada de QA.
-<button id="compare" disabled>Comparar profundidad</button><button id="damage" disabled>Añadir 40 de daño</button><button id="grow" disabled>Cambiar crecimiento</button><button id="work" disabled>Buscar VFX de trabajo</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas>
+<button id="compare" disabled>Comparar profundidad</button><button id="damage" disabled>Añadir 40 de daño</button><button id="grow" disabled>Cambiar crecimiento</button><button id="work" disabled>Buscar VFX de trabajo</button><button id="focus-worker" disabled>Enfocar trabajador</button><button id="gpu" disabled>Medir GPU del pase</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas>
 <script type="module">
 import * as THREE from 'three';
 import * as Game from '../../src/simulation/game.js';
@@ -10,6 +10,7 @@ import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
+import {GpuTimer} from './gpu-timer.js';
 const params=new URLSearchParams(window.location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'suajili',errors=[];
 const showError=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent=errors.join('; ');};
 addEventListener('error',e=>showError(e.error??e));addEventListener('unhandledrejection',e=>showError(e.reason));
@@ -22,15 +23,30 @@ const world=new WorldScene(document.querySelector('#world'),()=>{});world.onErro
 world.focus(place.center);const ground=nav.field.surface(place.center.x,place.center.z);world.controls.target.set(place.center.x,ground+1,place.center.z);world.camera.position.set(place.center.x+10,ground+9,place.center.z+14);world.controls.update();
 // Request capture in every diagnostic frame, including frames without VFX.
 const prepare=world.workVfx.prepare.bind(world.workVfx);world.workVfx.prepare=camera=>{prepare(camera);return true;};
+let benchRunning=false,captureTimer=null,captureFrame=0,benchmark=null;
+const capture=world.destructionPass.captureDepth.bind(world.destructionPass);
+world.destructionPass.captureDepth=(camera,scene)=>{const active=captureTimer?.begin(captureFrame++);try{return capture(camera,scene);}finally{if(active)captureTimer.end();}};
 const readScene=new THREE.Scene(),readCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,1),readMaterial=new THREE.ShaderMaterial({uniforms:{depth:{value:null}},vertexShader:'void main(){gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D depth;'+THREE.ShaderChunk.packing+'void main(){gl_FragColor=packDepthToRGBA(texelFetch(depth,ivec2(gl_FragCoord.xy),0).r);}',depthTest:false,depthWrite:false,toneMapped:false});
 readScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),readMaterial));let result=null;
 function readDepth(){const renderer=world.renderer,texture=world.destructionPass.smokeDepth.depthTexture,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=new THREE.WebGLRenderTarget(size.x,size.y,{depthBuffer:false}),old=renderer.getRenderTarget();readMaterial.uniforms.depth.value=texture;const bytes=new Uint8Array(size.x*size.y*4);try{renderer.setRenderTarget(target);renderer.render(readScene,readCamera);renderer.readRenderTargetPixels(target,0,0,size.x,size.y,bytes);}finally{renderer.setRenderTarget(old);target.dispose();}return bytes;}
-function status(){document.querySelector('#status').textContent=`${biome}/${culture} · ${state.structures[0].hp} PV · ${world.chunks.size} chunks · ${errors.length} errores`;document.querySelector('#data').textContent=JSON.stringify({biome,culture,elapsed:state.elapsed,growth:state.plants[0].growth,damage:world.objects.get(state.structures[0].id)?.damage,stats:world.destructionPass.depthCaptureStats,workVfx:[...world.workVfx.effects.values()].map(e=>({id:e.native.definition.id,solids:[...e.rigids.values()].reduce((n,m)=>n+m.geometry.instanceCount,0)})),result,errors},null,2);}
+function status(){document.querySelector('#status').textContent=`${biome}/${culture} · ${state.structures[0].hp} PV · ${world.chunks.size} chunks · ${errors.length} errores${benchRunning?' · midiendo GPU':''}${result?' · diferencias '+result.differentPixels:''}${benchmark?.baseline.meanMs!=null?' · GPU '+benchmark.baseline.meanMs.toFixed(2)+' → '+benchmark.specialized.meanMs.toFixed(2)+' ms':''}`;document.querySelector('#data').textContent=JSON.stringify({biome,culture,elapsed:state.elapsed,growth:state.plants[0].growth,damage:world.objects.get(state.structures[0].id)?.damage,stats:world.destructionPass.depthCaptureStats,workers:state.workers.map(w=>({id:w.id,status:w.status,meshPresent:world.objects.has(w.id)})),workVfx:[...world.workVfx.effects.values()].map(e=>({id:e.native.definition.id,solids:[...e.rigids.values()].reduce((n,m)=>n+m.geometry.instanceCount,0)})),result,benchmark,errors},null,2);}
+const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+async function measure(optimized){
+ world.destructionPass.optimizedDepth=optimized;
+ for(let i=0;i<8;i++){await nextFrame();world.render(0);}
+ const timer=new GpuTimer(world.renderer.getContext());if(timer.reason)return timer.report();captureTimer=timer;captureFrame=0;
+ try{for(let i=0;i<240&&timer.samples.length<40&&!timer.reason;i++){await nextFrame();world.render(0);timer.poll();}
+  captureTimer=null;for(let i=0;i<240&&timer.pending.length&&!timer.reason;i++){await nextFrame();timer.poll();}
+  const report=timer.report(),sorted=report.samples.map(s=>s.ms).sort((a,b)=>a-b);return {...report,meanMs:sorted.length?sorted.reduce((a,b)=>a+b,0)/sorted.length:null,medianMs:sorted.length?sorted[Math.floor(sorted.length/2)]:null};
+ }finally{captureTimer=null;timer.dispose();}
+}
+document.querySelector('#gpu').onclick=async()=>{benchRunning=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);try{const size=world.renderer.getDrawingBufferSize(new THREE.Vector2());benchmark={width:size.x,height:size.y,baseline:await measure(false),specialized:await measure(true)};}catch(e){showError(e);}finally{world.destructionPass.optimizedDepth=true;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}};
 function compare(){world.destructionPass.optimizedDepth=false;world.render(0);const baseline=readDepth();world.destructionPass.optimizedDepth=true;world.render(0);const optimized=readDepth();let differentBytes=0,differentPixels=0,nonUniformPixels=0;for(let i=0;i<baseline.length;i+=4){let different=false;for(let j=0;j<4;j++)if(baseline[i+j]!==optimized[i+j]){differentBytes++;different=true;}if(different)differentPixels++;if([0,1,2,3].some(j=>baseline[i+j]!==baseline[j]))nonUniformPixels++;}if(!nonUniformPixels)throw new Error("Constant depth readback cannot prove equivalence");result={differentPixels,differentBytes,nonUniformPixels,pixels:baseline.length/4};status();}
 document.querySelector('#compare').onclick=compare;
+document.querySelector('#focus-worker').onclick=()=>{const worker=state.workers[0],y=nav.field.surface(worker.x,worker.z);world.controls.target.set(worker.x,y+.8,worker.z);world.camera.position.set(worker.x+4,y+3.5,worker.z+5);world.controls.update();world.render(0);status();};
 document.querySelector('#work').onclick=async()=>{document.querySelectorAll('button').forEach(b=>b.disabled=true);try{for(let i=0;i<4000&&!world.workVfx.effects.size;i++){Game.resume(state,'qa');Game.tick(state,.1,nav);Game.pause(state,'qa');world.workVfx.update(state);if(i%25===24){world.render(0);await new Promise(resolve=>setTimeout(resolve,0));}}Game.resume(state,'qa');Game.tick(state,.12,nav);Game.pause(state,'qa');world.render(0);status();}finally{document.querySelectorAll('button').forEach(b=>b.disabled=false);}};
 document.querySelector('#damage').onclick=()=>{hitStructure(state.structures[0],40);world.render(0);status();};
 document.querySelector('#grow').onclick=()=>{const p=state.plants[0],total=cropSpec(p.species).growth_seconds;p.growth=p.growth<total*.3?total*.52:p.growth<total*.9?total:0;world.render(0);status();};
 await world.whenChunksReady();world.render(0);await Promise.all([...world.assets.cache.values()]);document.querySelectorAll('button').forEach(b=>b.disabled=false);status();
-requestAnimationFrame(function frame(){world.render(0);status();requestAnimationFrame(frame);});addEventListener('pagehide',()=>world.dispose());
+requestAnimationFrame(function frame(){if(!benchRunning)world.render(0);status();requestAnimationFrame(frame);});addEventListener('pagehide',()=>world.dispose());
 </script></html>
