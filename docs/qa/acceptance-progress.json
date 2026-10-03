@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "db9b07c",
+  "implementation_commit": "fc94ba9",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1863,9 +1863,11 @@
       "area": "Guardado y presentación",
       "scenario": "Escena grande lejos del origen y tras descargar chunks",
       "expected": "Colocaciones estables, colisiones y persistencia; perf se mide, no se infiere de MAX_PLANTS=240.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-large-farm.md"
+      ],
+      "notes": "Native Sabana/Mapungubwe seed712 postgame QA checkpoint:627 paid commands,600 crops/eight species,2 villages/2 centres/24 walls,far centre at4235/-4075. Three2048-unit streaming cycles:25 disjoint chunks away,all600 GPU instances restored with maximum1.872e-6 position error,26 collisions and exact centre-village route preserved. Fresh Navigation/WorldScene after SaveRepository load:343323-byte snapshots identical.300 measured static frames:60-71ms mean intervals; resources return111 geometries/21 textures. Performance measured, no FPS-target/mobile/active-play or indefinite-memory claim. InstancedMesh disposal corrected;22/22 directed tests/build/web-package pass."
     },
     {
       "id": "QA-159",

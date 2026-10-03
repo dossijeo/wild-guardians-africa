@@ -65,6 +65,24 @@ comparación visual, caras por categoría/LOD y profundidad de interiores/ceniza
 La separación de sombras estáticas/dinámicas requiere una prueba independiente.
 No se convierten estos diagnósticos en cambios visuales globales sin validarlos.
 
+## Finca grande: medición de QA-158
+
+Sobre `fc94ba9`, la [prueba de finca grande](qa-large-farm.md) coloca 600 cultivos,
+24 defensas y dos centros, con un poblado a más de cuatro kilómetros del origen.
+Tres ciclos de streaming y una recarga completa conservan exactamente el estado,
+las colisiones y posiciones. Los recursos registrados regresan a 111 geometrías
+y 21 texturas en las cinco series de finca; no se afirma estabilidad indefinida.
+
+Las 300 muestras estáticas en media, framebuffer 1600×900, dan intervalos medios
+de 59,98–71,21 ms y CPU render de 8,64–12,38 ms. Son intervalos reales de navegador
+y CPU síncrona, no tiempo GPU ni una prueba A/B. La escena sigue siendo pesada;
+el cierre funcional de QA-158 no cierra las optimizaciones pendientes.
+
+Durante la revisión se corrigió la retirada de lotes: InstancedMesh.dispose
+libera los buffers propios de instancias al crecer la capacidad. La geometría
+y los materiales ya se liberaban. La prueba cubre los 40 modelos y 32 bridges;
+no atribuye a este cambio una mejora de FPS ni bytes GPU medidos.
+
 ## Comprobación sobre la implementación actual
 
 Sobre `0db52e8` pasan **51/51 pruebas dirigidas**, cero fallos/omisiones,
