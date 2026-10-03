@@ -98,6 +98,11 @@ Build aprobado (139 módulos, 6,24 s; aviso de tamaño de bundle existente).
 Paquete web aprobado: 559 archivos, 379783708 bytes, 796 enlaces relativos,
 20 GLB de runtime y ningún duplicado original.
 
+La [CI completa de la corrección fc94ba9](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37148622382)
+terminó correctamente: **1196/1196 pruebas**, cero fallos u omisiones, verificación
+de assets/plan, build, paquete web y empaquetado itch. Los commits posteriores
+de este ensayo añaden fixture, evidencia y documentación; no modifican runtime.
+
 [Datos completos y muestras](qa/large-farm/final-report.json),
 [comparación independiente](qa/large-farm/comparison.json),
 [snapshot preparado](qa/large-farm/prepared-snapshot.json),
