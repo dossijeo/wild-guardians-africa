@@ -42,7 +42,7 @@ export function applyEvent(s) {
   if(event.targetIds.length) {
     const names={frost:'Estrés nocturno: retrocede el crecimiento',plague:'Plaga: se reduce el margen de riego',favorable:'Noche favorable: avanza el crecimiento',fertile:'Suelo fértil: mejora la próxima cosecha',season:'Buena temporada: aumenta el margen hasta el próximo riego'};
     notice(s,`${names[event.kind]} de ${event.targetIds.length} plantas${event.species?' de '+cropSpec(event.species).name:''}.`,event.targetIds[0]);
-    emit(s,'AgriculturalEventApplied',{kind:event.kind,targets:event.targetIds});
+    emit(s,'AgriculturalEventApplied',{kind:event.kind,targets:event.targetIds,day:s.day,noticeId:s.messages.at(-1).id});
   }
 }
 

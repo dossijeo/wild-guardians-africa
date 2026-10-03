@@ -1,0 +1,38 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Anuncio agrícola al amanecer</title>
+<p>Fixture de QA: terreno Sabana/Mapungubwe, semilla 712, centro y doce semillas pagados. Crédito explícito de 5000 monedas, postcampaña sin ataques, primer riego/progreso preparados. Busca un plan real del PRNG y prepara el final de noche; no acredita una campaña natural. Usa únicamente qa-agricultural-events en este origen independiente.</p>
+<button id="open" disabled>Abrir partida nocturna en el juego</button><button id="inspect" disabled>Inspeccionar guardado de QA</button><pre id="status">Preparando…</pre>
+<script type="module">
+import {TUTORIAL_IDS} from '../../src/tutorial/messages.js';
+import * as Game from '../../src/simulation/game.js';
+import {rational,transact} from '../../src/simulation/money.js';
+import {waterPlant} from '../../src/simulation/crops.js';
+import {planNight} from '../../src/simulation/raids.js';
+import {selectEvent} from '../../src/simulation/events.js';
+import {SaveRepository,serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {json} from '../../src/rendering/assets.js';
+const repository=new SaveRepository(localStorage),slotId='qa-agricultural-events';
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+let state=Game.newGame({seed:712,slotId});const nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');
+transact(state.ledger,'qa-inspection-credit',rational(5000));Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);
+for(let z=-9;z<=9&&state.plants.length<12;z+=1.5)for(let x=4.5;x<=15&&state.plants.length<12;x+=1.5){
+ const p={x:location.center.x+x,z:location.center.z+z};if(!nav.placement(p.x,p.z,.4).valid)continue;
+ Game.plant(state,'qa-seed-'+state.plants.length,'mijo',p.x,p.z,nav);const plant=state.plants.at(-1);waterPlant(plant);plant.growth=14;
+}
+if(state.plants.length!==12)throw Error('No se encontraron doce posiciones legales');
+state.day=101;state.completedNights=100;state.postgame=true;state.initialPreparation=false;state.tutorial.step='done';state.tutorial.basicSkipped=true;state.tutorial.seen=[...TUTORIAL_IDS];state.dayPlan={done:true};
+// Each candidate gets one genuine night plan/event draw. Advance the persisted
+// RNG between candidates solely to prepare this explicit QA starting state.
+for(let attempt=0;attempt<100;attempt++){
+ const candidate=deserialize(serialize(state));planNight(candidate);selectEvent(candidate);
+ if(candidate.eventPlan){state=candidate;break;}state.rng=candidate.rng;
+}
+if(!state.eventPlan)throw Error('No se encontró evento de QA');state.nightPlan.done=true;state.time=599.9;Game.rebuildTasks(state);
+function describe(s){return {slotId:s.slotId,day:s.day,time:s.time,rng:s.rng,balance:s.ledger.balance,eventPlan:s.eventPlan,plants:s.plants,messages:s.messages,events:s.events.filter(e=>e.type==='AgriculturalEventApplied'),pauses:s.pauses};}
+document.querySelector('#status').textContent=JSON.stringify(describe(state),null,2);
+document.querySelector('#open').disabled=false;document.querySelector('#inspect').disabled=false;
+document.querySelector('#open').onclick=()=>{repository.save(state);window.location.href='../../';};
+document.querySelector('#inspect').onclick=()=>{document.querySelector('#status').textContent=JSON.stringify(describe(repository.load(slotId)),null,2);};
+</script></html>
