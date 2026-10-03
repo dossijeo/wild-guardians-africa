@@ -235,3 +235,17 @@ matriz visual completa ni pérdida real del último centro.
 [Evidencia y límites](qa-center-bounds.md). Pendiente selección de lotes contra
 volumen de luz y demás prioridades/aceptación completa del Plan Maestro.
 CI b020f37 finalizada correctamente; cambios actuales pendientes de CI.
+
+### 3 de octubre: selección de props por volumen de luz
+
+Publicado c8d4675: frustum direccional independiente para grupos y excepciones
+recortadas, envolvente de todos los LODs y selección global antes de rebasing.
+Test conserva caster fuera de pantalla, mueve foco, cubre LOD final mayor y
+traslación ±48M. Suite 637/637; dirigidas 20/20, build/paquete aprobados.
+Sabana/Mapungubwe: 3/25 chunks fuera de luz; 70,356 triángulos menos por
+mapa regenerado, misma cantidad de calls. Variación GPU y diferencias de
+capturas preservadas, sin afirmar ahorro de tiempo ni identidad exacta. Caché
+normal conserva 210 hits/0 dibujos en QA; cero errores.
+[Evidencia y límites](qa-light-volume.md). CI 26639b4 aprobada; CI actual
+pendiente. Siguen pendientes caras por categoría, ruido barato, registros CPU,
+profundidad VFX, resolución independiente y aceptación completa del plan.
