@@ -26,4 +26,4 @@ Suite completa local de `4890c6d`: **688/688**, sin fallos ni omitidas, en 321,0
 
 La [CI 37091884829](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37091884829) terminó correctamente para el mismo commit: suite completa, verificaciones de recursos/reglas, build y paquete web. Evidencias: [ci.json](qa/acceptance-territory/ci.json), [ci-results.txt](qa/acceptance-territory/ci-results.txt).
 
-Queda fuera de este bloque la elección de poblado al construir un centro por primera vez: su código actual todavía utiliza distancia euclidiana. El Plan Maestro exige distancia de camino válida también en ese caso; debe corregirse y probarse por separado. El objetivo completo sigue abierto.
+Quedó fuera de este bloque la elección de poblado al construir un centro por primera vez: en `4890c6d` todavía utilizaba distancia euclidiana. Se corrigió posteriormente en `611a77c`: [asociación inicial por camino válido](qa-center-logistics.md). El objetivo completo sigue abierto.

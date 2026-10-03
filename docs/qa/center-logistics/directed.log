@@ -1,0 +1,380 @@
+TAP version 13
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 1 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 9.0675
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 2 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 17.1753
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 3 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 11.8002
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 4 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 5.1828
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 5 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 2.3013
+  ...
+# Subtest: QA-042: equal weights and creation timestamps break ties by persistent ID
+ok 6 - QA-042: equal weights and creation timestamps break ties by persistent ID
+  ---
+  duration_ms: 16.7526
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 7 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 20.2437
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 8 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 1.6268
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 9 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 5.2112
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 10 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 11.8379
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 11 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 196.2055
+  ...
+# Subtest: QA-052/143: founding changes territorial center assignment while current staff return to their original village
+ok 12 - QA-052/143: founding changes territorial center assignment while current staff return to their original village
+  ---
+  duration_ms: 82.014
+  ...
+# Subtest: QA-052: territorial choice respects full detours and excludes unreachable village routes
+ok 13 - QA-052: territorial choice respects full detours and excludes unreachable village routes
+  ---
+  duration_ms: 1.3823
+  ...
+# Subtest: A new center chooses a reachable village by complete path distance rather than straight-line proximity
+ok 14 - A new center chooses a reachable village by complete path distance rather than straight-line proximity
+  ---
+  duration_ms: 5.5369
+  ...
+# Subtest: No valid village route rejects a new center before debit, ID allocation, suppression or events
+ok 15 - No valid village route rejects a new center before debit, ID allocation, suppression or events
+  ---
+  duration_ms: 1.8651
+  ...
+# Subtest: Preview checks the selected culture hull and remains identical to committed native geometry
+ok 16 - Preview checks the selected culture hull and remains identical to committed native geometry
+  ---
+  duration_ms: 6.1404
+  ...
+# Subtest: Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+ok 17 - Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+  ---
+  duration_ms: 1.3933
+  ...
+# Subtest: Real Navigation validates the proposed building and preserves live collision caches during preview
+ok 18 - Real Navigation validates the proposed building and preserves live collision caches during preview
+  ---
+  duration_ms: 68.5754
+  ...
+# Subtest: A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+ok 19 - A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+  ---
+  duration_ms: 130.9672
+  ...
+# Subtest: The unreachable-center command explains its failure in English and Spanish
+ok 20 - The unreachable-center command explains its failure in English and Spanish
+  ---
+  duration_ms: 0.5912
+  ...
+# Subtest: suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 21 - suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 839.6359
+  ...
+# Subtest: etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 22 - etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 585.4795
+  ...
+# Subtest: mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 23 - mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 517.4395
+  ...
+# Subtest: saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 24 - saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 581.1158
+  ...
+# Subtest: musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 25 - musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 592.2933
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 26 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 11.0002
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 27 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 6.735
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 28 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 1.4643
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 29 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 1.439
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 30 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 1.5887
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 31 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 11.5579
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 32 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.2439
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 33 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 3.7132
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 34 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.966
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 35 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.8868
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 36 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 31.1102
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 37 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 3.0109
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 38 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 4.7364
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 39 - New midday center does not move plants or employees
+  ---
+  duration_ms: 2.0989
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 40 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 5.9026
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 41 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.5812
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 42 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.1173
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 43 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.096
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 44 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.3028
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 45 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.2119
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 46 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 1.0253
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 47 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.6368
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 48 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4478
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 49 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 2.1276
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 50 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.1664
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 51 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.2034
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 52 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 110.1468
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 53 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 19.7507
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 54 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 19.1871
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 55 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.8593
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 56 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.5558
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 57 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 10.9565
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 58 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.6354
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 59 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 9.5985
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 60 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.5332
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 61 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.6555
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 62 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.6104
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 63 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.0597
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 64 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.9735
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 65 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.7578
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 66 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4796
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 67 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2381
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 68 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3728
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 69 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.6187
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 70 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 4.8888
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 71 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.437
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 72 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 0.8785
+  ...
+# Subtest: Structure connectivity preflight leaves the actual crop target priority unchanged
+ok 73 - Structure connectivity preflight leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 5.1558
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 74 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 3.3379
+  ...
+1..74
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3504.2828

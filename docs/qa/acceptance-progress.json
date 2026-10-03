@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "4890c6d",
+  "implementation_commit": "2222037",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -35,9 +35,10 @@
       "expected": "Se permite colocar el primer centro por 800; no bloquea la condición de infraestructura.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa-center-logistics.md"
       ],
-      "notes": "Actual new tutorial: 1000 coins, no centre, enabled 800-coin centre; valid placement produced 200 coins and next tutorial reading. Directed domain test also passes."
+      "notes": "Actual new tutorial: 1000 coins, no centre, enabled 800-coin centre; valid placement produced 200 coins and next tutorial reading. Directed domain test also passes. Initial center construction additionally verifies valid native-footprint routes, culture consistency and rejection without debit; funded flat-navigation fixtures do not replace prior UI or real-biome acceptance."
     },
     {
       "id": "QA-004",
@@ -47,9 +48,10 @@
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
-        "docs/qa-acceptance-selector.md"
+        "docs/qa-acceptance-selector.md",
+        "docs/qa-center-logistics.md"
       ],
-      "notes": "Invalid overlap and Cancel leave 1000 unchanged. Domain test verifies no structure or suppression mutation. Cancelling the new-game selector preserved the existing Sabana/Mapungubwe slot at 95; subsequent separate Desert/Ethiopian start created exactly one additional slot and kept the first at 95."
+      "notes": "Invalid overlap and Cancel leave 1000 unchanged. Domain test verifies no structure or suppression mutation. Cancelling the new-game selector preserved the existing Sabana/Mapungubwe slot at 95; subsequent separate Desert/Ethiopian start created exactly one additional slot and kept the first at 95. Initial center construction additionally verifies valid native-footprint routes, culture consistency and rejection without debit; funded flat-navigation fixtures do not replace prior UI or real-biome acceptance."
     },
     {
       "id": "QA-005",
@@ -1394,9 +1396,10 @@
       "expected": "Nueva asociación territorial no cambia la residencia ni centro de trabajadores de hoy.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-territory.md"
+        "docs/qa-acceptance-territory.md",
+        "docs/qa-center-logistics.md"
       ],
-      "notes": "Actual postgame founding during worker jornada changes territorial association without moving current origin/center. Worker physically returns to original home; next day starts new worker at new territory entry with normal single wage."
+      "notes": "Actual postgame founding during worker jornada changes territorial association without moving current origin/center. Worker physically returns to original home; next day starts new worker at new territory entry with normal single wage. Initial center construction additionally verifies valid native-footprint routes, culture consistency and rejection without debit; funded flat-navigation fixtures do not replace prior UI or real-biome acceptance."
     },
     {
       "id": "QA-144",

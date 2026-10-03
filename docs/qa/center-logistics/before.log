@@ -1,0 +1,109 @@
+TAP version 13
+# Subtest: A new center chooses a reachable village by complete path distance rather than straight-line proximity
+not ok 1 - A new center chooses a reachable village by complete path distance rather than straight-line proximity
+  ---
+  duration_ms: 6.4341
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'village-1'
+    - 'village-2'
+               ^
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'village-2'
+  actual: 'village-1'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:19:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: No valid village route rejects a new center before debit, ID allocation, suppression or events
+not ok 2 - No valid village route rejects a new center before debit, ID allocation, suppression or events
+  ---
+  duration_ms: 1.3598
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:23:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:24:46)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: Preview checks the selected culture hull and remains identical to committed native geometry
+not ok 3 - Preview checks the selected culture hull and remains identical to committed native geometry
+  ---
+  duration_ms: 0.5898
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:27:1'
+  failureType: 'testCodeFailure'
+  error: 'Game.previewCenter is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:31:42)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+not ok 4 - Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+  ---
+  duration_ms: 0.3004
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:40:1'
+  failureType: 'testCodeFailure'
+  error: 'Game.previewCenter is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:42:20)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Real Navigation validates the proposed building and preserves live collision caches during preview
+not ok 5 - Real Navigation validates the proposed building and preserves live collision caches during preview
+  ---
+  duration_ms: 0.7471
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:50:1'
+  failureType: 'testCodeFailure'
+  error: 'Game.previewCenter is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/center-logistics.test.js:55:20)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 185.7898
