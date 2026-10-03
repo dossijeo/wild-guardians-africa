@@ -1,0 +1,74 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA audio ×1 / ×5</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px}pre{white-space:pre-wrap;font-size:13px}</style>
+<h1>Reloj de audio frente a aceleración automática</h1>
+<p>Sabana/Mapungubwe original; centro pagado. WebAudio real y MP3 originales, salida silenciada. Se preparan horas de QA y noches tranquilas; no se guardan partidas. Día, noche e incursión nativa con ambos packs.</p>
+<button id="run" disabled>Comparar A y B</button><p id="status">Preparando navegación…</p><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {AudioSystem} from '../../src/audio/audio.js';
+import {json} from '../../src/rendering/assets.js';
+const audio=new AudioSystem({sfx:0,music:0}),results=[],errors=[];
+const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#run');
+addEventListener('error',e=>errors.push(String(e.error??e.message)));
+addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const check=(ok,message)=>{if(!ok)throw new Error(message);};
+let base,nav,frame,disposed=false;
+function paint(){report.textContent=JSON.stringify({results,errors},null,2);}
+async function trial(day,mode){
+ const state=structuredClone(base);state.day=day;state.time=mode==='day'?100:310;
+ // Explicit quiet-night fixture: excludes random arrival during the comparison.
+ state.dayPlan={done:true};state.nightPlan={done:true};nav.setState(state);
+ if(mode==='raid')spawnRaid(state,{group:['warthog']},nav);
+ check(mode!=='raid'||state.raid,'No se generó la incursión nativa');
+ audio.stop();audio.updateMusic(state);await audio.gameplay(day);
+ const bank=await audio.sfxBank(),clip=bank.items.find(i=>i.id==='farm_watering_can');
+ const buffer=await audio.buffer(clip.audio.url);
+ const source=audio.startBuffer(buffer,{family:clip.id});
+ const audioStart=audio.context.currentTime,wallStart=performance.now()/1000,simStart=state.elapsed;
+ const deck=audio.transport.primary,bar=240/audio.mixer.policy.bpm,origin=deck.start+audio.mixer.policy.gridOffset;
+ let endedAt=null,last=wallStart,submitted=0,minRate=Infinity,maxRate=-Infinity,maxDetune=0,minimumMusic=Infinity;
+ const markers=[],originalEnded=source.onended;
+ source.onended=()=>{endedAt=audio.context.currentTime-audioStart;originalEnded();};
+ let nextBar=Math.ceil((audioStart-origin)/bar);
+ await new Promise((resolve,reject)=>{
+  function step(){try{
+   if(disposed)throw new Error('Prueba cerrada');
+   const wall=performance.now()/1000,dt=Math.min(.1,wall-last);last=wall;submitted+=dt;
+   Game.advanceReal(state,dt,nav);audio.updateMusic(state);
+   for(const s of [...audio.active,source]){minRate=Math.min(minRate,s.playbackRate.value);maxRate=Math.max(maxRate,s.playbackRate.value);maxDetune=Math.max(maxDetune,Math.abs(s.detune.value));}
+   minimumMusic=Math.min(minimumMusic,[...audio.voices.values()].filter(v=>v.music).length);
+   const now=audio.context.currentTime;
+   while(now>=origin+nextBar*bar){markers.push({bar:nextBar,scheduled:origin+nextBar*bar-audioStart,observed:now-audioStart});nextBar++;}
+   if(wall-wallStart<6){frame=requestAnimationFrame(step);return;}
+   const actualAudio=now-audioStart,simulated=state.elapsed-simStart,speed=mode==='night'?5:1;
+   const result={pack:audio.pack,mode,expectedSpeed:speed,realSeconds:wall-wallStart,submittedSeconds:submitted,audioSeconds:actualAudio,simulatedSeconds:simulated,simulationRatio:simulated/submitted,audioRatio:actualAudio/(wall-wallStart),minRate,maxRate,maxDetune,minimumMusic,barSeconds:bar,markers,sfx:{id:clip.id,decodedDuration:buffer.duration,endedAfterAudioSeconds:endedAt},raidActive:!!state.raid,pauses:state.pauses,result:state.result};
+   results.push(result);paint();
+   check(Math.abs(result.simulationRatio-speed)<1e-7,'Velocidad lógica incorrecta');
+   check(Math.abs(result.audioRatio-1)<.03,'El reloj de audio no sigue el tiempo real');
+   check(minRate===1&&maxRate===1&&maxDetune===0,'Pitch o reproducción alterados');
+   check(minimumMusic===10&&markers.length>=2,'Capas o compases ausentes');
+   check(endedAt!==null&&Math.abs(endedAt-buffer.duration)<.08,'Duración real del SFX incorrecta');
+   check(!state.result&&!state.pauses.length&&(mode!=='raid'||state.raid),'Escenario interrumpido');
+   resolve();
+  }catch(e){reject(e);}}
+  frame=requestAnimationFrame(step);
+ });
+}
+try{
+ const profile=(await json('/content/biome-'+BIOME_IDS.sabana+'.json')).profile;
+ const payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ nav=new Navigation(712,'sabana',profile);const place=await findInitialLocationAsync(nav,payload);
+ base=Game.newGame({seed:712,slotId:'qa-audio-speed'});Object.assign(base.villages[0],place);base.suppressed.push(...place.suppress);nav.setState(base);
+ Game.resume(base,'intro');Game.placeStructure(base,'qa-center',place.center,nav);base.initialPreparation=false;
+ status.textContent='Listo';button.disabled=false;
+}catch(e){errors.push(String(e));status.textContent='Error de preparación';paint();}
+button.onclick=async()=>{button.disabled=true;try{
+ await audio.unlock();results.length=0;
+ for(const day of [1,2])for(const mode of ['day','night','raid']){status.textContent=`Comparando pack ${day===1?'A':'B'} · ${mode}`;await trial(day,mode);}
+ audio.stop();check(audio.active.length===0&&audio.voices.size===0,'Fuentes pendientes');status.textContent='Verificado: seis escenarios';
+}catch(e){errors.push(String(e));audio.stop();status.textContent='Error';}finally{paint();button.disabled=false;}};
+addEventListener('pagehide',()=>{disposed=true;cancelAnimationFrame(frame);audio.dispose();});
+</script></html>
