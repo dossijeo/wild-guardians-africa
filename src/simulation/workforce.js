@@ -45,12 +45,21 @@ export function hiringCost(selection) {
 export function distributeProfiles(quotas,selection) {
   const centers=Object.keys(quotas);
   const result=Object.fromEntries(centers.map(id=>[id,[]]));
-  // Round-robin among centers with available quotas; no task/sex optimization.
-  let cursor=0;
-  for(const p of PROFILES) for(let i=0;i<(selection[p.id]??0);i++) {
-    if(!centers.some(id=>result[id].length<quotas[id])) return result;
-    while(result[centers[cursor%centers.length]].length>=quotas[centers[cursor%centers.length]]) cursor++;
-    result[centers[cursor++%centers.length]].push(p.id);
+  // Apportion each profile across remaining capacity. Filling small centers
+  // first would concentrate later profiles in the largest center.
+  for(const p of PROFILES) {
+    const available=centers.map((id,index)=>({id,index,free:quotas[id]-result[id].length}));
+    const capacity=available.reduce((sum,c)=>sum+c.free,0);
+    if(!capacity)return result;
+    const count=Math.min(selection[p.id]??0,capacity);
+    let assigned=0;
+    for(const c of available){
+      const numerator=BigInt(count)*BigInt(c.free);
+      c.count=Number(numerator/BigInt(capacity));c.remainder=numerator%BigInt(capacity);assigned+=c.count;
+    }
+    available.sort((a,b)=>a.remainder===b.remainder?a.index-b.index:a.remainder>b.remainder?-1:1);
+    for(const c of available.slice(0,count-assigned))c.count++;
+    for(const c of available)for(let i=0;i<c.count;i++)result[c.id].push(p.id);
   }
   return result;
 }
