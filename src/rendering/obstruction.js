@@ -37,24 +37,40 @@ export function obstructionMaterial(material){
   material.customProgramCacheKey=()=>cache()+'|native-obstruction';material.needsUpdate=true;
 }
 
+// Records belong to an immutable prop population. Replacing a suppressed slot
+// creates another fade; weak ownership lets retired populations be collected.
+const obstructionCaches=new WeakMap();
 export function updateObstructions(chunks,camera,target,dt,{enabled=true,distance=7,snap=false}={}){
-  const frame=obstructionFrame(camera.position.toArray(),target.toArray(),THREE.MathUtils.degToRad(camera.fov),camera.aspect,distance);
+  const inputs=[...camera.position.toArray(),...target.toArray(),camera.fov,camera.aspect,distance,enabled];
+  let frame;
   const stats={hidden:0,fading:0,affected:0};dt=Math.max(0,Math.min(.12,dt));
   for(const group of chunks.values()){
    const batches=group.userData?.lodBatches??[];
    const fades=[...batches.map(b=>b.fade),...group.children.filter(m=>!m.userData?.nativeLodBatch).map(m=>m.geometry?.userData.obstruction)];
    for(const fade of fades){
-    if(!fade)continue;let dirty=false;
+    if(!fade)continue;
+    let cache=obstructionCaches.get(fade);
+    const invalid=!cache||fade.fresh||cache.records!==fade.records||cache.desired.length!==fade.records.length||cache.array!==fade.attribute.array||cache.version!==fade.attribute.version||inputs.some((value,i)=>value!==cache.inputs[i]);
+    if(invalid){
+      if(enabled)frame??=obstructionFrame(camera.position.toArray(),target.toArray(),THREE.MathUtils.degToRad(camera.fov),camera.aspect,distance);
+      cache={inputs,records:fade.records,array:fade.attribute.array,desired:fade.records.map(record=>enabled?obstructionVisibility(record,frame):1),settled:false};
+      obstructionCaches.set(fade,cache);
+    }
+    if(cache.settled){for(const key of ['hidden','fading','affected'])stats[key]+=cache.stats[key];continue;}
+    let dirty=false,settled=true;const counts={hidden:0,fading:0,affected:0};
     for(let i=0;i<fade.records.length;i++){
-      const desired=enabled?obstructionVisibility(fade.records[i],frame):1,old=fade.attribute.array[i],rate=desired<old?16:7;
+      const desired=cache.desired[i],old=fade.attribute.array[i],rate=desired<old?16:7;
       let value=snap||fade.fresh?desired:old+(desired-old)*(1-Math.exp(-dt*rate));
       if(Math.abs(value-desired)<.008)value=desired;if(value<.002)value=0;if(value>.998)value=1;
       if(Math.abs(value-old)>.0001){fade.attribute.array[i]=value;dirty=true;}
-      if(value<.999){stats.affected++;if(value<.002)stats.hidden++;else stats.fading++;}
+      if(value!==(desired<.002?0:desired>.998?1:desired))settled=false;
+      if(value<.999){counts.affected++;if(value<.002)counts.hidden++;else counts.fading++;}
     }
     fade.fresh=false;if(dirty)fade.attribute.needsUpdate=true;
+    cache.version=fade.attribute.version;cache.settled=settled;cache.stats=counts;
+    for(const key of ['hidden','fading','affected'])stats[key]+=counts[key];
+    if(dirty)for(const batch of batches)if(batch.fade===fade)batch.packCoverage();
    }
-   for(const batch of batches)batch.packCoverage();
   }
   return stats;
 }
