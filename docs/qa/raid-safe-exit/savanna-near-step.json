@@ -1,0 +1,184 @@
+{
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "tutorial": false,
+  "entryBounds": [
+    120,
+    -72,
+    360,
+    168
+  ],
+  "currentBounds": [
+    24,
+    -72,
+    264,
+    168
+  ],
+  "entryAnimals": [
+    {
+      "id": "animal-3",
+      "spawn": {
+        "x": 124.35,
+        "z": 19.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 19.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2
+    },
+    {
+      "id": "animal-4",
+      "spawn": {
+        "x": 124.35,
+        "z": 23.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 23.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2
+    },
+    {
+      "id": "animal-5",
+      "spawn": {
+        "x": 124.35,
+        "z": 27.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 27.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2
+    },
+    {
+      "id": "animal-6",
+      "spawn": {
+        "x": 124.35,
+        "z": 31.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 31.34991014827507
+      },
+      "radius": 0.97,
+      "hits": 6
+    },
+    {
+      "id": "animal-7",
+      "spawn": {
+        "x": 124.35,
+        "z": 35.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 35.34991014827507
+      },
+      "radius": 0.97,
+      "hits": 6
+    }
+  ],
+  "animals": [
+    {
+      "id": "animal-3",
+      "species": "warthog",
+      "x": 125.40174854966997,
+      "z": 18,
+      "spawn": {
+        "x": 124.35,
+        "z": 19.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 19.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2,
+      "status": "entering",
+      "meshPresent": true,
+      "rigLoaded": true
+    },
+    {
+      "id": "animal-4",
+      "species": "warthog",
+      "x": 122.83000000000001,
+      "z": 23.34991014827507,
+      "spawn": {
+        "x": 124.35,
+        "z": 23.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 23.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2,
+      "status": "retreating",
+      "meshPresent": true,
+      "rigLoaded": true
+    },
+    {
+      "id": "animal-5",
+      "species": "warthog",
+      "x": 122.83000000000001,
+      "z": 27.34991014827507,
+      "spawn": {
+        "x": 124.35,
+        "z": 27.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 27.34991014827507
+      },
+      "radius": 1.1,
+      "hits": 2,
+      "status": "retreating",
+      "meshPresent": true,
+      "rigLoaded": true
+    },
+    {
+      "id": "animal-6",
+      "species": "buffalo",
+      "x": 122.83000000000001,
+      "z": 31.34991014827507,
+      "spawn": {
+        "x": 124.35,
+        "z": 31.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 31.34991014827507
+      },
+      "radius": 0.97,
+      "hits": 6,
+      "status": "retreating",
+      "meshPresent": true,
+      "rigLoaded": true
+    },
+    {
+      "id": "animal-7",
+      "species": "buffalo",
+      "x": 122.83000000000001,
+      "z": 35.34991014827507,
+      "spawn": {
+        "x": 124.35,
+        "z": 35.34991014827507
+      },
+      "exit": {
+        "x": 121.35,
+        "z": 35.34991014827507
+      },
+      "radius": 0.97,
+      "hits": 6,
+      "status": "retreating",
+      "meshPresent": true,
+      "rigLoaded": true
+    }
+  ],
+  "centerHp": 600,
+  "raidEnded": 0,
+  "errors": []
+}

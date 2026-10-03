@@ -1,5 +1,10 @@
 # Incursiones en el borde activo — QA-094/095
 
+Actualización: [retirada física y terreno desconectado](qa-raid-safe-exit.md),
+implementación `86b3d2b`. Corrige la precondición de conexión a objetivos que
+omitía la segunda noche en Manglares. Las medidas de este informe corresponden
+a `610edf6`; el informe nuevo conserva evidencia del comportamiento corregido.
+
 La aparición anterior utilizaba una distancia fija de 46 m al primer centro,
 independiente de los chunks dibujados. Ahora `WorldScene.syncChunks` comunica
 su rectángulo activo a navegación. El grupo usa un mismo lado de ese rectángulo,

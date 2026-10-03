@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 1 - Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 4227.3587
+  ...
+# Subtest: Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 2 - Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 7198.9645
+  ...
+# Subtest: Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 3 - Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 5206.2659
+  ...
+# Subtest: Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 4 - Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 6154.7449
+  ...
+# Subtest: Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 5 - Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 5666.9512
+  ...
+# Subtest: entry searches the full active edge when only a distant corner admits the body and its exit
+ok 6 - entry searches the full active edge when only a distant corner admits the body and its exit
+  ---
+  duration_ms: 5.5803
+  ...
+# Subtest: a blocked entry-to-exit corridor cancels the entire group without allocating animals
+ok 7 - a blocked entry-to-exit corridor cancels the entire group without allocating animals
+  ---
+  duration_ms: 2.38
+  ...
+# Subtest: native reverse approach search preserves endpoints and swept collision on a real detour
+ok 8 - native reverse approach search preserves endpoints and swept collision on a real detour
+  ---
+  duration_ms: 4.7906
+  ...
+# Subtest: legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+ok 9 - legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+  ---
+  duration_ms: 1.3558
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28634.1436

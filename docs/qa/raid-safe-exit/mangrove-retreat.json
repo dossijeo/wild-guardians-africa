@@ -1,0 +1,56 @@
+{
+  "biome": "manglares",
+  "culture": "mapungubwe",
+  "tutorial": true,
+  "entryBounds": [
+    -72,
+    -120,
+    168,
+    120
+  ],
+  "currentBounds": [
+    72,
+    -120,
+    312,
+    120
+  ],
+  "entryAnimals": [
+    {
+      "id": "animal-3",
+      "spawn": {
+        "x": 163.65,
+        "z": -9.317485623690732
+      },
+      "exit": {
+        "x": 166.65,
+        "z": -9.317485623690732
+      },
+      "radius": 1.1,
+      "hits": 2
+    }
+  ],
+  "animals": [
+    {
+      "id": "animal-3",
+      "species": "warthog",
+      "x": 165.17,
+      "z": -9.317485623690732,
+      "spawn": {
+        "x": 163.65,
+        "z": -9.317485623690732
+      },
+      "exit": {
+        "x": 166.65,
+        "z": -9.317485623690732
+      },
+      "radius": 1.1,
+      "hits": 2,
+      "status": "retreating",
+      "meshPresent": true,
+      "rigLoaded": true
+    }
+  ],
+  "centerHp": 600,
+  "raidEnded": 0,
+  "errors": []
+}

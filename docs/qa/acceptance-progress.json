@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "610edf6",
+  "implementation_commit": "86b3d2b",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -963,63 +963,85 @@
       "area": "Incursiones e IA",
       "scenario": "Atracción en 0/1/499/500/1499/1500/3999/4000/9999/10000",
       "expected": "Tabla exacta, sin dependencia del saldo ni valor de cajas.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "Ten independently specified threshold boundaries; living base crop value, independent of wallet, crates, progress and yield modifiers."
     },
     {
       "id": "QA-088",
       "area": "Incursiones e IA",
       "scenario": "Noche 1 y noche 2 con atracción cero",
       "expected": "Primera tranquila; segunda un facóquero tutorial garantizado.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js",
+        "tests/raid-safe-exit.test.js"
+      ],
+      "notes": "Real game clock: first night quiet and second night one guaranteed warthog, active snapshot restored. Native Manglares/seed712 in all five cultures spawns and physically exits when targets are unreachable; browser confirms Mapungubwe without terrain changes."
     },
     {
       "id": "QA-089",
       "area": "Incursiones e IA",
       "scenario": "Varias noches consecutivas con resultado igual",
       "expected": "Tiradas independientes, sin sistema de compensación oculto.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "1000 successive production planning decisions compared with an independent RNG oracle, exact random consumption and repeated equal outcomes; no hidden compensation. Planning layer, not 1000 fights."
     },
     {
       "id": "QA-090",
       "area": "Incursiones e IA",
       "scenario": "Presupuesto 3 con hiena desbloqueada",
       "expected": "Composiciones válidas: tres facóqueros o una hiena.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "Budget 3 with hyena unlocked has exactly two compositions: one hyena or three warthogs."
     },
     {
       "id": "QA-091",
       "area": "Incursiones e IA",
       "scenario": "Enumerar cada presupuesto de cada nivel",
       "expected": "Al menos una composición, ≤5 animales, límites por especie y gasto 75–100%.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "Complete composition pools match independent Cartesian count enumeration for all 16 nocturnal and four daytime budget contexts, nonempty, 75-100% cost, <=5 animals, native species caps."
     },
     {
       "id": "QA-092",
       "area": "Incursiones e IA",
       "scenario": "Permutar orden de generación del mismo grupo",
       "expected": "No duplica su probabilidad; se elige composición, no orden de animales.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "All 120 species-order permutations and duplicate input IDs preserve the same canonical unweighted composition set."
     },
     {
       "id": "QA-093",
       "area": "Incursiones e IA",
       "scenario": "Intentar introducir especie todavía bloqueada",
       "expected": "No aparece aunque el presupuesto permita pagarla.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-raid-safe-exit.md",
+        "tests/acceptance-raid-planning.test.js"
+      ],
+      "notes": "Affordable locked lion/rhino excluded; explicit unlocking admits nonempty groups containing them."
     },
     {
       "id": "QA-094",
@@ -1028,11 +1050,11 @@
       "expected": "Aparece simultáneamente en puntos separados de una misma zona del borde activo.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-raid-border.md",
+        "docs/qa-raid-safe-exit.md",
         "tests/raid-active-border.test.js",
-        "docs/qa/raid-border/comparison.json"
+        "docs/qa/raid-safe-exit/camera-comparison.json"
       ],
-      "notes": "Verified production generator and WorldScene on original Sabana/Mapungubwe/712 terrain: legal five-animal budget-13 group, one spawn event, loaded native rigs, common active edge and body gap >=1.06 m. Four sides in medium/high and five native body radii covered by spatial tests with controlled navigation; no probability or full biome-matrix claim."
+      "notes": "Updated production generator on original Sabana/Mapungubwe/712: five legal budget-13 animals, common active edge, full bodies and 3m clear retreat corridor, native rigs, original budgets. Four-side medium/high controlled-navigation tests cover all five native radii; no full visual biome matrix claim."
     },
     {
       "id": "QA-095",
@@ -1041,11 +1063,11 @@
       "expected": "Animal no desaparece ni reinicia su cupo por salir del dibujo.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-raid-border.md",
+        "docs/qa-raid-safe-exit.md",
         "tests/raid-active-border.test.js",
-        "docs/qa/raid-border/comparison.json"
+        "docs/qa/raid-safe-exit/camera-comparison.json"
       ],
-      "notes": "Original WorldScene streaming changed active rectangle by >1 km without changing five logical animals, entries or budgets. Exact native near/far 0.5 s records match after restoring the same snapshot; continuing animal advances offscreen. Four animals retreat for lack of free targets in both branches; snapshot restores all entries and one spawn event."
+      "notes": "Updated WorldScene near/far 0.5s from same snapshot gives exactly equal five animal records, positions, native budgets, entry and exit. Moving camera >1km and reloading preserves actors; four retreat for one reserved target identically in both views."
     },
     {
       "id": "QA-096",
