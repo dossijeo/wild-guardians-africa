@@ -36,6 +36,12 @@ payload={p['id']:p['url'] for p in record['payloads'] if 'url' in p}
 for tile in profiles.values():
     for role in ['base','normal','arh']:
         if role in tile:tile[role]=payload[tile[role]]
+baked=root/'content/manifests/mangrove-ground-bake.json'
+if baked.exists():
+    for role,item in json.loads(baked.read_text(encoding='utf8'))['maps'].items():
+        assert hashlib.sha256((root/'public'/item['url'].lstrip('/')).read_bytes()).hexdigest()==item['sha256']
+        profiles['mangrove'][role]=item['url']
+    profiles['mangrove']['name']='Moss002 + Ground050 · mezcla orgánica sin deformaciones'
 write('public/content/ground-materials.json',json.dumps(profiles,ensure_ascii=False,separators=(',',':')))
 
 shader=fragment('// Material-only experiment V4.1.8.','const float PI4=')

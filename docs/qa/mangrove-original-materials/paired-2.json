@@ -1,0 +1,928 @@
+{
+  "schema": 2,
+  "pairedGpu": {
+    "original": {
+      "count": 90,
+      "mean": 41.92665113333336,
+      "p50": 40.505572,
+      "p95": 53.908697,
+      "max": 58.353437
+    },
+    "baked": {
+      "count": 90,
+      "mean": 40.95203082222223,
+      "p50": 39.252135,
+      "p95": 50.305208,
+      "max": 53.722187
+    }
+  },
+  "groundComparison": {
+    "pattern": "ABBA",
+    "original": [
+      {
+        "url": "http://127.0.0.1:5181/assets/59b561800a23971253804385622ac6b87b9745e0f654d08263caa81593bd57a6.jpg",
+        "width": 1024,
+        "height": 1024
+      },
+      {
+        "url": "http://127.0.0.1:5181/assets/19796ddbf475c130166a39e388c07577e56d44d033a281ccc4e256838ddec9eb.jpg",
+        "width": 1024,
+        "height": 1024
+      },
+      {
+        "url": "http://127.0.0.1:5181/assets/7e512482577df14fe6d5b196a01412416aa1feb1b5a726a02e4c8fadf4d7387c.png",
+        "width": 1024,
+        "height": 1024
+      }
+    ],
+    "prepared": [
+      {
+        "url": "http://127.0.0.1:5181/assets/9eeff640e233a5d0b976917ed8b60bd21d26a8e521c9170531a5fff603966f5d.jpg",
+        "width": 1024,
+        "height": 1024
+      },
+      {
+        "url": "http://127.0.0.1:5181/assets/d44f3636755ac1db32aa1b54fa02616ebce395f38908f16b321b6671b093c502.jpg",
+        "width": 1024,
+        "height": 1024
+      },
+      {
+        "url": "http://127.0.0.1:5181/assets/dab0179e8aac60ed966a1e42e2a9cc2d670474f49974ecfc836116e162441776.webp",
+        "width": 1024,
+        "height": 1024
+      }
+    ]
+  },
+  "materialRegistry": {
+    "enabled": true,
+    "includingWarmup": true,
+    "nodes": 1465,
+    "materials": 195,
+    "waters": 1,
+    "discoveredNodes": 0,
+    "refreshedMeshes": 0,
+    "legacyScans": 0,
+    "waterWrites": 0
+  },
+  "cropBufferUploads": {
+    "includingWarmup": true,
+    "matrixVersions": 0,
+    "growthVersions": 0
+  },
+  "gpuTimer": {
+    "supported": true,
+    "reason": null,
+    "disjointEvents": 0,
+    "discarded": 0,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "allocationFailures": 0,
+    "unresolvedAtDispose": 0,
+    "contextLost": false,
+    "pending": 0,
+    "samples": [
+      {
+        "frame": 0,
+        "ms": 51.643854
+      },
+      {
+        "frame": 1,
+        "ms": 52.816666
+      },
+      {
+        "frame": 2,
+        "ms": 48.68375
+      },
+      {
+        "frame": 3,
+        "ms": 51.771822
+      },
+      {
+        "frame": 4,
+        "ms": 58.027708
+      },
+      {
+        "frame": 5,
+        "ms": 53.722187
+      },
+      {
+        "frame": 6,
+        "ms": 52.136406
+      },
+      {
+        "frame": 7,
+        "ms": 50.27802
+      },
+      {
+        "frame": 8,
+        "ms": 58.353437
+      },
+      {
+        "frame": 9,
+        "ms": 49.579687
+      },
+      {
+        "frame": 10,
+        "ms": 49.877656
+      },
+      {
+        "frame": 11,
+        "ms": 51.453802
+      },
+      {
+        "frame": 12,
+        "ms": 51.853541
+      },
+      {
+        "frame": 13,
+        "ms": 47.996041
+      },
+      {
+        "frame": 14,
+        "ms": 45.846197
+      },
+      {
+        "frame": 15,
+        "ms": 47.855156
+      },
+      {
+        "frame": 16,
+        "ms": 46.959114
+      },
+      {
+        "frame": 17,
+        "ms": 37.953125
+      },
+      {
+        "frame": 18,
+        "ms": 48.291666
+      },
+      {
+        "frame": 19,
+        "ms": 47.874947
+      },
+      {
+        "frame": 20,
+        "ms": 48.520781
+      },
+      {
+        "frame": 21,
+        "ms": 47.025677
+      },
+      {
+        "frame": 22,
+        "ms": 46.113645
+      },
+      {
+        "frame": 23,
+        "ms": 48.451614
+      },
+      {
+        "frame": 24,
+        "ms": 46.302552
+      },
+      {
+        "frame": 25,
+        "ms": 47.712656
+      },
+      {
+        "frame": 26,
+        "ms": 47.707968
+      },
+      {
+        "frame": 27,
+        "ms": 37.113385
+      },
+      {
+        "frame": 28,
+        "ms": 37.75526
+      },
+      {
+        "frame": 29,
+        "ms": 49.91526
+      },
+      {
+        "frame": 30,
+        "ms": 48.69151
+      },
+      {
+        "frame": 31,
+        "ms": 40.991354
+      },
+      {
+        "frame": 32,
+        "ms": 34.982708
+      },
+      {
+        "frame": 33,
+        "ms": 36.215677
+      },
+      {
+        "frame": 34,
+        "ms": 35.934479
+      },
+      {
+        "frame": 35,
+        "ms": 38.601979
+      },
+      {
+        "frame": 36,
+        "ms": 38.837291
+      },
+      {
+        "frame": 37,
+        "ms": 46.565156
+      },
+      {
+        "frame": 38,
+        "ms": 46.859635
+      },
+      {
+        "frame": 39,
+        "ms": 46.139114
+      },
+      {
+        "frame": 40,
+        "ms": 35.220625
+      },
+      {
+        "frame": 41,
+        "ms": 36.806041
+      },
+      {
+        "frame": 42,
+        "ms": 37.978906
+      },
+      {
+        "frame": 43,
+        "ms": 37.236875
+      },
+      {
+        "frame": 44,
+        "ms": 45.859166
+      },
+      {
+        "frame": 45,
+        "ms": 37.975416
+      },
+      {
+        "frame": 46,
+        "ms": 48.150989
+      },
+      {
+        "frame": 47,
+        "ms": 39.786458
+      },
+      {
+        "frame": 48,
+        "ms": 42.674114
+      },
+      {
+        "frame": 49,
+        "ms": 46.309843
+      },
+      {
+        "frame": 50,
+        "ms": 47.483281
+      },
+      {
+        "frame": 51,
+        "ms": 55.809479
+      },
+      {
+        "frame": 52,
+        "ms": 48.404635
+      },
+      {
+        "frame": 53,
+        "ms": 37.913177
+      },
+      {
+        "frame": 54,
+        "ms": 38.554114
+      },
+      {
+        "frame": 55,
+        "ms": 32.482812
+      },
+      {
+        "frame": 56,
+        "ms": 37.993854
+      },
+      {
+        "frame": 57,
+        "ms": 47.897552
+      },
+      {
+        "frame": 58,
+        "ms": 41.112552
+      },
+      {
+        "frame": 59,
+        "ms": 52.109687
+      },
+      {
+        "frame": 60,
+        "ms": 40.570416
+      },
+      {
+        "frame": 61,
+        "ms": 42.112916
+      },
+      {
+        "frame": 62,
+        "ms": 38.127395
+      },
+      {
+        "frame": 63,
+        "ms": 47.353385
+      },
+      {
+        "frame": 64,
+        "ms": 40.505572
+      },
+      {
+        "frame": 65,
+        "ms": 37.621458
+      },
+      {
+        "frame": 66,
+        "ms": 37.632395
+      },
+      {
+        "frame": 67,
+        "ms": 36.895416
+      },
+      {
+        "frame": 68,
+        "ms": 38.250625
+      },
+      {
+        "frame": 69,
+        "ms": 37.136718
+      },
+      {
+        "frame": 70,
+        "ms": 36.086614
+      },
+      {
+        "frame": 71,
+        "ms": 45.919791
+      },
+      {
+        "frame": 72,
+        "ms": 37.059166
+      },
+      {
+        "frame": 73,
+        "ms": 36.69625
+      },
+      {
+        "frame": 74,
+        "ms": 43.571822
+      },
+      {
+        "frame": 75,
+        "ms": 38.500104
+      },
+      {
+        "frame": 76,
+        "ms": 46.6825
+      },
+      {
+        "frame": 77,
+        "ms": 40.056718
+      },
+      {
+        "frame": 78,
+        "ms": 37.745104
+      },
+      {
+        "frame": 79,
+        "ms": 39.584166
+      },
+      {
+        "frame": 80,
+        "ms": 46.658697
+      },
+      {
+        "frame": 81,
+        "ms": 45.267812
+      },
+      {
+        "frame": 82,
+        "ms": 42.239895
+      },
+      {
+        "frame": 83,
+        "ms": 48.212343
+      },
+      {
+        "frame": 84,
+        "ms": 49.707656
+      },
+      {
+        "frame": 85,
+        "ms": 50.305208
+      },
+      {
+        "frame": 86,
+        "ms": 41.608072
+      },
+      {
+        "frame": 87,
+        "ms": 45.926666
+      },
+      {
+        "frame": 88,
+        "ms": 42.731927
+      },
+      {
+        "frame": 89,
+        "ms": 42.852604
+      },
+      {
+        "frame": 90,
+        "ms": 33.009843
+      },
+      {
+        "frame": 91,
+        "ms": 43.454739
+      },
+      {
+        "frame": 92,
+        "ms": 39.033489
+      },
+      {
+        "frame": 93,
+        "ms": 33.578125
+      },
+      {
+        "frame": 94,
+        "ms": 41.52125
+      },
+      {
+        "frame": 95,
+        "ms": 38.683281
+      },
+      {
+        "frame": 96,
+        "ms": 36.977083
+      },
+      {
+        "frame": 97,
+        "ms": 47.6125
+      },
+      {
+        "frame": 98,
+        "ms": 45.577135
+      },
+      {
+        "frame": 99,
+        "ms": 42.774895
+      },
+      {
+        "frame": 100,
+        "ms": 42.659166
+      },
+      {
+        "frame": 101,
+        "ms": 32.599427
+      },
+      {
+        "frame": 102,
+        "ms": 34.595156
+      },
+      {
+        "frame": 103,
+        "ms": 28.715885
+      },
+      {
+        "frame": 104,
+        "ms": 37.707968
+      },
+      {
+        "frame": 105,
+        "ms": 47.789062
+      },
+      {
+        "frame": 106,
+        "ms": 39.016302
+      },
+      {
+        "frame": 107,
+        "ms": 49.857812
+      },
+      {
+        "frame": 108,
+        "ms": 47.399218
+      },
+      {
+        "frame": 109,
+        "ms": 37.967708
+      },
+      {
+        "frame": 110,
+        "ms": 39.122656
+      },
+      {
+        "frame": 111,
+        "ms": 39.759895
+      },
+      {
+        "frame": 112,
+        "ms": 37.707239
+      },
+      {
+        "frame": 113,
+        "ms": 45.538645
+      },
+      {
+        "frame": 114,
+        "ms": 36.493489
+      },
+      {
+        "frame": 115,
+        "ms": 43.021927
+      },
+      {
+        "frame": 116,
+        "ms": 40.771718
+      },
+      {
+        "frame": 117,
+        "ms": 35.295
+      },
+      {
+        "frame": 118,
+        "ms": 39.252135
+      },
+      {
+        "frame": 119,
+        "ms": 37.562864
+      },
+      {
+        "frame": 120,
+        "ms": 30.70427
+      },
+      {
+        "frame": 121,
+        "ms": 30.898541
+      },
+      {
+        "frame": 122,
+        "ms": 31.609583
+      },
+      {
+        "frame": 123,
+        "ms": 33.98427
+      },
+      {
+        "frame": 124,
+        "ms": 34.31552
+      },
+      {
+        "frame": 125,
+        "ms": 43.420156
+      },
+      {
+        "frame": 126,
+        "ms": 31.142916
+      },
+      {
+        "frame": 127,
+        "ms": 44.414635
+      },
+      {
+        "frame": 128,
+        "ms": 33.220781
+      },
+      {
+        "frame": 129,
+        "ms": 32.582916
+      },
+      {
+        "frame": 130,
+        "ms": 32.201093
+      },
+      {
+        "frame": 131,
+        "ms": 34.643697
+      },
+      {
+        "frame": 132,
+        "ms": 34.457083
+      },
+      {
+        "frame": 133,
+        "ms": 32.793072
+      },
+      {
+        "frame": 134,
+        "ms": 38.091718
+      },
+      {
+        "frame": 135,
+        "ms": 40.793385
+      },
+      {
+        "frame": 136,
+        "ms": 37.129166
+      },
+      {
+        "frame": 137,
+        "ms": 43.727031
+      },
+      {
+        "frame": 138,
+        "ms": 44.591302
+      },
+      {
+        "frame": 139,
+        "ms": 36.215937
+      },
+      {
+        "frame": 140,
+        "ms": 34.229895
+      },
+      {
+        "frame": 141,
+        "ms": 34.025104
+      },
+      {
+        "frame": 142,
+        "ms": 35.632187
+      },
+      {
+        "frame": 143,
+        "ms": 35.43625
+      },
+      {
+        "frame": 144,
+        "ms": 39.734895
+      },
+      {
+        "frame": 145,
+        "ms": 44.86927
+      },
+      {
+        "frame": 146,
+        "ms": 35.839427
+      },
+      {
+        "frame": 147,
+        "ms": 36.922239
+      },
+      {
+        "frame": 148,
+        "ms": 49.048333
+      },
+      {
+        "frame": 149,
+        "ms": 35.081875
+      },
+      {
+        "frame": 150,
+        "ms": 49.966666
+      },
+      {
+        "frame": 151,
+        "ms": 53.908697
+      },
+      {
+        "frame": 152,
+        "ms": 54.184947
+      },
+      {
+        "frame": 153,
+        "ms": 52.392239
+      },
+      {
+        "frame": 154,
+        "ms": 42.778645
+      },
+      {
+        "frame": 155,
+        "ms": 41.442656
+      },
+      {
+        "frame": 156,
+        "ms": 48.077968
+      },
+      {
+        "frame": 157,
+        "ms": 36.875208
+      },
+      {
+        "frame": 158,
+        "ms": 44.279687
+      },
+      {
+        "frame": 159,
+        "ms": 33.972083
+      },
+      {
+        "frame": 160,
+        "ms": 37.217864
+      },
+      {
+        "frame": 161,
+        "ms": 40.267968
+      },
+      {
+        "frame": 162,
+        "ms": 37.306979
+      },
+      {
+        "frame": 163,
+        "ms": 50.212552
+      },
+      {
+        "frame": 164,
+        "ms": 36.015052
+      },
+      {
+        "frame": 165,
+        "ms": 35.162656
+      },
+      {
+        "frame": 166,
+        "ms": 36.388437
+      },
+      {
+        "frame": 167,
+        "ms": 36.985625
+      },
+      {
+        "frame": 168,
+        "ms": 33.388229
+      },
+      {
+        "frame": 169,
+        "ms": 32.749375
+      },
+      {
+        "frame": 170,
+        "ms": 31.068385
+      },
+      {
+        "frame": 171,
+        "ms": 34.387395
+      },
+      {
+        "frame": 172,
+        "ms": 37.786145
+      },
+      {
+        "frame": 173,
+        "ms": 29.330208
+      },
+      {
+        "frame": 174,
+        "ms": 30.851927
+      },
+      {
+        "frame": 175,
+        "ms": 31.720312
+      },
+      {
+        "frame": 176,
+        "ms": 31.769427
+      },
+      {
+        "frame": 177,
+        "ms": 35.50677
+      },
+      {
+        "frame": 178,
+        "ms": 46.395104
+      },
+      {
+        "frame": 179,
+        "ms": 45.088541
+      }
+    ]
+  },
+  "gpuElapsedMs": {
+    "count": 180,
+    "mean": 41.43934097777778,
+    "p50": 40.056718,
+    "p95": 52.109687,
+    "max": 58.353437
+  },
+  "recordedAt": "2026-10-03T23:25:55.495Z",
+  "scenario": {
+    "organicGround": false,
+    "case": 11,
+    "biome": "manglares",
+    "culture": "mapungubwe",
+    "seed": 712,
+    "camera": [
+      76.70247532024266,
+      18.674902117438382,
+      30.57367599590944
+    ],
+    "target": [
+      60,
+      3.5,
+      0
+    ],
+    "quality": "media",
+    "pixelRatioLimit": null,
+    "hdrEndpoints": true,
+    "lightCulling": true,
+    "shadowChunks": 18,
+    "culledShadowChunks": 7,
+    "centerCulling": true,
+    "centerDamage": 0,
+    "unitBounds": true,
+    "fineNoise": true,
+    "shadows": true,
+    "shadowMapSize": [
+      1024,
+      1024
+    ],
+    "renderOrigin": {
+      "x": 0,
+      "z": 0,
+      "revision": 0
+    },
+    "batching": true,
+    "view": "village",
+    "night": false,
+    "phase": null,
+    "simulatedElapsed": 0,
+    "workers": 4,
+    "animals": 5,
+    "plants": 16,
+    "chunks": 25
+  },
+  "shadowCache": {
+    "enabled": true,
+    "includingWarmup": true,
+    "draws": 0,
+    "hits": 210,
+    "untracked": 0
+  },
+  "device": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "hardwareConcurrency": 16,
+    "deviceMemoryGiB": 32,
+    "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "glVendor": "Google Inc. (Intel)",
+    "viewport": [
+      1280,
+      720
+    ],
+    "canvas": [
+      1600,
+      900
+    ],
+    "dpr": 1.25,
+    "hiddenDuringRun": false
+  },
+  "warmupFrames": 30,
+  "cpuSubmissionMs": {
+    "count": 180,
+    "mean": 12.958888889683617,
+    "p50": 12.800000011920929,
+    "p95": 15.599999964237213,
+    "max": 18
+  },
+  "frameIntervalMs": {
+    "count": 180,
+    "mean": 51.18666666666666,
+    "p50": 49.900000000001455,
+    "p95": 66.60000000000582,
+    "max": 66.90000000000146
+  },
+  "averageObservedFps": 19.536337587913522,
+  "submittedCalls": {
+    "count": 180,
+    "mean": 100,
+    "p50": 100,
+    "p95": 100,
+    "max": 100
+  },
+  "submittedTriangles": {
+    "count": 180,
+    "mean": 1069818,
+    "p50": 1069818,
+    "p95": 1069818,
+    "max": 1069818
+  },
+  "threeResourceCounts": {
+    "organicGround": false,
+    "calls": 100,
+    "triangles": 1069818,
+    "lines": 0,
+    "points": 0,
+    "geometries": 203,
+    "textures": 55,
+    "programs": 21
+  },
+  "simulationUnchanged": true,
+  "errors": [],
+  "limits": "Isolated static QA scene, all render passes counted, CPU submission includes sync/LOD/VFX GPU elapsed queries wrap those same passes when supported; no GPU fence/finish or memory-bytes claim. Frame cadence includes browser scheduling. Three resource counts are not resident GPU bytes; no navigation/audio/gameplay timing or mobile hardware claim."
+}

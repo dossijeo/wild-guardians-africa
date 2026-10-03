@@ -1,0 +1,25 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "originalGpuMs": 51.06079468888889,
+      "preparedGpuMs": 50.147073055555545,
+      "originalP95Ms": 62.251406,
+      "preparedP95Ms": 62.788229,
+      "calls": 100,
+      "triangles": 1069818
+    },
+    {
+      "run": 2,
+      "originalGpuMs": 41.92665113333336,
+      "preparedGpuMs": 40.95203082222223,
+      "originalP95Ms": 53.908697,
+      "preparedP95Ms": 50.305208,
+      "calls": 100,
+      "triangles": 1069818
+    }
+  ],
+  "gpuSamples": 360,
+  "unchangedShader": true,
+  "limits": "Static isolated QA on this hardware; source textures changed, not shader work. Browser scheduling and device load vary. No general FPS gain or universal zero-cost claim."
+}

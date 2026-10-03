@@ -21,14 +21,16 @@ export function webPackagePlugin(){
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
       walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify(mapping,null,2)+'\n');
-      // Preserve the lab's demo village in the lossless source archive. The
-      // game uses its five native cultures and never requests those six files.
-      const biomeArchive=resolve(config.root,'content/manifests/biome-lab-update.json');
-      if(existsSync(biomeArchive))for(const url of JSON.parse(readFileSync(biomeArchive,'utf8')).archiveOnly){
-        if(!/^\/assets\/[a-f0-9]{64}\.(?:bin|png)$/.test(url))throw Error('Invalid biome archive path');
-        const target=resolve(dist,url.slice(1));
-        if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Biome archive path escapes package');
-        rmSync(target,{force:true});
+      // Keep demo village and superseded combined ground maps in the source
+      // archive. Ship native cultures and the three final baked maps only.
+      for(const archive of ['biome-lab-update.json','mangrove-ground-bake.json']){
+        const manifestFile=resolve(config.root,'content/manifests',archive);
+        if(existsSync(manifestFile))for(const url of JSON.parse(readFileSync(manifestFile,'utf8')).archiveOnly){
+          if(!/^\/assets\/[a-f0-9]{64}\.(?:bin|png|jpg|webp)$/.test(url))throw Error('Invalid source archive path');
+          const target=resolve(dist,url.slice(1));
+          if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Source archive path escapes package');
+          rmSync(target,{force:true});
+        }
       }
     }
   };

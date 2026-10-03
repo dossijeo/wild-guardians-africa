@@ -34,3 +34,15 @@ Resultados finales: 30 combinaciones × día/noche, 60 capturas, cero errores de
 La [CI de 9481512](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37154214266) pasa **1.205/1.205** tests, verifica los 505 recursos y los 20 GLB, construye y valida el paquete web. Las seis pruebas que dependían del mapa antiguo se ejecutan explícitamente con terreno legacy; cinco casos nuevos comprueban la incursión y salida física en manglar con plataforma.
 
 Tras excluir seis recursos exclusivos del poblado demostrativo, la comprobación local del paquete pasa: **575 archivos, 403.778.267 bytes, 813 enlaces relativos**. El ZIP para itch.io contiene **351.685.314 bytes**, con CRCs verificados. Las tres pruebas de empaquetado también pasan. El archivo de referencia conserva íntegros esos recursos.
+
+
+## Mangrove ground correction from original materials — 2026-10-04
+
+Replaced the lab's diagonally patterned combined tile with an offline organic
+blend of the user-provided original Moss002/Ground050 maps. No source UVs are
+warped or rotated and no shader/chunk sampling is added. Color, normal and packed
+AO/roughness/height share the same periodic mask at the original 1024 resolution.
+Both separate ZIPs and source hashes are preserved; superseded combined maps are
+excluded from the web package. Two actual ABBA GPU comparisons observed no
+frametime regression. Day, night, grazing-angle and minimum-quality evidence,
+measurement limits and packaging checks: [original-material QA](qa/mangrove-original-materials/README.md).

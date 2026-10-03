@@ -29,3 +29,19 @@ if workers.exists():
         for code in item['exporterScripts']:
             assert hashlib.sha256((repo/code['path']).read_bytes()).hexdigest()==code['sha256'],profile
     print('PASS: four full worker libraries exported by the original labs, 48 actions with provenance')
+
+# Generated maps and source ZIP entries have independent provenance.
+from zipfile import ZipFile
+bake=json.loads((repo/'content/manifests/mangrove-ground-bake.json').read_text(encoding='utf8'))
+for material in bake['materials']:
+    path=repo/material['path']
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==material['sha256']
+    with ZipFile(path) as archive:
+        for entry in material['entries'].values():
+            data=archive.read(entry['entry'])
+            assert len(data)==entry['bytes'] and hashlib.sha256(data).hexdigest()==entry['sha256']
+for role,item in bake['maps'].items():
+    data=(repo/'public'/item['url'].lstrip('/')).read_bytes()
+    assert len(data)==item['bytes'] and hashlib.sha256(data).hexdigest()==item['sha256'],role
+    assert item['width']==item['height']==1024 and item['channels']==3
+print('PASS: three baked textures and ten original material maps in two intact source ZIPs')
