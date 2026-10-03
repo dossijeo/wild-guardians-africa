@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: authored depth route shares live deformation uniforms and restores original objects and materials after failure
+ok 1 - authored depth route shares live deformation uniforms and restores original objects and materials after failure
+  ---
+  duration_ms: 12.092
+  ...
+# Subtest: unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+ok 2 - unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+  ---
+  duration_ms: 7.6219
+  ...
+# Subtest: transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+ok 3 - transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+  ---
+  duration_ms: 1.6043
+  ...
+# Subtest: stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+ok 4 - stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+  ---
+  duration_ms: 4.9852
+  ...
+# Subtest: recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+ok 5 - recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+  ---
+  duration_ms: 1.5152
+  ...
+# Subtest: canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+ok 6 - canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+  ---
+  duration_ms: 0.9014
+  ...
+# Subtest: unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+ok 7 - unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+  ---
+  duration_ms: 1.5901
+  ...
+# Subtest: source disposal releases its cached depth material once; successive stable captures reuse it
+ok 8 - source disposal releases its cached depth material once; successive stable captures reuse it
+  ---
+  duration_ms: 5.7408
+  ...
+# Subtest: capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+ok 9 - capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+  ---
+  duration_ms: 1.3178
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 412.5754

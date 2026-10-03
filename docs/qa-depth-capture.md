@@ -1,5 +1,9 @@
 # Profundidad VFX — primera ruta especializada
 
+Actualización: [ampliación de materiales nativos y salvaguarda de alpha](qa-standard-depth.md).
+El CI de `8d245c3` y el de la documentación `41229be` terminaron correctamente.
+Los datos siguientes conservan el alcance de la primera etapa.
+
 Implementación `8d245c3`. `captureDepth` selecciona shaders de profundidad
 ya escritos para cultivos (crecimiento y puentes de morph), exterior DEST
 de centros y sólidos VFX. Conserva sus uniforms y callbacks vivos, incluidos

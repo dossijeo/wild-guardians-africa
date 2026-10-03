@@ -30,11 +30,11 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    reenviar matrices. Registro de materiales/agua implementado: [evidencia y límites](qa-material-registry.md).
    [Caché de obstrucciones implementada](qa-obstruction-cache.md), conservando fades
    y reempaquetado al cambiar LOD; otros recorridos CPU siguen pendientes.
-7. **Profundidad VFX (primera ruta implementada):** [comparación de profundidad](qa-depth-capture.md)
-   con shaders originales de cultivos, exterior DEST y sólidos VFX. Props,
-   terreno, interiores/ceniza y personajes siguen pendientes de una ruta barata.
-   Conservar alpha test, clipping,
-   skinning, morph, crecimiento y agujeros DEST. No explica una vista sin efectos.
+7. **Profundidad VFX (ampliación opaca implementada):** [rutas nativas y medición](qa-standard-depth.md),
+   además de [cultivos, exterior DEST y sólidos VFX](qa-depth-capture.md).
+   Terreno, horizonte y actores opacos usan recetas de profundidad conocidas.
+   Alpha sin ruta acreditada conserva su shader original tras detectar diferencias
+   en manglares; interiores/ceniza siguen pendientes. No explica una vista sin efectos.
 8. **Resolución (diagnóstico medido y selector implementado):** [DPR 1 manteniendo calidad media](qa-resolution.md),
    36 % menos de píxeles; [selector persistente separado del HUD](qa-resolution-settings.md).
    Intercambia nitidez por rendimiento; variación GPU y alcance preservados.

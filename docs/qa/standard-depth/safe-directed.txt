@@ -1,0 +1,241 @@
+TAP version 13
+# Subtest: chunk clip preserves the original half-open FS predicate and biome exceptions
+ok 1 - chunk clip preserves the original half-open FS predicate and biome exceptions
+  ---
+  duration_ms: 13.65
+  ...
+# Subtest: adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+ok 2 - adjacent chunks carry independent bounds through LOD while retaining shared atlas material and solid shadow geometry
+  ---
+  duration_ms: 17.8935
+  ...
+# Subtest: clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+ok 3 - clip shader composes once with coverage and African Toon without enabling clipping on shadow material
+  ---
+  duration_ms: 2.4588
+  ...
+# (node:4956) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all 120 original surface classifications and every LOD tangent buffer match the native recipes
+ok 4 - all 120 original surface classifications and every LOD tangent buffer match the native recipes
+  ---
+  duration_ms: 1436.9884
+  ...
+# Subtest: native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+ok 5 - native atlas loading preserves shared color/normal/MR maps, per-asset materials and per-LOD tangent handedness
+  ---
+  duration_ms: 630.0007
+  ...
+# Subtest: native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+ok 6 - native surface uniforms and atlas channels compose with cel shading and per-instance coverage
+  ---
+  duration_ms: 4.9123
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 7 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 5404.7856
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 8 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 14.7176
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 9 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 5.2688
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 10 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 10.5416
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 11 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 29.6822
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 12 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 24.2198
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 13 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 3.6588
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 14 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 146.2995
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 15 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 2.1578
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 16 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 108.4268
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 17 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 21.3311
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 18 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 11.913
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 19 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 7.0716
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 20 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 67.0681
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 21 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 5.6823
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 22 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 2.029
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 23 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 44.8636
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 24 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 18.9084
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 25 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 25.231
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 26 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 12.3509
+  ...
+# Subtest: authored depth route shares live deformation uniforms and restores original objects and materials after failure
+ok 27 - authored depth route shares live deformation uniforms and restores original objects and materials after failure
+  ---
+  duration_ms: 5.1363
+  ...
+# Subtest: unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+ok 28 - unverified depth shaders, clipping, alpha mismatch, offset, side mismatch and multi-material meshes retain their original recipes
+  ---
+  duration_ms: 4.6511
+  ...
+# Subtest: transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+ok 29 - transparency and non-writing materials remain excluded; override and diagnostic comparison preserve the old route
+  ---
+  duration_ms: 1.3883
+  ...
+# (node:24320) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native canyon and desert horizons preserve every original position, normal and color byte
+ok 30 - native canyon and desert horizons preserve every original position, normal and color byte
+  ---
+  duration_ms: 4506.2498
+  ...
+# Subtest: streaming uses the eye and original resident radii, including negative boundaries
+ok 31 - streaming uses the eye and original resident radii, including negative boundaries
+  ---
+  duration_ms: 19.8566
+  ...
+# Subtest: horizon resources survive static frames and are released once on travel, quality change and close
+ok 32 - horizon resources survive static frames and are released once on travel, quality change and close
+  ---
+  duration_ms: 732.5302
+  ...
+# Subtest: native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+ok 33 - native half-open horizon clipping excludes resident canyon terrain and river while keeping desert apron
+  ---
+  duration_ms: 647.6639
+  ...
+# (node:31064) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+ok 34 - native volumes and viewing corridor match the original across rotation, scale, chunk offset and camera poses
+  ---
+  duration_ms: 15.5326
+  ...
+# Subtest: coverage is independent per instance and chunk, excluding low vegetation, water and short props
+ok 35 - coverage is independent per instance and chunk, excluding low vegetation, water and short props
+  ---
+  duration_ms: 9.3632
+  ...
+# Subtest: packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+ok 36 - packages without explicit bounds use the full original mesh across reduced LODs and honor original group overrides
+  ---
+  duration_ms: 2.7809
+  ...
+# Subtest: native fade rates clamp wall time, restore independently and do not dirty static frames
+ok 37 - native fade rates clamp wall time, restore independently and do not dirty static frames
+  ---
+  duration_ms: 0.8416
+  ...
+# Subtest: streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+ok 38 - streaming releases the private coverage geometry once while retaining another chunk and the source arrays
+  ---
+  duration_ms: 3.7505
+  ...
+# Subtest: native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+ok 39 - native ordered discard composes with cel shader and preserves opaque depth and original full shadows
+  ---
+  duration_ms: 2.6128
+  ...
+# Subtest: stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+ok 40 - stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+  ---
+  duration_ms: 7.9183
+  ...
+# Subtest: recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+ok 41 - recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+  ---
+  duration_ms: 2.0705
+  ...
+# Subtest: canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+ok 42 - canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+  ---
+  duration_ms: 0.7229
+  ...
+# Subtest: unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+ok 43 - unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+  ---
+  duration_ms: 1.466
+  ...
+# Subtest: source disposal releases its cached depth material once; successive stable captures reuse it
+ok 44 - source disposal releases its cached depth material once; successive stable captures reuse it
+  ---
+  duration_ms: 5.0993
+  ...
+# Subtest: capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+ok 45 - capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+  ---
+  duration_ms: 1.0306
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9134.3497

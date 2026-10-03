@@ -1,0 +1,429 @@
+{
+  "depthStateAnomalies": [
+    {
+      "name": "",
+      "type": "RawShaderMaterial",
+      "depthTest": true,
+      "depthFunc": 2,
+      "features": []
+    }
+  ],
+  "preserveOrder": false,
+  "biome": "sabana",
+  "culture": "suajili",
+  "scope": "all",
+  "elapsed": 0,
+  "growth": 0,
+  "damage": 0,
+  "stats": {
+    "specialized": 130,
+    "fallback": 1190,
+    "excluded": 5
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "arriving",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [],
+  "result": {
+    "mode": "original-vs-specialized",
+    "differentPixels": 0,
+    "differentBytes": 0,
+    "maxDepthDelta": 0,
+    "differences": [],
+    "nonUniformPixels": 1439999,
+    "pixels": 1440000
+  },
+  "benchmark": {
+    "width": 1600,
+    "height": 900,
+    "baseline": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 0,
+          "ms": 32.698541
+        },
+        {
+          "frame": 1,
+          "ms": 30.168592
+        },
+        {
+          "frame": 2,
+          "ms": 35.340936
+        },
+        {
+          "frame": 3,
+          "ms": 32.980833
+        },
+        {
+          "frame": 4,
+          "ms": 34.940676
+        },
+        {
+          "frame": 5,
+          "ms": 32.433645
+        },
+        {
+          "frame": 6,
+          "ms": 34.011926
+        },
+        {
+          "frame": 7,
+          "ms": 29.568541
+        },
+        {
+          "frame": 8,
+          "ms": 31.124218
+        },
+        {
+          "frame": 9,
+          "ms": 31.884322
+        },
+        {
+          "frame": 10,
+          "ms": 30.310676
+        },
+        {
+          "frame": 11,
+          "ms": 29.533333
+        },
+        {
+          "frame": 12,
+          "ms": 29.865155
+        },
+        {
+          "frame": 13,
+          "ms": 30.099583
+        },
+        {
+          "frame": 14,
+          "ms": 30.469322
+        },
+        {
+          "frame": 15,
+          "ms": 30.15927
+        },
+        {
+          "frame": 16,
+          "ms": 30.372655
+        },
+        {
+          "frame": 17,
+          "ms": 29.362812
+        },
+        {
+          "frame": 18,
+          "ms": 29.375676
+        },
+        {
+          "frame": 19,
+          "ms": 27.843437
+        },
+        {
+          "frame": 20,
+          "ms": 26.608905
+        },
+        {
+          "frame": 21,
+          "ms": 25.95552
+        },
+        {
+          "frame": 22,
+          "ms": 26.514739
+        },
+        {
+          "frame": 23,
+          "ms": 25.994999
+        },
+        {
+          "frame": 24,
+          "ms": 26.037707
+        },
+        {
+          "frame": 25,
+          "ms": 26.332759
+        },
+        {
+          "frame": 26,
+          "ms": 26.279895
+        },
+        {
+          "frame": 27,
+          "ms": 28.819583
+        },
+        {
+          "frame": 28,
+          "ms": 27.434947
+        },
+        {
+          "frame": 29,
+          "ms": 29.244218
+        },
+        {
+          "frame": 30,
+          "ms": 27.174426
+        },
+        {
+          "frame": 31,
+          "ms": 27.084843
+        },
+        {
+          "frame": 32,
+          "ms": 26.265311
+        },
+        {
+          "frame": 33,
+          "ms": 27.637916
+        },
+        {
+          "frame": 34,
+          "ms": 27.47875
+        },
+        {
+          "frame": 35,
+          "ms": 28.342082
+        },
+        {
+          "frame": 36,
+          "ms": 27.649479
+        },
+        {
+          "frame": 37,
+          "ms": 28.121353
+        },
+        {
+          "frame": 38,
+          "ms": 27.453228
+        },
+        {
+          "frame": 39,
+          "ms": 27.866822
+        },
+        {
+          "frame": 40,
+          "ms": 27.987238
+        },
+        {
+          "frame": 41,
+          "ms": 28.221197
+        },
+        {
+          "frame": 42,
+          "ms": 27.893072
+        },
+        {
+          "frame": 43,
+          "ms": 28.065676
+        }
+      ],
+      "meanMs": 29.06838213636364,
+      "medianMs": 28.342082
+    },
+    "specialized": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 0,
+          "ms": 22.370364
+        },
+        {
+          "frame": 1,
+          "ms": 22.353957
+        },
+        {
+          "frame": 2,
+          "ms": 22.547343
+        },
+        {
+          "frame": 3,
+          "ms": 22.174114
+        },
+        {
+          "frame": 4,
+          "ms": 23.090208
+        },
+        {
+          "frame": 5,
+          "ms": 22.590103
+        },
+        {
+          "frame": 6,
+          "ms": 22.175468
+        },
+        {
+          "frame": 7,
+          "ms": 22.692707
+        },
+        {
+          "frame": 8,
+          "ms": 22.26953
+        },
+        {
+          "frame": 9,
+          "ms": 21.81026
+        },
+        {
+          "frame": 10,
+          "ms": 21.843437
+        },
+        {
+          "frame": 11,
+          "ms": 22.021718
+        },
+        {
+          "frame": 12,
+          "ms": 22.378488
+        },
+        {
+          "frame": 13,
+          "ms": 22.667551
+        },
+        {
+          "frame": 14,
+          "ms": 22.019322
+        },
+        {
+          "frame": 15,
+          "ms": 21.753385
+        },
+        {
+          "frame": 16,
+          "ms": 22.215416
+        },
+        {
+          "frame": 17,
+          "ms": 21.829739
+        },
+        {
+          "frame": 18,
+          "ms": 22.829114
+        },
+        {
+          "frame": 19,
+          "ms": 21.805468
+        },
+        {
+          "frame": 20,
+          "ms": 23.365832
+        },
+        {
+          "frame": 21,
+          "ms": 21.331197
+        },
+        {
+          "frame": 22,
+          "ms": 20.942395
+        },
+        {
+          "frame": 23,
+          "ms": 22.878541
+        },
+        {
+          "frame": 24,
+          "ms": 20.92651
+        },
+        {
+          "frame": 25,
+          "ms": 21.246092
+        },
+        {
+          "frame": 26,
+          "ms": 22.226926
+        },
+        {
+          "frame": 27,
+          "ms": 20.951457
+        },
+        {
+          "frame": 28,
+          "ms": 22.406614
+        },
+        {
+          "frame": 29,
+          "ms": 20.828333
+        },
+        {
+          "frame": 30,
+          "ms": 20.958749
+        },
+        {
+          "frame": 31,
+          "ms": 22.189166
+        },
+        {
+          "frame": 32,
+          "ms": 21.30875
+        },
+        {
+          "frame": 33,
+          "ms": 22.065259
+        },
+        {
+          "frame": 34,
+          "ms": 20.682395
+        },
+        {
+          "frame": 35,
+          "ms": 20.819322
+        },
+        {
+          "frame": 36,
+          "ms": 21.025781
+        },
+        {
+          "frame": 37,
+          "ms": 20.719843
+        },
+        {
+          "frame": 38,
+          "ms": 21.061718
+        },
+        {
+          "frame": 39,
+          "ms": 21.033332
+        },
+        {
+          "frame": 40,
+          "ms": 20.741197
+        },
+        {
+          "frame": 41,
+          "ms": 20.80151
+        },
+        {
+          "frame": 42,
+          "ms": 20.854843
+        },
+        {
+          "frame": 43,
+          "ms": 20.716822
+        }
+      ],
+      "meanMs": 21.76182445454545,
+      "medianMs": 21.843437
+    }
+  },
+  "errors": []
+}

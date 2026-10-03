@@ -1,0 +1,415 @@
+{
+  "biome": "sabana",
+  "culture": "suajili",
+  "elapsed": 0,
+  "growth": 0,
+  "damage": 0,
+  "stats": {
+    "specialized": 1312,
+    "fallback": 8,
+    "excluded": 5
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "arriving",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [],
+  "result": {
+    "differentPixels": 0,
+    "differentBytes": 0,
+    "nonUniformPixels": 1439999,
+    "pixels": 1440000
+  },
+  "benchmark": {
+    "width": 1600,
+    "height": 900,
+    "baseline": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 0,
+          "ms": 28.708489
+        },
+        {
+          "frame": 1,
+          "ms": 28.870832
+        },
+        {
+          "frame": 2,
+          "ms": 31.089791
+        },
+        {
+          "frame": 3,
+          "ms": 30.975363
+        },
+        {
+          "frame": 4,
+          "ms": 29.024999
+        },
+        {
+          "frame": 5,
+          "ms": 29.003332
+        },
+        {
+          "frame": 6,
+          "ms": 28.177395
+        },
+        {
+          "frame": 7,
+          "ms": 26.790729
+        },
+        {
+          "frame": 8,
+          "ms": 26.873906
+        },
+        {
+          "frame": 9,
+          "ms": 26.424374
+        },
+        {
+          "frame": 10,
+          "ms": 27.583749
+        },
+        {
+          "frame": 11,
+          "ms": 26.301458
+        },
+        {
+          "frame": 12,
+          "ms": 26.131718
+        },
+        {
+          "frame": 13,
+          "ms": 26.809843
+        },
+        {
+          "frame": 14,
+          "ms": 26.371614
+        },
+        {
+          "frame": 15,
+          "ms": 26.346822
+        },
+        {
+          "frame": 16,
+          "ms": 27.434531
+        },
+        {
+          "frame": 17,
+          "ms": 27.955207
+        },
+        {
+          "frame": 18,
+          "ms": 28.036562
+        },
+        {
+          "frame": 19,
+          "ms": 27.525832
+        },
+        {
+          "frame": 20,
+          "ms": 27.84927
+        },
+        {
+          "frame": 21,
+          "ms": 27.27401
+        },
+        {
+          "frame": 22,
+          "ms": 27.67979
+        },
+        {
+          "frame": 23,
+          "ms": 27.881978
+        },
+        {
+          "frame": 24,
+          "ms": 27.91677
+        },
+        {
+          "frame": 25,
+          "ms": 28.081822
+        },
+        {
+          "frame": 26,
+          "ms": 27.739738
+        },
+        {
+          "frame": 27,
+          "ms": 27.861666
+        },
+        {
+          "frame": 28,
+          "ms": 27.390676
+        },
+        {
+          "frame": 29,
+          "ms": 29.497083
+        },
+        {
+          "frame": 30,
+          "ms": 27.696301
+        },
+        {
+          "frame": 31,
+          "ms": 27.616301
+        },
+        {
+          "frame": 32,
+          "ms": 28.171718
+        },
+        {
+          "frame": 33,
+          "ms": 27.861613
+        },
+        {
+          "frame": 34,
+          "ms": 27.25927
+        },
+        {
+          "frame": 35,
+          "ms": 27.11151
+        },
+        {
+          "frame": 36,
+          "ms": 26.542655
+        },
+        {
+          "frame": 37,
+          "ms": 26.416301
+        },
+        {
+          "frame": 38,
+          "ms": 26.512552
+        },
+        {
+          "frame": 39,
+          "ms": 26.324738
+        },
+        {
+          "frame": 40,
+          "ms": 27.250624
+        },
+        {
+          "frame": 41,
+          "ms": 26.401666
+        },
+        {
+          "frame": 42,
+          "ms": 26.120676
+        },
+        {
+          "frame": 43,
+          "ms": 26.135156
+        }
+      ],
+      "meanMs": 27.568873409090916,
+      "medianMs": 27.583749
+    },
+    "specialized": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 0,
+          "ms": 10.756145
+        },
+        {
+          "frame": 1,
+          "ms": 11.223801
+        },
+        {
+          "frame": 2,
+          "ms": 10.946874
+        },
+        {
+          "frame": 3,
+          "ms": 12.527343
+        },
+        {
+          "frame": 4,
+          "ms": 12.182551
+        },
+        {
+          "frame": 5,
+          "ms": 11.780051
+        },
+        {
+          "frame": 6,
+          "ms": 12.01552
+        },
+        {
+          "frame": 7,
+          "ms": 12.373177
+        },
+        {
+          "frame": 8,
+          "ms": 12.537499
+        },
+        {
+          "frame": 9,
+          "ms": 8.31401
+        },
+        {
+          "frame": 10,
+          "ms": 12.425207
+        },
+        {
+          "frame": 11,
+          "ms": 12.389374
+        },
+        {
+          "frame": 12,
+          "ms": 8.282812
+        },
+        {
+          "frame": 13,
+          "ms": 11.968645
+        },
+        {
+          "frame": 14,
+          "ms": 12.238229
+        },
+        {
+          "frame": 15,
+          "ms": 12.359842
+        },
+        {
+          "frame": 16,
+          "ms": 12.458801
+        },
+        {
+          "frame": 17,
+          "ms": 12.009218
+        },
+        {
+          "frame": 18,
+          "ms": 12.58979
+        },
+        {
+          "frame": 19,
+          "ms": 11.881718
+        },
+        {
+          "frame": 20,
+          "ms": 12.338384
+        },
+        {
+          "frame": 21,
+          "ms": 11.469843
+        },
+        {
+          "frame": 22,
+          "ms": 8.505207
+        },
+        {
+          "frame": 23,
+          "ms": 10.846197
+        },
+        {
+          "frame": 24,
+          "ms": 11.020468
+        },
+        {
+          "frame": 25,
+          "ms": 10.653854
+        },
+        {
+          "frame": 26,
+          "ms": 12.619374
+        },
+        {
+          "frame": 27,
+          "ms": 12.626978
+        },
+        {
+          "frame": 28,
+          "ms": 10.650416
+        },
+        {
+          "frame": 29,
+          "ms": 10.610572
+        },
+        {
+          "frame": 30,
+          "ms": 10.793125
+        },
+        {
+          "frame": 31,
+          "ms": 10.673124
+        },
+        {
+          "frame": 32,
+          "ms": 10.765781
+        },
+        {
+          "frame": 33,
+          "ms": 10.88078
+        },
+        {
+          "frame": 34,
+          "ms": 11.208489
+        },
+        {
+          "frame": 35,
+          "ms": 11.049582
+        },
+        {
+          "frame": 36,
+          "ms": 8.556457
+        },
+        {
+          "frame": 37,
+          "ms": 10.702759
+        },
+        {
+          "frame": 38,
+          "ms": 8.564791
+        },
+        {
+          "frame": 39,
+          "ms": 10.637447
+        },
+        {
+          "frame": 40,
+          "ms": 10.911405
+        },
+        {
+          "frame": 41,
+          "ms": 10.735572
+        },
+        {
+          "frame": 42,
+          "ms": 10.904218
+        },
+        {
+          "frame": 43,
+          "ms": 12.241353
+        }
+      ],
+      "meanMs": 11.209699613636362,
+      "medianMs": 11.208489
+    }
+  },
+  "errors": []
+}

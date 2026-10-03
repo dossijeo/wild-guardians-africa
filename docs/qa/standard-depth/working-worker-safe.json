@@ -1,0 +1,46 @@
+{
+  "depthStateAnomalies": [
+    {
+      "name": "",
+      "type": "RawShaderMaterial",
+      "depthTest": true,
+      "depthFunc": 2,
+      "features": []
+    }
+  ],
+  "preserveOrder": false,
+  "biome": "sabana",
+  "culture": "suajili",
+  "scope": "all",
+  "elapsed": 59.02000000000057,
+  "growth": 0,
+  "damage": 0,
+  "stats": {
+    "specialized": 137,
+    "fallback": 1206,
+    "excluded": 7
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "acting",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [
+    {
+      "id": "dig",
+      "solids": 0
+    }
+  ],
+  "result": {
+    "mode": "original-vs-specialized",
+    "differentPixels": 0,
+    "differentBytes": 0,
+    "maxDepthDelta": 0,
+    "differences": [],
+    "nonUniformPixels": 1439997,
+    "pixels": 1440000
+  },
+  "errors": []
+}
