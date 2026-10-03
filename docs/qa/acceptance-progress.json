@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "85d89d8",
+  "implementation_commit": "04691f2",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -530,18 +530,24 @@
       "area": "Trabajadores y colas",
       "scenario": "Dos trabajadores libres y una tarea antigua",
       "expected": "FIFO escoge tarea; la ejecuta el libre de ese centro más cercano.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "Actual paid staff and production Navigation on flat terrain: independent ambient motion gives distinct positions; two real seed tasks reserve FIFO, older task chooses nearest eligible local worker, second chooses other. Reciprocal links and two physical first-care completions verified."
     },
     {
       "id": "QA-048",
       "area": "Trabajadores y colas",
       "scenario": "Dos agentes evalúan la misma planta/caja",
       "expected": "Reserva atómica al aceptar; solo un propietario.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "Repeated reservation evaluations leave snapshot unchanged: distinct plant tasks have one owner each. Real harvest cargo stays exclusively carried after queue rebuild; native drop API releases at physical position, one loose-crate task grants one worker, one pickup/carrier and one final delivery/ledger entry. Sequential atomic game model, no simulated concurrent threads."
     },
     {
       "id": "QA-049",
@@ -593,27 +599,36 @@
       "area": "Trabajadores y colas",
       "scenario": "Destruir centro y quedar otro operativo del mismo poblado",
       "expected": "Tras ataque se reasignan trabajadores desplazados según necesidad definida, sin cobrar otra jornada.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "Five cultures: paid staff physically arrive at two local centers; loss prepared via native hitStructure/collapse. Explicit warthog raid flees, hits and physically exits. Lost-center pool returns to local survivor, residents keep assignment, ledger unchanged/one hiring. IDs/day persist; repeat recovery adds nothing. Flat terrain/native Navigation, not attribution of prepared damage to animal."
     },
     {
       "id": "QA-054",
       "area": "Trabajadores y colas",
       "scenario": "Destruir último centro del poblado y no quedar destino",
       "expected": "Regresan; no teletransportar a un poblado ajeno ni prolongar turno.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "Five cultures: native prepared center loss plus physical raid/exit; paid local staff return to home at original village entry. Additional prepared foreign settlement/operational center never receives these contracts or reassignment events. IDs retained, no additional wage. Explicit locality fixture, no claim natural postgame expansion and raids coexist."
     },
     {
       "id": "QA-055",
       "area": "Trabajadores y colas",
       "scenario": "Construir sustituto y haber desplazados aún disponibles",
       "expected": "Aplicar excepción de destrucción, sin reasignar empleados normales de otros centros.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "Five cultures: home displaced staff saved/loaded via SaveRepository, replacement costs 800 and recalls same worker/person IDs with original contractDay; they physically arrive without another hiring. Separately after reassignment to survivor, a new empty center never moves its normal assigned staff. Expired/shift-ended/injury exclusions also checked in directed existing contract/displaced suite."
     },
     {
       "id": "QA-056",
@@ -664,18 +679,24 @@
       "area": "Trabajadores y colas",
       "scenario": "Inactividad sin tarea",
       "expected": "Alterna reposo/vigilar y paseos caminando a máximo aproximado 8 m.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "All four paid profiles: actual Game/production Navigation alternates native workerPose Idle/Alert/Walk_Skip, ambient routes/positions within eight meters, every measured step at walking speed/no running, cosmetic RNG leaves gameplay RNG unchanged. Flat fixture; no new WebGL rig render or terrain benchmark."
     },
     {
       "id": "QA-061",
       "area": "Trabajadores y colas",
       "scenario": "Aparecer tarea durante paseo",
       "expected": "Cancela paseo y sale desde posición actual, sin teletransporte.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-worker-routing.md",
+        "tests/acceptance-worker-routing.test.js"
+      ],
+      "notes": "All four profiles receive actual paid planting during an ambient walk: Game cancels idle before another ambient step, position exactly unchanged and run budget retained; task reserves one owner, next movement starts there at calibrated speed, and physical first watering completes exactly once."
     },
     {
       "id": "QA-062",

@@ -1,0 +1,340 @@
+TAP version 13
+# Subtest: QA-146: olderMale reload keeps a paid initial action and intraday assignments
+ok 1 - QA-146: olderMale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 53.4539
+  ...
+# Subtest: QA-146: olderFemale reload keeps a paid initial action and intraday assignments
+ok 2 - QA-146: olderFemale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 32.4101
+  ...
+# Subtest: QA-146: youngMale reload keeps a paid initial action and intraday assignments
+ok 3 - QA-146: youngMale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 30.2716
+  ...
+# Subtest: QA-146: youngFemale reload keeps a paid initial action and intraday assignments
+ok 4 - QA-146: youngFemale reload keeps a paid initial action and intraday assignments
+  ---
+  duration_ms: 21.6794
+  ...
+# Subtest: QA-147: olderMale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 5 - QA-147: olderMale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 94.3351
+  ...
+# Subtest: QA-147: olderFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 6 - QA-147: olderFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 111.6369
+  ...
+# Subtest: QA-147: youngMale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 7 - QA-147: youngMale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 69.3967
+  ...
+# Subtest: QA-147: youngFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+ok 8 - QA-147: youngFemale reload preserves one native carry phase and bonus-valued crate until one delivery
+  ---
+  duration_ms: 55.9632
+  ...
+# Subtest: QA-047/048: actual paid workers reserve FIFO by nearest free colleague and never duplicate plant/crate owners
+ok 9 - QA-047/048: actual paid workers reserve FIFO by nearest free colleague and never duplicate plant/crate owners
+  ---
+  duration_ms: 172.085
+  ...
+# Subtest: QA-060/061: olderMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 10 - QA-060/061: olderMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 48.7179
+  ...
+# Subtest: QA-060/061: olderFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 11 - QA-060/061: olderFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 30.883
+  ...
+# Subtest: QA-060/061: youngMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 12 - QA-060/061: youngMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 41.3368
+  ...
+# Subtest: QA-060/061: youngFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 13 - QA-060/061: youngFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 32.4326
+  ...
+# Subtest: QA-053: mapungubwe a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 14 - QA-053: mapungubwe a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 175.5313
+  ...
+# Subtest: QA-053: saheliana a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 15 - QA-053: saheliana a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 145.106
+  ...
+# Subtest: QA-053: suajili a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 16 - QA-053: suajili a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 112.3919
+  ...
+# Subtest: QA-053: musgum a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 17 - QA-053: musgum a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 104.642
+  ...
+# Subtest: QA-053: etiope a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 18 - QA-053: etiope a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 91.7735
+  ...
+# Subtest: QA-054/055: mapungubwe displaced staff physically go home and a saved replacement recovers the same paid people
+ok 19 - QA-054/055: mapungubwe displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 24.1379
+  ...
+# Subtest: QA-054/055: saheliana displaced staff physically go home and a saved replacement recovers the same paid people
+ok 20 - QA-054/055: saheliana displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 14.6634
+  ...
+# Subtest: QA-054/055: suajili displaced staff physically go home and a saved replacement recovers the same paid people
+ok 21 - QA-054/055: suajili displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 14.4608
+  ...
+# Subtest: QA-054/055: musgum displaced staff physically go home and a saved replacement recovers the same paid people
+ok 22 - QA-054/055: musgum displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 12.1949
+  ...
+# Subtest: QA-054/055: etiope displaced staff physically go home and a saved replacement recovers the same paid people
+ok 23 - QA-054/055: etiope displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 12.3124
+  ...
+# Subtest: QA-054: mapungubwe an available center in a foreign village never steals displaced contracts
+ok 24 - QA-054: mapungubwe an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 117.7421
+  ...
+# Subtest: QA-054: saheliana an available center in a foreign village never steals displaced contracts
+ok 25 - QA-054: saheliana an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 181.8126
+  ...
+# Subtest: QA-054: suajili an available center in a foreign village never steals displaced contracts
+ok 26 - QA-054: suajili an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 148.8873
+  ...
+# Subtest: QA-054: musgum an available center in a foreign village never steals displaced contracts
+ok 27 - QA-054: musgum an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 131.9891
+  ...
+# Subtest: QA-054: etiope an available center in a foreign village never steals displaced contracts
+ok 28 - QA-054: etiope an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 159.5431
+  ...
+# Subtest: QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+ok 29 - QA-037: all four profiles charge age wages once and preserve sex-independent contracts
+  ---
+  duration_ms: 10.9036
+  ...
+# Subtest: QA-039: confirming zero staff advances a recoverable farm without fictitious production
+ok 30 - QA-039: confirming zero staff advances a recoverable farm without fictitious production
+  ---
+  duration_ms: 14.544
+  ...
+# Subtest: QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+ok 31 - QA-040: real hiring with 100/20/0 living plants allocates six staff 4/1/1
+  ---
+  duration_ms: 11.3297
+  ...
+# Subtest: QA-041: scarce staff cover the most populated centers before assigning seconds
+ok 32 - QA-041: scarce staff cover the most populated centers before assigning seconds
+  ---
+  duration_ms: 5.522
+  ...
+# Subtest: QA-042: tied scarcity uses creation order regardless of structure array order
+ok 33 - QA-042: tied scarcity uses creation order regardless of structure array order
+  ---
+  duration_ms: 1.0834
+  ...
+# Subtest: QA-042: equal weights and creation timestamps break ties by persistent ID
+ok 34 - QA-042: equal weights and creation timestamps break ties by persistent ID
+  ---
+  duration_ms: 16.7108
+  ...
+# Subtest: QA-043: eight workers divide 3/3/2 among empty centers and create no work
+ok 35 - QA-043: eight workers divide 3/3/2 among empty centers and create no work
+  ---
+  duration_ms: 19.3925
+  ...
+# Subtest: QA-044: species price, growth and water count do not change equal plant weights
+ok 36 - QA-044: species price, growth and water count do not change equal plant weights
+  ---
+  duration_ms: 1.8659
+  ...
+# Subtest: QA-045: vastly different village populations do not introduce a village-first quota
+ok 37 - QA-045: vastly different village populations do not introduce a village-first quota
+  ---
+  duration_ms: 5.5155
+  ...
+# Subtest: QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+ok 38 - QA-046: four-profile hiring preserves balanced mixtures through unequal center quotas and save
+  ---
+  duration_ms: 9.9322
+  ...
+# Subtest: QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+ok 39 - QA-049/050/051: new crops and a midday center do not transfer existing staff or crop bindings
+  ---
+  duration_ms: 176.1921
+  ...
+# Subtest: QA-052/143: founding changes territorial center assignment while current staff return to their original village
+ok 40 - QA-052/143: founding changes territorial center assignment while current staff return to their original village
+  ---
+  duration_ms: 108.2884
+  ...
+# Subtest: QA-052: territorial choice respects full detours and excludes unreachable village routes
+ok 41 - QA-052: territorial choice respects full detours and excludes unreachable village routes
+  ---
+  duration_ms: 1.7234
+  ...
+# Subtest: A harvest begun before shift end completes its native action and physical transport across dawn
+ok 42 - A harvest begun before shift end completes its native action and physical transport across dawn
+  ---
+  duration_ms: 89.9356
+  ...
+# Subtest: A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+ok 43 - A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload
+  ---
+  duration_ms: 11.8155
+  ...
+# Subtest: A busy person cannot be hired twice; only the new daily contract is charged
+ok 44 - A busy person cannot be hired twice; only the new daily contract is charged
+  ---
+  duration_ms: 2.2424
+  ...
+# Subtest: An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+ok 45 - An expired carrier finishes its chain but cannot take ordinary tasks from the new day
+  ---
+  duration_ms: 6.3066
+  ...
+# Subtest: Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+ok 46 - Replaying a hiring transaction from the previous day leaves hiring open and grants no free new contract
+  ---
+  duration_ms: 1.3542
+  ...
+# Subtest: Cargo coordinates follow the actual carrier after every movement step
+ok 47 - Cargo coordinates follow the actual carrier after every movement step
+  ---
+  duration_ms: 0.8854
+  ...
+# Subtest: Losing the carrier center drops the box at its physical position without paying or deleting it
+ok 48 - Losing the carrier center drops the box at its physical position without paying or deleting it
+  ---
+  duration_ms: 1.4438
+  ...
+# Subtest: Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+ok 49 - Snapshot validation rejects orphaned, duplicated or inconsistent carrier links
+  ---
+  duration_ms: 3.7662
+  ...
+# Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+ok 50 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid
+  ---
+  duration_ms: 1.4764
+  ...
+# Subtest: New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+ok 51 - New harvest provenance survives reload and rejects an orphan, species mismatch, living source or duplicated yield
+  ---
+  duration_ms: 2.5104
+  ...
+# Subtest: A corrupt latest carrier relation falls back to the last valid saved snapshot
+ok 52 - A corrupt latest carrier relation falls back to the last valid saved snapshot
+  ---
+  duration_ms: 1.602
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 53 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 6.9984
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 54 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 13.3573
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 55 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 1.1985
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 56 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 3.1992
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 57 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 2.5667
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 58 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 0.8252
+  ...
+# Subtest: All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+ok 59 - All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+  ---
+  duration_ms: 70.0028
+  ...
+# Subtest: FIFO assignment interrupts an ambient route immediately without losing a reservation
+ok 60 - FIFO assignment interrupts an ambient route immediately without losing a reservation
+  ---
+  duration_ms: 2.2533
+  ...
+# Subtest: Unreachable or nonlocal detours never become ambient movement
+ok 61 - Unreachable or nonlocal detours never become ambient movement
+  ---
+  duration_ms: 4.1012
+  ...
+# Subtest: A changed navigation version invalidates a blocked paseo before moving
+ok 62 - A changed navigation version invalidates a blocked paseo before moving
+  ---
+  duration_ms: 0.492
+  ...
+# Subtest: Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+ok 63 - Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+  ---
+  duration_ms: 34.5029
+  ...
+# Subtest: A waiting employee returns physically at shift end and does not prolong the contract
+ok 64 - A waiting employee returns physically at shift end and does not prolong the contract
+  ---
+  duration_ms: 33.7826
+  ...
+# Subtest: Receiving queued work prevents even one extra ambient step
+ok 65 - Receiving queued work prevents even one extra ambient step
+  ---
+  duration_ms: 12.3541
+  ...
+# Subtest: Ambient paths stay inside the local radius and original terrain/building footprints
+ok 66 - Ambient paths stay inside the local radius and original terrain/building footprints
+  ---
+  duration_ms: 4281.8094
+  ...
+1..66
+# tests 66
+# suites 0
+# pass 66
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4841.1621

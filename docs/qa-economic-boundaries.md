@@ -93,7 +93,10 @@ narración y continuación opcional son el caso independiente QA-135, aún pendi
 en manglares. Tras añadir la comprobación del inicio de noche 100 y el diagnóstico
 del plátano, [cobertura final](qa/economic-boundaries/targeted-final.txt): **23/23**,
 cero fallos/cancelaciones/omisiones, 725,2537 ms. No se suman como casos distintos.
-La CI completa del nuevo commit de pruebas queda pendiente de comprobación.
+La [CI del commit 85d89d8](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37115782703)
+terminó correctamente: **876/876**, cero fallos, 398.285,452411 ms, verificaciones,
+build y paquete web aprobados. [Log](qa/economic-boundaries/ci-log.txt),
+[estado](qa/economic-boundaries/ci.json).
 
 La CI anterior de cultivos `99cee68` ya terminó: **853/853**, cero fallos,
 219.903,649006 ms, verificación de assets/plan/rutas, build y paquete web.
