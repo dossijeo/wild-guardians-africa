@@ -47,3 +47,8 @@ con 150 finales, aviso original game_attack_over solicitado una sola vez y sin
 repetición del historial al cargar. Se cierra QA-104 en su comportamiento lógico
 y despacho sonoro; no se reclama una nueva escucha ni inspección WebGL en este
 turno. Son pruebas de aceptación, sin modificaciones del runtime ni nueva build.
+
+La [CI de `1ddee01`](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37117809933)
+terminó correctamente: **931/931**, cero fallos, 307.224,472738 ms,
+verificaciones, build y paquete web aprobados. [Log](qa/raid-return/ci-log.txt),
+[estado](qa/raid-return/ci.json).
