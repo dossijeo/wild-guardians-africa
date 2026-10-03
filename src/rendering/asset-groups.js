@@ -17,9 +17,14 @@ export function nativeChunkBounds(group){
   if(group.userData.nativeAssetBounds)return group.userData.nativeAssetBounds;
   group.updateMatrixWorld(true);const box=new THREE.Box3(),temp=new THREE.Box3(),dummy=new THREE.Object3D();
   for(const mesh of group.children)if(mesh.userData.ground){mesh.geometry.computeBoundingBox();box.union(temp.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld));}
-  for(const batch of group.userData.lodBatches??[])for(const p of batch.instances){
-    dummy.position.set(p.x-batch.chunkOrigin[0],p.y,p.z-batch.chunkOrigin[1]);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();dummy.matrix.premultiply(group.matrixWorld);
-    box.union(temp.copy(batch.levels[0].geometry.boundingBox).applyMatrix4(dummy.matrix));
+  for(const batch of group.userData.lodBatches??[]){
+    // Every native variant contributes, including the solid shadow LOD. Reduced
+    // geometry need not have exactly the same envelope as the color source.
+    const variants=new THREE.Box3();for(const level of batch.levels){if(!level.geometry.boundingBox)level.geometry.computeBoundingBox();variants.union(level.geometry.boundingBox);}
+    for(const p of batch.instances){
+      dummy.position.set(p.x-batch.chunkOrigin[0],p.y,p.z-batch.chunkOrigin[1]);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();dummy.matrix.premultiply(group.matrixWorld);
+      box.union(temp.copy(variants).applyMatrix4(dummy.matrix));
+    }
   }
   group.userData.nativeAssetBounds=box;return box;
 }
@@ -59,28 +64,34 @@ export class NativeAssetGroups{
     stats.bytes+=capacity*(pass==='color'?68:64);
     if(pass==='shadow')this.shadowRoot.userData.lodBatches.push({shadow:g.mesh,meshes:[g.mesh]});
   }
-  update(chunks,camera,origin={x:0,z:0}){
+  update(chunks,camera,origin={x:0,z:0},light=null){
     if(!this.origin||this.origin.x!==origin.x||this.origin.z!==origin.z){
       this.origin={x:origin.x,z:origin.z};this.root.position.set(origin.x,0,origin.z);
       this.shadowRoot.position.copy(this.root.position);this.shadowRoot.updateMatrixWorld(true);
       for(const cache of [this.colors,this.shadows])for(const group of cache.values())group.stamp=null;
     }
-    const stats={colorGroups:0,shadowGroups:0,visibleChunks:0,uploads:0,bytes:0,rawColorSlices:0};
+    const stats={colorGroups:0,shadowGroups:0,visibleChunks:0,uploads:0,bytes:0,rawColorSlices:0,shadowChunks:0,culledShadowChunks:0};
     this.stats=stats;this.shadowRoot.userData.lodBatches=[];this.shadowChunks=new Map([['merged',this.shadowRoot]]);
     if(!this.enabled){this.clear();for(const group of chunks.values())for(const b of group.userData.lodBatches??[])for(const m of b.meshes)m.layers.set(0);return stats;}
     camera.updateMatrixWorld(true);this.vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);this.frustum.setFromProjectionMatrix(this.vp);
+    let lightVolume=null;
+    if(this.shadowCulling!==false&&light?.isDirectionalLight&&light.castShadow){
+      light.updateWorldMatrix(true,false);light.target.updateWorldMatrix(true,false);
+      light.shadow.updateMatrices(light);lightVolume=light.shadow.getFrustum();
+    }
     const colorEntries=new Map(),shadowEntries=new Map();
     const add=(map,key,entry)=>{if(!map.has(key))map.set(key,[]);map.get(key).push(entry);};
     for(const [key,group] of chunks){
-      group.updateMatrixWorld(true);const visible=group.visible&&this.frustum.intersectsBox(nativeChunkBounds(group));if(visible)stats.visibleChunks++;
+      group.updateMatrixWorld(true);const bounds=nativeChunkBounds(group),visible=group.visible&&this.frustum.intersectsBox(bounds),casts=group.visible&&(!lightVolume||lightVolume.intersectsBox(bounds));if(visible)stats.visibleChunks++;
+      if(group.visible){if(casts)stats.shadowChunks++;else stats.culledShadowChunks++;}
       const raw=[];
       for(const batch of group.userData.lodBatches??[]){
-        if(batch.clip){raw.push(batch);continue;}
+        if(batch.clip){if(casts)raw.push(batch);continue;}
         for(const [level,mesh] of batch.meshes.entries()){
           mesh.layers.set(31);if(!group.visible||!mesh.visible||!mesh.material.visible||!mesh.count)continue;
           const entry={group,batch,level,mesh};
           if(visible){add(colorEntries,batch.slot+':'+level,entry);stats.rawColorSlices++;}
-          if(batch.group!==2)add(shadowEntries,String(batch.slot),entry);
+          if(casts&&batch.group!==2)add(shadowEntries,String(batch.slot),entry);
         }
       }
       if(raw.length){const shadowGroup={visible:group.visible,matrixWorld:group.matrixWorld,userData:{lodBatches:raw}};this.shadowChunks.set(key,shadowGroup);}

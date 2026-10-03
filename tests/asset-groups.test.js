@@ -60,3 +60,29 @@ test('retired groups release their own buffers once, preserve borrowed arrays an
  groups.enabled=false;groups.update(chunks,camera);assert.equal(colors,1);assert.equal(shadowMatrices,1);assert.equal(source,0);assert.equal(groups.root.children.length,0);assert.ok([...chunks.values()].every(g=>g.userData.lodBatches.every(b=>b.meshes.every(m=>m.layers.mask===1))));
  groups.enabled=true;groups.update(chunks,camera);assert.ok(groups.colors.size>0);groups.dispose();groups.dispose();assert.equal(colors,1);assert.equal(source,0);assert.equal(groups.root.parent,null);assert.ok(!scene.children.includes(groups.root));
 });
+
+test('light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color',()=>{
+ const {scene,groups,chunks,camera,levels}=fixture(),light=new THREE.DirectionalLight();light.castShadow=true;scene.add(light,light.target);
+ Object.assign(light.shadow.camera,{left:-20,right:20,top:60,bottom:-60,near:.1,far:200});light.shadow.camera.updateProjectionMatrix();light.position.set(0,100,0);
+ const offscreen=new THREE.Group();createAssetLod(offscreen,levels,[0,2,4].map(i=>({x:i,y:0,z:40,sx:1,sy:1,sz:1,yaw:0})),{group:0,role:'prop'},0);chunks.set('offscreen',offscreen);scene.add(offscreen);updateAssetLods(chunks,camera,'media');
+ let stats=groups.update(chunks,camera,{x:0,z:0},light);
+ assert.equal(stats.visibleChunks,2);assert.equal(stats.shadowChunks,3);assert.equal(stats.culledShadowChunks,1);assert.equal(groups.shadows.get('0').mesh.count,9);assert.equal(groups.colors.get('0:0').mesh.count,6);
+ const remote=chunks.get('behind').userData.lodBatches[0];remote.clip=true;groups.update(chunks,camera,{x:0,z:0},light);assert.equal(groups.shadowChunks.has('behind'),false);
+ light.position.z=light.target.position.z=150;stats=groups.update(chunks,camera,{x:0,z:0},light);
+ assert.equal(stats.visibleChunks,2);assert.equal(stats.shadowChunks,1);assert.equal(groups.shadows.size,0);assert.deepEqual(groups.shadowChunks.get('behind').userData.lodBatches,[remote]);
+ groups.shadowCulling=false;groups.update(chunks,camera,{x:0,z:0},light);assert.equal(groups.shadows.get('0').mesh.count,9);assert.ok(groups.shadowChunks.has('behind'));
+ // Selection stays in global double precision while submitted matrices rebase.
+ groups.shadowCulling=true;const shift=new THREE.Vector3(48_000_000,0,-48_000_000);
+ for(const chunk of chunks.values()){chunk.position.add(shift);delete chunk.userData.nativeAssetBounds;}
+ camera.position.add(shift);camera.lookAt(shift.x,5,shift.z);light.position.add(shift);light.target.position.add(shift);
+ stats=groups.update(chunks,camera,{x:shift.x,z:shift.z},light);assert.equal(stats.shadowChunks,1);assert.equal(stats.visibleChunks,2);assert.ok(groups.shadowChunks.has('behind'));
+ groups.dispose();
+});
+
+test('shadow selection includes bounds of the final native variant even if they exceed LOD0',()=>{
+ const {scene,groups,chunks,camera,levels}=fixture(),light=new THREE.DirectionalLight();light.castShadow=true;scene.add(light,light.target);
+ levels[2].geometry.translate(0,0,180);levels[2].geometry.computeBoundingBox();light.position.set(0,100,180);light.target.position.z=180;
+ Object.assign(light.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:.1,far:200});light.shadow.camera.updateProjectionMatrix();
+ assert.ok(nativeChunkBounds(chunks.get('front')).max.z>160);
+ groups.update(chunks,camera,{x:0,z:0},light);assert.ok(groups.shadows.get('0').mesh.count>=3);groups.dispose();
+});
