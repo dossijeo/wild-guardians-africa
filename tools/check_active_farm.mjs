@@ -35,11 +35,10 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
   const act=()=>{
     if(s.raid&&s.cooldowns.shield===0){
       const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));
-      threats.sort((a,b)=>Number(!!b.target?.alive)-Number(!!a.target?.alive));
+      threats.sort((a,b)=>Number(b.target?.kind==='center')-Number(a.target?.kind==='center'));
       for(const {a,target} of threats){
-        // Conserve the only shield for living crops while a healthy center can
-        // absorb damage and be repaired. This is the diagnostic player's choice.
-        if(target?.kind==='center'&&target.hp>target.maxHp/2&&s.plants.some(p=>p.alive))continue;
+        // Protect the sole center first: losing it ends the campaign even when
+        // cash remains. This is a player choice, not a gameplay priority change.
         if(target&&distance(a,target)<8&&!Game.spellAt(s,'shield',target)&&cast('shield',target))break;
       }
     }
