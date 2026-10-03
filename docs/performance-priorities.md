@@ -150,3 +150,17 @@ Es una comprobación de regresiones tras los cambios de audio y tipografía.
 No añade una medición GPU, FPS ni una comparación visual. Los experimentos
 de caras por categoría/LOD, ruido fino más barato, profundidad de interiores/ceniza
 y separación de sombras estáticas/dinámicas conservan los límites documentados.
+
+## Comprobación de las ocho sugerencias sobre `257bf0c`
+
+Se contrastaron las sugerencias con el código actual y pasan **61/61 pruebas
+dirigidas**, cero fallos, cancelaciones u omisiones, 1.395,7136 ms.
+[Salida completa](qa/performance-actions/integrated-257bf0c.txt). La selección
+cubre las mismas quince suites de la revisión de `d89b184`, tras los cambios
+de música, aislamiento de biblioteca y reproducción de campañas.
+
+No se han vuelto a implementar correcciones que ya estaban presentes ni se
+atribuyen nuevos ahorros GPU a esta comprobación. Continúan pendientes las
+comparaciones visuales/GPU de caras por categoría y LOD, una receta de ruido
+más barata, profundidad de interiores/ceniza y separación de sombras estáticas
+y dinámicas. La resolución sigue siendo un ajuste explícito de nitidez.
