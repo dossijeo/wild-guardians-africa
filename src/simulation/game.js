@@ -422,7 +422,10 @@ export function tick(s,seconds,nav) {
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
-    for(const kind of Object.keys(s.cooldowns))s.cooldowns[kind]=Math.max(0,s.cooldowns[kind]-step);
+    for(const kind of Object.keys(s.cooldowns)) {
+      const remaining=s.cooldowns[kind]-step;
+      s.cooldowns[kind]=remaining>1e-9?remaining:0;
+    }
     for(const structure of s.structures)if(structure.status==='collapsing') {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
     }

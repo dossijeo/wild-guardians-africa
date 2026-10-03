@@ -46,3 +46,20 @@ test('Production shield mesh follows the world floor and has no incoming demonst
   assert.equal(vertices,48*17*6);assert.equal(fx.contacts.length,0);assert.ok(!fx.sprites().some(p=>p.tex==='trail'));
   const contact=createNativeVfx('shield',rects,{shieldMode:'contact'});contact.seek(.1);assert.equal(contact.contacts.length,1);assert.ok(!contact.sprites().some(p=>p.tex==='trail'));assert.throws(()=>createNativeVfx('shield',rects,{shieldMode:'unknown'}),/Escudo/);
 });
+
+
+test('QA-115: Shield crosses sunset on the real clock without changing crop growth, and night recast remains permitted',()=>{
+  let state=Game.newGame({slotId:'shield-sunset',seed:712});Game.resume(state,'intro');Game.placeStructure(state,'center',{x:12,z:8},nav);Game.plant(state,'seed','mijo',18,8,nav);Game.openInitialHiring(state);Game.hire(state,'hire',{olderMale:1});
+  state.day=3;state.time=299;state.dayPlan={done:true};state.nightPlan={done:true,group:[]};state.tutorial.step='done';Game.cast(state,'shield','shield',18,8,nav);
+  const control=deserialize(serialize(state));control.spells=[];control.cooldowns.shield=0;
+  let g=graphics();const id=state.spells[0].id;
+  try {
+    Game.advanceReal(state,1.2,nav);Game.advanceReal(control,1.2,nav);
+    assert.ok(Math.abs(state.time-301)<1e-7);assert.deepEqual(state.plants,control.plants);
+    const before=serialize(state);g.manager.update(state);assert.equal(serialize(state),before);assert.ok(Math.abs(g.manager.effects.get(id).native.time-2)<1e-7);
+    Game.pause(state,'menu');const paused=serialize(state);Game.advanceReal(state,100,nav);g.manager.update(state);assert.equal(serialize(state),paused);
+    g.dispose();state=deserialize(serialize(state));g=graphics();g.manager.update(state);assert.ok(Math.abs(g.manager.effects.get(id).native.time-2)<1e-7);Game.resume(state,'menu');
+    Game.advanceReal(state,18/5,nav);Game.advanceReal(control,18/5,nav);g.manager.update(state);assert.equal(state.spells.length,0);assert.equal(g.manager.effects.size,0);assert.deepEqual(state.plants,control.plants);assert.ok(Math.abs(state.cooldowns.shield-70)<1e-7);
+    Game.advanceReal(state,70/5,nav);assert.ok(state.time>=300);assert.equal(state.cooldowns.shield,0);Game.cast(state,'night-shield','shield',18,8,nav);assert.equal(state.spells[0].remaining,20);
+  }finally{g.dispose();}
+});
