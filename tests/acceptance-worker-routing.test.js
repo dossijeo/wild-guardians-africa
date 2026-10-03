@@ -41,6 +41,14 @@ test('QA-047/048: actual paid workers reserve FIFO by nearest free colleague and
  until(s,nav,()=>s.workers.some(w=>w.status==='carrying'),30);const crate=s.crates[0],carrier=crate.carrierId;
  Game.rebuildTasks(s);reserveTasks(s);reserveTasks(s);assert.equal(crate.carrierId,carrier);
  assert.equal(s.workers.filter(w=>w.crateId===crate.id).length,1);assert.equal(s.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id).length,0);
+ // The same actual cargo becomes loose through the native interruption API.
+ // Both paid workers evaluate it; the queue grants exactly one new owner.
+ Game.dropCarriedCrate(s,s.workers.find(w=>w.id===carrier));assert.equal(crate.carrierId,null);
+ Game.tick(s,.01,nav);const claim=s.tasks.find(t=>t.kind==='crate'&&t.targetId===crate.id);assert.ok(claim?.workerId);
+ assert.equal(s.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id).length,1);
+ const claimed=serialize(s);reserveTasks(s);reserveTasks(s);assert.equal(serialize(s),claimed);
+ assert.equal(s.workers.filter(w=>w.taskId===claim.id).length,1);
+ until(s,nav,()=>!!crate.carrierId,10);assert.equal(crate.carrierId,claim.workerId);assert.equal(s.workers.filter(w=>w.crateId===crate.id).length,1);
  until(s,nav,()=>crate.delivered,30);assert.equal(s.events.filter(e=>e.type==='CrateDelivered'&&e.targetId===crate.id).length,1);
  assert.equal(Object.keys(s.ledger.entries).filter(k=>k===`deliver:${crate.id}`).length,1);
 });
