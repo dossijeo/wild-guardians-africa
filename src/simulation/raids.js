@@ -127,8 +127,11 @@ export function updateRaid(s,dt,nav) {
       const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;
-        if(target){
-          const shield=spellAt(s,'shield',target);
+        const shield=target?spellAt(s,'shield',target):null;
+        const expiredBorder=!!a.approachShieldId&&a.approachShieldId!==shield?.id;
+        // A committed border animation stays at that border. Losing the barrier
+        // does not turn it into a ranged hit on the protected target.
+        if(target&&!expiredBorder){
           if(!shield){
             if('alive' in target){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
             else {hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);emit(s,'StructureHit',{targetId:target.id});}
@@ -138,7 +141,7 @@ export function updateRaid(s,dt,nav) {
           emit(s,'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,presentation:{elapsed:s.elapsed,
             animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
-        }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species});
+        }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
       a.status='walking';a.path=null;if(!target)release(s,a);
       // Finish the committed animation before spending another hit or retreating.
