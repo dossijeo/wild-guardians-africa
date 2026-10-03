@@ -11,7 +11,7 @@ import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
-import {villageLayout,findVillageEntry} from '../world/villages.js';
+import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
 import {repairRoute} from '../world/work-points.js';
@@ -386,16 +386,16 @@ export function previewVillage(s,culture,x,z,payload,nav) {
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
 export function foundVillage(s,id,culture,x,z,payload,nav) {
-  const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
   return commit(s,id,'village',()=>{
+    // Replayed commands must stop before validating their already occupied site.
+    // New confirmations still revalidate the complete layout before charging.
+    const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
     transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {
       const departure=centerServicePoint(center,s);
-      const routes=s.villages.map(v=>({v,route:nav.path(departure,v.entry??v,.28,null,true)})).filter(r=>r.route);
-      for(const r of routes)r.length=r.route.reduce((length,p,i)=>length+dist(p,i?r.route[i-1]:departure),0);
-      routes.sort((a,b)=>a.length-b.length||a.v.id.localeCompare(b.v.id));
-      if(routes[0]){center.culture??=centerCulture(center,s);center.villageId=routes[0].v.id;}
+      const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
+      if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
     }
     emit(s,'VillageFounded',{culture,x,z});
   });

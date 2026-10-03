@@ -1,5 +1,20 @@
 import {centerFootprint,centerServicePoint} from './centers.js';
 import {footprintsOverlap} from './footprints.js';
+export function nearestVillageRoute(nav,departure,villages){
+  const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+  const candidates=villages.map(v=>({v,lower:distance(departure,v.entry??v)}));
+  candidates.sort((a,b)=>a.lower-b.lower||a.v.id.localeCompare(b.v.id));
+  let best=null;
+  for(const {v,lower} of candidates){
+    // Straight-line distance is a lower bound, never a substitute for routing.
+    // Keep numerical ties eligible so the stable ID tie-break is preserved.
+    if(best&&lower>best.length+1e-8*Math.max(1,lower,best.length))break;
+    const route=nav.path(departure,v.entry??v,.28,null,true);if(!route)continue;
+    const length=route.reduce((sum,p,i)=>sum+distance(p,i?route[i-1]:departure),0);
+    if(!best||length<best.length||length===best.length&&v.id.localeCompare(best.v.id)<0)best={v,route,length};
+  }
+  return best;
+}
 export function villageLayout(payload,x,z) {
   return payload.units.map(unit=>{
     const px=(unit.min[0]+unit.max[0])*8,pz=(unit.min[2]+unit.max[2])*8;

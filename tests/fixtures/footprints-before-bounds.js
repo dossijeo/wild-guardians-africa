@@ -29,11 +29,6 @@ export function footprintDistance(polygon,x,z) {
   return best;
 }
 export function footprintsOverlap(a,b) {
-  // Reject separated boxes before the exact vertex/edge test. Recompute from
-  // current vertices: callers may mutate polygons, so identity is no cache key.
-  const bounds=polygon=>{let minX=Infinity,minZ=Infinity,maxX=-Infinity,maxZ=-Infinity;for(const p of polygon){minX=Math.min(minX,p.x);minZ=Math.min(minZ,p.z);maxX=Math.max(maxX,p.x);maxZ=Math.max(maxZ,p.z);}return {minX,minZ,maxX,maxZ};};
-  const aa=bounds(a),bb=bounds(b),margin=1e-8;
-  if(aa.maxX+margin<bb.minX||bb.maxX+margin<aa.minX||aa.maxZ+margin<bb.minZ||bb.maxZ+margin<aa.minZ)return false;
   if(a.some(p=>footprintDistance(b,p.x,p.z)<1e-8)||b.some(p=>footprintDistance(a,p.x,p.z)<1e-8))return true;
   const side=(a,b,p)=>(b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x);
   for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++) {
