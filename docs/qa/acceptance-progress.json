@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "6d056f3",
+  "implementation_commit": "fd524ac",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1837,9 +1837,10 @@
       "expected": "No fusionar stems incompatibles; se usa la política del lab musical al importarlo.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-native-music-mixes.md"
+        "docs/qa-native-music-mixes.md",
+        "docs/qa-native-music-transport.md"
       ],
-      "notes": "Native A/B eight presets imported with source hashes; day/night/attack connected through read-only game state, independent 110/108 BPM default grids, 2s progressive gain ramps, original layer ordering, shared clock/rate1, no stem restart during scene changes. 26 directed tests and muted real WebAudio fixtures. Remaining: native section graph with candidate branches, global end/start blend, evolution/temporary arrangements, perceptual listening validation and fully integrated campaign alternation. Existing odd/even day pack selection remains a technical integration choice; labs do not prescribe A/B campaign alternation."
+      "notes": "Native independent presets and vertical scene mixing plus section transport imported. Six registered candidate edges retain shared ten-stem offsets/preroll, native branch probabilities/cooldowns/recent-history weights, natural continuity without new deck, 4s global wrap and conservative delayed-callback fallback. 38 directed tests include all six edges, disposal of two decks and partial-start recovery without throwing into simulation. Real muted WebAudio: both wraps and A_D/A_E branch fixtures, peak20 scheduled music sources then10, rate1 and stop0. Remaining: evolution/temporary arrangements, perceptual listening of candidate edges and fully integrated campaign alternation; odd/even day pack selection is a technical integration choice, not a lab-prescribed A/B campaign rule."
     },
     {
       "id": "QA-157",

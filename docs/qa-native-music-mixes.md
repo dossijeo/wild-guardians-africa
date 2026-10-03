@@ -56,3 +56,9 @@ Por ello no se afirma que este cambio reproduzca todavía todo el motor musical.
 [Build](qa/music-mixer/build.txt) correcto en 4,43 s, aviso conocido de bundle grande.
 [Paquete web](qa/music-mixer/package.txt): 555 archivos / 379764817 bytes,
 794 enlaces relativos y 20 GLB runtime sin duplicados originales.
+
+## Actualización posterior
+
+La base fd524ac incorpora decks, grafo y retorno global: véase
+[transporte musical nativo](qa-native-music-transport.md). Los límites indicados
+en este informe describen la base 6d056f3, no el estado posterior.
