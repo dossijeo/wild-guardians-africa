@@ -11,6 +11,7 @@ import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
+import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
@@ -82,7 +83,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   notice(s,'¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.',animals[0].id);emit(s,'RaidSpawned');
 }
-function release(s,a) {if(a.reservation)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -107,16 +108,17 @@ function targetFor(s,a,nav) {
     if(approach)return {target:p,reservation:group.id,approach,shieldId:shield?.id??null};
   }
   // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
-  const structures=s.structures.filter(c=>c.status==='intact'&&!s.raid?.reservations[`structure:${c.id}`]);
-  structures.sort((p,q)=>groups.length?dist(a,p)-dist(a,q):q.cost-p.cost||dist(a,p)-dist(a,q));
-  for(const structure of structures) {
+  const structures=defensiveGroups(s).filter(g=>!reservedGroup(s,a,g)),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
+  structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
+  for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
     const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield);
-    if(approach)return {target:structure,reservation:`structure:${structure.id}`,approach,shieldId:shield?.id??null};
+    if(approach)return {target:structure,reservation:group.id,approach,shieldId:shield?.id??null};
   }
   return null;
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
+  reconcileDefensiveReservations(s,release);
   updateWorkerEncounters(s,nav);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
@@ -143,7 +145,7 @@ export function updateRaid(s,dt,nav) {
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
-      a.status='walking';a.path=null;if(!target)release(s,a);
+      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
