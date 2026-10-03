@@ -9,6 +9,9 @@ import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {terrainTriangleHeight} from '../src/rendering/hand-terrain.js';
 import {AfricanToon} from '../src/rendering/african-toon.js';
+import {withDepthCaptureMaterials} from '../src/rendering/depth-capture.js';
+import {auxiliaryBuildingDepthFragment} from '../src/rendering/building-depth.js';
+import {destructionFragment} from '../src/rendering/destruction-native.js';
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/destruction.json',import.meta.url))).buildings;
 function originalModel(building){
   const bytes=readFileSync(new URL('../public'+building.url,import.meta.url)),array=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),view=new DataView(array);let json,bin;
@@ -23,6 +26,34 @@ function fakeRenderer(){
     getDrawingBufferSize(out){return out.copy(this.size)},getRenderTarget(){return this.target},setRenderTarget(target){this.target=target},getClearColor(out){return out.copy(this.color)},getClearAlpha(){return this.alpha},setClearColor(color,alpha){this.color.set(color);this.alpha=alpha},render(){this.renders++;if(this.fail)throw new Error('fallo GPU de prueba');}};
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
+
+test('auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures',()=>{
+  const shell=destructionFragment.slice(destructionFragment.indexOf('  if(uInner>.5){'),destructionFragment.indexOf('  float soot='));
+  const ash=destructionFragment.slice(destructionFragment.indexOf('  if(uDamage<.235)discard;'),destructionFragment.indexOf('  base=mix(vec3(.025'));
+  assert.ok(auxiliaryBuildingDepthFragment.includes(shell));assert.ok(auxiliaryBuildingDepthFragment.includes(ash));
+  for(const forbidden of ['shadowFactor','environment4','cotangent','texture(uAlbedo','tonemap'])assert.ok(!auxiliaryBuildingDepthFragment.includes(forbidden));
+  for(const template of templates){
+    const pass=new BuildingDestructionPass(fakeRenderer());pass.auxiliaryDepth=true;const entity={id:'aux-depth',hp:240,maxHp:600,status:'intact'},house=new NativeBuilding(template,entity,pass),world=new THREE.Scene();world.add(house);
+    assert.equal(house.inner.customDepthMaterial.depthFunc,THREE.LessDepth);
+    assert.equal(house.ash.customDepthMaterial.depthFunc,THREE.LessEqualDepth);
+    for(const mesh of [house.inner,house.ash]){
+      assert.equal(mesh.customDepthMaterial.vertexShader,mesh.material.vertexShader);
+      assert.equal(mesh.customDepthMaterial.uniforms,mesh.material.uniforms);
+      assert.equal(mesh.customDepthMaterial.side,THREE.DoubleSide);
+    }
+    assert.equal(house.inner.customDepthMaterial.uniforms.uInner.value,1);assert.equal(house.ash.customDepthMaterial.uniforms.uMode.value,2);
+    const original=house.inner.material,camera=new THREE.PerspectiveCamera(45,1,.1,100);camera.position.set(10,8,12);camera.lookAt(0,2,0);camera.updateWorldMatrix(true,false);house.updateWorldMatrix(true,true);
+    assert.throws(()=>withDepthCaptureMaterials(world,()=>{
+      assert.equal(house.inner.material,house.inner.customDepthMaterial);assert.equal(house.ash.material,house.ash.customDepthMaterial);
+      house.inner.onBeforeRender(null,world,camera);assert.equal(house.inner.material.uniforms.uOpeningMask.value,pass.target.texture);assert.equal(house.inner.material.uniforms.uIntactDepth.value,pass.target.depthTexture);
+      assert.ok(house.inner.material.uniforms.uVP.value.equals(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(house.inner.matrixWorld)));
+      throw new Error('capture interrupted');
+    }),/capture interrupted/);assert.equal(house.inner.material,original);assert.equal(house.inner.material.colorWrite,true);
+    const defaultHouse=new NativeBuilding(template,{...entity,id:'default-depth'},pass);pass.auxiliaryDepth=false;const nativeHouse=new NativeBuilding(template,{...entity,id:'native-depth'},pass);assert.equal(nativeHouse.inner.customDepthMaterial,undefined);assert.equal(nativeHouse.ash.customDepthMaterial,undefined);nativeHouse.dispose();defaultHouse.dispose();
+    const depths=[house.outer,house.inner,house.ash].map(m=>m.customDepthMaterial),disposed=[];depths.forEach(m=>m.addEventListener('dispose',()=>disposed.push(m)));
+    house.dispose();assert.deepEqual(disposed,depths);pass.dispose();
+  }
+});
 
 test('five native center envelopes contain intact/interior and falling vertices throughout collapse',()=>{
   const point=new THREE.Vector3();

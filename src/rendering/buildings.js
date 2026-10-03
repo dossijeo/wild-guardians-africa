@@ -4,6 +4,7 @@ import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionV
 import {BuildingEffects} from './building-effects.js';
 import {nativeBuildingBounds} from './building-bounds.js';
 import {withDepthCaptureMaterials} from './depth-capture.js';
+import {auxiliaryBuildingDepthFragment} from './building-depth.js';
 
 const glsl=source=>source.replace('#version 300 es\n','');
 const clamp=value=>Math.max(0,Math.min(1,value));
@@ -70,6 +71,13 @@ export class NativeBuilding extends THREE.Group {
     const innerUniforms={...this.uniforms,uInner:value(1)},ashUniforms={...this.uniforms,uMode:value(2)};
     this.inner=new THREE.Mesh(template.body,shaderMaterial(innerUniforms,destructionFragment));this.inner.material.depthFunc=THREE.LessDepth;this.inner.renderOrder=1;
     this.ash=new THREE.Mesh(template.ash,shaderMaterial(ashUniforms,destructionFragment));
+    // QA opt-in only: combined depth readbacks still differ at some angles.
+    // Gameplay keeps the native color recipe until equivalence is established.
+    if(pipeline.auxiliaryDepth===true)for(const mesh of [this.inner,this.ash]){
+      mesh.customDepthMaterial=shaderMaterial(mesh.material.uniforms,auxiliaryBuildingDepthFragment);
+      mesh.customDepthMaterial.depthFunc=mesh.material.depthFunc;
+      mesh.customDepthMaterial.userData.worldDepthCompatible=true;
+    }
     this.opening=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionOpeningFragment));this.opening.matrixAutoUpdate=false;
     for(const mesh of [this.outer,this.inner,this.ash,this.opening]){
       // Bounds include native interior recession, collapse drift and ash scaling.
@@ -110,7 +118,7 @@ export class NativeBuilding extends THREE.Group {
     if(!hit)return;const point=new THREE.Vector3(...hit.p).applyMatrix4(this.matrixWorld),distance=point.distanceTo(raycaster.ray.origin);
     if(distance>=raycaster.near&&distance<=raycaster.far)hits.push({distance,point,object:this.outer});
   }
-  dispose(){this.effects.dispose();this.pipeline.remove(this);for(const mesh of [this.outer,this.inner,this.ash,this.opening])mesh.material.dispose();this.outer.customDepthMaterial.dispose();this.clear();}
+  dispose(){this.effects.dispose();this.pipeline.remove(this);for(const mesh of [this.outer,this.inner,this.ash,this.opening]){mesh.material.dispose();mesh.customDepthMaterial?.dispose();}this.clear();}
 }
 export class BuildingDestructionPass {
   constructor(renderer,sun=null,ambient=null){
