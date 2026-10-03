@@ -1781,9 +1781,10 @@
       "expected": "Liberar audio, WebGL, listeners y timers de la escena anterior.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-audio-lifecycle.md"
+        "docs/qa-audio-lifecycle.md",
+        "docs/qa/resource-retry/README.md"
       ],
-      "notes": "Audio generation guards prevent late unlock/JSON/menu and old pack A from starting or stopping a newer scene. Twenty controlled menu cycles release source/gain nodes; partial stem start failure cleans up. Real WebAudio delayed-menu test ends at zero voices without an extra audio fetch. Remaining: integrated repeated menu/game lifecycle for WebGL, DOM listeners and timers."
+      "notes": "Audio generation guards prevent late unlock/JSON/menu and old pack A from starting or stopping a newer scene. Twenty controlled menu cycles release source/gain nodes; partial stem start failure cleans up. Real WebAudio delayed-menu test ends at zero voices without an extra audio fetch. Remaining: integrated repeated menu/game lifecycle for WebGL, DOM listeners and timers. WorldScene now aborts its five own canvas listeners and guards repeated disposal. Two CPU tests release real disposal method resources once in partial/full load and detach event callback. Three real failed-world entries return menu, then one normal retry loads. Still partial: these are not repeated full gameplay exit/reentry GPU/DOM/timer cycles."
     },
     {
       "id": "QA-151",
@@ -1792,9 +1793,10 @@
       "expected": "Error o fallback controlado; no pantalla infinita ni mundo corrupto.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-audio-lifecycle.md"
+        "docs/qa-audio-lifecycle.md",
+        "docs/qa/resource-retry/README.md"
       ],
-      "notes": "Network/decode failures and SFX bank rejection release failed cache promises; same-day music and same-clip retry succeed. Real muted AudioContext: injected HTTP404 yields zero voices and no cached failure, second native MP3 decode/play succeeds at rate1. Controlled resume rejection can retry; app gesture listener no longer once-only. Remaining: actual browser denied-unlock flow and controlled missing model/shader/terrain/other asset entry in integrated game."
+      "notes": "Network/decode failures and SFX bank rejection release failed cache promises; same-day music and same-clip retry succeed. Real muted AudioContext: injected HTTP404 yields zero voices and no cached failure, second native MP3 decode/play succeeds at rate1. Controlled resume rejection can retry; app gesture listener no longer once-only. Remaining: actual browser denied-unlock flow and controlled missing model/shader/terrain/other asset entry in integrated game. Actual production app/native selector: one-shot HTTP404 for sky catalogue, terrain binary and first compressed world GLB returns original menu with zero live world canvases and zero slots. Normal retry creates exactly one real world/1000-coin slot at time0, intro/reading paused, no demonstration start; console clean. One premature QA-control activation recorded separately and sent no start. Shader compilation failure and actual denied audio unlock remain; transient terrain/model alerts were not captured, though recovery was observed."
     },
     {
       "id": "QA-152",

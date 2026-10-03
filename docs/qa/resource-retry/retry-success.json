@@ -1,0 +1,208 @@
+{
+  "attempts": [
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    },
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    },
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    },
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 68125.60000002384
+    },
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 121537.40000003576
+    },
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 216492.80000001192
+    },
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 301792.5
+    }
+  ],
+  "failCount": 3,
+  "failures": [
+    {
+      "resource": "sky",
+      "url": "/content/skies.json"
+    },
+    {
+      "resource": "terrain",
+      "url": "/assets/4e10ebce0a685de1093c67c72bad0d59267ff103364876ebb92a7a159ee914a8.bin"
+    },
+    {
+      "resource": "model",
+      "url": "/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb"
+    }
+  ],
+  "worldCanvasCreations": 4,
+  "liveWorldCanvases": 1,
+  "liveNativeMenuFrames": 0,
+  "initialSlotCount": 0,
+  "currentSlotCount": 1,
+  "addedSlots": [
+    {
+      "key": "wild-guardians:slot:10fa9da0-3ef1-41e7-b005-cab5d557c361",
+      "slotId": "10fa9da0-3ef1-41e7-b005-cab5d557c361",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "money": {
+        "n": "1000",
+        "d": "1"
+      },
+      "time": 0,
+      "structures": 0,
+      "pauses": [
+        "intro",
+        "tutorial-reading"
+      ]
+    }
+  ],
+  "oldUnchanged": true,
+  "errors": [
+    "Error: Reach the culture step first"
+  ]
+}

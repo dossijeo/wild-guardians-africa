@@ -1,0 +1,61 @@
+{
+  "attempts": [
+    {
+      "clicks": 1,
+      "cancelledLaunches": 1,
+      "simulatedStarts": 0,
+      "selection": {
+        "biome": {
+          "id": "sabana",
+          "name": "Sabana",
+          "index": 0
+        },
+        "culture": {
+          "id": "mapungubwe",
+          "name": "Mapungubwe",
+          "index": 0
+        }
+      },
+      "states": [
+        {
+          "step": "culture",
+          "biome": {
+            "id": "sabana",
+            "name": "Sabana",
+            "index": 0
+          },
+          "culture": {
+            "id": "mapungubwe",
+            "name": "Mapungubwe",
+            "index": 0
+          },
+          "simulation": true
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "type": "wild-guardians:menu",
+      "action": "start",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "at": 68125.60000002384
+    }
+  ],
+  "failCount": 1,
+  "failures": [
+    {
+      "resource": "sky",
+      "url": "/content/skies.json"
+    }
+  ],
+  "worldCanvasCreations": 1,
+  "liveWorldCanvases": 0,
+  "liveNativeMenuFrames": 1,
+  "initialSlotCount": 0,
+  "currentSlotCount": 0,
+  "addedSlots": [],
+  "oldUnchanged": true,
+  "errors": []
+}
