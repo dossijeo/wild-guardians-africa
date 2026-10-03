@@ -31,6 +31,7 @@ export class NativeVfx extends THREE.Group {
     const rigidFragment=fragment(vfxRigidFragment).replace('float hash(vec3 p)', 'uniform bool uHasShadow;\n'+THREE.ShaderChunk.packing+'\nfloat hash(vec3 p)').replace('float shadow(float nl){','float shadow(float nl){if(!uHasShadow)return 1.;').replace('float z=texture(uShadow,p.xy+vec2(x,y)*uShadowTexel*1.2).r;','float z=unpackRGBAToDepth(textureLod(uShadow,p.xy+vec2(x,y)*uShadowTexel*1.2,0.));').replace('vec4(max(c,vec3(0.)),1.)','vec4(worldColor(c),1.)');
     this.rigidMaterial=material(vfxRigidVertex,rigidFragment,this.uniforms);
     this.depthMaterial=material(vfxShadowVertex,'precision highp float;'+THREE.ShaderChunk.packing+'out vec4 fragColor;void main(){fragColor=packDepthToRGBA(gl_FragCoord.z);}',this.uniforms);
+    this.depthMaterial.userData.worldDepthCompatible=true;
     for(const [id,shape] of library.shapes){
       const g=new THREE.InstancedBufferGeometry();for(const [name,attribute] of Object.entries(shape.attributes))g.setAttribute(name,attribute);
       const buffer=new THREE.InstancedInterleavedBuffer(new Float32Array(256*23),23);buffer.setUsage(THREE.DynamicDrawUsage);this.buffers.set(id,buffer);

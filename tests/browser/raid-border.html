@@ -22,7 +22,7 @@ function draw(){world.render(0);const animals=state.raid?.animals??[];
  document.querySelector('#data').textContent=JSON.stringify({biome,culture,tutorial,entryBounds,currentBounds:nav.activeBounds,entryAnimals,animals:records,centerHp:state.structures[0]?.hp,raidEnded:state.events.filter(e=>e.type==='RaidEnded').length,errors},null,2);
 }
 async function action(fn){buttons().forEach(b=>b.disabled=true);try{await fn();draw();}catch(e){error(e);}finally{buttons().forEach(b=>b.disabled=false);document.querySelector('#spawn').disabled=!!state.raid;}}
-const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
 state=Game.newGame({seed:712,biome,culture,slotId:'raid-border-qa'});nav=new Navigation(712,biome,pack.profile);
 const location=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
 world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=error;world.qualitySetting('media');await world.load(state,nav,payload);

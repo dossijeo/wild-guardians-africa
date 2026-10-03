@@ -3,6 +3,7 @@ import {toonDestruction} from './african-toon.js';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
 import {BuildingEffects} from './building-effects.js';
 import {nativeBuildingBounds} from './building-bounds.js';
+import {withDepthCaptureMaterials} from './depth-capture.js';
 
 const glsl=source=>source.replace('#version 300 es\n','');
 const clamp=value=>Math.max(0,Math.min(1,value));
@@ -60,6 +61,7 @@ export class NativeBuilding extends THREE.Group {
     this.outer=new THREE.Mesh(template.body,shaderMaterial(this.uniforms,destructionFragment));
     const depthFragment=destructionDepthFragment.replace('uniform int uMode;uniform float uUncut;','uniform int uMode;uniform float uUncut;\n#include <packing>\nout vec4 packedDepth;').replace('if(damageField(vOriginal)<0.)discard;}','if(damageField(vOriginal)<0.)discard;packedDepth=packDepthToRGBA(gl_FragCoord.z);}');
     this.outer.customDepthMaterial=shaderMaterial({...this.uniforms,uUncut:value(0)},depthFragment);this.outer.castShadow=true;this.outer.material.shadowSide=THREE.DoubleSide;
+    this.outer.customDepthMaterial.userData.worldDepthCompatible=true;
     this.outer.onBeforeShadow=(renderer,object,camera,shadowCamera)=>this.cameraUniforms(this.outer,shadowCamera);
     // Depth only uses deformation/cut inputs; color camera/fog/time uniforms
     // are overwritten by other passes and do not change the silhouette.
@@ -137,14 +139,12 @@ export class BuildingDestructionPass {
   }
   captureDepth(camera,world){
     camera.updateWorldMatrix(true,false);
-    const renderer=this.renderer,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=renderer.getRenderTarget(),autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled,materials=new Map();
+    const renderer=this.renderer,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=renderer.getRenderTarget(),autoClear=renderer.autoClear,shadows=renderer.shadowMap.enabled;
     if(this.smokeDepth.width!==size.x||this.smokeDepth.height!==size.y)this.smokeDepth.setSize(size.x,size.y);
-    world.traverse(object=>{for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[])if(!materials.has(material))materials.set(material,{visible:material.visible,colorWrite:material.colorWrite});});
-    if(world.overrideMaterial&&!materials.has(world.overrideMaterial))materials.set(world.overrideMaterial,{visible:world.overrideMaterial.visible,colorWrite:world.overrideMaterial.colorWrite});
     try{
-      for(const material of materials.keys()){material.colorWrite=false;if(material.transparent||!material.depthWrite)material.visible=false;}
-      renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);renderer.render(world,camera);
-    }finally{for(const [material,saved] of materials)Object.assign(material,saved);renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
+      renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);
+      this.depthCaptureStats=withDepthCaptureMaterials(world,()=>renderer.render(world,camera),{optimized:this.optimizedDepth!==false});
+    }finally{renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   renderSmoke(camera,world,{depthPrepared=false}={}){
     if(![...this.buildings].some(b=>b.effects.native.smoke.length))return;
