@@ -1,4 +1,5 @@
 import '../ui/styles.css';
+import {autosaveEventAfter} from './autosave-events.js';
 import {saveGame} from './save-game.js';
 import {agriculturalDawnMessage} from '../ui/agricultural-notice.js';
 import {WORLD_RESOLUTIONS,worldResolution,applyWorldResolution} from './world-resolution.js';
@@ -264,7 +265,7 @@ function settingsDialog(inGame=false) {
 }
 function resultDialog() {
   const won=state.result==='victory';Game.pause(state,'result');document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" id="result-dialog" role="dialog" aria-modal="true"><div class="eyebrow">El Espíritu</div><h2>${won?'La maldición ha terminado':'El poblado necesita un nuevo comienzo'}</h2><p>${won?'Has sobrevivido a cien noches. La tierra queda libre: puedes seguir cultivando y fundar nuevos poblados en paz.':esc(state.messages.at(-1)?.text??'No quedan recursos suficientes para continuar.')}</p><div class="dialog-actions">${button('result-menu','Volver al menú')}${won?button('continue','Seguir en este mundo'):button('retry','Nueva partida')}</div></section></div>`;
-  bind('result-menu',menu);bind('retry',()=>{save();state=null;clearWorld();newGameScreen();});bind('continue',()=>{Game.resume(state,'result');Game.continuePostgame(state);document.querySelector('#modal').innerHTML='';save();});
+  bind('result-menu',menu);bind('retry',()=>{if(!save())return;state=null;clearWorld();newGameScreen();});bind('continue',()=>{Game.resume(state,'result');Game.continuePostgame(state);document.querySelector('#modal').innerHTML='';save();});
 }
 function libraryScreen() {
   clearWorld();screen='library';app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Biblioteca</div>${button('back','← Volver','ghost')}</header><h2>Los archivos del poblado</h2><p class="muted">Laboratorios originales aislados de tus partidas. Los recursos se cargan al abrir cada demostración.</p><div class="library-grid">${[['crops','Cultivos','Ocho especies, cinco etapas y transiciones locales.'],['walls','Bastión','Materiales, puertas reforzadas y estados de daño.'],['destruction','Destrucción','Daño normalizado y colapso de los edificios.'],['sfx','Sonidos','126 sonidos originales, con usos y reservas documentados.']].map(([id,title,description])=>`<article class="library-card"><h3>${title}</h3><p class="muted">${description}</p><button data-demo="${id}">Abrir demostración →</button></article>`).join('')}</div><p class="muted">Modelos originales Meshy · Audio original ElevenLabs y paquetes musicales suministrados · Ga Maamli y Banga bajo SIL OFL.</p></main>`;
@@ -281,8 +282,7 @@ function frame(now) {
     const eventIndex=state.events.at(-1)?.id;
     try {tutorial?.update();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events);updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
-    const newEvents=state.events.filter(e=>e.id!==eventIndex&&['Dawn','RaidEnded','CampaignWon'].includes(e.type));
-    if(newEvents.length&&newEvents.at(-1).id!==frame.lastSaveEvent){frame.lastSaveEvent=newEvents.at(-1).id;save();}
+    if(autosaveEventAfter(state.events,eventIndex))save();
   }
 }
 async function boot() {try {await window.WildGuardiansLanguageReady;[selector,thumbnails]=await Promise.all([json('/content/selector.json'),json('/content/crop-thumbnails.json')]);menu();requestAnimationFrame(frame);}catch(e){app.textContent='No se pudo iniciar Wild Guardians: '+e.message;}}
