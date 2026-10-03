@@ -1,0 +1,435 @@
+TAP version 13
+# Subtest: QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 1 - QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 67.5663
+  ...
+# Subtest: QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 2 - QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 19.7089
+  ...
+# Subtest: QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 3 - QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 16.8851
+  ...
+# Subtest: QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 4 - QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 20.2263
+  ...
+# Subtest: QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 5 - QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 23.1547
+  ...
+# Subtest: QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+ok 6 - QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+  ---
+  duration_ms: 38.6751
+  ...
+# Subtest: QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+ok 7 - QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+  ---
+  duration_ms: 128.3647
+  ...
+# Subtest: QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+ok 8 - QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+  ---
+  duration_ms: 74.6183
+  ...
+# Subtest: QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+ok 9 - QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+  ---
+  duration_ms: 51.4266
+  ...
+# Subtest: QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+ok 10 - QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+  ---
+  duration_ms: 48.8538
+  ...
+# Subtest: QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+ok 11 - QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+  ---
+  duration_ms: 26.4096
+  ...
+# Subtest: QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+ok 12 - QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+  ---
+  duration_ms: 0.6486
+  ...
+# Subtest: warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 13 - warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 496.4613
+  ...
+# Subtest: hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 14 - hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 231.0398
+  ...
+# Subtest: buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 15 - buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 195.0329
+  ...
+# Subtest: lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 16 - lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 196.4851
+  ...
+# Subtest: rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 17 - rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 174.9476
+  ...
+# Subtest: Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+ok 18 - Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+  ---
+  duration_ms: 2.1616
+  ...
+# Subtest: Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+ok 19 - Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+  ---
+  duration_ms: 22.5489
+  ...
+# Subtest: Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+ok 20 - Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+  ---
+  duration_ms: 0.7742
+  ...
+# Subtest: Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+ok 21 - Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+  ---
+  duration_ms: 4.6395
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 22 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 15.8367
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 23 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 9.578
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 24 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 2.4439
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 25 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 2.8337
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 26 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 2.9553
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 27 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+  ---
+  duration_ms: 37.0805
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 28 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 4.1696
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1000
+ok 29 - 30 canonical combinations validate and each new game starts isolated at 1000
+  ---
+  duration_ms: 5.4879
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 30 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 1.4116
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 31 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.8488
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 32 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 51.4262
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 33 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 2.2611
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 34 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.4505
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 35 - New midday center does not move plants or employees
+  ---
+  duration_ms: 1.9962
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 36 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+  ---
+  duration_ms: 15.2861
+  ...
+# Subtest: Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+ok 37 - Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction
+  ---
+  duration_ms: 0.8105
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 38 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.6397
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 39 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.0499
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 40 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.6129
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 41 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.0587
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 42 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.7472
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 43 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.6826
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 44 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.5394
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 45 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 13.7031
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 46 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.1903
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 47 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.455
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 48 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.0087
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 49 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.3345
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 50 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 2.179
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 51 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5717
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 52 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.6803
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 53 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3318
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 54 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4947
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 55 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 1.137
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 56 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 6.4709
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 57 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 2.0062
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 58 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 7.414
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 59 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 3.5142
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 60 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.6367
+  ...
+# Subtest: Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 61 - Manglares/mapungubwe: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 7324.3768
+  ...
+# Subtest: Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 62 - Manglares/saheliana: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 11153.0101
+  ...
+# Subtest: Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 63 - Manglares/suajili: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 7715.0439
+  ...
+# Subtest: Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 64 - Manglares/musgum: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 9309.2365
+  ...
+# Subtest: Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+ok 65 - Manglares/etiope: guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target
+  ---
+  duration_ms: 8574.4981
+  ...
+# Subtest: entry searches the full active edge when only a distant corner admits the body and its exit
+ok 66 - entry searches the full active edge when only a distant corner admits the body and its exit
+  ---
+  duration_ms: 4.7973
+  ...
+# Subtest: a blocked entry-to-exit corridor cancels the entire group without allocating animals
+ok 67 - a blocked entry-to-exit corridor cancels the entire group without allocating animals
+  ---
+  duration_ms: 2.5392
+  ...
+# Subtest: native reverse approach search preserves endpoints and swept collision on a real detour
+ok 68 - native reverse approach search preserves endpoints and swept collision on a real detour
+  ---
+  duration_ms: 6.8619
+  ...
+# Subtest: legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+ok 69 - legacy snapshots retain the original spawn as their exit; malformed new exit positions are rejected
+  ---
+  duration_ms: 2.3727
+  ...
+# Subtest: warthog: a committed border attack cannot damage its distant crop when the Shield expires
+ok 70 - warthog: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 170.7309
+  ...
+# Subtest: hyena: a committed border attack cannot damage its distant crop when the Shield expires
+ok 71 - hyena: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 77.3982
+  ...
+# Subtest: buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+ok 72 - buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 61.773
+  ...
+# Subtest: lion: a committed border attack cannot damage its distant crop when the Shield expires
+ok 73 - lion: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 78.2198
+  ...
+# Subtest: rhino: a committed border attack cannot damage its distant crop when the Shield expires
+ok 74 - rhino: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 72.1752
+  ...
+# Subtest: All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+ok 75 - All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+  ---
+  duration_ms: 12.7701
+  ...
+# Subtest: Each species blocks a real hit on the active dome, then physically resumes its crop attack after expiry
+ok 76 - Each species blocks a real hit on the active dome, then physically resumes its crop attack after expiry
+  ---
+  duration_ms: 191.8381
+  ...
+# Subtest: The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+ok 77 - The original dome lasts twenty simulated seconds at its actual radius, without the timed demonstration impact
+  ---
+  duration_ms: 230.0994
+  ...
+# Subtest: Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+ok 78 - Every species triggers one original block from a confirmed hit, on the 3D dome, with pause and reload
+  ---
+  duration_ms: 263.539
+  ...
+# Subtest: Production shield mesh follows the world floor and has no incoming demonstration bolt
+ok 79 - Production shield mesh follows the world floor and has no incoming demonstration bolt
+  ---
+  duration_ms: 34.7113
+  ...
+# Subtest: Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+ok 80 - Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+  ---
+  duration_ms: 50.2194
+  ...
+# Subtest: Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+ok 81 - Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+  ---
+  duration_ms: 22.7952
+  ...
+# Subtest: Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+ok 82 - Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+  ---
+  duration_ms: 12.9031
+  ...
+# Subtest: Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+ok 83 - Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+  ---
+  duration_ms: 4.6622
+  ...
+# Subtest: Shield preview rejects an animal touching its area without moving or repelling it
+ok 84 - Shield preview rejects an animal touching its area without moving or repelling it
+  ---
+  duration_ms: 1.0448
+  ...
+# Subtest: One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+ok 85 - One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+  ---
+  duration_ms: 18.4797
+  ...
+1..85
+# tests 85
+# suites 0
+# pass 85
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 44499.8252

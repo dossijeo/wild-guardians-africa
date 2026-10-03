@@ -53,7 +53,9 @@ shaders del mundo; no se atribuyen al material Basic del borde ni se consideran
 resueltos. La compilación de los programas terminó y la partida siguió funcionando.
 Pestaña de QA y servidor cerrados tras la inspección.
 
-La suite completa del nuevo commit se verifica mediante CI; este informe no
-presenta las 774 pruebas del commit anterior como resultado de esta versión.
-Quedan la continuación física de animales al expirar Escudo y el resto de la
-auditoría funcional del Plan Maestro.
+El [CI exacto de 9b4dfc5](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37109456784)
+terminó correctamente: 780/780 pruebas, cero fallos, 224895,068173 ms,
+verificaciones, compilación, ZIP y artefactos. [Log completo](qa/spell-preview/ci-log.txt).
+La continuación física del Escudo se corrigió después:
+[evidencia y alcance](qa-shield-expiry.md). El resto de la auditoría funcional
+del Plan Maestro sigue abierto.

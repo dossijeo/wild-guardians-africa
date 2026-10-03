@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "9b4dfc5",
+  "implementation_commit": "2586978",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -1280,7 +1280,7 @@
         "docs/qa-spell-preview.md",
         "docs/qa/spell-preview/directed.txt"
       ],
-      "notes": "Game.advanceReal exercised at day x1 and night x5 with independent active Growth/Shield cooldowns, actual snapshots and stacked blocking pauses; exact 20/90, 30/90 and 15/120 duration/cooldown checks. Production pause during language change keeps clock fixed. New source CI remains pending; directed tests and build pass."
+      "notes": "Game.advanceReal exercised at day x1 and night x5 with independent active Growth/Shield cooldowns, actual snapshots and stacked blocking pauses; exact 20/90, 30/90 and 15/120 duration/cooldown checks. Production pause during language change keeps clock fixed. Spell-preview source CI 9b4dfc5 completed successfully with 780 tests; directed tests and build pass."
     },
     {
       "id": "QA-117",
@@ -1300,9 +1300,16 @@
       "area": "Magias",
       "scenario": "Escudo vence con animales aún con cupo",
       "expected": "Continúan con objetivos válidos; no desaparecen automáticamente.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "tests/shield-expiry.test.js",
+        "docs/qa-shield-expiry.md",
+        "docs/qa/shield-expiry/directed.txt",
+        "docs/qa/shield-expiry/edge.json",
+        "docs/qa/shield-expiry/miss.json",
+        "docs/qa/shield-expiry/crop-hit.json"
+      ],
+      "notes": "Fixed a committed dome-edge attack becoming remote crop damage after Shield expiry. Production Navigation on controlled flat terrain covers all five species/five cultures, pause/reload mid-clip, one expiry miss and physical reapproach before a new crop hit. Additional native-budget seed 123 covers a confirmed block followed by physical continuation. Original Sabana/Mapungubwe browser confirms warthog at 3.15 m, Shield 0.5 s left; after expiry/memory reload crop alive and one strike left, then movement to 1.7 m and one real hit. Native 20 s duration/radius/budget preserved; not a full biome rendering matrix."
     },
     {
       "id": "QA-119",
@@ -1312,10 +1319,10 @@
       "audit_status": "partial",
       "evidence": [
         "tests/spell-preview.test.js",
-        "docs/qa-spell-preview.md",
-        "docs/qa/spell-preview/directed.txt"
+        "tests/shield-expiry.test.js",
+        "docs/qa-shield-expiry.md"
       ],
-      "notes": "Shared preview/cast checks animal radius plus Shield radius; just-inside overlap rejected without moving animal or changing gameplay state, just-outside allowed. Remaining: real Navigation routes, all species and poses, and visual interaction during an active incursion; the current geometric test uses a navigation double."
+      "notes": "All five authored body radii now tested with production Navigation on controlled flat, prop-free terrain: penetration rejected without moving animals or mutating state; just-outside placement accepted without teleportation; nav blocks animal crossing and permits workers. Original-terrain warthog expiry/approach inspected separately. Remaining: placement-over-animal inspection across original biome routes, species and poses; no full visual interaction claim."
     },
     {
       "id": "QA-120",

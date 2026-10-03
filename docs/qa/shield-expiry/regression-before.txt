@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: warthog: a committed border attack cannot damage its distant crop when the Shield expires
+not ok 1 - warthog: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 21.978
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:27:67'
+  failureType: 'testCodeFailure'
+  error: 'The completed edge animation must not become a ranged crop hit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:36:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: hyena: a committed border attack cannot damage its distant crop when the Shield expires
+not ok 2 - hyena: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 5.616
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:27:67'
+  failureType: 'testCodeFailure'
+  error: 'The completed edge animation must not become a ranged crop hit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:36:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+not ok 3 - buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 6.1862
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:27:67'
+  failureType: 'testCodeFailure'
+  error: 'The completed edge animation must not become a ranged crop hit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:36:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: lion: a committed border attack cannot damage its distant crop when the Shield expires
+not ok 4 - lion: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 8.9037
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:27:67'
+  failureType: 'testCodeFailure'
+  error: 'The completed edge animation must not become a ranged crop hit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:36:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: rhino: a committed border attack cannot damage its distant crop when the Shield expires
+not ok 5 - rhino: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 5.9347
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:27:67'
+  failureType: 'testCodeFailure'
+  error: 'The completed edge animation must not become a ranged crop hit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/shield-expiry.test.js:36:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+ok 6 - All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+  ---
+  duration_ms: 10.5212
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 1
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 217.9215

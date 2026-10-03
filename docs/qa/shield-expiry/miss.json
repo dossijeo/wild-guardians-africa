@@ -1,0 +1,31 @@
+{
+  "species": "warthog",
+  "elapsed": 21.050000000000015,
+  "shieldRemaining": 0,
+  "cooldown": 68.95000000000134,
+  "cropAlive": true,
+  "animal": {
+    "x": 230.0936382952636,
+    "z": 29.49991014827507,
+    "radius": 1.1,
+    "status": "walking",
+    "hits": 1,
+    "clip": "Right_Hand_Sword_Slash",
+    "attackId": "attack-8",
+    "attackRemaining": 0,
+    "distance": 3.1499999999999986
+  },
+  "rigLoaded": true,
+  "misses": [
+    {
+      "id": "event-9",
+      "type": "AnimalLogicalMiss",
+      "attackId": "attack-8",
+      "targetId": "plant-3",
+      "species": "warthog",
+      "reason": "shield-expired"
+    }
+  ],
+  "hits": [],
+  "errors": []
+}
