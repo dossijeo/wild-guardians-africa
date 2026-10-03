@@ -985,9 +985,9 @@
       "area": "Defensas y reparación",
       "scenario": "Colocación atraviesa props grandes o terreno inválido",
       "expected": "Sin compra parcial ni solapamiento visible.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": ["docs/qa-wall-placement.md", "tests/wall-placement-native.test.js", "docs/qa/wall-placement-native-directed.txt"],
+      "notes": "Native terrain/props across all six biomes reject chains with legal prefixes without state, ledger or obstacle changes; native invalid terrain boundaries tested in four biomes. Full production browser rejects visible Sabana rock and Gran Rio water with no partial preview/confirmation; saved snapshots preserve ledger, commands, suppression and structures. River baseline is after legitimate dawn hiring payment. Scope and raw evidence in docs/qa-wall-placement.md."
     },
     {
       "id": "QA-086",
