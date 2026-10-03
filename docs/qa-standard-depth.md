@@ -41,7 +41,7 @@ verificaciones de assets, plan y rutas web, compilación, ZIP y artefactos.
 las últimas salvaguardas de esa ampliación; 62 pruebas dirigidas comprobaron esos
 ajustes finales. Tras la salvaguarda `06cf866` pasan [45 pruebas dirigidas](qa/standard-depth/safe-directed.txt),
 con un caso adicional que conserva alpha nativo y permite profundidad authored.
-El CI de esa salvaguarda sigue pendiente al redactar este informe.
+El [CI exacto de esa salvaguarda](qa/standard-depth/safe-ci.json) termina correctamente: **757/757 pruebas**, verificaciones, build, ZIP y artefactos. [Log](qa/standard-depth/safe-ci-log.txt).
 
 [Compilación final y paquete](qa/standard-depth/safe-build.txt): 554 archivos,
 379684668 bytes, 794 enlaces relativos y 20 GLB de ejecución, sin duplicados

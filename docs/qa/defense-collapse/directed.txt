@@ -1,0 +1,285 @@
+TAP version 13
+# Subtest: QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 1 - QA-072: zarzas paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 41.606
+  ...
+# Subtest: QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 2 - QA-072: empalizada paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 13.6478
+  ...
+# Subtest: QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 3 - QA-072: adobe paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 10.7173
+  ...
+# Subtest: QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 4 - QA-072: reforzado paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 9.7738
+  ...
+# Subtest: QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+ok 5 - QA-072: piedra paid enclosure has a deterministic gate at the same unit cost and 60% HP
+  ---
+  duration_ms: 10.5013
+  ...
+# Subtest: QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+ok 6 - QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin
+  ---
+  duration_ms: 12.1697
+  ...
+# Subtest: QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+ok 7 - QA-074: warthog collapses 600 HP centers after 12 committed hits in each culture
+  ---
+  duration_ms: 47.5801
+  ...
+# Subtest: QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+ok 8 - QA-074: hyena collapses 600 HP centers after 10 committed hits in each culture
+  ---
+  duration_ms: 34.8183
+  ...
+# Subtest: QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+ok 9 - QA-074: buffalo collapses 600 HP centers after 7 committed hits in each culture
+  ---
+  duration_ms: 29.7733
+  ...
+# Subtest: QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+ok 10 - QA-074: lion collapses 600 HP centers after 6 committed hits in each culture
+  ---
+  duration_ms: 17.3966
+  ...
+# Subtest: QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+ok 11 - QA-074: rhino collapses 600 HP centers after 4 committed hits in each culture
+  ---
+  duration_ms: 15.6572
+  ...
+# Subtest: QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+ok 12 - QA-075: BAST 20% remaining and DEST 79% lost keep their distinct inclusive boundaries and irreversible transitions
+  ---
+  duration_ms: 0.5432
+  ...
+# Subtest: warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 13 - warthog: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 240.0604
+  ...
+# Subtest: hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 14 - hyena: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 124.9308
+  ...
+# Subtest: buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 15 - buffalo: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 136.3194
+  ...
+# Subtest: lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 16 - lion: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 118.9735
+  ...
+# Subtest: rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+ok 17 - rhino: four clips present one committed logical hit with independent decorative contacts, pause and reload
+  ---
+  duration_ms: 120.9776
+  ...
+# Subtest: Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+ok 18 - Shield hit metadata places the contact on its actual edge and survives shield expiry and raid removal
+  ---
+  duration_ms: 2.2172
+  ...
+# Subtest: Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+ok 19 - Invalidated targets and exhausted attacks release visuals without inventing a completed impact
+  ---
+  duration_ms: 23.0111
+  ...
+# Subtest: Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+ok 20 - Different attack IDs coexist through dissipating tails; legacy/malformed metadata cannot replay damage
+  ---
+  duration_ms: 0.8209
+  ...
+# Subtest: Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+ok 21 - Legacy center hit facts recover native culture and yaw from the retained structure without changing damage
+  ---
+  duration_ms: 3.5625
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 22 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 3737.2542
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 23 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 9.1913
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 24 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 2.9658
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 25 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 7.8762
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 26 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 21.5843
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 27 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 18.2561
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 28 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.613
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 29 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 108.1635
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 30 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.806
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 31 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 70.1993
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 32 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 11.7562
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 33 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 7.9082
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 34 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 6.2741
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 35 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 40.7051
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 36 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.0515
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 37 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.8722
+  ...
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 38 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 2.8304
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 39 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 1.9226
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 40 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 32.521
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 41 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 22.1371
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 42 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 6.3263
+  ...
+# Subtest: Invalid terrain, crop intersection and insufficient money leave state unchanged
+ok 43 - Invalid terrain, crop intersection and insufficient money leave state unchanged
+  ---
+  duration_ms: 9.5114
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap without refund or replacement
+ok 44 - Removing an automatic gate opens a persistent gap without refund or replacement
+  ---
+  duration_ms: 7.6524
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 45 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 2.4505
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 46 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 2.3828
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 47 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 2.5807
+  ...
+# Subtest: Removing a reserved repair releases its worker and preserves the ledger
+ok 48 - Removing a reserved repair releases its worker and preserves the ledger
+  ---
+  duration_ms: 2.5637
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 49 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 3.1193
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 50 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 15.0548
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 51 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 929.5538
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 52 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 201.7288
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 53 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 18.921
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 54 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 31.805
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 55 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 1152.274
+  ...
+1..55
+# tests 55
+# suites 0
+# pass 55
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6929.1299

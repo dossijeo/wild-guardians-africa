@@ -1,7 +1,7 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "86b3d2b",
+  "implementation_commit": "b97662a",
   "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
   "cases": [
     {
@@ -796,36 +796,48 @@
       "area": "Defensas y reparación",
       "scenario": "Cerrar perímetro de cada material",
       "expected": "Se genera la puerta determinista; misma compra y 60% de PV.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-defenses.md",
+        "tests/acceptance-defense-collapse.test.js"
+      ],
+      "notes": "All five paid enclosure previews/commits use real Navigation on explicitly flat prop-free terrain, deterministic single automatic gate, canonical per-piece cost and 60% HP; command replay and snapshot preserve a single payment/layout. Native layout and original wall/gate geometry are covered in the same directed run. Browser purchasing/placement terrain matrix belongs to separate UI/placement acceptance."
     },
     {
       "id": "QA-073",
       "area": "Defensas y reparación",
       "scenario": "Golpear zarzas intactas dos veces a 40 PV",
       "expected": "Al quedar 20 PV comienza el colapso; no exige un tercer golpe.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-defenses.md",
+        "tests/acceptance-defense-collapse.test.js"
+      ],
+      "notes": "Two actual committed warthog combos completed through Game.tick leave brambles at 60 then 20 HP; the second starts collapse, 1.4 simulated seconds finish one persistent ruin, pause/reload cannot duplicate damage. Original WorldScene browser readbacks/visuals independently confirm two controlled 40-HP hits, falling BAST and final ruin."
     },
     {
       "id": "QA-074",
       "area": "Defensas y reparación",
       "scenario": "Golpear centro de 600 PV con cada especie",
       "expected": "Colapso tras 12/10/7/6/4 golpes desde intacto sin reparación.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-defenses.md",
+        "tests/acceptance-defense-collapse.test.js"
+      ],
+      "notes": "Committed attack clock and snapshot path verified for five species in all five cultures: 600-HP center collapses after 12/10/7/6/4 canonical hits with no repair. Individual animal budgets remain legal; additional controlled animals supply further hits. Explicit QA recovery funds prevent economic defeat from freezing the collapse-clock test. Selection/arrival/contact are outside this case and remain separate IA gates."
     },
     {
       "id": "QA-075",
       "area": "Defensas y reparación",
       "scenario": "Entrar al umbral de BAST o DEST",
       "expected": "Respeta 20% de vida/79% de daño respectivamente, sin unificación silenciosa.",
-      "audit_status": "pending",
-      "evidence": [],
-      "notes": "Not audited against this full acceptance case yet."
+      "audit_status": "verified",
+      "evidence": [
+        "docs/qa-acceptance-defenses.md",
+        "tests/acceptance-defense-collapse.test.js"
+      ],
+      "notes": "Inclusive distinct boundaries checked just above and exactly at 20% BAST remaining and 79% DEST damage; durations 1.4/3.2 seconds, no repeat hit during irreversible collapse. Production WorldScene browser verifies 126.01 center HP intact, 126 HP collapsing, visual fall and final ashes; bramble visual finishes at 1.4 seconds. No full renderer reload/streaming claim."
     },
     {
       "id": "QA-076",
