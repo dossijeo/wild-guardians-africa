@@ -1,0 +1,115 @@
+{
+  "scope": "Actual production main.js gameplay in an isolated in-memory save at CSS viewport 390x844. Not a physical mobile device, touchscreen, DPR or performance proof. Recorded before the subsequent expired-notice/late-delivery controller fix.",
+  "runtime_commit": "a5ee36a",
+  "biome": "gran-rio",
+  "culture": "suajili",
+  "guided_pause_time": 14.749899999999878,
+  "money_sequence": [
+    1500,
+    700,
+    695,
+    595,
+    606
+  ],
+  "first_delivery": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "day": 1,
+    "time": 244.46080000003732,
+    "elapsed": 244.46080000003732,
+    "balance": {
+      "n": "606",
+      "d": "1"
+    },
+    "pauses": [],
+    "tutorial": {
+      "step": "done",
+      "seen": [
+        "basic.introduction",
+        "basic.center",
+        "basic.plant",
+        "basic.hiring",
+        "basic.work",
+        "basic.harvest",
+        "basic.complete"
+      ],
+      "pending": [],
+      "guideAfterAuto": [
+        "basic.center",
+        "basic.plant"
+      ],
+      "reading": "mechanic.defenses",
+      "basicSkipped": false,
+      "dismissed": [
+        "basic.introduction:",
+        "basic.center:",
+        "basic.plant:",
+        "basic.hiring:",
+        "basic.work:",
+        "basic.harvest:",
+        "basic.complete:"
+      ]
+    },
+    "plants": [
+      {
+        "id": "plant-3",
+        "growth": 140,
+        "alive": false,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 196,
+          "y": 494
+        }
+      }
+    ],
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "running": false,
+        "x": 88.18687665695658,
+        "z": -0.0516865798526247,
+        "path": null,
+        "screen": {
+          "x": 425,
+          "y": 476
+        }
+      }
+    ],
+    "delivered": 1
+  },
+  "actions": "Native menu/two-step selector, HUD Build/Center, ground placement, HUD Grow/Mijo, indicated ground placement, automatic mandatory hiring, one older male and confirmation. No manual harvest action. Tool expired once during inspection; reselected Mijo before planting. Both required waterings, pickup and physical delivery happened in production ticks.",
+  "loading": [
+    {
+      "stamp": 683.7000000476837,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 621308.9000000358,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 628353,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "remaining": "First-night raid, dawn, walls/magic walkthrough and physical-device usability are not proved by this record."
+}

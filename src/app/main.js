@@ -1,3 +1,4 @@
+import {visibleNotices} from './notices.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
@@ -222,7 +223,7 @@ function updateUI(force=false) {
   document.querySelector('#center-action').disabled=!permission(state,'center');document.querySelector('#plant-action').disabled=!permission(state,'plant');document.querySelector('#wall-action').disabled=!permission(state,'wall');document.querySelector('#spell-action').disabled=!permission(state,'shield');
   if(surfaces.active==='panel'&&!document.querySelector('#panel').children.length)surfaces.active=null;
   contextPanel();narrator();
-  document.querySelector('#notices').innerHTML=state.messages.slice(-3).map(m=>`<button data-notice="${m.id}">${esc(m.text)}</button>`).join('');
+  document.querySelector('#notices').innerHTML=visibleNotices(state).map(m=>`<button data-notice="${m.id}">${esc(m.text)}</button>`).join('');
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
   if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring'))hiringDialog();

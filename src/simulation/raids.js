@@ -1,3 +1,4 @@
+import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
@@ -126,7 +127,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,'¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.',animals[0].id);emit(s,'RaidSpawned');
+  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){

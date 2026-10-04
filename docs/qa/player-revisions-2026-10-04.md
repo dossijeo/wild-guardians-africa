@@ -83,3 +83,12 @@ Se conservan los puntos iniciales de los encuentros de aceptación (trabajador e
 Resultado: 109/109 pruebas dirigidas y 1544/1544 de la batería completa, sin fallos. Evidencia: `watering-encounter-regressions.json`. Esto resuelve los 35 fallos de la CI anterior; no acredita por sí solo toda la aceptación visual y de audio.
 
 El nuevo recorrido por interfaz del juego real, en marco CSS 390 × 844 (Gran río/Suajili), mantuvo tiempo simulado 14,7499 durante la mano del HUD, los selectores de Construir/Cultivar, la colocación del centro y la caducidad/reselección de la herramienta. Tras plantar Mijo se liberó la pausa y se abrió automáticamente la contratación en el día 1 (08:04). Saldo: 1500 → 700 → 695 → 595 al contratar un hombre mayor. Confirmación sin botón de cerrar en la contratación; cero errores observados hasta ese punto. Sigue pendiente acreditar el resto de la jornada y un móvil físico.
+
+
+### Primera entrega guiada y avisos caducados
+
+Cierre del recorrido anterior: el trabajador del día 1 completó ambos riegos, el Mijo llegó a crecimiento 140, se recogió por la cola automática y una caja se entregó al centro. Saldo 595 → 606, día 1 / tiempo 244,4608, tutorial `done` y `basic.complete` reconocido, sin pausas. Evidencia de interfaz: `tutorial-action-first-day.json`. No se pulsó una acción de cosecha. La primera noche, amanecer, murallas, magia y dispositivo físico siguen fuera del alcance de este registro.
+
+Se corrige el HUD para que el aviso de incursión corresponda a la incursión actual: sigue presente aunque salga el primer animal y se oculta cuando termina todo el grupo. Se conserva el historial guardado. El tutorial descarta instrucciones de incursión que ya no está activa sin marcarlas leídas, conserva la lección de Escudo y reconoce una primera entrega física aunque ocurra después del día 1. Los tutoriales ya terminados no se reabren.
+
+Validación del último ajuste: 93/93 pruebas dirigidas, incluyendo entrega real pagada en día 2, instrucciones activas/pendientes caducadas, conservación del historial, persistencia del aviso hasta la salida del último animal y pausa guiada. La batería completa de 1544 casos corresponde al ajuste anterior de geometría de encuentros; no se atribuye al último cambio de avisos.

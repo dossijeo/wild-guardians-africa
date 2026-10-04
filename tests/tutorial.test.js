@@ -106,3 +106,27 @@ test('Profile memory lives outside slot listings and never changes another slot 
   repository.save(a);repository.save(b);const before=storage.getItem(repository.key('b'));new TutorialProfile(storage).record('magic.growth');
   assert.equal(storage.getItem(repository.key('b')),before);assert.equal(repository.list().length,2);
 });
+
+
+test('a first paid crop completed after day one still closes the basic tutorial after actual delivery',()=>{
+ const {s:state,nav}=createOpeningWorld(),profile=new TutorialProfile(new Storage());
+ state.day=2;state.completedNights=1;state.time=0;state.dayPlan={done:true};state.nightPlan={done:true};
+ const c=new TutorialController(state,profile);c.acknowledge();const center=state.structures[0];let point;
+ for(let dz=-6;dz<=6&&!point;dz+=1.5)for(let dx=4.5;dx<12&&!point;dx+=1.5){const p={x:center.x+dx,z:center.z+dz};if(nav.placement(p.x,p.z,.4).valid&&nav.path(centerServicePoint(center,state,.8),p,.28,null,true))point=p;}
+ assert.ok(point);Game.plant(state,'late-seed','mijo',point.x,point.z,nav);Game.pause(state,'hiring');Game.hire(state,'late-wage',{olderFemale:1});c.update();
+ assert.equal(state.tutorial.step,'observe');
+ for(let i=0;i<2000&&!state.crates.some(crate=>crate.delivered);i++){Game.tick(state,.2,nav);c.update();}
+ assert.ok(state.crates.some(crate=>crate.delivered));assert.equal(state.tutorial.step,'done');assert.equal(c.presentation().id,'basic.complete');assert.equal(profile.basicCompleted,false);c.acknowledge();assert.equal(profile.basicCompleted,true);
+});
+test('an expired raid instruction is dropped unread while the Shield lesson remains available',()=>{
+ for(const queued of [false,true]){
+  const {state,controller,profile}=setup();profile.record('basic.complete');controller.skipBasic();if(queued)Game.pause(state,'menu');
+  state.raid={animals:[]};controller.update();if(!queued)assert.equal(state.tutorial.reading,'mechanic.first-raid');
+  state.raid=null;controller.update();Game.resume(state,'menu');controller.update();
+  assert.ok(!state.tutorial.pending.includes('mechanic.first-raid'));assert.notEqual(state.tutorial.reading,'mechanic.first-raid');assert.equal(profile.has('mechanic.first-raid'),false);
+  assert.ok(state.tutorial.reading==='magic.shield'||state.tutorial.pending.includes('magic.shield'));
+ }
+});
+test('a deliberately finished basic tutorial is not reopened by missing early game entities',()=>{
+ const {state,controller}=setup();state.tutorial.step='done';state.tutorial.reading=null;state.day=2;controller.update();assert.equal(state.tutorial.step,'done');
+});

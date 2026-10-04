@@ -31,10 +31,11 @@ export class TutorialController {
     resume(s,reason);resume(s,'intro');
     if(s.result==='defeat'){t.reading=null;resume(s,reason);resume(s,'tutorial-action');return;}
     if(t.basicSkipped){t.step='done';resume(s,'intro');resume(s,'tutorial-action');}
-    else if(s.day===1&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
+    else if(t.step!=='done'&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
+    if(!s.raid){t.pending=t.pending.filter(id=>id!=='mechanic.first-raid');if(t.reading==='mechanic.first-raid')t.reading=null;}
     enqueue('mechanic.defenses',s.day>1||s.time>=240);
     enqueue('mechanic.first-raid',!!s.raid);
     enqueue('magic.shield',!!s.raid);
