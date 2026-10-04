@@ -20,9 +20,9 @@ test('Calibration preserves all four original route speeds and the median physic
 });
 test('Running consumes travelled metres and switches to walking inside the exhaustion step',()=>{
   const worker=actor(.8);moveWorker(worker,1,{urgent:true});
-  assert.equal(worker.runRemaining,0);assert.ok(Math.abs(worker.x-(.8+.5*.72))<1e-12);
-  assert.equal(worker.running,false);assert.equal(worker.runPhase,.5);assert.equal(worker.walkPhase,.5);
-  moveWorker(worker,1,{urgent:true});assert.ok(Math.abs(worker.x-1.88)<1e-12);
+  assert.equal(worker.runRemaining,0);assert.ok(Math.abs(worker.x-(.8+(2/3)*1.08))<1e-12);
+  assert.equal(worker.running,false);assert.ok(Math.abs(worker.runPhase-1/3)<1e-12);assert.ok(Math.abs(worker.walkPhase-1)<1e-12);
+  moveWorker(worker,1,{urgent:true});assert.ok(Math.abs(worker.x-2.6)<1e-12);
 });
 test('Short arrivals consume only their actual distance; blocked paths consume nothing',()=>{
   const worker=actor(10);worker.path=[{x:.2,z:0},{x:.2,z:.3}];
@@ -30,14 +30,14 @@ test('Short arrivals consume only their actual distance; blocked paths consume n
   moveWorker(worker,20,{urgent:true});assert.equal(worker.runRemaining,9.5);
 });
 test('Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve',()=>{
-  const worker={...actor(),recovering:true};moveWorker(worker,1,{urgent:true});assert.equal(worker.x,.72);assert.equal(worker.runRemaining,100);
-  moveWorker(worker,1,{flight:true});assert.ok(Math.abs(worker.x-2.32)<1e-12);assert.equal(worker.runRemaining,100);
+  const worker={...actor(),recovering:true};moveWorker(worker,1,{urgent:true});assert.ok(Math.abs(worker.x-1.08)<1e-12);assert.equal(worker.runRemaining,100);
+  moveWorker(worker,1,{flight:true});assert.ok(Math.abs(worker.x-3.48)<1e-12);assert.equal(worker.runRemaining,100);
   worker.incapacitated=true;moveWorker(worker,1,{flight:true,slow:true});
-  assert.ok(Math.abs(worker.x-2.88)<1e-12);assert.equal(worker.runRemaining,100);
+  assert.ok(Math.abs(worker.x-4.32)<1e-12);assert.equal(worker.runRemaining,100);
 });
 test('Carrying and unhurried walking keep their native gaits and do not spend running metres',()=>{
-  const worker=actor();moveWorker(worker,1,{urgent:true,carrying:true});assert.equal(worker.x,.72);assert.equal(worker.carryPhase,1);
-  moveWorker(worker,1);assert.equal(worker.x,1.44);assert.equal(worker.runRemaining,100);
+  const worker=actor();moveWorker(worker,1,{urgent:true,carrying:true});assert.ok(Math.abs(worker.x-1.08)<1e-12);assert.ok(Math.abs(worker.carryPhase-1.5)<1e-12);
+  moveWorker(worker,1);assert.ok(Math.abs(worker.x-2.16)<1e-12);assert.equal(worker.runRemaining,100);
 });
 test('Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold',()=>{
   const worker={...actor(),id:'w',centerId:'c'},state={time:0,workers:[worker],tasks:[{centerId:'c'},{centerId:'c'}]};

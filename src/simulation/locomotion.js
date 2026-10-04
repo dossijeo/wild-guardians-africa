@@ -2,6 +2,9 @@ import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {BALANCE as B} from './balance.js';
 import {PROFILES,contractExpired} from './workforce.js';
 import {waitForGate} from './gates.js';
+// User gameplay revision: travel +50%; walking/carrying cadence +50%,
+// running cadence retains the original animation clock.
+export const WORKER_SPEED_MULTIPLIER=1.5;
 export const dailyRunMetres=()=>L.longTripMetres*B.workers.daily_run_distance_long_trips;
 export function urgentWork(state,worker){
   const active=state.workers.filter(w=>w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
@@ -33,14 +36,14 @@ export function moveWorker(worker,seconds,{urgent=false,flight=false,slow=false,
   let left=seconds,runDistance=0,walkDistance=0;
   const canRun=!carrying&&(flight||urgent&&!worker.recovering&&!worker.incapacitated&&(worker.runRemaining??0)>0);
   if(canRun){
-    const speed=L.runMetresPerSecond*(slow?.35:1);
+    const speed=L.runMetresPerSecond*WORKER_SPEED_MULTIPLIER*(slow?.35:1);
     const requested=flight?speed*left:Math.min(speed*left,worker.runRemaining);
     runDistance=movePathWithGates(worker,requested,gates,clear);left-=runDistance/speed;
     if(!flight)worker.runRemaining=Math.max(0,worker.runRemaining-runDistance);
-    worker.runPhase=(worker.runPhase??0)+runDistance/L.runMetresPerSecond;
+    worker.runPhase=(worker.runPhase??0)+runDistance/(L.runMetresPerSecond*WORKER_SPEED_MULTIPLIER);
   }
   if(left>1e-9&&worker.path.length&&!worker.gateWaiting){
-    walkDistance=movePathWithGates(worker,L.walkMetresPerSecond*left,gates,clear);
+    walkDistance=movePathWithGates(worker,L.walkMetresPerSecond*WORKER_SPEED_MULTIPLIER*left,gates,clear);
     const key=carrying?'carryPhase':'walkPhase';worker[key]=(worker[key]??0)+walkDistance/L.walkMetresPerSecond;
   }
   worker.running=runDistance>0&&walkDistance<1e-9&&!worker.gateWaiting;
