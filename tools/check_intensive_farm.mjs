@@ -13,6 +13,7 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
+import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
@@ -108,7 +109,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
 }
 export function auditIntensiveFarm(report,{victory=false}={}){
  const s=report.state,plants=new Map(s.plants.map(p=>[p.id,p]));let balance=1500n;
@@ -131,11 +132,12 @@ export function auditIntensiveFarm(report,{victory=false}={}){
  return true;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
- const days=Number(process.argv[2]??100),result=simulateIntensiveFarm({days,biome:process.argv[3]??'sabana',culture:process.argv[4]??'mapungubwe',mixed:process.argv[5]==='mixed',seed:712,onDay:r=>console.log(JSON.stringify(r))});
+ const provenance=intensiveRunProvenance(process.argv.slice(2));console.log(JSON.stringify({provenance}));
+ const days=Number(process.argv[2]??100),profile=process.argv[6]??'olderFemale',result=simulateIntensiveFarm({days,biome:process.argv[3]??'sabana',culture:process.argv[4]??'mapungubwe',mixed:process.argv[5]==='mixed',profile,seed:712,onDay:r=>console.log(JSON.stringify(r))});
  const {state,nav,daily,...report}=result;console.log(JSON.stringify(report));
  mkdirSync(new URL('../test-results/',import.meta.url),{recursive:true});
- const key=`intensive-${report.biome}-${report.culture}-${report.seed}${process.argv[5]==='mixed'?'-mixed':''}`;
- writeFileSync(new URL(`../test-results/${key}.json`,import.meta.url),JSON.stringify({...report,daily},null,2)+'\n');
+ const key=`intensive-${report.biome}-${report.culture}-${report.seed}${process.argv[5]==='mixed'?'-mixed':''}${profile==='olderFemale'?'':'-'+profile}`;
+ writeFileSync(new URL(`../test-results/${key}.json`,import.meta.url),JSON.stringify({...report,daily,provenance},null,2)+'\n');
  writeFileSync(new URL(`../test-results/${key}-state.json`,import.meta.url),serialize(state));
  auditIntensiveFarm(result,{victory:days===100});
 }

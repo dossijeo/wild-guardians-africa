@@ -24,6 +24,8 @@ export function summarizeIntensiveFarm(report){
   const unoccupied=idle.budget+idle.space+idle['shift-end'];
   return {
     biome:report.biome,culture:report.culture,seed:report.seed,result:report.result,
+    provenance:report.provenance??null,
+    policy:report.policy,
     campaign100:report.result==='victory'&&report.completedNights===100?'verified':'unverified',
     completedNights:report.completedNights,daysObserved:days,money:report.money,
     maximumLiving:report.maximumLiving,speciesObserved:Object.keys(bySpecies).length,bySpecies,
