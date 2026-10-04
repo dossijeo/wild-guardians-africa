@@ -44,19 +44,19 @@ function* initialLocations(nav,payload,legacy=false) {
     yield;
     const x=Math.cos(angle/count*Math.PI*2)*ring*12+60,z=Math.sin(angle/count*Math.PI*2)*ring*12;
     const layout=villageLayout(payload,x,z);
+    const center={kind:'center',x:x+23,z,culture:payload.id==='saheliano'?'saheliana':payload.id};
     // Validate paths and the future farm on the same padded map we will save.
     // Choosing an entry first and levelling later can change mangrove habitats
     // and place a new prop over the previously accepted route.
     let terrainSite;
     if(!legacy&&originalField instanceof TerrainField){
-      terrainSite=villageTerrainSite({x,z,buildings:layout},originalField);
+      terrainSite=villageTerrainSite({x,z,buildings:[...layout,centerFootprint(center)]},originalField);
       nav.config.settlementSite=terrainSite;nav.field=new TerrainField(nav.config);nav.chunks.clear();
       nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();nav.closedRegions.clear();nav.portalGraphs?.clear();
     }
     const checks=[];
     for(const building of layout){const check=nav.placementFootprint(building);checks.push(check);if(!check.valid)break;}
     if(checks.some(c=>!c.valid))continue;
-    const center={x:x+23,z,culture:payload.id==='saheliano'?'saheliana':payload.id};
     const shape=centerFootprint(center);
     const centerCheck=nav.placementFootprint(shape);
     if(!centerCheck.valid||layout.some(b=>b.kind!=='Zona común'&&b.footprint&&footprintsOverlap(shape.footprint,b.footprint)))continue;

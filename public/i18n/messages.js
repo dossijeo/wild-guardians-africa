@@ -1520,5 +1520,7 @@ export const messages = {
   "Activar poder": "Activate power",
   "Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.": "Choose a power and tap an area to preview it before confirming.",
   "La partida guardada pertenece a otra ranura.": "The saved game belongs to another slot.",
-  "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.": "Could not draw the world. Return to the menu to try again."
+  "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.": "Could not draw the world. Return to the menu to try again.",
+  "Contratación pendiente · Abrir": "Hiring pending · Open",
+  "Resultado · Abrir": "Result · Open"
 };

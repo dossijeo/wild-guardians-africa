@@ -2,3 +2,6 @@
 #guardian-root.result-narration{z-index:11}
 #guardian-root .tutorial-skip{margin-top:8px;padding:6px 10px;background:var(--cream);border:1px solid var(--green);color:var(--ink);font-size:13px;font-weight:400}
 #guardian-root .tutorial-skip[hidden]{display:none}
+#guardian-root .tutorial-close{position:absolute;right:4px;top:4px;width:34px;height:34px;padding:0;border:0;background:transparent;color:var(--ink);font-size:24px}
+#guardian-root .bubble{padding-top:34px;max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+@media(max-width:700px){#guardian-root .bubble{padding-top:34px;left:12px;bottom:calc(12px + var(--safe-bottom));max-height:60dvh}#guardian-root .avatar-shell{bottom:96px;opacity:.65}}

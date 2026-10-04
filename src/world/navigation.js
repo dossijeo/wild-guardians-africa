@@ -120,13 +120,16 @@ export class Navigation {
   placementFootprint(building) {
     const polygon=building.footprint;
     if(!polygon?.length)return this.placement(building.x,building.z,building.radius);
-    const terrainPoint=p=>this.terrainValid(p.x,p.z,0);
+    const base=this.field.surface?.(building.x,building.z);
+    // The native floor is horizontal at the center anchor. Validate its whole
+    // occupied area, including shallow slopes that pass the walking limit.
+    const terrainPoint=p=>this.terrainValid(p.x,p.z,0)&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);
     if(!polygon.every(terrainPoint))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
     const xs=polygon.map(p=>p.x),zs=polygon.map(p=>p.z);
     const minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
     // Sample the occupied interior and edges, rather than the empty corners of
     // a bounding circle. Native hull coordinates use the same scale as render.
-    for(let x=minX;x<=maxX;x+=1)for(let z=minZ;z<=maxZ;z+=1)if(containsPoint(polygon,x,z)&&!this.terrainValid(x,z,0))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    for(let x=minX;x<=maxX;x+=.5)for(let z=minZ;z<=maxZ;z+=.5)if(containsPoint(polygon,x,z)&&!terrainPoint({x,z}))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
     for(let i=0;i<polygon.length;i++){
       const a=polygon[i],b=polygon[(i+1)%polygon.length],steps=Math.ceil(distance(a,b));
       for(let j=1;j<steps;j++)if(!terrainPoint({x:a.x+(b.x-a.x)*j/steps,z:a.z+(b.z-a.z)*j/steps}))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
@@ -139,9 +142,21 @@ export class Navigation {
   path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
     const key=`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}:${margin}`;
     if(this.failedPaths.has(key))return null;
-    const result=this.findPath(start,end,radius,ignore,worker,margin);
+    const found=this.findPath(start,end,radius,ignore,worker,margin);
+    const result=found&&worker?this.smoothPath(start,found,radius,ignore,worker):found;
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
     return result;
+  }
+  smoothPath(start,path,radius,ignore,worker){
+    const route=[];let anchor=start,index=0;
+    while(index<path.length){
+      let next=index;
+      // Bound shortcut checks. Routes are computed only on destination or
+      // obstacle changes, never per rendered frame; collision tests are shared.
+      for(let j=Math.min(path.length-1,index+32);j>index;j--)if(this.segmentClear(anchor,path[j],radius,ignore,worker)){next=j;break;}
+      anchor=path[next];route.push(anchor);index=next+1;
+    }
+    return route;
   }
   approachPath(start,end,radius){
     // Animal routes have symmetric terrain/solid collision rules. Search from

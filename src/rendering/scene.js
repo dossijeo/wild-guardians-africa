@@ -285,7 +285,7 @@ export class WorldScene {
     if(!this.hands)return;
     const step=this.state.tutorial.step,key=step+':'+this.nav.version;
     let config=null;
-    if(this.state.day===1&&!this.state.result&&step!=='done'){
+    if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&step!=='done'){
       if(['observe','harvest'].includes(step))config=tutorialHandTarget(this.state,this.nav);
       else {if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav);}config=this.handTargetCache;}
     }

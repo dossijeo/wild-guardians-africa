@@ -12,10 +12,11 @@ export class NativeGuardian {
     container.innerHTML='<section id="guardian-root" class="closed" aria-hidden="true"><div class="avatar-shell"><canvas id="guardian-avatar" aria-label="El Espíritu" role="img"></canvas><canvas id="guardian-magic" aria-hidden="true"></canvas></div><div class="bubble"><div class="message-body"><p class="message" aria-live="polite"></p><button type="button" class="tutorial-skip" hidden>Omitir tutorial básico</button></div><button type="button" class="next-button" aria-label="Continuar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></section>';
     this.root=container.querySelector('#guardian-root');this.canvas=container.querySelector('#guardian-avatar');this.fx=container.querySelector('#guardian-magic');this.message=container.querySelector('.message');this.button=container.querySelector('.next-button');
     this.button.onclick=()=>this.advance?.();
+    this.closeButton=document.createElement('button');this.closeButton.type='button';this.closeButton.className='tutorial-close';this.closeButton.setAttribute('aria-label','Cerrar');this.closeButton.textContent='×';this.closeButton.onclick=()=>this.dismiss?.();this.root.querySelector('.bubble').append(this.closeButton);
     this.skipButton=container.querySelector('.tutorial-skip');this.skipButton.onclick=()=>this.skip?.();
     this.root.addEventListener('keydown',event=>{
       if(!this.blocking||event.key!=='Tab')return;
-      const buttons=[this.skipButton,this.button].filter(button=>!button.hidden&&!button.disabled),current=buttons.indexOf(document.activeElement);
+      const buttons=[this.skipButton,this.button,this.closeButton].filter(button=>!button.hidden&&!button.disabled),current=buttons.indexOf(document.activeElement);
       event.preventDefault();buttons[(current+(event.shiftKey?-1:1)+buttons.length)%buttons.length]?.focus();
     });
     this.observer=new ResizeObserver(()=>this.resize());this.observer.observe(this.canvas);
@@ -29,9 +30,9 @@ export class NativeGuardian {
       this.mesh=new GuardianMesh(this.canvas,image);this.magic=new GuardianMagic(this.fx);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}
   }
-  show({key,text,gesture='speak',advance=null,closeAfter=false,blocking=false,skip=null,result=false}){
+  show({key,text,gesture='speak',advance=null,dismiss=null,closeAfter=false,blocking=false,skip=null,result=false}){
     if(this.disposed||this.key===key)return;
-    this.key=key;this.age=0;this.gesture=gesture;this.advance=advance;this.closeAfter=closeAfter;this.lastStamp=null;
+    this.key=key;this.age=0;this.gesture=gesture;this.advance=advance;this.dismiss=dismiss;this.closeButton.hidden=!dismiss;this.closeAfter=closeAfter;this.lastStamp=null;
     const entering=['closed','farewell','outro'].includes(this.lifecycle.phase);this.lifecycle.open();
     this.blocking=blocking;this.skip=skip;this.skipButton.hidden=!skip;this.root.classList.toggle('reading',blocking);this.root.classList.toggle('result-narration',result);
     this.root.setAttribute('role',blocking?'dialog':'region');this.root.setAttribute('aria-label','El Espíritu');

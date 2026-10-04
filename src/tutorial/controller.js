@@ -72,7 +72,19 @@ export class TutorialController {
     if(!this.profile.basicCompleted||t.step!=='intro'||t.reading!=='basic.introduction')return false;
     t.basicSkipped=true;t.step='done';t.reading=null;resume(this.state,'intro');resume(this.state,reason);this.update();return true;
   }
+  dismiss(){
+    const message=this.presentation();if(!message)return false;
+    if(message.blocking)this.acknowledge();
+    const t=this.state.tutorial;
+    t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
+    return true;
+  }
   presentation(){
+    const message=this.currentPresentation();
+    if(message&&!message.blocking&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
+    return message;
+  }
+  currentPresentation(){
     const s=this.state,t=s.tutorial;
     if(s.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
     if(t.reading){const id=t.reading;return {id,...TUTORIAL_MESSAGES[id],blocking:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};}

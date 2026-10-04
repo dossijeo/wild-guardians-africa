@@ -22,7 +22,7 @@ export function workerPose(worker,task,elapsed,library) {
     time=worker.idleState.mode==='walk'?(worker.walkPhase??0):worker.idleState.elapsed;
   }
   if(worker.fallRemaining>0&&!worker.incapacitated){name='Fall';time=Math.max(0,library.actions.Fall.duration-worker.fallRemaining);}
-  else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name='Run';time=worker.runPhase??elapsed*(worker.incapacitated?.35:1);}
+  else if(worker.status==='fleeing'||worker.incapacitated&&worker.status!=='home'){name=worker.running===false?'Idle':'Run';time=name==='Run'?(worker.runPhase??elapsed*(worker.incapacitated?.35:1)):elapsed;}
   else if(worker.status==='carrying'){name='Carry_Crate';time=worker.carryPhase??elapsed;}
   else if(['walking','arriving','returning'].includes(worker.status)){
     name=worker.running?'Run':'Walk_Skip';time=worker.running?(worker.runPhase??elapsed):(worker.walkPhase??elapsed);

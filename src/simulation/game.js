@@ -262,6 +262,7 @@ export function cast(s,id,kind,x,z,nav) {
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false}={}) {
   const previous={x:w.x,z:w.z};
+  if(worker)w.running=false;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals

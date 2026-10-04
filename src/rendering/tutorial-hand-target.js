@@ -7,6 +7,10 @@ export function tutorialHandTarget(state,nav){
   const village=state.villages[0],entry=village.entry??village;
   const center=state.structures.find(s=>s.kind==='center'&&s.status!=='ruined');
   const plant=state.plants.find(p=>p.alive),mature=state.plants.find(p=>p.alive&&isMature(p));
+  // Waiting, hiring and watching workers require no gesture in the world.
+  if(!['plant','harvest'].includes(state.tutorial.step))return null;
+  const message=state.tutorial.step==='plant'?'basic.plant':'basic.harvest';
+  if(state.tutorial.dismissed?.includes(message+':'))return null;
   const position=p=>[p.x,nav.field.surface(p.x,p.z)+.025,p.z];
   const target=(kind,p,id=p.id)=>({kind,target:id,position:position(p)});
   const ground=(anchor,radius)=>{
@@ -33,9 +37,9 @@ export function tutorialHandTarget(state,nav){
       return {...target('drag',worker),route:path.map(position)};
     }
     case 'harvest':{
-      if(mature??plant)return target('pinch',mature??plant);
+      if(mature)return target('tap',mature);
       const crate=state.crates?.find(c=>!c.delivered),carrier=crate&&state.workers.find(w=>w.id===crate.carrierId);
-      return crate?target('open',carrier??crate):null;
+      return null;
     }
     default:return null;
   }
