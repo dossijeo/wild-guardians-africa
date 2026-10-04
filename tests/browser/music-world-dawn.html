@@ -1,0 +1,76 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Amanecer musical en mundo nativo</title>
+<style>body{margin:0;font:12px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:absolute;z-index:2;background:#fff9edee;padding:8px;max-width:420px}pre{max-height:35vh;overflow:auto}button{padding:10px}</style>
+<header><p>Sabana/Mapungubwe, semilla 712. Centro, mijo y trabajadora pagados con las 1500 monedas iniciales. Día y primera incursión nativos; avance por pasos de 0,1 s real solicitados. Audio silenciado, sin escucha ni medida de FPS.</p><button id="run" disabled>Recorrer jornada y amanecer A → B</button><output id="status">Preparando…</output><pre id="report"></pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {centerServicePoint} from '../../src/world/centers.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {AudioSystem,SFX_LIMITS} from '../../src/audio/audio.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+const status=document.querySelector('#status'),output=document.querySelector('#report');
+const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[],seen=new Set();
+const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0};
+let state,nav,world,phase='setup';
+const assert=(v,message)=>{if(!v)throw Error(message);},flush=()=>new Promise(done=>setTimeout(done,0));
+const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
+const fail=e=>{errors.push(String(e.message??e));phase='failed';status.textContent='FAIL: '+errors.join(' · ');audio.stop();paint();};
+addEventListener('error',e=>fail(e.error??e.message));addEventListener('unhandledrejection',e=>fail(e.reason));
+addEventListener('pagehide',()=>{audio.dispose();world?.dispose();});
+function observe(){
+ for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);result.events[e.type]=(result.events[e.type]??0)+1;}
+ const before=serialize(state),listener=world.controls.target;
+ audio.process(state.events,{state,listener});audio.updateMusic(state);audio.updateUnlocks(state);
+ audio.updateAmbient(state,{listener,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});
+ audio.updateWorkers(state,{listener});audio.updateWork(state,{listener});audio.updateFarm(state,{listener});audio.updateAnimals(state,{listener});audio.updateMovement(state,{listener,surfaceAt:world.movementSurfaceAt});
+ assert(serialize(state)===before,'Presentation changes domain');
+ const voices=[...audio.voices.values()],sfx=voices.filter(v=>!v.music),families=new Map(),emitters=new Map();
+ for(const v of sfx){families.set(v.family,(families.get(v.family)??0)+1);if(v.emitter!=null)emitters.set(v.emitter,(emitters.get(v.emitter)??0)+1);}
+ assert(sfx.length<=SFX_LIMITS.total,'Global voices');assert([...families.values()].every(n=>n<=SFX_LIMITS.perFamily),'Family voices');assert([...emitters.values()].every(n=>n<=SFX_LIMITS.perEmitter),'Emitter voices');
+ assert(audio.active.every(source=>source.playbackRate.value===1),'Pitch changed');
+ result.peakSfx=Math.max(result.peakSfx,sfx.length);result.peakMusic=Math.max(result.peakMusic,voices.length-sfx.length);
+}
+async function loaded(pack){
+ const start=performance.now();
+ while(!audio.transport||audio.pack!==pack){if(audio.musicError)throw audio.musicError;if(performance.now()-start>60000)throw Error('Music loading deadline');await flush();}
+}
+function capture(){
+ return {day:state.day,pack:audio.pack,stems:audio.transport.loaded.map(({track,buffer})=>({id:track.id,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,frames:buffer.length})),musicVoices:[...audio.voices.values()].filter(v=>v.music).length,cachedMusicUrls:[...audio.musicBuffers],scheduledStart:audio.transport.primary.start,rates:audio.transport.primary.sources.map(source=>source.playbackRate.value)};
+}
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;
+ try{
+  phase='music-a';status.textContent='Cargando A original…';await audio.unlock();audio.remember(state.events);observe();await loaded('a');history.push(capture());
+  assert(history[0].musicVoices===10,'A does not have ten stems');
+  const start=performance.now();while(!audio.ambient.entries.get('wind')?.source){if(performance.now()-start>15000)throw Error('Native wind absent');await flush();observe();}
+  const wind=audio.ambient.entries.get('wind').source,oldUrls=[...audio.musicBuffers];
+  Game.resume(state,'qa');phase='first-day';status.textContent='Jornada, cosecha e incursión nativas';
+  while(state.day===1&&!state.result){
+   assert(!errors.length,'Prior browser error');assert(!state.pauses.length,'Unexpected gameplay pause');world.render(0);
+   if(!world.actorsReady()){result.heldSteps++;await flush();continue;}
+   Game.advanceReal(state,.1,nav);observe();world.render(.1);assert(world.renderer.getContext().getError()===0,'WebGL error');await flush();
+   if(++result.steps%100===0)paint();if(result.steps>10000)throw Error('Native first day did not finish');
+  }
+  assert(state.day===2&&!state.result&&state.completedNights===1&&!state.raid,'First night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
+  assert(result.events.CrateDelivered===1,'Paid crop delivery absent or repeated');assert(result.events.RaidSpawned===1&&result.events.RaidEnded===1,'Native incursion absent');
+  phase='music-b';status.textContent='Amanecer: cargando B original…';const dawn=serialize(state);observe();await loaded('b');observe();history.push(capture());
+  assert(serialize(state)===dawn,'Music changes paused dawn');assert(history[1].musicVoices===10,'B does not have ten stems');
+  assert(audio.voices.has(wind)&&audio.ambient.entries.get('wind').source===wind,'Daily music replaced native wind');
+  assert(oldUrls.every(url=>!audio.buffers.has(url)),'Old music pack retained');result.windPreserved=true;result.oldPackEvicted=true;
+  audio.stop();result.voicesAfterStop=audio.active.length;assert(!audio.active.length&&!audio.musicBuffers.size,'Audio resources retained');audio.dispose();await flush();result.context=audio.context.state;assert(result.context==='closed','Context not closed');
+  phase='complete';status.textContent='Completada · amanecer nativo A → B';paint();
+ }catch(e){fail(e);}
+};
+try{
+ const profile=(await json('/content/biome-savanna.json')).profile,payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ state=Game.newGame({seed:712,slotId:'qa-music-world-dawn'});nav=new Navigation(712,'sabana',profile);const site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'center',site.center,nav);
+ const origin=centerServicePoint(state.structures[0],state,.8);let planted=false;
+ for(let dz=-6;dz<=6&&!planted;dz+=1.5)for(let dx=5;dx<=12&&!planted;dx+=1.5){const p={x:Math.round((site.center.x+dx)/1.5)*1.5,z:Math.round((site.center.z+dz)/1.5)*1.5};if(nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true)){Game.plant(state,'seed','mijo',p.x,p.z,nav);planted=true;}}
+ assert(planted,'Reachable native seed absent');Game.openInitialHiring(state);Game.hire(state,'hire',{youngFemale:1});state.tutorial.step='done';Game.pause(state,'qa');
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('muy_baja');await world.load(state,nav,payload);world.focus(state.structures[0]);await world.whenChunksReady();world.render(0);
+ phase='ready';status.textContent='Preparada · partida pagada';document.querySelector('#run').disabled=false;paint();
+}catch(e){fail(e);}
+</script></html>
