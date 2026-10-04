@@ -56,8 +56,10 @@
     "runtimeGlbs": 20
   },
   "completeLocalSuite": {
-    "status": "running",
-    "sessionId": 15879,
+    "status": "passed",
+    "passed": 1290,
+    "failed": 0,
+    "durationMs": 613834.5529,
     "log": ".cache/music-scene-final-full.log"
   },
   "intermediateLocalSuite": {
@@ -66,5 +68,11 @@
     "durationMs": 556830.8279,
     "log": ".cache/music-scene-full.log",
     "scope": "Intermediate run; menu lifecycle changed after this run started. Not complete-regression proof of the final source."
+  },
+  "productionCommit": "76b3e99",
+  "ci": {
+    "run": 37178556446,
+    "status": "in_progress",
+    "headSha": "76b3e99819612f6ee8d21a6354dd630555a45499"
   }
 }
