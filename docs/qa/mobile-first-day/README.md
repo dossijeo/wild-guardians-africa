@@ -17,3 +17,9 @@ Se completó la primera noche y apareció automáticamente la contratación del 
 Si se cierra la contratación pendiente, tocar el terreno la vuelve a abrir; no se añade un botón de contratación. El paseo sin cultivos se centra en la entrada del centro, no en su huella sólida; las rutas de aproximación inaccesibles reintentan como máximo una vez por segundo.
 
 La comprobación de escritorio/emulación no sustituye probar el tacto, memoria y rendimiento en un teléfono físico.
+
+Prueba adicional de presupuesto en una partida aislada: centro por 800 y cuatro semillas de plátano por 150 dejan exactamente 100. El quinto intento muestra el aviso del Espíritu y el error de compra; siguen existiendo cuatro plantas y el saldo permanece en 100 (`reserve-blocked.json`, `reserve-warning.png`). Tras caducar el modo se abre contratación con la hora real 11:13. Su cierre deja solo una indicación de texto (`SPAN`); un toque en el suelo reabre la misma contratación (`reopen-hiring-ground.json`).
+
+## Validación publicada
+
+[CI 37168606387](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37168606387), commit `44f5c7b`: **1221/1221 pruebas**, cero fallos; verificación de assets, GLB web, plan original, build y paquete itch aprobados. Paquete: 578 archivos, 406.678.313 bytes, 816 enlaces relativos y 20 GLB de runtime. Build y comprobación del paquete también aprobados localmente. Pruebas dirigidas locales: 109 de economía/materiales/culturas, 58 de tutorial/reparación/postgame y 48 de paseo/rutas/usabilidad/i18n. `validation.json` distingue estas evidencias del ensayo local anterior de las dos campañas activas.
