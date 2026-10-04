@@ -1,11 +1,12 @@
-import {PROFILES} from '../simulation/workforce.js';
+import {farmActivity} from './farm-contact-audio.js';
+import {FARM_ACTIONS} from './farm-actions-data.js';
 
 export const WORK_SOUND_IDS=Object.freeze(['farm_watering_can']);
-// Match the original Plant -> Water presentation; no audio completes the task.
+// Follow the original visible pour window; no audio completes the task.
 export function wateringActivity(worker,task){
   if(worker.status!=='acting'||worker.incapacitated||worker.fallRemaining>0||worker.gateWaiting||!task||task.id!==worker.taskId||!['initial','water'].includes(task.kind)||!(worker.actionRemaining>0))return false;
-  const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
-  return task.kind==='water'||7.2-worker.actionRemaining*speed>=3.8;
+  const plan=farmActivity(worker,task),fractions=FARM_ACTIONS.sources[worker.profile]?.fractions;
+  return !!(plan?.phase==='water'&&plan.progress>=fractions.pourStart*3.4&&plan.progress<fractions.pourEnd*3.4);
 }
 export class WorkAudio {
   constructor(play,stopVoice){this.play=play;this.stopVoice=stopVoice;this.entries=new Map();this.stateRef=null;}

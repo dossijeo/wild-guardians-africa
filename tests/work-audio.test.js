@@ -1,3 +1,4 @@
+import {FARM_ACTIONS} from '../src/audio/farm-actions-data.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {WorkAudio,wateringActivity} from '../src/audio/work-audio.js';
@@ -13,11 +14,12 @@ function fixture(){
  const state={workers:[worker],tasks:[task],pauses:[]},audio=new WorkAudio((id,opts)=>{const source={};calls.push({id,opts,source});return source;},source=>stopped.push(source));
  return {calls,stopped,worker,task,state,audio};
 }
-for(const profile of PROFILES)test(`${profile.id}: watering activity matches the native combined-action pose`,()=>{
+for(const profile of PROFILES)test(`${profile.id}: watering activity follows the authored pour window inside native Water`,()=>{
  const worker={profile:profile.id,taskId:'t',status:'acting'},task={id:'t',kind:'initial'},library={actions:{Plant:{duration:3.8,loop:false},Water:{duration:3.4,loop:false}}};
- for(const progress of [0,3.79,3.8,4,7.19]){
+ for(const progress of [0,3.79,3.8,4,4.5,5,6.9,7.19]){
   worker.actionRemaining=(7.2-progress)/profile.speed;
-  assert.equal(wateringActivity(worker,task),workerPose(worker,task,0,library).name==='Water');
+  const waterTime=progress-3.8,f=FARM_ACTIONS.sources[profile.id].fractions,expected=waterTime>=f.pourStart*3.4&&waterTime<f.pourEnd*3.4;
+  assert.equal(wateringActivity(worker,task),expected);if(expected)assert.equal(workerPose(worker,task,0,library).name,'Water');
  }
 });
 test('one original watering cue per task, with distance and no repeated completed samples',async()=>{

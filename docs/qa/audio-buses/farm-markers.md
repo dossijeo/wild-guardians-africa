@@ -1,6 +1,6 @@
 # Authoritative farm action timing
 
-Preparation for agricultural audio integration, not a claim that these new markers already emit sound. tools/calibrate_farm_actions.mjs reads all four original worker lab scripts, validates their recorded SHA256 and each original GLB SHA256, and derives the gesture/effect gates. The reproducible data lives in content/manifests/farm-actions.json and src/audio/farm-actions-data.js. No source script, model or animation is modified, and no geometry scan is added to a gameplay frame.
+Historical calibration preparation at revision922de82. These markers are now consumed by production audio; current integration and its verification are documented in farm.md. The following records the original calibration evidence and gaps identified before that integration. tools/calibrate_farm_actions.mjs reads all four original worker lab scripts, validates their recorded SHA256 and each original GLB SHA256, and derives the gesture/effect gates. The reproducible data lives in content/manifests/farm-actions.json and src/audio/farm-actions-data.js. No source script, model or animation is modified, and no geometry scan is added to a gameplay frame.
 
 | Native phase | Authored gate | Native clip seconds |
 | --- | --- | --- |

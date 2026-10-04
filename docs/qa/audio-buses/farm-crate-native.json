@@ -1,0 +1,40 @@
+{
+  "steps": 5374,
+  "day": 101,
+  "simulatedSeconds": 268.6999999999898,
+  "raidStarted": true,
+  "cratePhaseSeen": true,
+  "accepted": [
+    {
+      "elapsed": 169.1000000000084,
+      "emitter": "crate-10",
+      "family": "farm_crate_move",
+      "bus": "world",
+      "status": null,
+      "task": null,
+      "rate": 1
+    },
+    {
+      "elapsed": 262.29999999999563,
+      "emitter": "worker-6",
+      "family": "farm_crate_move",
+      "bus": "world",
+      "status": "acting",
+      "task": "crate",
+      "rate": 1
+    }
+  ],
+  "decoded": {
+    "channels": 2,
+    "sampleRate": 48000,
+    "duration": 2.48
+  },
+  "drops": 1,
+  "picks": 1,
+  "deliveries": 1,
+  "finalVoices": 0,
+  "context": "closed",
+  "errors": [],
+  "muted": true,
+  "world3D": false
+}

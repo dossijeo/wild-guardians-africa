@@ -1,3 +1,4 @@
+import {FarmContactAudio} from './farm-contact-audio.js';
 import {AnimalAudio} from './animal-audio.js';
 import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
@@ -7,7 +8,7 @@ import {json,bytes} from '../rendering/assets.js';
 import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';
-export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'farm_seeds_drop',CropPicked:'farm_harvest_pick',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
+export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
 export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
@@ -138,6 +139,10 @@ export class AudioSystem {
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);
   }
+  updateFarm(state,options={}){
+    if(this.context?.state!=='running'){this.farm?.dispose();return;}
+    this.farm??=new FarmContactAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.farm.update(state,options);
+  }
   updateAnimals(state,options={}){
     if(this.context?.state!=='running'){this.animals?.dispose();return;}
     this.animals??=new AnimalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.animals.update(state,options);
@@ -147,6 +152,6 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
+  stop(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  suspend(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

@@ -1,0 +1,65 @@
+{
+  "sourceSha256": {
+    "src/audio/farm-contact-audio.js": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
+    "src/audio/work-audio.js": "54c0c3852c64ebf36c350baa8ef4bf56af356b1a2f79fc25478fa0f882975712",
+    "src/audio/audio.js": "6db917b23dfa5bfa451169bf7b885d75079b896ab19753bbc8cf92dcce605b24",
+    "src/app/main.js": "6454c6c95e5580fa34789b09a44bf87e7cca5a7f999a5a6bcab55f65dea88b30",
+    "src/audio/farm-actions-data.js": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560",
+    "public/content/sfx-routing.json": "719cfbc13ca6cc0e6b4b0321d76e9bed8b1ac8d645cecd54300e72bd2d34ac8e"
+  },
+  "directedTests": {
+    "passed": 135,
+    "failed": 0,
+    "durationMs": 2309.8298
+  },
+  "completeLocalSuite": {
+    "status": "passed",
+    "passed": 1374,
+    "failed": 0,
+    "durationMs": 588855.4814,
+    "log": ".cache/farm-contact-full.log",
+    "sourceFilesPredateSuite": true
+  },
+  "build": {
+    "result": "passed",
+    "viteReportedSeconds": 6.03
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406692845,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 69,
+    "reserved": 57
+  },
+  "native": {
+    "result": "passed",
+    "farmCases": 6,
+    "actualFirstDayCases": 4,
+    "rootCases": 2,
+    "farmAcceptedSources": 54,
+    "crateAcceptedSources": 2,
+    "uniqueActualOriginalIds": 9,
+    "maxObservedPerEmitter": 2,
+    "crateDrops": 1,
+    "crateDeliveries": 1,
+    "context": "closed",
+    "fixtures": [
+      "tests/browser/farm-contact-audio.html",
+      "tests/browser/farm-crate-audio.html"
+    ],
+    "muted": true,
+    "world3D": false,
+    "navigation": "directed clear-path adapter",
+    "rootAndRaidQaCredit": 10000
+  },
+  "limitations": [
+    "No listening evidence",
+    "No rendered worker/beast/collapse mixture or physical-phone performance proof",
+    "Original clips were predecoded in the native fixtures; no cold-network timing claim"
+  ]
+}

@@ -1,3 +1,4 @@
+import {FARM_CONTACT_IDS} from '../src/audio/farm-contact-audio.js';
 import {ANIMAL_SOUND_IDS} from '../src/audio/animal-audio.js';
 import {WALL_HIT_SOUNDS} from '../src/audio/structure-audio.js';
 import {UI_SOUND_ROUTES} from '../src/audio/ui-audio.js';
@@ -29,10 +30,11 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   assert.equal(hash,item.sha256);assert.equal(hash,original.sha256);assert.equal(hash,route.sha256);assert.equal(data.length,item.bytes);
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
   const events=Object.keys(eventSound).filter(e=>eventSound[e]===item.id);
-  if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,events);assert.equal(item.loop,false);}
+  if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[...events,...(FARM_CONTACT_IDS.includes(item.id)?['native-farm-contact']:[])]);assert.equal(item.loop,false);}
   else if(Object.values(WALL_HIT_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['StructureHit:wall:'+Object.keys(WALL_HIT_SOUNDS).find(material=>WALL_HIT_SOUNDS[material]===item.id)]);assert.equal(item.loop,false);}
   else if(ANIMAL_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-animal-phase']);assert.equal(item.loop,false);}
   else if(UI_SOUND_ROUTES[item.id]){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[UI_SOUND_ROUTES[item.id]]);assert.equal(item.loop,false);}
+  else if(FARM_CONTACT_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-farm-contact']);assert.equal(item.loop,false);}
   else if(WORK_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['worker-watering-activity']);assert.equal(item.loop,false);}
   else if(MOVEMENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['actor-foot-contact']);assert.equal(item.loop,false);}
   else if(AMBIENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['world-ambient-layer']);assert.equal(item.loop,true);}

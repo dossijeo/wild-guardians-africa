@@ -212,11 +212,10 @@
       "id": "farm_sow",
       "filename": "019_farm_sow.mp3",
       "sha256": "6bbd3f0932a31c533200957fe4e0043ebea8a2a35bd83784e29954287f9ddb60",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-farm-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Gesto de siembra inicial que realiza el trabajador."
     },
     {
@@ -226,9 +225,8 @@
       "sha256": "d134c7fd6402523ccf23745790f873bcb5b614be3f9f1cfce0a0e9cecff90a76",
       "status": "connected",
       "destination": [
-        "CropPlaced"
+        "native-farm-contact"
       ],
-      "reservation_reason": null,
       "planned_trigger": "Detalle de semillas al sembrar; alternativa/capa tenue de farm_sow."
     },
     {
@@ -248,11 +246,10 @@
       "id": "farm_water_soil",
       "filename": "022_farm_water_soil.mp3",
       "sha256": "5c554b7ec30d174fec8becafcfa44472d1c6e65f0522a90dc643a876d4896381",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-farm-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Contacto de agua con tierra; conservar exactamente la asignación 022 aprobada."
     },
     {
@@ -262,9 +259,8 @@
       "sha256": "d883c29c9fdcfd9bbabce569ec6b74dc46e6c170544924fe1e4940f2983a140c",
       "status": "connected",
       "destination": [
-        "CropPicked"
+        "native-farm-contact"
       ],
-      "reservation_reason": null,
       "planned_trigger": "Contacto de recogida de una planta madura."
     },
     {
@@ -272,11 +268,10 @@
       "id": "farm_plant_pull",
       "filename": "024_farm_plant_pull.mp3",
       "sha256": "1d8011467db71c9fed7fd6eae23227b11ea877bd5cff13ba7ed755cd88ed31f3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-farm-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Extracción de raíz/planta en cosecha; alternativa por especie, no segundo ingreso."
     },
     {
@@ -284,11 +279,10 @@
       "id": "farm_crop_to_crate",
       "filename": "025_farm_crop_to_crate.mp3",
       "sha256": "4778bbeccee26212e9bd0e5390b8cb3a98e3d1054c1304cd9344a4e630dfce13",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "CropPicked"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Depósito de producto en la caja durante la cadena de cosecha."
     },
     {
@@ -298,9 +292,9 @@
       "sha256": "20ba7460680f89f3c3e945dc088396e5a1166e15194d42bd94fb21d3eacf820b",
       "status": "connected",
       "destination": [
-        "CrateDropped"
+        "CrateDropped",
+        "native-farm-contact"
       ],
-      "reservation_reason": null,
       "planned_trigger": "Levantar/dejar una caja; una toma por acción, no por fotograma."
     },
     {
@@ -1218,11 +1212,10 @@
       "id": "ui_buy",
       "filename": "105_ui_buy.mp3",
       "sha256": "4c480c2c9f5f83ad1a92d8738d57a8631dae6881a42476e6af8d5acddd1e3d7a",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "CropPlaced"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Compra aceptada; alternativa a eco_spend, sin doble cargo."
     },
     {
