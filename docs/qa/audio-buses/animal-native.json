@@ -1,0 +1,540 @@
+{
+  "history": [
+    {
+      "species": "lion",
+      "steps": 1371,
+      "simulatedSeconds": 68.54999999999825,
+      "attackIds": [
+        "attack-5",
+        "attack-8",
+        "attack-11",
+        "attack-14"
+      ],
+      "logicalHits": 4,
+      "structureHits": 4,
+      "accepted": [
+        {
+          "id": "lion_aggressive",
+          "elapsed": 0.05,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-aggressive",
+          "rate": 1,
+          "gain": 0.032047271728515625
+        },
+        {
+          "id": "lion_neutral",
+          "elapsed": 12.050000000000036,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.05329125002026558
+        },
+        {
+          "id": "lion_neutral",
+          "elapsed": 24.050000000000207,
+          "status": "walking",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.19453564286231995
+        },
+        {
+          "id": "lion_attack",
+          "elapsed": 31.600000000000314,
+          "status": "attacking",
+          "attackId": "attack-5",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49804261326789856
+        },
+        {
+          "id": "lion_attack",
+          "elapsed": 33.20000000000025,
+          "status": "attacking",
+          "attackId": "attack-8",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49804261326789856
+        },
+        {
+          "id": "lion_attack",
+          "elapsed": 34.80000000000016,
+          "status": "attacking",
+          "attackId": "attack-11",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49804261326789856
+        },
+        {
+          "id": "lion_attack",
+          "elapsed": 39.3999999999999,
+          "status": "attacking",
+          "attackId": "attack-14",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49804261326789856
+        },
+        {
+          "id": "lion_retreat",
+          "elapsed": 43.99999999999964,
+          "status": "retreating",
+          "attackId": "attack-14",
+          "family": "animal-retreat",
+          "rate": 1,
+          "gain": 0.4975196421146393
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "species": "hyena",
+      "steps": 1280,
+      "simulatedSeconds": 63.9999999999985,
+      "attackIds": [
+        "attack-5",
+        "attack-8",
+        "attack-11"
+      ],
+      "logicalHits": 3,
+      "structureHits": 3,
+      "accepted": [
+        {
+          "id": "hyena_aggressive",
+          "elapsed": 0.05,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-aggressive",
+          "rate": 1,
+          "gain": 0.03208000212907791
+        },
+        {
+          "id": "hyena_neutral",
+          "elapsed": 12.050000000000036,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.05338229611515999
+        },
+        {
+          "id": "hyena_neutral",
+          "elapsed": 24.050000000000207,
+          "status": "walking",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.19409769773483276
+        },
+        {
+          "id": "hyena_attack",
+          "elapsed": 31.650000000000315,
+          "status": "attacking",
+          "attackId": "attack-5",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49791091680526733
+        },
+        {
+          "id": "hyena_attack",
+          "elapsed": 33.25000000000025,
+          "status": "attacking",
+          "attackId": "attack-8",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49791091680526733
+        },
+        {
+          "id": "hyena_attack",
+          "elapsed": 34.85000000000016,
+          "status": "attacking",
+          "attackId": "attack-11",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.49791091680526733
+        },
+        {
+          "id": "hyena_retreat",
+          "elapsed": 39.449999999999896,
+          "status": "retreating",
+          "attackId": "attack-11",
+          "family": "animal-retreat",
+          "rate": 1,
+          "gain": 0.4973718822002411
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "species": "buffalo",
+      "steps": 1369,
+      "simulatedSeconds": 68.44999999999825,
+      "attackIds": [
+        "attack-5",
+        "attack-8",
+        "attack-11",
+        "attack-14"
+      ],
+      "logicalHits": 4,
+      "structureHits": 4,
+      "accepted": [
+        {
+          "id": "buffalo_aggressive",
+          "elapsed": 0.05,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-aggressive",
+          "rate": 1,
+          "gain": 0.03212590515613556
+        },
+        {
+          "id": "buffalo_neutral",
+          "elapsed": 12.050000000000036,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.053510114550590515
+        },
+        {
+          "id": "buffalo_neutral",
+          "elapsed": 24.050000000000207,
+          "status": "walking",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.19456931948661804
+        },
+        {
+          "id": "buffalo_charge",
+          "elapsed": 31.550000000000313,
+          "status": "attacking",
+          "attackId": "attack-5",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.497719407081604
+        },
+        {
+          "id": "buffalo_charge",
+          "elapsed": 33.150000000000254,
+          "status": "attacking",
+          "attackId": "attack-8",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.497719407081604
+        },
+        {
+          "id": "buffalo_charge",
+          "elapsed": 34.75000000000016,
+          "status": "attacking",
+          "attackId": "attack-11",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.497719407081604
+        },
+        {
+          "id": "buffalo_charge",
+          "elapsed": 39.3499999999999,
+          "status": "attacking",
+          "attackId": "attack-14",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.497719407081604
+        },
+        {
+          "id": "buffalo_retreat",
+          "elapsed": 43.94999999999964,
+          "status": "retreating",
+          "attackId": "attack-14",
+          "family": "animal-retreat",
+          "rate": 1,
+          "gain": 0.4971579909324646
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "species": "rhino",
+      "steps": 1353,
+      "simulatedSeconds": 67.6499999999983,
+      "attackIds": [
+        "attack-5",
+        "attack-8",
+        "attack-11",
+        "attack-14"
+      ],
+      "logicalHits": 4,
+      "structureHits": 4,
+      "accepted": [
+        {
+          "id": "rhino_aggressive",
+          "elapsed": 0.05,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-aggressive",
+          "rate": 1,
+          "gain": 0.03250997141003609
+        },
+        {
+          "id": "rhino_neutral",
+          "elapsed": 12.050000000000036,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.054585397243499756
+        },
+        {
+          "id": "rhino_neutral",
+          "elapsed": 24.050000000000207,
+          "status": "walking",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.19615037739276886
+        },
+        {
+          "id": "rhino_charge",
+          "elapsed": 31.000000000000306,
+          "status": "attacking",
+          "attackId": "attack-5",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4958163797855377
+        },
+        {
+          "id": "rhino_charge",
+          "elapsed": 32.600000000000286,
+          "status": "attacking",
+          "attackId": "attack-8",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4958163797855377
+        },
+        {
+          "id": "rhino_charge",
+          "elapsed": 34.200000000000195,
+          "status": "attacking",
+          "attackId": "attack-11",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4958163797855377
+        },
+        {
+          "id": "rhino_charge",
+          "elapsed": 38.79999999999993,
+          "status": "attacking",
+          "attackId": "attack-14",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4958163797855377
+        },
+        {
+          "id": "rhino_retreat",
+          "elapsed": 43.39999999999967,
+          "status": "retreating",
+          "attackId": "attack-14",
+          "family": "animal-retreat",
+          "rate": 1,
+          "gain": 0.4958163797855377
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "species": "warthog",
+      "steps": 1181,
+      "simulatedSeconds": 59.04999999999878,
+      "attackIds": [
+        "attack-5",
+        "attack-8"
+      ],
+      "logicalHits": 2,
+      "structureHits": 2,
+      "accepted": [
+        {
+          "id": "warthog_aggressive",
+          "elapsed": 0.05,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-aggressive",
+          "rate": 1,
+          "gain": 0.03221140801906586
+        },
+        {
+          "id": "warthog_neutral",
+          "elapsed": 12.050000000000036,
+          "status": "entering",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.05374860018491745
+        },
+        {
+          "id": "warthog_neutral",
+          "elapsed": 24.050000000000207,
+          "status": "walking",
+          "attackId": null,
+          "family": "animal-neutral",
+          "rate": 1,
+          "gain": 0.19467034935951233
+        },
+        {
+          "id": "warthog_charge",
+          "elapsed": 31.450000000000312,
+          "status": "attacking",
+          "attackId": "attack-5",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4973418414592743
+        },
+        {
+          "id": "warthog_charge",
+          "elapsed": 33.05000000000026,
+          "status": "attacking",
+          "attackId": "attack-8",
+          "family": "animal-attack",
+          "rate": 1,
+          "gain": 0.4973418414592743
+        },
+        {
+          "id": "warthog_retreat",
+          "elapsed": 34.65000000000017,
+          "status": "retreating",
+          "attackId": "attack-8",
+          "family": "animal-retreat",
+          "rate": 1,
+          "gain": 0.4967389404773712
+        }
+      ],
+      "finalVoices": 0
+    }
+  ],
+  "decoded": [
+    {
+      "id": "lion_retreat",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.6
+    },
+    {
+      "id": "lion_neutral",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48
+    },
+    {
+      "id": "lion_attack",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2
+    },
+    {
+      "id": "lion_aggressive",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 3.48
+    },
+    {
+      "id": "hyena_neutral",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.76
+    },
+    {
+      "id": "buffalo_aggressive",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.48
+    },
+    {
+      "id": "hyena_retreat",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.76
+    },
+    {
+      "id": "hyena_attack",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2
+    },
+    {
+      "id": "buffalo_neutral",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.76
+    },
+    {
+      "id": "hyena_aggressive",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48
+    },
+    {
+      "id": "rhino_neutral",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.68
+    },
+    {
+      "id": "buffalo_charge",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48
+    },
+    {
+      "id": "buffalo_retreat",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.6
+    },
+    {
+      "id": "rhino_retreat",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.76
+    },
+    {
+      "id": "warthog_aggressive",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.36
+    },
+    {
+      "id": "warthog_neutral",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.6
+    },
+    {
+      "id": "rhino_aggressive",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 3
+    },
+    {
+      "id": "rhino_charge",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 4
+    },
+    {
+      "id": "warthog_charge",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 3.48
+    },
+    {
+      "id": "warthog_retreat",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 4
+    }
+  ],
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "context": "closed"
+}

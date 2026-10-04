@@ -570,7 +570,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
       "planned_trigger": "Carga genérica; alternativa cuando no se usa la carga específica de la especie."
     },
     {
@@ -582,7 +582,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
       "planned_trigger": "Ataque genérico; alternativa a la toma específica, no repetición de daño."
     },
     {
@@ -630,7 +630,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
       "planned_trigger": "Vocalización animal neutra genérica; alternativa, baja frecuencia."
     },
     {
@@ -642,7 +642,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
       "planned_trigger": "Vocalización agresiva genérica; alternativa a la especie."
     },
     {
@@ -654,7 +654,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
       "planned_trigger": "Retirada genérica; alternativa a la especie."
     },
     {
@@ -674,11 +674,10 @@
       "id": "lion_neutral",
       "filename": "058_lion_neutral.mp3",
       "sha256": "66fc9416d4367dc286572f680121d4c03c790a7194fc92b9aaf9d0bf98d43995",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Vocalización neutra del león durante espera o aproximación; limitar frecuencia."
     },
     {
@@ -686,11 +685,10 @@
       "id": "lion_aggressive",
       "filename": "059_lion_aggressive.mp3",
       "sha256": "45ca634baa1df2e9514b2cbe1d892f3fa7bff93f27bf9eb060161e4c09f70820",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aviso agresivo/rugido del león; no añade una habilidad de área."
     },
     {
@@ -698,11 +696,10 @@
       "id": "lion_attack",
       "filename": "060_lion_attack.mp3",
       "sha256": "cefb9bf1eb9f32251a30ce6a9b3b92ce0a62f52e62717e0f2580ec4bde19ae8c",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Animación de ataque del león; varios sonidos decorativos no multiplican daño."
     },
     {
@@ -722,11 +719,10 @@
       "id": "lion_retreat",
       "filename": "062_lion_retreat.mp3",
       "sha256": "72dc4588da3f20ec4e1f7f5385fe0c990fca094506a03b4c4f99c2a01e3576c3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Retirada del león por cupo agotado o sin objetivo libre."
     },
     {
@@ -734,11 +730,10 @@
       "id": "hyena_neutral",
       "filename": "063_hyena_neutral.mp3",
       "sha256": "a7f0da2a6e3f72f52573452e42c540e639fd6a5a45ee55c430e83b87db0c4d7b",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Vocalización neutra de hiena."
     },
     {
@@ -746,11 +741,10 @@
       "id": "hyena_aggressive",
       "filename": "064_hyena_aggressive.mp3",
       "sha256": "64ea509a9241e43f90ada70d7786309691d7eedec52f9dd83335011e76f94c3b",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aviso agresivo de hiena."
     },
     {
@@ -758,11 +752,10 @@
       "id": "hyena_attack",
       "filename": "065_hyena_attack.mp3",
       "sha256": "9187f2e241992d682db157ffc4caf628b6828f93ced13f85678e8daa6ffe03c2",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Ataque de hiena, sincronizado con la acción válida."
     },
     {
@@ -782,11 +775,10 @@
       "id": "hyena_retreat",
       "filename": "067_hyena_retreat.mp3",
       "sha256": "57f59825f0b719fac94fbf12fb6e7874645e884f3e797e19e4d6dbdc41287116",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Retirada de hiena."
     },
     {
@@ -794,11 +786,10 @@
       "id": "buffalo_neutral",
       "filename": "068_buffalo_neutral.mp3",
       "sha256": "13c0146a05652d788197eb15ce62c0eb3a92690f49d199ca863c6a84662fc4a3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Vocalización neutra de búfalo."
     },
     {
@@ -806,11 +797,10 @@
       "id": "buffalo_aggressive",
       "filename": "069_buffalo_aggressive.mp3",
       "sha256": "cfe51f9e3a4eca9048438ab39cbba704bb9c9b7578dbb913833b9df925f976e1",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aviso agresivo de búfalo."
     },
     {
@@ -818,11 +808,10 @@
       "id": "buffalo_charge",
       "filename": "070_buffalo_charge.mp3",
       "sha256": "8503208b8f39098c8e04489d2a6d16422bea115f9a58b4a71b6842597b131b79",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Carga/ataque de búfalo; no añade un golpe lógico extra."
     },
     {
@@ -842,11 +831,10 @@
       "id": "buffalo_retreat",
       "filename": "072_buffalo_retreat.mp3",
       "sha256": "a8de3582eb32a24402e187868c3c840aa9e6629da7e5567fb7a892a52190104d",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Retirada de búfalo."
     },
     {
@@ -854,11 +842,10 @@
       "id": "rhino_neutral",
       "filename": "073_rhino_neutral.mp3",
       "sha256": "04fb877b5392f7ba78dfe22622ec2d2749c51baa88a3d468e1c9784ffde1e6c5",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Vocalización neutra de rinoceronte."
     },
     {
@@ -866,11 +853,10 @@
       "id": "rhino_aggressive",
       "filename": "074_rhino_aggressive.mp3",
       "sha256": "75516374bfbcc74dc11d6e977ae111663882b2e962bdcdf1f8fc7e29494fc2b3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aviso agresivo de rinoceronte."
     },
     {
@@ -878,11 +864,10 @@
       "id": "rhino_charge",
       "filename": "075_rhino_charge.mp3",
       "sha256": "93da40c038d4d7dc03c1e05894389a9db48e7396ff088fccaf27a963b1a0b3ba",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Carga/ataque de rinoceronte."
     },
     {
@@ -902,11 +887,10 @@
       "id": "rhino_retreat",
       "filename": "077_rhino_retreat.mp3",
       "sha256": "bcf447156459b2d7130dc6ca5eb8829033d36e322eb477f0d067f79888cfa626",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Retirada de rinoceronte."
     },
     {
@@ -914,11 +898,10 @@
       "id": "warthog_neutral",
       "filename": "078_warthog_neutral.mp3",
       "sha256": "cacab2e2231fdc2c10408699e9f891428d7479ad90550b9abd5729ef477f44c0",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Vocalización neutra de facóquero."
     },
     {
@@ -926,11 +909,10 @@
       "id": "warthog_aggressive",
       "filename": "079_warthog_aggressive.mp3",
       "sha256": "c196360bb62b494902c90349a29c47cc9178456622cdb9fd19f9e0b2f5534d9e",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aviso agresivo de facóquero."
     },
     {
@@ -938,11 +920,10 @@
       "id": "warthog_charge",
       "filename": "080_warthog_charge.mp3",
       "sha256": "e52179b754dc4ae80c6f9c26d5857c1133fba2287b118f0a7730376e1dda0fa6",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Carga/ataque de facóquero."
     },
     {
@@ -962,11 +943,10 @@
       "id": "warthog_retreat",
       "filename": "082_warthog_retreat.mp3",
       "sha256": "4c89d168503bef3c6f61cbc99e7f7bc3e3a1887f491be4354f0cbb3d14b9a69c",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-animal-phase"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Retirada de facóquero."
     },
     {

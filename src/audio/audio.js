@@ -1,3 +1,4 @@
+import {AnimalAudio} from './animal-audio.js';
 import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
@@ -137,11 +138,15 @@ export class AudioSystem {
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);
   }
+  updateAnimals(state,options={}){
+    if(this.context?.state!=='running'){this.animals?.dispose();return;}
+    this.animals??=new AnimalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.animals.update(state,options);
+  }
   updateMovement(state,options={}){
     if(this.context?.state!=='running'){this.movement?.dispose();return;}
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
+  stop(){this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  suspend(){this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

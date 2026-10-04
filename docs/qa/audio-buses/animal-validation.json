@@ -1,0 +1,65 @@
+{
+  "sourceSha256": {
+    "src/audio/animal-audio.js": "f13067dc11ca0c5e607eb7f3e3f63de1fc3e4f59a30fcdaa8223756b4b3b4adb",
+    "src/audio/audio.js": "54cd28638d684253003668a78f6f7bc8bf63e081f83708fb70b8b25bc017b63b",
+    "src/app/main.js": "a514374c1df33d86140224b1daebc9d98b4aca36e99414b57f8e9bff9985a4c7",
+    "public/content/sfx-routing.json": "8fff818cea1e3dc6cda9ecac6e3d48cec2d4e9b1f87e087e18faa04aabc858e6"
+  },
+  "directedTests": {
+    "passed": 114,
+    "failed": 0,
+    "durationMs": 1882.3894
+  },
+  "completeLocalSuite": {
+    "status": "running",
+    "log": ".cache/animal-audio-full.log"
+  },
+  "build": {
+    "result": "passed",
+    "viteReportedSeconds": 5.76
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406686014,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 64,
+    "reserved": 62
+  },
+  "native": {
+    "result": "passed",
+    "fixture": "tests/browser/animal-audio.html",
+    "report": "docs/qa/audio-buses/animal-native.json",
+    "species": [
+      "lion",
+      "hyena",
+      "buffalo",
+      "rhino",
+      "warthog"
+    ],
+    "uniqueOriginalIds": 20,
+    "acceptedSources": 37,
+    "observedNativeAttackIds": 17,
+    "logicalHits": 17,
+    "muted": true,
+    "world3D": false,
+    "navigation": "directed clear-path adapter",
+    "context": "closed",
+    "finalVoices": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "limitations": [
+    "No listening evidence",
+    "No full 3D worker/beast/collapse mixture",
+    "Complete local regression is still running"
+  ]
+}
