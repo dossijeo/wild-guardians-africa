@@ -1,66 +1,44 @@
-// Legal minimal campaign route: one crop on day one, then zero-worker hiring.
-// This tests the campaign clock/raid/save/victory pipeline, not all threat tiers.
+// Adverse strategy: one initial crop, paid labour every day, no replanting,
+// repairs or defensive magic. This is a loss test, not campaign balance acceptance.
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 import {simulateOpening} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {numberOf} from '../src/simulation/money.js';
-import {reachableApproach} from '../src/simulation/raids.js';
 export function simulateCampaign(options={}){
-  let s,nav,reloads=0,tutorialReachable=null,initialCenterHp;
-  const seenEvents=new Set(),loadedRaids=new Set(),events={};
-  const collect=()=>{
-    for(const event of s.events)if(!seenEvents.has(event.id)){
-      seenEvents.add(event.id);events[event.type]=(events[event.type]??0)+1;
-    }
-  };
-  const reload=()=>{
-    const text=serialize(s);s=deserialize(text);assert.equal(serialize(s),text);
-    nav.setState(s);reloads++;
-  };
-  const opening=simulateOpening('olderMale',1,{...options,onTick:(current,routes)=>{
-    s=current;nav=routes;collect();
-    if(s.raid&&!loadedRaids.has(s.raid.id)){
-      initialCenterHp=s.structures[0].hp;tutorialReachable=!!reachableApproach(s.raid.animals[0],s.structures[0],nav);
-      loadedRaids.add(s.raid.id);reload();
-    }
-    return s;
-  }});s=opening.state;nav=opening.nav;
-  collect();assert.equal(s.result,null,'The first crop must finance continuing the campaign');
-  assert.equal(s.day,2);assert.equal(opening.delivered,1);assert.equal(opening.living,0);
-  const openingMoney=numberOf(s.ledger.balance);
-  for(let day=2;day<=100&&!s.result;day++){
-    assert.equal(s.day,day);assert.equal(s.completedNights,day-1);assert.deepEqual(s.pauses,['hiring']);
-    if(day%7===0){reload();const paused=serialize(s);Game.tick(s,30,nav);assert.equal(serialize(s),paused);}
-    Game.hire(s,'campaign-hire-'+day,{});const started=s.elapsed;
-    while(s.day===day&&!s.result){
-      if(s.raid&&!loadedRaids.has(s.raid.id)){tutorialReachable=!!reachableApproach(s.raid.animals[0],s.structures[0],nav);loadedRaids.add(s.raid.id);reload();}
-      // Stop exactly at planning/spawn boundaries so even a short, legitimate
-      // withdrawal can be saved while active, rather than missed by a 30s tick.
-      const untilRaid=s.time<300?300-s.time:s.nightPlan&&!s.nightPlan.done?s.nightPlan.at-s.time:Infinity;
-      Game.tick(s,Math.min(30,Math.max(.001,untilRaid)),nav);collect();
-      // Diagnostic bound only: never expire or alter an animal in the game.
-      if(s.elapsed-started>2400)throw new Error(`Raid did not finish on ${s.biome}/${s.culture}/day ${day}: ${JSON.stringify(s.raid)}`);
-    }
-    assert.equal(numberOf(s.ledger.balance),openingMoney,'Zero-worker hiring and combat must not invent payments');
+ let s,nav,reloads=0;
+ const seenEvents=new Set(),loadedRaids=new Set(),events={};
+ const collect=()=>{for(const e of s.events)if(!seenEvents.has(e.id)){seenEvents.add(e.id);events[e.type]=(events[e.type]??0)+1;}};
+ const reload=()=>{const text=serialize(s);s=deserialize(text);assert.equal(serialize(s),text);nav.setState(s);reloads++;};
+ const opening=simulateOpening('olderMale',1,{...options,onTick:(current,routes)=>{
+  s=current;nav=routes;collect();
+  if(s.raid&&!loadedRaids.has(s.raid.id)){loadedRaids.add(s.raid.id);reload();}
+  return s;
+ }});s=opening.state;nav=opening.nav;collect();
+ assert.equal(s.result,null,'One opening crop leaves a viable first dawn');assert.equal(s.day,2);
+ for(let day=2;day<=100&&!s.result;day++){
+  assert.equal(s.day,day);assert.deepEqual(s.pauses,['hiring']);
+  if(day%7===0){reload();const frozen=serialize(s);Game.tick(s,30,nav);assert.equal(serialize(s),frozen);}
+  const before=numberOf(s.ledger.balance);Game.hire(s,'neglect-hire-'+day,{olderMale:1});assert.equal(numberOf(s.ledger.balance),before-30);
+  const started=s.elapsed;
+  while(s.day===day&&!s.result){
+   options.onTick?.(s,nav);
+   if(s.raid&&!loadedRaids.has(s.raid.id)){loadedRaids.add(s.raid.id);reload();}
+   const untilRaid=s.time<300?300-s.time:s.nightPlan&&!s.nightPlan.done?s.nightPlan.at-s.time:Infinity;
+   Game.tick(s,Math.min(5,Math.max(.001,untilRaid)),nav);collect();
+   if(s.elapsed-started>2400)throw new Error(`Raid did not finish on ${s.biome}/${s.culture}/day ${day}: ${JSON.stringify(s.raid)}`);
   }
-  assert.equal(s.result,'victory');assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.raid,null);
-  assert.equal(events.CampaignWon,1);assert.equal(events.GameOver??0,0);
-  assert.equal(events.RaidSpawned,1);assert.equal(events.RaidEnded,1);
-  assert.notEqual(tutorialReachable,null,'The guaranteed tutorial raid must actually spawn');
-  if(tutorialReachable)assert.ok(s.structures[0].hp<initialCenterHp,'A reachable tutorial target must actually receive damage');
-  else {assert.equal(s.structures[0].hp,initialCenterHp,'An inaccessible island must not receive remote damage');assert.equal(events.StructureHit??0,0);}
-  const victory=serialize(s);Game.tick(s,600,nav);assert.equal(serialize(s),victory);reload();
-  const centerHp=s.structures[0].hp;Game.continuePostgame(s);collect();
-  for(let day=101;day<=102;day++){
-    assert.equal(s.day,day);assert.deepEqual(s.pauses,['hiring']);Game.hire(s,'postgame-hire-'+day,{});
-    while(s.day===day){Game.tick(s,30,nav);collect();assert.equal(s.raid,null);assert.equal(s.result,null);}
-  }
-  assert.equal(s.postgame,true);assert.equal(s.day,103);assert.equal(s.completedNights,102);
-  assert.equal(s.structures[0].hp,centerHp);assert.equal(events.CampaignWon,1);assert.equal(events.PostgameStarted,1);
-  return {biome:s.biome,culture:s.culture,seed:s.seed,completedNights:s.completedNights,postgame:s.postgame,
-    money:numberOf(s.ledger.balance),centerHp,reloads,tutorialReachable,events};
+ }
+ assert.equal(s.result,'defeat','Spending on idle labour and neglecting planting/defences must not win');
+ assert.ok(s.completedNights<100);assert.equal(events.CampaignWon??0,0);assert.equal(events.GameOver,1);
+ assert.equal(s.plants.length,1);assert.ok(s.crates.length<=1);assert.ok(events.RaidSpawned>0);assert.ok(reloads>0);
+ let balance=1500n;for(const v of Object.values(s.ledger.entries)){assert.equal(v.d,'1');balance+=BigInt(v.n);}
+ assert.equal(s.ledger.balance.n,String(balance));assert.equal(s.ledger.balance.d,'1');
+ const terminal=serialize(s);Game.tick(s,600,nav);assert.equal(serialize(s),terminal);reload();
+ const defeated=serialize(s);Game.continuePostgame(s);assert.equal(serialize(s),defeated);
+ return {biome:s.biome,culture:s.culture,seed:s.seed,strategy:'neglect',result:s.result,completedNights:s.completedNights,postgame:s.postgame,
+  money:numberOf(s.ledger.balance),reloads,events};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)
-  console.log(JSON.stringify(simulateCampaign({biome:process.argv[2]??'sabana',culture:process.argv[3]??'mapungubwe'})));
+ console.log(JSON.stringify(simulateCampaign({biome:process.argv[2]??'sabana',culture:process.argv[3]??'mapungubwe'})));
