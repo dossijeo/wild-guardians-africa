@@ -1,0 +1,9 @@
+# Carga renderizada con varios colapsos
+
+`tests/browser/audio-world-collapses.html` amplía la escena por fases archivada en `native-phases-source.txt`. Se ejecuta sobre la producción de `45369c2`, con Sabana/Mapungubwe, semilla 712, calidad baja, 32 semillas, ocho trabajadores y tres centros pagados. Conserva el crédito QA explícito adicional de 10000 y el audio silenciado/predecodificado.
+
+La primera fase exige trabajo físico de los empleados y diez stems originales de Gameplay A. En la segunda se solicita un grupo de cinco especies. Dos centros reciben daño completo **como preparación de carga QA**, de forma simultánea; el centro principal conserva la preparación de 468 puntos de daño y debe colapsar por contactos de animales. El dominio nativo completa los colapsos y emite sus eventos; no se fabrican eventos de colapso ni contactos de animales para los centros preparados.
+
+El paso renderiza y comprueba `world.actorsReady()` antes de Game.tick, como la barrera del frame del juego. Durante carga asíncrona cuenta iteraciones retenidas en `heldSteps`; ese contador no mide fotogramas, segundos reales ni FPS. Se muestrean límites globales, por familia y emisor, pitch 1, humo/escombros por edificio y cantidad agregada de instancias de escombros realmente enviadas al renderer. Se exige haber observado al menos dos centros colapsando simultáneamente y terminar con los tres arruinados.
+
+La sintaxis del módulo pasa `node --check`; el navegador ha completado la preparación de los tres centros y ha iniciado la fase laboral. El resultado terminal sigue pendiente. No se acredita aún QA-155 completo, escucha perceptual, carga fría, HUD, teléfono físico ni alternancia A/B. El array `ashChips` preparado se distingue del número agregado de instancias renderizadas, como en la auditoría de la escena anterior.
