@@ -9,3 +9,9 @@ Every checkpoint serializes the whole state and loads a fresh navigator and rend
 Transient dust/debris/smoke are safely reconstructed, as Plan 21.2 permits. Their counts before/after are reported separately and are not part of the exact-particle comparison. Previously published spell-duration proof covers all three remaining-duration/cooldown phases, and prior BAST persistence proof covers damage/repair fades and five wall materials. This matrix adds the remaining cultural DEST stages, original open leaves, reconstruction and chunk transitions; it does not claim identical pixels or unchanged decorative particle trajectories.
 
 Results are retained by culture as the directed run completes. Thirty-nine focused building, gate articulation/controller and wall-presentation tests pass. Early fixture development rendered a new scene before loading completed; its own render loop now waits for scene readiness, matching the production application loading boundary. Acceptance records use the completed rerun.
+
+## Completed matrix
+
+All five cultures passed: Mapungubwe, Saheliana, Suajili, Musgum and Etiope. The retained JSON and PNG files document 70 fresh scene reloads, 50 disjoint chunk round trips and 70 disposed renderers/contexts/chunk workers. No completed run reported an error. Every culture ends with the centre intact at 600 HP and 810 coins; the physical reconstruction charged 800 once from 1610, and another tick after reloading did not charge again.
+
+`validation.json` records the aggregate and the 39/39 focused building/gate/presentation tests. The completed runs use fixture commit `72a6279` and production engine `44f5c7b`. This closes QA-148 together with the earlier wall-fade and spell-duration evidence; it does not replace those checks or claim exact transient particle persistence.

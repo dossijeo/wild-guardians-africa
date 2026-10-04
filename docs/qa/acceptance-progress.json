@@ -1800,13 +1800,16 @@
       "area": "Guardado y presentación",
       "scenario": "Guardar colapso o cooldown en curso",
       "expected": "Estado no reversible accidentalmente; restaurar duración/estado coherente.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-wall-reload.md",
         "docs/qa-wall-repair.md",
-        "docs/qa/spell-durations/README.md"
+        "docs/qa/spell-durations/README.md",
+        "tests/browser/structure-restore-world.html",
+        "docs/qa/structure-restore-world/README.md",
+        "docs/qa/structure-restore-world/validation.json"
       ],
-      "notes": "Fixed real BAST damage fade/reload and paid repair fade discontinuities. Persisted simulated origins restore exact stage/positions/normals for five materials, walls/gates, through damage, collapse, pause, repair and ruin rebuilding. Physical repair tests verify one canonical arrival debit and compare fresh renderers throughout the 480 ms upward fade. Actual browser disposes/recreates WorldScene and preserves damage/collapse/ruin, plus one paid native-terrain repair (85 -> 81 coins, same visual 0.801533 before/after recreation, final visual 1 without another payment). Legacy snapshots remain readable with prior ratio fallback. Remaining: other DEST states/effects, cooldowns, open gates and specific chunk streaming; no broad QA-148 completion claim. Spell-duration WorldScene fixture now recreates fresh navigation/renderer at10s: all three cooldowns/remaining durations and VFX phases preserved, exact snapshot equality. Other DEST states/open gates/streaming remain outstanding; QA-148 stays partial."
+      "notes": "Real BAST damage/reload and paid repair fades preserve simulated origins, stages and positions/normals across five wall materials, walls/gates, collapse and rebuilding; legacy snapshots retain their ratio fallback. Fresh native WorldScene spell proof preserves all three remaining durations/cooldowns and VFX phases with exact domain snapshot equality. Closure: all five original cultural centre templates on native Sabana seed712 pass 14 directed checkpoints each, including six gate opening states across three gate families, damage40/78/79%, mid/late collapse, ruin and physically paid reconstruction. Seventy fresh renderer/navigation reloads preserve complete snapshots, damage holes, visibility, scale and every gate position/normal Float32 entry. Fifty disjoint chunk round trips retain presentation/domain; all70 retired contexts and chunk workers release. All cultures debit800 exactly once at worker arrival and retain810 after reload/later tick. Zero completed-run errors;39 focused tests pass. Controlled damage/gate approach and explicit2000 QA credit isolate the test without changing1500 production starts. Plan21.2 permits clearing/reconstructing transient dust, smoke and debris; their counts are reported separately, not claimed pixel/frame-identical."
     },
     {
       "id": "QA-149",
