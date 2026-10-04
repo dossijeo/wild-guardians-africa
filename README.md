@@ -28,6 +28,8 @@ La compilación queda en `dist/`. El servidor debe publicar también `assets/`, 
 
 Para itch.io: `npm run package:itch` genera `test-results/wild-guardians-itch.zip`, con `index.html` en la raíz, rutas relativas y sin los GLB originales duplicados. Los originales y sus hashes siguen en el repositorio; el runtime usa variantes meshopt/WebP. [Inventario, tolerancias y QA web](docs/WEB_ASSETS.md). Para regenerar variantes: `npm run assets:compress`; para verificarlas: `npm run verify:web-assets`. `npm run qa:web-package` sirve el build en un prefijo anidado y tres fixtures visibles para revisión en navegador.
 
+Los recorridos de la boquilla se preparan con `node tools/prepare_watering_emitters.mjs` desde los cuatro GLB originales. El runtime lee `content/watering-emitters.json` y solo interpola, para evitar muestrear otro rig al contratar. Las pruebas comprueban su procedencia y alineación contra las animaciones originales; el verificador del paquete comprueba que los datos llegan intactos a `dist`.
+
 GitHub Actions ejecuta estas comprobaciones al subir a `main` y permite una ejecución manual. Los cambios se registran con conventional commits y se suben directamente a `main`.
 
 Diagnóstico de campaña: `node tools/check_campaign.mjs sabana mapungubwe`. Ejecuta un recorrido mínimo con comandos legales: un mijo, contratación de cero trabajadores después del primer día, cien noches, recargas y dos jornadas postcampaña. Sirve para comprobar reloj, incursión tutorial, persistencia y transición final; no certifica rentabilidad de una finca activa ni todos los niveles de amenaza. `tests/campaign.test.js` repite ese recorrido en las treinta combinaciones de bioma y cultura.

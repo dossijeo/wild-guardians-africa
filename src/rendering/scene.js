@@ -97,7 +97,8 @@ export class WorldScene {
     this.villagePrototypes=await this.assets.village(villagePayload);this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await json('/content/destruction.json')).buildings;
     await Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture)));
-    [this.models,this.workerLibraries]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json')]);
+    [this.models,this.workerLibraries,this.wateringPaths]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json'),json('/content/watering-emitters.json')]);
+    for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
@@ -184,12 +185,11 @@ export class WorldScene {
     // authored in the GLB; animated foot grounding follows in applyAnimalPose.
     if(type==='animal')prepareAnimalModel(model,entity.species);
     root.add(model);
-    if(type==='worker'&&!this.wateringEmitters.has(entity.profile))this.wateringEmitters.set(entity.profile,createWateringEmitter(gltf));
-    const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
+    const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{profile:type==='worker'?entity.profile:null,mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
       groundSamples:type==='animal'?animalGroundSamples(model):null});
   }
   wateringSource(id,time,effect){
-    const data=this.mixers.get(id),root=this.objects.get(id),worker=this.state.workers.find(w=>w.id===id),sample=this.wateringEmitters.get(worker?.profile);
+    const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);
     if(!data||!sample||!root||!effect)return null;
     sample(time/4.3,this.waterMouth,this.waterDirection);root.updateWorldMatrix(true,false);effect.updateWorldMatrix(true,false);
     this.waterMouth.applyMatrix4(root.matrixWorld);effect.worldToLocal(this.waterMouth);

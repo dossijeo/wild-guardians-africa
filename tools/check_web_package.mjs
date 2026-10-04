@@ -19,6 +19,8 @@ async function walk(dir){for(const name of await readdir(dir)){const path=resolv
  }
 }}
 await walk(root);assert(await exists(resolve(root,'index.html')));assert(await exists(resolve(root,'content/ground-materials.json')),'Native ground material profiles missing');
+assert(await exists(resolve(root,'content/watering-emitters.json')),'Prepared watering paths missing');
+assert.equal(await readFile(resolve(root,'content/watering-emitters.json'),'utf8'),await readFile('public/content/watering-emitters.json','utf8'),'Prepared watering paths changed in build');
 const biomeArchive=JSON.parse(await readFile('content/manifests/biome-lab-update.json','utf8'));
 for(const url of biomeArchive.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Demo village archive must not ship');
 

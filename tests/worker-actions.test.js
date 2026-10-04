@@ -1,3 +1,4 @@
+import {bakeWateringEmitter} from '../tools/prepare_watering_emitters.mjs';
 import {createWateringEmitter} from '../src/rendering/watering-emitter.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -82,7 +83,8 @@ test('Carrying uses the original crate and idle uses the supplied resting pose',
 
 for(const [profile,library] of Object.entries(libraries))test(`${profile}: cached water emitter follows the actual animated nozzle holes`,async()=>{
   const gltf=await new GLTFLoader().parseAsync(geometryOnlyGlb(readFileSync(new URL('../public'+library.url,import.meta.url))),'');
-  const sample=createWateringEmitter(gltf),nozzle=gltf.scene.getObjectByName('Can_Nozzle'),clip=gltf.animations.find(c=>c.name==='Water'),mixer=new THREE.AnimationMixer(gltf.scene),action=mixer.clipAction(clip).play();action.paused=true;
+  const data=JSON.parse(readFileSync('public/content/watering-emitters.json')).profiles[profile],{sourceSha256,...path}=data;assert.equal(sourceSha256,library.sha256);assert.deepEqual(bakeWateringEmitter(gltf.scene,gltf.animations),path);
+  const sample=createWateringEmitter(data),nozzle=gltf.scene.getObjectByName('Can_Nozzle'),clip=gltf.animations.find(c=>c.name==='Water'),mixer=new THREE.AnimationMixer(gltf.scene),action=mixer.clipAction(clip).play();action.paused=true;
   const origin=new THREE.Vector3(),outward=new THREE.Vector3(),actual=new THREE.Vector3(),direction=new THREE.Vector3();
   for(let i=0;i<90;i++){
     const time=(.52+i/89*1.554)/4.3*clip.duration;
@@ -93,3 +95,5 @@ for(const [profile,library] of Object.entries(libraries))test(`${profile}: cache
   }
   action.stop();mixer.uncacheRoot(gltf.scene);
 });
+
+test('Prepared nozzle paths reject missing, malformed and non-finite samples',()=>{for(const data of [null,{}, {frames:0,positions:[],directions:[]},{frames:1,positions:[0,0,0,0,0,NaN],directions:[0,1,0,0,1,0]}])assert.throws(()=>createWateringEmitter(data),/Recorrido/);});
