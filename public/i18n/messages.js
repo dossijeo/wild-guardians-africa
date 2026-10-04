@@ -1528,5 +1528,10 @@ export const messages = {
   "Crecimiento acelera las plantas de su zona durante 30 segundos. No sustituye los riegos obligatorios ni permite madurar con agua pendiente. Se recarga en 90 segundos desde el lanzamiento; las pausas del juego congelan duración y recarga.": "Growth speeds up plants in its area for 30 seconds. It does not replace required watering or allow plants to mature with watering pending. Its cooldown lasts 90 seconds from casting; game pauses freeze both duration and cooldown.",
   "Listo para recoger": "Ready to harvest",
   "Toca el terreno para continuar la contratación.": "Tap the ground to resume hiring.",
-  "tu equipo": "your team"
+  "tu equipo": "your team",
+  "Disponible desde la noche 2": "Available from night 2",
+  "Disponible desde el día 3": "Available from day 3",
+  "Disponible desde el día 5": "Available from day 5",
+  "Recargando": "Cooling down",
+  "No disponible ahora": "Unavailable now"
 };

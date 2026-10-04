@@ -1,0 +1,69 @@
+{
+  "productionSha256": {
+    "src/audio/audio.js": "f4f8e8af8f9d66d8de1567019311ed879070ee2f93e2ac1814b0039fbca6759b",
+    "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
+    "src/ui/spell-cards.js": "f76a809ff3a43f88a9dd4ecc2716541c692fc829e30bbd16e6e8649026977b72",
+    "src/app/main.js": "8d95b1943ca053bcc33166bf40a3aeeec6a1a761dcdbe54e27f78fb35853cb33",
+    "src/simulation/game.js": "28e3f59f04d6a4f54324ad0be905d33924254e03ae53c4ac91a1d310841b4e4b",
+    "src/simulation/rules.js": "de4c92ae7db45d58699766f6fba29cc86427908d1f99803294462fa9eff6e2bd",
+    "public/i18n/messages.js": "0e4a0a88ee4ec23c85608bb2c672a576a9939b8061cdb16a238370929ff40c93",
+    "public/content/sfx-routing.json": "1c854f0cf1447e724059efee51a7e5e18d848dbadcea446dd667a106a2e606b4"
+  },
+  "directed": {
+    "tests": 307,
+    "pass": 307,
+    "fail": 0,
+    "durationMs": 2828.4428,
+    "log": ".cache/unlock-directed.log"
+  },
+  "build": {
+    "pass": true,
+    "seconds": 5.82,
+    "log": ".cache/unlock-build.log"
+  },
+  "webPackage": {
+    "pass": true,
+    "files": 578,
+    "bytes": 406701775,
+    "relativeLinks": 816,
+    "runtimeGLBs": 20,
+    "log": ".cache/unlock-package.log"
+  },
+  "native": {
+    "fixture": "tests/browser/unlock-audio.html",
+    "report": "docs/qa/audio-buses/unlock-native.json",
+    "sources": 3,
+    "milestones": [
+      "night2",
+      "day3",
+      "day5"
+    ],
+    "balanceDay1": 595,
+    "balanceDay5": 195,
+    "errors": [],
+    "finalVoices": 0,
+    "context": "closed",
+    "componentWidth": 390,
+    "muted": true,
+    "predecoded": true,
+    "world3D": false
+  },
+  "initialFailures": [
+    "Test setup omitted a seed required for initial hiring; corrected fixture without changing gameplay.",
+    "Native cooldown assertion exposed floating point 89.00000000000006 displaying as 90; corrected display rounding only and reran directed/native tests."
+  ],
+  "previousCommitCI": {
+    "commit": "aad0857acadbaa6023883b121c751bca1432dae3",
+    "run": 37187733123,
+    "status": "completed",
+    "conclusion": "success",
+    "tests": 1455,
+    "pass": 1455,
+    "fail": 0,
+    "durationMs": 349666.260561
+  },
+  "currentCommitCI": "Pending publication; previous commit evidence is not final-code full regression proof.",
+  "limits": [
+    "Muted predecoded component verification is not perceptual listening, cold-network timing, full-world interaction or physical-phone performance."
+  ]
+}

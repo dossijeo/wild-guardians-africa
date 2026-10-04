@@ -1,0 +1,204 @@
+{
+  "accepted": [
+    {
+      "id": "ui_unlock",
+      "day": 2,
+      "time": 300,
+      "elapsed": 900.0000000000484,
+      "bus": "ui",
+      "emitter": "ui:unlock",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48,
+      "rate": 1
+    },
+    {
+      "id": "ui_unlock",
+      "day": 3,
+      "time": 0,
+      "elapsed": 1215.4999999998345,
+      "bus": "ui",
+      "emitter": "ui:unlock",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48,
+      "rate": 1
+    },
+    {
+      "id": "ui_unlock",
+      "day": 5,
+      "time": 0,
+      "elapsed": 2415.499999998588,
+      "bus": "ui",
+      "emitter": "ui:unlock",
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48,
+      "rate": 1
+    }
+  ],
+  "snapshots": [
+    {
+      "tag": "day1",
+      "day": 1,
+      "time": 0,
+      "balance": 595,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": true,
+          "label": "Available from night 2",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": true,
+          "label": "Available from day 3",
+          "cooldown": ""
+        },
+        {
+          "id": "multiply",
+          "disabled": true,
+          "label": "Available from day 5",
+          "cooldown": ""
+        }
+      ]
+    },
+    {
+      "tag": "day5",
+      "day": 5,
+      "time": 0,
+      "balance": 195,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "multiply",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        }
+      ]
+    },
+    {
+      "tag": "casting",
+      "day": 5,
+      "time": 0,
+      "balance": 195,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": true,
+          "label": "Cooling down",
+          "cooldown": "90"
+        },
+        {
+          "id": "multiply",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        }
+      ]
+    },
+    {
+      "tag": "cooldown",
+      "day": 5,
+      "time": 0.9999999999999999,
+      "balance": 195,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": true,
+          "label": "Cooling down",
+          "cooldown": "89"
+        },
+        {
+          "id": "multiply",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        }
+      ]
+    },
+    {
+      "tag": "en",
+      "day": 5,
+      "time": 0.9999999999999999,
+      "balance": 195,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": true,
+          "label": "Cooling down",
+          "cooldown": "89"
+        },
+        {
+          "id": "multiply",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        }
+      ]
+    },
+    {
+      "tag": "es",
+      "day": 5,
+      "time": 0.9999999999999999,
+      "balance": 195,
+      "cards": [
+        {
+          "id": "shield",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        },
+        {
+          "id": "growth",
+          "disabled": true,
+          "label": "Recargando",
+          "cooldown": "89"
+        },
+        {
+          "id": "multiply",
+          "disabled": false,
+          "label": "",
+          "cooldown": ""
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "componentWidth": 390,
+  "context": "closed",
+  "finalVoices": 0
+}

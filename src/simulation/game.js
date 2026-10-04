@@ -6,7 +6,7 @@ import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,multiply,negate,transact,compare} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
-import {permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
+import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
@@ -245,8 +245,7 @@ export function previewSpell(s,kind,x,z,nav) {
 }
 function validateSpell(s,kind,x,z,nav) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
-  const unlocked=kind==='shield'?s.day>=2&&s.time>=300||s.day>2:kind==='growth'?s.day>=3:s.day>=5;
-  if(!unlocked)throw new Error('El Espíritu todavía no ha revelado esta magia');
+  if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
   if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
   if(!Number.isFinite(x)||!Number.isFinite(z)||!nav.terrainValid(x,z,.2))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);

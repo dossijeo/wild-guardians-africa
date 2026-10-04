@@ -1,3 +1,4 @@
+import {UNLOCK_SOUND_IDS} from '../src/audio/unlock-audio.js';
 import {GUARDIAN_SOUND_IDS} from '../src/audio/guardian-audio.js';
 import {WORKER_SOUND_IDS} from '../src/audio/worker-audio.js';
 import {FARM_CONTACT_IDS} from '../src/audio/farm-contact-audio.js';
@@ -32,7 +33,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   assert.equal(hash,item.sha256);assert.equal(hash,original.sha256);assert.equal(hash,route.sha256);assert.equal(data.length,item.bytes);
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
   const events=[...Object.keys(eventSound).filter(e=>eventSound[e]===item.id),...Object.keys(eventExtraSound).filter(e=>eventExtraSound[e]===item.id)];
-  if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[...events,...(FARM_CONTACT_IDS.includes(item.id)?['native-farm-contact']:[])]);assert.equal(item.loop,false);}
+  if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[...events,...(FARM_CONTACT_IDS.includes(item.id)?['native-farm-contact']:[]),...(UNLOCK_SOUND_IDS.includes(item.id)?['native-magic-unlock']:[])]);assert.equal(item.loop,false);}
   else if(Object.values(WALL_HIT_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['StructureHit:wall:'+Object.keys(WALL_HIT_SOUNDS).find(material=>WALL_HIT_SOUNDS[material]===item.id)]);assert.equal(item.loop,false);}
   else if(GUARDIAN_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-guardian-lifecycle']);assert.equal(item.loop,false);}
   else if(WORKER_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-worker-reaction']);assert.equal(item.loop,false);}

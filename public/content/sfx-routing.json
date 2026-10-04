@@ -1286,11 +1286,12 @@
       "id": "ui_unlock",
       "filename": "111_ui_unlock.mp3",
       "sha256": "4caf7733e081bdd68db69a7a0e05f211f5e31af5db802bbaf478a96d2acbb3f3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "PostgameStarted",
+        "native-magic-unlock"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Desbloqueo de magia o postgame."
     },
     {
