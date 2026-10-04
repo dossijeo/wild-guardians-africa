@@ -61,7 +61,7 @@ function* initialLocations(nav,payload,legacy=false) {
   for(let ring=0;ring<70;ring++)for(let angle=0,count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;angle<count;angle++) {
     yield;
     let x=Math.cos(angle/count*Math.PI*2)*ring*12+60,z=Math.sin(angle/count*Math.PI*2)*ring*12;
-    const canyon=!legacy&&originalField.canyon;
+    const canyon=!legacy&&originalField?.canyon;
     if(canyon){z=(ring*24+angle*12)-30;x=originalField.riverX(z);}
     const banks=canyon?canyonVillageLayout(payload,originalField,z):null;
     const layout=banks?.buildings??villageLayout(payload,x,z);
