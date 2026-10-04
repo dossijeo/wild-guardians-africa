@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Expiración física del Escudo</title>
 <style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;max-width:420px;padding:10px;background:#fff9edee}button{padding:8px;margin:3px}pre{max-height:190px;overflow:auto}</style>
 <header>Terreno y navegación originales. Centro y cultivo pagados. Noche 2 y posición inicial del animal controladas para inspeccionar la expiración; no se altera su radio, presupuesto, ruta ni duración del Escudo.<br>
-<button id="edge" disabled>Avanzar hasta golpear el borde</button><button id="resolve" disabled>Resolver animación del borde</button><button id="crop" disabled>Continuar hasta el cultivo</button><button id="reload" disabled>Guardar y recargar en memoria</button><div id="status">Preparando…</div><pre id="data"></pre></header>
+<button id="barrier" disabled>Mostrar barrera activa</button><button id="block" hidden disabled>Avanzar hasta un impacto bloqueado</button><button id="edge" disabled>Avanzar hasta golpear el borde</button><button id="resolve" disabled>Resolver animación del borde</button><button id="crop" disabled>Continuar hasta el cultivo</button><button id="reload" disabled>Guardar y recargar en memoria</button><div id="status">Preparando…</div><pre id="data"></pre></header>
 <canvas id="world" aria-label="Escudo y animal nativos sobre terreno original"></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
@@ -11,7 +11,8 @@ import {Navigation} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
-const species=new URLSearchParams(location.search).get('species')??'warthog';
+const params=new URLSearchParams(location.search),species=params.get('species')??'warthog',blocked=params.get('mode')==='blocked';
+document.querySelector('#block').hidden=!blocked;
 if(!['warthog','hyena','buffalo','lion','rhino'].includes(species))throw new Error('Especie de QA desconocida');
 const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
 let state=Game.newGame({seed:712,slotId:'shield-expiry-qa'});const nav=new Navigation(712,'sabana',pack.profile),site=await findInitialLocationAsync(nav,payload);
@@ -24,7 +25,7 @@ state.day=2;state.time=320;state.initialPreparation=false;state.tutorial.step='d
 spawnRaid(state,{group:[species]},nav);if(!state.raid)throw new Error('No hay entrada legal para el animal');
 const animal=state.raid.animals[0],radius=Game.spellRadius('shield')+animal.radius+.1;let start;
 for(let i=0;i<64&&!start;i++){
-  const angle=i*Math.PI/32,dx=Math.sin(angle),dz=Math.cos(angle),a={x:crop.x+dx*(radius+1.5*19.5),z:crop.z+dz*(radius+1.5*19.5)},b={x:crop.x+dx*radius,z:crop.z+dz*radius},exit={x:a.x+dx*3,z:a.z+dz*3};
+  const angle=i*Math.PI/32,dx=Math.sin(angle),dz=Math.cos(angle),a={x:crop.x+dx*(radius+1.5*(blocked?3:19.5)),z:crop.z+dz*(radius+1.5*(blocked?3:19.5))},b={x:crop.x+dx*radius,z:crop.z+dz*radius},exit={x:a.x+dx*3,z:a.z+dz*3};
   if(nav.walkable(a.x,a.z,animal.radius,null,false)&&nav.walkable(b.x,b.z,animal.radius,null,false)&&nav.walkable(exit.x,exit.z,animal.radius,null,false)&&nav.segmentClear(a,b,animal.radius,null,false)&&nav.segmentClear(a,exit,animal.radius,null,false))start={...a,exit};
 }
 if(!start)throw new Error('No existe corredor original directo para esta fixture; no se altera el terreno');
@@ -33,11 +34,18 @@ Game.cast(state,'qa-shield','shield',crop.x,crop.z,nav);Game.pause(state,'qa');
 const cropId=crop.id,animalId=animal.id;let busy=false;
 function status(){
   const a=state.raid?.animals.find(a=>a.id===animalId),p=state.plants.find(p=>p.id===cropId),rig=world.objects.get(animalId);
-  const data={species,elapsed:state.elapsed,shieldRemaining:state.spells[0]?.remaining??0,cooldown:state.cooldowns.shield,cropAlive:p.alive,animal:a&&{x:a.x,z:a.z,radius:a.radius,status:a.status,hits:a.hitsRemaining,clip:a.animation,attackId:a.attackId,attackRemaining:a.attackRemaining,distance:Math.hypot(a.x-p.x,a.z-p.z)},rigLoaded:!!rig?.children.length,misses:state.events.filter(e=>e.type==='AnimalLogicalMiss'),hits:state.events.filter(e=>e.type==='AnimalLogicalHit'),errors};
+  const data={species,elapsed:state.elapsed,shieldRemaining:state.spells[0]?.remaining??0,cooldown:state.cooldowns.shield,cropAlive:p.alive,cropHits:p.attackHits??0,controlledApproachSeconds:blocked?3:19.5,animal:a&&{x:a.x,z:a.z,radius:a.radius,status:a.status,hits:a.hitsRemaining,clip:a.animation,attackId:a.attackId,attackRemaining:a.attackRemaining,distance:Math.hypot(a.x-p.x,a.z-p.z)},rigLoaded:!!rig?.children.length,misses:state.events.filter(e=>e.type==='AnimalLogicalMiss'),hits:state.events.filter(e=>e.type==='AnimalLogicalHit'),errors};
   document.querySelector('#status').textContent=`${species} · ${state.elapsed.toFixed(2)} s · Escudo ${(data.shieldRemaining).toFixed(2)} s · cultivo ${p.alive?'vivo':'destruido'} · ${errors.length} errores`;document.querySelector('#data').textContent=JSON.stringify(data,null,2);
 }
 async function action(fn){busy=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);try{await fn();world.render(0);status();}catch(e){errors.push(e.message);status();}finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}}
 async function advance(until,max){Game.resume(state,'qa');try{for(let i=0;i<max&&!until()&&!state.result;i++){Game.tick(state,.05,nav);if(i%25===24){world.render(0);status();await new Promise(resolve=>setTimeout(resolve,0));}}}finally{Game.pause(state,'qa');}}
+document.querySelector('#barrier').onclick=()=>action(async()=>{Game.resume(state,'qa');try{Game.tick(state,1,nav);}finally{Game.pause(state,'qa');}});
+document.querySelector('#block').onclick=()=>action(async()=>{
+ await advance(()=>state.events.some(e=>e.type==='AnimalLogicalHit'&&e.presentation?.shield),500);
+ if(!state.events.some(e=>e.type==='AnimalLogicalHit'&&e.presentation?.shield))throw Error('No se confirmó un impacto protegido');
+ Game.resume(state,'qa');try{Game.tick(state,.1,nav);}finally{Game.pause(state,'qa');}
+ const p=state.plants.find(p=>p.id===cropId);if(!p.alive||(p.attackHits??0)!==0)throw Error('El impacto protegido dañó el cultivo');
+});
 document.querySelector('#edge').onclick=()=>action(()=>advance(()=>state.raid?.animals[0].status==='attacking',500));
 document.querySelector('#resolve').onclick=()=>action(()=>advance(()=>state.raid?.animals[0].status!=='attacking',200));
 document.querySelector('#crop').onclick=()=>action(()=>advance(()=>!state.plants.find(p=>p.id===cropId).alive,200));
