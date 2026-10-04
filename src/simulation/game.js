@@ -338,7 +338,25 @@ export function idleFarmAnchor(s,worker,center){
   if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
+function reserveAvailableTasks(s,nav){
+  if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
+    if(s.time>=profile(w).end)return false;
+    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
+  });
+}
 function updateWorkers(s,dt,nav) {
+  const newArrivals=[];
+  if(!s.raid&&s.time<300)for(const w of s.workers){
+    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
+    if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
+    w.status='idle';newArrivals.push(w);
+  }
+  // New contracts reserve from their actual village position before any idle
+  // motion. Returning raid survivors retain the existing arrival sequence.
+  if(newArrivals.length){
+    reserveAvailableTasks(s,nav);
+    for(const w of newArrivals)if(!w.taskId)w.status='arriving';
+  }
   for(const w of s.workers) {
     if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
     const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
@@ -404,10 +422,7 @@ function updateWorkers(s,dt,nav) {
       w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
     }
   }
-  if(!s.raid && s.time<300)reserveTasks(s,(w,t,target)=>{
-    if(s.time>=profile(w).end)return false;
-    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
-  });
+  reserveAvailableTasks(s,nav);
 }
 function closeNight(s) {
   s.completedNights++;s.time=0;s.day++;

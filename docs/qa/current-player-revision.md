@@ -8,7 +8,7 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Evitar avisos consecutivos de reserva por cada intento de planta/muralla | Publicado; falta recorrido visual |
 | Corregir SFX 103 repetido sin cierre real | Se ha corregido un contexto vacío; falta escucha y recorrido completo |
 | Avisos de eventos temporales, cerrables, fuera del lateral seguro | Publicado; pruebas de caducidad y cierre manual; falta prueba móvil |
-| Trabajador contratado va directamente a primera tarea | Pendiente |
+| Trabajador contratado va directamente a primera tarea | Implementado; 120 pruebas de rutas y tareas superadas; recorrido visual pendiente |
 | Magias directas sobre terreno/cultivos sin modal ni desactivación | Primera corrección local; revisar validación del terreno |
 | Multiplicar deja marcado el beneficio hasta la recogida posterior | Pendiente |
 | Murallas: línea física visible al arrastrar y límite según saldo menos contratación | Revisar integración real y móvil |
@@ -31,7 +31,7 @@ Cada edificio dispone de un apoyo local; el cauce conserva su altura natural. El
 
 Evidencia: `tests/canyon-village.test.js` comprueba cinco culturas y tres semillas, cauce, alturas, tránsito, colisiones sólidas, guardado/restauración y correspondencia entre geometría visible y hull. Los tests de terreno comparan también los seis biomas con la receta original para las plataformas anteriores.
 
-Pendiente: inspección visual renderizada del conjunto y recorrido en móvil. La lectura del navegador de pruebas sigue agotando el plazo antes de ejecutar la consulta; esto no acredita un fallo del juego ni permite certificar su aspecto visual.
+Pendiente: inspección visual renderizada del conjunto y recorrido en móvil. El acceso al navegador se ha recuperado y se ha comprobado con una captura del menú; la vista del cañón todavía requiere inspección específica.
 
 ## Jornales revisados
 
@@ -40,3 +40,7 @@ Pendiente: inspección visual renderizada del conjunto y recorrido en móvil. La
 Las expectativas monetarias de los tests se actualizan por la diferencia exacta de los jornales. Se conservan la exigencia de recorridos completos, la entrega física antes del cobro, el redondeo de reparaciones, la idempotencia y las comprobaciones de derrota. `tests/player-wages.test.js` comprueba precios explícitos 30/40, HUD, reserva exacta y conservación de una operación histórica de 100 al confirmar un contrato nuevo de 30.
 
 La estrategia histórica de una planta seguida de jornadas sin trabajadores comprueba el reloj/guardado; no constituye aceptación del balance solicitado de grandes plantaciones. La estrategia histórica de 16 parcelas con cuatro jornadas iniciales sin contratación tampoco sustituye la campaña intensiva responsable pendiente en esta revisión.
+
+## Primera tarea de la jornada
+
+Los contratos nuevos reservan la primera tarea FIFO alcanzable desde su posición real antes de iniciar el desplazamiento. Sin tareas disponibles conservan su aproximación al centro; quienes regresan de una incursión mantienen su vuelta deliberada. Las pruebas incluyen restauración de partida, desplazamiento continuo, riego, cajas y entrega física antes del cobro.
