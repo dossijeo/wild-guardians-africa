@@ -1,0 +1,9 @@
+# Cargar una partida mientras el documento está oculto
+
+La restauración eliminaba todas las pausas transitorias del mundo anterior, incluida `hidden`. Si el documento se había ocultado antes de asignar la nueva partida, el listener de visibilitychange no tenía estado que pausar. Una carga posterior podía borrar el motivo de pausa sin recibir otra transición de visibilidad. Esto es un defecto concreto del enlace de carga, no una reproducción de un teléfono físico.
+
+`resumeLoadedWorld` ahora recibe la visibilidad actual desde main. Elimina las interrupciones del mundo dispuesto y vuelve a añadir `hidden` cuando corresponde, sin duplicarla y conservando contratación y otras pausas lógicas. La carga en estado oculto también suspende AudioSystem. Al volver, el listener existente libera solo `hidden`, reinicia lastFrame con performance.now y solicita recuperar el audio.
+
+45/45 pruebas dirigidas pasan: restauración, reloj, pausas de tutorial, UI, ciclo de audio y Wake Lock. Una partida pagada con centro, semilla y trabajador se serializa y restaura en estado oculto; solicitar 600 segundos reales no altera ningún byte de su snapshot. Otra prueba conserva una incursión activa y un escudo lanzado legalmente: duración 20 y cooldown 90 no avanzan hasta volver. La contratación permanece bloqueante cuando se retira hidden. Build y paquete web pasan tras el cambio final de producción.
+
+En la sonda real del navegador integrado se abrió una segunda pestaña y se leyó la primera: siguió indicando document.hidden=false, visibilityState=visible y ningún visibilitychange. No se simula ni redefine document.hidden para aparentar una aceptación. QA-014 sigue parcial hasta observar una ocultación/restauración real suficientemente prolongada en el juego, con ausencia de avance offline y recuperación de audio/cámara/HUD. Estas regresiones acreditan la reparación de la restauración y su invariancia de dominio, no esa transición de navegador ni un dispositivo físico.
