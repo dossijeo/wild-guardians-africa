@@ -60,7 +60,7 @@ test('suspending during decode does not falsely mark an inaudible pack as playin
 test('twenty menu enter/exit cycles release all source and volume nodes',async()=>{
  const {audio,sources,gains}=fixture({json:async()=>({music:'menu'}),bytes:async()=>({})});
  for(let i=0;i<20;i++){await audio.menu();assert.equal(audio.active.length,1);audio.stop();assert.equal(audio.active.length,0);assert.equal(audio.voices.size,0);}
- assert.equal(sources.length,20);assert.ok(sources.every(s=>s.stopped&&s.closed));assert.ok(gains.every(g=>g.closed));
+ assert.equal(sources.length,20);assert.ok(sources.every(s=>s.stopped&&s.closed));const buses=Object.values(audio.sfxBuses);assert.equal(buses.length,3);assert.ok(buses.every(g=>!g.closed));assert.ok(gains.filter(g=>!buses.includes(g)).every(g=>g.closed));
 });
 
 

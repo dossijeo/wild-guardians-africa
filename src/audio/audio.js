@@ -3,13 +3,23 @@ import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'farm_seeds_drop',WaterSatisfied:'farm_watering_can',CropPicked:'farm_harvest_pick',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
-export const SFX_LIMITS=Object.freeze({total:20,perFamily:4});
+export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
 export const soundPriority=id=>['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
+export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
+export function eventAudioOptions(event,id,state,listener){
+  const bus=soundBus(id);if(bus!=='world')return {bus};
+  const emitter=event.workerId??(event.type.startsWith('Worker')?event.targetId:event.animalId??event.targetId);
+  let entity=event.presentation;
+  if(!entity&&state)for(const list of [state.workers,state.raid?.animals,state.structures,state.plants,state.crates]){entity=list?.find(e=>e.id===emitter);if(entity)break;}
+  const distance=entity&&listener?Math.hypot(entity.x-listener.x,entity.z-listener.z):0;
+  return {bus,emitter,gain:Number.isFinite(distance)?1/(1+(distance/24)**2):1};
+}
 export class AudioSystem {
   constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;}
   async unlock() {
     this.context??=new AudioContext();await this.context.resume();
     if(!this.sfxGain){this.sfxGain=this.context.createGain();this.sfxGain.connect(this.context.destination);this.musicGain=this.context.createGain();this.musicGain.connect(this.context.destination);}
+    if(!this.sfxBuses){this.sfxBuses={};for(const name of ['ambient','world','ui']){const node=this.context.createGain();node.gain.value=1;node.connect(this.sfxGain);this.sfxBuses[name]=node;}}
     this.volume();
   }
   volume(){if(this.sfxGain)this.sfxGain.gain.value=this.settings.sfx;if(this.musicGain)this.musicGain.gain.value=this.settings.music;}
@@ -34,17 +44,26 @@ export class AudioSystem {
     this.voices.delete(source);this.active=this.active.filter(s=>s!==source);source.disconnect();voice.volume.disconnect();
   }
   stopVoice(source){try{source.stop();}catch{}this.releaseVoice(source);}
-  startBuffer(buffer,{loop=false,music=false,gain=1,priority=1,family='generic',when,loopEnd,destination,offset=0,stopAt}={}){
+  startBuffer(buffer,{loop=false,music=false,gain=1,priority=1,family='generic',emitter,bus='world',when,loopEnd,destination,offset=0,stopAt}={}){
     if(!this.context||this.context.state!=='running')return null;
     if(!music){
-      const voices=[...this.voices].filter(([,v])=>!v.music),same=voices.filter(([,v])=>v.family===family);
-      const pool=same.length>=SFX_LIMITS.perFamily?same:voices.length>=SFX_LIMITS.total?voices:null;
-      if(pool){const candidate=pool.sort((a,b)=>a[1].priority-b[1].priority)[0];if(candidate[1].priority>=priority)return null;this.stopVoice(candidate[0]);}
+      // Plan admission after decode. Check every limit before stopping any voice:
+      // a rejected cue must not partially evict an unrelated sound.
+      let voices=[...this.voices].filter(([,v])=>!v.music);const evicted=[];
+      while(true){
+        const same=voices.filter(([,v])=>v.family===family),local=emitter==null?[]:voices.filter(([,v])=>v.emitter===emitter);
+        const pool=local.length>=SFX_LIMITS.perEmitter?local:same.length>=SFX_LIMITS.perFamily?same:voices.length>=SFX_LIMITS.total?voices:null;
+        if(!pool)break;
+        const candidate=pool.sort((a,b)=>a[1].priority-b[1].priority)[0];
+        if(candidate[1].priority>=priority)return null;
+        evicted.push(candidate[0]);voices=voices.filter(([source])=>source!==candidate[0]);
+      }
+      for(const source of evicted)this.stopVoice(source);
     }
     const source=this.context.createBufferSource(),volume=this.context.createGain();source.buffer=buffer;source.loop=loop;if(loopEnd!==undefined)source.loopEnd=loopEnd;
     // Simulation speed changes event cadence, never the sample clock or pitch.
-    source.playbackRate.value=1;volume.gain.value=gain;source.connect(volume);volume.connect(destination??(music?this.musicGain:this.sfxGain));
-    this.voices.set(source,{volume,music,priority,family});this.active.push(source);source.onended=()=>this.releaseVoice(source);
+    source.playbackRate.value=1;volume.gain.value=gain;source.connect(volume);volume.connect(destination??(music?this.musicGain:this.sfxBuses?.[bus]??this.sfxGain));
+    this.voices.set(source,{volume,music,priority,family,emitter,bus});this.active.push(source);source.onended=()=>this.releaseVoice(source);
     try{source.start(when,offset);if(stopAt!==undefined)source.stop(stopAt);}catch(error){this.stopVoice(source);throw error;}return source;
   }
   async play(url,options={}) {
@@ -86,11 +105,11 @@ export class AudioSystem {
     this.musicScene=gameplayMusicScene(state);
     if(this.context?.state==='running'){try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stop();this.musicError=error;}}
   }
-  async sound(id) {
-    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{priority:soundPriority(id),family:id});return null;
+  async sound(id,options={}) {
+    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:id});return null;
   }
-  process(events){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=eventSound[event.type];if(id)this.sound(id).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
+  process(events,{state,listener}={}){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=eventSound[event.type];if(id)this.sound(id,eventAudioOptions(event,id,state,listener)).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   remember(events){this.seen=new Set(events.map(event=>event.id));}
   stop(){this.transport?.dispose();this.transport=null;this.mixer=null;this.musicEvent=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();this.context?.close();}
+  suspend(){this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

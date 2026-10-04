@@ -283,7 +283,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 }
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
-    if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{targetId:target.id});}
+    if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);
@@ -291,7 +291,7 @@ function completeTask(s,w,t,target,nav) {
       if(spellAt(s,'multiply',target))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
       target.alive=false;target.harvestRequested=false;
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{targetId:target.id});
+      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
@@ -301,7 +301,7 @@ function completeTask(s,w,t,target,nav) {
         const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
         delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
         if(visual!==null)recordWallPresentation(target,visual,s.elapsed);nav.setState(s);
-        emit(s,'RepairApplied',{targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
+        emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
     }
@@ -338,7 +338,7 @@ function updateWorkers(s,dt,nav) {
       const delivered=walkTo(s,w,{...center,...centerServicePoint(center,s),id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}});
       crate.x=w.x;crate.z=w.z;
       if(delivered) {
-        transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{targetId:crate.id});
+        transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
         if(s.tutorial.step==='observe'||s.tutorial.step==='harvest')s.tutorial.step='done';
       }
       continue;

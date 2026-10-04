@@ -1,0 +1,565 @@
+{
+  "emitterAccepted": 2,
+  "emitter": {
+    "active": 2,
+    "sfx": 2,
+    "priorities": [
+      1,
+      1
+    ],
+    "rates": [
+      1,
+      1
+    ],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": [
+      {
+        "family": "task-0",
+        "emitter": "qa-worker",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "task-1",
+        "emitter": "qa-worker",
+        "bus": "world",
+        "gain": 1
+      }
+    ]
+  },
+  "familyAccepted": 4,
+  "family": {
+    "active": 4,
+    "sfx": 4,
+    "priorities": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "rates": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": [
+      {
+        "family": "farm_watering_can",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "farm_watering_can",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "farm_watering_can",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "farm_watering_can",
+        "bus": "world",
+        "gain": 1
+      }
+    ]
+  },
+  "totalAccepted": 20,
+  "total": {
+    "active": 20,
+    "sfx": 20,
+    "priorities": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "rates": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": [
+      {
+        "family": "qa-emitter-0",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-1",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-2",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-3",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-4",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-5",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-6",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-7",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-8",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-9",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-10",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-11",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-12",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-13",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-14",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-15",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-16",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-17",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-18",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-19",
+        "bus": "world",
+        "gain": 1
+      }
+    ]
+  },
+  "alertAccepted": true,
+  "withAlert": {
+    "active": 20,
+    "sfx": 20,
+    "priorities": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3
+    ],
+    "rates": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": [
+      {
+        "family": "qa-emitter-1",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-2",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-3",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-4",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-5",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-6",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-7",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-8",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-9",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-10",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-11",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-12",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-13",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-14",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-15",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-16",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-17",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-18",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-19",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "game_attack_alert",
+        "bus": "ui",
+        "gain": 1
+      }
+    ]
+  },
+  "victoryAccepted": true,
+  "withVictory": {
+    "active": 20,
+    "sfx": 20,
+    "priorities": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      4
+    ],
+    "rates": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": [
+      {
+        "family": "qa-emitter-2",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-3",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-4",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-5",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-6",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-7",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-8",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-9",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-10",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-11",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-12",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-13",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-14",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-15",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-16",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-17",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-18",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "qa-emitter-19",
+        "bus": "world",
+        "gain": 1
+      },
+      {
+        "family": "game_attack_alert",
+        "bus": "ui",
+        "gain": 1
+      },
+      {
+        "family": "game_victory",
+        "bus": "ui",
+        "gain": 1
+      }
+    ]
+  },
+  "stopped": {
+    "active": 0,
+    "sfx": 0,
+    "priorities": [],
+    "rates": [],
+    "context": "running",
+    "buses": [
+      "ambient",
+      "world",
+      "ui"
+    ],
+    "voices": []
+  },
+  "errors": []
+}

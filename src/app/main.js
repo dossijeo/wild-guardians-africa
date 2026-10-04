@@ -339,7 +339,7 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events);audio.updateMusic(state);updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
