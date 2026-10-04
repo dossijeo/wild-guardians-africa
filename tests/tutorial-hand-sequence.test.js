@@ -50,3 +50,22 @@ test('automatic message timeout preserves actionable guidance across reload, whi
  assert.deepEqual(s.pauses,[]);assert.deepEqual(manual.pauses,[]);
  for(const value of ['bad',['basic.work'],['basic.center','basic.center']]){const bad=structuredClone(s);bad.tutorial.guideAfterAuto=value;assert.throws(()=>serialize(bad),/Guía/);}
 });
+test('a new game repeats both HUD and world placement guidance after a previous tutorial was completed',()=>{
+ const seen=new Set(['basic.introduction','basic.center','basic.plant','basic.hiring','basic.work','basic.harvest','basic.complete']);
+ const profile={basicCompleted:true,read:()=>seen,record:id=>seen.add(id)};
+ const state=Game.newGame({slotId:'second-guided-game',seed:712});state.villages[0].center={x:10,z:0};
+ const controller=new TutorialController(state,profile);
+ assert.equal(controller.presentation().id,'basic.introduction');assert.equal(controller.presentation().canSkip,true);
+ controller.acknowledge();assert.equal(controller.presentation().id,'basic.center');
+ assert.equal(tutorialHudHandTarget(state,controller.presentation()),'[data-menu="build"]');
+ const center=tutorialHandTarget(state,nav,'center');assert.ok(center);
+ Game.placeStructure(state,'second-game-center',{x:center.position[0],z:center.position[2]},nav);controller.update();
+ assert.equal(controller.presentation().id,'basic.plant');
+ assert.equal(tutorialHudHandTarget(state,controller.presentation()),'[data-menu="grow"]');
+ const seed=tutorialHandTarget(state,nav,'plant');assert.ok(seed);
+ Game.plant(state,'second-game-seed','mijo',seed.position[0],seed.position[2],nav);controller.update();
+ assert.equal(tutorialHudHandTarget(state,controller.presentation()),null);assert.equal(tutorialHandTarget(state,nav,'plant'),null);
+ const skipped=Game.newGame({slotId:'second-skipped-game',seed:712}),skipController=new TutorialController(skipped,profile);
+ assert.equal(skipController.skipBasic(),true);assert.equal(tutorialHudHandTarget(skipped,skipController.presentation()),null);
+ assert.equal(tutorialHandTarget(skipped,nav,'center'),null);
+});
