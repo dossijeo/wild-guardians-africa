@@ -61,6 +61,8 @@ Los cultivos acumulan un golpe sin morir y se destruyen al segundo; el daño se 
 
 ## Petición adicional: cámara de incursión
 
-Pendiente: viaje suave hacia el primer animal cuando entra en la finca, una vez por incursión, interrumpible mediante control manual de la cámara.
+Implementado: viaje suave de 1,2 segundos hacia el primer animal cuando entra en la finca, una vez por incursión y siguiendo su posición durante el viaje. El desplazamiento conserva orientación y distancia y respeta la altura del terreno. Un gesto manual o Volver lo interrumpe sin reiniciarlo; menús y ocultación congelan el viaje. El foco de la incursión se guarda para no repetirlo tras restaurar.
 
 La cuota inicial de cultivos y el contador de destrucciones se guardan con la incursión. Pruebas con 1/2/5/10 cultivos confirman daño real, conservación de al menos una planta, gasto del presupuesto restante y restauración determinista. El límite solo corresponde a las primeras cinco presentaciones; las incursiones posteriores mantienen el peligro normal.
+
+Evidencia de cámara: 38 pruebas de recorrido, control manual, pausas, restauración y cámara en seis biomas. La prueba de navegador con WorldScene real en Sabana/Mapungubwe parte de una vista alejada y termina con el foco en las coordenadas de la bestia, rig cargado y sin errores. Captura: `docs/qa/raid-camera/sabana-arrival.png`. El recorrido completo con HUD móvil sigue pendiente.

@@ -1,0 +1,38 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Viaje de cámara a incursión</title>
+<style>body{margin:0;font:14px system-ui;background:#efe8d4}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9eded;padding:8px;max-width:80vw}pre{max-height:140px;overflow:auto;font-size:10px}</style>
+<header><strong>Viaje automático a la primera bestia que entra en la finca</strong><div id="status">Cargando mundo real…</div><pre id="data"></pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const query=new URLSearchParams(location.search),biome=query.get('biome')??'sabana',culture=query.get('culture')??'mapungubwe';
+const status=document.querySelector('#status'),data=document.querySelector('#data'),errors=[];
+function fail(e){errors.push(String(e.message??e));status.textContent='ERROR: '+errors.join(' · ');}
+addEventListener('error',e=>fail(e.error??e));addEventListener('unhandledrejection',e=>fail(e.reason));
+try{
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
+ const state=Game.newGame({seed:712,biome,culture,slotId:'camera-travel-qa'}),nav=new Navigation(712,biome,pack.profile);
+ const position=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],position);state.suppressed.push(...position.suppress);nav.setState(state);
+ const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('media');await world.load(state,nav,payload);
+ Game.resume(state,'intro');Game.placeStructure(state,'qa-center',position.center,nav);state.day=6;state.time=400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={done:true};state.nightPlan={done:true};
+ world.focus(state.structures[0]);world.render(0);await world.whenChunksReady();
+ spawnRaid(state,{group:['warthog']},nav);if(!state.raid)throw Error('No se pudo generar la incursión');
+ world.sync(0);await Promise.all([...world.assets.cache.values()]);
+ const center=state.structures[0];world.focus({x:center.x+100,z:center.z+100});const start=world.controls.target.toArray();
+ let previous=performance.now(),finished=false;
+ requestAnimationFrame(function frame(now){
+  try{
+   const dt=Math.min(.1,(now-previous)/1000);previous=now;
+   if(!finished)Game.advanceReal(state,dt,nav);world.render(dt);
+   const a=state.raid?.animals[0],trip=world.raidCamera.travel,focused=state.raid?.cameraFocusedAnimalId;
+   if(focused&&!trip&&!finished){finished=true;Game.pause(state,'qa');}
+   status.textContent=finished?'Viaje terminado: cámara centrada en la bestia':trip?'Cámara viajando hacia la bestia':'Esperando entrada en la finca';
+   data.textContent=JSON.stringify({biome,culture,start,target:world.controls.target.toArray(),focused,travel:trip?{age:trip.age,duration:trip.duration}:null,animal:a?{x:a.x,z:a.z,status:a.status,meshPresent:world.objects.has(a.id),rigLoaded:world.objects.get(a.id)?.children.length>0}:null,finished,errors},null,2);
+   requestAnimationFrame(frame);
+  }catch(e){fail(e);}
+ });
+}catch(e){fail(e);}
+</script></html>

@@ -48,3 +48,18 @@ export function focusTerrainCamera(camera,controls,field,point){
   const {pose,rawEye}=cameraPose(field,[point.x,0,point.z],field.canyon?0:.50,field.canyon?1.18:1.16,field.canyon?34:38);
   return applyPose(camera,controls,field,pose,rawEye);
 }
+
+export function beginTerrainCameraTravel(camera,controls,field,duration=1.2){
+  const damping=controls.enableDamping;controls.enableDamping=false;try{controls.update?.();}finally{controls.enableDamping=damping;}
+  protectTerrainCamera(camera,controls,field);
+  const previous=lastPose.get(camera),eye=previous?.rawEye??camera.position.toArray();
+  const offset=new THREE.Vector3().fromArray(eye).sub(controls.target),spherical=new THREE.Spherical().setFromVector3(offset);
+  return {start:[controls.target.x,controls.target.z],theta:spherical.theta,phi:spherical.phi,distance:spherical.radius,age:0,duration};
+}
+export function stepTerrainCameraTravel(camera,controls,field,travel,point,seconds){
+  travel.age=Math.min(travel.duration,travel.age+Math.max(0,seconds));
+  const t=travel.age/travel.duration,ease=t*t*(3-2*t);
+  const x=travel.start[0]+(point.x-travel.start[0])*ease,z=travel.start[1]+(point.z-travel.start[1])*ease;
+  const {pose,rawEye}=cameraPose(field,[x,0,z],travel.theta,travel.phi,travel.distance);
+  applyPose(camera,controls,field,pose,rawEye);return t>=1;
+}
