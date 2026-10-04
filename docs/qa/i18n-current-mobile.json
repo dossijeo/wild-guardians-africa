@@ -1,0 +1,188 @@
+{
+  "implementationCommit": "667d4bf",
+  "fixture": "tests/browser/mobile-first-day.html",
+  "language": "en",
+  "scope": "Actual native menu and selector clicks, HUD center/seed placement and automatic mandatory hiring; memory-isolated saves, muted audio, browser viewport rather than physical phone. Current evidence follows development catalog reload; the earlier interrupted run is excluded.",
+  "portraitTutorial": {
+    "actions": {
+      "bottom": 683.2750396728516,
+      "left": 284.8000183105469,
+      "right": 378.400016784668,
+      "top": 147.6750030517578
+    },
+    "bubble": {
+      "bottom": 832.0000152587891,
+      "left": 12,
+      "right": 378.3999938964844,
+      "top": 652.1375122070312
+    },
+    "bubbleFits": true,
+    "language": "en",
+    "text": "Tap Grow crops and choose a seed. Then touch the clear ground the hand points to near the centre. You pay for the seed when planting and a sprout appears. Growth begins when a worker completes sowing and the first watering. Plant what you can tend; keep coins for hiring.\n\n×",
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  "landscapeTutorial": {
+    "actions": {
+      "bottom": 322.9499969482422,
+      "left": 702.8875122070312,
+      "right": 832.0000152587891,
+      "top": 76
+    },
+    "bubble": {
+      "bottom": 388.85082244873047,
+      "left": 98.66828155517578,
+      "right": 674.9793167114258,
+      "top": 272.1869812011719
+    },
+    "bubbleFits": true,
+    "columnSafe": true,
+    "language": "en",
+    "text": "Hiring opens automatically when you finish planting. Adjust the four profiles to your available balance. Wages are charged once when you confirm. Workers are distributed among work centers and carry out tasks in order.\n\n×",
+    "viewport": [
+      844,
+      390
+    ]
+  },
+  "seedsInPriceOrder": [
+    "Millet5",
+    "Sorghum6",
+    "Maize8",
+    "Sweet potato10",
+    "Cassava12",
+    "Sunflower18",
+    "Cotton100",
+    "Banana150"
+  ],
+  "hiringLandscape": {
+    "bodyText": "Young man\n40\n/ day\nPace ×1.50\nHarvest +20 %\n10 h\n07:05–17:05\n−\n+\nYoung woman\n40\n/ day\nPace ×1.50\nHarvest base\n12 h · +20 %\n07:05–19:05\n−\n+\nOlder man\n30\n/ day\nPace ×1.00\nHarvest +20 %\n10 h\n07:05–17:05\n−\n+\nOlder woman\n30\n/ day\nPace ×1.00\nHarvest base\n12 h · +20 %\n07:05–19:05\n−\n+\nHow they work and what you pay\n\nYou hire for one day and pay on confirmation. This combination is remembered tomorrow, but you are never charged again without confirming.\n\nOlder workers earn 30 coins and younger workers earn 40. Younger workers work at ×1.50 speed. Men produce 20% more harvest per cycle. Women work 12 hours compared with 10 for men: 20% longer. Both sexes receive the same wage within each age group.\n\nWorkers handle their centre's tasks. Harvest income arrives when each crate is delivered.",
+    "clientHeight": 174,
+    "closeButtons": 0,
+    "panel": {
+      "bottom": 378.3999938964844,
+      "left": 20,
+      "right": 824,
+      "top": 12
+    },
+    "scrollHeight": 264,
+    "scrollTop": 90.4000015258789,
+    "viewport": [
+      844,
+      390
+    ]
+  },
+  "hiringScrollAfterUpdates": 90.4000015258789,
+  "hiringPortrait": {
+    "clientHeight": 548,
+    "confirmFits": true,
+    "panel": {
+      "bottom": 832,
+      "left": 20,
+      "right": 370.3999938964844,
+      "top": 12
+    },
+    "panelFits": true,
+    "scrollHeight": 711,
+    "scrollTop": 0,
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  "afterHiring": {
+    "day": 1,
+    "elapsed": 115.8350000000083,
+    "balance": {
+      "n": "655",
+      "d": "1"
+    },
+    "pauses": [],
+    "plants": [
+      {
+        "id": "plant-3",
+        "growth": 23.562599999999886,
+        "alive": true,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 195,
+          "y": 427,
+          "depth": 0.9945267498123629,
+          "inFrustum": true
+        }
+      }
+    ],
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "running": false,
+        "x": -34.529202190250146,
+        "z": 33.67051387468831,
+        "path": null,
+        "screen": {
+          "x": 194,
+          "y": 417,
+          "depth": 0.9946560964578174,
+          "inFrustum": true
+        }
+      }
+    ]
+  },
+  "afterExit": {
+    "cycles": [
+      {
+        "cycle": 1,
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "initialMoney": {
+          "n": "1500",
+          "d": "1"
+        },
+        "loads": 1,
+        "disposals": 1,
+        "renders": 22641,
+        "rendersAfterDispose": 0,
+        "disposed": true,
+        "contextLost": true,
+        "canvasConnected": false,
+        "canvasListenersLive": 0,
+        "ownListenersAborted": true,
+        "workerTerminated": true,
+        "streamDead": true,
+        "streamTimer": null,
+        "streamQueue": 0,
+        "geometryCount": 173,
+        "geometryDisposed": 89,
+        "materialCount": 102,
+        "materialDisposed": 593
+      }
+    ],
+    "audio": [
+      {
+        "voices": 0,
+        "active": 0,
+        "transport": false,
+        "context": "running"
+      }
+    ],
+    "worldCanvases": 0,
+    "menuFrames": 1,
+    "isolatedSlots": 1,
+    "errors": [],
+    "limits": "Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active."
+  },
+  "logs": []
+}
