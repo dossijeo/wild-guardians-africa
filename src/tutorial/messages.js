@@ -19,3 +19,4 @@ export const TUTORIAL_MESSAGES={
   'world.expansion':{gesture:'curious',text:'La tierra liberada permite fundar otros poblados. Elige una cultura y revisa la ubicación completa antes de confirmar. Conservas saldo, construcciones y cultivos; el nuevo poblado participa en la distribución de trabajadores a partir del siguiente amanecer.'}
 };
 export const TUTORIAL_IDS=Object.keys(TUTORIAL_MESSAGES);
+export const DEFENSES_FOLLOWUP={gesture:'warning',text:'Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.'};

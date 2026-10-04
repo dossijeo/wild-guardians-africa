@@ -1,7 +1,7 @@
 import {pause,resume,emit} from '../simulation/game.js';
 import {operational} from '../simulation/rules.js';
 import {isMature} from '../simulation/crops.js';
-import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS} from './messages.js';
+import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLOWUP} from './messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function actionStep(s){
@@ -36,7 +36,11 @@ export class TutorialController {
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
     if(!s.raid){t.pending=t.pending.filter(id=>id!=='mechanic.first-raid');if(t.reading==='mechanic.first-raid')t.reading=null;}
-    enqueue('mechanic.defenses',s.day>1||s.time>=240);
+    if(s.postgame||s.result==='victory'){
+      t.pending=t.pending.filter(id=>id!=='mechanic.defenses');
+      if(t.reading==='mechanic.defenses')t.reading=null;
+    }
+    enqueue('mechanic.defenses',!s.postgame&&s.result!=='victory'&&(s.day>1||s.time>=240));
     enqueue('mechanic.first-raid',!!s.raid);
     enqueue('magic.shield',!!s.raid);
     enqueue('magic.growth',s.day>=3);
@@ -103,7 +107,10 @@ export class TutorialController {
   currentPresentation(){
     const s=this.state,t=s.tutorial;
     if(s.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
-    if(t.reading){const id=t.reading;return {id,...TUTORIAL_MESSAGES[id],blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};}
+    if(t.reading){
+      const id=t.reading,afterRaid=s.day>1||!!s.raid||!!(s.nightPlan?.done&&s.nightPlan.group?.length);
+      return {id,...TUTORIAL_MESSAGES[id],...(id==='mechanic.defenses'&&afterRaid?{...DEFENSES_FOLLOWUP,variant:'after-raid'}:{}),blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};
+    }
     if(s.result==='victory')return {id:'campaign.liberation',...TUTORIAL_MESSAGES['campaign.liberation'],blocking:false,result:true};
     if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'No quedan recursos suficientes para continuar.',blocking:false,result:true};
     if(s.day===1&&!t.basicSkipped&&t.step!=='done'){
