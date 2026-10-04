@@ -1,0 +1,52 @@
+name: Build Windows desktop
+
+on:
+  push:
+    branches: [main, codex/tauri-windows-itch-ci]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - run: npm ci
+      - run: npm run desktop:build
+      - name: Check Windows executable and installer
+        shell: pwsh
+        run: |
+          $binary = Get-Item -LiteralPath src-tauri/target/release/wild-guardians-africa.exe
+          $installer = Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe
+          if ($binary.Length -lt 1MB -or $installer.Count -ne 1) { throw 'Missing Windows deliverables' }
+          "Windows executable: $($binary.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+          "NSIS installer: $($installer.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v7
+        with:
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        with:
+          path: src-tauri/target/release/wild-guardians-africa.exe
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-cargo-lock
+          path: src-tauri/Cargo.lock
+          retention-days: 7

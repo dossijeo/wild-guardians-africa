@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Wild Guardians Africa",
+  "version": "0.1.0",
+  "identifier": "com.wildguardians.africa",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://127.0.0.1:5173",
+    "beforeBuildCommand": "npm run build && npm run test:web-package",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [{"title": "Wild Guardians Africa", "width": 1280, "height": 720, "minWidth": 800, "minHeight": 480}],
+    "security": {"csp": null}
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "category": "Game",
+    "shortDescription": "Build a thriving farm and survive 100 nights",
+    "icon": ["icons/icon.ico"],
+    "windows": {"webviewInstallMode": {"type": "downloadBootstrapper", "silent": true}}
+  }
+}
