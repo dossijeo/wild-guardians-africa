@@ -10,7 +10,7 @@ export function villageCost(ordinal) {
 export const operational = c => c.kind==='center' && c.status==='intact';
 export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
 export function permission(state,action) {
-  if(state.result || state.pauses.length) return false;
+  if(state.result || state.pauses.some(reason=>reason!=='tutorial-action')) return false;
   const hasCenter=state.structures.some(operational);
   const peaceful=state.time<300 && !state.raid;
   if(action==='camera')return true;

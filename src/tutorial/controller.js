@@ -22,15 +22,15 @@ export class TutorialController {
     if(!BASIC_STEPS.includes(t.step))t.step='intro';
     if(!known.has(t.reading))t.reading=null;
     t.basicSkipped=t.basicSkipped===true;
-    resume(state,reason);resume(state,'intro');
+    resume(state,reason);resume(state,'intro');resume(state,'tutorial-action');
     this.update();
   }
   seen(id,globalSeen){return this.state.tutorial.seen.includes(id)||globalSeen.has(id);}
   update(){
     const s=this.state,t=s.tutorial,globalSeen=this.profile.read();
     resume(s,reason);resume(s,'intro');
-    if(s.result==='defeat'){t.reading=null;resume(s,reason);return;}
-    if(t.basicSkipped){t.step='done';resume(s,'intro');}
+    if(s.result==='defeat'){t.reading=null;resume(s,reason);resume(s,'tutorial-action');return;}
+    if(t.basicSkipped){t.step='done';resume(s,'intro');resume(s,'tutorial-action');}
     else if(s.day===1&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
@@ -91,6 +91,7 @@ export class TutorialController {
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
     t.guideAfterAuto=(t.guideAfterAuto??[]).filter(id=>id!==message.id);
     if(automatic&&['basic.center','basic.plant'].includes(message.id))t.guideAfterAuto.push(message.id);
+    if(!automatic)resume(this.state,'tutorial-action');
     return true;
   }
   presentation(){

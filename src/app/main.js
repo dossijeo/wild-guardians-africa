@@ -1,3 +1,4 @@
+import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
@@ -276,12 +277,18 @@ function setTutorialInteraction(blocking){
     if(tutorialFocus?.isConnected&&!tutorialFocus.closest('#narrator'))tutorialFocus.focus({preventScroll:true});tutorialFocus=null;
   }
 }
+function refreshTutorialGuidance(){
+  const warning=performance.now()<budgetWarningUntil,message=tutorial?.presentation();
+  const guideAllowed=!surfaces.active&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
+  hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind):null);
+  const guidedStep=message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
+  world.tutorialToolKind=tool?.kind??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
+  syncTutorialActionPause(state,{hudTarget:!hudHand.image.hidden,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
+}
 function narrator() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase));
   tutorial?.update();const warning=performance.now()<budgetWarningUntil;const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
-  const guideAllowed=!surfaces.active&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
-  hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind):null);
-  world.tutorialToolKind=tool?.kind??null;world.tutorialHandsEnabled=guideAllowed&&(message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step));
+  refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return;}
   const advance=message.reading?()=>safe(()=>{tutorial.acknowledge();save();}):null;
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss();save();}),
@@ -337,7 +344,7 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
