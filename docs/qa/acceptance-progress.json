@@ -12,9 +12,10 @@
       "audit_status": "partial",
       "evidence": [
         "docs/qa-acceptance-start.md",
-        "docs/qa-acceptance-selector.md"
+        "docs/qa-acceptance-selector.md",
+        "docs/qa/production-combinations/README.md"
       ],
-      "notes": "All 30 combinations exercised in actual native selector: correct biome/culture, checked radio, enabled matching Start, exactly 5 cultures. Desert/Ethiopian choices retained after back and reopening. World entry observed for Sabana/Mapungubwe and Desert/Ethiopian. Remaining: actual world entry in other 28 combinations."
+      "notes": "All 30 combinations exercised in actual native selector: correct biome/culture, checked radio, enabled matching Start, exactly 5 cultures. Desert/Ethiopian choices retained after back and reopening. World entry observed for Sabana/Mapungubwe and Desert/Ethiopian. Remaining: actual world entry in other 28 combinations. Five additional actual production entries now verified for Manglares with all five cultures using native menu/two-step selector, full WorldScene/HUD/tutorial, 1000 starting coins and native pause/save/exit. All five render and cleanly dispose; zero global errors. Evidence: docs/qa/production-combinations/README.md. Total 7/30; remaining 23 actual world entries."
     },
     {
       "id": "QA-002",
