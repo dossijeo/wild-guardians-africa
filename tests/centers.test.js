@@ -47,7 +47,18 @@ for(const building of catalogue)test(`${building.culture}: native GLB scale, rot
  const repair=repairRoute({x:0,z:0},center,nav);assert.ok(repair);assert.ok(footprintDistance(shape.footprint,repair.destination.x,repair.destination.z)>=.28);
  const site=centerServicePoint(center,state,5);Game.plant(state,'seed','mijo',site.x,site.z,nav);
  const before=serialize(state);assert.throws(()=>Game.placeStructure(state,'over-crop',{x:site.x,z:site.z},nav),/cultivo/);assert.equal(serialize(state),before);
- const face=centerServicePoint(center,state,0);const wallBefore=serialize(state);assert.throws(()=>Game.placeStructure(state,'over-center',{kind:'wall',material:'empalizada',x:face.x+.8*Math.cos(center.yaw),z:face.z-.8*Math.sin(center.yaw),yaw:center.yaw},nav));assert.equal(serialize(state),wallBefore);
+ // Boundary-crossing walls are legal; wholly interior pieces are skipped
+ // silently. Exercise both on a separate paid snapshot so delivery below
+ // still checks the original building's physical service route and economy.
+ const face=centerServicePoint(center,state,0),walls=deserialize(serialize(state)),wallNav=flat();wallNav.setState(walls);
+ const crossing={kind:'wall',material:'empalizada',x:face.x+.8*Math.cos(center.yaw),z:face.z-.8*Math.sin(center.yaw),yaw:center.yaw};
+ assert.equal(wallNav.wallPlacement(crossing).valid,true);
+ Game.placeStructure(walls,'over-center',crossing,wallNav);
+ assert.equal(walls.structures.length,state.structures.length+1);
+ assert.equal(Number(walls.ledger.balance.n),Number(state.ledger.balance.n)-walls.structures.at(-1).cost);
+ const inside={kind:'wall',material:'empalizada',x:center.x,z:center.z,yaw:center.yaw};
+ assert.equal(wallNav.wallPlacement(inside).valid,false);
+ const wallBefore=serialize(walls);assert.equal(Game.placeStructure(walls,'inside-center',inside,wallNav),false);assert.equal(serialize(walls),wallBefore);
  Game.openInitialHiring(state);Game.hire(state,'hire',{olderMale:1});
  for(let i=0;i<5800&&!state.crates.some(c=>c.delivered);i++){
   if(isMature(state.plants[0])&&!state.plants[0].harvestRequested)Game.harvest(state,'harvest',state.plants[0].id);
