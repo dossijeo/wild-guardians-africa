@@ -14,6 +14,7 @@ test('failed staging, backup or primary writes never announce success or lose th
   const errors=[];failing=true;assert.equal(saveGame(s,repo,{confirm:true,onError:e=>errors.push(e)}),false);
   assert.deepEqual(errors,['No se pudo guardar la partida: Quota exceeded']);assert.equal(s.messages.length,0);
   assert.equal(repo.load(s.slotId).day,1);assert.equal(s.day,2);
+  assert.equal(storage.getItem(repo.key(s.slotId)+':pending'),null,'failed writes must release their unused staging copy');
   failing=false;assert.equal(saveGame(s,repo,{confirm:true,onError:e=>errors.push(e)}),true);
   assert.equal(repo.load(s.slotId).day,2);assert.equal(s.messages.filter(m=>m.text==='Partida guardada.').length,1);
  }

@@ -74,17 +74,22 @@ export class SaveRepository {
   key(slotId) {return `wild-guardians:slot:${slotId}`;}
   save(state) {
     const text=serialize(state),key=this.key(state.slotId);
-    // Verify staging before replacing the last known valid snapshot.
-    this.storage.setItem(key+':pending',text);
-    slotSnapshot(this.storage.getItem(key+':pending'),state.slotId);
-    const previous=this.storage.getItem(key);
-    if(previous) {
-      let valid=false;
-      try {slotSnapshot(previous,state.slotId);valid=true;}catch { /* Keep existing backup. */ }
-      if(valid)this.storage.setItem(key+':backup',previous);
+    try {
+      // Verify staging before replacing the last known valid snapshot.
+      this.storage.setItem(key+':pending',text);
+      slotSnapshot(this.storage.getItem(key+':pending'),state.slotId);
+      const previous=this.storage.getItem(key);
+      if(previous) {
+        let valid=false;
+        try {slotSnapshot(previous,state.slotId);valid=true;}catch { /* Keep existing backup. */ }
+        if(valid)this.storage.setItem(key+':backup',previous);
+      }
+      this.storage.setItem(key,text);
+    } finally {
+      // A failed write is not a recoverable save; load never uses staging.
+      // Release its space even when quota prevents backup/primary writes.
+      this.storage.removeItem(key+':pending');
     }
-    this.storage.setItem(key,text);
-    this.storage.removeItem(key+':pending');
   }
   load(slotId) {
     const key=this.key(slotId);

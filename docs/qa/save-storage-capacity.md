@@ -1,0 +1,11 @@
+# Capacidad nativa y limpieza de guardados fallidos
+
+`tests/browser/save-storage-capacity.html` utiliza el SaveRepository de producción y localStorage real del navegador integrado en `http://127.0.0.1:5181`. Cada ranura QA contiene una copia del snapshot legal de diez noches de Gran cañón/Mapungubwe, cambiando únicamente slotId. Se guarda dos veces para incluir la copia de recuperación y se verifica que la partida sigue siendo jugable. No se altera economía, crecimiento, daño ni RNG.
+
+El snapshot original ocupa 374555 caracteres; cada identidad QA lo lleva a 374606. En este origen, seis ranuras se guardan y recuperan correctamente. La primera escritura de la séptima alcanza la cuota nativa y falla al reemplazar la copia principal. Antes de la corrección deja `pending:true`, aunque no hay primary ni backup de esa nueva ranura. Esa copia temporal no se usa en load y continúa consumiendo espacio tras el fallo.
+
+SaveRepository ahora retira pending en finally, tanto al terminar como al fallar staging, validación, backup o primary. Las excepciones siguen llegando a saveGame: un guardado fallido informa del error y no anuncia éxito. Se conserva el último guardado jugable y su recuperación. No se elimina ninguna otra ranura para liberar espacio.
+
+La prueba real repetida sigue alcanzando la cuota al crear la séptima ranura, pero registra `pending:false`, seis ranuras anteriores jugables y cero claves QA tras la limpieza final. El límite depende del navegador y del espacio ocupado en el origen; seis no es un límite impuesto por el juego. El plan admite tantas ranuras como permita el almacenamiento. Esta comprobación no acredita todavía que el snapshot final de una plantación intensiva de cien noches quepa en localStorage: habrá que medirlo sobre el resultado real de las campañas activas.
+
+La regresión de staging/backup/primary fallaba antes del cambio por encontrar la copia temporal abandonada y pasa después. Pasan 21 pruebas dirigidas de guardado, identidad de ranura, autosave y persistencia de multiplicación. Evidencia del navegador: `save-storage-capacity/before.json`, `after.json` y las capturas correspondientes. Solo se crearon/eliminaron las identidades temporales propias de este fixture; no se modificaron partidas del jugador.

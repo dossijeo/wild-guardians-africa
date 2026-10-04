@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Native save storage capacity</title>
+<style>body{font:16px system-ui;background:#172c26;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
+<h1>Native save storage capacity</h1><p>Uses copies of the audited ten-night canyon snapshot. Only temporary QA slot keys are written and removed.</p>
+<button id="run">Check native save capacity</button><p id="summary">Ready</p><details><summary>Full diagnostic</summary><pre id="result">Ready</pre></details>
+<script type="module">
+import {SaveRepository,deserialize,serialize} from '../../src/persistence/snapshots.js';
+const button=document.querySelector('#run'),out=document.querySelector('#result');
+button.onclick=async()=>{
+ button.disabled=true;
+ const prefix='qa-storage-capacity-'+crypto.randomUUID(),repo=new SaveRepository(localStorage),slots=[];
+ const report={origin:location.origin,status:'running',scope:'Native localStorage and production SaveRepository; clones of a legal ten-night state differ only in slot identity. No game balances, growth or damage overrides.',attempts:[]};
+ try{
+  const response=await fetch('../../docs/qa/intensive-canyon-10/state.json');if(!response.ok)throw Error('Audited snapshot unavailable');
+  const original=await response.text();report.originalSnapshotCharacters=original.length;
+  for(let index=0;index<12;index++){
+   const state=deserialize(original);state.slotId=prefix+'-'+index;slots.push(state.slotId);
+   const row={index,snapshotCharacters:serialize(state).length,savesCompleted:0};report.attempts.push(row);
+   try{
+    repo.save(state);row.savesCompleted++;
+    repo.save(state);row.savesCompleted++;
+    row.roundTrip=serialize(repo.load(state.slotId))===serialize(state);
+    if(!row.roundTrip)throw Error('Saved state differs');
+   }catch(error){row.error={name:error.name,message:error.message};const key=repo.key(state.slotId);row.partialKeys={primary:localStorage.getItem(key)!==null,backup:localStorage.getItem(key+':backup')!==null,pending:localStorage.getItem(key+':pending')!==null};report.status=error.name==='QuotaExceededError'?'quota-reproduced':'failed';break;}
+  }
+  if(report.status==='running')report.status='twelve-slots-saved';
+  report.previousPlayableSlots=report.attempts.filter(row=>row.savesCompleted===2).every(row=>repo.load(prefix+'-'+row.index).day===11);
+ }catch(error){report.status='failed';report.error={name:error.name,message:error.message};}
+ finally{
+  for(const slot of slots)repo.delete(slot);
+  report.temporaryKeysRemaining=Object.keys(localStorage).filter(key=>key.startsWith('wild-guardians:slot:'+prefix)).length;
+  const failed=report.attempts.find(row=>row.error);
+  document.querySelector('#summary').textContent=`${report.attempts.filter(row=>row.savesCompleted===2).length} saved slots remain playable: ${report.previousPlayableSlots}. Failed staging copy remains: ${failed?.partialKeys?.pending??'not tested'}. Temporary QA keys after cleanup: ${report.temporaryKeysRemaining}.`;
+  out.textContent=JSON.stringify(report,null,2);button.disabled=false;
+ }
+};
+</script></html>
