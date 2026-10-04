@@ -381,10 +381,8 @@ class TerrainField{
  naturalHeight(x,z){
   if(this.desert)return desertHeight(this,x,z);
   if(this.canyon)return canyonHeight(this,x,z);
-  const base=this.raw(x,z);let h=this.riverBase(x,z);
-  if(this.wetland){
-   return this.riverLevel;
-  }
+  if(this.wetland)return this.riverLevel;
+  let h=this.riverBase(x,z);
   for(const p of this.nearbyPonds(x,z)){
    const d=this.pondMetric(x,z,p);
    if(d<1.8){

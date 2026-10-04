@@ -1,0 +1,390 @@
+{
+  "date": "2026-10-04",
+  "baselineRevision": "a5f7e72",
+  "change": "Remove unused raw-height evaluation from naturalHeight. Return constant native mangrove height before evaluating riverBase. Preserve river, pond and biome recipes.",
+  "scope": "Node domain/CPU checks; no browser/GPU/audio/mobile acceptance. Integrated load uses the existing warm-navigation stress diagnostic. Direct probe loop: each biome, seed 712, relief 1, river true; z and x -100 inclusive to 100 exclusive; field.height(x*0.5,z*0.5), 40000 probes. Wrap raw() only to count calls; report sum and elapsed loop time. Baseline loader replaces only terrain.js. Three sequential alternating pairs.",
+  "tests": {
+    "targetedPassed": 17,
+    "nativeLabComparison": "exact terrain heights, water, scatter and masks across six biomes with saved village platform",
+    "build": "pass",
+    "webPackage": "pass"
+  },
+  "conclusion": "Duplicate raw evaluations removed; direct height outputs retain their sums and full native comparisons pass. Integrated serialized trajectories unchanged. No demonstrated reduction in maximum integrated tick time; do not claim FPS improvement.",
+  "integratedRuns": [
+    {
+      "variant": "reference",
+      "run": 1,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 322.5605999999998,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 373.0707000000002,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 304.80009999999993,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 358.13620000000014,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 349.99260000000004,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 363.80520000000024,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d"
+    }
+  ],
+  "directHeightRuns": [
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 60.94969999999999,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 50.686499999999995,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 28.34560000000002,
+      "rawCalls": 80000,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 44.2963,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 25.51120000000003,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "reference",
+      "run": 1,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 40.04990000000004,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 81.1907,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 49.835200000000015,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 24.902900000000017,
+      "rawCalls": 80000,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 44.60970000000003,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 22.121100000000013,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 35.548400000000015,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 71.40140000000001,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 73.2502,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 31.79310000000001,
+      "rawCalls": 80000,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 37.78340000000003,
+      "rawCalls": 80009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 20.88760000000002,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 35.696000000000026,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 61.2068,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 46.7722,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 4.982599999999991,
+      "rawCalls": 0,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 38.93299999999999,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 21.45920000000001,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 34.81139999999999,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 70.47479999999999,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 49.90599999999999,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 4.488699999999994,
+      "rawCalls": 0,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 38.4015,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 24.18599999999998,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 29.951300000000032,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "savanna",
+      "probes": 40000,
+      "ms": 53.137600000000006,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "grand_river",
+      "probes": 40000,
+      "ms": 53.82759999999999,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "mangrove",
+      "probes": 40000,
+      "ms": 4.154800000000023,
+      "rawCalls": 0,
+      "sum": 132800.0000001362
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "volcanoes",
+      "probes": 40000,
+      "ms": 60.14690000000002,
+      "rawCalls": 40009,
+      "sum": 208096.54779140642
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "canyons",
+      "probes": 40000,
+      "ms": 26.958699999999993,
+      "rawCalls": 0,
+      "sum": 1036218.0725487057
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "biome": "desert",
+      "probes": 40000,
+      "ms": 33.891399999999976,
+      "rawCalls": 0,
+      "sum": 467474.32546351757
+    }
+  ],
+  "sourceSha256": "9f9831c14c44d65ab09b57583f9560b0d7f3bd06d387a8175bb3cdf10da2f942"
+}
