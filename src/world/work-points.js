@@ -24,11 +24,20 @@ export function repairRoute(worker,target,nav){
 
 // Keep the worker body outside the crop interaction envelope. Try the near
 // side first; blocked terrain/props/buildings use another physical approach.
+export function canWaterFrom(worker,plant,nav){
+  const reach=(plant.species==='platano'?.65:.45)+(worker.radius??.28)+.22;
+  if(Math.hypot(worker.x-plant.x,worker.z-plant.z)>reach)return false;
+  if(!nav.field?.surface||!nav.workerSurface)return true;
+  // A close point on the canyon floor is not a watering point for a crop on
+  // the plateau above it. River crossing permission does not extend the spout.
+  return Math.abs(nav.workerSurface(worker.x,worker.z)-nav.field.surface(plant.x,plant.z))<=.5;
+}
 export function wateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
   const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
   for(const [index,offset] of [0,1,-1,2,-2,3,-3,4].entries()){
     const yaw=angle+offset*Math.PI/4,destination={x:plant.x+Math.sin(yaw)*standOff,z:plant.z+Math.cos(yaw)*standOff,id:`water-point-${plant.id}-${index}`};
+    if(!canWaterFrom({...destination,radius},plant,nav))continue;
     if(nav.walkable?.(destination.x,destination.z,radius,null,true)===false)continue;
     const path=nav.path(worker,destination,radius,null,true);
     if(path)return {destination,path};

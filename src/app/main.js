@@ -348,7 +348,7 @@ document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='m
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{screenWakeLock.dispose();if(state)save();});
 function updateRaidLoading(){
-  if(world.raidReady()){raidLoading?.remove();raidLoading=null;return;}
+  if(world.actorsReady()){raidLoading?.remove();raidLoading=null;return;}
   if(raidLoading)return;
   raidLoading=document.createElement('div');raidLoading.id='raid-loading';raidLoading.setAttribute('role','status');raidLoading.textContent='Cargando…';
   raidLoading.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:25;background:#17261eee;color:white;padding:16px;border-radius:12px;pointer-events:none';
@@ -358,7 +358,7 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.raidReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }

@@ -1,0 +1,9 @@
+# Riego a distinta altura en Gran cañón
+
+El jugador informó de brotes en una meseta aparentemente inaccesible que crecían sin riego visible. La inspección confirma que advancePlant exige el primer riego y que los eventos favorables tampoco pueden saltárselo. No se ha reproducido su partida concreta ni se da por probado que todos esos cultivos fueran inaccesibles.
+
+Sí faltaba una guarda física en wateringRoute y al terminar una tarea inicial/de riego: encontrar una ruta hasta un punto cercano en X/Z no bastaba para acreditar que el trabajador podía regar el terreno del cultivo. canWaterFrom exige alcance horizontal y una diferencia de altura de suelo de hasta 0,5 m. La comprobación se hace al buscar un punto de riego y al completar la acción, sin recorrer el terreno por fotograma. Si la acción no puede completarse físicamente, conserva la tarea y el riego pendiente. La posibilidad de plantar en una meseta permanece.
+
+La guarda de carga de la incursión se extiende también a trabajadores que todavía no tengan su rig, para evitar que un trabajador recién contratado ejecute trabajo invisible durante la descarga del GLB. Los trabajadores que ya están en casa no bloquean el reloj. Esta comprobación de pertenencia al mapa de rigs no calcula geometrías por fotograma ni modifica las pausas guardadas.
+
+Pruebas en tests/watering-approach.test.js: desnivel controlado de 12 m, tarea en curso guardada y recargada, aproximaciones de los cuatro perfiles y primer riego pagado; caso adicional con el generador real de Gran cañón / Mapungubwe, semilla 712, centro, brote de mijo en meseta y mujer joven pagados. El punto permite plantar, wateringRoute no encuentra acceso, y tras simular la jornada mantiene crecimiento cero y primer riego pendiente. No se modifica dinero, crecimiento ni tolerancia para hacer pasar ese caso; se desactivan los planes de incursión para aislar el acceso a la tarea. Los trabajadores mantienen su permiso para cruzar el agua del cañón.

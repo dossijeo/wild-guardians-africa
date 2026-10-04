@@ -15,7 +15,7 @@ import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
-import {repairRoute,wateringRoute} from '../world/work-points.js';
+import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
 
@@ -329,6 +329,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 }
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
+    if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;return;}
     if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
     if(isMature(target)&&target.harvestRequested) {

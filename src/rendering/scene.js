@@ -201,6 +201,7 @@ export class WorldScene {
     }));
   }
   raidReady(){return (this.state?.raid?.animals??[]).every(a=>a.status==='gone'||this.mixers.has(a.id));}
+  actorsReady(){return this.raidReady()&&(this.state?.workers??[]).every(w=>w.status==='home'||this.mixers.has(w.id));}
   requestActor(entity,type,root){
     if(root.userData.actorLoading||performance.now()<(root.userData.actorRetryAt??0))return;
     root.userData.actorLoading=true;

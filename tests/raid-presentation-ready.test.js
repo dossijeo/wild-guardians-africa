@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {Assets} from '../src/rendering/assets.js';
+test('a newly hired worker must have a rig before simulation advances its tasks',()=>{const world=Object.create(WorldScene.prototype);world.mixers=new Map();world.state={workers:[{id:'w',status:'walking'},{id:'retired',status:'home'}]};assert.equal(world.actorsReady(),false);world.mixers.set('w',{});assert.equal(world.actorsReady(),true);world.state.workers[0].status='home';world.mixers.clear();assert.equal(world.actorsReady(),true);});
 
 
 test('cold raid models hold simulation until the actor is attached, even when first loaded offscreen',async()=>{
