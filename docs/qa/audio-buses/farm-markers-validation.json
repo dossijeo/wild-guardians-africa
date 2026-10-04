@@ -1,0 +1,33 @@
+{
+  "sourceSha256": {
+    "tools/calibrate_farm_actions.mjs": "326f71fd3e947cb0ef2baa86b01b7513b1363604682995d3decfbd6919126cba",
+    "src/audio/farm-actions-data.js": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560",
+    "content/manifests/farm-actions.json": "e6bf6a715f39750d10661ba50e1b20e23e262e17c7710a6f636992f5fbeb032e",
+    "tests/farm-action-markers.test.js": "da6e246469944d42e617e8b189adfe6c23158801ea421a45cbb377569303ec8a"
+  },
+  "directedTests": {
+    "passed": 6,
+    "failed": 0,
+    "durationMs": 1129.8483
+  },
+  "profiles": [
+    "youngMale",
+    "olderMale",
+    "olderFemale",
+    "youngFemale"
+  ],
+  "nativeOriginalRigChecks": true,
+  "audioIntegration": "pending",
+  "runtimeGeometryScanAdded": false,
+  "limitations": [
+    "No native browser/audio listening verification",
+    "Marker data is not yet consumed by production audio",
+    "The preceding frozen animal regression does not include these new marker tests"
+  ],
+  "routingAndMarkers": {
+    "passed": 16,
+    "failed": 0,
+    "durationMs": 1845.5579,
+    "log": ".cache/farm-markers-routing.log"
+  }
+}

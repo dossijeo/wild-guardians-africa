@@ -9,3 +9,5 @@ A restored actor's current phase is seeded silently. Pause, result, long observa
 The native browser runs five actual Game incursions against paid centers with a declared clear-path navigation adapter. It does not set attack phases manually. Twenty original stereo48kHz MP3s decode; all twenty unique IDs are accepted across37 sources. Seventeen observed native attack IDs produce seventeen attack cues and seventeen logical hits; each species retreats once and ends with zero activity voices. The AudioContext closes and no errors are reported. See animal-native.json and animal-native.png.
 
 The simulation advances in directed .05-second observations with short asynchronous UI yields; this diagnostic is not a real-time listening demonstration or a rendered-world performance benchmark. Output is muted and there is no3D world. It establishes original decoding, actual domain phase binding and cleanup; native mixed-worker/beast/collapse and perceptual acceptance remain open. Material-impact revision0583a10 independently passes1315 complete local tests and GitHub CI37181035241.
+
+GitHub CI37181711740 for native animal revisionb30b47c independently succeeds.
