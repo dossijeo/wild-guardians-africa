@@ -1,16 +1,16 @@
-import {ensurePurchaseBudget} from './budget.js';
+import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
-import {rational,multiply,negate,transact,compare} from './money.js';
+import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {enqueue,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
-import {wallStroke,wallLayout} from '../world/wall-layout.js';
+import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
@@ -86,6 +86,17 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
 }
+export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
+export function affordableWallStroke(s,material,points){
+  const maxPieces=wallCapacity(s,material),slots=wallStroke(points,s.structures,{maxPieces});
+  return {slots,points:wallStrokeLine(slots),maxPieces};
+}
+export function wallRefund(target){
+  if(target.kind!=='wall'||target.hp<=0||target.status==='ruined'||target.status==='collapsing')return rational(0);
+  // Native automatic gates can have fractional HP after proportional conversion.
+  const amount=multiply(rational(target.cost),Math.round(Math.min(target.hp,target.maxHp)*1e6),Math.round(target.maxHp*1e6));
+  return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
+}
 export function previewWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,options);
@@ -123,8 +134,9 @@ export function removeWall(s,id,targetId,nav) {
     const tasks=new Set(s.tasks.filter(t=>t.targetId===targetId).map(t=>t.id));
     for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';}
     s.tasks=s.tasks.filter(t=>t.targetId!==targetId);s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
+    const refund=wallRefund(target);transact(s.ledger,id,refund);
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
-    emit(s,'WallRemoved',{targetId});
+    emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
   });
 }
 export function plant(s,id,species,x,z,nav) {

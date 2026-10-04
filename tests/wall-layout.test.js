@@ -51,9 +51,9 @@ test('Invalid terrain, crop intersection and insufficient money leave state unch
     const before=JSON.stringify(state);assert.throws(()=>Game.buildWallChain(state,'chain',reason==='money'?'piedra':'zarzas',square,nav,{smooth:false,snap:false}));assert.equal(JSON.stringify(state),before);
   }
 });
-test('Removing an automatic gate opens a persistent gap without refund or replacement',()=>{
+test('Removing an automatic gate opens a persistent gap with its refund and without replacement',()=>{
   const {state,nav}=fixture();Game.buildWallChain(state,'chain','zarzas',square,nav,{smooth:false,snap:false});const gate=state.structures.find(p=>p.autoGate),balance=state.ledger.balance.n;
-  Game.removeWall(state,'remove',gate.id,nav);assert.equal(state.ledger.balance.n,balance);assert.equal(state.structures.filter(p=>p.autoGate).length,0);
+  Game.removeWall(state,'remove',gate.id,nav);assert.equal(Number(state.ledger.balance.n),Number(balance)+10);assert.equal(state.structures.filter(p=>p.autoGate).length,0);
   const loaded=deserialize(serialize(state));assert.equal(wallLayout(loaded.structures,hp).closedFaces().length,0);assert.equal(loaded.structures.length,state.structures.length);
   Game.buildWallChain(state,'other','zarzas',[[20,20],[22,20]],nav,{smooth:false,snap:false});assert.equal(state.structures.filter(p=>p.autoGate).length,0);
 });
@@ -99,9 +99,9 @@ test('Night and live raids reject individual walls, gates, preview and stale cha
     }
   }
 });
-test('Removing a reserved repair releases its worker and preserves the ledger',()=>{
+test('Removing a reserved repair releases its worker and refunds the removed piece once',()=>{
   const {state,nav}=fixture();Game.buildWallChain(state,'chain','zarzas',[[0,0],[4,0]],nav,{smooth:false,snap:false});const wall=state.structures.find(p=>p.kind==='wall');
   const worker={id:'qa-worker',taskId:'qa-task',status:'acting',path:[{x:1,z:0}],taskApproach:{x:1,z:0}};
   state.workers.push(worker);state.tasks.push({id:'qa-task',targetId:wall.id,workerId:worker.id});const balance=state.ledger.balance.n;
-  Game.removeWall(state,'remove',wall.id,nav);assert.equal(worker.taskId,null);assert.equal(worker.taskApproach,null);assert.equal(worker.path,null);assert.equal(worker.status,'idle');assert.equal(state.tasks.length,0);assert.equal(state.ledger.balance.n,balance);
+  Game.removeWall(state,'remove',wall.id,nav);assert.equal(worker.taskId,null);assert.equal(worker.taskApproach,null);assert.equal(worker.path,null);assert.equal(worker.status,'idle');assert.equal(state.tasks.length,0);assert.equal(Number(state.ledger.balance.n),Number(balance)+10);
 });

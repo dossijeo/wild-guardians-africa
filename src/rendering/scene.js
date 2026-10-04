@@ -73,6 +73,7 @@ export class WorldScene {
   }
   resize() {const r=this.canvas.getBoundingClientRect(),resolution=nativeRenderResolution(r.width,r.height,devicePixelRatio,this.quality,this.pixelRatioLimit),aspect=resolution.width/resolution.height;this.renderResolution=resolution;if(this.canvas.width!==resolution.width||this.canvas.height!==resolution.height)this.renderer.setSize(resolution.width,resolution.height,false);if(this.camera.aspect!==aspect){this.camera.aspect=aspect;this.camera.updateProjectionMatrix();}}
   showWallStroke(points){
+    points=this.limitWallStroke?.(points)??points;
     this.strokeLine.geometry.dispose();this.strokeLine.geometry=new THREE.BufferGeometry().setFromPoints(points.map(([x,z])=>new THREE.Vector3(x,this.nav?.field.surface(x,z)+.06,z)));this.strokeLine.computeLineDistances();this.strokeLine.visible=points.length>1;
   }
   wallCameraGesture(old,next){

@@ -2,7 +2,7 @@ import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {UiAudio} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
-import {RESERVE_MESSAGE} from '../simulation/budget.js';
+import {RESERVE_MESSAGE,HIRING_RESERVE} from '../simulation/budget.js';
 import {GameSurfaces} from '../ui/game-surfaces.js';
 import {resumeLoadedWorld} from './resume-loaded-world.js';
 import '../ui/styles.css';
@@ -40,7 +40,7 @@ const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';font
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
 const audio=new AudioSystem(settings);const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
-let commandFeedback='',hudSize='',frameImages=null,guardian=null,tutorial=null,tutorialInert=null,tutorialFocus=null,pendingWall=null,pendingSpell=null;
+let commandFeedback='',hudSize='',frameImages=null,guardian=null,tutorial=null,tutorialInert=null,tutorialFocus=null,pendingSpell=null;
 const surfaces=new GameSurfaces(),toolSession=new ToolSession();
 let budgetWarningUntil=0,lastBudgetBalance=Infinity;
 const tutorialProfile=new TutorialProfile(localStorage);
@@ -53,7 +53,7 @@ function error(message){uiAudio.error();if(String(message)===RESERVE_MESSAGE)bud
 function safe(action){commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){screenWakeLock.setActive(false);surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;pendingVillage=null;pendingSpell=null;commandFeedback='';setTutorialInteraction(false);pendingWall=null;tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){screenWakeLock.setActive(false);surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;pendingVillage=null;pendingSpell=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){if(!save())return;state=null;}clearWorld();screen='menu';
   app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
@@ -110,7 +110,7 @@ async function startGame(loaded=null) {
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>toolPanel('plant'));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(buildPanel);
-    world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#loading-progress');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>wallPreview(points));world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
+    world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#loading-progress');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.limitWallStroke=points=>{if(!points.length||tool?.kind!=='wall'||tool.gate)return points;const draft=Game.affordableWallStroke(state,tool.material,points);world.wallStrokeMaxPieces=draft.maxPieces;return draft.points;};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     await world.load(state,nav,payload);
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
     world.render(0);document.querySelector('#world-loading').remove();document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
@@ -122,7 +122,6 @@ function onPick({entityId,point}) {
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
-    if(pendingWall)return;
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
@@ -145,32 +144,21 @@ function spellConfirmPanel(){
     Game.cast(state,commandId(),draft.kind,draft.x,draft.z,nav);cancelSpellPreview({keepTool:true});save();
   });
 }
-function cancelWallPreview(){pendingWall=null;world?.clearWallPreview();hideHudPanel();}
-function wallPreview(points){
-  if(state.pauses.includes('hiring'))return;
-  if(tool?.kind!=='wall'||tool.gate)return;
-  const plan=Game.previewWallChain(state,tool.material,points,nav);pendingWall={points:points.map(p=>p.slice()),material:tool.material,plan};world.showWallPreview(plan);wallConfirmPanel();
-}
-function wallConfirmPanel(){
-  const {plan}=pendingWall;
-  showHudPanel('Construir muralla',`<p class="panel-note">${plan.pieces.length} módulos · ${plan.cost} monedas${plan.gates?` · ${plan.gates} puerta${plan.gates===1?'':'s'} sin recargo`:''}</p><p class="panel-note">El trazado verde aún no está construido. Confirma para pagar y colocarlo.</p><div class="menu-list">${button('confirm-wall','Construir por '+plan.cost+' monedas','wood-button')}${button('cancel-wall','Cancelar trazado','wood-button')}</div>`);
-  bind('cancel-wall',cancelWallPreview);
-  bind('confirm-wall',()=>{
-    const draft=pendingWall;if(!draft)return;
-    const fresh=Game.previewWallChain(state,draft.material,draft.points,nav);
-    if(fresh.cost!==draft.plan.cost){draft.plan=fresh;world.showWallPreview(fresh);wallConfirmPanel();return;}
-    Game.buildWallChain(state,commandId(),draft.material,draft.points,nav);toolSession.used(performance.now()/1000);cancelWallPreview();world.syncResidentProps();save();
-  });
+function buildWallStroke(points){
+  if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
+  const maxPieces=Math.min(Game.wallCapacity(state,tool.material),world.wallStrokeMaxPieces??Infinity);if(!maxPieces)throw new Error(RESERVE_MESSAGE);
+  Game.buildWallChain(state,commandId(),tool.material,points,nav,{maxPieces});
+  toolSession.used(performance.now()/1000);world.clearWallPreview();world.syncResidentProps();save();
 }
 function toolPanel(type) {
   if(state.pauses.includes('hiring'))return;
   cancelTool();
   if(pendingSpell)cancelSpellPreview();
-  pendingWall=null;world.clearWallPreview();
+  world.clearWallPreview();
   let content='';
   const price=value=>`<span class="price"><img src="${ASSETS.coin.src}" alt="">${value}</span>`;
   if(type==='plant')content=`<div class="card-grid crop-grid">${B.crops.map(c=>`<button class="choice-card" data-crop="${c.id}" ${!permission(state,'plant')||numberOf(state.ledger.balance)<c.plant_cost?'disabled':''}><img class="card-image" src="${thumbnails[c.id]}" alt=""><strong>${c.name}</strong>${price(c.plant_cost)}</button>`).join('')}</div><p class="panel-note">Elige una semilla y toca un espacio libre.</p>`;
-  if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Revisa los módulos y su coste antes de construir. Un recinto cerrado incluye su puerta sin recargo.</p>`;
+  if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost+HIRING_RESERVE?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 100 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.</p>`;
   if(type==='spell')content=spellCardsMarkup(state,spellSVG);
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
   document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
@@ -201,24 +189,22 @@ function closeSurface(){
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
   if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
-  if(pendingWall)cancelWallPreview();if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();
+  if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);}
-function cancelTool(){if(pendingWall)cancelWallPreview();if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
+function cancelTool(){if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
-  if(pendingWall&&(tool?.kind!=='wall'||tool.material!==pendingWall.material||tool.gate))cancelWallPreview();
   if(tool&&['plant','center','wall'].includes(tool.kind)&&toolSession.expired(now/1000))cancelTool();
   if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
   const balance=numberOf(state.ledger.balance);if(balance<=220&&lastBudgetBalance>220)budgetWarningUntil=now+18000;lastBudgetBalance=balance;
-  world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&!pendingWall&&permission(state,'wall'));
+  world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   if(pendingSpell){
     if(state.result||tool?.kind!=='spell'||tool.spell!==pendingSpell.kind)cancelSpellPreview();
     else {pendingSpell=Game.previewSpell(state,pendingSpell.kind,pendingSpell.x,pendingSpell.z,nav);world.showSpellPreview(pendingSpell);const confirm=document.querySelector('#confirm-spell');if(confirm)confirm.disabled=!pendingSpell.valid;commandFeedback=pendingSpell.reason??'';}
   }
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
-  const confirmWall=document.querySelector('#confirm-wall');if(confirmWall)confirmWall.disabled=!permission(state,'wall')||!pendingWall||numberOf(state.ledger.balance)<pendingWall.plan.cost;
   const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
   if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
   document.querySelector('#clockValue').textContent=Game.clockLabel(state);
@@ -250,7 +236,7 @@ function updateUI(force=false) {
 }
 function refreshCommandFeedback(){
   const label=null;
-  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();if(pendingSpell)cancelSpellPreview();tool=null;commandFeedback='';if(pendingWall)cancelWallPreview();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
+  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();if(pendingSpell)cancelSpellPreview();tool=null;commandFeedback='';updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
 
 function buildPanel(){
@@ -276,7 +262,7 @@ function contextPanel() {
   const el=document.querySelector('#context');if(!selection){el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close();}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
   const key=JSON.stringify(p?[p.id,Math.floor(p.growth/cropSpec(p.species).growth_seconds*100),p.water.map(w=>w.status),p.harvestRequested,p.centerId,permission(state,'harvest')]:structure?[structure.id,structure.hp,structure.status,permission(state,'wall')]:null);if(el.dataset.key===key&&el.children.length)return;el.dataset.key=key;
   if(p) {selection=null;el.replaceChildren();return;  } else if(structure) {
-    el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Retirar defensa sin reembolso'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));
+    el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Eliminar muralla · +'+localMoney(Game.wallRefund(structure))+' monedas'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));
     bind('remove-wall',()=>{Game.removeWall(state,commandId(),structure.id,nav);selection=null;save();});if(document.querySelector('#remove-wall'))document.querySelector('#remove-wall').disabled=!permission(state,'wall');
   } else el.innerHTML='';if(el.querySelector('.context'))el.querySelector('.context').scrollTop=scroll;bind('close-context',closeSurface);
 }
@@ -340,7 +326,7 @@ function libraryScreen() {
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
 document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation()?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(pendingWall){cancelWallPreview();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{screenWakeLock.dispose();if(state)save();});
