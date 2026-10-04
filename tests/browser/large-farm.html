@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA finca grande y origen</title>
 <style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;left:0;top:0;background:#fffdeacc;padding:10px;max-width:460px}button{padding:8px;margin:3px}pre{max-height:180px;overflow:auto;font-size:11px}</style>
 <header><strong>Finca grande · Sabana/Mapungubwe</strong><p>600 cultivos de ocho especies. Crédito QA explícito de 1000000; construcciones y semillas pagadas. Preparación botánica mediante riego/crecimiento nativos. Guarda únicamente qa-large-farm en este origen QA.</p>
-<button id="measure" disabled>Medir finca</button><button id="compare" disabled>Comparar CPU anterior/actual</button><button id="away" disabled>Descargar chunks de finca</button><button id="back" disabled>Volver y medir</button><button id="reload" disabled>Guardar y recargar</button>
+<button id="measure" disabled>Medir finca</button><button id="compare" disabled>Comparar CPU anterior/actual</button><button id="resolution" disabled>Comparar resolución del mundo</button><button id="away" disabled>Descargar chunks de finca</button><button id="back" disabled>Volver y medir</button><button id="reload" disabled>Guardar y recargar</button>
 <p id="status">Preparando finca…</p><p id="summary"></p><pre id="report"></pre><details><summary>Snapshot público</summary><pre id="snapshot"></pre></details></header><canvas id="world" aria-label="Finca grande lejos del origen"></canvas>
 <script type="module">
 import * as THREE from 'three';
@@ -16,6 +16,7 @@ import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {createCropBatch} from '../../src/rendering/crop-batch.js';
+import {applyWorldResolution} from '../../src/app/world-resolution.js';
 const status=document.querySelector('#status'),report=document.querySelector('#report'),steps=[],errors=[],repo=new SaveRepository(localStorage);
 const species=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
@@ -38,7 +39,7 @@ async function measure(stage){
  }
  const summary=a=>{const sorted=[...a].sort((x,y)=>x-y);return {mean:a.reduce((x,y)=>x+y,0)/a.length,min:sorted[0],p50:sorted[Math.floor(sorted.length*.5)],p95:sorted[Math.ceil(sorted.length*.95)-1],max:sorted.at(-1)};};
  invariants();const info=geometryReport();assert(info.instances===600&&info.matchedPlants===600,'No se dibujan las 600 plantas');assert(info.maxCropPositionError<1e-5,'Colocación de cultivo inestable');
- steps.push({stage,...info,cpuRenderMs:summary(cpu),frameIntervalMs:summary(frames),drawCalls:summary(calls),triangles:summary(triangles),samples:{cpuRenderMs:cpu,frameIntervalMs:frames,drawCalls:calls,triangles},collisions:collisions(),route:route(),viewport:{css:[innerWidth,innerHeight],buffer:[world.canvas.width,world.canvas.height],dpr:devicePixelRatio},quality:world.quality});publish();status.textContent=stage;
+ steps.push({stage,...info,cpuRenderMs:summary(cpu),frameIntervalMs:summary(frames),drawCalls:summary(calls),triangles:summary(triangles),samples:{cpuRenderMs:cpu,frameIntervalMs:frames,drawCalls:calls,triangles},collisions:collisions(),route:route(),viewport:{css:[innerWidth,innerHeight],buffer:[world.canvas.width,world.canvas.height],dpr:devicePixelRatio},quality:world.quality,pixelRatioLimit:Number.isFinite(world.pixelRatioLimit)?world.pixelRatioLimit:null,shadowsEnabled:world.renderer.shadowMap.enabled});publish();status.textContent=stage;
 }
 async function run(action){if(busy)return;busy=true;for(const b of document.querySelectorAll('button'))b.disabled=true;try{await action();}catch(e){errors.push(String(e));status.textContent='FAIL: '+e.message;publish();console.error(e);}finally{busy=false;for(const b of document.querySelectorAll('button'))b.disabled=false;}}
 try{
@@ -88,6 +89,14 @@ try{
   try{for(const [label,factory] of [['Anterior A1',reference.createCropBatch],['Actual B1',createCropBatch],['Actual B2',createCropBatch],['Anterior A2',reference.createCropBatch]]){
    status.textContent='Midiendo '+label;world.cropBatch.dispose();world.cropBatch=factory(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity);await measure(label);
   }}finally{world.cropBatch.dispose();world.cropBatch=createCropBatch(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity);world.render(0);}
+ });
+ document.querySelector('#resolution').onclick=()=>run(async()=>{
+  const previous=world.pixelRatioLimit,quality=world.quality,shadowMap=world.renderer.shadowMap,chunks=[...world.chunks.keys()].join('|');
+  try{for(const [label,preset] of [['Perfil A1','profile'],['DPR 1 B1','economy'],['DPR 1 B2','economy'],['Perfil A2','profile']]){
+   status.textContent='Midiendo '+label;applyWorldResolution(world,preset);await measure(label);
+   assert(world.quality===quality&&world.renderer.shadowMap===shadowMap&&shadowMap.enabled,'Resolución cambia calidad o sombras');
+   assert([...world.chunks.keys()].join('|')===chunks,'Resolución reconstruye terreno');
+  }}finally{world.pixelRatioLimit=previous;world.resize();world.render(0);}
  });
  document.querySelector('#away').onclick=()=>run(async()=>{camera(true);await settle();invariants();assert([...world.chunks.keys()].every(k=>!homeChunks.has(k)),'Chunks de finca siguen residentes');steps.push({stage:'Finca descargada',...geometryReport()});publish();status.textContent='Chunks de finca descargados';});
  document.querySelector('#back').onclick=()=>run(async()=>{camera();await settle();assert([...world.chunks.keys()].every(k=>homeChunks.has(k)),'Chunks de regreso diferentes');await measure('Medición tras streaming');});
