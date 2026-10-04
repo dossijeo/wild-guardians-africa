@@ -2,6 +2,7 @@ import {pause,resume,emit} from '../simulation/game.js';
 import {operational} from '../simulation/rules.js';
 import {isMature} from '../simulation/crops.js';
 import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLOWUP} from './messages.js';
+import {REPEATABLE_MAGIC_IDS,shieldReminderKey,usefulPeacefulMagic,recordMagicReminder} from './magic-reminders.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
@@ -35,6 +36,7 @@ export class TutorialController {
   }
   seen(id,globalSeen){return this.state.tutorial.seen.includes(id)||globalSeen.has(id);}
   recordSeen(id){
+    if(REPEATABLE_MAGIC_IDS.has(id))return;
     const t=this.state.tutorial;
     if(!t.seen.includes(id))t.seen.push(id);
     try{this.profile.record(id);}catch(error){this.onError(error);}
@@ -66,8 +68,22 @@ export class TutorialController {
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));
     enqueue('campaign.liberation',s.result==='victory',true);
     enqueue('world.expansion',s.postgame&&!s.result);
+    const shieldKey=shieldReminderKey(s),memo=t.magicReminders??{};
+    if(this.reminderCheckAt===undefined||s.elapsed-this.reminderCheckAt>=2||s.elapsed<this.reminderCheckAt){
+      this.reminderCheckAt=s.elapsed;this.usefulMagic=usefulPeacefulMagic(s);
+    }
+    const repeatable=[];
+    if(shieldKey&&(memo.shieldRaid!==shieldKey||t.reading==='reminder.shield'))repeatable.push(this.seen('magic.shield',globalSeen)?'reminder.shield':'magic.shield');
+    for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&s.cooldowns[kind]===0&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
+    t.pending=t.pending.filter(id=>!REPEATABLE_MAGIC_IDS.has(id)||repeatable.includes(id));
+    if(REPEATABLE_MAGIC_IDS.has(t.reading)&&!repeatable.includes(t.reading))t.reading=null;
+    for(const id of repeatable)if(!t.pending.includes(id)&&t.reading!==id)t.pending.push(id);
+    const urgentShield=repeatable.find(id=>id.endsWith('.shield'));
+    if(urgentShield&&t.reading&&t.reading!==urgentShield&&!['basic.introduction','basic.center','basic.plant','basic.hiring'].includes(t.reading)){
+      t.pending.unshift(t.reading);t.reading=null;
+    }
     // A saved, acknowledged message must not hold a stale pause indefinitely.
-    if(t.reading&&t.seen.includes(t.reading)){t.reading=null;resume(s,reason);}
+    if(t.reading&&!REPEATABLE_MAGIC_IDS.has(t.reading)&&t.seen.includes(t.reading)){t.reading=null;resume(s,reason);}
     if(t.reading)return;
     if(s.pauses.some(p=>['menu','hidden','context-lost','hiring'].includes(p)))return;
     const basicId=BASIC_MESSAGES[t.step];
@@ -75,14 +91,14 @@ export class TutorialController {
     if(s.result==='victory')t.reading=t.seen.includes('campaign.liberation')?null:'campaign.liberation';
     else if(basicAvailable&&!t.seen.includes(basicId))t.reading=basicId;
     else {
-      t.pending=t.pending.filter(id=>id==='campaign.liberation'?!t.seen.includes(id):!this.seen(id,globalSeen));
+      t.pending=t.pending.filter(id=>REPEATABLE_MAGIC_IDS.has(id)|| (id==='campaign.liberation'?!t.seen.includes(id):!this.seen(id,globalSeen)));
       if(s.result==='victory')t.reading=t.pending.includes('campaign.liberation')?'campaign.liberation':null;
       else {
         const urgent=s.raid&&['mechanic.first-raid','magic.shield'].find(id=>t.pending.includes(id));
-        t.reading=urgent||t.pending.shift()||null;
+        t.reading=urgentShield||urgent||t.pending.shift()||null;
       }
     }
-    if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);emit(s,'TutorialMessageStarted',{messageId:t.reading});}
+    if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);recordMagicReminder(s,t.reading);this.presentationAge=0;this.presentationKey=null;emit(s,'TutorialMessageStarted',{messageId:t.reading});}
   }
   acknowledge(){
     const t=this.state.tutorial,id=t.reading;if(!id)return false;

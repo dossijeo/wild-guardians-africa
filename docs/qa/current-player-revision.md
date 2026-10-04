@@ -16,9 +16,9 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Volver centra cámara en centro de trabajo | Publicado; falta recorrido visual |
 | Jornales: ancianos 30, jóvenes 40; ajustar reserva y textos | Implementado: ancianos 30, jóvenes 40 y reserva 30; sustituye los costes anteriores |
 | Manos HUD del tutorial también en segunda partida | Pendiente |
-| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales de atracción reducidos, presentaciones con presupuesto creciente y límite de destrucción inicial; recordatorio de escudo pendiente |
+| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales reducidos, presupuesto creciente y límite inicial; recordatorio de escudo disponible al entrar en la finca implementado |
 | Cultivos resisten dos golpes y edificios requieren el doble de golpes | Implementado: daño persistente en cultivos y mitad de daño estructural por golpe |
-| Recordatorios útiles periódicos de crecimiento y multiplicación | Pendiente |
+| Recordatorios útiles periódicos de crecimiento y multiplicación | Implementados con disponibilidad, cultivos elegibles, intervalo y guardado; recorrido de partida móvil pendiente |
 | Campaña de 100 noches con plantación intensiva responsable y actividad constante | Pendiente; medir tiempo sin nada útil que hacer y ajustar parámetros reales si falla |
 | Mala gestión debe poder causar derrota | Pendiente; añadir casos adversos representativos |
 | Poblado inicial de Gran Cañón dentro del cañón en ambas riberas; trabajadores sobre el agua | Implementado; pruebas geométricas y de navegación; comprobación visual pendiente |
@@ -80,3 +80,11 @@ Una campaña adversa detectó un facóquero agotado en la noche 10: la cuadrícu
 La regresión conserva el guardado real y exige pasos de máximo 0,38 metros, colisiones válidas, restauración durante el regreso y salida antes de abrir contratación. 46 pruebas de incursiones y rutas pasan. La campaña adversa Gran Cañón/Musgum termina ahora en derrota económica tras 23 noches resueltas; la matriz completa se vuelve a ejecutar.
 
 La estrategia adversa de una sola siembra inicial, jornal pagado cada día y ausencia de replantación, reparación o magias sustituye la expectativa obsoleta de victoria por abandonar la finca. Antes de corregir el pasillo de salida pasaban 29 de 30 combinaciones; la combinación restante pasa con la corrección. La batería completa actual está en ejecución. Este caso no acredita el balance intensivo responsable de 100 noches, que sigue pendiente.
+
+## Recordatorios de magia
+
+Escudo se recuerda una vez por incursión cuando un animal en movimiento o ataque entra en la envolvente de la finca y el poder está disponible. El aviso tiene prioridad sobre explicaciones informativas, conserva las pendientes y desaparece si el poder se usa o la incursión termina. La marca de incursión se guarda, evitando repeticiones tras cargar.
+
+Crecimiento requiere plantas creciendo, con el primer riego completado y sin riego pendiente. Multiplicar requiere cultivos vivos sin beneficio previo y trabajadores disponibles. Se excluyen plantas cubiertas por otra zona mágica. Cada tipo deja 120 segundos simulados entre avisos, con al menos 75 segundos entre recordatorios pacíficos; los textos iniciales también reinician ese intervalo. La elegibilidad pacífica se comprueba cada dos segundos simulados, sin recorrer la plantación por cada fotograma.
+
+Los avisos permiten cierre, caducan con el lector existente, no muestran manos ni añaden pausas. Español e inglés están incluidos. 54 pruebas de tutorial, traducciones y guardado pasan; build correcto. La presentación nativa del aviso de Multiplicar en inglés se revisó a 844×390 y 390×844, con cierre manual comprobado y capturas en docs/qa/magic-reminders. Son pruebas del panel aislado con HUD real, no aceptación del recorrido de una partida móvil completa.

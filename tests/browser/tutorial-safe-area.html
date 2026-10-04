@@ -6,13 +6,16 @@ import {assetUrl} from '../../src/rendering/asset-url.js';
 import {TutorialHudHand} from '../../src/ui/tutorial-hud-hand.js';
 import {NativeGuardian} from '../../src/ui/guardian.js';
 import {TUTORIAL_MESSAGES} from '../../src/tutorial/messages.js';
+import {translate} from '../../public/i18n/catalog.js';
+const params=new URLSearchParams(location.search),messageId=params.get('message')??'basic.hiring',language=params.get('lang')??'es';
 const stage=document.querySelector('#stage');stage.insertAdjacentHTML('afterbegin',hudMarkup+'<div id="events" hidden></div><div id="placementBanner" hidden></div>');
 for(const img of stage.querySelectorAll('[data-sprite]'))img.src=assetUrl(ASSETS[img.dataset.sprite].src);
 const report=document.createElement('pre');report.id='qa-safe-area';report.style.cssText='position:absolute;left:12px;top:100px;background:#fffdeac9;color:#203629;font:11px monospace;z-index:12;pointer-events:none';stage.append(report);
-const hand=new TutorialHudHand(stage);let handSelector='[data-menu="build"]';
+if(params.has('capture'))report.hidden=true;
+const hand=new TutorialHudHand(stage);let handSelector=messageId.startsWith('reminder.')?null:'[data-menu="build"]';
 for(const button of stage.querySelectorAll('[data-menu]'))button.addEventListener('click',()=>{handSelector=`[data-menu="${button.dataset.menu}"]`;hand.show(handSelector);});
 const guardian=new NativeGuardian(document.querySelector('#narrator'));await guardian.ready;
-guardian.show({key:'safe-area',text:TUTORIAL_MESSAGES['basic.hiring'].text,gesture:'idle',dismiss:()=>{guardian.hide();handSelector=null;hand.show(null);}});
+guardian.show({key:'safe-area',text:translate(TUTORIAL_MESSAGES[messageId].text,language),gesture:'idle',dismiss:()=>{guardian.hide();handSelector=null;hand.show(null);}});
 function measure(){layoutHud(stage);hand.show(handSelector);const actions=document.querySelector('#actions').getBoundingClientRect(),bubble=document.querySelector('.bubble').getBoundingClientRect(),portrait=stage.classList.contains('portrait');const target=handSelector&&stage.querySelector(handSelector)?.getBoundingClientRect(),image=hand.image.getBoundingClientRect(),tip={x:image.left+image.width*.982,y:image.top+image.height*.25};report.textContent=JSON.stringify({handVisible:!hand.image.hidden,handSelector,tip,target:target?{x:target.left,y:target.top+target.height*.5}:null,handFits:hand.image.hidden||image.left>=0&&image.top>=0&&image.right<=innerWidth&&image.bottom<=innerHeight,viewport:[innerWidth,innerHeight],portrait,actionsLeft:actions.left,bubbleRight:bubble.right,gap:actions.left-bubble.right,entireColumnSafe:portrait?null:bubble.right<=actions.left-6,bubbleFits:bubble.left>=0&&bubble.right<=innerWidth&&bubble.top>=0&&bubble.bottom<=innerHeight},null,2);}
 new ResizeObserver(measure).observe(stage);measure();
 function frame(){guardian.update();measure();requestAnimationFrame(frame);}requestAnimationFrame(frame);
