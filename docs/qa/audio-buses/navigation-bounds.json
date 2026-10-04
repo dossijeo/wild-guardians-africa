@@ -1,0 +1,72 @@
+{
+  "scenario": "integrated-load, warm navigation, explicit QA credit10000, 32 paid plants, eight paid workers, five animal species, one ruined center",
+  "scope": "CPU domain only; excludes render, audio, mobile frametime and full QA155 acceptance",
+  "runs": [
+    {
+      "variant": "reference",
+      "run": 1,
+      "maxTickMs": 691.4564999999998,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "bounds",
+      "run": 1,
+      "maxTickMs": 455.3795,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "maxTickMs": 657.1061,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "bounds",
+      "run": 2,
+      "maxTickMs": 419.7514000000001,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "maxTickMs": 763.7265,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "bounds",
+      "run": 3,
+      "maxTickMs": 459.07950000000005,
+      "steps": 1636,
+      "searches": 251
+    }
+  ],
+  "medianPeakMs": {
+    "reference": 691.4564999999998,
+    "bounds": 455.3795
+  },
+  "trajectorySha256": "98ab892b42bde416b6c122a28a31063e74420d9d382c1154d3f09fa04dd648ae",
+  "identicalSerializedSteps": 1636,
+  "searches": 251,
+  "events": {
+    "PlacementCommitted": 1,
+    "CropPlaced": 32,
+    "HiringConfirmed": 1,
+    "WaterSatisfied": 54,
+    "RaidSpawned": 1,
+    "StructureHit": 1,
+    "AnimalLogicalHit": 3,
+    "CropDestroyed": 2,
+    "StructureRuined": 1,
+    "AnimalRetreating": 1,
+    "RaidEnded": 1
+  },
+  "tests": {
+    "pass": 51,
+    "fail": 0
+  }
+}

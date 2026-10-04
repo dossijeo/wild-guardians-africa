@@ -1,3 +1,4 @@
+import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
@@ -68,6 +69,7 @@ export class Navigation {
     this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>s.kind==='center'?centerFootprint(s,state):({...s,radius:.7}));
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
+    this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
   }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
@@ -91,8 +93,10 @@ export class Navigation {
   }
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
     if(!this.terrainValid(x,z,radius))return false;
+    const point={x,z};
     if(this.obstacles.some(o=>{
       if(o.id===ignore||worker&&o.kind==='shield')return false;
+      if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
       if(o.kind==='wall'){
         const dx=x-o.x,dz=z-o.z,c=Math.cos(o.yaw??0),s=Math.sin(o.yaw??0);
@@ -101,9 +105,9 @@ export class Navigation {
         return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22*scale+radius;
       }
       if(o.footprint)return footprintDistance(o.footprint,x,z)<radius;
-      return distance(o,{x,z})<o.radius+radius;
+      return distance(o,point)<o.radius+radius;
     }))return false;
-    return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius);
+    return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,point)<(p.radius??1.5)+radius);
   }
   placement(x,z,radius=1,{ignoreWalls=false}={}) {
     if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
@@ -283,6 +287,7 @@ export class Navigation {
   testSegmentClear(start,end,radius,ignore,worker) {
     for(const obstacle of this.obstacles){
       if(obstacle.id===ignore||worker&&obstacle.kind==='shield')continue;
+      if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
       if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
       if(obstacle.kind==='wall'){
         const scale=obstacle.gate?(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1,width=1.09*(obstacle.baseScaleX??1)*scale+radius;
