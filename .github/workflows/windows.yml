@@ -2,7 +2,7 @@ name: Build Windows desktop
 
 on:
   push:
-    branches: [main, codex/tauri-windows-itch-ci]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -45,9 +45,20 @@ jobs:
           $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
-          Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          if ($result.worldPng) {
+            [IO.File]::WriteAllBytes((Join-Path $env:RUNNER_TEMP 'windows-canyon.png'), [Convert]::FromBase64String($result.worldPng.Split(',')[1]))
+            $result.PSObject.Properties.Remove('worldPng')
+            $result | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $report
+          }
+          Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
           if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          path: ${{ runner.temp }}/windows-canyon.png
+          archive: false
+          retention-days: 7
       - uses: actions/upload-artifact@v7
         if: always()
         with:

@@ -16,7 +16,7 @@ El ejecutable queda en `src-tauri/target/release/wild-guardians-africa.exe`; el 
 
 ## GitHub Actions
 
-`Build Windows desktop` compila con Rust en `windows-latest`, comprueba EXE/NSIS y ejecuta el EXE con `--smoke-report PATH`. Ese modo exclusivo de QA carga los veinte modelos meshopt con el decoder WASM de producción, comprueba WebGL 2, Worker, MP3 y almacenamiento, y arranca el mundo real Gran cañón/Mapungubwe desde el menú. El informe queda como artefacto y en el resumen del job. No reemplaza una revisión visual, auditiva, de rendimiento ni una partida completa en PC.
+`Build Windows desktop` compila con Rust en `windows-latest`, comprueba EXE/NSIS y ejecuta el EXE con `--smoke-report PATH`. Ese modo exclusivo de QA carga los veinte modelos meshopt con el decoder WASM de producción, comprueba WebGL 2, Worker, MP3 y almacenamiento, y arranca el mundo real Gran cañón/Mapungubwe mediante `MessageEvent` preparado que pasa por los handlers del menú de producción. No pulsa los botones del menú. El informe queda como artefacto y en el resumen del job; también se captura el canvas 3D. No reemplaza una revisión visual, auditiva, de rendimiento, un recorrido de la UI ni una partida completa en PC.
 
 El instalador y el EXE se descargan individualmente, sin ZIP envolvente. No están firmados con un certificado de editor; no se han publicado en Releases ni en itch.io. Los artefactos duran siete días. Cada nueva ejecución del mismo workflow/ref cancela la anterior; ramas diferentes se ejecutan independientemente.
 

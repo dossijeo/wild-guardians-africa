@@ -3,6 +3,8 @@
   if (window.__desktopSmokeStarted) return;
   window.__desktopSmokeStarted = true;
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
+  const consoleError = console.error;
+  console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
   const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 180000);
@@ -52,6 +54,8 @@
     const world = document.querySelector('#world');
     if (!world || world.width === 0 || world.height === 0) throw Error('Production world canvas missing');
     report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    report.worldPng = world.toDataURL('image/png');
     report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
     await finish();
   } catch (error) { await finish(error); }
