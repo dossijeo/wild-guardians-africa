@@ -110,7 +110,7 @@ export class WorldScene {
     this.shieldVfx=new ShieldVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.agricultureVfx=new AgricultureVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.materialVfx=new MaterialVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
-    this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
+    this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>this.nav.field.canyon?this.nav.workerSurface(x,z):renderedTerrainSurface(this.nav.field,x,z));
     const village=state.villages[0];this.focus({x:village.x+20,z:village.z});
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await this.chunkStream.whenReady();if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
@@ -162,7 +162,7 @@ export class WorldScene {
   }
   villageMesh(village) {
     const group=new THREE.Group();
-    for(const original of this.villageTemplates.get(village.culture)??this.villagePrototypes){const mesh=original.clone(),u=mesh.userData.unit,layout=village.buildings.find(b=>b.key===u.key);if(!layout)continue;mesh.scale.setScalar(16);mesh.position.set(village.x,this.nav.field.surface(layout.x,layout.z)-u.min[1]*16+.018,village.z);group.add(mesh);}
+    for(const original of this.villageTemplates.get(village.culture)??this.villagePrototypes){const mesh=original.clone(),u=mesh.userData.unit,layout=village.buildings.find(b=>b.key===u.key);if(!layout)continue;mesh.scale.setScalar(16);const yaw=layout.yaw??0,c=Math.cos(yaw),n=Math.sin(yaw),cx=(u.min[0]+u.max[0])*8,cz=(u.min[2]+u.max[2])*8;mesh.rotation.y=yaw;mesh.position.set(layout.x-cx*c-cz*n,this.nav.field.surface(layout.x,layout.z)-u.min[1]*16+.018,layout.z+cx*n-cz*c);group.add(mesh);}
     return group;
   }
   async ensureBuilding(culture){if(!this.buildingTemplates.has(culture)){const descriptor=this.buildingCatalogue.find(b=>b.culture===culture);if(!descriptor)throw new Error('Casa DEST desconocida: '+culture);this.buildingTemplates.set(culture,await this.assets.building(descriptor));}}
@@ -233,7 +233,7 @@ export class WorldScene {
         else mesh=new THREE.Group();
       mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
       }
-      mesh.position.set(e.x,this.nav.field.surface(e.x,e.z)+.025,e.z);
+      mesh.position.set(e.x,('profile' in e?this.nav.workerSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
       if('value' in e)mesh.visible=!e.carrierId;
       if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}

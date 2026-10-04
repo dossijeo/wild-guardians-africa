@@ -377,7 +377,18 @@ class TerrainField{
  wetlandShore(mask){return Math.min(42,Math.abs(mask-.59)*52)}
  wetlandCluster(x,z){return smooth(.40,.74,fbm(x*.020+19,z*.020-13,this.seed^9263)*.64+noise(x*.041,z*.041,this.seed^9269)*.36)}
  wetlandPatch(x,z){return smooth(.42,.72,noise(x*.017+47,z*.017-29,this.seed^9273)*.55+fbm(x*.0105-8,z*.0105+12,this.seed^9279)*.45)}
- height(x,z){const base=this.naturalHeight(x,z),s=this.settlementSite;return s?mix(base,s.y,settlementBlend410(s,x,z)):base;}
+ height(x,z){
+  const base=this.naturalHeight(x,z),s=this.settlementSite;
+  if(this.canyon&&s?.pads){
+   if(Math.abs(x-s.x)>s.hx+6||Math.abs(z-s.z)>s.hz+6)return base;
+   // Individual bank pads must never fill the channel between the houses.
+   if(Math.abs(x-this.riverX(z))<=canyonFrame(this,z).waterHalf+.6)return base;
+   let weight=0,target=base;
+   for(const pad of s.pads){const blend=settlementBlend410(pad,x,z);if(blend>weight){weight=blend;target=pad.y;}}
+   return mix(base,target,weight);
+  }
+  return s?mix(base,s.y,settlementBlend410(s,x,z)):base;
+ }
  naturalHeight(x,z){
   if(this.desert)return desertHeight(this,x,z);
   if(this.canyon)return canyonHeight(this,x,z);

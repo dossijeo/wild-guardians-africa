@@ -1,4 +1,4 @@
-import {TerrainField} from './terrain.js';
+import {TerrainField,canyonFrame} from './terrain.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint,centerServicePoint} from './centers.js';
 import {footprintsOverlap} from './footprints.js';
@@ -25,6 +25,24 @@ export function villageLayout(payload,x,z) {
     return {key:unit.key,kind:unit.kind,x:x+px,z:z+pz,radius,unit:unit.key,...(footprint?{footprint}:{})};
   });
 }
+// Keep each native unit at its authored scale, rotating wide houses along the river.
+export function canyonVillageLayout(payload,field,z) {
+  const rows=[z,z],layout=[];
+  for(const [i,unit] of payload.units.entries()){
+    const side=i%2?-1:1,index=side===1?0:1;
+    const width=(unit.max[0]-unit.min[0])*16,depth=(unit.max[2]-unit.min[2])*16;
+    const yaw=width>depth?Math.PI/2:0,hx=Math.min(width,depth)/2,hz=Math.max(width,depth)/2;
+    const bz=rows[index]+hz;rows[index]=bz+hz+3;
+    let edge=0;
+    for(let dz=-hz-1;dz<=hz+1;dz+=.5)edge=Math.max(edge,side*(field.riverX(bz+dz)-field.riverX(bz))+canyonFrame(field,bz+dz,side).waterHalf+.9);
+    const x=field.riverX(bz)+side*(edge+hx+1.25),c=Math.cos(yaw),n=Math.sin(yaw);
+    const cx=(unit.min[0]+unit.max[0])*8,cz=(unit.min[2]+unit.max[2])*8;
+    const hull=unit.hull??[[unit.min[0],unit.min[2]],[unit.max[0],unit.min[2]],[unit.max[0],unit.max[2]],[unit.min[0],unit.max[2]]];
+    const footprint=hull.map(([px,pz])=>{const dx=px*16-cx,dz=pz*16-cz;return {x:x+dx*c+dz*n,z:bz-dx*n+dz*c};});
+    layout.push({key:unit.key,kind:unit.kind,x,z:bz,radius:Math.hypot(hx,hz),unit:unit.key,yaw,footprint});
+  }
+  return {buildings:layout,endZ:Math.max(...rows)};
+}
 export function findVillageEntry(nav,layout,x,z,destination=null,additionalObstacles=[]) {
   const oldObstacles=nav.obstacles;
   nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];nav.walkCache?.clear();
@@ -42,9 +60,17 @@ function* initialLocations(nav,payload,legacy=false) {
   // rays skips most of the terrain between rays in the outer rings.
   for(let ring=0;ring<70;ring++)for(let angle=0,count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;angle<count;angle++) {
     yield;
-    const x=Math.cos(angle/count*Math.PI*2)*ring*12+60,z=Math.sin(angle/count*Math.PI*2)*ring*12;
-    const layout=villageLayout(payload,x,z);
-    const center={kind:'center',x:x+23,z,culture:payload.id==='saheliano'?'saheliana':payload.id};
+    let x=Math.cos(angle/count*Math.PI*2)*ring*12+60,z=Math.sin(angle/count*Math.PI*2)*ring*12;
+    const canyon=!legacy&&originalField.canyon;
+    if(canyon){z=(ring*24+angle*12)-30;x=originalField.riverX(z);}
+    const banks=canyon?canyonVillageLayout(payload,originalField,z):null;
+    const layout=banks?.buildings??villageLayout(payload,x,z);
+    const centerZ=banks?banks.endZ+10:z;
+    const center={kind:'center',x:banks?originalField.riverX(centerZ)+13:x+23,z:centerZ,culture:payload.id==='saheliano'?'saheliana':payload.id};
+    if(banks){
+      const local=centerFootprint({...center,x:0,z:0}).footprint;
+      center.x=Math.max(...local.map(p=>originalField.riverX(center.z+p.z)+canyonFrame(originalField,center.z+p.z).waterHalf+1.25-p.x));
+    }
     // Validate paths and the future farm on the same padded map we will save.
     // Choosing an entry first and levelling later can change mangrove habitats
     // and place a new prop over the previously accepted route.

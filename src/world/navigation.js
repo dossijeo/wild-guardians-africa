@@ -78,9 +78,16 @@ export class Navigation {
       walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),searchNeighborCache:new Map(),
     });
   }
-  terrainValid(x,z,radius=.3) {
+  workerSurface(x,z){
+    const ground=this.field.surface(x,z);
+    return this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
+  }
+  terrainValid(x,z,radius=.3,worker=false) {
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
-      if(this.field.blocked(x+dx,z+dz,.15)||this.field.slope(x+dx,z+dz)>.5)return false;
+      if(worker&&this.field.canyon){
+        const surface=(px,pz)=>this.workerSurface(px,pz);
+        if(Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6>.5)return false;
+      }else if(this.field.blocked(x+dx,z+dz,.15)||this.field.slope(x+dx,z+dz)>.5)return false;
     }
     return true;
   }
@@ -92,7 +99,7 @@ export class Navigation {
     return result;
   }
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
-    if(!this.terrainValid(x,z,radius))return false;
+    if(!this.terrainValid(x,z,radius,worker))return false;
     const point={x,z};
     if(this.obstacles.some(o=>{
       if(o.id===ignore||worker&&o.kind==='shield')return false;
@@ -317,7 +324,7 @@ export class Navigation {
     const midpoint={x:(start.x+end.x)/2,z:(start.z+end.z)/2};
     if(this.propsAt(midpoint.x,midpoint.z,distance(start,end)/2+radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&edgeDistance(start,end,p.x,p.z)<(p.radius??1.5)+radius))return false;
     const steps=Math.max(1,Math.ceil(distance(start,end)/.25));
-    for(let i=0;i<=steps;i++)if(!this.terrainValid(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius))return false;
+    for(let i=0;i<=steps;i++)if(!this.terrainValid(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius,worker))return false;
     return true;
   }
 }
