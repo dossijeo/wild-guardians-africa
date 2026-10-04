@@ -35,3 +35,11 @@ Se completaron cinco nuevas partidas desde el menú y selector originales: Mapun
 Todas terminan con contexto perdido, canvas desconectado, cero listeners activos, worker terminado, timer nulo y cola vacía. No se registran errores globales. Antes de iniciar se comprobó el aria-label del botón Comenzar y se esperó a que terminase el recorrido del menú. Calidad muy baja, almacenamiento aislado y audio silenciado; se conservan los límites del ensayo descritos anteriormente.
 
 Estado actualizado: 22/30 entradas reales acreditadas; faltan cuatro culturas de Sabana y cuatro de Desierto. QA-001 sigue parcial.
+
+## Sabana: cuatro culturas pendientes
+
+Se añadieron nuevas partidas reales para Saheliana, Suajili, Musgum y Etíope, mediante Juego nuevo y los dos pasos del selector original. Mapungubwe ya está acreditada en `docs/qa-acceptance-start.md` y en los tres ciclos de `docs/qa/world-lifecycle/README.md`.
+
+`sabana-four-cultures.json` conserva cuatro cargas completas con 1.000 monedas y 500/401/486/646 renders antes de guardar/salir por el menú de pausa. Se avanzaron los dos primeros mensajes del tutorial y se comprobó el HUD. `sabana-etiope.png` registra la cuarta combinación. Todas dejan el contexto perdido, canvas desconectado, listeners cero, worker terminado, timer nulo y cola vacía, sin errores globales. Calidad muy baja y almacenamiento en memoria, con los límites del ensayo descritos arriba.
+
+Estado actualizado: 26/30 entradas reales acreditadas; faltan las cuatro culturas de Desierto distintas de Etíope. QA-001 sigue parcial.
