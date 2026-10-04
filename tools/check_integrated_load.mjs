@@ -17,7 +17,8 @@ for(let z=-12;z<=12&&s.plants.length<32;z+=1.5)for(let x=5;x<=24&&s.plants.lengt
 }
 assert.equal(s.plants.length,32);Game.openInitialHiring(s);Game.hire(s,'qa-hire',{olderFemale:4,olderMale:4});s.tutorial.step='done';s.dayPlan={done:true};s.nightPlan={done:true};
 const eye={x:center.x+18,z:center.z+25};nav.setRaidView(eye,center);nav.setActiveBounds(activeChunkRegion(eye,'baja').bounds);
-const report={seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
+const warmNavigation=process.argv.includes('--warm-navigation');
+const report={warmNavigation,seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
 nav.findPath=function(...args){report.searches++;const start=performance.now(),result=find.apply(this,args),ms=performance.now()-start;if(ms>20&&report.slowSearches.length<20){const [from,to,radius,ignore,worker,margin]=args;report.slowSearches.push({elapsed:s.elapsed,phase:report.phase,from:{x:from.x,z:from.z},to:{x:to.x,z:to.z},radius,worker,margin,ms,found:!!result});}return result;};
 function step(){
   const before=performance.now();Game.tick(s,.1,nav);const ms=performance.now()-before;report.steps++;report.maxTickMs=Math.max(ms,report.maxTickMs);
@@ -26,7 +27,7 @@ function step(){
   if(report.steps%100===0)process.stdout.write(JSON.stringify({phase:report.phase,elapsed:s.elapsed,searches:report.searches,maxTickMs:report.maxTickMs})+'\n');
 }
 while(s.elapsed<130)step();assert.ok(report.events.WaterSatisfied>=8);
-report.phase='raid';hitStructure(center,468,s.elapsed);nav.setState(s);spawnRaid(s,{group:['warthog','hyena','buffalo','lion','rhino']},nav);assert.equal(s.raid.animals.length,5);
+report.phase='raid';hitStructure(center,468,s.elapsed);if(!warmNavigation)nav.setState(s);spawnRaid(s,{group:['warthog','hyena','buffalo','lion','rhino']},nav);assert.equal(s.raid.animals.length,5);
 while(s.raid&&!s.result&&s.elapsed<400)step();
 report.phase='complete';report.elapsed=s.elapsed;report.raidFinished=!s.raid;report.centerStatus=center.status;report.domainResult=s.result;process.stdout.write(JSON.stringify(report,null,2)+'\n');
 assert.ok(report.events.StructureHit>0);assert.equal(center.status,'ruined');assert.equal(s.raid,null);
