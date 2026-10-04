@@ -1,0 +1,731 @@
+{
+  "phase": "fault-primary",
+  "fault": "primary",
+  "attempts": [
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 0,
+      "balance": {
+        "n": "1500",
+        "d": "1"
+      },
+      "structures": 0,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [],
+      "bonuses": [],
+      "commands": [],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 38.9612000000005,
+      "balance": {
+        "n": "700",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        }
+      ],
+      "bonuses": [],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "dawn",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 0,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [
+        "hiring"
+      ],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "dawn",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 0,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        },
+        {
+          "id": "event-26",
+          "type": "HiringConfirmed"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4",
+        "966702f4-2f1e-4305-b578-11c486dea8ea"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "raid-end",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 320.79859999999945,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        },
+        {
+          "id": "event-26",
+          "type": "HiringConfirmed"
+        },
+        {
+          "id": "event-28",
+          "type": "RaidSpawned"
+        },
+        {
+          "id": "event-29",
+          "type": "AnimalRetreating"
+        },
+        {
+          "id": "event-30",
+          "type": "RaidEnded"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4",
+        "966702f4-2f1e-4305-b578-11c486dea8ea"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "fault-pending",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 398.86960000000096,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [
+        "menu"
+      ],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        },
+        {
+          "id": "event-26",
+          "type": "HiringConfirmed"
+        },
+        {
+          "id": "event-28",
+          "type": "RaidSpawned"
+        },
+        {
+          "id": "event-29",
+          "type": "AnimalRetreating"
+        },
+        {
+          "id": "event-30",
+          "type": "RaidEnded"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4",
+        "966702f4-2f1e-4305-b578-11c486dea8ea"
+      ],
+      "fault": "pending",
+      "success": false,
+      "error": "Cuota simulada de QA en pending",
+      "previousPreserved": true
+    },
+    {
+      "phase": "fault-backup",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 398.86960000000096,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [
+        "menu"
+      ],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        },
+        {
+          "id": "event-26",
+          "type": "HiringConfirmed"
+        },
+        {
+          "id": "event-28",
+          "type": "RaidSpawned"
+        },
+        {
+          "id": "event-29",
+          "type": "AnimalRetreating"
+        },
+        {
+          "id": "event-30",
+          "type": "RaidEnded"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4",
+        "966702f4-2f1e-4305-b578-11c486dea8ea"
+      ],
+      "fault": "backup",
+      "success": false,
+      "error": "Cuota simulada de QA en backup",
+      "previousPreserved": true
+    },
+    {
+      "phase": "fault-primary",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 398.86960000000096,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [
+        "menu"
+      ],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        },
+        {
+          "id": "event-26",
+          "type": "HiringConfirmed"
+        },
+        {
+          "id": "event-28",
+          "type": "RaidSpawned"
+        },
+        {
+          "id": "event-29",
+          "type": "AnimalRetreating"
+        },
+        {
+          "id": "event-30",
+          "type": "RaidEnded"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4",
+        "966702f4-2f1e-4305-b578-11c486dea8ea"
+      ],
+      "fault": "primary",
+      "success": false,
+      "error": "Cuota simulada de QA en primary",
+      "previousPreserved": true
+    }
+  ],
+  "writes": [
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "raid-end",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "raid-end",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "raid-end",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "fault-pending",
+      "stage": "pending",
+      "failed": true
+    },
+    {
+      "phase": "fault-backup",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "fault-backup",
+      "stage": "backup",
+      "failed": true
+    },
+    {
+      "phase": "fault-primary",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "fault-primary",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "fault-primary",
+      "stage": "primary",
+      "failed": true
+    }
+  ],
+  "otherSlotPreserved": true,
+  "worlds": [
+    {
+      "loads": 1,
+      "disposals": 0,
+      "disposed": false,
+      "canvasConnected": true
+    }
+  ],
+  "current": {
+    "day": 2,
+    "time": 398.86960000000096,
+    "balance": {
+      "n": "675",
+      "d": "1"
+    },
+    "structures": 1,
+    "plants": 5,
+    "raid": false,
+    "pauses": [
+      "menu"
+    ],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 707,
+        "y": 378
+      }
+    },
+    "events": [
+      {
+        "id": "event-2",
+        "type": "PlacementCommitted"
+      },
+      {
+        "id": "event-4",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-6",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-8",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-10",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-12",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-14",
+        "type": "AgriculturalEventApplied"
+      },
+      {
+        "id": "event-20",
+        "type": "Dawn"
+      },
+      {
+        "id": "event-26",
+        "type": "HiringConfirmed"
+      },
+      {
+        "id": "event-28",
+        "type": "RaidSpawned"
+      },
+      {
+        "id": "event-29",
+        "type": "AnimalRetreating"
+      },
+      {
+        "id": "event-30",
+        "type": "RaidEnded"
+      }
+    ],
+    "messages": [
+      "Buena temporada: aumenta el margen hasta el próximo riego de 5 plantas.",
+      "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."
+    ]
+  },
+  "alerts": [
+    "No se pudo guardar la partida: Cuota simulada de QA en primary"
+  ],
+  "errors": []
+}

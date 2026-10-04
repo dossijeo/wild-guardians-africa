@@ -1,0 +1,125 @@
+{
+  "phase": "load",
+  "fault": "none",
+  "attempts": [
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 0,
+      "balance": {
+        "n": "1500",
+        "d": "1"
+      },
+      "structures": 0,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [],
+      "bonuses": [],
+      "commands": [],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 38.9612000000005,
+      "balance": {
+        "n": "700",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        }
+      ],
+      "bonuses": [],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    }
+  ],
+  "writes": [
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    }
+  ],
+  "otherSlotPreserved": true,
+  "worlds": [
+    {
+      "loads": 1,
+      "disposals": 0,
+      "disposed": false,
+      "canvasConnected": true
+    }
+  ],
+  "current": {
+    "day": 1,
+    "time": 51.93300000000126,
+    "balance": {
+      "n": "700",
+      "d": "1"
+    },
+    "structures": 1,
+    "plants": 0,
+    "raid": false,
+    "pauses": [],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 707,
+        "y": 378
+      }
+    },
+    "events": [
+      {
+        "id": "event-2",
+        "type": "PlacementCommitted"
+      }
+    ],
+    "messages": []
+  },
+  "alerts": [],
+  "errors": []
+}

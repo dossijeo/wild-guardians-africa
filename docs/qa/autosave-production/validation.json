@@ -1,0 +1,23 @@
+{
+  "approved_triggers": [
+    "structural-purchase",
+    "dawn-after-agriculture",
+    "raid-end",
+    "return-to-menu"
+  ],
+  "storage_failure_stages": [
+    "pending",
+    "backup",
+    "primary"
+  ],
+  "failed_exit_preserves_world": true,
+  "other_slot_unchanged": true,
+  "restored_money": "675",
+  "restored_commands": 7,
+  "focused_tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "production_commit": "2b54639",
+  "scope": "Production UI/RAF plus controlled original-terrain event/raid checkpoints; injected Storage-interface DOMExceptions, not actual quota exhaustion. Subsequent natural dawn during observation is retained."
+}

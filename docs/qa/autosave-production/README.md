@@ -1,0 +1,13 @@
+# Integrated production autosave acceptance
+
+`tests/browser/autosave-production.html` imports the real application, native menu, HUD and WorldScene. Its isolated storage implements the browser Storage interface and throws controlled `QuotaExceededError` DOMExceptions at staging, backup or primary writes. It never fills the actual browser quota or changes personal slots. Production SaveRepository, saveGame, the application RAF/event boundary selection and menu handlers remain unchanged. Audio is muted.
+
+The player continues the prepared Mapungubwe/Sabana slot A (seed712), opens Construir and purchases the actual800-coin centre on native terrain. Five paid millet plants and a selected20% season event are diagnostic preparation; the clock is positioned at599.9. The actual RAF closes the night, applies the event to all five plants and saves day2/time0/hiring. A zero-worker contract is confirmed in the real dialog. A single native warthog entry is generated with a controlled exhausted attack budget; it physically retreats via the production raid/navigation update and emits RaidEnded, which triggers another exact save. These setups isolate boundaries; they are not a natural first-day balance or full attack test.
+
+The real pause menu then exercises staging, backup and primary write failures. Every attempt reports the error, leaves the previous primary intact and preserves the second sentinel slot B. None announces Partida guardada. A failed Guardar y volver al menú also retains the live world/canvas instead of discarding unsaved state. After disabling the fault, explicit Guardar succeeds and announces success; Guardar y volver al menú saves and disposes the world exactly once.
+
+The files record each stage and actual UI error screenshots. `purchase.json`, `dawn.json`, `raid-end.json` and `menu-exit.json` cover the four approved triggers. Failed-stage reports, `failed-exit.json` and `retry-success.json` cover error/retry UI. A later native Continue reload verifies retained balance, crop count and unique event/command identities. Only a successful repository transaction is marked exact; this compares the entire serialized state to the actual primary value at the time of the write.
+
+Twelve focused autosave, saveGame and slot-identity tests also pass. The directed browser proof establishes application wiring and error presentation; storage failures are injected rather than caused by physically exhausting disk/browser quota.
+
+Reload restores the exact saved day2 clock398.8696,675 coins,seven command IDs and event IDs; the transient menu pause is cleared. During subsequent live observation the campaign naturally reaches a new day3 dawn. This later event is retained, rather than presented as an exact static-state reload comparison.

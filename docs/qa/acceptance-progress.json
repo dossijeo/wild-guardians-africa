@@ -1751,12 +1751,14 @@
       "area": "Guardado y presentación",
       "scenario": "Guardar desde cada disparador aprobado",
       "expected": "Snapshot del slot actual; sin sobrescribir otra ranura.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-save-isolation.md",
-        "docs/qa-autosave-events.md"
+        "docs/qa-autosave-events.md",
+        "tests/browser/autosave-production.html",
+        "docs/qa/autosave-production/README.md"
       ],
-      "notes": "Production SaveRepository now enforces the requested slot identity in staging, primary and backup; wrong-slot snapshots cannot replace a valid backup or load another campaign. Explicit staging/backup/primary failures preserve last valid save and do not announce success; retry succeeds once. App menu exit checks save result before discarding current state/scene. In-memory storage adapter, not browser quota/UI fault injection. Remaining: integrated four approved save triggers and their error presentation. Incremental frame selector now uses only events newer than its own pre-tick tail; no shared cross-slot marker. Actual Game.tick dawn/raid exit/victory/economic defeat and explicit wall/menu snapshots preserve final state once; quiet/worker frames produce no writes. Rollover of the bounded event buffer covered. Retry also checks save success. Full UI trigger/error acceptance still outstanding."
+      "notes": "Production SaveRepository now enforces the requested slot identity in staging, primary and backup; wrong-slot snapshots cannot replace a valid backup or load another campaign. Explicit staging/backup/primary failures preserve last valid save and do not announce success; retry succeeds once. App menu exit checks save result before discarding current state/scene. In-memory storage adapter, not browser quota/UI fault injection. Remaining: integrated four approved save triggers and their error presentation. Incremental frame selector now uses only events newer than its own pre-tick tail; no shared cross-slot marker. Actual Game.tick dawn/raid exit/victory/economic defeat and explicit wall/menu snapshots preserve final state once; quiet/worker frames produce no writes. Rollover of the bounded event buffer covered. Retry also checks save success. Full UI trigger/error acceptance still outstanding. Closure: actual native Continue/production HUD/WorldScene/RAF observes paid800 centre purchase, selected season applied to five paid original-terrain plants before Dawn save, canonical warthog physical retreat followed by RaidEnded save, and successful menu exit. Complete primary snapshots match serialization; second slot remains byte-identical. Injected Storage-interface QuotaExceededError at staging/backup/primary shows actual UI alerts, no success notice, intact previous primary. Failed menu exit retains world; retry succeeds, announces success and disposes once. Native Continue restores exactday2 clock398.8696/balance675/seven commands/event identities; a later natural day3 dawn is separately recorded.12 focused tests pass; injected errors do not claim actual disk/browser quota exhaustion."
     },
     {
       "id": "QA-145",

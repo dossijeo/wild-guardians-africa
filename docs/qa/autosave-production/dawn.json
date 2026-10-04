@@ -1,0 +1,240 @@
+{
+  "phase": "dawn",
+  "fault": "none",
+  "attempts": [
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 0,
+      "balance": {
+        "n": "1500",
+        "d": "1"
+      },
+      "structures": 0,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [],
+      "bonuses": [],
+      "commands": [],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "load",
+      "slotId": "qa-autosave-a",
+      "day": 1,
+      "time": 38.9612000000005,
+      "balance": {
+        "n": "700",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 0,
+      "raid": false,
+      "pauses": [],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        }
+      ],
+      "bonuses": [],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    },
+    {
+      "phase": "dawn",
+      "slotId": "qa-autosave-a",
+      "day": 2,
+      "time": 0,
+      "balance": {
+        "n": "675",
+        "d": "1"
+      },
+      "structures": 1,
+      "plants": 5,
+      "raid": false,
+      "pauses": [
+        "hiring"
+      ],
+      "events": [
+        {
+          "id": "event-2",
+          "type": "PlacementCommitted"
+        },
+        {
+          "id": "event-4",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-6",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-8",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-10",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-12",
+          "type": "CropPlaced"
+        },
+        {
+          "id": "event-14",
+          "type": "AgriculturalEventApplied"
+        },
+        {
+          "id": "event-20",
+          "type": "Dawn"
+        }
+      ],
+      "bonuses": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "commands": [
+        "3b103024-ed13-46d8-8e10-92c90f951f31",
+        "qa-event-seed-0",
+        "qa-event-seed-1",
+        "qa-event-seed-2",
+        "qa-event-seed-3",
+        "qa-event-seed-4"
+      ],
+      "fault": "none",
+      "success": true,
+      "exact": true
+    }
+  ],
+  "writes": [
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "load",
+      "stage": "primary",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "pending",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "backup",
+      "failed": false
+    },
+    {
+      "phase": "dawn",
+      "stage": "primary",
+      "failed": false
+    }
+  ],
+  "otherSlotPreserved": true,
+  "worlds": [
+    {
+      "loads": 1,
+      "disposals": 0,
+      "disposed": false,
+      "canvasConnected": true
+    }
+  ],
+  "current": {
+    "day": 2,
+    "time": 0,
+    "balance": {
+      "n": "675",
+      "d": "1"
+    },
+    "structures": 1,
+    "plants": 5,
+    "raid": false,
+    "pauses": [
+      "hiring"
+    ],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 707,
+        "y": 378
+      }
+    },
+    "events": [
+      {
+        "id": "event-2",
+        "type": "PlacementCommitted"
+      },
+      {
+        "id": "event-4",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-6",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-8",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-10",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-12",
+        "type": "CropPlaced"
+      },
+      {
+        "id": "event-14",
+        "type": "AgriculturalEventApplied"
+      },
+      {
+        "id": "event-20",
+        "type": "Dawn"
+      }
+    ],
+    "messages": [
+      "Buena temporada: aumenta el margen hasta el próximo riego de 5 plantas."
+    ]
+  },
+  "alerts": [],
+  "errors": []
+}
