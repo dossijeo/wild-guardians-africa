@@ -74,3 +74,12 @@ El tutorial conserva lecturas no bloqueantes, pero la primera colocación del ce
 Validación: 28/28 pruebas dirigidas de pausa guiada, secuencia de manos, tutorial, permisos y aproximación de riego. Build y paquete web verificados: 579 archivos, 816 enlaces relativos, 20 GLB de ejecución. En el marco CSS 390 × 844 del juego real se observó la pausa de la mano del HUD y de la mano 3D, con Construir y la selección de Centro operativos. Esta observación precedió al último ajuste de continuidad dentro del selector; ese ajuste está comprobado por la prueba de dominio. No acredita un recorrido completo del primer día ni un móvil físico.
 
 La CI de `1bd5ae8` terminó con 35 fallos en pruebas de encuentros, lesiones y retorno tras incursiones. El cambio de aproximación de riego modifica las posiciones y trayectorias iniciales de esos escenarios; queda pendiente separar expectativas antiguas de defectos reales. No se considera validada la batería general por el resultado dirigido de este cambio.
+
+
+### Encuentros tras separar al trabajador del cultivo
+
+Se conservan los puntos iniciales de los encuentros de aceptación (trabajador en 20, 0), desplazando sus cultivos de prueba a 20,83, 0. La posición real de llegada queda comprobada explícitamente. No se modifica la lógica de encuentros ni se eliminan las aserciones de golpes, azar, empujón, caída, lesión, recuperación o retirada guardada. La muestra de carrera tras regresar usa cultivos más alejados del acceso del centro y exige que la tarea todavía esté caminando.
+
+Resultado: 109/109 pruebas dirigidas y 1544/1544 de la batería completa, sin fallos. Evidencia: `watering-encounter-regressions.json`. Esto resuelve los 35 fallos de la CI anterior; no acredita por sí solo toda la aceptación visual y de audio.
+
+El nuevo recorrido por interfaz del juego real, en marco CSS 390 × 844 (Gran río/Suajili), mantuvo tiempo simulado 14,7499 durante la mano del HUD, los selectores de Construir/Cultivar, la colocación del centro y la caducidad/reselección de la herramienta. Tras plantar Mijo se liberó la pausa y se abrió automáticamente la contratación en el día 1 (08:04). Saldo: 1500 → 700 → 695 → 595 al contratar un hombre mayor. Confirmación sin botón de cerrar en la contratación; cero errores observados hasta ese punto. Sigue pendiente acreditar el resto de la jornada y un móvil físico.

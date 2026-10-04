@@ -27,10 +27,12 @@ for(const culture of Game.CULTURES)for(const id of species)test(`QA-098: ${cultu
  }
  assert.equal(s.raid,null);for(const count of [...Object.values(samples),...Object.values(calibrated)])assert.ok(count>=2);assert.equal(a.status,'gone');assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
 });
+// Place the crop .83 m beyond the intended encounter start (20, 0): watering
+// now stops outside it. Preserve the encounter geometry and all hit assertions.
 for(const culture of Game.CULTURES)test(`QA-100: ${culture} actual last worker hit exhausts the budget and the saved exit keeps physical separation`,()=>{
  const s=Game.newGame({seed:21,culture,slotId:'last-hit-'+culture});Game.resume(s,'intro');s.ledger.balance=rational(10000);const nav=navigation(s);nav.activeBounds=[-24,-24,24,24];
- Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20,0,nav);s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});s.dayPlan={done:true};s.nightPlan={done:true};
- for(let i=0;s.workers[0].status!=='acting'&&i<2000;i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],w=s.workers[0];assert.equal(a.hitsRemaining,2);
+ Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20.83,0,nav);s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});s.dayPlan={done:true};s.nightPlan={done:true};
+ for(let i=0;s.workers[0].status!=='acting'&&i<2000;i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],w=s.workers[0];assert.ok(Math.abs(w.x-20)<1e-8&&Math.abs(w.z)<1e-8);assert.equal(a.hitsRemaining,2);
  until(s,nav,()=>a.hitsRemaining===0);assert.equal(w.hits,2);assert.equal(w.incapacitated,true);assert.equal(a.status,'attacking');assert.ok(a.attackRemaining>0);
  const loaded=saved(s),fresh=navigation(loaded);fresh.activeBounds=[-24,-24,24,24];let steps=0,retreatFrames=0;
  while((s.raid||loaded.raid)&&steps++<3000){

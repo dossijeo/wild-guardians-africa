@@ -1,0 +1,24 @@
+{
+  "scope": "Full Node test suite after preserving encounter start geometry with the new watering stand-off; current runtime includes guided tutorial action pauses. Not full visual/audio/mobile acceptance.",
+  "runtime_commit": "1abb410",
+  "test_changes": [
+    "tests/acceptance-frontal-encounter.test.js",
+    "tests/acceptance-live-injury.test.js",
+    "tests/acceptance-raid-motion-shield.test.js",
+    "tests/encounters.test.js"
+  ],
+  "directed": {
+    "tests": 109,
+    "pass": 109,
+    "fail": 0,
+    "duration_ms": 2164.3114
+  },
+  "full_suite": {
+    "command": "npm test",
+    "tests": 1544,
+    "pass": 1544,
+    "fail": 0,
+    "duration_ms": 630940.4088
+  },
+  "reason": "Move encounter fixture crop to x=20.83 so the physical worker watering approach still starts the raid at x=20,z=0. Assert that position explicitly and retain all contact, damage, RNG, fall, incapacity, recovery, saved-exit and motion checks. Return fixture puts urgent crops farther from the service entrance so the running sample occurs before arrival, and additionally asserts walking task status."
+}

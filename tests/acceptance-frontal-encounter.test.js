@@ -12,10 +12,12 @@ function actors(s){const a=s.raid?.animals[0],w=s.workers[0];if(!a)return null;c
 function eligible(s){const x=actors(s);return x&&x.w.status!=='home'&&!x.w.incapacitated&&!['gone','retreating'].includes(x.a.status)&&x.a.hitsRemaining>0&&x.close&&!x.collision&&x.frontal&&!(s.raid.encounterContacts??[]).includes(x.pair);}
 function saved(s){const map=new Map(),r=new SaveRepository({getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)});r.save(s);return r.load(s.slotId);}
 const domain=s=>JSON.parse(serialize(s));
+// Place the crop .83 m beyond the intended encounter start (20, 0): watering
+// now stops outside it. Preserve the encounter geometry and all hit assertions.
 function fixture(culture,seed){
  const s=Game.newGame({seed,culture,slotId:`frontal-${culture}-${seed}`});Game.resume(s,'intro');s.ledger.balance=rational(10000);const nav=navigation(s,seed);
- Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20,0,nav);s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});s.dayPlan={done:true};s.nightPlan={done:true};
- for(let i=0;i<2000&&s.workers[0].status!=='acting';i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');spawnRaid(s,{group:['warthog']},nav);
+ Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20.83,0,nav);s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});s.dayPlan={done:true};s.nightPlan={done:true};
+ for(let i=0;i<2000&&s.workers[0].status!=='acting';i++)Game.tick(s,.05,nav);assert.equal(s.workers[0].status,'acting');assert.ok(Math.abs(s.workers[0].x-20)<1e-8&&Math.abs(s.workers[0].z)<1e-8);spawnRaid(s,{group:['warthog']},nav);
  for(let i=0;i<2000&&!eligible(s)&&s.raid;i++)Game.tick(s,.05,nav);assert.ok(eligible(s));return {s,nav};
 }
 for(const culture of Game.CULTURES)for(const [seed,accepted] of [[21,true],[152,false]])test(`QA-105: ${culture} real non-collision frontal ${accepted?'hit':'rejection'} rolls once and retains contact on reload`,()=>{

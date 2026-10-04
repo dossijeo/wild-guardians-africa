@@ -91,7 +91,8 @@ test('Raid survivors return walking even with urgent tasks, and resume ordinary 
   const world={placement:()=>({valid:true}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[b]};
   const raid=s.raid;s.raid=null;
   Game.placeStructure(s,'center',{x:20,z:0},world);const center=s.structures[0];
-  for(let i=0;i<3;i++)Game.plant(s,'plant-'+i,'mijo',24+i*1.5,0,world);
+  // Leave enough clear distance beyond the building for a running frame before arrival.
+  for(let i=0;i<3;i++)Game.plant(s,'plant-'+i,'mijo',30+i*1.5,0,world);
   s.raid=raid;
   Object.assign(worker,{x:2,z:0,centerId:center.id,villageId:s.villages[0].id,runRemaining:50});
   s.initialPreparation=false;s.time=100;animal.status='gone';updateRaid(s,.1,world);
@@ -99,5 +100,5 @@ test('Raid survivors return walking even with urgent tasks, and resume ordinary 
   Game.tick(s,1,world);assert.ok(Math.abs(worker.x-3.08)<1e-9);assert.equal(worker.runRemaining,50);assert.equal(worker.running,false);
   while(worker.status==='arriving')Game.tick(s,.1,world);
   assert.equal(worker.raidReturn,false);assert.equal(worker.runRemaining,50);
-  Game.tick(s,.2,world);assert.ok(worker.runRemaining<50);assert.equal(worker.running,true);
+  Game.tick(s,.2,world);assert.equal(worker.status,'walking');assert.ok(worker.runRemaining<50);assert.equal(worker.running,true);
 });

@@ -13,11 +13,13 @@ const profiles=['olderMale','olderFemale','youngMale','youngFemale'];
 function navigation(s){const n=new Navigation(19,'sabana',{});n.field={blocked:()=>false,slope:()=>0,surface:()=>0};n.propsAt=()=>[];n.activeBounds=[-24,-24,24,24];n.setState(s);return n;}
 function saved(s){const map=new Map(),repo=new SaveRepository({getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)});repo.save(s);return repo.load(s.slotId);}
 function until(s,nav,predicate,seconds=150){for(let i=0;!predicate()&&i<seconds*20&&!s.pauses.length&&!s.result;i++)Game.tick(s,.05,nav);assert.ok(predicate(),JSON.stringify({time:s.time,worker:s.workers[0],raid:s.raid}));}
+// Place the crop .83 m beyond the intended encounter start (20, 0): watering
+// now stops outside it. Preserve the encounter geometry and all hit assertions.
 function fixture(culture,profile){
  const s=Game.newGame({seed:19,culture,slotId:`injury-${culture}-${profile}`});Game.resume(s,'intro');s.ledger.balance=rational(10000);const nav=navigation(s);
- Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20,0,nav);
+ Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'crop','mijo',20.83,0,nav);
  s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';Game.pause(s,'hiring');Game.hire(s,'hire',{[profile]:1});s.dayPlan={done:true};s.nightPlan={done:true};
- until(s,nav,()=>s.workers[0].status==='acting');const w=s.workers[0],task=w.taskId;
+ until(s,nav,()=>s.workers[0].status==='acting');const w=s.workers[0],task=w.taskId;assert.ok(Math.abs(w.x-20)<1e-8&&Math.abs(w.z)<1e-8);
  // Explicit exhausted ordinary allowance; both actors' positions and all
  // later collisions, pushes, falls and recovery evolve through production ticks.
  w.runRemaining=0;spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);assert.equal(w.status,'fleeing');assert.equal(w.taskId,null);assert.equal(s.tasks.find(t=>t.id===task).workerId,null);
