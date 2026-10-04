@@ -18,6 +18,9 @@ test('intensive native opening hires daily, expands beyond 16 crops and reinvest
  assert.equal(summary.activity.unoccupiedSeconds,report.activity.unoccupiedSeconds);
  assert.equal(summary.activity.unoccupiedFraction,report.activity.unoccupiedFraction);
  assert.equal(totals.reduce((n,row)=>n+BigInt(row.income),0n),Object.entries(report.state.ledger.entries).filter(([id])=>id.startsWith('deliver:')).reduce((n,[,entry])=>n+BigInt(entry.n),0n));
+ const cash=summary.cashflow;
+ assert.equal(BigInt(cash.openingBalance)+BigInt(cash.harvestIncome)-BigInt(cash.seedCosts)-BigInt(cash.wageCosts)-BigInt(cash.repairCosts)-BigInt(cash.centreCosts)+BigInt(cash.otherNet),BigInt(report.state.ledger.balance.n));
+ assert.equal(cash.harvestIncome,totals.reduce((n,row)=>n+BigInt(row.income),0n).toString());
 });
 test('reinvestment without growing labour or maintenance reserves can lose despite a large plantation',()=>{
  const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false});

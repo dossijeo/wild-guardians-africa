@@ -22,6 +22,17 @@ export function summarizeIntensiveFarm(report){
   const days=report.daily.length,daylight=days*300;
   const idle=Object.fromEntries(['budget','space','shift-end','incursion','night'].map(reason=>[reason,report.daily.reduce((total,row)=>total+(row.idle[reason]??0),0)]));
   const unoccupied=idle.budget+idle.space+idle['shift-end'];
+  const cash={harvestIncome:0n,seedCosts:0n,wageCosts:0n,repairCosts:0n,centreCosts:0n,otherNet:0n};
+  for(const [id,entry] of Object.entries(state.ledger.entries)){
+    const amount=BigInt(entry.n);
+    if(id.startsWith('deliver:'))cash.harvestIncome+=amount;
+    else if(id.startsWith('intensive-plant-'))cash.seedCosts-=amount;
+    else if(id.startsWith('intensive-hire-'))cash.wageCosts-=amount;
+    else if(id.startsWith('repair:'))cash.repairCosts-=amount;
+    else if(id==='center')cash.centreCosts-=amount;
+    else cash.otherNet+=amount;
+  }
+  const operatingCashFlow=cash.harvestIncome-cash.seedCosts-cash.wageCosts-cash.repairCosts+cash.otherNet;
   return {
     biome:report.biome,culture:report.culture,seed:report.seed,result:report.result,
     provenance:report.provenance??null,
@@ -29,6 +40,7 @@ export function summarizeIntensiveFarm(report){
     campaign100:report.result==='victory'&&report.completedNights===100?'verified':'unverified',
     completedNights:report.completedNights,daysObserved:days,money:report.money,
     maximumLiving:report.maximumLiving,speciesObserved:Object.keys(bySpecies).length,bySpecies,
+    cashflow:{openingBalance:'1500',...Object.fromEntries(Object.entries(cash).map(([key,value])=>[key,String(value)])),operatingCashFlow:String(operatingCashFlow),endingBalance:state.ledger.balance.n},
     activity:{daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,idleSecondsByReason:idle,longestIdle:report.activity.longestIdle,p90LongestIdle:report.activity.p90LongestIdle},
     daily:report.daily.map(({day,money,staff,planted,delivered,destroyed,living,centerHp,longestIdle,idle})=>({day,money,staff,planted,delivered,destroyed,living,centerHp,longestIdle,idle})),
     scope:'Recorded domain strategy and simulated time; not physical player activity, GPU frametime or complete biome/culture acceptance. Dead unpicked plants are losses in this strategy, which never removes crops manually.'
