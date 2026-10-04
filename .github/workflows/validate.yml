@@ -40,8 +40,10 @@ jobs:
           name: wild-guardians-build
           path: dist/
           retention-days: 7
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wild-guardians-itch
           path: test-results/wild-guardians-itch.zip
+          archive: false
+          if-no-files-found: error
           retention-days: 7
