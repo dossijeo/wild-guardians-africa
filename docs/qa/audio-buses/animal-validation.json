@@ -11,8 +11,12 @@
     "durationMs": 1882.3894
   },
   "completeLocalSuite": {
-    "status": "running",
-    "log": ".cache/animal-audio-full.log"
+    "status": "passed",
+    "passed": 1336,
+    "failed": 0,
+    "durationMs": 705393.5704,
+    "log": ".cache/animal-audio-full.log",
+    "revision": "b30b47c"
   },
   "build": {
     "result": "passed",
@@ -59,7 +63,6 @@
   },
   "limitations": [
     "No listening evidence",
-    "No full 3D worker/beast/collapse mixture",
-    "Complete local regression is still running"
+    "No full 3D worker/beast/collapse mixture"
   ]
 }
