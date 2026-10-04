@@ -43,3 +43,11 @@ Se añadieron nuevas partidas reales para Saheliana, Suajili, Musgum y Etíope, 
 `sabana-four-cultures.json` conserva cuatro cargas completas con 1.000 monedas y 500/401/486/646 renders antes de guardar/salir por el menú de pausa. Se avanzaron los dos primeros mensajes del tutorial y se comprobó el HUD. `sabana-etiope.png` registra la cuarta combinación. Todas dejan el contexto perdido, canvas desconectado, listeners cero, worker terminado, timer nulo y cola vacía, sin errores globales. Calidad muy baja y almacenamiento en memoria, con los límites del ensayo descritos arriba.
 
 Estado actualizado: 26/30 entradas reales acreditadas; faltan las cuatro culturas de Desierto distintas de Etíope. QA-001 sigue parcial.
+
+## Cierre de la matriz de entrada
+
+Se recuperó el informe que había quedado en `.cache` al atender la revisión móvil: `desierto-four-cultures-before-onboarding.json`. Acredita las cuatro cargas reales de Desierto/Mapungubwe, Saheliana, Suajili y Musgum, sus renders y la salida normal. Todas terminan con contexto perdido, canvas desconectado, cero listeners, worker terminado y stream vacío, sin errores. Es evidencia histórica del inicio con 1000, no una captura de las nuevas reglas.
+
+Además se repitió Desierto/Etíope sobre el código actual `44f5c7b`: selector original con aria-label de la combinación correcta, cubierta durante 3,918 segundos, 1500 iniciales y reloj/tutorial sin pausas. Se construyó su centro nativo por 800 en la ubicación inicial y un mijo por 5; contratación automática por 100 deja 595. El renderer dibujó 8382 frames y se liberó completamente al salir: `desierto-etiope-current-lifecycle.json`, `desierto-etiope-current-start.json` y `desierto-etiope-current.png`.
+
+QA-001 queda verificado en su alcance de flujo nativo y combinación válida: las 30 entradas quedan archivadas. No se afirma que se hayan repetido las 30 con las nuevas reglas económicas; el saldo nuevo y el tutorial no bloqueante tienen su prueba actual en Desierto/Etíope y en el recorrido completo móvil de Sabana/Mapungubwe. Las pruebas de terreno y logística de las 30 combinaciones también pasan en la regresión actual de 1221 casos. La matriz no acredita audio perceptual ni todos los perfiles de rendimiento.

@@ -1,21 +1,21 @@
 {
   "plan": "docs/plan/casos_prueba_integracion.json",
   "plan_sha256": "cc0cb5f73fd09828bb1e9c7a47d9227d27b5c3933287654e40471b3274794e73",
-  "implementation_commit": "b112d8d",
-  "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance.",
+  "implementation_commit": "44f5c7b",
+  "scope": "Incremental acceptance audit; pending does not mean absent or broken. Earlier QA evidence must be linked and checked case by case. Unit success alone is not full integrated acceptance. Latest approved onboarding rules override the original 1000-coin/blocking tutorial behavior; historical notes retain their original evidence context.",
   "cases": [
     {
       "id": "QA-001",
       "area": "Inicio y UI",
       "scenario": "Nueva partida con cada combinación de seis biomas y cinco culturas",
       "expected": "Dos pasos, selección conservada y combinación válida; no se crea una sexta cultura.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
         "docs/qa-acceptance-selector.md",
         "docs/qa/production-combinations/README.md"
       ],
-      "notes": "All 30 combinations exercised in actual native selector: correct biome/culture, checked radio, enabled matching Start, exactly 5 cultures. Desert/Ethiopian choices retained after back and reopening. World entry observed for Sabana/Mapungubwe and Desert/Ethiopian. Remaining: actual world entry in other 28 combinations. Five additional actual production entries now verified for Manglares with all five cultures using native menu/two-step selector, full WorldScene/HUD/tutorial, 1000 starting coins and native pause/save/exit. All five render and cleanly dispose; zero global errors. Evidence: docs/qa/production-combinations/README.md. Total 7/30; remaining 23 actual world entries. Gran rio adds five actual production entries, one per culture: native two-step choice, full rendering/tutorial/HUD,1000 starting coins, normal save/exit and zero errors. Evidence gran-rio-five-cultures.json and gran-rio-etiope.png. Updated total12/30; remaining18 (Sabana4,Desierto4,Volcanes5,Gran canon5). Volcanes adds five actual production starts across all cultures: native choice, full world/HUD/tutorial,1000 initial coins, normal save/exit, no global errors and detached/lost old contexts. Evidence volcanes-five-cultures.json and volcanes-etiope.png. Updated total17/30; remaining13 (Gran canon5,Sabana4,Desierto4). Gran canon adds five actual production starts across all cultures, with native two-step choice, full world/HUD/tutorial,1000 initial coins, normal save/exit and no global errors. Old contexts/canvas/listeners/worker are released. Evidence gran-canon-five-cultures.json and gran-canon-etiope.png. Updated total22/30; remaining8 (Sabana4,Desierto4). Sabana adds actual production starts for Saheliana,Suajili,Musgum,Etiope; Mapungubwe was already covered. Native two-step choice, full world/HUD/tutorial,1000 initial coins, normal save/exit and zero global errors. Evidence sabana-four-cultures.json and sabana-etiope.png. Updated total26/30; remaining4 Desierto cultures other than Etiope."
+      "notes": "All 30 combinations exercised in actual native selector: correct biome/culture, checked radio, enabled matching Start, exactly 5 cultures. Desert/Ethiopian choices retained after back and reopening. World entry observed for Sabana/Mapungubwe and Desert/Ethiopian. Remaining: actual world entry in other 28 combinations. Five additional actual production entries now verified for Manglares with all five cultures using native menu/two-step selector, full WorldScene/HUD/tutorial, 1000 starting coins and native pause/save/exit. All five render and cleanly dispose; zero global errors. Evidence: docs/qa/production-combinations/README.md. Total 7/30; remaining 23 actual world entries. Gran rio adds five actual production entries, one per culture: native two-step choice, full rendering/tutorial/HUD,1000 starting coins, normal save/exit and zero errors. Evidence gran-rio-five-cultures.json and gran-rio-etiope.png. Updated total12/30; remaining18 (Sabana4,Desierto4,Volcanes5,Gran canon5). Volcanes adds five actual production starts across all cultures: native choice, full world/HUD/tutorial,1000 initial coins, normal save/exit, no global errors and detached/lost old contexts. Evidence volcanes-five-cultures.json and volcanes-etiope.png. Updated total17/30; remaining13 (Gran canon5,Sabana4,Desierto4). Gran canon adds five actual production starts across all cultures, with native two-step choice, full world/HUD/tutorial,1000 initial coins, normal save/exit and no global errors. Old contexts/canvas/listeners/worker are released. Evidence gran-canon-five-cultures.json and gran-canon-etiope.png. Updated total22/30; remaining8 (Sabana4,Desierto4). Sabana adds actual production starts for Saheliana,Suajili,Musgum,Etiope; Mapungubwe was already covered. Native two-step choice, full world/HUD/tutorial,1000 initial coins, normal save/exit and zero global errors. Evidence sabana-four-cultures.json and sabana-etiope.png. Updated total26/30; remaining4 Desierto cultures other than Etiope. Closure: archived the four actual Desert entries interrupted by mobile work; all 30 native production entries are now retained. Fresh Desert/Ethiopian on 44f5c7b verifies 1500, loading cover, nonblocking clock/tutorial, native center and seed, automatic hiring, normal save/exit and full disposal with zero errors. These are flow/valid-combination proofs, not a claim of 30 new-money repeats or full quality/audio coverage."
     },
     {
       "id": "QA-002",
@@ -38,9 +38,18 @@
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
-        "docs/qa-center-logistics.md"
+        "docs/qa-center-logistics.md",
+        "docs/qa/mobile-first-day/README.md"
       ],
-      "notes": "Actual new tutorial: 1000 coins, no centre, enabled 800-coin centre; valid placement produced 200 coins and next tutorial reading. Directed domain test also passes. Initial center construction additionally verifies valid native-footprint routes, culture consistency and rejection without debit; funded flat-navigation fixtures do not replace prior UI or real-biome acceptance."
+      "notes": "Actual new tutorial: 1000 coins, no centre, enabled 800-coin centre; valid placement produced 200 coins and next tutorial reading. Directed domain test also passes. Initial center construction additionally verifies valid native-footprint routes, culture consistency and rejection without debit; funded flat-navigation fixtures do not replace prior UI or real-biome acceptance. Current override verified by native mobile first-day run:1500->700 center->685 three millet seeds->585 daily hire->603 two physical deliveries; no tutorial pause, automatically dismissed messages, automatic second-day hiring. Historical1000/manual-hire/blocking evidence above is superseded for those behaviors.",
+      "approved_override": {
+        "source": "User gameplay/usability instructions, 4 October 2026",
+        "starting_money": 1500,
+        "tutorial_blocks_time_or_controls": false,
+        "initial_hiring": "Automatic after planting batch/tool inactivity; no hire button",
+        "tool_timeout_seconds": 10,
+        "optional_purchase_salary_reserve": 100
+      }
     },
     {
       "id": "QA-004",
@@ -62,9 +71,18 @@
       "expected": "Contratación en el momento del guion, no antes de colocar el centro.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa/mobile-first-day/README.md"
       ],
-      "notes": "Hire crew disabled before centre. After centre and first 5-coin millet planting the hiring reading appeared, hiring became available; one older man charged 100, balance 195 -> 95. Directed sequence/idempotency test passes."
+      "notes": "Hire crew disabled before centre. After centre and first 5-coin millet planting the hiring reading appeared, hiring became available; one older man charged 100, balance 195 -> 95. Directed sequence/idempotency test passes. Current override verified by native mobile first-day run:1500->700 center->685 three millet seeds->585 daily hire->603 two physical deliveries; no tutorial pause, automatically dismissed messages, automatic second-day hiring. Historical1000/manual-hire/blocking evidence above is superseded for those behaviors.",
+      "approved_override": {
+        "source": "User gameplay/usability instructions, 4 October 2026",
+        "starting_money": 1500,
+        "tutorial_blocks_time_or_controls": false,
+        "initial_hiring": "Automatic after planting batch/tool inactivity; no hire button",
+        "tool_timeout_seconds": 10,
+        "optional_purchase_salary_reserve": 100
+      }
     },
     {
       "id": "QA-006",
@@ -83,11 +101,12 @@
       "area": "Inicio y UI",
       "scenario": "Abrir varias causas de pausa y cerrar solo una",
       "expected": "La simulación continúa pausada mientras quede otra causa activa.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
-        "docs/qa-acceptance-start.md"
+        "docs/qa-acceptance-start.md",
+        "docs/qa/stacked-pauses/README.md"
       ],
-      "notes": "Stacked-pause domain and tutorial tests pass. Remaining: integrated browser visibility plus menu/settings overlapping pauses."
+      "notes": "Stacked-pause domain and tutorial tests pass. Remaining: integrated browser visibility plus menu/settings overlapping pauses. Actual production Desert/Ethiopian: hiring plus menu freezes at elapsed86.7685 and695coins; settings and closing menu removes only menu, retaining the exact clock/wallet/plant state while hiring remains. Paid100 hiring removes the final pause; elapsed advances107.9712 with worker physically arriving. Document visible throughout; actual hidden/restored QA-014 remains partial."
     },
     {
       "id": "QA-008",
@@ -980,7 +999,10 @@
       "scenario": "Trazar muralla o usar atajo durante noche/ataque",
       "expected": "Rechazo común por permisos; no bloquear animales creando nuevas piezas.",
       "audit_status": "verified",
-      "evidence": ["docs/qa-wall-permissions.md", "docs/qa/wall-permissions-directed.txt"],
+      "evidence": [
+        "docs/qa-wall-permissions.md",
+        "docs/qa/wall-permissions-directed.txt"
+      ],
       "notes": "Native common permission rejects night/day-raid/night-raid individual walls, gates and stale chains without campaign/navigation changes. Full production browser covers sunset disabling an open panel, live native night/day raids through shortcut 2, and a real three-module day preview whose confirmation is disabled at night. Saved snapshots preserve ledger, commandIds, suppression and zero walls; H/P remain usable. Evidence and deliberate QA preparation limits in docs/qa-wall-permissions.md."
     },
     {
@@ -989,7 +1011,11 @@
       "scenario": "Colocación atraviesa props grandes o terreno inválido",
       "expected": "Sin compra parcial ni solapamiento visible.",
       "audit_status": "verified",
-      "evidence": ["docs/qa-wall-placement.md", "tests/wall-placement-native.test.js", "docs/qa/wall-placement-native-directed.txt"],
+      "evidence": [
+        "docs/qa-wall-placement.md",
+        "tests/wall-placement-native.test.js",
+        "docs/qa/wall-placement-native-directed.txt"
+      ],
       "notes": "Native terrain/props across all six biomes reject chains with legal prefixes without state, ledger or obstacle changes; native invalid terrain boundaries tested in four biomes. Full production browser rejects visible Sabana rock and Gran Rio water with no partial preview/confirmation; saved snapshots preserve ledger, commands, suppression and structures. River baseline is after legitimate dawn hiring payment. Scope and raw evidence in docs/qa-wall-placement.md."
     },
     {
@@ -998,7 +1024,12 @@
       "scenario": "Destruir estructura y descargar/cargar chunk",
       "expected": "Estado y ruina persisten; colisiones no resucitan con el render.",
       "audit_status": "verified",
-      "evidence": ["docs/qa-ruin-streaming.md", "tests/browser/ruin-streaming.html", "docs/qa/ruin-streaming/final-report.json", "docs/qa/ruin-streaming/comparison.json"],
+      "evidence": [
+        "docs/qa-ruin-streaming.md",
+        "tests/browser/ruin-streaming.html",
+        "docs/qa/ruin-streaming/final-report.json",
+        "docs/qa/ruin-streaming/comparison.json"
+      ],
       "notes": "Full native WorldScene Sabana/Mapungubwe: paid center and adobe wall destroyed through logical damage, collapse finished and navigation freed. All 25 original chunks leave on a 2048 m camera move and regenerate on return with identical campaign serialization. Fresh Navigation/WorldScene reload gives byte-identical snapshot, visible ash/rubble and no resurrected obstacles. Structures remain registered while terrain streams; no claim of structure resource unloading or large-farm memory bounds."
     },
     {
@@ -1494,9 +1525,18 @@
       "expected": "Lectura cerrada y simulación activa; no deadlock del tutorial.",
       "audit_status": "verified",
       "evidence": [
-        "docs/qa-tutorial-native.md"
+        "docs/qa-tutorial-native.md",
+        "docs/qa/mobile-first-day/README.md"
       ],
-      "notes": "Real paid native center/mijo/olderFemale farm: advance input remains at elapsed 0 and fixed worker position while reading; Continue removes tutorial-reading pause. Same Game.advanceReal moves/assigns task-7, acts at 60 s and manually waters at 65 s with growth 2.76, unchanged balance 95 and exactly three charges. No forced worker positions or task completion."
+      "notes": "Real paid native center/mijo/olderFemale farm: advance input remains at elapsed 0 and fixed worker position while reading; Continue removes tutorial-reading pause. Same Game.advanceReal moves/assigns task-7, acts at 60 s and manually waters at 65 s with growth 2.76, unchanged balance 95 and exactly three charges. No forced worker positions or task completion. Current override verified by native mobile first-day run:1500->700 center->685 three millet seeds->585 daily hire->603 two physical deliveries; no tutorial pause, automatically dismissed messages, automatic second-day hiring. Historical1000/manual-hire/blocking evidence above is superseded for those behaviors.",
+      "approved_override": {
+        "source": "User gameplay/usability instructions, 4 October 2026",
+        "starting_money": 1500,
+        "tutorial_blocks_time_or_controls": false,
+        "initial_hiring": "Automatic after planting batch/tool inactivity; no hire button",
+        "tool_timeout_seconds": 10,
+        "optional_purchase_salary_reserve": 100
+      }
     },
     {
       "id": "QA-126",

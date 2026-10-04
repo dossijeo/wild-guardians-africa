@@ -1,0 +1,140 @@
+{
+  "loading": [
+    {
+      "stamp": 509.69999998807907,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 79153.79999995232,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 83071.79999995232,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "day": 1,
+  "time": 86.76850000000191,
+  "elapsed": 86.76850000000191,
+  "balance": {
+    "n": "695",
+    "d": "1"
+  },
+  "pauses": [
+    "hiring",
+    "menu"
+  ],
+  "tutorial": {
+    "step": "hire",
+    "seen": [
+      "basic.introduction",
+      "basic.center",
+      "basic.plant"
+    ],
+    "pending": [],
+    "reading": "basic.hiring",
+    "basicSkipped": false,
+    "dismissed": [
+      "basic.introduction:",
+      "basic.center:",
+      "basic.plant:"
+    ]
+  },
+  "structures": [
+    {
+      "id": "structure-2",
+      "x": 82.95943734297131,
+      "z": -0.07068772560345238,
+      "screen": {
+        "x": 707,
+        "y": 377
+      }
+    }
+  ],
+  "proposedCenter": {
+    "kind": "center",
+    "x": 83,
+    "z": 0,
+    "culture": "etiope",
+    "screen": {
+      "x": 707,
+      "y": 378
+    }
+  },
+  "plantSpots": [
+    {
+      "x": 88.5,
+      "z": -3,
+      "screen": {
+        "x": 867,
+        "y": 378
+      }
+    },
+    {
+      "x": 88.5,
+      "z": -1.5,
+      "screen": {
+        "x": 856,
+        "y": 393
+      }
+    },
+    {
+      "x": 88.5,
+      "z": 0,
+      "screen": {
+        "x": 844,
+        "y": 408
+      }
+    },
+    {
+      "x": 88.5,
+      "z": 1.5,
+      "screen": {
+        "x": 831,
+        "y": 425
+      }
+    },
+    {
+      "x": 88.5,
+      "z": 3,
+      "screen": {
+        "x": 817,
+        "y": 443
+      }
+    }
+  ],
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 867,
+        "y": 378
+      }
+    }
+  ],
+  "workers": [],
+  "delivered": 0
+}

@@ -1,0 +1,43 @@
+{
+  "cycles": [
+    {
+      "cycle": 1,
+      "biome": "desierto",
+      "culture": "etiope",
+      "initialMoney": {
+        "n": "1500",
+        "d": "1"
+      },
+      "loads": 1,
+      "disposals": 1,
+      "renders": 8382,
+      "rendersAfterDispose": 0,
+      "disposed": true,
+      "contextLost": true,
+      "canvasConnected": false,
+      "canvasListenersLive": 0,
+      "ownListenersAborted": true,
+      "workerTerminated": true,
+      "streamDead": true,
+      "streamTimer": null,
+      "streamQueue": 0,
+      "geometryCount": 167,
+      "geometryDisposed": 83,
+      "materialCount": 100,
+      "materialDisposed": 470
+    }
+  ],
+  "audio": [
+    {
+      "voices": 0,
+      "active": 0,
+      "transport": false,
+      "context": "running"
+    }
+  ],
+  "worldCanvases": 0,
+  "menuFrames": 1,
+  "isolatedSlots": 2,
+  "errors": [],
+  "limits": "Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active."
+}
