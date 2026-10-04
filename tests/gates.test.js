@@ -13,10 +13,10 @@ const gate=(material='empalizada')=>({id:'gate',kind:'wall',gate:true,material,x
 const worker=()=>({id:'worker',x:.05,z:-3,path:[{x:.05,z:3}],status:'walking',profile:'olderMale',runRemaining:50});
 const state=(g=gate(),w=worker())=>({structures:[g],workers:[w],pauses:[],initialPreparation:false});
 const libraries=JSON.parse(readFileSync(new URL('../public/content/worker-actions.json',import.meta.url)));
-function paidFixture(material,profile='olderMale',centerZ=2){
-  const s=Game.newGame({seed:712});s.villages[0].z=-8;Game.resume(s,'intro');s.tutorial.step='center';
+function paidFixture(material,profile='olderMale',centerZ=2,centerX=-6){
+  const s=Game.newGame({seed:712});s.villages[0].z=centerX===0?-20:-8;Game.resume(s,'intro');s.tutorial.step='center';
   const nav=Object.create(Navigation.prototype);nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];nav.chunks=new Map();nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.searchedRegions=[];nav.obstacles=[];
-  Game.placeStructure(s,'center',{x:-6,z:centerZ},nav);Game.placeStructure(s,'gate',{kind:'wall',material,gate:true,x:0,z:0},nav);Game.plant(s,'seed','mijo',0,4,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{[profile]:1});
+  Game.placeStructure(s,'center',{x:centerX,z:centerZ},nav);Game.placeStructure(s,'gate',{kind:'wall',material,gate:true,x:0,z:0},nav);Game.plant(s,'seed','mijo',0,4,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{[profile]:1});
   return {s,nav,g:s.structures.find(e=>e.gate),w:s.workers[0]};
 }
 test('Workers request a near crossing and wait without spending run distance or movement phases',()=>{
@@ -100,11 +100,11 @@ test('Fractional gate portals connect enclosed grid regions and retain exact swe
   }
 });
 for(const material of ['zarzas','empalizada','reforzado'])test(`${material}: a real harvested crate waits, crosses and charges only on delivery`,()=>{
-  const {s,nav,w}=paidFixture(material,'olderMale',-3),plant=s.plants[0],initialMoney=BigInt(s.ledger.balance.n);let carryWait=false,delivered=false,saved=false;
+  const {s,nav,w}=paidFixture(material,'olderMale',-7,0),initialMoney=BigInt(s.ledger.balance.n);let carryWait=false,delivered=false,saved=false;
   for(let i=0;i<2400&&!delivered;i++){
     const before={x:w.x,z:w.z};Game.tick(s,.1,nav);
     if(Math.hypot(w.x-before.x,w.z-before.z)>1e-8)assert.ok(nav.workerMotionClear(before,w),'every actual movement stays clear');
-    if(plant.growth>=140&&!plant.harvestRequested&&plant.alive)Game.harvest(s,'harvest',plant.id);
+    // Maturity queues the harvest; the paid worker must still collect and carry it.
     if(w.status==='carrying'&&w.gateWaiting){
       carryWait=true;assert.equal(BigInt(s.ledger.balance.n),initialMoney,'waiting does not pay a crate');
       if(!saved){const text=serialize(s);assert.equal(serialize(deserialize(text)),text);saved=true;}
