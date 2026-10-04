@@ -10,8 +10,12 @@
     "durationMs": 1454.3191
   },
   "completeLocalSuite": {
-    "status": "running",
-    "log": ".cache/structure-audio-full.log"
+    "status": "passed",
+    "passed": 1315,
+    "failed": 0,
+    "durationMs": 548823.1762,
+    "log": ".cache/structure-audio-full.log",
+    "revision": "0583a10"
   },
   "build": {
     "result": "passed",
@@ -43,7 +47,11 @@
   },
   "limitations": [
     "No listening evidence",
-    "No full 3D worker/beast/collapse mixture",
-    "Complete local regression is still running"
-  ]
+    "No full 3D worker/beast/collapse mixture"
+  ],
+  "githubCi": {
+    "runId": 37181035241,
+    "conclusion": "success",
+    "revision": "0583a10"
+  }
 }
