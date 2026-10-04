@@ -19,6 +19,7 @@
   }
   async function checkVisibility(fixture) {
     const transitions=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    report.checks.visibility={passed:false,phase:'visible-baseline',transitions};
     document.addEventListener('visibilitychange',()=>transitions.push({state:document.visibilityState,at:performance.now()}));
     const until=async predicate=>{const deadline=performance.now()+20000;while(!predicate()){if(performance.now()>deadline)throw Error('Native visibility transition absent');await wait(100);}};
     const core=s=>Object.fromEntries(['day','time','elapsed','rng','ledger','plants','structures','workers','crates','tasks','spells','cooldowns','raid','nightPlan','dayPlan','result','completedNights','postgame','commandIds','villages','suppressed'].map(key=>[key,s[key]]));
@@ -34,8 +35,11 @@
     const before=sample();await wait(2000);const advancing=sample();
     if(advancing.elapsed<=before.elapsed||advancing.pauses.some(p=>p!=='menu'))throw Error('Visible fixture does not advance freely');
     if(!advancing.raid||!advancing.spells.some(s=>s.kind==='shield'&&s.remaining>0))throw Error('Visibility fixture lost active raid or magic');
-    await window.__TAURI_INTERNALS__.invoke('desktop_smoke_minimize');
+    report.checks.visibility.phase='minimize';
+    report.checks.visibility.nativeMinimized=await window.__TAURI_INTERNALS__.invoke('desktop_smoke_minimize');
+    if(!report.checks.visibility.nativeMinimized)throw Error('Native window did not minimize');
     await until(()=>document.hidden);
+    report.checks.visibility.phase='hidden-interval';
     // Saving briefly opens the menu; close it so hidden is the sole blocker
     // during the measured interval. Retain the menu only at its end.
     const hiddenStart=sample(),hiddenAt=performance.now();
@@ -44,10 +48,12 @@
     if(!document.hidden)throw Error('Native hidden interval too short');
     const hiddenEnd=sample({resume:false}),hiddenMs=performance.now()-hiddenAt;
     if(JSON.stringify(core(hiddenStart))!==JSON.stringify(core(hiddenEnd)))throw Error('Game progressed while genuinely hidden');
+    report.checks.visibility.phase='restore';
     await until(()=>!document.hidden);
     const visibleMenu=sample({resume:false});
     if(visibleMenu.pauses.includes('hidden')||!visibleMenu.pauses.includes('menu'))throw Error('Native restore released the wrong pause');
     if(JSON.stringify(core(hiddenEnd))!==JSON.stringify(core(visibleMenu)))throw Error('Game advanced behind retained menu');
+    report.checks.visibility.phase='resume';
     document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=sample();
     const delta=resumed.elapsed-visibleMenu.elapsed,visibleMs=performance.now()-resumedAt;
     if(delta<=0||delta>visibleMs/1000*5+.5)throw Error('Visible game failed to resume or caught up hidden time');

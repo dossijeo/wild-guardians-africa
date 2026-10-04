@@ -3,6 +3,20 @@ use tauri::Manager;
 
 fn main() {
     tauri::Builder::default()
+        .on_window_event(|window, event| {
+            if matches!(event, tauri::WindowEvent::Resized(_) | tauri::WindowEvent::Focused(_)) {
+                if let Some(host) = window.app_handle().get_webview_window(window.label()) {
+                    // WebView2 does not automatically mirror a minimized host.
+                    // Update the native controller so the page receives its
+                    // genuine visibilitychange and the existing hidden pause.
+                    let view: &tauri::Webview = host.as_ref();
+                    let hidden = window.is_minimized().unwrap_or(false)
+                        || !window.is_visible().unwrap_or(true);
+                    let result = if hidden { view.hide() } else { view.show() };
+                    if let Err(error) = result { eprintln!("Webview visibility: {error}"); }
+                }
+            }
+        })
         .invoke_handler(tauri::generate_handler![desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
         .on_page_load(|webview, payload| {
             if payload.event() == tauri::webview::PageLoadEvent::Finished
@@ -27,17 +41,18 @@ fn desktop_smoke_fixture() -> Result<Option<serde_json::Value>, String> {
 }
 
 #[tauri::command]
-fn desktop_smoke_minimize(app: tauri::AppHandle) -> Result<(), String> {
+fn desktop_smoke_minimize(app: tauri::AppHandle) -> Result<bool, String> {
     if !std::env::args().any(|arg| arg == "--smoke-report") { return Err("Smoke mode is disabled".into()); }
     let window = app.get_webview_window("main").ok_or("Main window missing")?;
     window.minimize().map_err(|error| error.to_string())?;
+    let minimized = window.is_minimized().map_err(|error| error.to_string())?;
     std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_secs(8));
         let _ = window.unminimize();
         let _ = window.show();
         let _ = window.set_focus();
     });
-    Ok(())
+    Ok(minimized)
 }
 
 #[tauri::command]
