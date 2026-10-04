@@ -70,3 +70,5 @@ Evidencia de cámara: 38 pruebas de recorrido, control manual, pausas, restaurac
 ## Regresiones de combate con el daño revisado
 
 64 pruebas superadas de colapso, límites económicos, transporte de cajas, VFX y audio. Los oráculos de daño usan 20/25/35/40/60 y conservan golpes animados completos. Las pruebas de pérdida del último centro parten ahora de un centro previamente dañado, para seguir verificando los límites 799/800 y la derrota antes de victoria con un presupuesto legal de incursión. La prueba de colapso desde 600 HP permanece independiente y exige todos los golpes reales. El transporte que cruza el amanecer espera la salida física del último animal antes de contratar.
+
+La protección introductoria se ha comprobado con las cinco especies y 1/2/5/10 cultivos: 28 pruebas superadas, incluida destrucción real, gasto completo de golpes y guardado/restauración determinista.
