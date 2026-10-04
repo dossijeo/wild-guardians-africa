@@ -44,7 +44,7 @@ const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';font
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
 const audio=new AudioSystem(settings);const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
-let commandFeedback='',hudSize='',frameImages=null,guardian=null,hudHand=null,tutorial=null,tutorialInert=null,tutorialFocus=null,pendingSpell=null;
+let commandFeedback='',hudSize='',frameImages=null,guardian=null,hudHand=null,tutorial=null,tutorialInert=null,tutorialFocus=null;
 const surfaces=new GameSurfaces(),toolSession=new ToolSession();
 let budgetWarningUntil=0,lastBudgetBalance=Infinity,reserveWarningShown=false;
 const tutorialProfile=new TutorialProfile(localStorage);
@@ -57,7 +57,7 @@ function error(message){if(String(message)===RESERVE_MESSAGE){if(reserveWarningS
 function safe(action){commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){noticeLifetime.reset();screenWakeLock.setActive(false);surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;pendingSpell=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){noticeLifetime.reset();screenWakeLock.setActive(false);surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){if(!save())return;state=null;}clearWorld();screen='menu';
   app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
@@ -144,17 +144,6 @@ function onPick({entityId,point}) {
   });
 }
 function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close();}}
-function cancelSpellPreview({keepTool=false}={}){pendingSpell=null;world?.clearSpellPreview();if(!keepTool&&tool?.kind==='spell')tool=null;hideHudPanel();}
-function spellConfirmPanel(){
-  if(state.pauses.includes('hiring'))return;
-  const name=B.spells.find(s=>s.id===pendingSpell.kind).name;
-  showHudPanel(name,`<p class="panel-note">La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.</p><div class="menu-list">${button('confirm-spell','Activar poder','wood-button')}${button('cancel-spell','Cancelar','wood-button')}</div>`);
-  bind('cancel-spell',cancelSpellPreview);
-  bind('confirm-spell',()=>{
-    if(!pendingSpell)return;const draft=pendingSpell;
-    Game.cast(state,commandId(),draft.kind,draft.x,draft.z,nav);cancelSpellPreview({keepTool:true});save();
-  });
-}
 function buildWallStroke(points){
   if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
   const maxPieces=Math.min(Game.wallCapacity(state,tool.material),world.wallStrokeMaxPieces??Infinity);if(!maxPieces)throw new Error(RESERVE_MESSAGE);
@@ -164,7 +153,6 @@ function buildWallStroke(points){
 function toolPanel(type) {
   if(state.pauses.includes('hiring'))return;
   cancelTool();
-  if(pendingSpell)cancelSpellPreview();
   world.clearWallPreview();
   let content='';
   const price=value=>`<span class="price"><img src="${ASSETS.coin.src}" alt="">${value}</span>`;
@@ -200,10 +188,10 @@ function closeSurface(){
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
   if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
-  if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();
+  if(pendingVillage)cancelVillagePreview();
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
-function cancelTool(){if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
+function cancelTool(){if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
@@ -211,10 +199,6 @@ function updateUI(force=false) {
   if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
-  if(pendingSpell){
-    if(state.result||tool?.kind!=='spell'||tool.spell!==pendingSpell.kind)cancelSpellPreview();
-    else {pendingSpell=Game.previewSpell(state,pendingSpell.kind,pendingSpell.x,pendingSpell.z,nav);world.showSpellPreview(pendingSpell);const confirm=document.querySelector('#confirm-spell');if(confirm)confirm.disabled=!pendingSpell.valid;commandFeedback=pendingSpell.reason??'';}
-  }
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
   const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
   if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
@@ -248,13 +232,12 @@ function updateUI(force=false) {
 }
 function refreshCommandFeedback(){
   const label=null;
-  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();if(pendingSpell)cancelSpellPreview();tool=null;commandFeedback='';updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
+  renderCommandFeedback(document,{label,message:commandFeedback,onCancel:()=>{if(tool?.kind==='village')cancelVillagePreview();tool=null;commandFeedback='';updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
 
 function buildPanel(){
   if(state.pauses.includes('hiring'))return;
  cancelTool();
- if(pendingSpell)cancelSpellPreview();
  showHudPanel('Construir',`<div class="card-grid two"><button class="choice-card" id="native-center"><img class="card-image" src="${ASSETS.home_icon.src}" alt=""><strong>Centro de trabajo</strong><span class="price">800 monedas</span></button><button class="choice-card" id="native-wall"><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>Murallas</strong></button></div><div class="menu-list">${state.postgame?button('native-village','Fundar poblado','wood-button'):''}</div>`);
  bind('native-center',()=>{armTool({kind:'center'});hideHudPanel();});bind('native-wall',()=>toolPanel('wall'));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
  document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');
@@ -346,7 +329,7 @@ function libraryScreen() {
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
 document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation()?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{screenWakeLock.dispose();if(state)save();});
