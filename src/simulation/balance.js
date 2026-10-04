@@ -313,7 +313,7 @@ export const BALANCE = {
       "name": "Escudo",
       "duration_seconds": 20,
       "cooldown_seconds": 90,
-      "unlock": "night_2",
+      "unlock": "night_1",
       "coverage_reference_plants": [
         5,
         6

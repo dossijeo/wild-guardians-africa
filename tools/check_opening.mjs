@@ -7,7 +7,6 @@ import {findInitialLocation} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
 import {isMature} from '../src/simulation/crops.js';
 import {numberOf} from '../src/simulation/money.js';
-import {permission} from '../src/simulation/rules.js';
 const read=name=>JSON.parse(readFileSync(new URL(`../public/content/${name}.json`,import.meta.url),'utf8'));
 const villages=read('villages');
 export function createOpeningWorld({seed=712,biome='sabana',culture='mapungubwe',slotId='opening',terrainVersion='4.1.10.3'}={}){
@@ -24,7 +23,7 @@ export function createOpeningWorld({seed=712,biome='sabana',culture='mapungubwe'
 export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
   if(!['olderMale','olderFemale','youngMale','youngFemale'].includes(profile))throw new Error('Unknown worker profile');
   if(!Number.isSafeInteger(requestedCount)||requestedCount<1)throw new Error('Crop count must be a positive integer');
-  const {s,nav}=createOpeningWorld(worldOptions);
+  let {s,nav}=createOpeningWorld(worldOptions);
   const center=s.structures[0],departure=centerServicePoint(center,s,.8);
   const plots=[];
   for(let dz=-9;dz<=9;dz+=1.5)for(let dx=4.5;dx<=15;dx+=1.5){
@@ -40,7 +39,7 @@ export function simulateOpening(profile,requestedCount=8,worldOptions={}) {
   const initialBalance=numberOf(s.ledger.balance);
   let maximumTime=0;
   while(s.day===1&&!s.result&&!s.pauses.length) {
-    if(permission(s,'harvest'))for(const p of s.plants.filter(p=>isMature(p)&&!p.harvestRequested))Game.harvest(s,'harvest-'+p.id,p.id);
+    s=worldOptions.onTick?.(s,nav)??s;
     Game.tick(s,.5,nav);
     maximumTime=Math.max(maximumTime,s.time);
   }

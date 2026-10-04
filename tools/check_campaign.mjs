@@ -8,8 +8,7 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {numberOf} from '../src/simulation/money.js';
 import {reachableApproach} from '../src/simulation/raids.js';
 export function simulateCampaign(options={}){
-  const opening=simulateOpening('olderMale',1,options),nav=opening.nav;
-  let s=opening.state,reloads=0,tutorialReachable=null;
+  let s,nav,reloads=0,tutorialReachable=null,initialCenterHp;
   const seenEvents=new Set(),loadedRaids=new Set(),events={};
   const collect=()=>{
     for(const event of s.events)if(!seenEvents.has(event.id)){
@@ -20,9 +19,17 @@ export function simulateCampaign(options={}){
     const text=serialize(s);s=deserialize(text);assert.equal(serialize(s),text);
     nav.setState(s);reloads++;
   };
+  const opening=simulateOpening('olderMale',1,{...options,onTick:(current,routes)=>{
+    s=current;nav=routes;collect();
+    if(s.raid&&!loadedRaids.has(s.raid.id)){
+      initialCenterHp=s.structures[0].hp;tutorialReachable=!!reachableApproach(s.raid.animals[0],s.structures[0],nav);
+      loadedRaids.add(s.raid.id);reload();
+    }
+    return s;
+  }});s=opening.state;nav=opening.nav;
   collect();assert.equal(s.result,null,'The first crop must finance continuing the campaign');
   assert.equal(s.day,2);assert.equal(opening.delivered,1);assert.equal(opening.living,0);
-  const openingMoney=numberOf(s.ledger.balance),initialCenterHp=s.structures[0].hp;
+  const openingMoney=numberOf(s.ledger.balance);
   for(let day=2;day<=100&&!s.result;day++){
     assert.equal(s.day,day);assert.equal(s.completedNights,day-1);assert.deepEqual(s.pauses,['hiring']);
     if(day%7===0){reload();const paused=serialize(s);Game.tick(s,30,nav);assert.equal(serialize(s),paused);}

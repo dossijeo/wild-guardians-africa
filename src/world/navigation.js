@@ -19,6 +19,10 @@ export class Navigation {
     if(this.activeBounds?.every((value,i)=>value===bounds[i]))return;
     this.activeBounds=[...bounds];
   }
+  setRaidView(eye,target){
+    if(![eye?.x,eye?.z,target?.x,target?.z].every(Number.isFinite))return;
+    this.raidView={eye:{x:eye.x,z:eye.z},target:{x:target.x,z:target.z}};
+  }
   chunk(cx,cz) {
     const key=`${cx},${cz}`;
     if(!this.chunks.has(key)) {

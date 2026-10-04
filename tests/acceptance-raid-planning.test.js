@@ -38,15 +38,16 @@ test('QA-087: actual living plant base values drive night planning independently
  }
 });
 
-test('QA-088: real day/night clock keeps the empty first night peaceful and spawns one tutorial warthog on night two',()=>{
+test('QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload',()=>{
  const nav={placement:()=>({valid:true}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
  let s=Game.newGame({seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);s.initialPreparation=false;
- Game.tick(s,300.01,nav);assert.equal(s.nightPlan.attraction,0);assert.deepEqual(s.nightPlan.group,[]);
- Game.tick(s,600-s.time,nav);assert.equal(s.day,2);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
- Game.hire(s,'day-two-zero-workers',{});Game.tick(s,300.01,nav);assert.equal(s.nightPlan.attraction,0);assert.deepEqual(s.nightPlan.group,['warthog']);
+ Game.tick(s,300.01,nav);assert.equal(s.day,1);assert.equal(s.nightPlan.attraction,0);assert.deepEqual(s.nightPlan.group,['warthog']);
+ assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
  s=deserialize(serialize(s));Game.tick(s,s.nightPlan.at-s.time+.01,nav);
  assert.deepEqual(s.raid.animals.map(a=>a.species),['warthog']);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
  assert.ok(s.raid.animals[0].hitsRemaining>=2&&s.raid.animals[0].hitsRemaining<=4);
+ s=deserialize(serialize(s));Game.tick(s,.1,nav);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
+ const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,[]);
 });
 
 test('QA-089: a thousand consecutive fixed-attraction plans consume fresh draws without compensating repeated outcomes',()=>{

@@ -1,6 +1,6 @@
 import {BALANCE} from '../simulation/balance.js';
 import {permission,spellUnlocked} from '../simulation/rules.js';
-export const SPELL_UNLOCK_LABELS=Object.freeze({shield:'Disponible desde la noche 2',growth:'Disponible desde el día 3',multiply:'Disponible desde el día 5'});
+export const SPELL_UNLOCK_LABELS=Object.freeze({shield:'Disponible desde la noche 1',growth:'Disponible desde el día 3',multiply:'Disponible desde el día 5'});
 export function spellCardStatus(state,spec){
   const locked=!spellUnlocked(state,spec.id),cooldown=Math.max(0,state.cooldowns[spec.id]??0),allowed=permission(state,spec.id);
   return {disabled:locked||cooldown>0||!allowed,label:locked?SPELL_UNLOCK_LABELS[spec.id]:cooldown>0?'Recargando':!allowed?'No disponible ahora':'',cooldown,ratio:cooldown/spec.cooldown_seconds*100};

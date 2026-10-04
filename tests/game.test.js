@@ -116,8 +116,8 @@ test('Growth/multiply permissions, area nonoverlap, cooldown from activation and
   cast(s,'growth','growth',10,0,nav);assert.equal(s.cooldowns.growth,90);assert.equal(s.spells[0].remaining,30);
   assert.throws(()=>cast(s,'overlap','multiply',11,0,nav),/solaparse/);tick(s,30,nav);assert.equal(s.spells.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
 });
-test('Night 1 is calm, night 2 exactly one tutorial warthog with zero attraction',()=>{
-  const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,[]);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);
+test('Night 1 has one mandatory warthog and night 2 uses ordinary zero-attraction planning',()=>{
+  const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,[]);
 });
 test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
   const s=setup();const w=s.workers[0];s.crates.push({id:'crate-test',x:5,z:0,value:rational(10),carrierId:w.id,delivered:false});w.crateId='crate-test';w.status='carrying';

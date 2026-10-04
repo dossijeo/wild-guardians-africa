@@ -34,9 +34,9 @@ export class TutorialController {
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
-    enqueue('mechanic.defenses',s.day>=2);
+    enqueue('mechanic.defenses',s.day>1||s.time>=240);
     enqueue('mechanic.first-raid',!!s.raid);
-    enqueue('magic.shield',s.day>=2&&!!s.raid);
+    enqueue('magic.shield',!!s.raid);
     enqueue('magic.growth',s.day>=3);
     enqueue('magic.multiply',s.day>=5);
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));

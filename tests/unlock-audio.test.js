@@ -12,13 +12,13 @@ function fixture(){let clock=0;const calls=[],stopped=[],audio=new UnlockAudio((
 const state=()=>({day:1,time:0,elapsed:0,pauses:[],result:null});
 
 test('shared calendar predicate preserves the approved exact boundaries',()=>{
-  for(const [day,time,expected] of [[1,599,[]],[2,299.999,[]],[2,300,['shield']],[3,0,['shield','growth']],[4,599,['shield','growth']],[5,0,['shield','growth','multiply']]]){
+  for(const [day,time,expected] of [[1,299.999,[]],[1,300,['shield']],[2,0,['shield']],[3,0,['shield','growth']],[4,599,['shield','growth']],[5,0,['shield','growth','multiply']]]){
     const s={day,time};assert.deepEqual(['shield','growth','multiply'].filter(id=>spellUnlocked(s,id)),expected);assert.equal(spellUnlocked(s,'unknown'),false);
   }
 });
 test('live milestones play once, tolerate a dropped frame and never mutate the simulation',async()=>{
   const f=fixture(),s=state();f.audio.update(s);
-  for(const [day,time] of [[2,299],[2,305],[3,0],[5,0]]){
+  for(const [day,time] of [[1,299],[1,305],[3,0],[5,0]]){
     s.day=day;s.time=time;s.elapsed++;const before=JSON.stringify(s);f.audio.update(s);await flush();assert.equal(JSON.stringify(s),before);for(let i=0;i<100;i++)f.audio.update(s);
   }
   assert.equal(f.calls.length,3);assert.ok(f.calls.every(c=>c.id==='ui_unlock'&&c.options.bus==='ui'&&c.options.emitter==='ui:unlock'));assert.equal(f.stopped.length,2);

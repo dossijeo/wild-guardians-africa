@@ -8,7 +8,7 @@ export function villageCost(ordinal) {
   return 50000+25000*(ordinal-2);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
-export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=2&&state.time>=300||state.day>2:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
+export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
 export function permission(state,action) {
   if(state.result || state.pauses.length) return false;
   const hasCenter=state.structures.some(operational);

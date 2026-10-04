@@ -29,8 +29,8 @@ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=erro
 Game.resume(state,'intro');Game.placeStructure(state,'qa-center',location.center,nav);
 // Prepared night and direct legal tier-5 composition, not a probability or
 // campaign-profitability test. No altered terrain, body sizes or hit budgets.
-state.day=tutorial?2:21;state.completedNights=tutorial?1:20;state.time=tutorial?299:400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={at:150,done:true};state.nightPlan=tutorial?null:{at:323,group:[],done:true};Game.pause(state,'qa');
-if(tutorial)document.querySelector('#spawn').textContent='Generar incursión de segunda noche';
+state.day=tutorial?1:21;state.completedNights=tutorial?0:20;state.time=tutorial?299:400;state.initialPreparation=false;state.tutorial.step='done';state.dayPlan={at:150,done:true};state.nightPlan=tutorial?null:{at:323,group:[],done:true};Game.pause(state,'qa');
+if(tutorial)document.querySelector('#spawn').textContent='Generar incursión de primera noche';
 document.querySelector('#spawn').onclick=()=>action(async()=>{
  world.render(0);entryBounds=[...nav.activeBounds];
  if(tutorial){Game.resume(state,'qa');try{Game.tick(state,1,nav);Game.tick(state,state.nightPlan.at-state.time,nav);}finally{Game.pause(state,'qa');}}

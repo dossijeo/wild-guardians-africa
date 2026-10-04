@@ -3,16 +3,24 @@ import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {spawnRaid,reachableApproach} from '../src/simulation/raids.js';
 import {Navigation} from '../src/world/navigation.js';
-import {simulateOpening} from '../tools/check_opening.mjs';
+import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+function enterFirstNight(s,nav){
+ const center=s.structures[0];let planted=false;
+ for(let radius=5;radius<=12&&!planted;radius++)for(let i=0;i<16&&!planted;i++){
+  const x=center.x+Math.sin(i*Math.PI/8)*radius,z=center.z+Math.cos(i*Math.PI/8)*radius;
+  if(nav.placement(x,z,.4).valid){Game.plant(s,'first-seed','mijo',x,z,nav);planted=true;}
+ }
+ assert.ok(planted);Game.openInitialHiring(s);Game.hire(s,'first-night-zero-workers',{});Game.tick(s,300-s.time,nav);Game.tick(s,s.nightPlan.at-s.time,nav);
+}
 
 // A new platform connects different land than the archived island regression.
 // Exercise actual entry, collision-safe movement, reload, hits and departure
 // without assuming that the seed still has an unreachable center.
-for(const culture of Game.CULTURES)test(`Manglares/${culture}: new lab platform supports a complete second-night raid and saved navigation`,()=>{
- let {state:s,nav}=simulateOpening('olderMale',1,{biome:'manglares',culture,seed:712});
+for(const culture of Game.CULTURES)test(`Manglares/${culture}: new lab platform supports a complete first-night raid and saved navigation`,()=>{
+ let {s,nav}=createOpeningWorld({biome:'manglares',culture,seed:712});
  assert.equal(s.terrainVersion,'4.1.10.3');assert.ok(s.villages[0].terrainSite);
- Game.hire(s,'night-two-zero-workers',{});Game.tick(s,300-s.time,nav);Game.tick(s,s.nightPlan.at-s.time,nav);
+ enterFirstNight(s,nav);
  assert.ok(s.raid);const born=s.raid.animals[0],exit={...born.exit};let last={x:born.x,z:born.z},departed=null;
  s=deserialize(serialize(s));nav.setState(s);assert.deepEqual(s.raid.animals[0].exit,exit);
  for(let elapsed=0;s.raid&&!s.result&&elapsed<250;elapsed+=.1){
@@ -24,9 +32,9 @@ for(const culture of Game.CULTURES)test(`Manglares/${culture}: new lab platform 
  assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
 });
 
-for(const culture of Game.CULTURES)test(`Manglares/${culture}: legacy map guaranteed second-night animal spawns, reloads and physically exits when the island has no reachable target`,()=>{
- let {state:s,nav}=simulateOpening('olderMale',1,{biome:'manglares',culture,seed:712,terrainVersion:'legacy'});
- Game.hire(s,'night-two-zero-workers',{});Game.tick(s,300-s.time,nav);Game.tick(s,s.nightPlan.at-s.time,nav);
+for(const culture of Game.CULTURES)test(`Manglares/${culture}: legacy map guaranteed first-night animal spawns, reloads and physically exits when the island has no reachable target`,()=>{
+ let {s,nav}=createOpeningWorld({biome:'manglares',culture,seed:712,terrainVersion:'legacy'});
+ enterFirstNight(s,nav);
  assert.ok(s.raid);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);assert.equal(s.raid.animals.length,1);
  const animal=s.raid.animals[0];assert.equal(animal.species,'warthog');assert.equal(reachableApproach(animal,s.structures[0],nav),null);
  assert.ok(nav.walkable(animal.x,animal.z,animal.radius,null,false));assert.ok(nav.segmentClear(animal,animal.exit,animal.radius,null,false));

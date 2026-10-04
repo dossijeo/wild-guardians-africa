@@ -16,7 +16,7 @@ test('cooldown starts at casting and updates cards while effect continues; pause
 });
 test('native markup keeps original symbols and translated status labels',()=>{
   const markup=spellCardsMarkup(ready(),i=>`<svg data-original="${i}"></svg>`);assert.equal((markup.match(/ disabled/g)||[]).length,3);assert.equal((markup.match(/data-original=/g)||[]).length,3);
-  for(const [es,en] of [['Disponible desde la noche 2','Available from night 2'],['Disponible desde el día 3','Available from day 3'],['Disponible desde el día 5','Available from day 5'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now']]){assert.equal(translate(es,'es'),es);assert.equal(translate(es,'en'),en);}
+  for(const [es,en] of [['Disponible desde la noche 1','Available from night 1'],['Disponible desde el día 3','Available from day 3'],['Disponible desde el día 5','Available from day 5'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now']]){assert.equal(translate(es,'es'),es);assert.equal(translate(es,'en'),en);}
 });
 test('stable refresh preserves translated text, existing nodes and scroll; a state transition updates only status',()=>{
   const s=ready(),label={dataset:{source:'Disponible desde el día 3'},textContent:'Available from day 3',hidden:false},number={textContent:''},values=new Map([['--cd','0%']]),ring={style:{getPropertyValue:k=>values.get(k),setProperty:(k,v)=>values.set(k,v)}},button={dataset:{spell:'growth'},disabled:true,querySelector:k=>({'.spell-status':label,'.cooldown-number':number,'.spell-cooldown':ring}[k])},root={scrollTop:117,querySelectorAll:()=>[button]};

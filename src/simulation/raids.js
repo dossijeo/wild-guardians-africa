@@ -1,4 +1,4 @@
-import {centerBoundaryPoint,centerCulture} from '../world/centers.js';
+import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
@@ -17,14 +17,58 @@ export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
   const value=attraction(s.plants),tier=threatTier(value);
   let group=[];
-  if(!s.postgame&&s.day===2)group=['warthog'];
-  else if(!s.postgame&&s.day>2&&tier&&nextRandom(s)<tier.night_attack_probability) {
+  if(!s.postgame&&s.day===1)group=['warthog'];
+  else if(!s.postgame&&s.day>1&&tier&&nextRandom(s)<tier.night_attack_probability) {
     const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=compositions(budget,tier.unlocked_species);
     group=legal[randomInt(s,0,legal.length-1)];
   }
   s.nightPlan={at,attraction:value,group,done:false};
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
+export function cameraRaidEntry(s,specs,bounds,nav){
+  const view=nav.raidView;if(!view)return null;
+  const dx=view.eye.x-view.target.x,dz=view.eye.z-view.target.z,length=Math.hypot(dx,dz);if(length<1e-6)return null;
+  const bx=dx/length,bz=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
+  const [minX,minZ,maxX,maxZ]=bounds;
+  const centers=s.structures.filter(operational),walls=s.structures.filter(t=>t.kind==='wall'&&t.hp>0&&t.status!=='collapsing');
+  // If the camera looks across disconnected water, try the near farm side.
+  // Never perform an unbounded sequence of full A* searches during spawning.
+  const focus=centers[0],anchors=[view.eye];
+  if(focus)anchors.push(centerBoundaryPoint(focus,Math.atan2(bx,bz),2,s));
+  for(const anchor of anchors){
+    const points=[],exits=[];let searches=0;
+    for(let i=0;i<specs.length;i++){
+      const {radius}=specs[i];let chosen=null;
+      const candidates=[];
+      for(const back of [radius+2,radius+4,radius+6,radius+8,radius+12])for(const shift of [0,1,-1,2,-2,3,-3,4,-4,5,-5,6,-6]){
+        const lateral=(i-(specs.length-1)/2+shift)*spacing;
+        candidates.push({x:anchor.x+bx*back-bz*lateral,z:anchor.z+bz*back+bx*lateral,distance:back*back+lateral*lateral});
+      }
+      candidates.sort((a,b)=>a.distance-b.distance);
+      for(const candidate of candidates){
+        const point={x:candidate.x,z:candidate.z},exit={x:point.x+bx*3,z:point.z+bz*3};
+        if([point,exit].some(p=>p.x-radius<minX||p.x+radius>maxX||p.z-radius<minZ||p.z+radius>maxZ))continue;
+        if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.walkable(exit.x,exit.z,radius,null,false))continue;
+        if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1))continue;
+        if(nav.segmentClear?!nav.segmentClear(point,exit,radius,null,false):!nav.path(point,exit,radius,null,false))continue;
+        const targets=[...centers,...walls].sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,2);
+        let reachable=!targets.length;
+        for(const target of targets){
+          const angle=Math.atan2(point.x-target.x,point.z-target.z);
+          const approach=target.kind==='center'?centerDeliveryPoint(target,point,s,radius+.5):{x:target.x+Math.sin(angle)*(radius+1.2),z:target.z+Math.cos(angle)*(radius+1.2)};
+          if(!nav.walkable(approach.x,approach.z,radius,null,false))continue;
+          if(nav.segmentClear?.(point,approach,radius,null,false)){reachable=true;break;}
+          if(searches>=2)continue;searches++;
+          if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){reachable=true;break;}
+        }
+        if(!reachable)continue;chosen={point,exit};break;
+      }
+      if(!chosen)break;points.push(chosen.point);exits.push(chosen.exit);
+    }
+    if(points.length===specs.length)return {entries:points,exits};
+  }
+  return null;
+}
 export function spawnRaid(s,plan,nav,daytime=false) {
   if(s.raid||s.postgame)return;
   let group=plan.group;
@@ -39,7 +83,8 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
-  let entries=null,exits=null;
+  const nearby=cameraRaidEntry(s,specs,bounds,nav);
+  let entries=nearby?.entries??null,exits=nearby?.exits??null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;
     const spread=(group.length-1)*2+2,lo=(side<2?minZ:minX)+inset+spread,hi=(side<2?maxZ:maxX)-inset-spread;
