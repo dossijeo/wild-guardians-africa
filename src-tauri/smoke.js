@@ -44,14 +44,14 @@
     report.checks.menu = menu.src;
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
-    send({action: 'start', biome: 'gran_canon', culture: 'mapungubwe'});
+    send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     const worldEnd = performance.now() + 90000;
     while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     await new Promise(resolve => setTimeout(resolve, 1000));
     const world = document.querySelector('#world');
     if (!world || world.width === 0 || world.height === 0) throw Error('Production world canvas missing');
-    report.checks.world = {biome: 'gran_canon', culture: 'mapungubwe', width: world.width, height: world.height};
+    report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
     report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
     await finish();
   } catch (error) { await finish(error); }
