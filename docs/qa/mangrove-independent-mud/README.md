@@ -23,3 +23,5 @@ Dos ensayos alternados ABBA comparan el suelo de `043d68b` con esta implementaci
 | paired-2.json | 29.16 ms | 27.31 ms | 66/68 | 897686/899456 |
 
 Ambos informes tienen cero errores y conservan intacta la simulación. El añadido de geometría tiene un coste de envío pequeño; en estas mediciones el menor coste del shader compensa ese trabajo. `lab-reference.json` es una comparación previa con los mapas combinados del lab, no con `043d68b`. Las capturas `after-day.png` y `before-published.png` corresponden a la exploración previa; las capturas finales son las identificadas como `final-*`.
+
+La suite completa de `e16c216` terminó correctamente: `npm test`, 1.212 pruebas, cero fallos/canceladas/omitidas, duración 672.569,5689 ms. El log completo está en `full-tests.log`.

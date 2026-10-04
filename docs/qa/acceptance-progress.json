@@ -1779,12 +1779,13 @@
       "area": "Guardado y presentación",
       "scenario": "Salir a menú y entrar repetidamente",
       "expected": "Liberar audio, WebGL, listeners y timers de la escena anterior.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-lifecycle.md",
-        "docs/qa/resource-retry/README.md"
+        "docs/qa/resource-retry/README.md",
+        "docs/qa/world-lifecycle/README.md"
       ],
-      "notes": "Audio generation guards prevent late unlock/JSON/menu and old pack A from starting or stopping a newer scene. Twenty controlled menu cycles release source/gain nodes; partial stem start failure cleans up. Real WebAudio delayed-menu test ends at zero voices without an extra audio fetch. Remaining: integrated repeated menu/game lifecycle for WebGL, DOM listeners and timers. WorldScene now aborts its five own canvas listeners and guards repeated disposal. Two CPU tests release real disposal method resources once in partial/full load and detach event callback. Three real failed-world entries return menu, then one normal retry loads. Still partial: these are not repeated full gameplay exit/reentry GPU/DOM/timer cycles."
+      "notes": "Audio generation guards prevent late unlock/JSON/menu and old pack A from starting or stopping a newer scene. Twenty controlled menu cycles release source/gain nodes; partial stem start failure cleans up. Real WebAudio delayed-menu test ends at zero voices without an extra audio fetch. Remaining: integrated repeated menu/game lifecycle for WebGL, DOM listeners and timers. WorldScene now aborts its five own canvas listeners and guards repeated disposal. Two CPU tests release real disposal method resources once in partial/full load and detach event callback. Three real failed-world entries return menu, then one normal retry loads. Still partial: these are not repeated full gameplay exit/reentry GPU/DOM/timer cycles. Integrated native menu/production game now completes three full load-render-save-exit cycles on the same document, including two reloads of one isolated slot. Real old contexts initially stayed active; explicit forceContextLoss after listener/renderer disposal now yields contextLost true on all three retained references. Old renders remain stopped, canvas listeners zero, worker terminated, stream timer null/queue empty, ten native muted music voices return to zero/transport false. No global errors. This covers repeated scene resource cleanup; not GPU byte counts or GC of all JS references."
     },
     {
       "id": "QA-151",
