@@ -125,10 +125,15 @@ export class Navigation {
   }
   wallPlacement(wall) {
     const scale=wall.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[wall.material]??1):1,half=1.09*(wall.baseScaleX??1)*scale,depth=.22*scale,c=Math.cos(wall.yaw),s=Math.sin(wall.yaw),suppressed=new Set();
-    const steps=Math.max(1,Math.ceil(half*2/.35));
+    if(![wall.x,wall.z,wall.yaw??0,half].every(Number.isFinite))return {valid:false,reason:'Trazado de muralla inválido'};
+    const points=[],steps=Math.max(1,Math.ceil(half*2/.35));
     for(let i=0;i<=steps;i++)for(const dz of [-depth,0,depth]){
-      const dx=-half+half*2*i/steps,check=this.placement(wall.x+dx*c+dz*s,wall.z-dx*s+dz*c,.05,{ignoreWalls:true});
-      if(!check.valid)return check;for(const id of check.suppress??[])suppressed.add(id);
+      const dx=-half+half*2*i/steps;points.push({x:wall.x+dx*c+dz*s,z:wall.z-dx*s+dz*c});
+    }
+    if(this.obstacles.some(o=>o.kind!=='wall'&&points.every(p=>o.footprint?footprintDistance(o.footprint,p.x,p.z)<1e-8:distance(o,p)<=o.radius)))return {valid:false,reason:'La muralla queda dentro de un edificio'};
+    for(const p of points){const props=this.propsAt(p.x,p.z,4);
+      if(props.some(prop=>(prop.slot<4||prop.slot>=10&&prop.slot<=12||prop.slot>=18)&&distance(prop,p)<(prop.radius??1.5)+.05))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
+      for(const prop of props)if(distance(prop,p)<(prop.radius??.5)+.05)suppressed.add(prop.id);
     }
     return {valid:true,suppress:[...suppressed]};
   }

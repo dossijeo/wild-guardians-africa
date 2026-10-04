@@ -45,7 +45,7 @@ export function updateTerrainCamera(camera,controls,field){
 
 export function focusTerrainCamera(camera,controls,field,point){
   const damping=controls.enableDamping;controls.enableDamping=false;try{controls.update?.();}finally{controls.enableDamping=damping;}
-  const {pose,rawEye}=cameraPose(field,[point.x,0,point.z],field.canyon?0:.50,field.canyon?1.18:1.16,field.canyon?34:38);
+  const {pose,rawEye}=cameraPose(field,[point.x,0,point.z],point.theta??(field.canyon?0:.50),field.canyon?1.18:1.16,point.distance??(field.canyon?34:38));
   return applyPose(camera,controls,field,pose,rawEye);
 }
 

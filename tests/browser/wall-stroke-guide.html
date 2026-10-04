@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Trazo del Bastión</title>
+<style>body{margin:0;font:14px system-ui}#world{width:100vw;height:100vh;display:block}header{position:absolute;top:0;left:0;z-index:3;background:#fff9ed;padding:10px;max-width:80vw}button{padding:8px}pre{max-height:100px;overflow:auto}</style>
+<header>Guía visual controlada: mundo nativo y compra de centro pagada. El botón muestra un gesto preparado para inspeccionar su línea; no equivale a un toque real de móvil.<br><button id="hold" disabled>Mostrar trazo retenido</button><button id="release" disabled>Construir al soltar</button><pre id="data">Cargando…</pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const data=document.querySelector('#data');
+try{
+ const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const s=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(s.villages[0],site);s.suppressed.push(...site.suppress);nav.setState(s);Game.resume(s,'intro');Game.placeStructure(s,'centre',site.center,nav);
+ const world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');await world.load(s,nav,payload);world.focus(site.center);Game.pause(s,'qa');
+ const points=[[site.center.x-8,site.center.z+6],[site.center.x,site.center.z+10],[site.center.x+8,site.center.z+6]];
+ world.limitWallStroke=p=>Game.affordableWallStroke(s,'zarzas',p).points;
+ const paint=()=>data.textContent=JSON.stringify({money:s.ledger.balance,wallCount:s.structures.filter(p=>p.kind==='wall').length,guidePoints:world.strokePreview.points.length,errors:[]});paint();
+ document.querySelector('#hold').disabled=false;document.querySelector('#hold').onclick=()=>{world.showWallStroke(points);document.querySelector('#release').disabled=false;paint();};
+ document.querySelector('#release').onclick=()=>{Game.resume(s,'qa');Game.buildWallChain(s,'stroke','zarzas',points,nav,{maxPieces:Game.wallCapacity(s,'zarzas')});Game.pause(s,'qa');world.showWallStroke([]);world.syncResidentProps();paint();};
+ const frame=()=>{world.render(0);requestAnimationFrame(frame);};frame();
+}catch(e){data.textContent=JSON.stringify({error:e.message});}
+</script>

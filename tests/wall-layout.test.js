@@ -45,11 +45,13 @@ test('Preview never spends coins, reserves IDs or alters the enclosure and const
   assert.equal(plan.cost,150);assert.equal(plan.gates,1);assert.equal(serialize(state),before);
   state.raid={animals:[]};assert.throws(()=>Game.buildWallChain(state,'confirm','zarzas',square,nav),/disponible/);assert.equal(state.ledger.balance.n,'700');assert.equal(state.structures.length,1);
 });
-test('Invalid terrain, crop intersection and insufficient money leave state unchanged',()=>{
-  for(const reason of ['terrain','crop','money']){
-    const {state,nav}=fixture();if(reason==='terrain')nav.wallPlacement=()=>({valid:false,reason:'no terreno'});if(reason==='crop')state.plants.push({id:'p',alive:true,x:1,z:0});
-    const before=JSON.stringify(state);assert.throws(()=>Game.buildWallChain(state,'chain',reason==='money'?'piedra':'zarzas',square,nav,{smooth:false,snap:false}));assert.equal(JSON.stringify(state),before);
-  }
+test('unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge',()=>{
+ const blocked=fixture();blocked.nav.wallPlacement=()=>({valid:false,reason:'no terreno'});const before=JSON.stringify(blocked.state);
+ assert.equal(Game.buildWallChain(blocked.state,'chain','zarzas',square,blocked.nav,{smooth:false,snap:false}),false);assert.equal(JSON.stringify(blocked.state),before);
+ const crop=fixture();crop.state.plants.push({id:'p',alive:true,x:1,z:0});
+ const plan=Game.previewWallChain(crop.state,'zarzas',square,crop.nav,{smooth:false,snap:false});assert.ok(plan.pieces.length>0&&plan.pieces.length<15);
+ Game.buildWallChain(crop.state,'chain','zarzas',square,crop.nav,{smooth:false,snap:false});assert.equal(crop.state.structures.length,plan.pieces.length+1);
+ const money=fixture(),original=JSON.stringify(money.state);assert.throws(()=>Game.buildWallChain(money.state,'chain','piedra',square,money.nav,{smooth:false,snap:false}));assert.equal(JSON.stringify(money.state),original);
 });
 test('Removing an automatic gate opens a persistent gap with its refund and without replacement',()=>{
   const {state,nav}=fixture();Game.buildWallChain(state,'chain','zarzas',square,nav,{smooth:false,snap:false});const gate=state.structures.find(p=>p.autoGate),balance=state.ledger.balance.n;

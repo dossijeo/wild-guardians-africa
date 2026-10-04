@@ -70,11 +70,12 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   return candidates[0]??{valid:false,cost:800,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
+  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
-  if(!check.valid)throw new Error(check.reason);
+  if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?800:wallSpec(material).cost;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
@@ -88,8 +89,8 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
 }
 export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
 export function affordableWallStroke(s,material,points){
-  const maxPieces=wallCapacity(s,material),slots=wallStroke(points,s.structures,{maxPieces});
-  return {slots,points:wallStrokeLine(slots),maxPieces};
+  const maxPieces=wallCapacity(s,material),all=wallStroke(points,s.structures),slots=all.slice(0,maxPieces);
+  return {slots,points:maxPieces?(all.length<=maxPieces?points:wallStrokeLine(slots)):[],maxPieces};
 }
 export function wallRefund(target){
   if(target.kind!=='wall'||target.hp<=0||target.status==='ruined'||target.status==='collapsing')return rational(0);
@@ -100,27 +101,27 @@ export function wallRefund(target){
 export function previewWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,options);
-  if(!slots.length)throw new Error('Ese tramo ya está ocupado o es demasiado corto');
-  const newPieces=slots.map((slot,i)=>({id:`structure-${s.nextId+i}`,created:s.sequence+i,kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id}));
+  const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
+  const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>nav.wallPlacement(piece).valid&&!cropOverlap(piece));
+  newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
   const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
   layout.ensureAutomaticGates();
   const converted=layout.pieces.filter(p=>p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
-  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp}));
+  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
   const checks=[...newPieces,...updates.filter(p=>!newPieces.some(e=>e.id===p.id)).map(p=>({...s.structures.find(e=>e.id===p.id),...p}))],suppressed=new Set();
   for(const piece of checks){
-    const check=nav.wallPlacement(piece);if(!check.valid)throw new Error(check.reason);
-    const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;
-    if(s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4))throw new Error('El trazado solapa un cultivo');
+    const check=nav.wallPlacement(piece);
     for(const key of check.suppress??[])suppressed.add(key);
   }
   const cost=spec.cost*newPieces.length;
   if(compare(s.ledger.balance,rational(cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
-  return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:converted.length};
+  return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length};
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   const plan=previewWallChain(s,material,points,nav,options),newPieces=plan.pieces;
+  if(!newPieces.length)return false;
   return commit(s,id,'wall',()=>{
     ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));
     for(const update of plan.updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
@@ -165,6 +166,25 @@ export function harvest(s,id,plantId) {
     emit(s,'HarvestRequested',{targetId:p.id,count:group.length});
   });
 }
+function addHiredWorker(s,profileId,centerId,usedPeople){
+  const center=s.structures.find(c=>c.id===centerId),village=s.villages.find(v=>v.id===center?.villageId)??s.villages[0];
+  let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
+  if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
+  const entry=village.entry??village;
+  s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+}
+export function hireAdditional(s,id,selection,centerId){
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contratación adicional no está disponible ahora');
+  if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no está disponible');
+  const cost=hiringCost(selection,{time:s.time}),total=Object.values(selection).reduce((n,c)=>n+c,0);
+  if(!total)return false;
+  transact(s.ledger,id,rational(-cost));
+  const usedPeople=new Set(s.workers.map(w=>w.personId));
+  for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)addHiredWorker(s,p.id,centerId,usedPeople);
+  for(const p of PROFILES)s.hiringSelection[p.id]=(s.hiringSelection[p.id]??0)+(selection[p.id]??0);
+  s.commandIds.push(id);emit(s,'HiringConfirmed',{count:total,additional:true,centerId,cost});return true;
+}
 export function hire(s,id,selection) {
   if(s.hiringPaidDay===s.day)return false;
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -176,11 +196,7 @@ export function hire(s,id,selection) {
   s.workers=s.workers.filter(w=>contractExpired(w,s)&&w.status!=='home');
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   const add=(profileId,centerId)=>{
-    const center=s.structures.find(c=>c.id===centerId),village=s.villages.find(v=>v.id===center?.villageId)??s.villages[0];
-    let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
-    if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
-    const entry=village.entry??village;
-    s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId: centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+    addHiredWorker(s,profileId,centerId,usedPeople);
   };
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);

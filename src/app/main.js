@@ -132,10 +132,12 @@ function onPick({entityId,point}) {
       if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav))save();return;
     }
     if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
+    const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
+    if(pickedCenter&&!state.raid&&state.time<300&&state.hiringPaidDay===state.day){cancelTool();hiringDialog(pickedCenter.id);return;}
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
-      if(tool.kind==='center'||tool.kind==='wall')Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
+      if(tool.kind==='center'||tool.kind==='wall'){if(Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav)===false)return;}
       else if(tool.kind==='plant')Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
 
       toolSession.used(performance.now()/1000);save();world.syncResidentProps();
@@ -146,7 +148,7 @@ function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(su
 function buildWallStroke(points){
   if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
   const maxPieces=Math.min(Game.wallCapacity(state,tool.material),world.wallStrokeMaxPieces??Infinity);if(!maxPieces)throw new Error(RESERVE_MESSAGE);
-  Game.buildWallChain(state,commandId(),tool.material,points,nav,{maxPieces});
+  if(Game.buildWallChain(state,commandId(),tool.material,points,nav,{maxPieces})===false)return;
   toolSession.used(performance.now()/1000);world.clearWallPreview();world.syncResidentProps();save();
 }
 function toolPanel(type) {
@@ -286,22 +288,35 @@ function narrator() {
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss();save();}),
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
 }
-function hiringDialog() {
-  if(!openSurface('hiring'))return;
-  const selection={...state.hiringSelection},modal=document.querySelector('#modal');
+function hiringDialog(centerId=null) {
+  const additional=centerId!==null;
+  if(!openSurface(additional?'modal':'hiring',additional?'additional-hiring':undefined))return;
+  if(additional)Game.pause(state,'menu');
+  const selection=additional?{}:{...state.hiringSelection},modal=document.querySelector('#modal');
   modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,clock:Game.clockLabel(state),hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
   const agricultural=agriculturalDawnMessage(state);
-  if(agricultural){const announcement=document.createElement('p');announcement.className='hiring-intro';announcement.id='hiringAgriculturalNotice';announcement.role='status';announcement.textContent=agricultural;document.querySelector('#hiringIntro').before(announcement);}
+  if(agricultural&&!additional){const announcement=document.createElement('p');announcement.className='hiring-intro';announcement.id='hiringAgriculturalNotice';announcement.role='status';announcement.textContent=agricultural;document.querySelector('#hiringIntro').before(announcement);}
   const stage=document.querySelector('#stage');stage.classList.add('hiring-open');
+  if(additional){
+    document.querySelector('#hiringTitle').textContent='Ampliar el equipo';
+    document.querySelector('.panel-subtitle').textContent='Jornada en curso';
+    document.querySelector('#hiringIntro').textContent='Contrata más personas para este centro. Pagas solo la parte de su jornada que queda, redondeada hacia arriba.';
+    const close=document.createElement('button');close.id='close-additional-hiring';close.textContent='Cerrar';document.querySelector('.hiring-footer').append(close);close.onclick=closeSurface;
+    const center=state.structures.find(s=>s.id===centerId);if(center.hp<center.maxHp){const repair=document.createElement('button');repair.textContent='Solicitar reparación';document.querySelector('.hiring-footer').append(repair);repair.onclick=()=>safe(()=>{closeSurface();Game.requestRepair(state,commandId(),centerId);save();});}
+    for(const [i,p] of NPC_TYPES.entries()){
+      const card=document.querySelector(`[data-crew-card="${i}"]`),shift=card.querySelector('.hire-shift span');shift.textContent=Game.clockLabel(state)+'–'+shift.textContent.split('–')[1];
+      if(state.time>=PROFILES.find(profile=>profile.id===p.id).end){const input=document.querySelector(`#crewCount${i}`);input.disabled=true;document.querySelectorAll(`[data-crew-step="${i}"]`).forEach(button=>button.disabled=true);}
+    }
+  }
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
-    state.hiringSelection={...selection};
-    try {const cost=hiringCost(selection),available=numberOf(state.ledger.balance);document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=cost>available;document.querySelector('#hireBudgetMessage').textContent=cost>available?'Reduce la plantilla para ajustarla al saldo.':'El salario se cobra una sola vez al confirmar.';}
+    if(!additional)state.hiringSelection={...selection};
+    try {const cost=hiringCost(selection,additional?{time:state.time}:{}),available=numberOf(state.ledger.balance);document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=cost>available;document.querySelector('#hireBudgetMessage').textContent=cost>available?'Reduce la plantilla para ajustarla al saldo.':'El salario se cobra una sola vez al confirmar.';}
     catch(e){document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  bind('hireConfirm',()=>{if(additional)Game.hireAdditional(state,commandId(),selection,centerId);else Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
   Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(document.querySelector('#hiring-dialog'))framePaint(modal,layoutHud(stage),frameImages);}).catch(()=>error('No se ha podido cargar el marco de contratación.'));
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});

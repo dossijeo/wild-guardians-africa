@@ -26,33 +26,23 @@ function chainAt(nav,state,p,reason){
     if(checks[0]?.valid&&checks.find(c=>!c.valid)?.reason.includes(reason))return {points,pieces,checks};
   }
 }
-function rejectsUnchanged(state,nav,chain,reason){
-  const before=serialize(state),obstacles=JSON.stringify(nav.obstacles),suppression=[...nav.suppressed];
-  assert.throws(()=>Game.previewWallChain(state,'zarzas',chain.points,nav,options),reason);
-  assert.throws(()=>Game.buildWallChain(state,'rejected-chain','zarzas',chain.points,nav,options),reason);
-  assert.equal(serialize(state),before,'all-or-nothing purchase, IDs and modules');
-  assert.equal(JSON.stringify(nav.obstacles),obstacles);assert.deepEqual([...nav.suppressed],suppression);
-}
-for(const biome of Game.BIOMES)test(`QA-085 ${biome}: native large prop rejects a chain containing legal modules without partial purchase`,async()=>{
-  const {nav,state,center}=await fixture(biome);
-  const props=nav.propsAt(center.x,center.z,100).filter(p=>p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18);
-  let chain,prop;
-  for(const candidate of props){chain=chainAt(nav,state,candidate,'árbol o roca');if(chain){prop=candidate;break;}}
-  assert.ok(chain,'real native scatter has an obstructed chain with a legal prefix');
-  rejectsUnchanged(state,nav,chain,/árbol o roca/);
-  const target=chain.pieces[chain.checks.findIndex(c=>!c.valid&&c.reason.includes('árbol o roca'))];
-  const before=serialize(state);
-  assert.throws(()=>Game.placeStructure(state,'rejected-single',{...target},nav),/árbol o roca/);
-  assert.equal(serialize(state),before);
-  console.log(JSON.stringify({biome,propId:prop.id,slot:prop.slot,points:chain.points,legalModules:chain.checks.filter(c=>c.valid).length,rejectedModules:chain.checks.filter(c=>!c.valid).length,balance:state.ledger.balance.n}));
+for(const biome of Game.BIOMES)test(`QA-085 ${biome}: a native large prop leaves a silent gap, charging only legal modules`,async()=>{
+ const {nav,state,center}=await fixture(biome);
+ const props=nav.propsAt(center.x,center.z,100).filter(p=>p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18);
+ let chain;for(const candidate of props){chain=chainAt(nav,state,candidate,'árbol o roca');if(chain)break;}
+ assert.ok(chain);const plan=Game.previewWallChain(state,'zarzas',chain.points,nav,options),before=Number(state.ledger.balance.n);
+ assert.ok(plan.pieces.length>0&&plan.pieces.length<chain.pieces.length);
+ Game.buildWallChain(state,'partial-chain','zarzas',chain.points,nav,options);
+ assert.equal(Number(state.ledger.balance.n),before-plan.cost);assert.equal(state.structures.filter(p=>p.kind==='wall').length,plan.pieces.length);
+ const target=chain.pieces[chain.checks.findIndex(c=>!c.valid)];const saved=serialize(state);
+ assert.equal(Game.placeStructure(state,'skipped-single',target,nav),false);assert.equal(serialize(state),saved);
 });
-for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: native water, lava or slope rejects the complete chain after a legal prefix`,async()=>{
-  const {nav,state,center}=await fixture(biome);let chain;
-  for(let z=-160;z<=160&&!chain;z+=4)for(let x=-160;x<=160&&!chain;x+=4){
-    const p={x:center.x+x,z:center.z+z};
-    if(!nav.terrainValid(p.x,p.z,.05))chain=chainAt(nav,state,p,'Agua, lava');
-  }
-  assert.ok(chain,'native terrain has a buildable-to-invalid boundary');
-  rejectsUnchanged(state,nav,chain,/Agua, lava/);
-  console.log(JSON.stringify({biome,terrain:chain.points,legalModules:chain.checks.filter(c=>c.valid).length,rejectedModules:chain.checks.filter(c=>!c.valid).length,balance:state.ledger.balance.n}));
+for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: native blocked terrain permits paid walls without changing plant or centre restrictions`,async()=>{
+ const {nav,state,center}=await fixture(biome);let point;
+ for(let z=-100;z<=100&&!point;z+=4)for(let x=-100;x<=100&&!point;x+=4){const p={x:center.x+x,z:center.z+z};
+  if(nav.field.blocked(p.x,p.z,.15)&&nav.wallPlacement({kind:'wall',material:'zarzas',yaw:0,...p}).valid)point=p;
+ }
+ assert.ok(point,'native water/lava point without a large prop');assert.equal(nav.placement(point.x,point.z,.4).valid,false);
+ const before=Number(state.ledger.balance.n);Game.placeStructure(state,'wet-wall',{kind:'wall',material:'zarzas',...point},nav);
+ assert.equal(Number(state.ledger.balance.n),before-10);assert.equal(state.structures.at(-1).kind,'wall');
 });

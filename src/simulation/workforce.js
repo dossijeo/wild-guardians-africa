@@ -35,13 +35,15 @@ export function allocateWorkers(centers,total) {
   residues.slice(0,remaining-spent).forEach(({c})=>result[c.id]++);
   return result;
 }
-export function hiringCost(selection) {
+export function hiringCost(selection,{time=0}={}) {
+  if(!Number.isFinite(time)||time<0)throw new Error('Hora de contratación inválida');
   if(Object.keys(selection).some(id=>!PROFILES.some(p=>p.id===id))) throw new Error('Perfil desconocido');
-  return PROFILES.reduce((sum,p)=>{
+  return Math.ceil(PROFILES.reduce((sum,p)=>{
     const count=selection[p.id]??0;
     if(!Number.isSafeInteger(count)||count<0) throw new Error('Cantidad inválida');
-    return sum+count*p.wage;
-  },0);
+    if(count&&time>=p.end)throw new Error('La jornada de este perfil ya ha terminado');
+    return sum+count*p.wage*Math.max(0,1-time/p.end);
+  },0));
 }
 export function distributeProfiles(quotas,selection) {
   const centers=Object.keys(quotas);
