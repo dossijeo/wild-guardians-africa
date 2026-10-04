@@ -12,6 +12,11 @@ export function validateSnapshot(state) {
   if(!tutorial||!BASIC_STEPS.includes(tutorial.step)||!validIds(tutorial.seen)||tutorial.pending!==undefined&&!validIds(tutorial.pending)||tutorial.reading!==undefined&&tutorial.reading!==null&&!TUTORIAL_IDS.includes(tutorial.reading)||tutorial.basicSkipped!==undefined&&typeof tutorial.basicSkipped!=='boolean')throw new Error('Tutorial inválido');
   if(tutorial.guideAfterAuto!==undefined&&(!validIds(tutorial.guideAfterAuto)||tutorial.guideAfterAuto.some(id=>!['basic.center','basic.plant'].includes(id))))throw new Error('Guía tutorial inválida');
   if(state.pauses?.includes('tutorial-reading')&&!tutorial.reading)throw new Error('Lectura tutorial incoherente');
+  if(state.raid?.cameraFocusedAnimalId!==undefined&&(typeof state.raid.cameraFocusedAnimalId!=='string'||!state.raid.animals.some(a=>a.id===state.raid.cameraFocusedAnimalId)))throw new Error('Foco de incursión inválido');
+  if(state.raid?.introCropLimit!==undefined){
+    const r=state.raid;
+    if(!Number.isSafeInteger(r.introPlantCount)||r.introPlantCount<0||!Number.isSafeInteger(r.introCropLimit)||r.introCropLimit<0||r.introCropLimit>Math.max(0,r.introPlantCount-1)||!Number.isSafeInteger(r.introCropsDestroyed)||r.introCropsDestroyed<0||r.introCropsDestroyed>r.introCropLimit)throw new Error('Límite de incursión inicial inválido');
+  }
   const ids=new Set();
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {

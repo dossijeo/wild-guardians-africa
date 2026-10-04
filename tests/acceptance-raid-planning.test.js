@@ -45,7 +45,7 @@ test('QA-088 revised: the first-night clock spawns one mandatory warthog with ze
  assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
  s=deserialize(serialize(s));Game.tick(s,s.nightPlan.at-s.time+.01,nav);
  assert.deepEqual(s.raid.animals.map(a=>a.species),['warthog']);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
- assert.equal(s.raid.animals[0].hitsRemaining,1);
+ assert.equal(s.raid.animals[0].hitsRemaining,2);
  s=deserialize(serialize(s));Game.tick(s,.1,nav);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
  const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,['hyena']);
 });

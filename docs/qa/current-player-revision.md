@@ -16,7 +16,7 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Volver centra cámara en centro de trabajo | Publicado; falta recorrido visual |
 | Jornales: ancianos 30, jóvenes 40; ajustar reserva y textos | Implementado: ancianos 30, jóvenes 40 y reserva 30; sustituye los costes anteriores |
 | Manos HUD del tutorial también en segunda partida | Pendiente |
-| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales de atracción reducidos, presentaciones con un golpe; recordatorio de escudo pendiente |
+| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales de atracción reducidos, presentaciones con presupuesto creciente y límite de destrucción inicial; recordatorio de escudo pendiente |
 | Cultivos resisten dos golpes y edificios requieren el doble de golpes | Implementado: daño persistente en cultivos y mitad de daño estructural por golpe |
 | Recordatorios útiles periódicos de crecimiento y multiplicación | Pendiente |
 | Campaña de 100 noches con plantación intensiva responsable y actividad constante | Pendiente; medir tiempo sin nada útil que hacer y ajustar parámetros reales si falla |
@@ -55,10 +55,12 @@ La batería completa tras la salida directa de trabajadores detectó dos facóqu
 
 ## Incursiones garantizadas y daño
 
-Todas las noches de campaña tienen un grupo de al menos un animal, incluso sin cultivos. Las cinco primeras presentan facóquero, hiena, búfalo, león y rinoceronte, uno por noche con un golpe disponible. Después se utilizan composiciones aleatorias legales con umbrales de atracción 0/100/300/800/2000 y probabilidad nocturna 100 %. Las incursiones diurnas mantienen su condición y probabilidad; tras liberar la campaña no hay ataques.
+Todas las noches de campaña tienen un grupo de al menos un animal, incluso sin cultivos. Las cinco primeras presentan facóquero, hiena, búfalo, león y rinoceronte, uno por noche con 2/3/4/4/5 golpes disponibles. Durante estas presentaciones se pueden destruir hasta el 20 % de los cultivos presentes al entrar (redondeado hacia arriba), dejando siempre al menos uno vivo. Después de alcanzar ese límite se pueden seguir dañando construcciones. Después se utilizan composiciones aleatorias legales con umbrales de atracción 0/100/300/800/2000 y probabilidad nocturna 100 %. Las incursiones diurnas mantienen su condición y probabilidad; tras liberar la campaña no hay ataques.
 
 Los cultivos acumulan un golpe sin morir y se destruyen al segundo; el daño se guarda y se valida al restaurar. Daños estructurales por especie: 20/25/35/40/60. Las pruebas conservan animaciones completas, presupuesto de golpes, reservas exclusivas y separación de cuerpos. Se han probado las cinco especies en las seis entradas de bioma reales cerca de cámara o finca. Falta la aceptación del balance con grandes plantaciones y el recordatorio de escudo en cada incursión.
 
 ## Petición adicional: cámara de incursión
 
 Pendiente: viaje suave hacia el primer animal cuando entra en la finca, una vez por incursión, interrumpible mediante control manual de la cámara.
+
+La cuota inicial de cultivos y el contador de destrucciones se guardan con la incursión. Pruebas con 1/2/5/10 cultivos confirman daño real, conservación de al menos una planta, gasto del presupuesto restante y restauración determinista. El límite solo corresponde a las primeras cinco presentaciones; las incursiones posteriores mantienen el peligro normal.

@@ -119,8 +119,12 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
-    hitsRemaining:plan.introductory&&!daytime?1:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
+    hitsRemaining:plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
+  if(plan.introductory&&!daytime){
+    const count=s.plants.filter(p=>p.alive).length;
+    s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
+  }
   for(const w of s.workers) {
     cancelIdle(w);
     releaseTask(s,w);w.path=null;w.hits=0;
@@ -143,6 +147,9 @@ export function reachableApproach(a,target,nav,shield=null){
   }
   return null;
 }
+function canAttackCrop(s,p){
+  return p.alive&&((p.attackHits??0)<1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
+}
 function targetFor(s,a,nav) {
   const groups=[],seen=new Set();
   for(const p of s.plants.filter(p=>p.alive))if(!seen.has(p.id)) {
@@ -150,7 +157,7 @@ function targetFor(s,a,nav) {
     if(!s.raid?.reservations[`crop:${id}`])groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
-  for(const group of groups)for(const p of group.targets.sort((p,q)=>dist(a,p)-dist(a,q))) {
+  for(const group of groups)for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
     const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
     if(approach)return {target:p,reservation:group.id,approach,shieldId:shield?.id??null};
   }
@@ -173,7 +180,7 @@ export function updateRaid(s,dt,nav) {
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);
       if(a.attackRemaining>1e-9)continue;
-      const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));
+      const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact'));
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;
         const shield=target?spellAt(s,'shield',target):null;
@@ -184,7 +191,7 @@ export function updateRaid(s,dt,nav) {
           if(!shield){
             if('alive' in target){
               target.attackHits=(target.attackHits??0)+1;emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
-              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
+              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
             }
             else {hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);emit(s,'StructureHit',{animalId:a.id,targetId:target.id});}
           }
@@ -204,7 +211,7 @@ export function updateRaid(s,dt,nav) {
       if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
-    let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||t.alive)&&(!('status' in t)||t.status==='intact'));
+    let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact'));
     if(!target) {
       release(s,a);const selected=targetFor(s,a,nav);
       if(!selected){a.status='retreating';continue;}
