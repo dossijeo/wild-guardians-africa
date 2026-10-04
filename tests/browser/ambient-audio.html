@@ -1,0 +1,22 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Ambientes WebAudio originales</title>
+<p>Salida silenciada. Hidrología dirigida, sin mundo 3D: comprueba bucles originales, buses y cambios de escena; no acredita escucha ni mezcla con personajes.</p><button id="run">Comprobar ambientes</button><output id="status">Lista</output><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {AMBIENT_SOUND_IDS} from '../../src/audio/ambient-audio.js';
+const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[];
+let disposed=false;const dispose=()=>{if(!disposed){disposed=true;audio.dispose();}};
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+const assert=(v,message)=>{if(!v)throw Error(message);};
+const wait=()=>new Promise(resolve=>setTimeout(resolve,600));
+const snapshot=label=>({label,voices:[...audio.voices.values()].map(v=>({family:v.family,bus:v.bus,emitter:v.emitter,gain:v.volume.gain.value})),rates:audio.active.map(s=>s.playbackRate.value),loops:audio.active.map(s=>s.loop)});
+addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{
+ status.textContent='Decodificando originales…';await audio.unlock();audio.sfx=await audio.sfxBank();
+ const decoded=await Promise.all(AMBIENT_SOUND_IDS.map(async id=>{const item=audio.sfx.items.find(i=>i.id===id),buffer=await audio.buffer(item.audio.url);return {id,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,length:buffer.length,duration:buffer.duration};}));
+ const state={biome:'sabana',time:0,pauses:[]},options={listener:{x:0,z:0},waterAt:()=>({active:true,shore:0,inside:false})};
+ async function stage(label){audio.updateAmbient(state,options);await wait();audio.updateAmbient(state,options);history.push(snapshot(label));assert(audio.active.every(s=>s.playbackRate.value===1&&s.loop),'Tono o bucle incorrecto');assert([...audio.voices.values()].every(v=>v.bus==='ambient'),'Bus incorrecto');}
+ await stage('Día Sabana');assert(audio.active.length===2,'Día duplicado');state.time=300;await stage('Noche Sabana');assert(audio.active.length===3,'Noche duplicada');state.biome='gran-rio';await stage('Agua de río');assert([...audio.voices.values()].some(v=>v.family==='amb_river'),'Falta río');state.biome='manglares';await stage('Agua de manglar');assert([...audio.voices.values()].some(v=>v.family==='amb_coast_mangrove'),'Falta manglar');assert(![...audio.voices.values()].some(v=>v.family==='amb_river'),'Río anterior sigue vivo');state.pauses=['menu'];await stage('Pausa atenuada');
+ audio.stop();const afterStop=audio.active.length;assert(afterStop===0,'Voces sin liberar');dispose();await wait();report.textContent=JSON.stringify({decoded,history,afterStop,context:audio.context.state,muted:true,hydrology:'directed',errors},null,2);status.textContent='Completada';
+ }catch(e){errors.push(String(e));report.textContent=JSON.stringify({history,errors},null,2);status.textContent='FAIL: '+e.message;dispose();}};
+addEventListener('pagehide',dispose);
+</script></html>

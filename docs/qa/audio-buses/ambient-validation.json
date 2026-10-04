@@ -1,0 +1,48 @@
+{
+  "sourceSha256": {
+    "src/audio/audio.js": "0b3df9a264c79b16b8061865e31f70b0ffc2d359fcaa6f8d69717bd057d3c24a",
+    "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
+    "src/app/main.js": "f1e3eb10cd3d570413f1d2688511828a680e810eb2ffe9dcc0326942135c31a5",
+    "public/content/sfx-routing.json": "50985c5ed4c352de03e012e80f963c6a887b4a42bb7434a3249d7b2f78642ed0"
+  },
+  "directedTests": {
+    "passed": 63,
+    "failed": 0,
+    "durationMs": 1596.6035
+  },
+  "completeLocalSuite": {
+    "passed": 1262,
+    "failed": 0,
+    "durationMs": 563601.8252,
+    "log": ".cache/ambient-audio-full.log"
+  },
+  "build": {
+    "result": "passed",
+    "durationSeconds": 37.47
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406683552,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 33,
+    "reserved": 93
+  },
+  "nativeBrowser": {
+    "result": "passed",
+    "fixture": "tests/browser/ambient-audio.html",
+    "report": "ambient-web-audio.json",
+    "screenshot": "ambient-web-audio.png",
+    "decodedOriginalClips": 6,
+    "stages": 5,
+    "afterStop": 0,
+    "context": "closed",
+    "muted": true,
+    "hydrology": "directed"
+  },
+  "scope": "Native original-loop decode, graph lifecycle and policy. No listening, real hydrology or native actor mixture success is inferred."
+}

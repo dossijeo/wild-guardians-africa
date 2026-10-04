@@ -58,3 +58,15 @@ test('context suspension cancels a pending foot contact even when no simulation 
  audio.updateMovement(state);worker.x=.144;worker.walkPhase=time+.1;state.elapsed=.2;audio.updateMovement(state);await new Promise(done=>setImmediate(done));assert.equal(typeof resolve,'function');
  audio.suspend();audio.resume();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
 });
+
+test('native ambient loops use the ambient child bus and share SFX budgets without changing simulation',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:['amb_wind_soft','amb_birds'].map(id=>({id,loop:true,audio:{url:id}}))};audio.buffer=async url=>({url});
+ const state={biome:'sabana',time:0,pauses:[]},before=JSON.stringify(state);audio.updateAmbient(state);await new Promise(done=>setImmediate(done));
+ assert.equal(sources.length,2);assert.equal(JSON.stringify(state),before);assert.ok(sources.every(source=>source.loop&&source.playbackRate.value===1));
+ for(const voice of audio.voices.values()){assert.equal(voice.volume.destination,audio.sfxBuses.ambient);assert.equal(voice.priority,0);assert.ok(voice.emitter.startsWith('ambient:'));}
+ audio.stop();assert.equal(audio.active.length,0);assert.equal(audio.ambient.entries.size,0);audio.dispose();
+});
+test('leaving while original ambient MP3s decode prevents every late loop from starting',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:['amb_wind_soft','amb_birds'].map(id=>({id,loop:true,audio:{url:id}}))};const pending=[];audio.buffer=()=>new Promise(done=>pending.push(done));
+ audio.updateAmbient({biome:'sabana',time:0,pauses:[]});await new Promise(done=>setImmediate(done));assert.equal(pending.length,2);audio.stop();for(const resolve of pending)resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
+});

@@ -1,17 +1,16 @@
 {
   "schema": "wg-sfx-routing-v1",
-  "scope": "Actual one-shot gameplay event routes and explicit retained reserves. Reserved is not implemented gameplay.",
+  "scope": "Actual logical-event, native-contact and ambient-layer routes with explicit retained reserves. Reserved is not implemented gameplay.",
   "items": [
     {
       "number": 1,
       "id": "amb_wind_soft",
       "filename": "001_amb_wind_soft.mp3",
       "sha256": "d127943dd85b02978ce88e72a2e88f1b714dae95f283949a50bd5a7baf8bd161",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Fondo de brisa; bucle espacial/ambiental de baja presencia."
     },
     {
@@ -23,7 +22,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Original variant retained; the current world uses the approved soft-wind baseline and has no accredited wind-intensity trigger for switching to this layer.",
       "planned_trigger": "Variante de viento perceptible; mezcla de ambiente sin monopolizar el paisaje."
     },
     {
@@ -31,11 +30,10 @@
       "id": "amb_insects",
       "filename": "003_amb_insects.mp3",
       "sha256": "4a0e5e869eceac026546cae91165f431393f8a93d7d7fa23902b51840e2f7909",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Insectos ambientales; activar por zona y limitar su densidad."
     },
     {
@@ -43,11 +41,10 @@
       "id": "amb_birds",
       "filename": "004_amb_birds.mp3",
       "sha256": "230c1bd9d8c5b75dea38065612cd6754ed6161dae600ebd9197179d50f632576",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Aves diurnas; ambiente, no entidades jugables nuevas."
     },
     {
@@ -55,11 +52,10 @@
       "id": "amb_night",
       "filename": "005_amb_night.mp3",
       "sha256": "356c34bb7de554deafcf1efb4b1caf8580bcb37cc10ac77b054c12ab605573d9",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Fondo nocturno; fundido al cambiar de fase, sin duplicar el bucle."
     },
     {
@@ -67,11 +63,10 @@
       "id": "amb_river",
       "filename": "006_amb_river.mp3",
       "sha256": "8cc8b5e845b0c101437fcb2bd1aad44402e8abfef682565b6267fd42996550d5",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Proximidad a agua fluvial; atenuación según distancia."
     },
     {
@@ -79,11 +74,10 @@
       "id": "amb_coast_mangrove",
       "filename": "007_amb_coast_mangrove.mp3",
       "sha256": "cd608df484aad2790e15a67b5f5a6a0e43fb626fd8e2ea45ebd24a27321ab70a",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "world-ambient-layer"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Proximidad a costa/manglares; no superponer a máximo con todos los otros ambientes."
     },
     {

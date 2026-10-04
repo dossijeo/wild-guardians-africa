@@ -1,0 +1,234 @@
+{
+  "decoded": [
+    {
+      "id": "amb_wind_soft",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 576000,
+      "duration": 12
+    },
+    {
+      "id": "amb_birds",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 576000,
+      "duration": 12
+    },
+    {
+      "id": "amb_insects",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 576000,
+      "duration": 12
+    },
+    {
+      "id": "amb_night",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 720000,
+      "duration": 15
+    },
+    {
+      "id": "amb_river",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 576000,
+      "duration": 12
+    },
+    {
+      "id": "amb_coast_mangrove",
+      "channels": 2,
+      "sampleRate": 48000,
+      "length": 576000,
+      "duration": 12
+    }
+  ],
+  "history": [
+    {
+      "label": "Día Sabana",
+      "voices": [
+        {
+          "family": "amb_wind_soft",
+          "bus": "ambient",
+          "emitter": "ambient:wind",
+          "gain": 0.3499999940395355
+        },
+        {
+          "family": "amb_birds",
+          "bus": "ambient",
+          "emitter": "ambient:fauna",
+          "gain": 0.2199999988079071
+        }
+      ],
+      "rates": [
+        1,
+        1
+      ],
+      "loops": [
+        true,
+        true
+      ]
+    },
+    {
+      "label": "Noche Sabana",
+      "voices": [
+        {
+          "family": "amb_wind_soft",
+          "bus": "ambient",
+          "emitter": "ambient:wind",
+          "gain": 0.3499999940395355
+        },
+        {
+          "family": "amb_insects",
+          "bus": "ambient",
+          "emitter": "ambient:fauna",
+          "gain": 0.2199999988079071
+        },
+        {
+          "family": "amb_night",
+          "bus": "ambient",
+          "emitter": "ambient:night",
+          "gain": 0.20000000298023224
+        }
+      ],
+      "rates": [
+        1,
+        1,
+        1
+      ],
+      "loops": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "label": "Agua de río",
+      "voices": [
+        {
+          "family": "amb_wind_soft",
+          "bus": "ambient",
+          "emitter": "ambient:wind",
+          "gain": 0.3499999940395355
+        },
+        {
+          "family": "amb_insects",
+          "bus": "ambient",
+          "emitter": "ambient:fauna",
+          "gain": 0.2199999988079071
+        },
+        {
+          "family": "amb_night",
+          "bus": "ambient",
+          "emitter": "ambient:night",
+          "gain": 0.20000000298023224
+        },
+        {
+          "family": "amb_river",
+          "bus": "ambient",
+          "emitter": "ambient:water",
+          "gain": 0.30000001192092896
+        }
+      ],
+      "rates": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "loops": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "label": "Agua de manglar",
+      "voices": [
+        {
+          "family": "amb_wind_soft",
+          "bus": "ambient",
+          "emitter": "ambient:wind",
+          "gain": 0.3499999940395355
+        },
+        {
+          "family": "amb_insects",
+          "bus": "ambient",
+          "emitter": "ambient:fauna",
+          "gain": 0.2199999988079071
+        },
+        {
+          "family": "amb_night",
+          "bus": "ambient",
+          "emitter": "ambient:night",
+          "gain": 0.20000000298023224
+        },
+        {
+          "family": "amb_coast_mangrove",
+          "bus": "ambient",
+          "emitter": "ambient:water",
+          "gain": 0.30000001192092896
+        }
+      ],
+      "rates": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "loops": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "label": "Pausa atenuada",
+      "voices": [
+        {
+          "family": "amb_wind_soft",
+          "bus": "ambient",
+          "emitter": "ambient:wind",
+          "gain": 0.08764524012804031
+        },
+        {
+          "family": "amb_insects",
+          "bus": "ambient",
+          "emitter": "ambient:fauna",
+          "gain": 0.0550912581384182
+        },
+        {
+          "family": "amb_night",
+          "bus": "ambient",
+          "emitter": "ambient:night",
+          "gain": 0.0500829853117466
+        },
+        {
+          "family": "amb_coast_mangrove",
+          "bus": "ambient",
+          "emitter": "ambient:water",
+          "gain": 0.07512450218200684
+        }
+      ],
+      "rates": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "loops": [
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "afterStop": 0,
+  "context": "closed",
+  "muted": true,
+  "hydrology": "directed",
+  "errors": []
+}

@@ -1,3 +1,4 @@
+import {AMBIENT_SOUND_IDS} from '../src/audio/ambient-audio.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -26,6 +27,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   const events=Object.keys(eventSound).filter(e=>eventSound[e]===item.id);
   if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,events);assert.equal(item.loop,false);}
   else if(MOVEMENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['actor-foot-contact']);assert.equal(item.loop,false);}
+  else if(AMBIENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['world-ambient-layer']);assert.equal(item.loop,true);}
   else{assert.equal(route.status,'reserved');assert.ok(route.reservation_reason);assert.deepEqual(route.destination,['sfx-library-preview']);}
  }
  assert.equal(bank.items.find(i=>i.number===21).sha256,'932df6a774847cf39bc2de324f6b8db4abea41eedfcf575a4caa5ddb91bf1290');
