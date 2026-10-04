@@ -22,7 +22,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Original variant retained; the current world uses the approved soft-wind baseline and has no accredited wind-intensity trigger for switching to this layer.",
+      "reservation_reason": "Explicit scope exception: runtime crop wind is fixed at 1 and VFX wind defaults to 0.3; TerrainField.desertWind is static dune orientation. No logical strong-wind state or authored strength transition exists. Retain original in Library rather than invent weather. See docs/qa/audio-buses/context-reservations.md.",
       "planned_trigger": "Variante de viento perceptible; mezcla de ambiente sin monopolizar el paisaje."
     },
     {
@@ -169,7 +169,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Original clip retained. MovementAudio accepts an authoritative local surface resolver, but current production biome defaults do not identify individual mud patches or a traversable wooden surface; do not pretend those materials were detected.",
+      "reservation_reason": "Explicit scope exception: the authored mangrove wooden dock is special_02 (slot 18), blocked by Navigation.testWalkable as a large special prop. Building footprints are blocked and center service points are outside their hulls. No traversable wooden floor/bridge is exposed by current navigation. Retain original in Library rather than pretend a wooden foot contact. See docs/qa/audio-buses/context-reservations.md.",
       "planned_trigger": "Apoyo de pie de trabajador sobre madera."
     },
     {
