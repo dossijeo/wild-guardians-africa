@@ -4,6 +4,14 @@ import {isMature} from '../simulation/crops.js';
 import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLOWUP} from './messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
+function readingActionCompleted(s,id){
+  if(id==='basic.center')return s.structures.some(c=>c.kind==='center'&&operational(c));
+  if(id==='basic.plant')return s.plants.length>0;
+  if(id==='basic.hiring')return s.hiringPaidDay!=null;
+  if(id==='basic.work')return s.plants.some(p=>p.alive&&isMature(p))||s.crates.length>0||delivered(s);
+  if(id==='basic.harvest')return delivered(s);
+  return false;
+}
 function actionStep(s){
   if(delivered(s))return 'done';
   if(!s.structures.some(c=>c.kind==='center'&&operational(c)))return 'center';
@@ -26,12 +34,22 @@ export class TutorialController {
     this.update();
   }
   seen(id,globalSeen){return this.state.tutorial.seen.includes(id)||globalSeen.has(id);}
+  recordSeen(id){
+    const t=this.state.tutorial;
+    if(!t.seen.includes(id))t.seen.push(id);
+    try{this.profile.record(id);}catch(error){this.onError(error);}
+  }
   update(){
     const s=this.state,t=s.tutorial,globalSeen=this.profile.read();
     resume(s,reason);resume(s,'intro');
     if(s.result==='defeat'){t.reading=null;resume(s,reason);resume(s,'tutorial-action');return;}
     if(t.basicSkipped){t.step='done';resume(s,'intro');resume(s,'tutorial-action');}
     else if(t.step!=='done'&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
+    // A completed action advances its explanation immediately, so the next
+    // HUD/world hand never waits behind a now-obsolete reading.
+    if(t.reading&&readingActionCompleted(s,t.reading)){
+      this.recordSeen(t.reading);t.reading=null;
+    }
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
@@ -68,8 +86,7 @@ export class TutorialController {
   }
   acknowledge(){
     const t=this.state.tutorial,id=t.reading;if(!id)return false;
-    if(!t.seen.includes(id))t.seen.push(id);
-    try{this.profile.record(id);}catch(error){this.onError(error);}
+    this.recordSeen(id);
     t.reading=null;resume(this.state,reason);
     if(id==='basic.introduction'){resume(this.state,'intro');t.step=actionStep(this.state);}
     this.update();return true;
