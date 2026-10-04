@@ -37,5 +37,5 @@ test('QA-096: actual paid contiguous crop groups remain exclusive through destru
   Game.tick(s,.05,nav);Game.tick(loaded,.05,fresh);assert.equal(serialize(loaded),serialize(s));
   if(s.raid){exclusive(s);for(const p of s.plants.filter(p=>p.alive)){const ids=new Set(contiguousGroup(s.plants,p).map(p=>p.id));assert.ok(s.raid.animals.filter(a=>ids.has(a.targetId)).length<=1);}}
  }
- assert.equal(s.raid,null);assert.equal(loaded.raid,null);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,6);
+ assert.equal(s.raid,null);assert.equal(loaded.raid,null);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,3);assert.equal(s.events.filter(e=>e.type==='CropHit').length,6);
 });

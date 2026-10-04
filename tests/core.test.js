@@ -10,9 +10,12 @@ import {enqueue,reserveTasks,releaseTask} from '../src/simulation/tasks.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
 import {newGame} from '../src/simulation/game.js';
 
-test('Original balance remains exact except the player-approved 30/40 daily wages',()=>{
+test('Original balance preserves unrelated values with explicit approved wage, raid and damage revisions',()=>{
  const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
+ original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];});
  original.workers.older_wage=30;original.workers.young_wage=40;
+ const boundaries=[0,100,300,800,2000];
+ original.threat_tiers.forEach((t,i)=>{t.attraction_min=boundaries[i];t.attraction_max_exclusive=boundaries[i+1]??null;t.night_attack_probability=1;});
  assert.deepEqual(BALANCE,original);
 });
 test('Ledger rounds an exact repair fraction upward only at settlement',()=>{
@@ -77,7 +80,7 @@ test('FIFO chooses oldest task, proximity chooses its worker and reserves atomic
 test('Threat boundaries and attraction are live plant base values',()=>{
   assert.equal(attraction(Array.from({length:20},()=>({species:'mijo',alive:true}))),180);
   assert.equal(attraction(Array.from({length:10},()=>({species:'platano',alive:true}))),2400);
-  assert.equal(threatTier(0),null);assert.equal(threatTier(499).threat_max,2);assert.equal(threatTier(500).threat_max,4);assert.equal(threatTier(10000).night_attack_probability,.85);
+  assert.equal(threatTier(0).threat_max,2);assert.equal(threatTier(99).threat_max,2);assert.equal(threatTier(100).threat_max,4);assert.equal(threatTier(2000).night_attack_probability,1);
 });
 test('Every reachable threat budget has unique legal unordered compositions',()=>{
   for(const t of BALANCE.threat_tiers)for(let budget=t.threat_min;budget<=t.threat_max;budget++) {

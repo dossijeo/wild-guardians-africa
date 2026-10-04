@@ -18,12 +18,13 @@ export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
   const value=attraction(s.plants),tier=threatTier(value);
   let group=[];
-  if(!s.postgame&&s.day===1)group=['warthog'];
-  else if(!s.postgame&&s.day>1&&tier&&nextRandom(s)<tier.night_attack_probability) {
+  const introductory=!s.postgame&&s.day<=5;
+  if(introductory)group=[B.animals[s.day-1].id];
+  else if(!s.postgame){
     const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=compositions(budget,tier.unlocked_species);
     group=legal[randomInt(s,0,legal.length-1)];
   }
-  s.nightPlan={at,attraction:value,group,done:false};
+  s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
 export function cameraRaidEntry(s,specs,bounds,nav){
@@ -118,7 +119,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
-    hitsRemaining:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
+    hitsRemaining:plan.introductory&&!daytime?1:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
   for(const w of s.workers) {
     cancelIdle(w);
@@ -181,7 +182,10 @@ export function updateRaid(s,dt,nav) {
         // does not turn it into a ranged hit on the protected target.
         if(target&&!expiredBorder){
           if(!shield){
-            if('alive' in target){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
+            if('alive' in target){
+              target.attackHits=(target.attackHits??0)+1;emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
+              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;emit(s,'CropDestroyed',{targetId:target.id});}
+            }
             else {hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);emit(s,'StructureHit',{animalId:a.id,targetId:target.id});}
           }
           // A presentation snapshot is a fact about this completed hit, never

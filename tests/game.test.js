@@ -116,8 +116,8 @@ test('Growth/multiply permissions, area nonoverlap, cooldown from activation and
   cast(s,'growth','growth',10,0,nav);assert.equal(s.cooldowns.growth,90);assert.equal(s.spells[0].remaining,30);
   assert.throws(()=>cast(s,'overlap','multiply',11,0,nav),/solaparse/);tick(s,30,nav);assert.equal(s.spells.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
 });
-test('Night 1 has one mandatory warthog and night 2 uses ordinary zero-attraction planning',()=>{
-  const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,[]);
+test('First nights introduce mandatory warthog and hyena even with zero attraction',()=>{
+  const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,['hyena']);
 });
 test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
   const s=setup();const w=s.workers[0];s.crates.push({id:'crate-test',x:5,z:0,value:rational(10),carrierId:w.id,delivered:false});w.crateId='crate-test';w.status='carrying';
@@ -127,8 +127,8 @@ test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
   const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
   a.targetId=center.id;a.status='attacking';a.animation='Weapon_Combo_2';a.attackRemaining=1;a.hitApplied=false;a.hitsRemaining=3;a.attackId='combo';
   updateRaid(s,.3,nav);assert.equal(center.hp,600);assert.equal(a.hitsRemaining,3);const loaded=deserialize(serialize(s));
-  updateRaid(loaded,.7,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
-  updateRaid(loaded,.1,nav);assert.equal(loaded.structures[0].hp,560);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
+  updateRaid(loaded,.7,nav);assert.equal(loaded.structures[0].hp,580);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
+  updateRaid(loaded,.1,nav);assert.equal(loaded.structures[0].hp,580);assert.equal(loaded.raid.animals[0].hitsRemaining,2);
 });
 test('Attack crossing dawn prevents events, hiring and night completion until departure',()=>{
   const s=setup();s.ledger.balance=rational(200);s.time=599.9;s.nightPlan={at:400,done:true,group:[]};spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0];a.status='retreating';a.x=0;a.z=0;a.exit={x:200,z:0};

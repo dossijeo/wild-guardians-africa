@@ -168,7 +168,7 @@ export const BALANCE = {
       "id": "warthog",
       "name": "Facóquero",
       "threat_cost": 1,
-      "structure_hit_damage": 40,
+      "structure_hit_damage": 20,
       "hit_budget_min": 2,
       "hit_budget_max": 4,
       "max_per_raid": 3
@@ -177,7 +177,7 @@ export const BALANCE = {
       "id": "hyena",
       "name": "Hiena",
       "threat_cost": 3,
-      "structure_hit_damage": 50,
+      "structure_hit_damage": 25,
       "hit_budget_min": 3,
       "hit_budget_max": 5,
       "max_per_raid": 2
@@ -186,7 +186,7 @@ export const BALANCE = {
       "id": "buffalo",
       "name": "Búfalo",
       "threat_cost": 5,
-      "structure_hit_damage": 70,
+      "structure_hit_damage": 35,
       "hit_budget_min": 4,
       "hit_budget_max": 6,
       "max_per_raid": 2
@@ -195,7 +195,7 @@ export const BALANCE = {
       "id": "lion",
       "name": "León",
       "threat_cost": 7,
-      "structure_hit_damage": 80,
+      "structure_hit_damage": 40,
       "hit_budget_min": 4,
       "hit_budget_max": 7,
       "max_per_raid": 2
@@ -204,7 +204,7 @@ export const BALANCE = {
       "id": "rhino",
       "name": "Rinoceronte",
       "threat_cost": 10,
-      "structure_hit_damage": 120,
+      "structure_hit_damage": 60,
       "hit_budget_min": 5,
       "hit_budget_max": 8,
       "max_per_raid": 1
@@ -212,9 +212,9 @@ export const BALANCE = {
   ],
   "threat_tiers": [
     {
-      "attraction_min": 1,
-      "attraction_max_exclusive": 500,
-      "night_attack_probability": 0.25,
+      "attraction_min": 0,
+      "attraction_max_exclusive": 100,
+      "night_attack_probability": 1,
       "threat_min": 1,
       "threat_max": 2,
       "unlocked_species": [
@@ -222,9 +222,9 @@ export const BALANCE = {
       ]
     },
     {
-      "attraction_min": 500,
-      "attraction_max_exclusive": 1500,
-      "night_attack_probability": 0.4,
+      "attraction_min": 100,
+      "attraction_max_exclusive": 300,
+      "night_attack_probability": 1,
       "threat_min": 3,
       "threat_max": 4,
       "unlocked_species": [
@@ -233,9 +233,9 @@ export const BALANCE = {
       ]
     },
     {
-      "attraction_min": 1500,
-      "attraction_max_exclusive": 4000,
-      "night_attack_probability": 0.55,
+      "attraction_min": 300,
+      "attraction_max_exclusive": 800,
+      "night_attack_probability": 1,
       "threat_min": 5,
       "threat_max": 7,
       "unlocked_species": [
@@ -245,9 +245,9 @@ export const BALANCE = {
       ]
     },
     {
-      "attraction_min": 4000,
-      "attraction_max_exclusive": 10000,
-      "night_attack_probability": 0.7,
+      "attraction_min": 800,
+      "attraction_max_exclusive": 2000,
+      "night_attack_probability": 1,
       "threat_min": 7,
       "threat_max": 10,
       "unlocked_species": [
@@ -258,9 +258,9 @@ export const BALANCE = {
       ]
     },
     {
-      "attraction_min": 10000,
+      "attraction_min": 2000,
       "attraction_max_exclusive": null,
-      "night_attack_probability": 0.85,
+      "night_attack_probability": 1,
       "threat_min": 10,
       "threat_max": 14,
       "unlocked_species": [

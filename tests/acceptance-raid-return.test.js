@@ -41,7 +41,7 @@ for(const culture of Game.CULTURES)for(const kind of ['initial','water','harvest
  assert.ok(s.workers.every(w=>w.status==='fleeing'&&w.taskId===null));assert.ok(!s.tasks.some(t=>t.id===repairId||t.kind==='repair'));
  until(s,nav,()=>!s.raid,100);assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);assert.deepEqual(raid.reservations,{});
  assert.ok(raid.animals.every(a=>a.status==='gone'));assert.equal(s.result,null);assert.ok(s.time<300);
- assert.equal(raid.animals[0].hitsRemaining,0);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,budget);
+ assert.equal(s.events.filter(e=>e.type==='CropHit').length,budget);assert.equal(raid.animals[0].hitsRemaining,0);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,Math.floor(budget/2));
  assert.ok(s.events.filter(e=>e.type==='CropDestroyed').every(e=>s.plants.find(p=>p.id===e.targetId).species==='platano'));
  assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===plantId).length,watersBefore);
  assert.deepEqual(s.workers.map(w=>w.id),workers);assert.ok(s.workers.every(w=>w.status==='arriving'&&w.raidReturn));

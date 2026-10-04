@@ -16,8 +16,8 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Volver centra cámara en centro de trabajo | Publicado; falta recorrido visual |
 | Jornales: ancianos 30, jóvenes 40; ajustar reserva y textos | Implementado: ancianos 30, jóvenes 40 y reserva 30; sustituye los costes anteriores |
 | Manos HUD del tutorial también en segunda partida | Pendiente |
-| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Pendiente; revisar atracción, daño y recordatorio de escudo disponible |
-| Cultivos resisten dos golpes y edificios requieren el doble de golpes | Pendiente |
+| Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales de atracción reducidos, presentaciones con un golpe; recordatorio de escudo pendiente |
+| Cultivos resisten dos golpes y edificios requieren el doble de golpes | Implementado: daño persistente en cultivos y mitad de daño estructural por golpe |
 | Recordatorios útiles periódicos de crecimiento y multiplicación | Pendiente |
 | Campaña de 100 noches con plantación intensiva responsable y actividad constante | Pendiente; medir tiempo sin nada útil que hacer y ajustar parámetros reales si falla |
 | Mala gestión debe poder causar derrota | Pendiente; añadir casos adversos representativos |
@@ -52,3 +52,13 @@ Al lanzar Multiplicar se marcan los cultivos vivos alcanzados; los brotes coloca
 ## Bloqueo de ruta en la noche 38
 
 La batería completa tras la salida directa de trabajadores detectó dos facóqueros detenidos mutuamente. Se ha reproducido en el terreno real Sabana/712: se encontraba un punto posterior libre pero se conservaba un waypoint anterior ocupado. La corrección incorpora el tramo de reincorporación solo si respeta obstáculos estáticos y separación entre actores. La regresión grabada exige llegada de ambos, límite de velocidad y validez de cada segmento. Una reproducción adicional del guardado completo bloqueado acaba la incursión y llega al amanecer del día 39 con contratación pendiente. La campaña completa con esta corrección todavía debe ejecutarse; no se aumenta su límite ni se sustituye la aceptación intensiva pendiente.
+
+## Incursiones garantizadas y daño
+
+Todas las noches de campaña tienen un grupo de al menos un animal, incluso sin cultivos. Las cinco primeras presentan facóquero, hiena, búfalo, león y rinoceronte, uno por noche con un golpe disponible. Después se utilizan composiciones aleatorias legales con umbrales de atracción 0/100/300/800/2000 y probabilidad nocturna 100 %. Las incursiones diurnas mantienen su condición y probabilidad; tras liberar la campaña no hay ataques.
+
+Los cultivos acumulan un golpe sin morir y se destruyen al segundo; el daño se guarda y se valida al restaurar. Daños estructurales por especie: 20/25/35/40/60. Las pruebas conservan animaciones completas, presupuesto de golpes, reservas exclusivas y separación de cuerpos. Se han probado las cinco especies en las seis entradas de bioma reales cerca de cámara o finca. Falta la aceptación del balance con grandes plantaciones y el recordatorio de escudo en cada incursión.
+
+## Petición adicional: cámara de incursión
+
+Pendiente: viaje suave hacia el primer animal cuando entra en la finca, una vez por incursión, interrumpible mediante control manual de la cámara.

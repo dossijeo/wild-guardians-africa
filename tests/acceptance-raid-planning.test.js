@@ -9,9 +9,9 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 // Independent contract table: do not derive the expected values from BALANCE.
 const species=['warthog','hyena','buffalo','lion','rhino'],costs=[1,3,5,7,10],caps=[3,2,2,2,1];
 const tiers=[
- [1,500,.25,1,2,1], [500,1500,.40,3,4,2],
- [1500,4000,.55,5,7,3], [4000,10000,.70,7,10,4],
- [10000,null,.85,10,14,5],
+ [0,100,1,1,2,1], [100,300,1,3,4,2],
+ [300,800,1,5,7,3], [800,2000,1,7,10,4],
+ [2000,null,1,10,14,5],
 ].map(([min,max,p,lo,hi,n])=>({attraction_min:min,attraction_max_exclusive:max,night_attack_probability:p,threat_min:lo,threat_max:hi,unlocked_species:species.slice(0,n)}));
 const signature=group=>species.map(id=>group.filter(x=>x===id).length).join(',');
 function expectedCompositions(budget,unlocked){
@@ -19,16 +19,16 @@ function expectedCompositions(budget,unlocked){
  for(let i=0;i<species.length;i++)vectors=vectors.flatMap(v=>Array.from({length:unlocked.includes(species[i])?caps[i]+1:1},(_,n)=>[...v,n]));
  return vectors.filter(v=>{const count=v.reduce((a,b)=>a+b,0),spent=v.reduce((a,n,i)=>a+n*costs[i],0);return count>0&&count<=5&&spent*4>=budget*3&&spent<=budget;}).map(v=>v.join(',')).sort();
 }
-function fixture(){const s=Game.newGame({seed:712,slotId:'raid-planning'});s.day=3;s.plants=Array.from({length:111},(_,i)=>({id:'crop-'+i,species:'mijo',alive:true,growth:0}));return s;}
+function fixture(){const s=Game.newGame({seed:712,slotId:'raid-planning'});s.day=6;s.plants=Array.from({length:111},(_,i)=>({id:'crop-'+i,species:'mijo',alive:true,growth:0}));return s;}
 function permutations(list){return list.length?list.flatMap((x,i)=>permutations(list.filter((_,j)=>j!==i)).map(rest=>[x,...rest])):[[]];}
 
 test('QA-087: all ten attraction boundaries select the exact confirmed tier',()=>{
- for(const [value,index] of [[0,-1],[1,0],[499,0],[500,1],[1499,1],[1500,2],[3999,2],[4000,3],[9999,3],[10000,4]])assert.deepEqual(threatTier(value),index<0?null:tiers[index],String(value));
+ for(const [value,index] of [[0,0],[1,0],[99,0],[100,1],[299,1],[300,2],[799,2],[800,3],[1999,3],[2000,4]])assert.deepEqual(threatTier(value),index<0?null:tiers[index],String(value));
 });
 
 test('QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses',()=>{
  const s=fixture();s.plants.push({id:'dead',species:'platano',alive:false,growth:999});assert.equal(attraction(s.plants),999);
- const empty=Game.newGame({seed:712});empty.day=3;empty.ledger.balance=rational(999999999);empty.crates=[{value:rational(999999999),delivered:false}];planNight(empty);assert.equal(empty.nightPlan.attraction,0);assert.deepEqual(empty.nightPlan.group,[]);
+ const empty=Game.newGame({seed:712});empty.day=6;empty.ledger.balance=rational(999999999);empty.crates=[{value:rational(999999999),delivered:false}];planNight(empty);assert.equal(empty.nightPlan.attraction,0);assert.ok(empty.nightPlan.group.length>0);
  const reference=structuredClone(s);planNight(reference);
  for(const balance of [0,100,999999999]){
   const other=structuredClone(s);other.ledger.balance=rational(balance);other.crates=[{value:rational(999999999),delivered:false}];
@@ -45,22 +45,21 @@ test('QA-088 revised: the first-night clock spawns one mandatory warthog with ze
  assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
  s=deserialize(serialize(s));Game.tick(s,s.nightPlan.at-s.time+.01,nav);
  assert.deepEqual(s.raid.animals.map(a=>a.species),['warthog']);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
- assert.ok(s.raid.animals[0].hitsRemaining>=2&&s.raid.animals[0].hitsRemaining<=4);
+ assert.equal(s.raid.animals[0].hitsRemaining,1);
  s=deserialize(serialize(s));Game.tick(s,.1,nav);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
- const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,[]);
+ const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,['hyena']);
 });
 
-test('QA-089: a thousand consecutive fixed-attraction plans consume fresh draws without compensating repeated outcomes',()=>{
- const s=fixture();let oracle=s.rng,previous=null,repeatAttack=false,repeatQuiet=false;
+test('QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws',()=>{
+ const s=fixture();let oracle=s.rng;const groups=new Set();
  const draw=()=>{oracle^=oracle<<13;oracle^=oracle>>>17;oracle^=oracle<<5;oracle>>>=0;return oracle/4294967296;};
  for(let i=0;i<1000;i++){
-  const when=draw(),attacks=draw()<.40;if(attacks){draw();draw();}
-  s.day=3+i;s.completedNights=2+i;planNight(s);
-  assert.equal(s.nightPlan.at,323+when*225);assert.equal(s.nightPlan.group.length>0,attacks);assert.equal(s.rng,oracle);
-  if(previous===attacks){if(attacks)repeatAttack=true;else repeatQuiet=true;}
-  previous=attacks;s.nightPlan.done=true;
+  const when=draw();draw();draw();
+  s.day=6+i;s.completedNights=5+i;planNight(s);
+  assert.equal(s.nightPlan.at,323+when*225);assert.ok(s.nightPlan.group.length>0);assert.equal(s.rng,oracle);
+  groups.add(signature(s.nightPlan.group));s.nightPlan.done=true;
  }
- assert.ok(repeatAttack&&repeatQuiet,'Both consecutive outcomes must occur without a forced alternation');
+ assert.ok(groups.size>1,'Composition remains random while the nightly incursion is guaranteed');
 });
 
 test('QA-090: budget three chooses precisely three warthogs or one unlocked hyena',()=>{
