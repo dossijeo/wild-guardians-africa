@@ -1,0 +1,61 @@
+{
+  "scope": "CPU domain only, warm navigation, same explicit QA setup as navigation-bounds.json. Reference disables neighbor caching with --no-neighbors; no mobile/GPU/audio acceptance claimed.",
+  "runs": [
+    {
+      "variant": "reference",
+      "run": 1,
+      "maxTickMs": 411.21630000000005,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "cached",
+      "run": 1,
+      "maxTickMs": 379.0912999999998,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "maxTickMs": 483.40909999999985,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "cached",
+      "run": 2,
+      "maxTickMs": 395.0642,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "maxTickMs": 442.25519999999983,
+      "steps": 1636,
+      "searches": 251
+    },
+    {
+      "variant": "cached",
+      "run": 3,
+      "maxTickMs": 438.83439999999996,
+      "steps": 1636,
+      "searches": 251
+    }
+  ],
+  "medianPeakMs": {
+    "reference": 442.25519999999983,
+    "cached": 395.0642
+  },
+  "trajectorySha256": "98ab892b42bde416b6c122a28a31063e74420d9d382c1154d3f09fa04dd648ae",
+  "identicalSerializedSteps": 1636,
+  "searches": 251,
+  "maxCachedNodes": 4096,
+  "tests": {
+    "pass": 55,
+    "fail": 0
+  },
+  "remaining": "Each worker still performs independent A*, and peak CPU latency remains substantial.",
+  "timingConditions": "Local alternating runs; repeated sample overlaps build activity. Workload-dependent timings, not an isolated hardware benchmark."
+}

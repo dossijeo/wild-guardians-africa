@@ -12,9 +12,10 @@ import {activeChunkRegion} from '../src/world/active-region.js';
 // Mirrors the paid domain setup of audio-world-phases.html. The explicit QA
 // credit and prepared damage are stress-fixture conditions, not player rules.
 // No audio, GPU or perceptual acceptance is claimed by this CPU diagnostic.
-const noBounds=process.argv.includes('--no-bounds'),trace=process.argv.includes('--trace')?createHash('sha256'):null;
+const noNeighbors=process.argv.includes('--no-neighbors'),noBounds=process.argv.includes('--no-bounds'),trace=process.argv.includes('--trace')?createHash('sha256'):null;
 const {s,nav}=createOpeningWorld({slotId:'integrated-load'}),center=s.structures[0];
 if(noBounds){const setState=nav.setState;nav.setState=function(...args){const value=setState.apply(this,args);this.obstacleBounds=undefined;return value;};nav.obstacleBounds=undefined;}
+if(noNeighbors){const setState=nav.setState;nav.setState=function(...args){const value=setState.apply(this,args);this.searchNeighborCache=undefined;return value;};nav.searchNeighborCache=undefined;}
 transact(s.ledger,'qa-credit',rational(10000));
 for(let z=-12;z<=12&&s.plants.length<32;z+=1.5)for(let x=5;x<=24&&s.plants.length<32;x+=1.5){
   try{Game.plant(s,'qa-seed-'+s.plants.length,'mijo',Math.round((center.x+x)/1.5)*1.5,Math.round((center.z+z)/1.5)*1.5,nav);}catch{}
@@ -22,7 +23,7 @@ for(let z=-12;z<=12&&s.plants.length<32;z+=1.5)for(let x=5;x<=24&&s.plants.lengt
 assert.equal(s.plants.length,32);Game.openInitialHiring(s);Game.hire(s,'qa-hire',{olderFemale:4,olderMale:4});s.tutorial.step='done';s.dayPlan={done:true};s.nightPlan={done:true};
 const eye={x:center.x+18,z:center.z+25};nav.setRaidView(eye,center);nav.setActiveBounds(activeChunkRegion(eye,'baja').bounds);
 const warmNavigation=process.argv.includes('--warm-navigation');
-const report={noBounds,warmNavigation,seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
+const report={noNeighbors,noBounds,warmNavigation,seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
 nav.findPath=function(...args){report.searches++;const start=performance.now(),result=find.apply(this,args),ms=performance.now()-start;if(ms>20&&report.slowSearches.length<20){const [from,to,radius,ignore,worker,margin]=args;report.slowSearches.push({elapsed:s.elapsed,phase:report.phase,from:{x:from.x,z:from.z},to:{x:to.x,z:to.z},radius,worker,margin,ms,found:!!result});}return result;};
 function step(){
   const before=performance.now();Game.tick(s,.1,nav);const ms=performance.now()-before;report.steps++;report.maxTickMs=Math.max(ms,report.maxTickMs);if(trace)trace.update(serialize(s));

@@ -11,7 +11,7 @@ export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
-    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];
+    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();
   }
   setActiveBounds(bounds){
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
@@ -64,7 +64,7 @@ export class Navigation {
     this.segmentCache.clear();
     this.failedPaths.clear();
     this.closedRegions.clear();
-    this.searchedRegions=[];
+    this.searchedRegions=[];this.searchNeighborCache=new Map();
     this.suppressed=new Set(state.suppressed);
     this.obstacles=state.structures.filter(s=>s.status!=='ruined').map(s=>s.kind==='center'?centerFootprint(s,state):({...s,radius:.7}));
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
@@ -75,7 +75,7 @@ export class Navigation {
     // Route the proposed footprint without polluting live paths or caches.
     return Object.assign(Object.create(this),{
       obstacles:[...this.obstacles,building],suppressed:new Set([...(this.suppressed??[]),...suppress]),
-      walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),
+      walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),searchNeighborCache:new Map(),
     });
   }
   terrainValid(x,z,radius=.3) {
@@ -191,6 +191,17 @@ export class Navigation {
     }
     const graph={nodes,links};this.portalGraphs.set(cacheKey,graph);return graph;
   }
+  searchNeighbors(cur,radius,ignore,worker,portals) {
+    const ck=`${cur.x},${cur.z}`,cacheKey=`${ck}:${radius}:${ignore}:${worker}`,cache=this.searchNeighborCache;
+    if(cache?.has(cacheKey))return cache.get(cacheKey);
+    const extras=portals.nodes.get(ck)?.neighbors??portals.links.get(ck)??[];
+    const points=portals.nodes.has(ck)?extras:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].map(([dx,dz])=>({x:cur.x+dx,z:cur.z+dz,gridStep:true})).concat(extras);
+    if(!cache)return points;
+    const neighbors=points.map(p=>({x:p.x,z:p.z,gridStep:p.gridStep,key:`${p.x},${p.z}`,length:Math.hypot(p.x-cur.x,p.z-cur.z),walkable:undefined}));
+    // Bound transient graph memory; no routes or destinations are persisted here.
+    if(cache.size>=4096)cache.delete(cache.keys().next().value);cache.set(cacheKey,neighbors);
+    return neighbors;
+  }
   findPath(start,end,radius=.3,ignore=null,worker=true,margin=16) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
@@ -236,14 +247,16 @@ export class Navigation {
         while(true){const [x,z]=k.split(',').map(Number);route.push({x:x*cell,z:z*cell});if(!previous.has(k))break;k=previous.get(k);}
         return route.reverse();
       }
-      const extras=portals.nodes.get(ck)?.neighbors??portals.links.get(ck)??[];
-      const neighbors=portals.nodes.has(ck)?extras:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].map(([dx,dz])=>({x:cur.x+dx,z:cur.z+dz,gridStep:true})).concat(extras);
+      const neighbors=this.searchNeighbors(cur,radius,ignore,worker,portals);
       for(const point of neighbors){
         const {x,z}=point,dx=x-cur.x,dz=z-cur.z;
         if(!inside(point)){if(!point.gridStep)touchesBoundary=true;continue;}
-        if(!this.walkable(x,z,radius,ignore,worker))continue;
-        if(point.gridStep&&dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker)))continue;
-        const k=key(x,z),g=cur.g+Math.hypot(dx,dz);
+        // Resolve collision lazily, only for neighbors inside this search corridor.
+        // The result is shared across searches in the same navigation epoch.
+        const walkable=point.walkable??(this.walkable(x,z,radius,ignore,worker)&&!(point.gridStep&&dx&&dz&&(!this.walkable(cur.x+dx,cur.z,radius,ignore,worker)||!this.walkable(cur.x,cur.z+dz,radius,ignore,worker))));
+        if(this.searchNeighborCache)point.walkable=walkable;
+        if(!walkable)continue;
+        const k=point.key??key(x,z),g=cur.g+(point.length??Math.hypot(dx,dz));
         if(g>=(costs.get(k)??Infinity))continue;
         if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
         costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
