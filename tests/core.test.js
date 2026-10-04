@@ -12,6 +12,7 @@ import {newGame} from '../src/simulation/game.js';
 
 test('Original balance preserves unrelated values with explicit approved wage, raid and damage revisions',()=>{
  const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
+ original.initial_money=1500;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];});
  original.workers.older_wage=30;original.workers.young_wage=40;
  const boundaries=[0,100,300,800,2000];

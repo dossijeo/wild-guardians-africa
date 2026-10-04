@@ -10,6 +10,7 @@
     "test": "node --test tests",
     "verify:assets": "python tools/verify_assets.py",
     "verify:plan": "python docs/plan/verificar_reglas.py",
+    "verify:balance": "python tools/generate_balance.py --check",
     "assets:compress": "node tools/compress_web_assets.mjs",
     "verify:web-assets": "node tools/verify_web_assets.mjs",
     "test:web-package": "node tools/check_web_package.mjs",

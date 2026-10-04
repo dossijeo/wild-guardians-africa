@@ -26,6 +26,7 @@ jobs:
       - run: npm run verify:assets
       - run: npm run verify:web-assets
       - run: npm run verify:plan
+      - run: npm run verify:balance
       - run: npm test
       - run: npm run build
       - run: npm run test:web-package
