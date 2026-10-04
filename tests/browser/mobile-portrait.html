@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><title>QA · Jornada móvil aislada</title>
+<style>body{margin:0;background:#172c22;color:#fff;font:14px system-ui}header{padding:8px}iframe{display:block;border:0;width:390px;height:844px}button{padding:8px;margin:0 8px 8px}</style>
+<header>Partida de prueba aislada. El marco usa el viewport CSS real de 390 × 844; no simula un dispositivo físico, tacto, DPR ni sus prestaciones. Cambiar orientación conserva la misma partida. Los datos quedan en memoria.</header>
+<button id="rotate">Cambiar a horizontal</button><output id="size">390 × 844</output>
+<iframe id="phone" width="390" height="844" title="Juego en viewport móvil" src="./mobile-first-day.html" allow="autoplay; screen-wake-lock"></iframe>
+<script>
+const phone=document.querySelector('#phone'),rotate=document.querySelector('#rotate'),size=document.querySelector('#size');let portrait=true;
+rotate.onclick=()=>{portrait=!portrait;const width=portrait?390:844,height=portrait?844:390;phone.style.width=width+'px';phone.style.height=height+'px';phone.width=width;phone.height=height;size.textContent=width+' × '+height;rotate.textContent=portrait?'Cambiar a horizontal':'Cambiar a vertical';};
+</script></html>

@@ -204,7 +204,9 @@ export class WorldScene {
   updateActor(entity,dt,type) {
     const data=this.mixers.get(entity.id);if(!data)return;
     if(type==='worker'){
-      applyWorkerPose(data,entity,this.state.tasks.find(t=>t.id===entity.taskId),this.state.elapsed,this.workerLibraries[entity.profile]);
+      const task=this.state.tasks.find(t=>t.id===entity.taskId);
+      applyWorkerPose(data,entity,task,this.state.elapsed,this.workerLibraries[entity.profile]);
+      if(entity.status==='acting'&&(task?.kind==='initial'||task?.kind==='water'))this.objects.get(entity.id).rotation.y=entity.heading??0;
       if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
       return;
     }

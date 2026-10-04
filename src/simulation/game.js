@@ -15,7 +15,7 @@ import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
-import {repairRoute} from '../world/work-points.js';
+import {repairRoute,wateringRoute} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
 
@@ -381,9 +381,17 @@ function updateWorkers(s,dt,nav) {
           w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
         }
         destination=w.taskApproach.destination;
+      }else if(t.kind==='initial'||t.kind==='water'){
+        if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
+          const route=wateringRoute(w,target,nav);
+          if(!route){releaseTask(s,w);w.status='idle';continue;}
+          w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
+        }
+        destination=w.taskApproach.destination;
       }
       if(walkTo(s,w,destination,dt,nav,{motion:{urgent:urgentWork(s,w)}})) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);continue;}
+        if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
         w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
       }else if(w.path===null){releaseTask(s,w);w.status='idle';}
     } else if(w.status==='acting') {
@@ -393,7 +401,7 @@ function updateWorkers(s,dt,nav) {
   }
   if(!s.raid && s.time<300)reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
-    return t.kind==='repair'?!!repairRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
+    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
   });
 }
 function closeNight(s) {
