@@ -1,0 +1,13 @@
+# Mezcla integrada observada por fases
+
+Base de producción `140b00d`, navegador integrado 1280 × 720, Sabana/Mapungubwe, semilla 712, calidad baja. La página de QA carga WorldScene, navegación, AudioSystem y diez stems originales de Gameplay A. Usa un crédito explícito adicional de 10000, compra 32 semillas y contrata ocho trabajadores; prepara el centro con 468 puntos de daño y solicita un grupo de cinco especies. No es una campaña económica ni una incursión aleatoria natural.
+
+Fuente exacta archivada en `native-phases-source.txt`, SHA256 `f1f8045b5d5c8d6bfc908a775f07778e279b35657bba0516a861a3dc6fd16e16`. Se ejecutó desde `tests/browser/audio-world-phases.html`; el archivo original no rastreado queda intacto. Para reproducir la fuente archivada hay que colocarla como HTML bajo `tests/browser/`, desde donde se resuelven sus imports relativos. No se incorpora al paquete distribuido.
+
+Resultado terminal en `native-phases-final.json` y captura en `native-phases-final.png`. La fase laboral completa 58 riegos con ocho trabajadores a los 130,1 segundos simulados. La segunda fase genera tres impactos lógicos, uno estructural y dos agrícolas, un cultivo destruido y un centro arruinado. La incursión termina a los 163 segundos simulados. Las voces aceptadas incluyen movimientos, actividad agrícola, reacción de trabajadores, facóquero/hiena, contacto estructural y colapso.
+
+Máximos observados: 17 SFX, diez voces musicales, dos por emisor y cuatro por familia; las aserciones de admisión y pitch 1 pasan. Se observan 99 entradas de humo y 95 de escombros. `peakAsh:175` mide el array de chips preparados del efecto, que existe incluso con el edificio intacto: **no representa 175 partículas activas durante toda la prueba**. No hubo errores WebGL ni excepciones registradas; la consola consultada al final no devolvió warnings/errors. Al detener se registran cero voces y al disponer el contexto queda cerrado.
+
+El audio está silenciado y previamente decodificado. El avance controlado de 0,1 segundos cede el hilo entre pasos, sin equivaler a tiempo real ni una medida de FPS. Esta página llama directamente a Game.tick, por lo que no verifica la barrera de carga de actores del frame de producción. La petición de cinco especies no demuestra ataques o voces de las cinco: el informe acredita contactos y voces de facóquero/hiena en esta incursión breve.
+
+Esto añade evidencia técnica renderizada a QA-155, cuyo estado sigue parcial. Faltan varios colapsos simultáneos, mezcla perceptual escuchada, carga fría, integración del HUD y rendimiento en dispositivo físico. QA-156 tampoco se completa: aquí se usa Gameplay A sin alternancia A/B.

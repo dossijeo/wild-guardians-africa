@@ -1897,7 +1897,9 @@
       "evidence": [
         "docs/qa-audio-routing.md",
         "docs/qa/audio-buses/context-reservations.md",
-        "docs/qa/audio-buses/integrated-domain-load.json"
+        "docs/qa/audio-buses/integrated-domain-load.json",
+        "docs/qa/audio-buses/native-phases.md",
+        "docs/qa/audio-buses/plural-collapses.md"
       ],
       "notes": "Decode-completion race fixed:20 SFX cap,4 per clip ID,critical danger/result replaces only lower-priority routine; deterministic oldest tie. Doubles and real muted AudioContext browser:100 same clip=>4,100 distinct families=>20,attack/victory admitted at20,stop=>0 nodes registered; stems gain/source cleanup included. Remaining: integrated many-worker/animal/collapse perceptual mix,independent per-emitter policy and particle concurrency. Technical limits are presentation configuration,not audited balance or measured listening quality. Current per-emitter limit is 2 and independent family/global admission is covered by 41 routing/bus/mud tests; the earlier pending-per-emitter note is superseded. Domain stress reproduction completes eight-worker/five-species incursion and one center collapse, but excludes WebAudio and renderer. Full-world/perceptual/plural-collapse acceptance remains unverified; current browser tab223 has no readable terminal result. Simultaneous home-route searches expose a CPU spike; active music PCM remains 547–659 MiB per pack."
     },
