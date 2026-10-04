@@ -33,7 +33,7 @@ test('saved damage cannot be fractional, exceed two strikes or leave a living cr
  for(const hits of [-1,.5,3,2]){s.plants[0].attackHits=hits;assert.throws(()=>serialize(s));}s.plants[0].attackHits=1;assert.doesNotThrow(()=>serialize(s));
 });
 
-for(const [index,id] of species.entries())for(const count of [1,2,5,10])test(`introductory ${id} threatens crops and buildings but cannot destroy all ${count} starting plants`,()=>{
+for(const [index,id] of species.entries())for(const count of [1,2,5,10,20,50])test(`introductory ${id} threatens crops and buildings but cannot destroy all ${count} starting plants`,()=>{
  const s=Game.newGame({slotId:'intro-quota-'+count});Game.resume(s,'intro');const nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);
  for(let i=0;i<count;i++)Game.plant(s,'seed-'+i,'mijo',8+(i%5)*2,4+Math.floor(i/5)*2,nav);
  s.day=index+1;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};planNight(s);s.nightPlan.done=true;spawnRaid(s,s.nightPlan,nav);
@@ -43,4 +43,18 @@ for(const [index,id] of species.entries())for(const count of [1,2,5,10])test(`in
  const lost=s.plants.filter(p=>!p.alive).length;assert.ok(lost<=Math.min(count-1,Math.ceil(count*.2)));assert.equal(raid.introCropsDestroyed,lost);
  if(count>1)assert.ok(lost>0,'an unshielded introductory animal can destroy a plant');
  assert.equal(raid.animals[0].hitsRemaining,0);assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,budget);
+});
+
+for(const [index,id] of species.entries())test(`introductory ${id}: damaged crops respect the destruction quota after a mid-attack save`,()=>{
+ let s=Game.newGame({slotId:'damaged-intro-'+id});Game.resume(s,'intro');let nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);
+ for(let i=0;i<10;i++){Game.plant(s,'seed-'+i,'mijo',8+(i%5)*2,4+Math.floor(i/5)*2,nav);s.plants.at(-1).attackHits=1;}
+ s.day=index+1;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};planNight(s);s.nightPlan.done=true;spawnRaid(s,s.nightPlan,nav);
+ until(s,nav,()=>s.raid.introCropsDestroyed===1);
+ const restored=deserialize(serialize(s)),fresh=navigation(restored);
+ assert.equal(restored.raid.introCropsDestroyed,1);assert.equal(restored.raid.introCropLimit,2);
+ until(s,nav,()=>!s.raid);until(restored,fresh,()=>!restored.raid);
+ assert.equal(serialize(restored),serialize(s));
+ assert.equal(s.plants.filter(p=>!p.alive).length,2);
+ assert.equal(s.plants.filter(p=>p.alive).length,8);
+ assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,2);
 });
