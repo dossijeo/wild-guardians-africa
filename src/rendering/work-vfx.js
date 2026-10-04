@@ -20,7 +20,7 @@ export function workVfxPlans(state){
       elapsed=Math.max(0,duration-worker.actionRemaining*speed);
     }
     const definition=definitions.get(id);
-    plans.push({key:`${worker.id}/${task.id}/${kind}`,id,x:target.x,z:target.z,yaw:worker.heading??0,time:Math.min(definition.duration,elapsed/duration*definition.duration)});
+    plans.push({workerId:worker.id,key:`${worker.id}/${task.id}/${kind}`,id,x:target.x,z:target.z,yaw:worker.heading??0,time:Math.min(definition.duration,elapsed/duration*definition.duration)});
   }
   // Repairs settle on arrival, without an acting phase. Present the committed
   // result at its service point; old saves without presentation do not replay it.
@@ -36,12 +36,12 @@ export function workVfxPlans(state){
 }
 
 export class WorkVfx {
-  constructor(library,pipeline,scene,surface){this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();}
+  constructor(library,pipeline,scene,surface,waterSource=null){this.waterSource=waterSource;this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();}
   update(state){
     const desired=new Set(),environment=vfxEnvironment(state.time>=300?1:0);
     for(const plan of workVfxPlans(state)){
       desired.add(plan.key);let effect=this.effects.get(plan.key);
-      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
+      if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.id==='water'&&this.waterSource?{waterSource:time=>this.waterSource(plan.workerId,time,effect)}:{}),...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
       effect.position.set(plan.x,this.surface(plan.x,plan.z),plan.z);effect.rotation.y=plan.yaw;effect.environment=environment;
       if(plan.time<effect.native.time||effect.native.time===0)effect.seek(plan.time);else effect.advance(plan.time-effect.native.time);
     }

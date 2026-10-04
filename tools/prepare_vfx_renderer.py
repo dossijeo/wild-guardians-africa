@@ -38,6 +38,9 @@ rigid_pack = rigid_pack.rstrip()[:-1]+'return rigidPacked;}\n'
 geometry = 'let fxVertices=[];\n'+section('function fxTri(', 'function paintGeometryFX(')
 simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
+simulation = simulation.replace('const mouth=M.pt(toolModel,[.62,.21,0]);', "const source=waterSource?.(clock);if(waterSource&&!source)return;const mouth=source?.position??M.pt(toolModel,[.62,.21,0]);")
+simulation = simulation.replace('[rand(1.4,2.05),rand(-.48,-.15),rand(-.45,.45)],[s,s*1.7,s]', "waterSource?[source.direction[0]*rand(.2,.4),rand(-.48,-.15),source.direction[2]*rand(.2,.4)]:[rand(1.4,2.05),rand(-.48,-.15),rand(-.45,.45)],[s,s*1.7,s]")
+
 simulation = simulation.replace('function floorAt(p){return ', "function floorAt(p){if(surface){const y=surface(p[0],p[2]);if(!Number.isFinite(y))throw new Error('Superficie VFX inválida');return y;}return ")
 simulation = simulation.replace('if(p.p[1]<p.ground+.025', 'if(surface)p.ground=floorAt(p.p);if(p.p[1]<p.ground+.025')
 simulation = simulation.replace('target=clamp(t,0,current.duration)', "target=clamp(t,0,agricultureMode?agricultureDuration:shieldMode==='barrier'?shieldDuration:current.duration)")
@@ -82,7 +85,7 @@ environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
 module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
 module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
 module += '''
-export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
+export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,waterSource=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
  const rigidGeo=style,rigidBuffers=Object.fromEntries(Object.keys(style).map(k=>[k,new Float32Array(256*23)])),rigidPacked=Object.fromEntries(Object.keys(style).map(k=>[k,{count:0,data:rigidBuffers[k]}]));
 '''+random+settings+'''

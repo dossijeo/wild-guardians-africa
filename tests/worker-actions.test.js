@@ -1,3 +1,4 @@
+import {createWateringEmitter} from '../src/rendering/watering-emitter.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -77,4 +78,18 @@ test('Carrying uses the original crate and idle uses the supplied resting pose',
   const library=libraries.olderFemale;
   assert.equal(workerPose({profile:'olderFemale',status:'carrying'},null,0,library).name,'Carry_Crate');
   assert.equal(workerPose({profile:'olderFemale',status:'idle'},null,0,library).name,'Idle');
+});
+
+for(const [profile,library] of Object.entries(libraries))test(`${profile}: cached water emitter follows the actual animated nozzle holes`,async()=>{
+  const gltf=await new GLTFLoader().parseAsync(geometryOnlyGlb(readFileSync(new URL('../public'+library.url,import.meta.url))),'');
+  const sample=createWateringEmitter(gltf),nozzle=gltf.scene.getObjectByName('Can_Nozzle'),clip=gltf.animations.find(c=>c.name==='Water'),mixer=new THREE.AnimationMixer(gltf.scene),action=mixer.clipAction(clip).play();action.paused=true;
+  const origin=new THREE.Vector3(),outward=new THREE.Vector3(),actual=new THREE.Vector3(),direction=new THREE.Vector3();
+  for(let i=0;i<90;i++){
+    const time=(.52+i/89*1.554)/4.3*clip.duration;
+    action.time=time;mixer.update(0);gltf.scene.updateMatrixWorld(true);actual.set(0,.023,0).applyMatrix4(nozzle.matrixWorld);gltf.scene.worldToLocal(actual);direction.set(0,1,0).transformDirection(nozzle.matrixWorld);
+    sample(time/clip.duration,origin,outward);
+    assert.ok(origin.distanceTo(actual)<.003,`${profile}: nozzle offset ${origin.distanceTo(actual)} at ${time}`);
+    assert.ok(outward.dot(direction)>.999,`${profile}: water travels out of nozzle`);
+  }
+  action.stop();mixer.uncacheRoot(gltf.scene);
 });

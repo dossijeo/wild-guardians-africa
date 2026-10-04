@@ -1,3 +1,4 @@
+import {createWateringEmitter} from './watering-emitter.js';
 import {MudPatches,residentMudSurface} from './mud-patches.js';
 import {installShaderFailureGuard} from './shader-failure.js';
 import {BiomeGround} from './biome-ground.js';
@@ -52,7 +53,7 @@ const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',young
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
   constructor(canvas,onPick) {
-    this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
+    this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.wateringEmitters=new Map();this.waterMouth=new THREE.Vector3();this.waterDirection=new THREE.Vector3();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
     this.camera=new THREE.PerspectiveCamera(42,1,.1,500);this.camera.position.set(40,35,50);
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});this.shaderFailure=installShaderFailureGuard(this.renderer);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1;
@@ -103,7 +104,7 @@ export class WorldScene {
     this.cropBridgeData=await json('/content/crop-bridges.json');this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
     this.wallPrototypes=await this.assets.walls(await json('/content/walls.json'));
     const vfxCatalogue=await json('/content/vfx.json');this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.assets.texture(vfxCatalogue.atlas));
-    this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
+    this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(id,time,effect)=>this.wateringSource(id,time,effect));
     this.attackVfx=new AttackVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.shieldVfx=new ShieldVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.agricultureVfx=new AgricultureVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
@@ -183,8 +184,17 @@ export class WorldScene {
     // authored in the GLB; animated foot grounding follows in applyAnimalPose.
     if(type==='animal')prepareAnimalModel(model,entity.species);
     root.add(model);
+    if(type==='worker'&&!this.wateringEmitters.has(entity.profile))this.wateringEmitters.set(entity.profile,createWateringEmitter(gltf));
     const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
       groundSamples:type==='animal'?animalGroundSamples(model):null});
+  }
+  wateringSource(id,time,effect){
+    const data=this.mixers.get(id),root=this.objects.get(id),worker=this.state.workers.find(w=>w.id===id),sample=this.wateringEmitters.get(worker?.profile);
+    if(!data||!sample||!root||!effect)return null;
+    sample(time/4.3,this.waterMouth,this.waterDirection);root.updateWorldMatrix(true,false);effect.updateWorldMatrix(true,false);
+    this.waterMouth.applyMatrix4(root.matrixWorld);effect.worldToLocal(this.waterMouth);
+    this.waterDirection.transformDirection(root.matrixWorld);effect.surfaceInverse.copy(effect.matrixWorld).invert();this.waterDirection.transformDirection(effect.surfaceInverse);
+    return {position:this.waterMouth.toArray(),direction:this.waterDirection.toArray()};
   }
   async crate(entity){
     const gltf=await this.assets.model(this.workerLibraries[entity.profile??'olderMale'].url);

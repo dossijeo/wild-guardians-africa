@@ -78,3 +78,9 @@ test('Repair dust ignores old, future, failed or malformed presentation instead 
  for(const event of [{...valid,presentation:undefined},{...valid,type:'RepairRequested'},{...valid,presentation:{...valid.presentation,x:NaN}},{...valid,presentation:{...valid.presentation,elapsed:11}},{...valid,id:undefined}])assert.deepEqual(workVfxPlans({...base,events:[event]}),[]);
  assert.deepEqual(workVfxPlans({...base,elapsed:20,events:[valid]}),[]);
 });
+
+test('Work manager attaches the worker emitter to the actual native water effect',()=>{
+  const {manager}=graphics(),calls=[];manager.waterSource=(id,time,effect)=>{calls.push({id,time,effect});return {position:[0,2,0],direction:[0,0,1]};};
+  const state={time:0,elapsed:0,tasks:[{id:'water-task',kind:'water',targetId:'plant'}],plants:[{id:'plant',x:8,z:4}],structures:[],workers:[{id:'worker',profile:'olderMale',status:'acting',taskId:'water-task',actionRemaining:2.9}]};
+  manager.update(state);const effect=[...manager.effects.values()][0];assert.ok(calls.length>0);assert.ok(calls.every(c=>c.id==='worker'&&c.effect===effect));assert.ok(effect.native.rigids.length>0);assert.ok(effect.native.rigids.every(r=>Math.abs(r.p[0])<.05&&r.p[1]>1));manager.dispose();
+});

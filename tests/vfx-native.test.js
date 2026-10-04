@@ -102,3 +102,11 @@ test('Original presentation caps bound dense particle bursts and layer switches 
   const packed=fx.rigidInstances();assert.equal(packed.soil.count,230);assert.ok(Object.values(packed).every(p=>p.count<=256));fx.advance(5);assert.equal(fx.parts.length,0);assert.equal(fx.rigids.length,0);
   const hidden=createNativeVfx('shield',rects,{layers:{textures:false,ribbons:false,lights:false}});hidden.seek(2);assert.equal(hidden.sprites().length,0);assert.equal(hidden.geometry().length,0);assert.deepEqual(hidden.lights.colors,[[0,0,0],[0,0,0]]);
 });
+
+test('Rig water sources replace only new droplet origins; seek replays sources and missing rigs do not emit',()=>{
+  const calls=[],source=time=>{calls.push(time);return {position:[4,2,.1*time],direction:[0,0,1]};},fx=createNativeVfx('water',rects,{waterSource:source});
+  fx.advance(.54);assert.equal(calls.length,1);assert.ok(fx.rigids.length>0);
+  for(const r of fx.rigids){assert.ok(Math.abs(r.p[0]-4)<.05);assert.ok(r.v[2]>.1);assert.ok(r.v[1]<0);assert.ok(r.p[1]>1.9);}
+  const before=fx.rigids.map(r=>({p:[...r.p],v:[...r.v],age:r.age}));calls.length=0;fx.seek(.54);assert.equal(calls.length,1);assert.equal(fx.rigids.length,before.length);for(let i=0;i<before.length;i++){const r=fx.rigids[i],b=before[i];assert.ok(Math.abs(r.age-b.age)<1e-12);for(let k=0;k<3;k++){assert.ok(Math.abs(r.p[k]-b.p[k])<1e-12);assert.ok(Math.abs(r.v[k]-b.v[k])<1e-12);}}
+  const missing=createNativeVfx('water',rects,{waterSource:()=>null});missing.advance(2);assert.equal(missing.rigids.length,0);assert.equal(missing.parts.length,0);
+});
