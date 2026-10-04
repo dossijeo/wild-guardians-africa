@@ -44,10 +44,10 @@ test('The native farm resumes physical worker actions after reading, and complet
   let ordered=false,carrying=false;
   for(let i=0;i<2000&&!state.crates.some(c=>c.delivered);i++){
     Game.tick(state,.2,nav);controller.update();
-    if(state.tutorial.reading==='basic.harvest'){assert.equal(numberOf(state.ledger.balance),595);controller.acknowledge();Game.harvest(state,'tutorial-order',state.plants[0].id);ordered=true;assert.equal(numberOf(state.ledger.balance),595);}
+    if(state.tutorial.reading==='basic.harvest'){assert.equal(numberOf(state.ledger.balance),665);controller.acknowledge();Game.harvest(state,'tutorial-order',state.plants[0].id);ordered=true;assert.equal(numberOf(state.ledger.balance),665);}
     if(state.crates.some(c=>!c.delivered)){carrying=true;assert.equal(state.tutorial.step,'harvest');assert.equal(controller.presentation().variant,'delivery');assert.equal(controller.presentation().blocking,false);}
   }
-  assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),604);assert.equal(state.day,1);
+  assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),674);assert.equal(state.day,1);
   assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);assert.equal(controller.presentation(),null);
   assert.equal(Object.keys(state.ledger.entries).filter(id=>id==='tutorial-wage').length,1);
 });

@@ -4,7 +4,7 @@ import {simulateOpening} from '../tools/check_opening.mjs';
 import {numberOf} from '../src/simulation/money.js';
 for(const profile of ['olderMale','olderFemale','youngMale','youngFemale']){
   test(`${profile}: eight original-terrain crops pay only their physical deliveries and permit dawn hiring`,()=>{
-    const report=simulateOpening(profile,8),wage=profile.startsWith('young')?120:100;
+    const report=simulateOpening(profile,8),wage=profile.startsWith('young')?40:30;
     const value=profile.endsWith('Male')?11:9;
     assert.equal(report.initialBalance,1500-800-8*5-wage);
     assert.equal(report.plots,8);assert.ok(report.delivered>0&&report.delivered<=8);
@@ -23,7 +23,7 @@ for(const profile of ['olderMale','olderFemale','youngMale','youngFemale']){
     assert.equal(report.plots,profile.startsWith('young')?16:19);
     assert.equal(report.day,2);assert.ok(report.money>=0);
     const pending=report.living>0||report.crates.some(c=>!c.delivered);
-    const minimum=pending?100:105;
+    const minimum=pending?30:35;
     if(report.money<minimum){
       assert.equal(report.result,'defeat');
       assert.ok(!report.pauses.includes('hiring'),'Defeat must precede opening the next hiring dialog');

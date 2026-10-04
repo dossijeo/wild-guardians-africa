@@ -10,7 +10,11 @@ import {enqueue,reserveTasks,releaseTask} from '../src/simulation/tasks.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
 import {newGame} from '../src/simulation/game.js';
 
-test('Generated balance matches authoritative received JSON exactly',()=>assert.deepEqual(BALANCE,JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'))));
+test('Original balance remains exact except the player-approved 30/40 daily wages',()=>{
+ const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
+ original.workers.older_wage=30;original.workers.young_wage=40;
+ assert.deepEqual(BALANCE,original);
+});
 test('Ledger rounds an exact repair fraction upward only at settlement',()=>{
   const ledger={balance:rational(100),entries:{}};
   transact(ledger,'repair',negate(multiply(rational(35),27,100)));
@@ -35,7 +39,7 @@ test('Allocation conserves every worker over 3000 seeded scenarios',()=>{
   }
 });
 test('Hiring rejects negatives and unknown profiles; balanced profiles preserve totals',()=>{
-  assert.equal(hiringCost({olderMale:1,youngFemale:2}),340);
+  assert.equal(hiringCost({olderMale:1,youngFemale:2}),110);
   assert.throws(()=>hiringCost({olderMale:-1}));assert.throws(()=>hiringCost({other:1}));
   const result=distributeProfiles({a:2,b:1,c:1},{olderMale:2,olderFemale:1,youngFemale:1});
   assert.deepEqual(Object.values(result).map(x=>x.length),[2,1,1]);assert.equal(Object.values(result).flat().filter(p=>p==='olderMale').length,2);
@@ -98,7 +102,7 @@ test('Permission matrix handles stacked pauses, night, raid and center recovery'
   s.pauses=['hiring','hidden'];assert.ok(!permission(s,'shield'));s.pauses.pop();assert.ok(!permission(s,'shield'));s.pauses=[];s.time=0;s.raid={};assert.ok(!permission(s,'plant'));
 });
 test('Economic dawn thresholds and linear unlimited village costs',()=>{
-  const s={structures:[],plants:[],crates:[]};assert.equal(dawnMinimum(s),905);s.crates=[{}];assert.equal(dawnMinimum(s),900);s.structures=[{kind:'center',status:'intact'}];assert.equal(dawnMinimum(s),100);s.crates=[];assert.equal(dawnMinimum(s),105);
+  const s={structures:[],plants:[],crates:[]};assert.equal(dawnMinimum(s),835);s.crates=[{}];assert.equal(dawnMinimum(s),830);s.structures=[{kind:'center',status:'intact'}];assert.equal(dawnMinimum(s),30);s.crates=[];assert.equal(dawnMinimum(s),35);
   for(const [n,cost] of [[2,50000],[3,75000],[10,250000],[50,1250000],[100,2500000]])assert.equal(villageCost(n),cost);
 });
 const snapshot=()=>newGame({seed:123,slotId:'one'});

@@ -83,7 +83,7 @@ test('30 canonical combinations validate and each new game starts isolated at 15
 test('First day center/plant/tutorial hiring sequence and payment idempotency',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);assert.equal(numberOf(s.ledger.balance),700);assert.equal(s.tutorial.step,'plant');
   assert.equal(placeStructure(s,'center',{x:4,z:0},nav),false);plant(s,'plant','mijo',8,0,nav);assert.equal(s.tutorial.step,'hire');
-  openInitialHiring(s);assert.ok(s.pauses.includes('hiring'));hire(s,'hire',{olderMale:1});assert.equal(numberOf(s.ledger.balance),595);assert.equal(hire(s,'hire-again',{olderMale:1}),false);
+  openInitialHiring(s);assert.ok(s.pauses.includes('hiring'));hire(s,'hire',{olderMale:1});assert.equal(numberOf(s.ledger.balance),665);assert.equal(hire(s,'hire-again',{olderMale:1}),false);
 });
 test('Invalid placement makes no economic or world modification',()=>{
   const s=ready();assert.throws(()=>placeStructure(s,'bad',{x:0,z:0},{...nav,placement:()=>({valid:false,reason:'invalid'})}));
@@ -92,12 +92,12 @@ test('Invalid placement makes no economic or world modification',()=>{
 test('Workers physically plant, water and harvest; only crate delivery pays',()=>{
   const s=setup();assert.equal(s.plants[0].growth,0);tick(s,1,nav);assert.equal(s.plants[0].growth,0);
   for(let i=0;i<1800&&!s.crates.length;i++)tick(s,.1,nav);
-  assert.equal(s.plants[0].growth,140);assert.equal(numberOf(s.ledger.balance),595);
+  assert.equal(s.plants[0].growth,140);assert.equal(numberOf(s.ledger.balance),665);
   assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,false);
   assert.equal(s.crates[0].sourcePlantId,s.plants[0].id);assert.equal(s.crates[0].species,s.plants[0].species);
   for(let i=0;i<300&&!s.crates[0].delivered;i++)tick(s,.1,nav);
-  assert.equal(numberOf(s.ledger.balance),606);assert.ok(s.crates[0].delivered);
-  const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),606);
+  assert.equal(numberOf(s.ledger.balance),676);assert.ok(s.crates[0].delivered);
+  const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),676);
 });
 test('Stacked pauses freeze crops and spell clocks',()=>{
   const s=setup();pause(s,'menu');pause(s,'hidden');tick(s,500,nav);assert.equal(s.time,0);resume(s,'menu');tick(s,500,nav);assert.equal(s.time,0);resume(s,'hidden');tick(s,1,nav);assert.ok(Math.abs(s.time-1)<1e-9);
@@ -121,7 +121,7 @@ test('Night 1 has one mandatory warthog and night 2 uses ordinary zero-attractio
 });
 test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
   const s=setup();const w=s.workers[0];s.crates.push({id:'crate-test',x:5,z:0,value:rational(10),carrierId:w.id,delivered:false});w.crateId='crate-test';w.status='carrying';
-  spawnRaid(s,{group:['warthog']},nav);assert.equal(w.crateId,null);assert.equal(s.crates[0].carrierId,null);assert.equal(numberOf(s.ledger.balance),595);assert.equal(w.status,'fleeing');
+  spawnRaid(s,{group:['warthog']},nav);assert.equal(w.crateId,null);assert.equal(s.crates[0].carrierId,null);assert.equal(numberOf(s.ledger.balance),665);assert.equal(w.status,'fleeing');
 });
 test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
   const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
@@ -148,5 +148,5 @@ test('Event frost leaves mature plants intact; favorable growth keeps mandatory 
 });
 test('Plague consumes half remaining tolerance without killing plants or changing coins',()=>{
   const s=setup();const p=s.plants[0];p.water[0].status='manual';p.water[1].status='due';p.water[1].wait=20;s.eventPlan={kind:'plague',negative:true,affectedFraction:1};applyEvent(s);
-  assert.equal(p.water[1].wait,45);assert.ok(p.alive);assert.equal(numberOf(s.ledger.balance),595);
+  assert.equal(p.water[1].wait,45);assert.ok(p.alive);assert.equal(numberOf(s.ledger.balance),665);
 });

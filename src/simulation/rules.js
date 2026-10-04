@@ -1,3 +1,4 @@
+import {HIRING_RESERVE} from './budget.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
@@ -41,7 +42,7 @@ export function compositions(budget,unlocked) {
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
   const resources=state.plants.some(p=>p.alive)||state.crates.some(c=>!c.delivered);
-  return center?(resources?100:105):(resources?900:905);
+  return (center?0:800)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }

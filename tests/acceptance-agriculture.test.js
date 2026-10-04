@@ -57,7 +57,7 @@ test('QA-019: physical care completes exactly the canonical number of waterings 
     }
     assert.equal(isMature(p),true,species);assert.equal(p.water.length,waters);
     assert.ok(p.water.every(w=>w.status==='manual'));assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===p.id).length,waters);
-    const wages=Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-')).length*100;
+    const wages=Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-')).length*30;
     assert.equal(numberOf(s.ledger.balance),10000-cropSpec(species).plant_cost-wages);
     assert.equal(s.crates.length,0);assert.equal(s.tasks.length,1);assert.equal(s.tasks[0].kind,'harvest');assert.equal(s.tasks[0].targetId,p.id);assert.equal(p.harvestRequested,true);
   }
@@ -105,13 +105,13 @@ test('QA-024: first-care debt gates growth and long-tolerance cassava waits belo
 
 test('QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once',()=>{
   const s=farm();sow(s,'platano');Game.openInitialHiring(s);Game.hire(s,'hire-day-101',{olderFemale:1});
-  assert.equal(numberOf(s.ledger.balance),9750);
+  assert.equal(numberOf(s.ledger.balance),9820);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,102);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),9750);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
-  Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9650);
+  assert.equal(numberOf(s.ledger.balance),9820);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
+  Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9790);
   assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),9890);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
+  assert.equal(numberOf(s.ledger.balance),10030);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 

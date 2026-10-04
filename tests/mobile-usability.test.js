@@ -67,10 +67,10 @@ test('The tool expires ten seconds after its last successful placement',()=>{
   session.used(9);assert.equal(session.expired(18.99),false);assert.equal(session.expired(19),true);
   session.clear();assert.equal(session.expired(30),false);
 });
-test('The salary reserve rejects purchases before any debit, permitting exactly 100 to remain',()=>{
-  const state=Game.newGame();state.ledger.balance=rational(105);
+test('The salary reserve rejects purchases before any debit, permitting exactly 30 to remain',()=>{
+  const state=Game.newGame();state.ledger.balance=rational(35);
   ensurePurchaseBudget(state,5);assert.throws(()=>ensurePurchaseBudget(state,6),e=>e.code==='hiring-reserve');
-  assert.equal(numberOf(state.ledger.balance),105);assert.deepEqual(state.ledger.entries,{});
+  assert.equal(numberOf(state.ledger.balance),35);assert.deepEqual(state.ledger.entries,{});
 });
 test('Idle farm anchors use a nearby living plot and a three metre roaming radius',()=>{
   const center={id:'center',x:0,z:0},worker={centerId:'center',x:20,z:0};

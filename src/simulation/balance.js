@@ -111,8 +111,8 @@ export const BALANCE = {
     }
   ],
   "workers": {
-    "older_wage": 100,
-    "young_wage": 120,
+    "older_wage": 30,
+    "young_wage": 40,
     "young_work_speed": 1.5,
     "male_harvest_multiplier": 1.2,
     "male_shift_end": "17:05",

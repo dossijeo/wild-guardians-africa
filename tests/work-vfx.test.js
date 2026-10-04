@@ -59,7 +59,7 @@ test('Committed arrival repair emits one native dust burst at its service point,
   Game.tick(s,.1,nav);const before=serialize(s);g.manager.update(s);assert.equal(serialize(s),before);
   if(!s.events.some(e=>e.type==='RepairApplied'))assert.ok(![...g.manager.effects.keys()].some(key=>key.startsWith('repair/')));
  }
- const event=s.events.find(e=>e.type==='RepairApplied'),worker=s.workers[0];assert.ok(event);assert.equal(numberOf(s.ledger.balance),541);
+ const event=s.events.find(e=>e.type==='RepairApplied'),worker=s.workers[0];assert.ok(event);assert.equal(numberOf(s.ledger.balance),611);
  assert.deepEqual(event.presentation,{elapsed:s.elapsed,x:worker.x,z:worker.z,yaw:worker.heading??0});
  const key=`repair/${event.id}`,effect=g.manager.effects.get(key);assert.ok(effect);assert.equal(effect.native.definition.id,'dust');assert.equal(effect.native.rigids.length,4);assert.ok(effect.native.parts.length>0);assert.equal(effect.position.x,worker.x);assert.equal(effect.position.z,worker.z);
  assert.equal(workVfxPlans({...s,events:[event,event]}).filter(p=>p.key===key).length,1);
@@ -67,8 +67,8 @@ test('Committed arrival repair emits one native dust burst at its service point,
  const particles=JSON.stringify({parts:effect.native.parts,rigids:effect.native.rigids}),time=effect.native.time;
  Game.tick(s,5,nav);for(let i=0;i<20;i++)g.manager.update(s);assert.equal(effect.native.time,time);assert.equal(JSON.stringify({parts:effect.native.parts,rigids:effect.native.rigids}),particles);
  const saved=serialize(s);g.manager.dispose();g.library.dispose();g.pipeline.dispose();s=deserialize(saved);g=graphics();g.manager.update(s);
- const restored=g.manager.effects.get(key);assert.equal(restored.native.time,time);const compareParticles=(a,b,path='particles')=>{if(typeof a==='number'&&typeof b==='number')assert.ok(Math.abs(a-b)<1e-4,path);else if(a&&typeof a==='object'){assert.deepEqual(Object.keys(a),Object.keys(b),path);for(const k of Object.keys(a))compareParticles(a[k],b[k],path+'.'+k);}else assert.equal(a,b,path);};compareParticles({parts:restored.native.parts,rigids:restored.native.rigids},JSON.parse(particles));assert.equal(numberOf(s.ledger.balance),541);
- Game.resume(s,'qa');Game.tick(s,4,nav);g.manager.update(s);assert.ok(!g.manager.effects.has(key));assert.equal(numberOf(s.ledger.balance),541);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);
+ const restored=g.manager.effects.get(key);assert.equal(restored.native.time,time);const compareParticles=(a,b,path='particles')=>{if(typeof a==='number'&&typeof b==='number')assert.ok(Math.abs(a-b)<1e-4,path);else if(a&&typeof a==='object'){assert.deepEqual(Object.keys(a),Object.keys(b),path);for(const k of Object.keys(a))compareParticles(a[k],b[k],path+'.'+k);}else assert.equal(a,b,path);};compareParticles({parts:restored.native.parts,rigids:restored.native.rigids},JSON.parse(particles));assert.equal(numberOf(s.ledger.balance),611);
+ Game.resume(s,'qa');Game.tick(s,4,nav);g.manager.update(s);assert.ok(!g.manager.effects.has(key));assert.equal(numberOf(s.ledger.balance),611);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);
  g.manager.dispose();assert.equal(g.scene.children.length,0);assert.equal(g.library.instances.size,0);g.library.dispose();g.pipeline.dispose();
 });
 

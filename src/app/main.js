@@ -6,7 +6,7 @@ import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {UiAudio} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
-import {RESERVE_MESSAGE,HIRING_RESERVE} from '../simulation/budget.js';
+import {RESERVE_MESSAGE,HIRING_RESERVE,BUDGET_WARNING_THRESHOLD} from '../simulation/budget.js';
 import {GameSurfaces} from '../ui/game-surfaces.js';
 import {resumeLoadedWorld} from './resume-loaded-world.js';
 import '../ui/styles.css';
@@ -169,7 +169,7 @@ function toolPanel(type) {
   let content='';
   const price=value=>`<span class="price"><img src="${ASSETS.coin.src}" alt="">${value}</span>`;
   if(type==='plant')content=`<div class="card-grid crop-grid">${B.crops.slice().sort((a,b)=>a.plant_cost-b.plant_cost).map(c=>`<button class="choice-card" data-crop="${c.id}" ${!permission(state,'plant')||numberOf(state.ledger.balance)<c.plant_cost?'disabled':''}><img class="card-image" src="${thumbnails[c.id]}" alt=""><strong>${c.name}</strong>${price(c.plant_cost)}</button>`).join('')}</div><p class="panel-note">Elige una semilla y toca un espacio libre.</p>`;
-  if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost+HIRING_RESERVE?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 100 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.</p>`;
+  if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost+HIRING_RESERVE?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 30 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.</p>`;
   if(type==='spell')content=spellCardsMarkup(state,spellSVG);
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
   document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
@@ -209,7 +209,7 @@ function updateUI(force=false) {
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   if(tool&&['plant','center','wall'].includes(tool.kind)&&toolSession.expired(now/1000))cancelTool();
   if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
-  const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>220)reserveWarningShown=false;if(balance<=220&&lastBudgetBalance>220&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
+  const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   if(pendingSpell){
     if(state.result||tool?.kind!=='spell'||tool.spell!==pendingSpell.kind)cancelSpellPreview();

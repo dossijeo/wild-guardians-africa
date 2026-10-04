@@ -18,7 +18,7 @@ function farm(weights,species=weights.map(()=> 'mijo')){
 }
 const counts=s=>s.structures.map(c=>s.workers.filter(w=>w.centerId===c.id).length);
 test('QA-037: all four profiles charge age wages once and preserve sex-independent contracts',()=>{
-  for(const [profile,wage] of [['olderMale',100],['olderFemale',100],['youngMale',120],['youngFemale',120]]){
+  for(const [profile,wage] of [['olderMale',30],['olderFemale',30],['youngMale',40],['youngFemale',40]]){
     const s=farm([1]),before=numberOf(s.ledger.balance);Game.hire(s,'hire',{[profile]:2});
     assert.equal(numberOf(s.ledger.balance),before-2*wage);assert.equal(s.workers.length,2);
     assert.ok(s.workers.every(w=>w.profile===profile&&w.contractDay===101));
@@ -85,7 +85,7 @@ test('QA-049/050/051: new crops and a midday center do not transfer existing sta
   assert.equal(s.day,102);assert.ok(s.pauses.includes('hiring'));assert.ok(s.plants.filter(p=>p.alive).every(p=>p.centerId===added));assert.equal(s.plants.find(p=>p.id===oldPlant).alive,false);assert.equal(s.plants.find(p=>p.id===oldPlant).centerId,old);
   assert.ok(s.tasks.every(t=>t.centerId===added));
   const cash=numberOf(s.ledger.balance);Game.hire(s,'next-day',{olderMale:4});
-  assert.deepEqual(counts(s),[1,3]);assert.equal(numberOf(s.ledger.balance),cash-400);
+  assert.deepEqual(counts(s),[1,3]);assert.equal(numberOf(s.ledger.balance),cash-120);
 });
 test('QA-052/143: founding changes territorial center assignment while current staff return to their original village',()=>{
   const s=farm([1]);Game.hire(s,'hire',{olderMale:1});Game.tick(s,60,nav);
@@ -101,7 +101,7 @@ test('QA-052/143: founding changes territorial center assignment while current s
   assert.equal(s.workers.length,1);assert.equal(s.events.filter(e=>e.type==='HiringConfirmed').length,1);
   s.eventPlan=null;Game.tick(s,300,nav);assert.equal(s.day,102);
   const cash=numberOf(s.ledger.balance);Game.hire(s,'next-day',{olderMale:1});
-  assert.equal(numberOf(s.ledger.balance),cash-100);assert.equal(s.workers.length,1);
+  assert.equal(numberOf(s.ledger.balance),cash-30);assert.equal(s.workers.length,1);
   assert.equal(s.workers[0].villageId,village.id);assert.equal(s.workers[0].x,village.entry.x);assert.equal(s.workers[0].z,village.entry.z);
 });
 test('QA-052: territorial choice respects full detours and excludes unreachable village routes',()=>{

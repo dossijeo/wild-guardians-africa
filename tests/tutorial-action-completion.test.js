@@ -41,7 +41,7 @@ test('actual paid worker watering, automatic pickup and delivery advance explana
     if(c.presentation()?.id==='basic.harvest')sawHarvest=true;
   }
   assert.ok(sawHarvest);assert.equal(s.crates.filter(crate=>crate.delivered).length,1);
-  assert.equal(numberOf(s.ledger.balance),606);assert.equal(c.presentation().id,'basic.complete');
+  assert.equal(numberOf(s.ledger.balance),676);assert.equal(c.presentation().id,'basic.complete');
   for(const id of ['basic.center','basic.plant','basic.hiring','basic.work','basic.harvest'])assert.equal(records.filter(value=>value===id).length,1,id);
   assert.ok(!s.tutorial.seen.includes('basic.complete'),'Completion announcement still needs reading or timed dismissal');
 });

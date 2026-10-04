@@ -1,8 +1,9 @@
+import {BALANCE} from './balance.js';
 export const PROFILES = [
-  {id:'olderMale',name:'Hombre mayor',wage:100,speed:1,male:true,end:250},
-  {id:'olderFemale',name:'Mujer mayor',wage:100,speed:1,male:false,end:300},
-  {id:'youngMale',name:'Hombre joven',wage:120,speed:1.5,male:true,end:250},
-  {id:'youngFemale',name:'Mujer joven',wage:120,speed:1.5,male:false,end:300},
+  {id:'olderMale',name:'Hombre mayor',wage:BALANCE.workers.older_wage,speed:1,male:true,end:250},
+  {id:'olderFemale',name:'Mujer mayor',wage:BALANCE.workers.older_wage,speed:1,male:false,end:300},
+  {id:'youngMale',name:'Hombre joven',wage:BALANCE.workers.young_wage,speed:1.5,male:true,end:250},
+  {id:'youngFemale',name:'Mujer joven',wage:BALANCE.workers.young_wage,speed:1.5,male:false,end:300},
 ];
 export const contractExpired=(worker,state)=>Number.isSafeInteger(worker.contractDay)&&worker.contractDay<state.day;
 const stable=(a,b)=>a.created-b.created || a.id.localeCompare(b.id);

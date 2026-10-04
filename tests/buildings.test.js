@@ -171,10 +171,10 @@ function paidGame(culture){const s=Game.newGame({culture,seed:712,slotId:'native
 test('Five paid centers clear their native damage only when the real rounded repair debit executes',()=>{
   for(const template of templates){
     const s=paidGame(template.building.culture),center=s.structures[0],pass=new BuildingDestructionPass(fakeRenderer()),house=new NativeBuilding(template,center,pass);
-    assert.equal(numberOf(s.ledger.balance),595);hitStructure(center,40);house.update(center,s.elapsed);assert.ok(Math.abs(house.damage-40/600)<1e-12);
-    Game.requestRepair(s,'repair',center.id);assert.equal(numberOf(s.ledger.balance),595);assert.equal(center.hp,560);
+    assert.equal(numberOf(s.ledger.balance),665);hitStructure(center,40);house.update(center,s.elapsed);assert.ok(Math.abs(house.damage-40/600)<1e-12);
+    Game.requestRepair(s,'repair',center.id);assert.equal(numberOf(s.ledger.balance),665);assert.equal(center.hp,560);
     for(let i=0;i<1000&&center.hp<600;i++){Game.tick(s,.1,nav);house.update(center,s.elapsed);if(!s.events.some(e=>e.type==='RepairApplied'))assert.ok(house.damage>0);}
-    assert.equal(center.hp,600);assert.equal(house.damage,0);assert.equal(numberOf(s.ledger.balance),541);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);Game.tick(s,1,nav);assert.equal(numberOf(s.ledger.balance),541);
+    assert.equal(center.hp,600);assert.equal(house.damage,0);assert.equal(numberOf(s.ledger.balance),611);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);Game.tick(s,1,nav);assert.equal(numberOf(s.ledger.balance),611);
     house.dispose();pass.dispose();
   }
 });

@@ -79,7 +79,7 @@ test('QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then 
   const cash=numberOf(s.ledger.balance);s.eventPlan=null;Game.tick(s,600-s.time,nav);
   assert.equal(s.day,103);assert.equal(s.crates.length,0);assert.equal(numberOf(s.ledger.balance),cash);
   assert.deepEqual(s.tasks.map(t=>[t.kind,t.targetId]),[['harvest',a.id],['harvest',b.id]]);
-  const w=hire(s,'olderMale'),paid=numberOf(s.ledger.balance);assert.equal(paid,cash-100);
+  const w=hire(s,'olderMale'),paid=numberOf(s.ledger.balance);assert.equal(paid,cash-30);
   until(s,()=>s.crates.length===1);const crate=s.crates[0];assert.equal(w.status,'carrying');assert.equal(crate.delivered,false);
   assert.equal(a.alive,false);assert.equal(a.harvestRequested,false);assert.equal(b.alive,true);assert.deepEqual(crate.value,rational(54,5));
   assert.equal(crate.sourcePlantId,a.id);assert.equal(numberOf(s.ledger.balance),paid);

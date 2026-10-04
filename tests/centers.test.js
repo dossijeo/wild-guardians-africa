@@ -53,7 +53,7 @@ for(const building of catalogue)test(`${building.culture}: native GLB scale, rot
   if(isMature(state.plants[0])&&!state.plants[0].harvestRequested)Game.harvest(state,'harvest',state.plants[0].id);
   Game.tick(state,.05,nav);
  }
- assert.equal(state.crates.filter(c=>c.delivered).length,1);assert.equal(state.ledger.balance.n,'606');
+ assert.equal(state.crates.filter(c=>c.delivered).length,1);assert.equal(state.ledger.balance.n,'676');
  const loaded=deserialize(serialize(state));assert.equal(centerCulture(loaded.structures[0],loaded),building.culture);
  loaded.villages[0].culture=building.culture==='suajili'?'mapungubwe':'suajili';
  assert.equal(centerCulture(loaded.structures[0],loaded),building.culture,'Logistical reassignment cannot replace the physical model');

@@ -35,7 +35,7 @@ for(const culture of Game.CULTURES)test(`QA-129/130: ${culture} a real last-cent
   else{
    const before=serialize(loaded);assert.throws(()=>Game.placeStructure(loaded,'night-rebuild',{x:-12,z:12},navigation(loaded)),/disponible/);assert.equal(serialize(loaded),before);
    Game.tick(loaded,600-loaded.time,navigation(loaded));assert.equal(loaded.result,'defeat');assert.equal(loaded.day,4);
-   assert.equal(loaded.events.filter(e=>e.type==='GameOver').length,1,'800 survives the raid check but cannot meet the empty dawn minimum 905');
+   assert.equal(loaded.events.filter(e=>e.type==='GameOver').length,1,'800 survives the raid check but cannot meet the empty dawn minimum 835');
   }
  }
 });
@@ -50,7 +50,7 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
   if(center!=='intact')destroy(s,nav);
   if(center==='collapsing'){s.structures[0].status='collapsing';s.structures[0].collapseRemaining=2;}
   nav.setState(s);s.time=599.9;s.nightPlan={done:true};s.dayPlan={done:true};s.eventPlan=null;
-  const resources=resource==='living'||resource==='loose-crate',minimum=center==='intact'?(resources?100:105):(resources?900:905);
+  const resources=resource==='living'||resource==='loose-crate',minimum=center==='intact'?(resources?30:35):(resources?830:835);
   s.ledger.balance=rational(minimum+offset);s.hiringSelection={youngMale:10,youngFemale:10};
   assert.equal(dawnMinimum(s),minimum);const loaded=saved(s),restoredNav=navigation(loaded);
   Game.tick(s,.1,nav);Game.tick(loaded,.1,restoredNav);assert.equal(serialize(loaded),serialize(s));
@@ -61,35 +61,35 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
  }
 });
 
-for(const culture of Game.CULTURES)test(`QA-130: ${culture} 900 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
- const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(900);
+for(const culture of Game.CULTURES)test(`QA-130: ${culture} 830 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
+ const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(830);
  // Explicit group, not the daytime 10%/attraction planner. Exercise physical
  // combat and the recovery permission at a daylight clock without altering it.
  spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);
  finish(s,nav);assert.equal(s.result,null);assert.equal(s.structures.some(operational),false);assert.ok(s.time<300);
  Game.placeStructure(s,'replacement',{x:-12,z:12},nav);assert.equal(s.structures.filter(operational).length,1);
- assert.equal(numberOf(s.ledger.balance),100);assert.equal(s.events.filter(e=>e.type==='GameOver').length,0);
+ assert.equal(numberOf(s.ledger.balance),30);assert.equal(s.events.filter(e=>e.type==='GameOver').length,0);
  assert.equal(s.events.filter(e=>e.type==='PlacementCommitted').length,2);assert.equal(s.ledger.entries.replacement.n,'-800');
 });
 
 for(const culture of Game.CULTURES)test(`QA-134/C07: ${culture} a last-night raid crossing dawn resolves before defeat or victory`,()=>{
- for(const money of [799,800,905]){
+ for(const money of [799,800,835]){
   const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=599.5;s.nightPlan={done:true};s.dayPlan={done:true};s.ledger.balance=rational(money);
   spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);Game.tick(s,.5,nav);
   assert.equal(s.time,600);assert.equal(s.day,100);assert.equal(s.completedNights,99);assert.equal(s.result,null);assert.deepEqual(s.pauses,[]);
   assert.equal(s.events.filter(e=>['Dawn','CampaignWon','GameOver'].includes(e.type)).length,0);
   finish(s,nav);assert.equal(s.raid,null);assert.equal(s.structures.some(operational),false);
-  const ended=s.events.findIndex(e=>e.type==='RaidEnded'),terminal=s.events.findIndex(e=>e.type===(money===905?'CampaignWon':'GameOver'));
-  assert.ok(ended>=0&&terminal>ended);assert.equal(s.result,money===905?'victory':'defeat');
+  const ended=s.events.findIndex(e=>e.type==='RaidEnded'),terminal=s.events.findIndex(e=>e.type===(money===835?'CampaignWon':'GameOver'));
+  assert.ok(ended>=0&&terminal>ended);assert.equal(s.result,money===835?'victory':'defeat');
   assert.equal(s.completedNights,money===799?99:100);assert.equal(s.day,money===799?100:101);
-  assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,money===905?1:0);assert.equal(s.events.filter(e=>e.type==='GameOver').length,money===905?0:1);
+  assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,money===835?1:0);assert.equal(s.events.filter(e=>e.type==='GameOver').length,money===835?0:1);
   assert.equal(s.pauses.includes('hiring'),false);assert.equal(numberOf(s.ledger.balance),money);
   const loaded=saved(s),frozen=serialize(loaded);Game.tick(loaded,30,navigation(loaded));assert.equal(serialize(loaded),frozen);
  }
 });
 
 test('QA-132: an unaffordable remembered selection does not defeat an otherwise viable farm and can be adjusted',()=>{
- const {s,nav}=farm();Game.plant(s,'seed','mijo',8,0,nav);s.time=599.9;s.nightPlan={done:true};s.dayPlan={done:true};s.eventPlan=null;s.ledger.balance=rational(100);s.hiringSelection={youngMale:3};
+ const {s,nav}=farm();Game.plant(s,'seed','mijo',8,0,nav);s.time=599.9;s.nightPlan={done:true};s.dayPlan={done:true};s.eventPlan=null;s.ledger.balance=rational(30);s.hiringSelection={youngMale:3};
  Game.tick(s,.1,nav);assert.equal(s.result,null);assert.deepEqual(s.pauses,['hiring']);
  const before=serialize(s);assert.throws(()=>Game.hire(s,'expensive',s.hiringSelection));assert.equal(serialize(s),before);
  const loaded=saved(s);Game.hire(loaded,'adjusted',{olderFemale:1});assert.equal(loaded.result,null);assert.deepEqual(loaded.pauses,[]);
@@ -108,8 +108,8 @@ test('QA-134: starting night 100 is not a victory even when no attack is selecte
  }
 });
 
-test('QA-133: the approved 100-coin threshold admits one slow banana but does not guarantee multi-day solvency',t=>{
- const {s,nav}=farm();Game.plant(s,'seed','platano',8,0,nav);s.ledger.balance=rational(100);s.day=101;s.completedNights=100;s.postgame=true;
+test('QA-133: the approved 30-coin threshold admits one slow banana but does not guarantee multi-day solvency',t=>{
+ const {s,nav}=farm();Game.plant(s,'seed','platano',8,0,nav);s.ledger.balance=rational(30);s.day=101;s.completedNights=100;s.postgame=true;
  Game.openInitialHiring(s);Game.hire(s,'paid-first-day',{olderFemale:1});
  for(let i=0;s.day===101&&!s.result&&i<12000;i++){s.eventPlan=null;Game.advanceReal(s,.05,nav);}
  assert.equal(s.result,'defeat');assert.equal(s.day,102);assert.equal(numberOf(s.ledger.balance),0);

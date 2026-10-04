@@ -1537,5 +1537,8 @@ export const messages = {
   "Eliminar muralla · +{0} monedas": "Remove wall · +{0} coins",
   "Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": "Prepare defences for future raids from Build: combine modules and gates to protect the farm while leaving accessible paths. Animals damage crops and structures; repairs are charged when the worker arrives.",
   "◎ Centro de trabajo": "◎ Work centre",
-  "Eliminar partida": "Delete saved game"
+  "Eliminar partida": "Delete saved game",
+  "Conserva las últimas 30 monedas: las necesitarás para contratar mañana.": "Keep your last 30 coins: you will need them to hire tomorrow.",
+  "Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 30 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.": "Drag across the ground to draw a wall. It is built when you release, keeping 30 coins for hiring. A closed enclosure includes its gate at no extra cost.",
+  "Los ancianos cobran 30 monedas y los jóvenes 40. Los jóvenes trabajan a ×1,50 de velocidad. Los hombres generan un 20 % más de cosecha por ciclo. Las mujeres trabajan 12 horas frente a las 10 de los hombres: un 20 % más. Ambos sexos cobran lo mismo dentro de cada edad.": "Older workers earn 30 coins and younger workers earn 40. Younger workers work at ×1.50 speed. Men produce 20% more harvest per cycle. Women work 12 hours compared with 10 for men: 20% longer. Both sexes receive the same wage within each age group."
 };

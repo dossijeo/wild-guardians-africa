@@ -15,7 +15,7 @@ for(const diversifyDay of [null,20])test(`Sabana/Mapungubwe/712/olderFemale: ${d
   assert.ok(report.daily.slice(4).every(day=>day.delivered>0),'Every operating day must deliver crops, not just wait out the campaign');
   assert.ok(report.money>1000);assert.equal(report.daily.length,100);
   const hires=Object.entries(s.ledger.entries).filter(([id])=>id.startsWith('active-hire-'));
-  assert.equal(hires.length,100);assert.equal(hires.filter(([,v])=>v.n==='0').length,4);assert.equal(hires.filter(([,v])=>v.n==='-100').length,96);
+  assert.equal(hires.length,100);assert.equal(hires.filter(([,v])=>v.n==='0').length,4);assert.equal(hires.filter(([,v])=>v.n==='-30').length,96);
   let balance=1500n;
   for(const value of Object.values(s.ledger.entries)){assert.equal(value.d,'1');balance+=BigInt(value.n);}
   assert.equal(s.ledger.balance.n,String(balance));assert.equal(s.ledger.balance.d,'1');
