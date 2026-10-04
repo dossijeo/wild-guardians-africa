@@ -1,6 +1,6 @@
 {
   "schema": "wg-sfx-routing-v1",
-  "scope": "Actual logical-event, native-contact and ambient-layer routes with explicit retained reserves. Reserved is not implemented gameplay.",
+  "scope": "Actual logical-event, native-contact, work-activity, ambient-layer and UI-transition routes with explicit retained reserves. Reserved is not implemented gameplay.",
   "items": [
     {
       "number": 1,
@@ -1207,11 +1207,11 @@
       "id": "ui_panel_open",
       "filename": "102_ui_panel_open.mp3",
       "sha256": "25be5772f11ddfc965f5e37be6321018ad54573e6c2ef530733e7009330ef644",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-surface-transition"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Abrir panel."
     },
     {
@@ -1219,11 +1219,11 @@
       "id": "ui_panel_close",
       "filename": "103_ui_panel_close.mp3",
       "sha256": "df05c56a7c1f6410790f30508bad7e279124ad124447630e1684754db795e7dd",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-surface-transition"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Cerrar panel."
     },
     {
@@ -1231,11 +1231,11 @@
       "id": "ui_tab",
       "filename": "104_ui_tab.mp3",
       "sha256": "a4aeb1b3adb95a16eb5b9c406badf7079c0f94681220b6d7a325225cfdb5610a",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-surface-transition"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Cambiar pestaña/selección del menú."
     },
     {
@@ -1267,11 +1267,11 @@
       "id": "ui_error",
       "filename": "107_ui_error.mp3",
       "sha256": "efc0c62e4d77f8059fdfb7fb30fdfd73e5831aa0cdafebdc231ff2bcf10f1475",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-command-error"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Error, fondos insuficientes o comando no permitido; aviso no invasivo."
     },
     {
@@ -1327,11 +1327,11 @@
       "id": "ui_pause",
       "filename": "112_ui_pause.mp3",
       "sha256": "7e2c04d1129657b9db33732ea7075dc28369262521497a2204f7d6d07d0d8b03",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-user-pause-transition"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Pausa solicitada por el jugador."
     },
     {
@@ -1339,11 +1339,11 @@
       "id": "ui_resume",
       "filename": "113_ui_resume.mp3",
       "sha256": "c1a6bac6ec474d0cb7ff156a641349d4d5cf041dd424612564a6e6032b328151",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "ui-user-pause-transition"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Reanudar cuando ya no queden motivos de pausa."
     },
     {

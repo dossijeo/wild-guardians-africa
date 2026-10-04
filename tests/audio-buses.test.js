@@ -1,3 +1,4 @@
+import {UiAudio,UI_SOUND_IDS} from '../src/audio/ui-audio.js';
 import {FOOTSTEPS} from '../src/rendering/footsteps-data.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -80,4 +81,13 @@ test('native work audio uses one unpitched world source and completion events do
 test('suspending during work decode invalidates its request even before the next frame',async()=>{
  const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:[{id:'farm_watering_can',loop:false,audio:{url:'watering'}}]};let resolve;audio.buffer=()=>new Promise(done=>resolve=done);audio.context.suspend=()=>{audio.context.state='suspended';};
  audio.updateWork({workers:[{id:'worker',profile:'olderFemale',status:'acting',taskId:'task',actionRemaining:1}],tasks:[{id:'task',kind:'water'}],pauses:[]});await new Promise(done=>setImmediate(done));audio.suspend();await audio.unlock();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
+});
+
+
+test('native UI transition decodes into the UI child bus while stale panel-open requests stay silent',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:UI_SOUND_IDS.map(id=>({id,loop:false,audio:{url:id}}))};let release;const pending=new Promise(done=>release=done);audio.buffer=()=>pending;
+ const ui=new UiAudio((id,opts)=>audio.sound(id,opts));ui.surface('panel','seed');ui.close();await new Promise(done=>setImmediate(done));release({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,1);assert.equal(audio.voices.get(sources[0]).family,'ui_panel_close');assert.equal(audio.voices.get(sources[0]).volume.destination,audio.sfxBuses.ui);assert.equal(sources[0].playbackRate.value,1);assert.equal(sources[0].loop,false);audio.dispose();
+});
+test('leaving the production UI cancels pending one-shots without affecting the next scene',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:UI_SOUND_IDS.map(id=>({id,loop:false,audio:{url:id}}))};let release;audio.buffer=()=>new Promise(done=>release=done);const ui=new UiAudio((id,opts)=>audio.sound(id,opts));ui.surface('panel');await new Promise(done=>setImmediate(done));ui.reset();audio.stop();release({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);assert.equal(audio.active.length,0);audio.dispose();
 });

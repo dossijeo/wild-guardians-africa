@@ -1,3 +1,4 @@
+import {UI_SOUND_ROUTES} from '../src/audio/ui-audio.js';
 import {WORK_SOUND_IDS} from '../src/audio/work-audio.js';
 import {AMBIENT_SOUND_IDS} from '../src/audio/ambient-audio.js';
 import test from 'node:test';
@@ -27,6 +28,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
   const events=Object.keys(eventSound).filter(e=>eventSound[e]===item.id);
   if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,events);assert.equal(item.loop,false);}
+  else if(UI_SOUND_ROUTES[item.id]){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[UI_SOUND_ROUTES[item.id]]);assert.equal(item.loop,false);}
   else if(WORK_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['worker-watering-activity']);assert.equal(item.loop,false);}
   else if(MOVEMENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['actor-foot-contact']);assert.equal(item.loop,false);}
   else if(AMBIENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['world-ambient-layer']);assert.equal(item.loop,true);}

@@ -1,0 +1,69 @@
+{
+  "sourceSha256": {
+    "src/audio/ui-audio.js": "d755dcb773687e5a8062e42df4bbb53ac063c586b023e546d2264287dfab11d7",
+    "src/audio/audio.js": "8f2f55c746d847538297403917f48a66f07c0855ec518533038d4bc600bc9e5b",
+    "src/app/main.js": "db1fadd19d169f2e96abfa2cc6c66ce7c02f80e7e9b6f40ff812e7d79b8774c8",
+    "public/content/sfx-routing.json": "f90904973a8567698fec8a0cb727538664ee0c917b68c45b4f2811b5673957ea"
+  },
+  "directedTests": {
+    "passed": 51,
+    "failed": 0,
+    "durationMs": 1394.4372
+  },
+  "completeLocalSuite": {
+    "status": "passed",
+    "passed": 1301,
+    "failed": 0,
+    "durationMs": 841265.5201,
+    "log": ".cache/ui-audio-full.log"
+  },
+  "build": {
+    "result": "passed",
+    "durationLabel": "1m 18s"
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406686832,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 39,
+    "reserved": 87
+  },
+  "nativeProductionUi": {
+    "result": "passed",
+    "fixture": "tests/browser/ui-audio-app.html",
+    "viewport": [
+      1280,
+      720
+    ],
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "quality": "muy_baja",
+    "muted": true,
+    "realAcceptedClipIds": [
+      "ui_error",
+      "ui_panel_close",
+      "ui_panel_open",
+      "ui_pause",
+      "ui_resume",
+      "ui_tab"
+    ],
+    "day": 2,
+    "paidCenters": 1,
+    "balance": 700,
+    "resumeRequestsWithHiringPending": 0,
+    "rejectedShortBurstCueCount": 1,
+    "afterExitGameVoices": 0,
+    "afterExitLiveCanvasListeners": 0,
+    "afterExitWorkerTerminated": true,
+    "report": "ui-app.json",
+    "pendingReport": "ui-app-pending-hiring.json",
+    "exitReport": "ui-app-exit.json",
+    "screenshot": "ui-app.png"
+  },
+  "scope": "Actual main/HUD/modal handlers, original muted WebAudio clips and game-domain commands; no perceptual listening, physical-phone performance or worker/beast/collapse mixture claim."
+}

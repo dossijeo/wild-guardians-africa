@@ -1,3 +1,4 @@
+import {UiAudio} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
 import {RESERVE_MESSAGE} from '../simulation/budget.js';
 import {GameSurfaces} from '../ui/game-surfaces.js';
@@ -35,7 +36,7 @@ let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
-const audio=new AudioSystem(settings);
+const audio=new AudioSystem(settings);const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
 let commandFeedback='',hudSize='',frameImages=null,guardian=null,tutorial=null,tutorialInert=null,tutorialFocus=null,pendingWall=null,pendingSpell=null;
 const surfaces=new GameSurfaces(),toolSession=new ToolSession();
 let budgetWarningUntil=0,lastBudgetBalance=Infinity;
@@ -45,11 +46,11 @@ const localMoney=value=>formatMoney(value,moneyLocale());
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
 const button=(id,text,cls='')=>`<button id="${id}" class="${cls}">${text}</button>`;
-function error(message){if(String(message)===RESERVE_MESSAGE)budgetWarningUntil=performance.now()+18000;if(state&&screen==='game'){commandFeedback=String(message);refreshCommandFeedback();return;}document.querySelector('.error-banner')?.remove();const el=document.createElement('div');el.className='error-banner';el.role='alert';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),6000);}
+function error(message){uiAudio.error();if(String(message)===RESERVE_MESSAGE)budgetWarningUntil=performance.now()+18000;if(state&&screen==='game'){commandFeedback=String(message);refreshCommandFeedback();return;}document.querySelector('.error-banner')?.remove();const el=document.createElement('div');el.className='error-banner';el.role='alert';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),6000);}
 function safe(action){commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){surfaces.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;pendingVillage=null;pendingSpell=null;commandFeedback='';setTutorialInteraction(false);pendingWall=null;tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;pendingVillage=null;pendingSpell=null;commandFeedback='';setTutorialInteraction(false);pendingWall=null;tutorial=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){if(!save())return;state=null;}clearWorld();screen='menu';
   app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
@@ -129,7 +130,8 @@ function onPick({entityId,point}) {
     } else {closeSurface();selection=entityId;}
   });
 }
-function cancelSpellPreview(){pendingSpell=null;world?.clearSpellPreview();if(tool?.kind==='spell')tool=null;document.querySelector('#panel').innerHTML='';}
+function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close();}}
+function cancelSpellPreview(){pendingSpell=null;world?.clearSpellPreview();if(tool?.kind==='spell')tool=null;hideHudPanel();}
 function spellConfirmPanel(){
   const name=B.spells.find(s=>s.id===pendingSpell.kind).name;
   showHudPanel(name,`<p class="panel-note">La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.</p><div class="menu-list">${button('confirm-spell','Activar poder','wood-button')}${button('cancel-spell','Cancelar','wood-button')}</div>`);
@@ -139,7 +141,7 @@ function spellConfirmPanel(){
     Game.cast(state,commandId(),draft.kind,draft.x,draft.z,nav);cancelSpellPreview();save();
   });
 }
-function cancelWallPreview(){pendingWall=null;world?.clearWallPreview();document.querySelector('#panel').innerHTML='';}
+function cancelWallPreview(){pendingWall=null;world?.clearWallPreview();hideHudPanel();}
 function wallPreview(points){
   if(tool?.kind!=='wall'||tool.gate)return;
   const plan=Game.previewWallChain(state,tool.material,points,nav);pendingWall={points:points.map(p=>p.slice()),material:tool.material,plan};world.showWallPreview(plan);wallConfirmPanel();
@@ -165,30 +167,31 @@ function toolPanel(type) {
   if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Revisa los módulos y su coste antes de construir. Un recinto cerrado incluye su puerta sin recargo.</p>`;
   if(type==='spell')content=`<div class="card-grid three">${B.spells.map((m,i)=>`<button class="choice-card spell-card" data-spell="${m.id}"><span class="spell-symbol ${['blue','green','purple'][i]}">${spellSVG(i)}<span class="spell-cooldown" style="--cd:${state.cooldowns[m.id]/m.cooldown_seconds*100}%"></span><span class="cooldown-number">${state.cooldowns[m.id]>0?Math.ceil(state.cooldowns[m.id]):''}</span></span><strong>${m.name}</strong><span class="detail">${m.duration_seconds} s · recarga ${m.cooldown_seconds} s</span></button>`).join('')}</div><p class="panel-note">Selecciona un poder y toca una zona para previsualizarlo antes de confirmar.</p>`;
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
-  document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});document.querySelector('#panel').innerHTML='';updateUI(true);});
-  document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{armTool({kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked});document.querySelector('#panel').innerHTML='';updateUI(true);});
-  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{armTool({kind:'spell',spell:el.dataset.spell});document.querySelector('#panel').innerHTML='';updateUI(true);});
+  document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
+  document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{armTool({kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked});hideHudPanel();updateUI(true);});
+  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel();updateUI(true);});
 }
 function showHudPanel(title,body){
- openSurface('panel');
+ openSurface('panel',title);
  const host=document.querySelector('#panel');host.className='native-panel-host';host.innerHTML=`<section class="panel" role="dialog" aria-label="${esc(title)}"><canvas class="frame-canvas" aria-hidden="true"></canvas><header class="panel-head"><h2 class="panel-title">${esc(title)}</h2><button class="close-panel" id="close-hud-panel" aria-label="Cerrar">×</button></header><div class="panel-body">${body}</div></section>`;
  bind('close-hud-panel',()=>{closeSurface();});
  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(host.firstElementChild)framePaint(host,layoutHud(document.querySelector('#stage')),frameImages);}).catch(()=>error('No se ha podido cargar el marco del menú.'));
 }
-function openSurface(kind){
+function openSurface(kind,key=kind){
+  const beforePause=state.pauses.slice();
   setTutorialInteraction(false);guardian?.hide({immediate:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
   if(kind!=='panel')document.querySelector('#panel').replaceChildren();
   if(kind!=='modal'&&kind!=='hiring'&&kind!=='result')document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');
   if(kind!=='modal')Game.resume(state,'menu');
-  surfaces.open(kind);
+  surfaces.open(kind);uiAudio.surface(kind,key);uiAudio.pause(beforePause,state.pauses);
 }
 function closeSurface(){
-  const kind=surfaces.close();
+  const beforePause=state.pauses.slice(),kind=surfaces.close();uiAudio.close();
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
-  if(kind==='modal')Game.resume(state,'menu');
+  if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
   if(pendingWall)cancelWallPreview();if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);}
@@ -216,7 +219,7 @@ function updateUI(force=false) {
   const toolbar=document.querySelector('#toolbar');
   if(!toolbar.children.length||force) {
     toolbar.innerHTML=`${button('center-action','⌂ Centro · 800')}${button('plant-action','✿ Cultivos')}${button('wall-action','▥ Defensas')}${button('spell-action','✧ Magias')}${button('focus-action','◎ Poblado')}${state.postgame?button('village-action','⌂ Nuevo poblado'):''}`;
-    bind('center-action',()=>{armTool({kind:'center'});document.querySelector('#panel').innerHTML='';});bind('plant-action',()=>toolPanel('plant'));bind('wall-action',()=>toolPanel('wall'));bind('spell-action',()=>toolPanel('spell'));bind('focus-action',()=>world.focus(state.villages[0]));
+    bind('center-action',()=>{armTool({kind:'center'});hideHudPanel();});bind('plant-action',()=>toolPanel('plant'));bind('wall-action',()=>toolPanel('wall'));bind('spell-action',()=>toolPanel('spell'));bind('focus-action',()=>world.focus(state.villages[0]));
     bind('village-action',villageCulturePanel);
   }
   document.querySelector('#center-action').disabled=!permission(state,'center');document.querySelector('#plant-action').disabled=!permission(state,'plant');document.querySelector('#wall-action').disabled=!permission(state,'wall');document.querySelector('#spell-action').disabled=!permission(state,'shield');
@@ -245,20 +248,20 @@ function buildPanel(){
  cancelTool();
  if(pendingSpell)cancelSpellPreview();
  showHudPanel('Construir',`<div class="card-grid two"><button class="choice-card" id="native-center"><img class="card-image" src="${ASSETS.home_icon.src}" alt=""><strong>Centro de trabajo</strong><span class="price">800 monedas</span></button><button class="choice-card" id="native-wall"><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>Murallas</strong></button></div><div class="menu-list">${state.postgame?button('native-village','Fundar poblado','wood-button'):''}</div>`);
- bind('native-center',()=>{armTool({kind:'center'});document.querySelector('#panel').innerHTML='';});bind('native-wall',()=>toolPanel('wall'));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
+ bind('native-center',()=>{armTool({kind:'center'});hideHudPanel();});bind('native-wall',()=>toolPanel('wall'));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
  document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');
 }
-function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;document.querySelector('#panel').innerHTML='';}
+function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
 function villageCulturePanel() {
   showHudPanel('Un nuevo poblado',`<div><p>Coste: ${localMoney({n:String(50000+25000*(state.villages.length-1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
-  document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);armTool({kind:'village',culture});if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else document.querySelector('#panel').innerHTML='';}));
+  document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);armTool({kind:'village',culture});if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else hideHudPanel();}));
 }
 function villageConfirmPanel() {
   const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
-  bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;document.querySelector('#panel').innerHTML='';save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
+  bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function contextPanel() {
-  const el=document.querySelector('#context');if(!selection){el.replaceChildren();if(surfaces.active==='context')surfaces.active=null;return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
+  const el=document.querySelector('#context');if(!selection){el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close();}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
   const key=JSON.stringify(p?[p.id,Math.floor(p.growth/cropSpec(p.species).growth_seconds*100),p.water.map(w=>w.status),p.harvestRequested,p.centerId,permission(state,'harvest')]:structure?[structure.id,structure.hp,structure.status,permission(state,'wall')]:null);if(el.dataset.key===key&&el.children.length)return;el.dataset.key=key;
   if(p) {
     const percent=Math.floor(p.growth/cropSpec(p.species).growth_seconds*100);
@@ -309,13 +312,13 @@ function hiringDialog() {
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {
-  openSurface('modal');
-  Game.pause(state,'menu');document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
+  openSurface('modal','pause');
+  const beforePause=state.pauses.slice();Game.pause(state,'menu');uiAudio.pause(beforePause,state.pauses);document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
   bind('resume',closeSurface);bind('save',()=>save({confirm:true}));bind('game-settings',()=>settingsDialog(true));bind('exit',menu);
 }
 function settingsDialog(inGame=false) {
   const html=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>A tu ritmo</h2><label class="settings-row">Idioma<select data-language-select id="game-language"><option value="en">English</option><option value="es">Español</option></select></label><label class="settings-row">Sonidos<input id="sfx-volume" type="range" min="0" max="1" step=".05" value="${settings.sfx}"></label><label class="settings-row">Música<input id="music-volume" type="range" min="0" max="1" step=".05" value="${settings.music}"></label><label class="settings-row">Calidad<select id="quality">${[['muy_baja','Muy baja'],['baja','Baja'],['media','Media'],['alta','Alta']].map(([id,label])=>`<option value="${id}" ${settings.quality===id?'selected':''}>${label}</option>`).join('')}</select></label><label class="settings-row">Resolución del mundo<select id="world-resolution">${WORLD_RESOLUTIONS.map(([id,label])=>`<option value="${id}" ${settings.resolution===id?'selected':''}>${label}</option>`).join('')}</select></label><p>Reduce la nitidez del mundo 3D; el HUD conserva su resolución.</p><div class="dialog-actions">${button('close-settings','Volver')}</div></section></div>`;
-  if(inGame){openSurface('modal');document.querySelector('#modal').innerHTML=html;}else {const el=document.createElement('div');el.id='settings-overlay';el.innerHTML=html;app.append(el);}
+  if(inGame){openSurface('modal','settings');document.querySelector('#modal').innerHTML=html;}else {const el=document.createElement('div');el.id='settings-overlay';el.innerHTML=html;app.append(el);}
   document.querySelector('#game-language').value=window.WildGuardiansLanguage.getLanguage();
   for(const id of ['sfx-volume','music-volume','quality','world-resolution'])document.getElementById(id).oninput=()=>{settings.sfx=Number(document.querySelector('#sfx-volume').value);settings.music=Number(document.querySelector('#music-volume').value);const previous=settings.quality;settings.quality=document.querySelector('#quality').value;settings.resolution=worldResolution(document.querySelector('#world-resolution').value);if(world)applyWorldResolution(world,settings.resolution);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();if(world&&previous!==settings.quality){world.qualitySetting(settings.quality);world.syncChunks();}};
   bind('close-settings',()=>inGame?pauseDialog():document.querySelector('#settings-overlay').remove());
@@ -331,7 +334,7 @@ function libraryScreen() {
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();}}});
 document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation()?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(pendingWall){cancelWallPreview();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';document.querySelector('#panel').innerHTML='';}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.acknowledge();save();}else if(surfaces.active){closeSurface();}else if(pendingWall){cancelWallPreview();}else if(pendingSpell){cancelSpellPreview();commandFeedback='';}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{if(state)save();});
