@@ -1,9 +1,8 @@
 {
-  "schema": 2,
+  "schema": 3,
   "biome": "mangrove",
-  "seed": 417103,
   "generator": "tools/bake_mangrove_ground.py",
-  "recipe": "untransformed original materials; periodic organic mask shared by all maps",
+  "recipe": "separate untransformed Moss002 terrain and Ground050 patch materials",
   "materials": [
     {
       "path": "references/materials/Moss002_1K-JPG.zip",
@@ -70,33 +69,62 @@
   ],
   "maps": {
     "base": {
-      "url": "/assets/9eeff640e233a5d0b976917ed8b60bd21d26a8e521c9170531a5fff603966f5d.jpg",
-      "sha256": "9eeff640e233a5d0b976917ed8b60bd21d26a8e521c9170531a5fff603966f5d",
-      "bytes": 434029,
+      "url": "/assets/ff5251b8bc185be4d6c323d2c7b93a0b64aa6d330ec121737f46cdf97c147bb7.jpg",
+      "sha256": "ff5251b8bc185be4d6c323d2c7b93a0b64aa6d330ec121737f46cdf97c147bb7",
+      "bytes": 625105,
       "width": 1024,
       "height": 1024,
       "channels": 3
     },
     "normal": {
-      "url": "/assets/d44f3636755ac1db32aa1b54fa02616ebce395f38908f16b321b6671b093c502.jpg",
-      "sha256": "d44f3636755ac1db32aa1b54fa02616ebce395f38908f16b321b6671b093c502",
-      "bytes": 1164390,
+      "url": "/assets/511eb1a396dc7a9c452cb05bbcce87112a61d295e3b5e12a6cebfb3fef5c7447.jpg",
+      "sha256": "511eb1a396dc7a9c452cb05bbcce87112a61d295e3b5e12a6cebfb3fef5c7447",
+      "bytes": 1136186,
       "width": 1024,
       "height": 1024,
       "channels": 3
     },
     "arh": {
-      "url": "/assets/dab0179e8aac60ed966a1e42e2a9cc2d670474f49974ecfc836116e162441776.webp",
-      "sha256": "dab0179e8aac60ed966a1e42e2a9cc2d670474f49974ecfc836116e162441776",
-      "bytes": 1618990,
+      "url": "/assets/a659691de8b4a4050a44821591049221f172b1f0f36d0a4dae8ce75c26c93af6.webp",
+      "sha256": "a659691de8b4a4050a44821591049221f172b1f0f36d0a4dae8ce75c26c93af6",
+      "bytes": 1873768,
+      "width": 1024,
+      "height": 1024,
+      "channels": 3
+    }
+  },
+  "mudMaps": {
+    "base": {
+      "url": "/assets/bde2b5974beeed2c78195fd5765db7fec493d56d6e72915a1c216230ece40a37.jpg",
+      "sha256": "bde2b5974beeed2c78195fd5765db7fec493d56d6e72915a1c216230ece40a37",
+      "bytes": 189627,
+      "width": 1024,
+      "height": 1024,
+      "channels": 3
+    },
+    "normal": {
+      "url": "/assets/90b9050e6d2f100c2cbcdb3c44d0c17bdf3557920f86731f1ee19ee7c4597d42.jpg",
+      "sha256": "90b9050e6d2f100c2cbcdb3c44d0c17bdf3557920f86731f1ee19ee7c4597d42",
+      "bytes": 856380,
+      "width": 1024,
+      "height": 1024,
+      "channels": 3
+    },
+    "arh": {
+      "url": "/assets/b218c7a29bd20a5c51585647054377ba9fe3dc4eaa648d7140ee34a07db36f59.webp",
+      "sha256": "b218c7a29bd20a5c51585647054377ba9fe3dc4eaa648d7140ee34a07db36f59",
+      "bytes": 1079956,
       "width": 1024,
       "height": 1024,
       "channels": 3
     }
   },
   "archiveOnly": [
-    "/assets/59b561800a23971253804385622ac6b87b9745e0f654d08263caa81593bd57a6.jpg",
     "/assets/19796ddbf475c130166a39e388c07577e56d44d033a281ccc4e256838ddec9eb.jpg",
-    "/assets/7e512482577df14fe6d5b196a01412416aa1feb1b5a726a02e4c8fadf4d7387c.png"
+    "/assets/59b561800a23971253804385622ac6b87b9745e0f654d08263caa81593bd57a6.jpg",
+    "/assets/7e512482577df14fe6d5b196a01412416aa1feb1b5a726a02e4c8fadf4d7387c.png",
+    "/assets/9eeff640e233a5d0b976917ed8b60bd21d26a8e521c9170531a5fff603966f5d.jpg",
+    "/assets/d44f3636755ac1db32aa1b54fa02616ebce395f38908f16b321b6671b093c502.jpg",
+    "/assets/dab0179e8aac60ed966a1e42e2a9cc2d670474f49974ecfc836116e162441776.webp"
   ]
 }

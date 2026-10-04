@@ -41,7 +41,10 @@ if baked.exists():
     for role,item in json.loads(baked.read_text(encoding='utf8'))['maps'].items():
         assert hashlib.sha256((root/'public'/item['url'].lstrip('/')).read_bytes()).hexdigest()==item['sha256']
         profiles['mangrove'][role]=item['url']
-    profiles['mangrove']['name']='Moss002 + Ground050 · mezcla orgánica sin deformaciones'
+    data=json.loads(baked.read_text(encoding='utf8'))
+    profiles['mangrove']['pureMoss']=data['schema']>=3
+    if data['schema']>=3:profiles['mangrove']['mudPatches']={**{role:item['url'] for role,item in data['mudMaps'].items()},'scale':profiles['mangrove']['scale']}
+    profiles['mangrove']['name']='Moss002 · musgo puro con barro independiente'
 write('public/content/ground-materials.json',json.dumps(profiles,ensure_ascii=False,separators=(',',':')))
 
 shader=fragment('// Material-only experiment V4.1.8.','const float PI4=')
@@ -51,6 +54,22 @@ uv='(uGroundSeed+mod(mat2(.8,-.6,.6,.8)*uWorldOrigin*uGroundParams.x,1.))'
 shader=shader.replace('uGroundUVOrigin',uv).replace('uniform vec2 '+uv+';','uniform vec2 uGroundSeed;')
 shader=shader.replace('materialNoise(worldP*.32)','materialNoise(worldPatternPosition(worldP)*.32)').replace('materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*2.6)')
 shader=shader.replace('vec3(worldP.x*.095,0.,worldP.z*.095)','vec3(worldPatternPosition(worldP).x*.095,0.,worldPatternPosition(worldP).z*.095)').replace('vec3(worldP.x*.028+19.7,0.,worldP.z*.028-11.4)','vec3(worldPatternPosition(worldP).x*.028+19.7,0.,worldPatternPosition(worldP).z*.028-11.4)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')
+pure_moss="""
+ if(uGroundPureMoss>.5){
+  vec2 uv=mat2(.8,-.6,.6,.8)*worldP.xz*uGroundParams.x+uGroundSeed+mod(mat2(.8,-.6,.6,.8)*uWorldOrigin*uGroundParams.x,1.);
+  vec2 dx=dFdx(uv),dy=dFdy(uv);
+  vec3 tex=textureGrad(uGroundDetailMap,uv,dx,dy).rgb;
+  vec3 mapN=textureGrad(uGroundNormal,uv,dx,dy).rgb*2.-1.;
+  vec3 arh=textureGrad(uGroundARH,uv,dx,dy).rgb;
+  float fade=1.-smoothstep(.12,.60,max(length(dFdx(worldP)),length(dFdy(worldP))));
+  color=tex*vec3(1.,1.03,.96);N=sampleTurfN410(Ng,mapN,uGroundParams.z*uGroundMicro*fade);
+  rough=clamp(arh.g,.5,.99);wet=0.;materialAO410=mix(.45,1.,arh.r);materialCover410=1.;return;
+ }
+"""
+shader=shader.replace('uniform float uGroundDebug,uGroundRelief;','uniform float uGroundDebug,uGroundRelief,uGroundPureMoss;')
+marker='void groundMaterial417(vec3 worldP,vec3 Ng,inout vec3 color,inout vec3 N,inout float rough,inout float wet){'
+assert marker in shader
+shader=shader.replace(marker,marker+pure_moss)
 art=fragment('float artStep416(','float toonRamp4(')
 art=art.replace('bool ground=uTextured<.5&&uSurfaceType<.5;','bool ground=uSurfaceType<.5;').replace('uTextured>.5','uSurfaceType>.5').replace('uVolcanicGlow','uArtVolcanicGlow').replace('uHighlight','uArtHighlight')
 art_profiles=json.loads(source.split('const ART416_PROFILES=Object.freeze(',1)[1].split(');',1)[0])

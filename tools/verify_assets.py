@@ -40,8 +40,12 @@ for material in bake['materials']:
         for entry in material['entries'].values():
             data=archive.read(entry['entry'])
             assert len(data)==entry['bytes'] and hashlib.sha256(data).hexdigest()==entry['sha256']
-for role,item in bake['maps'].items():
+for role,item in {**bake['maps'],**{'mud-'+role:item for role,item in bake.get('mudMaps',{}).items()}}.items():
     data=(repo/'public'/item['url'].lstrip('/')).read_bytes()
     assert len(data)==item['bytes'] and hashlib.sha256(data).hexdigest()==item['sha256'],role
     assert item['width']==item['height']==1024 and item['channels']==3
-print('PASS: three baked textures and ten original material maps in two intact source ZIPs')
+print('PASS: six separate material textures and ten original material maps in two intact source ZIPs')
+
+for url in bake['archiveOnly']:
+    data=(repo/'public'/url.lstrip('/')).read_bytes()
+    assert hashlib.sha256(data).hexdigest()==pathlib.Path(url).stem,url
