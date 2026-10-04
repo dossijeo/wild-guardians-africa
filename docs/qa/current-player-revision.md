@@ -66,3 +66,7 @@ Implementado: viaje suave de 1,2 segundos hacia el primer animal cuando entra en
 La cuota inicial de cultivos y el contador de destrucciones se guardan con la incursión. Pruebas con 1/2/5/10 cultivos confirman daño real, conservación de al menos una planta, gasto del presupuesto restante y restauración determinista. El límite solo corresponde a las primeras cinco presentaciones; las incursiones posteriores mantienen el peligro normal.
 
 Evidencia de cámara: 38 pruebas de recorrido, control manual, pausas, restauración y cámara en seis biomas. La prueba de navegador con WorldScene real en Sabana/Mapungubwe parte de una vista alejada y termina con el foco en las coordenadas de la bestia, rig cargado y sin errores. Captura: `docs/qa/raid-camera/sabana-arrival.png`. El recorrido completo con HUD móvil sigue pendiente.
+
+## Regresiones de combate con el daño revisado
+
+64 pruebas superadas de colapso, límites económicos, transporte de cajas, VFX y audio. Los oráculos de daño usan 20/25/35/40/60 y conservan golpes animados completos. Las pruebas de pérdida del último centro parten ahora de un centro previamente dañado, para seguir verificando los límites 799/800 y la derrota antes de victoria con un presupuesto legal de incursión. La prueba de colapso desde 600 HP permanece independiente y exige todos los golpes reales. El transporte que cruza el amanecer espera la salida física del último animal antes de contratar.

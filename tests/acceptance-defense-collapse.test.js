@@ -15,7 +15,7 @@ function fixture(culture='mapungubwe'){
  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.setState(s);
  Game.placeStructure(s,'center',{x:-20,z:-20},nav);return {s,nav};
 }
-const specs={warthog:{damage:40,budget:4,hits:12},hyena:{damage:50,budget:5,hits:10},buffalo:{damage:70,budget:6,hits:7},lion:{damage:80,budget:7,hits:6},rhino:{damage:120,budget:8,hits:4}};
+const specs={warthog:{damage:20,budget:4,hits:24},hyena:{damage:25,budget:5,hits:19},buffalo:{damage:35,budget:6,hits:14},lion:{damage:40,budget:7,hits:12},rhino:{damage:60,budget:8,hits:8}};
 function committedStrike(s,nav,target,species,index){
  const spec=specs[species],animation=index%2?'Weapon_Combo_2':'Weapon_Combo',duration=ANIMAL_ACTIONS.animals[species].clips[animation].duration;
  let animal=s.raid?.animals.find(a=>a.species===species&&a.hitsRemaining>0&&a.status!=='gone');
@@ -52,10 +52,10 @@ for(const [material,cost,hp] of [['zarzas',10,100],['empalizada',20,200],['adobe
  assert.deepEqual(walls,second.s.structures.filter(e=>e.kind==='wall'));
  const saved=serialize(first.s);assert.equal(Game.buildWallChain(first.s,'closed-chain',material,points,first.nav,options),false);assert.equal(serialize(first.s),saved);assert.equal(serialize(deserialize(saved)),saved);
 });
-test('QA-073: two committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin',()=>{
+test('QA-073: four committed warthog hits start bramble collapse at 20 HP, then 1.4 simulated seconds produce one persistent ruin',()=>{
  let {s,nav}=fixture();Game.placeStructure(s,'bramble',{kind:'wall',material:'zarzas',x:0,z:0},nav);let target=s.structures.at(-1);night(s);
- ({s,target}=committedStrike(s,nav,target,'warthog',0));assert.equal(target.hp,60);assert.equal(target.status,'intact');
- ({s,target}=committedStrike(s,nav,target,'warthog',1));assert.equal(target.hp,20);assert.equal(s.events.filter(e=>e.type==='StructureHit'&&e.targetId===target.id).length,2);
+ for(let i=0;i<4;i++){({s,target}=committedStrike(s,nav,target,'warthog',i));assert.equal(target.hp,100-(i+1)*20);assert.equal(target.status,i<3?'intact':'collapsing');}
+ assert.equal(s.events.filter(e=>e.type==='StructureHit'&&e.targetId===target.id).length,4);
  completeCollapse(s,nav,target,1.4);
 });
 for(const [species,spec] of Object.entries(specs))test('QA-074: '+species+' collapses 600 HP centers after '+spec.hits+' committed hits in each culture',()=>{

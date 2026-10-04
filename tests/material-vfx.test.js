@@ -20,7 +20,7 @@ test('Five wall materials and gates produce one native debris composition only a
  for(const [material,id] of Object.entries({zarzas:'wood',empalizada:'wood',reforzado:'wood',adobe:'adobe',piedra:'stone'}))for(const gate of [false,true]){
   let {s,wall,duration}=fixture(material,gate),g=graphics();g.manager.update(s);assert.equal(g.manager.effects.size,0);const hp=wall.hp;
   Game.tick(s,duration/2,nav);g.manager.update(s);assert.equal(wall.hp,hp);assert.equal(g.manager.effects.size,0);
-  Game.tick(s,duration/2,nav);const before=serialize(s);g.manager.update(s);assert.equal(serialize(s),before);assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,1);assert.equal(s.raid.animals[0].hitsRemaining,0);assert.equal(wall.hp,Math.max(0,hp-40));
+  Game.tick(s,duration/2,nav);const before=serialize(s);g.manager.update(s);assert.equal(serialize(s),before);assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,1);assert.equal(s.raid.animals[0].hitsRemaining,0);assert.equal(wall.hp,Math.max(0,hp-20));
   const plan=materialVfxPlans(s)[0],effect=g.manager.effects.get('attack');assert.equal(effect.native.definition.id,id);assert.ok(effect.native.rigids.length>=13);assert.ok(effect.native.rigids.every(r=>r.kind===id));assert.equal(effect.native.contacts.length,0);
   effect.updateMatrixWorld(true);const p=new THREE.Vector3(.05,.98,.33).applyMatrix4(effect.matrixWorld);assert.ok(Math.hypot(p.x-plan.contact.x,p.z-plan.contact.z)<1e-8);assert.ok(Math.abs(p.y-(.98+.04*p.x+.02*p.z))<1e-8);
   Game.pause(s,'qa');Game.tick(s,10,nav);g.manager.update(s);assert.equal(effect.native.time,.42);Game.resume(s,'qa');

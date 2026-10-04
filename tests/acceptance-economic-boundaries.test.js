@@ -24,6 +24,7 @@ for(const culture of Game.CULTURES)test(`QA-129/130: ${culture} a real last-cent
   const {s,nav}=farm(culture);s.time=400;s.nightPlan={done:true};s.dayPlan={done:true};s.ledger.balance=rational(money);
   // Explicit Rhino incursion to exercise physical destruction. It is not a
   // claim that an empty farm's natural threat planner selects this animal.
+  hitStructure(s.structures[0],300,s.elapsed);assert.equal(s.structures[0].status,'intact');
   spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);const animal=s.raid.animals[0],budget=animal.hitsRemaining;
   assert.ok(budget>=4);finish(s,nav);assert.equal(s.structures.some(operational),false);
   assert.ok(s.events.some(e=>e.type==='StructureHit'));assert.ok(['collapsing','ruined'].includes(s.structures[0].status));assert.ok(s.structures[0].hp<=126);
@@ -63,6 +64,7 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
 
 for(const culture of Game.CULTURES)test(`QA-130: ${culture} 830 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
  const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(830);
+ hitStructure(s.structures[0],300,s.elapsed);assert.equal(s.structures[0].status,'intact');
  // Explicit group, not the daytime 10%/attraction planner. Exercise physical
  // combat and the recovery permission at a daylight clock without altering it.
  spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);
@@ -75,6 +77,7 @@ for(const culture of Game.CULTURES)test(`QA-130: ${culture} 830 permits a new ce
 for(const culture of Game.CULTURES)test(`QA-134/C07: ${culture} a last-night raid crossing dawn resolves before defeat or victory`,()=>{
  for(const money of [799,800,835]){
   const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=599.5;s.nightPlan={done:true};s.dayPlan={done:true};s.ledger.balance=rational(money);
+  hitStructure(s.structures[0],300,s.elapsed);assert.equal(s.structures[0].status,'intact');
   spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);Game.tick(s,.5,nav);
   assert.equal(s.time,600);assert.equal(s.day,100);assert.equal(s.completedNights,99);assert.equal(s.result,null);assert.deepEqual(s.pauses,[]);
   assert.equal(s.events.filter(e=>['Dawn','CampaignWon','GameOver'].includes(e.type)).length,0);
@@ -97,7 +100,7 @@ test('QA-132: an unaffordable remembered selection does not defeat an otherwise 
  assert.equal(Game.hire(loaded,'repeat',{olderFemale:1}),false);assert.equal(loaded.workers.length,1);
 });
 
-test('QA-134: starting night 100 is not a victory even when no attack is selected',()=>{
+test('QA-134: starting night 100 is not a victory before the guaranteed incursion resolves',()=>{
  for(const culture of Game.CULTURES){
   const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(105);
   Game.tick(s,.1,nav);assert.equal(s.time,300);assert.equal(s.result,null);assert.equal(s.completedNights,99);

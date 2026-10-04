@@ -16,7 +16,7 @@ for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))for(const gate of [fa
  spawnRaid(s,{group:['warthog']},nav);const animal=s.raid.animals[0];
  // Directed setup at the committed attack boundary; updateRaid owns damage/events.
  Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:wall.id,attackRemaining:.01,hitsRemaining:2,hitApplied:false,approachShieldId:null});const hp=wall.hp;updateRaid(s,.02,nav);
- const hits=s.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.equal(wall.hp,hp-40);assert.equal(structureHitSound(hits[0],s),id);
+ const hits=s.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.equal(wall.hp,hp-20);assert.equal(structureHitSound(hits[0],s),id);
  const before=serialize(s),audio=fixture();audio.process(hits,{state:s});audio.process(hits,{state:s});await new Promise(done=>setImmediate(done));
  assert.equal(audio.active.length,1);assert.equal(audio.active[0].buffer.url,bank.items.find(i=>i.id===id).audio.url);assert.equal(audio.active[0].playbackRate.value,1);assert.equal(audio.voices.get(audio.active[0]).family,STRUCTURE_CONTACT_FAMILY);assert.equal(serialize(s),before);audio.stop();
 });

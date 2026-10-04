@@ -70,6 +70,6 @@ test('Legacy center hit facts recover native culture and yaw from the retained s
   const expected=attackVfxPlans(state)[0];assert.ok(expected);
   delete event.presentation.target.culture;delete event.presentation.target.yaw;
   const before=serialize(state);assert.deepEqual(attackVfxPlans(state)[0],expected);assert.equal(serialize(state),before);
-  assert.deepEqual(attackVfxPlans(deserialize(before))[0],expected);assert.equal(target.hp,550);
+  assert.deepEqual(attackVfxPlans(deserialize(before))[0],expected);assert.equal(target.hp,575);
  }
 });
