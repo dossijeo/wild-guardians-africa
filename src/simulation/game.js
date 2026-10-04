@@ -146,7 +146,9 @@ export function plant(s,id,species,x,z,nav) {
   const center=nearest(s.structures.filter(operational),{x,z});
   return commit(s,id,'plant',()=>{
     ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
-    const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);s.plants.push(p);enqueue(s,center.id,'initial',p.id);
+    const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);
+    if(spellAt(s,'multiply',p))p.multiplyHarvest=true;
+    s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'CropPlaced',{targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
@@ -253,6 +255,10 @@ export function requestRepair(s,id,targetId) {
 }
 export const spellRadius=id=>({shield:1.95,growth:2.6,multiply:2.2})[id]; // Calibrated against 1.5 m planting pitch; area, not plant cap.
 export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);}
+function markMultiplyTargets(s,area){
+  for(const p of s.plants)if(p.alive&&dist(area,p)<=area.radius)p.multiplyHarvest=true;
+  area.exposureApplied=true;
+}
 export function previewSpell(s,kind,x,z,nav) {
   const draft={kind,x,z,radius:spellRadius(kind),valid:false,reason:null};
   try {
@@ -264,7 +270,7 @@ function validateSpell(s,kind,x,z,nav) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
   if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
-  if(!Number.isFinite(x)||!Number.isFinite(z)||!nav.terrainValid(x,z,.2))throw new Error('Ubicación mágica inválida');
+  if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
   if(s.spells.some(a=>a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
@@ -275,7 +281,9 @@ export function cast(s,id,kind,x,z,nav) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   const spec=validateSpell(s,kind,x,z,nav),radius=spellRadius(kind);
   return commit(s,id,kind,()=>{
-    s.spells.push({id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds});s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
+    const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
+    if(kind==='multiply')markMultiplyTargets(s,area);
+    s.spells.push(area);s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false}={}) {
@@ -304,9 +312,9 @@ function completeTask(s,w,t,target,nav) {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);
       if(profile(w).male)value=multiply(value,6,5);
-      if(spellAt(s,'multiply',target))value=multiply(value,2);
+      if(target.multiplyHarvest||spellAt(s,'multiply',target))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
-      target.alive=false;target.harvestRequested=false;
+      target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
@@ -473,6 +481,9 @@ export function tick(s,seconds,nav) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     prepareClockEvents(s,nav);
+    // Version-1 saves can contain an active area without exposure bookkeeping.
+    // Mark once on restoration; static plants need no per-frame exposure scan.
+    for(const area of s.spells)if(area.kind==='multiply'&&area.remaining>0&&!area.exposureApplied)markMultiplyTargets(s,area);
     const previousTime=s.time;
     const clockEdges=clockBoundaries(s);
     const boundaries=clockEdges.filter(t=>t>s.time+1e-9).map(t=>t-s.time);

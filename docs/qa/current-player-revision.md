@@ -9,8 +9,8 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Corregir SFX 103 repetido sin cierre real | Se ha corregido un contexto vacío; falta escucha y recorrido completo |
 | Avisos de eventos temporales, cerrables, fuera del lateral seguro | Publicado; pruebas de caducidad y cierre manual; falta prueba móvil |
 | Trabajador contratado va directamente a primera tarea | Implementado; 120 pruebas de rutas y tareas superadas; recorrido visual pendiente |
-| Magias directas sobre terreno/cultivos sin modal ni desactivación | Primera corrección local; revisar validación del terreno |
-| Multiplicar deja marcado el beneficio hasta la recogida posterior | Pendiente |
+| Magias directas sobre terreno/cultivos sin modal ni desactivación | Se admiten puntos finitos sin exigir terreno edificable; interacción visual pendiente |
+| Multiplicar deja marcado el beneficio hasta la recogida posterior | Implementado; pruebas de recogida y entrega tras caducidad y restauración |
 | Murallas: línea física visible al arrastrar y límite según saldo menos contratación | Revisar integración real y móvil |
 | Temporizador de modos comienza con última colocación exitosa | Publicado; falta recorrido visual |
 | Volver centra cámara en centro de trabajo | Publicado; falta recorrido visual |
@@ -44,3 +44,7 @@ La estrategia histórica de una planta seguida de jornadas sin trabajadores comp
 ## Primera tarea de la jornada
 
 Los contratos nuevos reservan la primera tarea FIFO alcanzable desde su posición real antes de iniciar el desplazamiento. Sin tareas disponibles conservan su aproximación al centro; quienes regresan de una incursión mantienen su vuelta deliberada. Las pruebas incluyen restauración de partida, desplazamiento continuo, riego, cajas y entrega física antes del cobro.
+
+## Multiplicación persistente
+
+Al lanzar Multiplicar se marcan los cultivos vivos alcanzados; los brotes colocados dentro durante los 15 segundos también quedan marcados. El beneficio no se acumula con otros lanzamientos y se consume en la recogida, incorporado al valor de la caja. Caducar, guardar o restaurar no elimina el beneficio. No se abonan monedas hasta completar el transporte y la entrega. Se conserva la compatibilidad con áreas activas antiguas mediante una inicialización única, sin recorrer cultivos por esta magia en cada paso.

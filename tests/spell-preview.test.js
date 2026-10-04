@@ -43,7 +43,7 @@ test('Preview and confirmation agree on overlap, terrain, cooldown, locks, block
     s=>{s.spells.push({id:'active',kind:'shield',x:10,z:20,radius:1.95,remaining:10});}
   ];
   for(const change of scenarios){const s=ready();change(s);const before=serialize(s),draft=Game.previewSpell(s,'growth',10,20,nav);assert.equal(draft.valid,false);assert.throws(()=>Game.cast(s,'confirm','growth',10,20,nav),{message:draft.reason});assert.equal(serialize(s),before);}
-  for(const point of [[NaN,0],[0,Infinity],[0,0]]){
+  for(const point of [[NaN,0],[0,Infinity]]){
     const s=ready(),blocked={...nav,terrainValid:()=>false},draft=Game.previewSpell(s,'shield',...point,blocked);
     assert.equal(draft.valid,false);assert.throws(()=>Game.cast(s,'invalid','shield',...point,blocked),{message:draft.reason});assert.equal(s.spells.length,0);
   }

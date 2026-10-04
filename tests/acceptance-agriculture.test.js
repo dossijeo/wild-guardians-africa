@@ -188,12 +188,12 @@ test('QA-027: automatic maturity preserves an older watering task and adds each 
   grow(s,1);assert.equal(s.tasks.length,4);assert.ok(ps.every(p=>p.harvestRequested));
 });
 
-test('QA-033: Multiply requested before harvest does not reward a pickup after the effect expires',()=>{
+test('QA-033: Multiply marks survive expiry before the physical pickup',()=>{
   const s=farm(),p=sow(s,'mijo',70);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.cast(s,'multiply','multiply',p.x,p.z,nav);Game.harvest(s,'harvest',p.id);
   for(let i=0;i<2400&&s.crates.length===0;i++)grow(s,.05);
-  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),10.8);
-  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+11);
+  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),21.6);
+  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+22);
   assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
 });
 
