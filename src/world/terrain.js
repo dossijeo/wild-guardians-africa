@@ -350,8 +350,13 @@ class TerrainField{
  nearbyPonds(x,z){
   if(this.wetland)return [];
   if(!this.pondsActive)return [];
-  const cell=this.featureCell,tx=Math.round(x/cell),tz=Math.round(z/cell),span=1,a=[];
+  const cell=this.featureCell,tx=Math.round(x/cell),tz=Math.round(z/cell);
+  // Adjacent terrain probes usually share one feature cell. Retain only its
+  // nine deterministic ponds, in the original iteration order.
+  if(this.pondNeighborhood?.tx===tx&&this.pondNeighborhood.tz===tz)return this.pondNeighborhood.ponds;
+  const span=1,a=[];
   for(let zc=tz-span;zc<=tz+span;zc++)for(let xc=tx-span;xc<=tx+span;xc++)a.push(this.pond(xc,zc));
+  this.pondNeighborhood={tx,tz,ponds:Object.freeze(a)};
   return a;
  }
  wetlandMask(x,z){const w=this.naturalWetlandMask(x,z),s=this.settlementSite;return s?w*(1-settlementBlend410(s,x,z)):w;}
