@@ -27,3 +27,11 @@ Se completó Juego nuevo, selección de Volcanes, elección de cada cultura y Co
 Todas las escenas terminan con contexto perdido, canvas desconectado, cero listeners activos, worker terminado, timer nulo y cola vacía. Cero errores globales. Se comprobó el aria-label del botón Comenzar antes de cada arranque y se esperó el final del recorrido del menú. Calidad muy baja, almacenamiento aislado y audio silenciado, con los mismos límites descritos anteriormente.
 
 Estado actualizado: 17/30 entradas reales acreditadas; faltan Gran cañón5, Sabana4 y Desierto4. QA-001 sigue parcial.
+
+## Gran cañón: cinco culturas
+
+Se completaron cinco nuevas partidas desde el menú y selector originales: Mapungubwe, Saheliana, Suajili, Musgum y Etíope. `gran-canon-five-cultures.json` registra una carga completa por combinación, 1.000 monedas iniciales y 514/562/587/572/859 renders antes de guardar y salir por el menú nativo de pausa. Se avanzaron los dos primeros mensajes del tutorial y se comprobó el HUD. `gran-canon-etiope.png` conserva la quinta combinación.
+
+Todas terminan con contexto perdido, canvas desconectado, cero listeners activos, worker terminado, timer nulo y cola vacía. No se registran errores globales. Antes de iniciar se comprobó el aria-label del botón Comenzar y se esperó a que terminase el recorrido del menú. Calidad muy baja, almacenamiento aislado y audio silenciado; se conservan los límites del ensayo descritos anteriormente.
+
+Estado actualizado: 22/30 entradas reales acreditadas; faltan cuatro culturas de Sabana y cuatro de Desierto. QA-001 sigue parcial.
