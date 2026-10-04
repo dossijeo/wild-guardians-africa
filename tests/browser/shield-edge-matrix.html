@@ -1,0 +1,42 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA-119 · Escudo y bestias en terreno original</title>
+<style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9edee;padding:10px;max-width:340px}pre{max-height:200px;overflow:auto}button,select{padding:7px;margin:3px}</style>
+<header>QA-119: terreno original, centro pagado, entrada calculada por spawnRaid sin recolocar al animal. Noche/especie y poses controladas; no acredita una campaña natural ni el audio.<br><button id="inside" disabled>Borde sobre el cuerpo</button><button id="outside" disabled>Borde libre</button><label>Pose <select id="pose" disabled></select></label><button id="next" disabled>Siguiente combinación</button><div id="status">Preparando…</div><pre id="report"></pre></header><canvas id="world" aria-label="Bestia original y borde de Escudo sobre terreno nativo"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {ANIMAL_ACTIONS} from '../../src/simulation/animal-actions-data.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const speciesList=['warthog','hyena','buffalo','lion','rhino'],index=Number(new URLSearchParams(location.search).get('case')??0),biome=Game.BIOMES[Math.floor(index/5)],species=speciesList[index%5];
+if(!biome||!species)throw Error('Combinación de QA desconocida');
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712,biome,slotId:'qa-shield-edge'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);
+state.day=2;state.completedNights=1;state.time=320;state.initialPreparation=false;state.tutorial.step='done';state.nightPlan={done:true};
+const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('muy_baja');await world.load(state,nav,payload);await world.whenChunksReady();
+spawnRaid(state,{group:[species]},nav);if(!state.raid)throw Error('Sin entrada nativa para '+biome+'/'+species);
+const animal=state.raid.animals[0],nativeSpawn={x:animal.x,z:animal.z},radius=Game.spellRadius('shield')+animal.radius,clips=ANIMAL_ACTIONS.animals[species].clips;let edges;
+for(let i=0;i<128&&!edges;i++){const angle=i*Math.PI/64,point=d=>({x:animal.x+Math.sin(angle)*d,z:animal.z+Math.cos(angle)*d}),inside=point(radius-.03),outside=point(radius+.03);if(nav.terrainValid(inside.x,inside.z,.2)&&nav.terrainValid(outside.x,outside.z,.2))edges={inside,outside};}
+if(!edges)throw Error('Sin borde inspeccionable sobre terreno original');
+world.focus(animal);const floor=nav.field.surface(animal.x,animal.z);world.controls.target.set(animal.x,floor+1.5,animal.z);world.camera.position.set(animal.x+8,floor+9,animal.z-11);world.controls.update();world.render(0);await Promise.all([...world.assets.cache.values()]);await world.whenChunksReady();world.render(0);
+if(!world.mixers.has(animal.id))throw Error('Falta el rig original');
+let draft,poseName='Walking';const results=[];
+function setPose(name,phase=.5){const clip=clips[name];animal.status=name==='Running'?'entering':name==='Walking'?'walking':'attacking';animal.animation=name;animal.motionPhase=clip.duration*phase;animal.attackDuration=clip.duration;animal.attackRemaining=clip.duration*(1-phase);animal.attackId='qa-pose-'+name;world.render(0);}
+function checkPose(name,phase){
+ setPose(name,phase);const before=JSON.stringify(state),inside=Game.previewSpell(state,'shield',edges.inside.x,edges.inside.z,nav),outside=Game.previewSpell(state,'shield',edges.outside.x,edges.outside.z,nav);let rejected=false;
+ try{Game.cast(state,'rejected-'+name+'-'+phase,'shield',edges.inside.x,edges.inside.z,nav);}catch(e){rejected=/animal/.test(e.message);}
+ const unchanged=JSON.stringify(state)===before,copy=structuredClone(state);Game.cast(copy,'accepted-'+name+'-'+phase,'shield',edges.outside.x,edges.outside.z,nav);nav.setState(state);
+ const stationary=copy.raid.animals[0].x===nativeSpawn.x&&copy.raid.animals[0].z===nativeSpawn.z;
+ const result={pose:name,phase,insideValid:inside.valid,reason:inside.reason,outsideValid:outside.valid,rejected,unchanged,stationary,duration:copy.spells[0].remaining,cooldown:copy.cooldowns.shield,renderedClip:world.mixers.get(animal.id).name};results.push(result);
+ if(inside.valid||!outside.valid||!rejected||!unchanged||!stationary||result.duration!==20||result.cooldown!==90||result.renderedClip!==name)throw Error('Contrato de borde incumplido: '+JSON.stringify(result));
+}
+for(const name of Object.keys(clips))for(const phase of [.1,.5,.9])checkPose(name,phase);
+function paint(){document.querySelector('#status').textContent=`${index+1}/30 · ${biome}/${species} · ${results.length} poses comprobadas · ${errors.length} errores`;document.querySelector('#report').textContent=JSON.stringify({case:index,biome,species,seed:712,originalTerrain:true,spawnUnmodified:animal.x===nativeSpawn.x&&animal.z===nativeSpawn.z,animal:{...nativeSpawn,radius:animal.radius,scale:world.mixers.get(animal.id).model.scale.toArray()},edges,preview:draft,pose:poseName,results,errors},null,2);}
+function preview(which){const p=edges[which];draft=Game.previewSpell(state,'shield',p.x,p.z,nav);world.showSpellPreview(draft);paint();}
+const select=document.querySelector('#pose');for(const name of Object.keys(clips)){const o=document.createElement('option');o.value=o.textContent=name;select.append(o);}select.value=poseName;select.onchange=()=>{poseName=select.value;setPose(poseName);preview(draft?.valid?'outside':'inside');};
+document.querySelector('#inside').onclick=()=>preview('inside');document.querySelector('#outside').onclick=()=>preview('outside');document.querySelector('#next').onclick=()=>{location.search='?case='+((index+1)%30);};
+setPose(poseName);preview('inside');document.querySelectorAll('button,select').forEach(e=>e.disabled=false);function frame(){world.render(0);requestAnimationFrame(frame);}requestAnimationFrame(frame);addEventListener('pagehide',()=>world.dispose());
+</script></html>

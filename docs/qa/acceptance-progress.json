@@ -1453,14 +1453,16 @@
       "id": "QA-119",
       "area": "Magias",
       "scenario": "Plantar un Escudo con borde sobre un animal",
-      "expected": "Validar geometría y no teletransportar ni introducir poder Repulsión.",
-      "audit_status": "partial",
+      "expected": "Validar geometrÃ­a y no teletransportar ni introducir poder RepulsiÃ³n.",
+      "audit_status": "verified",
       "evidence": [
         "tests/spell-preview.test.js",
         "tests/shield-expiry.test.js",
-        "docs/qa-shield-expiry.md"
+        "docs/qa-shield-expiry.md",
+        "tests/browser/shield-edge-matrix.html",
+        "docs/qa/shield-edge-matrix/README.md"
       ],
-      "notes": "All five authored body radii now tested with production Navigation on controlled flat, prop-free terrain: penetration rejected without moving animals or mutating state; just-outside placement accepted without teleportation; nav blocks animal crossing and permits workers. Original-terrain warthog expiry/approach inspected separately. Remaining: placement-over-animal inspection across original biome routes, species and poses; no full visual interaction claim."
+      "notes": "All five authored body radii now tested with production Navigation on controlled flat, prop-free terrain: penetration rejected without moving animals or mutating state; just-outside placement accepted without teleportation; nav blocks animal crossing and permits workers. Original-terrain warthog expiry/approach inspected separately. Remaining: placement-over-animal inspection across original biome routes, species and poses; no full visual interaction claim. Closure: directed native WorldScene matrix on original seed712 terrain across all six biomes and five species, paid centre, canonical unmodified spawn and original unit-scale rigs. All native clips sampled at three phases: 558 production preview/cast contracts, atomic rejection inside body radius, outside cast on a clone leaves animal coordinates unchanged with20s/90s. Browser previews/screenshots and JSON retained, zero captured errors. Body navigation cylinder excludes decorative weapons; vegetation may occlude rendered silhouettes. This is placement/pose validation, not a natural campaign or committed Shield VFX matrix."
     },
     {
       "id": "QA-120",
