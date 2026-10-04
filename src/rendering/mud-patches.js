@@ -21,7 +21,7 @@ export function clipMudTriangle(subject,clip){
 }
 export function mudPatchGeometry(field,cx,cz,scale=.115){
   if(field.c.biome!=='mangrove')return null;
-  const origin=[cx*48,cz*48],positions=[],uvs=[],centers=[],heights=new Map();let patches=0;
+  const origin=[cx*48,cz*48],positions=[],uvs=[],centers=[],outlines=[],heights=new Map();let patches=0;
   const sampled={surface:(x,z)=>{const key=x+","+z;if(!heights.has(key))heights.set(key,field.surface(x,z));return heights.get(key);}};
   const random=(i,salt)=>hashCell(field.seed,cx*13+i,cz*17-i,salt)/4294967296;
   for(let i=0;i<10;i++){
@@ -45,10 +45,29 @@ export function mudPatchGeometry(field,cx,cz,scale=.115){
         }
       }
     }
-    centers.push({x,z,radius:Math.max(rx,rz)*1.21});patches++;
+    centers.push({x,z,radius:Math.max(rx,rz)*1.21});outlines.push(contour.map(p=>[p.x,p.y]));patches++;
   }
   if(!positions.length)return null;
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.mudPatches=patches;geometry.userData.mudCenters=centers;return geometry;
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.mudPatches=patches;geometry.userData.mudCenters=centers;geometry.userData.mudOutlines=outlines;return geometry;
+}
+// Query only on an authored foot contact, using the exact already-rendered
+// outlines. No raycasting, regeneration or per-frame scene traversal.
+export function mudContainsPoint(surface,x,z){
+  for(let k=0;k<(surface?.mudCenters?.length??0);k++){
+    const center=surface.mudCenters[k],dx=x-center.x,dz=z-center.z;if(dx*dx+dz*dz>center.radius*center.radius)continue;
+    const contour=surface.mudOutlines[k];let inside=false;
+    for(let i=0,j=contour.length-1;i<contour.length;j=i++){
+      const a=contour[j],b=contour[i],ex=b[0]-a[0],ez=b[1]-a[1],px=x-a[0],pz=z-a[1],dot=px*ex+pz*ez;
+      if(Math.abs(ex*pz-ez*px)<=1e-9&&dot>=0&&dot<=ex*ex+ez*ez)return true;
+      if((a[1]>z)!==(b[1]>z)&&x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0])inside=!inside;
+    }
+    if(inside)return true;
+  }
+  return false;
+}
+export function residentMudSurface(chunks,x,z){
+  const group=chunks.get(Math.floor((x+24)/48)+','+Math.floor((z+24)/48));
+  return mudContainsPoint(group?.userData.mudSurface,x,z)?'mud':null;
 }
 export class MudPatches {
   async load(assets,tile){

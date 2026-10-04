@@ -1,0 +1,75 @@
+{
+  "productionSha256": {
+    "src/rendering/mud-patches.js": "4bfe8b1258175b55cb19db5a15039ceb7eddad6a19ccffaf0f88eeda7ca3b84c",
+    "src/rendering/scene.js": "6dd54fd3c1a404ef01129caa92f18323824b544120ae34e771fbf892f0d0d57a",
+    "src/app/main.js": "0792d3ee23458183acbf2b3d436046054741525cc35e3d4d15941ba6394dda8f",
+    "src/audio/movement-audio.js": "0cd7c4892f82cd57489f75d4ecdbc1de1e68c61ca31723cb4c79deaed82feba3",
+    "public/content/sfx-routing.json": "61bd51d438041fd971e40fb22242ac8bc2b940410aa1337b558c7c7c42b25af3"
+  },
+  "directed": {
+    "tests": 318,
+    "pass": 318,
+    "fail": 0,
+    "durationMs": 2709.4904,
+    "log": ".cache/mud-footsteps-directed-final.log"
+  },
+  "build": {
+    "pass": true,
+    "seconds": 5.01,
+    "log": ".cache/mud-footsteps-build-final.log"
+  },
+  "webPackage": {
+    "pass": true,
+    "files": 578,
+    "bytes": 406702369,
+    "relativeLinks": 816,
+    "runtimeGLBs": 20,
+    "log": ".cache/mud-footsteps-package-final.log"
+  },
+  "native": {
+    "fixture": "tests/browser/mud-footsteps.html",
+    "report": "docs/qa/audio-buses/mud-footsteps-native.json",
+    "acceptedOriginalSources": 8,
+    "profiles": 4,
+    "errors": [],
+    "finalVoices": 0,
+    "context": "closed",
+    "muted": true,
+    "world3D": false,
+    "predecoded": true,
+    "declaredMovementSetup": true
+  },
+  "visualIdentityAndQueryCost": {
+    "baseline": "6040033",
+    "identical": [
+      "position",
+      "uv",
+      "normal",
+      "boundingBox",
+      "boundingSphere"
+    ],
+    "chunks": 3,
+    "triangles": 4284,
+    "queryCountPerSample": 100000,
+    "samplesMs": [
+      12.528200000000027,
+      13.246500000000026,
+      14.453900000000033,
+      15.45659999999998,
+      18.128700000000038,
+      25.528999999999996,
+      34.82209999999998
+    ],
+    "medianMs": 15.45659999999998,
+    "medianMicrosecondsPerContact": 0.15456599999999981,
+    "hits": 29330,
+    "scope": "isolated Node CPU query; not browser frame/GPU/mobile performance"
+  },
+  "initialFailure": "Route inventory used native-locomotion instead of the established actor-foot-contact destination; corrected metadata and repeated final directed checks.",
+  "fullCI": "Pending publication of this revision. Prior unlock revision6040033 run37188980342 still in progress at last check.",
+  "limits": [
+    "Resident surface lookup follows currently rendered chunks; absent chunks use the established biome fallback.",
+    "Muted synthetic-contact diagnostic does not prove full-world/perceptual/physical-phone performance.",
+    "Node query cost is an isolated CPU measurement, not frame/GPU evidence."
+  ]
+}

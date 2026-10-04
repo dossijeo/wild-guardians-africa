@@ -1,4 +1,4 @@
-import {MudPatches} from './mud-patches.js';
+import {MudPatches,residentMudSurface} from './mud-patches.js';
 import {installShaderFailureGuard} from './shader-failure.js';
 import {BiomeGround} from './biome-ground.js';
 import {refreshResidentProps,sameSuppressions} from './resident-props.js';
@@ -52,7 +52,7 @@ const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',young
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
   constructor(canvas,onPick) {
-    this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.mixers=new Map();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
+    this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
     this.camera=new THREE.PerspectiveCamera(42,1,.1,500);this.camera.position.set(40,35,50);
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});this.shaderFailure=installShaderFailureGuard(this.renderer);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1;
@@ -120,7 +120,7 @@ export class WorldScene {
     const group=new THREE.Group();group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
-    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud)group.add(mud);}
+    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;}}
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
     if(waterGeometry){const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
