@@ -70,3 +70,14 @@ test('leaving while original ambient MP3s decode prevents every late loop from s
  const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:['amb_wind_soft','amb_birds'].map(id=>({id,loop:true,audio:{url:id}}))};const pending=[];audio.buffer=()=>new Promise(done=>pending.push(done));
  audio.updateAmbient({biome:'sabana',time:0,pauses:[]});await new Promise(done=>setImmediate(done));assert.equal(pending.length,2);audio.stop();for(const resolve of pending)resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
 });
+
+
+test('native work audio uses one unpitched world source and completion events do not replay it',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:[{id:'farm_watering_can',loop:false,audio:{url:'watering'}}]};audio.buffer=async()=>({});
+ const worker={id:'worker',profile:'olderFemale',taskId:'task',status:'acting',actionRemaining:2,x:0,z:0},state={workers:[worker],tasks:[{id:'task',kind:'water'}],pauses:[]};audio.updateWork(state);await new Promise(done=>setImmediate(done));assert.equal(sources.length,1);assert.equal(sources[0].playbackRate.value,1);assert.equal(audio.voices.get(sources[0]).volume.destination,audio.sfxBuses.world);
+ worker.status='idle';audio.process([{id:'water-end',type:'WaterSatisfied',workerId:'worker'}],{state});audio.updateWork(state);await new Promise(done=>setImmediate(done));assert.equal(sources.length,1);assert.ok(sources[0].stopped);assert.equal(audio.active.length,0);audio.dispose();
+});
+test('suspending during work decode invalidates its request even before the next frame',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:[{id:'farm_watering_can',loop:false,audio:{url:'watering'}}]};let resolve;audio.buffer=()=>new Promise(done=>resolve=done);audio.context.suspend=()=>{audio.context.state='suspended';};
+ audio.updateWork({workers:[{id:'worker',profile:'olderFemale',status:'acting',taskId:'task',actionRemaining:1}],tasks:[{id:'task',kind:'water'}],pauses:[]});await new Promise(done=>setImmediate(done));audio.suspend();await audio.unlock();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
+});

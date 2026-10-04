@@ -1,0 +1,47 @@
+{
+  "sourceSha256": {
+    "src/audio/audio.js": "e6e6d231fc4900f538720496d7296fab5c7ea0e48f6300507fdd19b7f09cf81b",
+    "src/audio/work-audio.js": "bfc2e305b3888fea7e81b1efeac77097e9035fcaa83d7a5a7b9820296c30efa1",
+    "src/app/main.js": "1bee9e7f5321a471d059540ea1825bec8f8cd67751b5aaa929e5451ec217f6a3",
+    "public/content/sfx-routing.json": "21e9f8859ecabf28ae8efbb5980bc8be180df41b6350c99a170714c9202f4707"
+  },
+  "directedTests": {
+    "passed": 70,
+    "failed": 0,
+    "durationMs": 1965.9708,
+    "files": [
+      "tests/work-audio.test.js",
+      "tests/audio-buses.test.js",
+      "tests/audio-routing.test.js",
+      "tests/ambient-audio.test.js",
+      "tests/movement-audio.test.js"
+    ]
+  },
+  "nativeWebAudio": {
+    "result": "passed",
+    "profiles": 4,
+    "report": "work-web-audio.json",
+    "screenshot": "work-web-audio.png",
+    "muted": true,
+    "geometry": "clear-path-directed"
+  },
+  "build": {
+    "result": "passed",
+    "durationSeconds": 44.91
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406685429,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "completeLocalSuite": {
+    "status": "passed",
+    "passed": 1281,
+    "failed": 0,
+    "durationMs": 598745.2012,
+    "log": ".cache/work-audio-full.log"
+  },
+  "scope": "Paid native task phase and real raid cancellation, original MP3 decode and source lifecycle. No perceptual or complete 3D mixed-scene claim."
+}

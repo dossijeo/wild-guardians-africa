@@ -1,0 +1,29 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Regadera e interrupción nativas</title>
+<p>Cuatro perfiles pagados mediante Game, recorrido dirigido sin obstáculos y sin mundo3D. Audio original y WebAudio reales con salida silenciada; no acredita escucha ni mezcla de la escena completa.</p><button id="run">Probar riego y huida</button><output id="status">Lista</output><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {rational} from '../../src/simulation/money.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
+import {wateringActivity} from '../../src/audio/work-audio.js';
+import {AudioSystem} from '../../src/audio/audio.js';
+const nav={placement:()=>({valid:true,suppress:[]}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+const errors=[],history=[],status=document.querySelector('#status'),report=document.querySelector('#report');
+const assert=(v,message)=>{if(!v)throw Error(message);};let live=null;
+const dispose=()=>{if(live){live.dispose();live=null;}};addEventListener('pagehide',dispose);
+addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{
+ for(const profile of PROFILES){
+  status.textContent='Perfil '+profile.id;const audio=live=new AudioSystem({sfx:0,music:0});await audio.unlock();audio.sfx=await audio.sfxBank();const item=audio.sfx.items.find(i=>i.id==='farm_watering_can');const buffer=await audio.buffer(item.audio.url);
+  const state=Game.newGame({seed:712,slotId:'qa-native-work-'+profile.id});Game.resume(state,'intro');state.ledger.balance=rational(10000);state.day=101;state.completedNights=100;state.postgame=true;state.initialPreparation=false;state.tutorial.step='done';
+  Game.placeStructure(state,'center',{x:4,z:0},nav);Game.plant(state,'seed','mijo',10,4,nav);Game.pause(state,'hiring');Game.hire(state,'hire',{[profile.id]:1});
+  const update=()=>{const before=serialize(state);audio.updateWork(state,{listener:{x:0,z:0}});assert(serialize(state)===before,'Audio cambia dominio');};let plantObserved=false,steps=0;
+  const worker=state.workers[0];while(!wateringActivity(worker,state.tasks.find(t=>t.id===worker.taskId))&&steps++<2000){Game.tick(state,.05,nav);update();if(worker.status==='acting'&&!wateringActivity(worker,state.tasks.find(t=>t.id===worker.taskId))){plantObserved=true;assert(audio.active.length===0,'Riego durante Plant');}}
+  assert(steps<2000&&plantObserved,'No alcanza fases nativas');update();await new Promise(done=>setTimeout(done,120));assert(audio.active.length===1,'No hay una regadera');const source=audio.active[0],voice=audio.voices.get(source);assert(source.playbackRate.value===1&&!source.loop,'Tono o bucle cambiado');assert(voice.bus==='world'&&voice.emitter===worker.id,'Emisor incorrecto');
+  const beforeRaid={status:worker.status,remaining:worker.actionRemaining,task:state.tasks.find(t=>t.id===worker.taskId).kind,voices:audio.active.length,gain:voice.volume.gain.value,rate:source.playbackRate.value};state.postgame=false;spawnRaid(state,{group:['warthog']},nav);assert(state.raid&&worker.status==='fleeing','No hay huida nativa');update();assert(audio.active.length===0,'Regadera suena durante huida');assert(state.events.filter(e=>e.type==='WaterSatisfied').length===0,'Audio completa riego');
+  history.push({profile:profile.id,decoded:{channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,duration:buffer.duration},beforeRaid,afterRaid:{status:worker.status,voices:audio.active.length,taskId:worker.taskId}});dispose();await new Promise(done=>setTimeout(done,80));assert(audio.context.state==='closed','Contexto sin cerrar');
+ }
+ report.textContent=JSON.stringify({history,errors,muted:true,geometry:'clear-path-directed'},null,2);status.textContent='Completada';
+ }catch(e){errors.push(String(e));report.textContent=JSON.stringify({history,errors},null,2);status.textContent='FAIL: '+e.message;dispose();}};
+</script></html>
