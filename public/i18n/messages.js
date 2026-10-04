@@ -445,6 +445,7 @@ export const messages = {
   "Elige su arquitectura.": "Choose its architecture.",
   "Un cultivo ocupa este terreno": "A crop occupies this ground",
   "Volver a un centro urbano · 1": "Return to a village centre · 1",
+  "Volver al centro de trabajo · 1": "Return to the work centre · 1",
   "Yuca": "Cassava",
   "Zarzas": "Thorn bushes",
   "Mampostería": "Masonry",
