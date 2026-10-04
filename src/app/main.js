@@ -218,7 +218,7 @@ function updateUI(force=false) {
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
-  if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring'))hiringDialog();
+  if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();
   if(state.result&&!state.tutorial.reading&&surfaces.shouldOpen('result'))resultDialog();
   const pending=state.pauses.includes('hiring')?'hiring':state.result?'result':null;
   let reopen=document.querySelector('#reopen-dialog');

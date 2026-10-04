@@ -24,6 +24,23 @@ test('Optional panels still replace one another and close normally',()=>{
   const ui=new GameSurfaces();ui.open('panel');ui.open('modal');assert.equal(ui.active,'modal');assert.equal(ui.close(),'modal');assert.equal(ui.active,null);
 });
 
+test('Dawn hiring replaces ordinary panels once, without reopening or replacing a result',()=>{
+  const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
+  for(const kind of ['panel','modal','context',null]){
+    const state=Game.newGame();Game.resume(state,'intro');
+    Game.placeStructure(state,'center',{x:12,z:8},nav);Game.plant(state,'seed','mijo',17,8,nav);
+    Game.openInitialHiring(state);Game.hire(state,'hire',{olderMale:1});
+    const ui=new GameSurfaces();if(kind)ui.open(kind);
+    state.time=599.9;state.dayPlan={done:true};state.nightPlan={done:true};
+    Game.tick(state,.2,nav);assert.equal(state.day,2);assert.ok(state.pauses.includes('hiring'));
+    assert.equal(ui.shouldOpen('hiring',{mandatory:true}),true);
+    ui.open('hiring',{mandatory:true});assert.equal(ui.active,'hiring');
+    for(let refresh=0;refresh<20;refresh++)assert.equal(ui.shouldOpen('hiring',{mandatory:true}),false);
+    assert.equal(ui.close(),null);
+    ui.open('result',{force:true});assert.equal(ui.shouldOpen('hiring',{mandatory:true}),false);
+  }
+});
+
 test('A dismissed instruction stays closed while its real action is pending, including after reload',()=>{
   const state=Game.newGame(),profile={read:()=>new Set(),record:()=>{},basicCompleted:false};
   const controller=new TutorialController(state,profile);controller.acknowledge();controller.dismiss();

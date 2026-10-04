@@ -13,5 +13,8 @@ export class GameSurfaces {
     const kind=this.active;if(kind&&!this.mandatory)this.deferred.add(kind);
     this.active=null;this.mandatory=false;return kind;
   }
-  shouldOpen(kind){return !this.active&&!this.deferred.has(kind);}
+  shouldOpen(kind,{mandatory=false}={}){
+    if(mandatory)return this.active!==kind&&this.active!=='result'&&!this.mandatory;
+    return !this.active&&!this.deferred.has(kind);
+  }
 }
