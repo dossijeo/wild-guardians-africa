@@ -79,6 +79,14 @@ export class SaveRepository {
     try {return slotSnapshot(this.storage.getItem(key),slotId);}
     catch {return slotSnapshot(this.storage.getItem(key+':backup'),slotId);}
   }
+  delete(slotId) {
+    if(typeof slotId!=='string'||!slotId)throw new Error('Ranura inválida');
+    const key=this.key(slotId);
+    // Remove recovery copies too, so a deleted game cannot reappear on load.
+    this.storage.removeItem(key+':backup');
+    this.storage.removeItem(key+':pending');
+    this.storage.removeItem(key);
+  }
   list() {
     const result=[];
     for(let i=0;i<this.storage.length;i++) {

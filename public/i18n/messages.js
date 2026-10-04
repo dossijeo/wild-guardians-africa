@@ -1535,5 +1535,7 @@ export const messages = {
   "Recargando": "Cooling down",
   "No disponible ahora": "Unavailable now",
   "Eliminar muralla · +{0} monedas": "Remove wall · +{0} coins",
-  "Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": "Prepare defences for future raids from Build: combine modules and gates to protect the farm while leaving accessible paths. Animals damage crops and structures; repairs are charged when the worker arrives."
+  "Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": "Prepare defences for future raids from Build: combine modules and gates to protect the farm while leaving accessible paths. Animals damage crops and structures; repairs are charged when the worker arrives.",
+  "◎ Centro de trabajo": "◎ Work centre",
+  "Eliminar partida": "Delete saved game"
 };

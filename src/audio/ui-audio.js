@@ -9,7 +9,7 @@ export class UiAudio {
     const identity=kind+':'+key;if(identity===this.identity)return;
     const tab=this.kind===kind&&this.identity!==null;this.kind=kind;this.identity=identity;const revision=++this.surfaceRevision;this.cue(tab?'ui_tab':'ui_panel_open','ui:surface',()=>revision===this.surfaceRevision);
   }
-  close(){const active=this.identity!==null;this.kind=null;this.identity=null;const revision=++this.surfaceRevision;if(active)this.cue('ui_panel_close','ui:surface',()=>revision===this.surfaceRevision);}
+  close({silent=false}={}){const active=this.identity!==null;this.kind=null;this.identity=null;const revision=++this.surfaceRevision;if(active&&!silent)this.cue('ui_panel_close','ui:surface',()=>revision===this.surfaceRevision);}
   error(){const now=this.clock();if(now-this.lastErrorAt<1)return;this.lastErrorAt=now;this.cue('ui_error','ui:error');}
   pause(before,after){const id=!before.includes('menu')&&after.includes('menu')?'ui_pause':before.includes('menu')&&!after.length?'ui_resume':null;if(id){const revision=++this.pauseRevision;this.cue(id,'ui:pause',()=>revision===this.pauseRevision);}}
   reset(){this.generation++;this.surfaceRevision=0;this.pauseRevision=0;this.identity=null;this.kind=null;this.lastErrorAt=-Infinity;}

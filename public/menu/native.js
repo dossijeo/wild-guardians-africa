@@ -438,8 +438,9 @@ window.addEventListener('message',event=>{
  if(event.origin!==location.origin)return;
  if(event.source===parent&&event.data?.type==='wild-guardians:menu-data'){
   if(event.data.slots&&$('#production-saves')){
-   $('#production-saves').innerHTML=event.data.slots.length?event.data.slots.map(slot=>`<div class="savecard"><strong>${esc(slot.cultureName)}</strong><span>Día ${slot.day} · ${esc(slot.biomeName)} · ${esc(slot.money)} monedas</span><button class="secondary" data-production-save="${esc(slot.slotId)}">Continuar →</button></div>`).join(''):'<p class="lede">Todavía no hay poblados guardados.</p>';
+   $('#production-saves').innerHTML=event.data.slots.length?event.data.slots.map(slot=>`<div class="savecard"><strong>${esc(slot.cultureName)}</strong><span>Día ${slot.day} · ${esc(slot.biomeName)} · ${esc(slot.money)} monedas</span><button class="secondary" data-production-save="${esc(slot.slotId)}">Continuar →</button><button class="secondary" data-production-delete="${esc(slot.slotId)}">Eliminar partida</button></div>`).join(''):'<p class="lede">Todavía no hay poblados guardados.</p>';
    $$('[data-production-save]').forEach(button=>button.onclick=()=>sendProduction('load-slot',{slotId:button.dataset.productionSave}));
+   $$('[data-production-delete]').forEach(button=>button.onclick=()=>sendProduction('delete-slot',{slotId:button.dataset.productionDelete}));
   }
   if(event.data.settings&&$('#production-sfx')){const settings=event.data.settings;$('#production-sfx').value=settings.sfx;$('#production-music').value=settings.music;$('#production-quality').value=settings.quality;$('#production-resolution').value=settings.resolution??'profile';}
  }

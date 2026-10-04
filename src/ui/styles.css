@@ -38,3 +38,6 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
   #stage .native-panel-host{left:8px;right:8px;width:auto;--panel-max:calc(100dvh - var(--header) - 24px)}
   #stage #context .context{left:8px;right:8px;width:auto;max-height:calc(100dvh - var(--header) - 24px)}
 }
+
+#stage .notices{right:calc(var(--action-w) + 26px + env(safe-area-inset-right));max-width:min(310px,calc(100vw - var(--action-w) - 50px));z-index:20;pointer-events:auto}
+.notice-card{display:flex;align-items:stretch;background:#203629ef;border-radius:8px}.notice-card [data-notice]{flex:1;min-width:0;background:transparent}.notice-card [data-dismiss-notice]{flex:none;padding:8px;background:transparent;align-self:flex-start}
