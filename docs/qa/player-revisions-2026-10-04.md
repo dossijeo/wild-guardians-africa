@@ -7,7 +7,7 @@ Estas decisiones del usuario tienen prioridad sobre los labs y las reglas anteri
 | Caminar: desplazamiento y animación +50 % | Implementado, commit 634e77c. 48 tests de locomoción, acciones y contactos sonoros aprobados; comprobación visual en partida pendiente. |
 | Correr: desplazamiento +50 %, cadencia original | Implementado en el mismo commit; fases y agotamiento por metros probados. |
 | Agua alineada al extremo de la regadera | Pendiente de revisar los cuatro rigs originales y el emisor. |
-| Entrega por el borde más próximo de la casa desde el cultivo | Pendiente de sustituir el punto de servicio fijo. |
+| Entrega por el borde más próximo de la casa desde el cultivo | Implementado con proyección al borde más cercano de la huella original girada, desde la posición del cultivo. Destino estable por caja/centro, conservado en guardado, sin abonar hasta llegar. 49 pruebas dirigidas aprobadas; revisión visual en partida pendiente. |
 | Cosecha automática, sin acción ni mini modal | Implementado en simulación y UI; madurez real, cultivo maduro guardado, reconstrucción de colas tras incursión y entrega pagada una sola vez probados. Tutorial bilingüe y mano manual retirados. Recorrido visual móvil pendiente. |
 | Tocar cultivos/aplicar magia conserva modo de magia | Implementado: la selección de cultivo solo cancela los otros modos; confirmar poder conserva el modo. Prueba de interacción en partida pendiente. |
 | Muralla dibujada con dedo y límite saldo menos reserva de 100 | Pendiente de recorte del trazo y comprobación táctil. |

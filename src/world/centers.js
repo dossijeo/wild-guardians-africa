@@ -1,3 +1,4 @@
+import {containsPoint} from './footprints.js';
 import {CENTER_GEOMETRIES} from './center-geometries.js';
 
 export function centerCulture(center,state){
@@ -29,4 +30,23 @@ export function centerBoundaryPoint(center,angle,clearance=0,state){
 export function centerServicePoint(center,state,clearance=.6){
  const geometry=centerGeometry(center,state),x=geometry.bounds.max[0]+clearance,yaw=center.yaw??0;
  return {x:center.x+x*Math.cos(yaw),z:center.z-x*Math.sin(yaw)};
+}
+
+// Closest authored building edge from the crop, with body clearance outside it.
+// This is not the fixed arrival/service entrance used for hiring and idle walks.
+export function centerDeliveryPoint(center,source,state,clearance=.6){
+ const hull=centerFootprint(center,state).footprint;let best=null;
+ for(let i=0;i<hull.length;i++){
+  const a=hull[i],b=hull[(i+1)%hull.length],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
+  const t=length?Math.max(0,Math.min(1,((source.x-a.x)*dx+(source.z-a.z)*dz)/length)):0;
+  const x=a.x+t*dx,z=a.z+t*dz,distance=Math.hypot(source.x-x,source.z-z);
+  if(!best||distance<best.distance)best={x,z,distance,dx,dz};
+ }
+ if(!clearance)return {x:best.x,z:best.z};
+ let dx=source.x-best.x,dz=source.z-best.z,length=Math.hypot(dx,dz);
+ if(length<1e-9||containsPoint(hull,source.x,source.z)){
+  const area=hull.reduce((sum,p,i)=>sum+p.x*hull[(i+1)%hull.length].z-p.z*hull[(i+1)%hull.length].x,0);
+  dx=best.dz*Math.sign(area);dz=-best.dx*Math.sign(area);length=Math.hypot(dx,dz);
+ }
+ return {x:best.x+dx/length*clearance,z:best.z+dz/length*clearance};
 }

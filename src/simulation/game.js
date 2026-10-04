@@ -1,6 +1,6 @@
 import {ensurePurchaseBudget} from './budget.js';
 import {footprintDistance} from '../world/footprints.js';
-import {centerCulture,centerFootprint,centerServicePoint} from '../world/centers.js';
+import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
@@ -339,10 +339,14 @@ function updateWorkers(s,dt,nav) {
     if(w.status==='carrying') {
       const crate=s.crates.find(c=>c.id===w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
-      const delivered=walkTo(s,w,{...center,...centerServicePoint(center,s),id:`delivery-${center.id}`},dt,nav,{motion:{carrying:true}});
+      if(w.deliveryApproach?.crateId!==crate.id||w.deliveryApproach?.centerId!==center.id||!Number.isFinite(w.deliveryApproach?.x)||!Number.isFinite(w.deliveryApproach?.z)){
+        const source=s.plants.find(p=>p.id===crate.sourcePlantId)??crate;
+        w.deliveryApproach={...centerDeliveryPoint(center,source,s),crateId:crate.id,centerId:center.id};w.path=null;
+      }
+      const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
       crate.x=w.x;crate.z=w.z;
       if(delivered) {
-        transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
+        transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
         if(s.tutorial.step==='observe'||s.tutorial.step==='harvest')s.tutorial.step='done';
       }
       continue;
