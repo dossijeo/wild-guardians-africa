@@ -1,0 +1,84 @@
+name: Build Windows desktop
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - run: npm ci
+      - run: npm run desktop:build
+      - name: Check Windows executable and installer
+        shell: pwsh
+        run: |
+          $binary = Get-Item -LiteralPath src-tauri/target/release/wild-guardians-africa.exe
+          $installer = Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe
+          if ($binary.Length -lt 1MB -or $installer.Count -ne 1) { throw 'Missing Windows deliverables' }
+          "Windows executable: $($binary.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+          "NSIS installer: $($installer.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+      - name: Smoke test the packaged game in WebView2
+        shell: pwsh
+        run: |
+          $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
+          $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
+          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
+          if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
+          $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          if ($result.worldPng) {
+            [IO.File]::WriteAllBytes((Join-Path $env:RUNNER_TEMP 'windows-canyon.png'), [Convert]::FromBase64String($result.worldPng.Split(',')[1]))
+            $result.PSObject.Properties.Remove('worldPng')
+            $result | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $report
+          }
+          Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
+          if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          path: ${{ runner.temp }}/windows-canyon.png
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          path: ${{ runner.temp }}/desktop-smoke.json
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        with:
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        with:
+          path: src-tauri/target/release/wild-guardians-africa.exe
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-cargo-lock
+          path: src-tauri/Cargo.lock
+          retention-days: 7
