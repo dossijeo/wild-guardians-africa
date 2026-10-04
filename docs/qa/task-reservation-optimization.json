@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-04",
+  "baselineRevision": "23feb4c",
+  "scope": "Node CPU/domain diagnostic; no rendering, audio, physical mobile or FPS measurement. Three sequential alternating reference/optimized pairs; baseline loader replaces only tasks.js with baseline source. Warm navigation, Sabana/Mapungubwe seed 712, QA credit 10000, 32 paid crops, eight paid workers, five beast species; diagnostic deliberately damages centre at elapsed 130.",
+  "change": "Order available workers by distance and ID first; stop reachability checks at the nearest eligible worker. Preserve FIFO, blocked state and worker eligibility.",
+  "searchReductionPercent": 38.095238095238095,
+  "conclusion": "Fewer route searches with identical serialized state trajectories. No demonstrated improvement to peak tick time: repeated optimized peaks remain comparable or higher. Raid pathfinding spikes remain unresolved.",
+  "initialPairMaxTickMs": {
+    "reference": 392.4684000000002,
+    "optimized": 424.18690000000015
+  },
+  "tests": {
+    "targetedPassed": 62,
+    "differentialReservationScenarios": 500,
+    "build": "pass",
+    "webPackage": "pass: 579 files, 816 relative links, 20 runtime GLBs"
+  },
+  "sourceSha256": "0bd29f8b7a69114f4966a68dc6c2fa761472965e3c879cac6de8c57ece1c00d2",
+  "runs": [
+    {
+      "variant": "reference",
+      "run": 1,
+      "steps": 1636,
+      "searches": 273,
+      "maxTickMs": 384.5487000000003,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    },
+    {
+      "variant": "reference",
+      "run": 2,
+      "steps": 1636,
+      "searches": 273,
+      "maxTickMs": 370.472,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    },
+    {
+      "variant": "reference",
+      "run": 3,
+      "steps": 1636,
+      "searches": 273,
+      "maxTickMs": 361.6887999999999,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    },
+    {
+      "variant": "optimized",
+      "run": 1,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 383.65830000000005,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    },
+    {
+      "variant": "optimized",
+      "run": 2,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 386.2261000000001,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    },
+    {
+      "variant": "optimized",
+      "run": 3,
+      "steps": 1636,
+      "searches": 169,
+      "maxTickMs": 392.7479999999998,
+      "trajectorySha256": "95a8ddd228107b4b372aa953663a0e30047ece3798e8fc361ee78e14b8690d8d",
+      "events": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 32,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 53,
+        "RaidSpawned": 1,
+        "StructureHit": 1,
+        "AnimalLogicalHit": 3,
+        "CropDestroyed": 2,
+        "StructureRuined": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1
+      },
+      "raidFinished": true,
+      "centerStatus": "ruined"
+    }
+  ]
+}

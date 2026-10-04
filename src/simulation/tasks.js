@@ -12,9 +12,10 @@ export function reserveTasks(state,canExecute=()=>true) {
     const target=[...state.plants,...state.crates,...state.structures].find(e=>e.id===t.targetId);
     if(!target)continue;
     const workers=state.workers.filter(w=>w.centerId===t.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state));
-    const eligible=workers.filter(w=>canExecute(w,t,target));
-    eligible.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
-    const worker=eligible[0];
+    // Reachability can require A*: test nearest candidates until one succeeds.
+    // The pure predicate and ordering retain the nearest eligible worker.
+    workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
+    const worker=workers.find(w=>canExecute(w,t,target));
     t.blocked=!worker && workers.length>0;
     if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking'; }
   }
