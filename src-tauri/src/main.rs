@@ -47,7 +47,7 @@ fn desktop_smoke_minimize(app: tauri::AppHandle) -> Result<bool, String> {
     window.minimize().map_err(|error| error.to_string())?;
     let minimized = window.is_minimized().map_err(|error| error.to_string())?;
     std::thread::spawn(move || {
-        std::thread::sleep(std::time::Duration::from_secs(8));
+        std::thread::sleep(std::time::Duration::from_secs(310));
         let _ = window.unminimize();
         let _ = window.show();
         let _ = window.set_focus();

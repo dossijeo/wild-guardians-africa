@@ -63,7 +63,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report, '--smoke-fixture', $fixture -WindowStyle Hidden -PassThru
-          if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
+          if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
           $result.PSObject.Properties.Remove('worldPng')

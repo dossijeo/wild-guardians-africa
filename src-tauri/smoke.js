@@ -7,7 +7,7 @@
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
-  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 180000);
+  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
   let finished = false;
   async function finish(error) {
     if (finished) return;
@@ -44,7 +44,7 @@
     // during the measured interval. Retain the menu only at its end.
     const hiddenStart=sample(),hiddenAt=performance.now();
     if(!hiddenStart.pauses.includes('hidden')||!hiddenStart.pauses.includes('menu'))throw Error('Hidden/menu pauses not stacked');
-    await wait(3500);
+    await wait(300000);
     if(!document.hidden)throw Error('Native hidden interval too short');
     const hiddenEnd=sample({resume:false}),hiddenMs=performance.now()-hiddenAt;
     if(JSON.stringify(core(hiddenStart))!==JSON.stringify(core(hiddenEnd)))throw Error('Game progressed while genuinely hidden');
@@ -56,7 +56,8 @@
     report.checks.visibility.phase='resume';
     document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=sample();
     const delta=resumed.elapsed-visibleMenu.elapsed,visibleMs=performance.now()-resumedAt;
-    if(delta<=0||delta>visibleMs/1000*5+.5)throw Error('Visible game failed to resume or caught up hidden time');
+    const maxScale=visibleMenu.raid&&resumed.raid&&visibleMenu.raid.id===resumed.raid.id?1:5;
+    if(delta<=0||delta>visibleMs/1000*maxScale+.1)throw Error('Visible game failed to resume or caught up hidden time');
     if(!transitions.some(t=>t.state==='hidden')||!transitions.some(t=>t.state==='visible'))throw Error('Real visibility events missing');
     return {passed:true,transitions,hiddenMs,visibleMs,resumedSimulatedSeconds:delta,hiddenStart:core(hiddenStart),hiddenEnd:core(hiddenEnd),visibleMenuPauses:visibleMenu.pauses,scope:'Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.'};
   }
