@@ -4,6 +4,7 @@ import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
+import {castPickedSpell} from './spell-placement.js';
 import {UiAudio} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
 import {RESERVE_MESSAGE,HIRING_RESERVE,BUDGET_WARNING_THRESHOLD} from '../simulation/budget.js';
@@ -128,9 +129,7 @@ function onPick({entityId,point}) {
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
-      const target=point??pickedPlant??state.structures.find(s=>s.id===entityId);
-      if(!target)return;
-      Game.cast(state,commandId(),tool.spell,target.x,target.z,nav);save();return;
+      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav))save();return;
     }
     if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
     if(tool&&point) {

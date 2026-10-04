@@ -134,4 +134,13 @@ Se confirmó el contrato (629→589) y se seleccionó Escudo desde Magias. Un to
 
 La inspección de main.js encontró pendingSpell y spellConfirmPanel conservados aunque ningún camino asignaba una previsualización. Se retiraron esa variable, el panel de confirmar/cancelar y sus condicionales de limpieza/refresco/Escape. onPick mantiene el lanzamiento directo antes de procesar la selección de plantas, utilizando el punto de terreno o la entidad seleccionada, sin cancelar el poder al tocar un cultivo. Se conserva Game.previewSpell como validación y el visor de previsualización QA independiente.
 
-Pasan 24 pruebas de tarjetas, validación de poderes, avisos, memoria de daño/guardado y recordatorios, además de build. Esta limpieza no añade una nueva aceptación visual: el navegador integrado agotó el tiempo de sincronización al retomar la pestaña de juego, que sigue presente en el inventario. La inspección móvil de magias sobre plantas sigue pendiente; no se deduce de las pruebas de dominio ni del lanzamiento sobre suelo libre comprobado anteriormente.
+Pasan 24 pruebas de tarjetas, validación de poderes, avisos, guardado y recordatorios, además de build. Esta limpieza no añade una nueva aceptación visual: el navegador integrado agotó el tiempo de sincronización al retomar la pestaña de juego, que sigue presente en el inventario. La inspección móvil de magias sobre plantas sigue pendiente; no se deduce de las pruebas de dominio ni del lanzamiento sobre suelo libre comprobado anteriormente.
+
+
+## Magia centrada en el cultivo seleccionado
+
+La rama de lanzamiento directo prefería el punto de intersección del terreno incluso cuando pick había identificado una planta viva. Una planta alta puede ocultar suelo varios metros detrás de ella, de modo que el radio mágico no la cubra. Ahora castPickedSpell, usado por onPick, prioriza las coordenadas lógicas del cultivo seleccionado. Los toques en suelo libre conservan su punto; una estructura sin intersección de suelo conserva el fallback anterior. No hay confirmación ni cancelación del modo mágico al tocar cultivos.
+
+La regresión construye un rayo 3D dirigido a un cultivo elevado y acredita que su punto de suelo queda fuera del radio de cada uno de los tres poderes. El lanzamiento de producción crea el área sobre la planta, activa cooldown y un único evento; Multiplicar marca su siguiente cosecha. También cubre replay del mismo comando, planta muerta, suelo libre, cielo vacío y rechazo de recarga sin mutar snapshot. Pasan 24 pruebas de colocación, validación, tarjetas y recordatorios, además de build. La geometría del rayo es sintética y la partida utiliza navegación plana de prueba: no es una nueva aceptación visual con GLB ni móvil.
+
+Una pestaña nueva recuperó el menú real tras los errores de sincronización de la anterior. Queda pendiente verificar visualmente este centrado durante el recorrido móvil, junto con el resto de requisitos abiertos.
