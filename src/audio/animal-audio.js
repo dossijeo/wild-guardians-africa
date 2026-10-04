@@ -6,12 +6,13 @@ const phase=actor=>actor.status==='attacking'?'attack':actor.status==='retreatin
 // Observe native action facts. Audio never selects a target, rolls gameplay RNG,
 // consumes a hit, or replays action history from a restored snapshot.
 export class AnimalAudio {
-  constructor(play,stopVoice,clock){this.play=play;this.stopVoice=stopVoice;this.clock=clock;this.entries=new Map();this.stateRef=null;this.elapsed=null;}
+  constructor(play,stopVoice,clock,setGain=()=>{}){this.play=play;this.stopVoice=stopVoice;this.clock=clock;this.setGain=setGain;this.entries=new Map();this.stateRef=null;this.elapsed=null;}
   release(entry){entry.ticket++;if(entry.voice)this.stopVoice(entry.voice);entry.voice=null;}
   cue(kind,actor,entry,state,listener){
     this.release(entry);const id=ANIMAL_SOUND_ROUTES[actor.species]?.[kind];if(!id)return;
     const ticket=entry.ticket,requested=this.clock(),currentPhase=phase(actor),attackId=actor.attackId;
     const isCurrent=()=>this.entries.get(actor.id)===entry&&entry.ticket===ticket&&this.stateRef===state&&!state.result&&!state.pauses?.length&&state.raid?.animals.includes(actor)&&phase(actor)===currentPhase&&(kind!=='attack'||actor.attackId===attackId)&&this.clock()-requested<=.25;
+    entry.baseGain=kind==='neutral'?.25:.5;entry.lastGain=null;
     const distance=listener?Math.hypot(actor.x-listener.x,actor.z-listener.z):0;
     entry.nextNeutral=state.elapsed+ANIMAL_NEUTRAL_INTERVAL;let pending;
     try{pending=this.play(id,{bus:'world',family:'animal-'+kind,emitter:actor.id,gain:(kind==='neutral'?.25:.5)/(1+(distance/24)**2),isCurrent});}catch{return;}
@@ -33,6 +34,9 @@ export class AnimalAudio {
       else if(previous?.phase!==currentPhase)this.release(entry);
       else if(currentPhase==='approach'&&state.elapsed>=entry.nextNeutral)this.cue('neutral',actor,entry,state,listener);
       Object.assign(entry,{phase:currentPhase,attackId:actor.attackId});
+      // A cue started while the camera was far away must become audible when
+      // the player returns, without restarting the original attack sound.
+      if(entry.voice){const distance=listener?Math.hypot(actor.x-listener.x,actor.z-listener.z):0,gain=entry.baseGain/(1+(distance/24)**2);if(entry.lastGain===null||Math.abs(gain-entry.lastGain)>.0001){this.setGain(entry.voice,gain);entry.lastGain=gain;}}
     }
     for(const [id,entry] of this.entries)if(!seen.has(id)){this.release(entry);this.entries.delete(id);}
     this.elapsed=state.elapsed;

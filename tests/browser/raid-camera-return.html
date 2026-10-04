@@ -1,0 +1,31 @@
+<!doctype html><meta charset="utf-8"><title>QA: incursión fuera de cámara</title>
+<style>body{margin:0}canvas{width:100vw;height:100vh}header{position:absolute;background:#fffe;padding:10px;z-index:2}pre{max-height:210px;overflow:auto;font-size:11px}</style>
+<header>Incursión nativa: cámara alejada durante la aparición, regreso durante el ataque. Preparación controlada, sin cambiar golpes ni modelos.<button id="return" disabled>Regresar a la finca</button><pre id="report">Cargando…</pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const params=new URLSearchParams(location.search),species=params.get('species')??'warthog',biome=params.get('biome')??'gran-canon',errors=[];
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712,biome,slotId:'qa-camera-return'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);
+state.day=3;state.completedNights=2;state.time=320;state.initialPreparation=false;state.tutorial.step='done';state.nightPlan={done:true};Game.resume(state,'intro');
+const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('muy_baja');await world.load(state,nav,payload);
+// Keep the native farm entry region while the observer moves away; exercise a
+// model first encountered by the renderer outside the viewing frustum.
+world.raidCamera.beginManual();world.focus({x:site.center.x,z:site.center.z+60});world.render(0);
+spawnRaid(state,{group:[species]},nav);if(!state.raid)throw Error('Sin entrada');world.render(0);
+await Promise.all([...world.assets.cache.values()]);
+const animal=state.raid.animals[0];let steps=0;
+let heldFrames=0;
+while(animal.status!=='attacking'&&animal.status!=='gone'&&state.raid&&steps++<10000){if(world.raidReady())Game.tick(state,.05,nav);else heldFrames++;if(steps%50===0){world.render(0);document.querySelector('#report').textContent='Llegada: '+steps+' · '+animal.status;await new Promise(r=>setTimeout(r,0));}}
+Game.pause(state,'qa');
+function report(){const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse)),meshes=[];world.objects.get(animal.id)?.traverse(m=>{if(m.isSkinnedMesh){const exact=new THREE.Box3().setFromObject(m,true);meshes.push({name:m.name,visible:m.visible,culled:m.frustumCulled,inFrustum:frustum.intersectsObject(m),sphere:m.boundingSphere?.center.toArray(),radius:m.boundingSphere?.radius,exactMin:exact.min.toArray(),exactMax:exact.max.toArray()});}});document.querySelector('#report').textContent=JSON.stringify({biome,species,status:animal.status,heldFrames,animal:{x:animal.x,z:animal.z},modelLoaded:world.mixers.has(animal.id),origin:{x:world.renderOrigin.x,z:world.renderOrigin.z},meshes,errors},null,2);}
+document.querySelector('#return').disabled=false;document.querySelector('#return').onclick=()=>{world.focus(animal);world.render(0);report();};report();
+function frame(){world.render(0);requestAnimationFrame(frame);}requestAnimationFrame(frame);addEventListener('pagehide',()=>world.dispose());
+</script>

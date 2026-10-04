@@ -2,7 +2,7 @@ import {UnlockAudio} from './unlock-audio.js';
 import {GuardianAudio} from './guardian-audio.js';
 import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
-import {AnimalAudio} from './animal-audio.js';
+import {AnimalAudio,ANIMAL_SOUND_ROUTES} from './animal-audio.js';
 import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
@@ -178,7 +178,17 @@ export class AudioSystem {
   }
   updateAnimals(state,options={}){
     if(this.context?.state!=='running'){this.animals?.dispose();return;}
-    this.animals??=new AnimalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.animals.update(state,options);
+    this.prepareAnimalSounds(state);
+    this.animals??=new AnimalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime,(source,gain)=>{this.voices.get(source)?.volume.gain.setTargetAtTime(gain,this.context.currentTime,.025);});this.animals.update(state,options);
+  }
+  prepareAnimalSounds(state){
+    const species=state.nightPlan?.group??(!state.postgame&&state.day<=5?['warthog','hyena','buffalo','lion','rhino'].slice(state.day-1,state.day):[]);
+    this.animalSoundPreparation??=new Map();
+    for(const id of new Set([...species,...(state.raid?.animals.map(a=>a.species)??[])])){
+      if(this.animalSoundPreparation.has(id))continue;
+      const pending=this.sfxBank().then(bank=>Promise.all(Object.values(ANIMAL_SOUND_ROUTES[id]??{}).map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
+      this.animalSoundPreparation.set(id,pending);pending.catch(()=>{if(this.animalSoundPreparation.get(id)===pending)this.animalSoundPreparation.delete(id);});
+    }
   }
   updateMovement(state,options={}){
     if(this.context?.state!=='running'){this.movement?.dispose();return;}

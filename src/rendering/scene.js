@@ -108,6 +108,8 @@ export class WorldScene {
     this.buildingCatalogue=(await json('/content/destruction.json')).buildings;
     await Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture)));
     [this.models,this.workerLibraries,this.wateringPaths]=await Promise.all([json('/content/models.json'),json('/content/worker-actions.json'),json('/content/watering-emitters.json')]);
+    this.warmedAnimals=new Set();
+    await this.warmAnimalModels([...new Set([...(state.raid?.animals.map(a=>a.species)??[]),...(state.nightPlan?.group??[]),...(!state.postgame&&state.day<=5?[Object.keys(animalSources)[state.day-1]]:[])])]);
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.assets.model(cropModel.url);this.cropGltf=gltf;this.cropModels=Array(40);
@@ -191,17 +193,40 @@ export class WorldScene {
     const culture=centerCulture(entity,this.state);
     return new NativeBuilding(this.buildingTemplates.get(culture),entity,this.destructionPass,this.state.elapsed);
   }
+  async warmAnimalModels(species){
+    await Promise.all(species.filter(id=>id&&!this.warmedAnimals.has(id)).map(async id=>{
+      const descriptor=this.models.find(m=>m.source.includes(animalSources[id]));
+      if(!descriptor)throw Error('Falta el modelo de '+id);
+      await this.assets.model(descriptor.url);this.warmedAnimals.add(id);
+    }));
+  }
+  raidReady(){return (this.state?.raid?.animals??[]).every(a=>a.status==='gone'||this.mixers.has(a.id));}
+  requestActor(entity,type,root){
+    if(root.userData.actorLoading||performance.now()<(root.userData.actorRetryAt??0))return;
+    root.userData.actorLoading=true;
+    this.actor(entity,type).catch(error=>{
+      if(this.disposed||this.objects.get(entity.id)!==root)return;
+      const failures=(root.userData.actorLoadFailures??0)+1;root.userData.actorLoadFailures=failures;
+      root.userData.actorRetryAt=performance.now()+Math.min(30000,3000*failures);
+      if(failures===1)this.onError?.(error);
+    }).finally(()=>{root.userData.actorLoading=false;});
+  }
   async actor(entity,type) {
     const fragment=type==='worker'?profileSources[entity.profile]:animalSources[entity.species];const descriptor=type==='worker'?this.workerLibraries[entity.profile]:this.models.find(m=>m.source.includes(fragment));
-    if(!descriptor)return;
-    const gltf=await this.assets.model(descriptor.url);if(!this.state||!this.objects.has(entity.id))return;
-    const root=this.objects.get(entity.id),model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
+    if(!descriptor)throw Error('Falta el modelo de '+(entity.species??entity.profile));
+    const root=this.objects.get(entity.id),state=this.state;
+    const gltf=await this.assets.model(descriptor.url);if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root)return;
+    const model=clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
     // Native bestiary labs use unit scale. Their heroic dimensions are already
     // authored in the GLB; animated foot grounding follows in applyAnimalPose.
     if(type==='animal')prepareAnimalModel(model,entity.species);
     root.add(model);
     const mixer=new THREE.AnimationMixer(model);this.mixers.set(entity.id,{profile:type==='worker'?entity.profile:null,mixer,clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,
       groundSamples:type==='animal'?animalGroundSamples(model):null});
+    // Initialize bones before a pointer raycast or an offscreen first render
+    // can cache a sphere from the cloned source's stale world transforms.
+    this.updateActor(entity,0,type);root.updateMatrixWorld(true);
+    model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.computeBoundingSphere();});
   }
   wateringSource(id,time,effect){
     const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);
@@ -231,6 +256,8 @@ export class WorldScene {
   }
   sync(dt) {
     const s=this.state;if(!s||!this.cropModels)return;
+    const upcoming=s.nightPlan?.group??(!s.postgame&&s.day<=5?[Object.keys(animalSources)[s.day-1]]:[]);
+    const warmKey=upcoming.join(',');if(this.animalWarmKey!==warmKey){this.animalWarmKey=warmKey;this.warmAnimalModels(upcoming).catch(error=>this.onError?.(error));}
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
@@ -243,12 +270,13 @@ export class WorldScene {
         else if(e.kind==='wall')mesh=new NativeWall(this.wallPrototypes,e,s.elapsed);
         else if(e.species&&'growth' in e)mesh=new THREE.Group();
         else if('value' in e){mesh=new THREE.Group();this.objects.set(e.id,mesh);this.crate(e).catch(error=>this.onError?.(error));}
-        else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();this.objects.set(e.id,mesh);this.actor(e,'profile' in e?'worker':'animal').catch(error=>this.onError?.(error));}
+        else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();}
         else if(e.kind==='shield')mesh=new THREE.Group();
         else mesh=new THREE.Group();
       mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
       }
       mesh.position.set(e.x,('profile' in e?this.nav.workerSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
+      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
       if('value' in e)mesh.visible=!e.carrierId;
       if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}
@@ -323,6 +351,6 @@ export class WorldScene {
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
   render(dt) {if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();this.updateCamera();this.raidCamera?.update(this.state,dt);this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:renderOriginBounds(this.scene),minSize:[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
-  dispose() {if(this.disposed)return;this.disposed=true;this.canvasEvents?.abort();this.spellPreview.dispose();this.materialRegistry.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.state=null;}
+  dispose() {if(this.disposed)return;this.disposed=true;this.canvasEvents?.abort();this.spellPreview.dispose();this.materialRegistry.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.controls.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.assets?.disposeModels(this.scene);this.state=null;}
 
 }

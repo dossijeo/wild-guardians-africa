@@ -39,8 +39,8 @@ import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new SaveRepository(localStorage);
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
-const screenWakeLock=new GameScreenWakeLock();
-let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,lastUI=0,villageCatalog=null,pendingVillage=null;
+const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
+let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
@@ -58,7 +58,7 @@ function error(message){if(String(message)===RESERVE_MESSAGE){if(reserveWarningS
 function safe(action){commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){noticeLifetime.reset();screenWakeLock.setActive(false);surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){raidLoading?.remove();raidLoading=null;noticeLifetime.reset();surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 function menu() {
   if(state){if(!save())return;state=null;}clearWorld();screen='menu';
   app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
@@ -347,11 +347,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state&&screen==='ga
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){if(guardian)guardian.key=null;updateUI(true);}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{screenWakeLock.dispose();if(state)save();});
+function updateRaidLoading(){
+  if(world.raidReady()){raidLoading?.remove();raidLoading=null;return;}
+  if(raidLoading)return;
+  raidLoading=document.createElement('div');raidLoading.id='raid-loading';raidLoading.setAttribute('role','status');raidLoading.textContent='Cargando…';
+  raidLoading.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:25;background:#17261eee;color:white;padding:16px;border-radius:12px;pointer-events:none';
+  document.querySelector('#stage').append(raidLoading);
+}
 function frame(now) {
   requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.raidReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateWorkers(state,{listener:world.controls.target});audio.updateWork(state,{listener:world.controls.target});audio.updateFarm(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }

@@ -8,8 +8,16 @@ import {computeTangents} from './surface-source.js';
 export const json=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return resolveAssetValues(await response.json());};
 export const bytes=async url=>{const response=await fetch(assetUrl(url));if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.arrayBuffer();};
 export class Assets {
-  constructor(){this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();}
-  async model(url) {if(!this.cache.has(url))this.cache.set(url,this.loader.loadAsync(assetUrl(url)));return this.cache.get(url);}
+  constructor(){this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();this.modelSources=new Map();}
+  async model(url) {if(!this.cache.has(url)){const pending=this.loader.loadAsync(assetUrl(url)).then(gltf=>{if(this.modelsDisposed)this.disposeModel(gltf,new Set());else this.modelSources.set(url,gltf);return gltf;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}return this.cache.get(url);}
+  disposeModel(gltf,seen){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;const resources=[mesh.geometry,...(Array.isArray(mesh.material)?mesh.material:[mesh.material])];for(const material of resources.filter(r=>r?.isMaterial))for(const value of Object.values(material))if(value?.isTexture)resources.push(value);for(const resource of resources)if(resource&&!seen.has(resource)){seen.add(resource);resource.dispose();}});}
+  disposeModels(renderedScene){
+    if(this.modelsDisposed)return;this.modelsDisposed=true;const seen=new Set();
+    // WorldScene has already disposed attached geometry/materials. Textures
+    // and prewarmed models that never entered the scene still belong to Assets.
+    renderedScene?.traverse(mesh=>{if(mesh.isMesh){seen.add(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])seen.add(material);}});
+    for(const gltf of this.modelSources.values())this.disposeModel(gltf,seen);this.modelSources.clear();
+  }
   async building(descriptor){const key='building:'+descriptor.url;if(!this.cache.has(key))this.cache.set(key,this.model(descriptor.url).then(gltf=>prepareNativeBuilding(gltf,descriptor)));return this.cache.get(key);}
   async texture(url,color=false) {
     const key=url+color;if(!this.cache.has(key))this.cache.set(key,this.textures.loadAsync(assetUrl(url)).then(texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;return texture;}));
