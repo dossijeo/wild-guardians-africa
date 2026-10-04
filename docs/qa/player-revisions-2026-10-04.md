@@ -101,3 +101,10 @@ Tras la primera entrega del recorrido anterior, el trabajador volvía al lado de
 Verificación: 41/41 pruebas dirigidas de paseo/riego/tutorial/encuentros y 52/52 de cadenas laborales, reparación, navegación y pausa guiada. La prueba nueva completa un cultivo pagado y su entrega real, comprueba el regreso al bancal, los segmentos físicamente válidos, radio de tres metros, ausencia de carrera y consumo de reserva, una sola entrega y reproducción idéntica de guardar/cargar. Build y paquete web verificados. La comprobación visual del nuevo paseo queda pendiente: las consultas de contenido y captura de la pestaña móvil 232 agotaron su plazo; el inventario todavía la muestra abierta y no acredita una terminación.
 
 Las CI 37206486622 (`a5ee36a`) y 37206824986 (`64ec438`) terminaron con éxito. El resultado de esas CI precede al ajuste del paseo y no se atribuye a él.
+
+
+### Regresión móvil del bancal conservado
+
+La CI 37207907143 de `6b35bfa` terminó con 1550 pruebas aprobadas y un fallo: `mobile-usability.test.js` todavía exigía radio de dos metros y regreso al edificio después de recoger todas las plantas. Se actualiza esa expectativa al bancal conservado de tres metros y se mantiene la comprobación del acceso del edificio cuando no hubo cultivos. Se añade prioridad de plantas vivas, exclusión de otros centros y desempate estable aunque cambie el orden de la lista. Pasan 51/51 pruebas de usabilidad móvil, paseo, pausa guiada, cadenas y rutas. La nueva CI completa queda pendiente; no se declara verde por los resultados anteriores.
+
+Verificadores originales ejecutados sobre esta base: plan 123.048 aserciones, assets 24 fuentes/505 recursos/126 SFX exactos, cuatro bibliotecas laborales completas (48 acciones) y ZIP/materiales originales intactos. Estos verificadores no sustituyen audio escuchado, mezcla renderizada ni recorrido móvil completo.

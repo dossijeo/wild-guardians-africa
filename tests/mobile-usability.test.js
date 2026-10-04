@@ -76,11 +76,20 @@ test('Idle farm anchors use a nearby living plot and a three metre roaming radiu
   const center={id:'center',x:0,z:0},worker={centerId:'center',x:20,z:0};
   const s={plants:[{id:'near',centerId:'center',alive:true,x:21,z:0},{id:'far',centerId:'center',alive:true,x:80,z:0}]};
   const anchor=Game.idleFarmAnchor(s,worker,center);assert.equal(anchor.id,'farm-near');assert.equal(anchor.idleRadius,3);
-  s.plants.forEach(p=>p.alive=false);assert.equal(Game.idleFarmAnchor(s,worker,center).idleRadius,2);
+  s.plants.forEach(p=>p.alive=false);const harvested=Game.idleFarmAnchor(s,worker,center);assert.equal(harvested.id,'farm-near');assert.equal(harvested.idleRadius,3);
+  s.plants=[];const empty=Game.idleFarmAnchor(s,worker,center);assert.equal(empty.id,'farm-center');assert.equal(empty.idleRadius,2);
 });
 
 test('An unreachable idle farm anchor backs off route searches instead of retrying each frame',()=>{
  let calls=0;const worker={id:'idle',profile:'olderFemale',x:0,z:0};const anchor={id:'farm-plot',x:100,z:0,idleRadius:3};
  const nav={version:1,path:()=>{calls++;return null;}};
  for(let i=0;i<50;i++)updateIdle(worker,anchor,.01,nav,712);assert.equal(calls,1);assert.equal(worker.running,false);
+});
+
+
+test('farm idle anchors prefer living plants, exclude other centers and break equal distances consistently',()=>{
+ const center={id:'center',x:0,z:0},worker={centerId:'center',x:20,z:0};
+ const s={plants:[{id:'foreign',centerId:'another',alive:true,x:20,z:0},{id:'harvested',centerId:'center',alive:false,x:20,z:0},{id:'z',centerId:'center',alive:true,x:21,z:0},{id:'a',centerId:'center',alive:true,x:19,z:0}]};
+ assert.equal(Game.idleFarmAnchor(s,worker,center).id,'farm-a');s.plants.reverse();assert.equal(Game.idleFarmAnchor(s,worker,center).id,'farm-a');
+ s.plants.forEach(p=>p.alive=false);assert.equal(Game.idleFarmAnchor(s,worker,center).id,'farm-harvested');
 });
