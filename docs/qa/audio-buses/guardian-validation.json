@@ -1,0 +1,44 @@
+{
+  "productionSha256": {
+    "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
+    "src/audio/audio.js": "ae5b9ff2ab42aa4267fb9f1f29c85dc2f1dde161f9e79bf81f196d0913b2ff8c",
+    "src/app/main.js": "60c34d6157abab1bfd6f0003d934691c20a6ea40858046e24bcfd1881cbe2fe7",
+    "src/ui/guardian.js": "05a6d8536adfd8b40080d8509163b119c502c46a99af74812a70f09f18da46e1",
+    "public/content/sfx-routing.json": "54a0357eb014764ffed302038f5475a494ccaade7c3c52448cc9f5d07d8b60ea"
+  },
+  "directed": {
+    "tests": 261,
+    "pass": 261,
+    "fail": 0,
+    "durationMs": 2982.7198,
+    "log": ".cache/guardian-audio-all.log"
+  },
+  "build": {
+    "pass": true,
+    "seconds": 6.66,
+    "log": ".cache/guardian-audio-build.log"
+  },
+  "webPackage": {
+    "pass": true,
+    "files": 578,
+    "bytes": 406697987,
+    "relativeLinks": 816,
+    "runtimeGLBs": 20,
+    "log": ".cache/guardian-audio-package.log"
+  },
+  "native": {
+    "fixture": "tests/browser/guardian-audio.html",
+    "report": "docs/qa/audio-buses/guardian-native.json",
+    "realPortrait": true,
+    "gestures": 8,
+    "acceptedOriginalSources": 3,
+    "normalOriginalTailSeconds": 2.480000000000004,
+    "errors": [],
+    "finalVoices": 0,
+    "context": "closed",
+    "muted": true,
+    "world3D": false,
+    "predecoded": true
+  },
+  "completeRegression": "New commit GitHub CI pending; directed evidence is not full-suite evidence."
+}

@@ -1,0 +1,175 @@
+{
+  "gestures": [
+    "greeting",
+    "speak",
+    "acknowledge",
+    "curious",
+    "warning",
+    "reveal",
+    "idle",
+    "farewell"
+  ],
+  "accepted": [
+    {
+      "id": "spirit_appear",
+      "start": 0,
+      "duration": 1.6,
+      "phase": "intro",
+      "bus": "ui",
+      "family": "spirit-presence",
+      "emitter": "guardian-avatar",
+      "rate": 1,
+      "ended": true,
+      "end": 1.6
+    },
+    {
+      "id": "spirit_disappear",
+      "start": 55.272,
+      "duration": 2.48,
+      "phase": "outro",
+      "bus": "ui",
+      "family": "spirit-presence",
+      "emitter": "guardian-avatar",
+      "rate": 1,
+      "ended": true,
+      "end": 57.752
+    },
+    {
+      "id": "spirit_appear",
+      "start": 57.76,
+      "duration": 1.6,
+      "phase": "intro",
+      "bus": "ui",
+      "family": "spirit-presence",
+      "emitter": "guardian-avatar",
+      "rate": 1,
+      "ended": true,
+      "end": 57.792
+    }
+  ],
+  "phases": [
+    {
+      "phase": "closed",
+      "at": 0
+    },
+    {
+      "phase": "intro",
+      "at": 0
+    },
+    {
+      "phase": "reading",
+      "at": 0.44
+    },
+    {
+      "phase": "rest",
+      "at": 7.472
+    },
+    {
+      "phase": "changing",
+      "at": 52.53066666666667
+    },
+    {
+      "phase": "reading",
+      "at": 52.690666666666665
+    },
+    {
+      "phase": "changing",
+      "at": 52.781333333333336
+    },
+    {
+      "phase": "reading",
+      "at": 52.96
+    },
+    {
+      "phase": "changing",
+      "at": 53.032
+    },
+    {
+      "phase": "reading",
+      "at": 53.21066666666667
+    },
+    {
+      "phase": "changing",
+      "at": 53.28
+    },
+    {
+      "phase": "reading",
+      "at": 53.461333333333336
+    },
+    {
+      "phase": "changing",
+      "at": 53.53066666666667
+    },
+    {
+      "phase": "reading",
+      "at": 53.712
+    },
+    {
+      "phase": "changing",
+      "at": 53.792
+    },
+    {
+      "phase": "reading",
+      "at": 53.96
+    },
+    {
+      "phase": "changing",
+      "at": 54.04
+    },
+    {
+      "phase": "reading",
+      "at": 54.21066666666667
+    },
+    {
+      "phase": "changing",
+      "at": 54.29066666666667
+    },
+    {
+      "phase": "reading",
+      "at": 54.472
+    },
+    {
+      "phase": "farewell",
+      "at": 54.552
+    },
+    {
+      "phase": "outro",
+      "at": 55.272
+    },
+    {
+      "phase": "closed",
+      "at": 56.181333333333335
+    },
+    {
+      "phase": "intro",
+      "at": 57.752
+    },
+    {
+      "phase": "hidden",
+      "at": 57.781333333333336
+    },
+    {
+      "phase": "disposed",
+      "at": 57.861333333333334
+    }
+  ],
+  "closedAt": 56.192,
+  "decoded": {
+    "spirit_appear": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.6
+    },
+    "spirit_disappear": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48
+    }
+  },
+  "finalVoices": 0,
+  "context": "closed",
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "predecoded": true
+}

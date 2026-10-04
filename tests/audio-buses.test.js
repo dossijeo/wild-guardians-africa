@@ -11,6 +11,21 @@ function fixture(){
  return {audio,sources,nodes};
 }
 
+test('native portrait disappearance uses the complete original UI source beyond visual closure',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:['spirit_appear','spirit_disappear'].map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url,duration:url==='spirit_appear'?1.6:2.48});
+ audio.guardianPhase('intro');await new Promise(done=>setImmediate(done));audio.guardianPhase('reading');audio.guardianPhase('outro');await new Promise(done=>setImmediate(done));audio.guardianPhase('closed');
+ assert.equal(sources.length,2);assert.ok(sources[0].stopped);assert.equal(sources[1].stopped,undefined);assert.equal(sources[1].buffer.duration,2.48);assert.equal(sources[1].playbackRate.value,1);assert.equal(sources[1].loop,false);
+ const voice=audio.voices.get(sources[1]);assert.equal(voice.bus,'ui');assert.equal(voice.emitter,'guardian-avatar');assert.equal(voice.volume.destination,audio.sfxBuses.ui);
+ audio.stop();assert.ok(sources[1].stopped);assert.equal(audio.guardianAudio.voice,null);audio.dispose();
+});
+
+test('context suspension invalidates pending portrait audio and resumes its phase silently',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.context.suspend=()=>{audio.context.state='suspended';};audio.context.resume=async()=>{audio.context.state='running';};
+ audio.sfx={items:[{id:'spirit_appear',loop:false,audio:{url:'appear'}}]};let resolve;audio.buffer=()=>new Promise(done=>resolve=done);
+ audio.guardianPhase('intro');await new Promise(done=>setImmediate(done));assert.equal(typeof resolve,'function');audio.suspend();audio.resume();resolve({});await new Promise(done=>setImmediate(done));
+ audio.guardianPhase('intro');audio.guardianPhase('reading');assert.equal(sources.length,0);audio.dispose();
+});
+
 test('four original NPC reactions share one voice family, pitch and world bus',async()=>{
  const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:WORKER_SOUND_IDS.map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url});
  for(let i=0;i<4;i++)assert.ok(await audio.sound(WORKER_SOUND_IDS[i],{family:'worker-voice',emitter:'w'+i,bus:'world'}));

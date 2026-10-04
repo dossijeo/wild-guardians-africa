@@ -283,7 +283,7 @@ function setTutorialInteraction(blocking){
   }
 }
 function narrator() {
-  const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message));
+  const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase));
   tutorial?.update();const warning=performance.now()<budgetWarningUntil;const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   world.tutorialHandsEnabled=!!message&&!message.reading&&!surfaces.active&&!warning;
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return;}

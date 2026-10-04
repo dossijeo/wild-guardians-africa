@@ -4,8 +4,8 @@ import {assetUrl} from '../rendering/asset-url.js';
 import {GuardianLifecycle} from './guardian-lifecycle.js';
 
 export class NativeGuardian {
-  constructor(container,onError=()=>{}){
-    this.container=container;this.onError=onError;this.disposed=false;this.key=null;this.time=0;this.age=0;this.lastStamp=null;
+  constructor(container,onError=()=>{},onPresentation=()=>{}){
+    this.container=container;this.onError=onError;this.onPresentation=onPresentation;this.disposed=false;this.key=null;this.time=0;this.age=0;this.lastStamp=null;
     this.physics=new OrnamentPhysics();this.pose=Object.fromEntries(['roll','yaw','pitch','lift','zoom','headX','headY','bodyX','bodyRoll','eyes','medallion','reveal'].map(k=>[k,0]));
     this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.lifecycle=new GuardianLifecycle(this.reduced);
@@ -49,9 +49,10 @@ export class NativeGuardian {
   hide({immediate=false}={}){
     this.root.classList.remove('reading','result-narration');this.root.removeAttribute('aria-modal');this.root.setAttribute('aria-hidden','true');this.root.inert=true;
     this.blocking=false;this.advance=null;this.skip=null;this.key=null;
-    if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;}
+    if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;this.present('hidden');}
     else this.lifecycle.finish();
   }
+  present(phase){try{this.onPresentation(phase);}catch{}}
   resize(){if(this.mesh){this.mesh.resize();this.magic.resize();this.draw(0);}}
   update(){
     if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}
@@ -60,7 +61,7 @@ export class NativeGuardian {
     if(this.closeAfter&&this.age>=this.duration+.9)this.hide();
     this.lifecycle.advance(elapsed,this.duration);
     this.root.classList.toggle('leaving',this.lifecycle.phase==='outro');
-    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.lastStamp=null;return;}
+    if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.lastStamp=null;this.present('closed');return;}
     this.draw(Math.min(elapsed,.065));
   }
   draw(dt){
@@ -75,10 +76,11 @@ export class NativeGuardian {
     this.physics.step(this.time,dt,this.pose.roll,this.pose.yaw,q.reveal*gain,gain,gain);
     this.mesh.update(this.pose.roll,this.pose.yaw,this.pose.pitch,{...this.pose,blend:1,angles:this.physics.angles,offsets:this.physics.offsets});
     this.mesh.draw();this.magic.draw(this.mesh,this.time,this.pose,false);
+    this.present(document.hidden?'hidden':this.lifecycle.phase);
     this.root.dataset.phase=gesture;
     this.root.dataset.lifecycle=this.lifecycle.phase;
   }
   dispose(){
-    this.disposed=true;this.observer.disconnect();this.mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();this.container.replaceChildren();
+    this.disposed=true;this.present('disposed');this.observer.disconnect();this.mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();this.container.replaceChildren();
   }
 }
