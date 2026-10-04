@@ -53,6 +53,28 @@ jobs:
           }
           Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
           if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }
+      - name: Check genuine native minimization and restoration
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP 'desktop-visibility-fixture.json'
+          node tools/create_desktop_visibility_fixture.mjs $fixture
+          if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
+          $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
+          $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
+          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report, '--smoke-fixture', $fixture -WindowStyle Hidden -PassThru
+          if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
+          if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
+          $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          $result.PSObject.Properties.Remove('worldPng')
+          $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
+          if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.visibility.passed) { throw 'Native visibility failed' }
+          "Native visibility hidden interval: $($result.checks.visibility.hiddenMs) ms" >> $env:GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          path: ${{ runner.temp }}/desktop-visibility.json
+          archive: false
+          retention-days: 7
       - uses: actions/upload-artifact@v7
         if: always()
         with:

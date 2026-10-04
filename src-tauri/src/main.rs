@@ -1,8 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+use tauri::Manager;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![desktop_smoke_report])
+        .invoke_handler(tauri::generate_handler![desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
         .on_page_load(|webview, payload| {
             if payload.event() == tauri::webview::PageLoadEvent::Finished
                 && std::env::args().any(|arg| arg == "--smoke-report")
@@ -13,6 +14,30 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .expect("Failed to run Wild Guardians Africa");
+}
+
+#[tauri::command]
+fn desktop_smoke_fixture() -> Result<Option<serde_json::Value>, String> {
+    let args: Vec<String> = std::env::args().collect();
+    if !args.iter().any(|arg| arg == "--smoke-report") { return Err("Smoke mode is disabled".into()); }
+    let Some(index) = args.iter().position(|arg| arg == "--smoke-fixture") else { return Ok(None); };
+    let path = args.get(index + 1).ok_or("Missing smoke fixture path")?;
+    let text = std::fs::read_to_string(path).map_err(|error| error.to_string())?;
+    serde_json::from_str(&text).map(Some).map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+fn desktop_smoke_minimize(app: tauri::AppHandle) -> Result<(), String> {
+    if !std::env::args().any(|arg| arg == "--smoke-report") { return Err("Smoke mode is disabled".into()); }
+    let window = app.get_webview_window("main").ok_or("Main window missing")?;
+    window.minimize().map_err(|error| error.to_string())?;
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_secs(8));
+        let _ = window.unminimize();
+        let _ = window.show();
+        let _ = window.set_focus();
+    });
+    Ok(())
 }
 
 #[tauri::command]
