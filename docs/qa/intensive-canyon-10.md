@@ -27,3 +27,11 @@ Se conservan los cargos enteros, semillas pagadas, riegos obligatorios antes de 
 La espera del 77,93 % es un problema pendiente para el requisito de mantener al jugador ocupado. Es tiempo sin comandos de esta estrategia automatizada; no una medida subjetiva de aburrimiento. Antes de ajustar ganancias, costes o daño se debe comparar con los resultados completos de cien noches y con otros perfiles, manteniendo la posibilidad de derrota por mala gestión. Sobrevivir estas diez noches no resuelve ese requisito.
 
 Evidencia: `intensive-canyon-10/report.json`, `intensive-canyon-10/state.json` y `intensive-canyon-10/summary.json`. La victoria de campaña permanece sin verificar.
+
+## Comparación con trabajadoras jóvenes
+
+Se repite la estrategia con el argumento `youngFemale`, sin alterar sus valores ordinarios: jornal 40, velocidad de trabajo 1,5 y jornada completa. El informe identifica esta selección y registra HEAD 8cb2edc, cambios locales de los scripts de QA y 165 huellas de fuentes/dependencias antes de empezar. Las reglas del juego estaban sin cambios. Evidencia adicional: `young-report.json`, `young-state.json` y `young-summary.json` en el mismo directorio.
+
+Diez noches completas, 610 brotes pagados, máximo de 132 plantas vivas, 483 cosechas recogidas/entregadas, 7 plantas destruidas y 653 monedas finales. El centro conserva 600 HP; la selección mixed vuelve a no activarse y solo se planta mijo. La misma política de contratación conserva doce plantas por trabajador independientemente de su perfil, así que no se presenta como contratación óptima para las jóvenes.
+
+La espera diurna alcanza 2356/3000 s (78,53 %), de los cuales 2156 son por presupuesto y 200 por final de jornada. El máximo sin acciones es 158 s y el percentil 90 diario 89 s. El mayor número de entregas no elimina la espera bajo esta política. Sigue pendiente contrastar el resultado completo de cien noches y encontrar un balance/gestión que permitan actividad frecuente sin impedir perder con decisiones malas. No se cambian expectativas de victoria para hacer pasar una derrota ni se consideran estos diez días una aceptación completa.
