@@ -202,7 +202,7 @@ function closeSurface(){
   if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
   if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();
 }
-function armTool(value){tool=toolSession.select(value,performance.now()/1000);}
+function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
 function cancelTool(){if(pendingSpell)cancelSpellPreview();if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;

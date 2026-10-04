@@ -6,6 +6,7 @@ import {tutorialHudHandTarget} from '../src/ui/tutorial-hud-hand.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {TutorialController} from '../src/tutorial/controller.js';
+import {WorldScene} from '../src/rendering/scene.js';
 const nav={field:{surface:()=>0},placement:()=>({valid:true,suppress:[]}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
 function fixture(){const s=Game.newGame({seed:712});s.tutorial.step='center';s.villages[0].center={x:10,z:0};return s;}
 test('the first center and first seed follow HUD selection, legal 3D placement, then remove both hints',()=>{
@@ -16,6 +17,18 @@ test('the first center and first seed follow HUD selection, legal 3D placement, 
  const plantMessage={id:'basic.plant',reading:true};assert.equal(tutorialHudHandTarget(s,plantMessage,'center'),'[data-menu="grow"]');assert.equal(tutorialHandTarget(s,nav,'center'),null);
  assert.equal(tutorialHudHandTarget(s,plantMessage,'plant'),null);const seed=tutorialHandTarget(s,nav,'plant');assert.equal(seed.kind,'tap');assert.equal(seed.position[0]%1.5,0);assert.equal(seed.position[2]%1.5,0);
  Game.plant(s,'first-seed','mijo',seed.position[0],seed.position[2],nav);assert.equal(tutorialHandTarget(s,nav,'plant'),null);assert.equal(tutorialHudHandTarget(s,{id:'basic.hiring'}),null);
+});
+test('choosing a guided placement reveals its exact legal world target without moving the camera again on unrelated tools',()=>{
+ const s=fixture(),focused=[],world={state:s,nav,focus:p=>focused.push(p)};
+ const guide=WorldScene.prototype.focusTutorialPlacement.call(world,'center');
+ assert.ok(guide);assert.deepEqual(focused,[{x:guide.position[0],z:guide.position[2]}]);
+ Game.placeStructure(s,'first-center',{x:guide.position[0],z:guide.position[2]},nav);
+ const seed=WorldScene.prototype.focusTutorialPlacement.call(world,'plant');assert.ok(seed);
+ assert.deepEqual(focused.at(-1),{x:seed.position[0],z:seed.position[2]});
+ for(const kind of ['wall','spell','center'])assert.equal(WorldScene.prototype.focusTutorialPlacement.call(world,kind),null);
+ assert.equal(focused.length,2);
+ s.tutorial.basicSkipped=true;assert.equal(WorldScene.prototype.focusTutorialPlacement.call(world,'plant'),null);
+ assert.equal(focused.length,2);
 });
 test('closing, skipping, hidden presentation and terminal states remove both kinds of guidance',()=>{
  for(const change of [s=>s.tutorial.dismissed=['basic.center:'],s=>s.day=2,s=>s.result='defeat',s=>s.tutorial.step='observe']){

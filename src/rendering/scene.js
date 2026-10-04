@@ -127,6 +127,11 @@ export class WorldScene {
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
+  focusTutorialPlacement(kind){
+    const target=tutorialHandTarget(this.state,this.nav,kind);
+    if(target)this.focus({x:target.position[0],z:target.position[2]});
+    return target;
+  }
   terrain(cx,cz,payload=null) {
     const group=new THREE.Group();group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
