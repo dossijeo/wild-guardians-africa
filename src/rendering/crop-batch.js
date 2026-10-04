@@ -8,6 +8,9 @@ export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
  const state={morphSeconds:2},renderOrigin={x:0,z:0};
  let models=[],bridges=[],counts=new Uint32Array(40),bridgeCounts=new Uint32Array(32);
  const dirty=new Map();
+ // A bounded sample per species and one synchronous pose avoid copying plant
+ // state and allocating identical botanical recipes for mature/paused cohorts.
+ const stageSamples=Array(8),renderPlant={};
  const uniforms={clock:{value:0},wind:{value:1}},tmpObj=new THREE.Object3D();
  const cycleDuration=crop=>cropSpec(ids[crop]).growth_seconds;
 const GROWTH_DECL=`attribute vec4 iGrowth; uniform float uGround; uniform float uHeight; uniform float uClock; uniform float uWind;`;
@@ -247,8 +250,10 @@ function writeInstance(modelIndex,plant,part){
    renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges])model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
    for(const entity of plants){
-    const p={...entity,crop:ids.indexOf(entity.species),growth:entity.growth/cropSpec(entity.species).growth_seconds,y:ground(entity.x,entity.z),seed:Number(entity.id.replace(/\D/g,''))||0};
-    const sample=stageSample(p.crop,p.growth);
+    const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=ids.indexOf(entity.species);p.growth=entity.growth/cropSpec(entity.species).growth_seconds;p.y=ground(entity.x,entity.z);p.seed=Number(entity.id.replace(/\D/g,''))||0;
+    const cached=stageSamples[p.crop];
+    const sample=cached?.growth===p.growth?cached.sample:stageSample(p.crop,p.growth);
+    if(cached?.growth!==p.growth)stageSamples[p.crop]={growth:p.growth,sample};
     for(const part of sample.items)writeInstance(part.index,p,part);
     if(sample.bridge)writeBridge(sample.bridge.index,p,sample.bridge);
    }
