@@ -1,6 +1,6 @@
-# Alcance de aceptación tras las revisiones del 4 de octubre
+# Alcance de aceptación de las revisiones actuales
 
-Runtime de la revisión incremental más reciente: `fdf9e30`; el informe original de esta página inspeccionaba `e87dc25`. El registro original de 159 casos conserva su revisión base `44f5c7b`, las notas históricas y los límites de cada ensayo. Sus 156 estados verified y tres partial no equivalen a aceptación completa de todas las revisiones posteriores. Todos los archivos de evidencia enlazados existen; comprobar su existencia no acredita su contenido ni su vigencia.
+Esta revisión reúne evidencia disponible hasta `7495dac`; el informe original de esta página inspeccionaba `e87dc25`. Los ensayos conservan sus revisiones particulares y no se atribuyen a HEAD posterior por conservarse sus archivos. El registro original de 159 casos mantiene la base `44f5c7b`, las notas históricas y los límites de cada ensayo. Sus 156 estados verified y tres partial no equivalen a aceptación completa de todas las revisiones posteriores. Comprobar la existencia de archivos enlazados no acredita su contenido ni su vigencia.
 
 ## Reglas actuales y alcance comprobado
 
@@ -14,13 +14,15 @@ Runtime de la revisión incremental más reciente: `fdf9e30`; el informe origina
 
 | Requisito | Evidencia disponible y límite | Pendiente |
 | --- | --- | --- |
-| QA-014: ocultar pestaña y recuperar sin salto | Razones de pausa probadas; el navegador integrado anterior no cambió document.hidden | Transición real de visibilidad y recuperación |
-| QA-155: agricultores, animales y varios colapsos con audio/VFX | Dominio pagado, una estructura preparada y mezclas parciales; pestaña 223 sin resultado legible | Escena integrada completa, varios colapsos, mezcla y escucha |
-| QA-156: Gameplay A/B | Transportes originales y cruces técnicos silenciados; diez stems por pack | Continuidad perceptual y alternancia en campaña renderizada |
+| QA-014: ocultar y recuperar sin salto | Restauración de dominio probada; WebView2 real tras corregir el host observa hidden/visible y 3,5 s comparados sin cambios, con menu conservado al restaurar | Cinco minutos reales en ejecución; navegador y teléfono físico siguen sin acreditar por esta prueba Windows |
+| QA-155: agricultores, animales y varios colapsos con audio/VFX | Escena 3D preparada con tres centros, dos colapsos simultáneos, 620 instancias de escombros, límites de voces y limpieza comprobados; crédito/daño QA explícitos y audio silenciado | Escucha, carga fría, HUD completo y ataques de las cinco especies; teléfono físico |
+| QA-156: Gameplay A/B | Mundo 3D nativo de primera jornada/incursión/amanecer cambia A→B; diez stems originales por pack, límites y limpieza comprobados con audio silenciado | Continuidad perceptual y alternancia de toda la campaña renderizada |
 | Móvil tras todas las revisiones | Primer día guiado anterior y pruebas de dominio/UI | Recorrido visual actualizado de manos, contratación, incursión, amanecer, murallas y magia; teléfono físico |
 | Rendimiento y memoria web/móvil | CPU local, GPU histórico y recursos originales | Frametime actual, picos de incursión y memoria de música activa en dispositivo |
 | Aceptación integral del plan y cambios posteriores | Casos originales y pruebas incrementales con alcances distintos | Contrastar los requisitos con evidencia vigente y suficiente; no sustituirlo por el conteo de tests |
 
 El acceso al navegador se ha recuperado. En el juego real a 390×844 se han comprobado carga previa al HUD, colocación guiada de centro y brote, orden de precios, contratación obligatoria automática, primera entrega cobrada, mano 2D al iniciar una segunda partida, construcción inmediata por arrastre y devolución de tramo intacto. Los detalles y capturas están en [current-player-revision.md](current-player-revision.md). Treinta pruebas de apertura guiada cubren riegos, recogida y entrega en los seis biomas y cinco culturas; no sustituyen inspección visual de todas esas combinaciones.
 
-La campaña intensiva de 100 noches sigue en ejecución; aún no queda aceptada su victoria ni el tiempo de inactividad. El recorrido visual de incursión/amanecer/magias, QA-014, QA-155, QA-156 y rendimiento en teléfono físico siguen pendientes. La recuperación del navegador no resuelve esas comprobaciones por sí sola. El objetivo completo permanece abierto.
+Las campañas intensivas de cien noches siguen en ejecución; aún no queda aceptada su victoria ni el tiempo de inactividad. Dos estrategias de diez noches de Gran cañón/Mapungubwe sobreviven con más de cien plantas simultáneas y entregas físicas auditadas, pero usan únicamente mijo y presentan un 77,93/78,53 % de tiempo diurno sin acciones. No acreditan diversidad ni un ritmo satisfactorio. Sus fuentes, límites y flujos de caja están en [intensive-canyon-10.md](intensive-canyon-10.md).
+
+La nueva evidencia móvil inglesa está en [i18n-current-mobile.md](i18n-current-mobile.md); la carga múltiple preparada en [audio-buses/plural-collapses.md](audio-buses/plural-collapses.md); la jornada renderizada A→B en [audio-buses/native-world-dawn.md](audio-buses/native-world-dawn.md); y los informes reales de fallo/corrección Windows en [windows-desktop/native-visibility.md](windows-desktop/native-visibility.md). El objetivo completo permanece abierto: ninguna de estas comprobaciones parciales resuelve por sí sola los requisitos pendientes.

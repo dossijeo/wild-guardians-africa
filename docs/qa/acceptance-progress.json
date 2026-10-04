@@ -187,9 +187,11 @@
       "expected": "No hay ganancias, daño, riego ni avance offline.",
       "audit_status": "partial",
       "evidence": [
-        "docs/qa-acceptance-clock.md"
+        "docs/qa-acceptance-clock.md",
+        "docs/qa/windows-desktop/native-visibility.md",
+        "docs/qa/windows-desktop/desktop-visibility-ccb2ce2.json"
       ],
-      "notes": "1800-second blocked real-time advances leave entire game state identical with menu plus hidden, and after only hidden clears. Remaining: actual browser hidden/restored timing and clock reset without offline advancement."
+      "notes": "1800-second blocked real-time advances leave entire game state identical with menu plus hidden, and after only hidden clears. Remaining: actual browser hidden/restored timing and clock reset without offline advancement. Native Windows ccb2ce2 now observes genuine hidden/visible transitions after synchronizing the WebView host: 3505.5 ms measured with unchanged simulation, menu retained on restore, 1 simulated second during 2254 ms visible. This brief interval does not prove many minutes; the five-minute CI extension remains unverified. QA-014 stays partial."
     },
     {
       "id": "QA-015",
