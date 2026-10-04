@@ -1,0 +1,27 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Impactos originales de murallas</title>
+<p>Murallas y puertas pagadas mediante Game; preparación dirigida en el final de un ataque y daño/eventos de updateRaid. WebAudio y MP3 originales, salida silenciada, sin mundo3D ni evaluación auditiva.</p><button id="run">Probar impactos por material</button><output id="status">Lista</output><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid,updateRaid} from '../../src/simulation/raids.js';
+import {rational} from '../../src/simulation/money.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {AudioSystem} from '../../src/audio/audio.js';
+import {WALL_HIT_SOUNDS,STRUCTURE_CONTACT_FAMILY} from '../../src/audio/structure-audio.js';
+const nav={placement:()=>({valid:true,suppress:[]}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+const errors=[],history=[],status=document.querySelector('#status'),report=document.querySelector('#report');let live=null;
+const assert=(v,message)=>{if(!v)throw Error(message);};const dispose=()=>{if(live){live.dispose();live=null;}};addEventListener('pagehide',dispose);
+addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{
+ const audio=live=new AudioSystem({sfx:0,music:0});await audio.unlock();audio.sfx=await audio.sfxBank();
+ for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))for(const gate of [false,true]){
+  status.textContent=material+(gate?' puerta':' muro');audio.stop();audio.remember([]);const item=audio.sfx.items.find(i=>i.id===id),buffer=await audio.buffer(item.audio.url);
+  const s=Game.newGame({seed:712,slotId:'qa-wall-'+material+'-'+gate});Game.resume(s,'intro');s.ledger.balance=rational(10000);s.day=3;s.initialPreparation=false;s.tutorial.step='done';
+  Game.placeStructure(s,'center',{x:4,z:0},nav);Game.placeStructure(s,'wall',{kind:'wall',material,gate,x:10,z:0},nav);const wall=s.structures[1];spawnRaid(s,{group:['warthog']},nav);
+  const animal=s.raid.animals[0];Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:wall.id,attackRemaining:.01,hitsRemaining:2,hitApplied:false,approachShieldId:null});const hp=wall.hp;updateRaid(s,.02,nav);
+  const hits=s.events.filter(e=>e.type==='StructureHit');assert(hits.length===1&&wall.hp===hp-40,'Daño lógico incorrecto');const before=serialize(s);audio.process(hits,{state:s});audio.process(hits,{state:s});await new Promise(done=>setTimeout(done,80));assert(serialize(s)===before,'Audio cambia dominio');assert(audio.active.length===1,'No hay una única fuente');
+  const source=audio.active[0],voice=audio.voices.get(source);assert(source.buffer===buffer&&source.playbackRate.value===1&&!source.loop,'Clip, tono o bucle incorrecto');assert(voice.family===STRUCTURE_CONTACT_FAMILY&&voice.bus==='world'&&voice.emitter===animal.id,'Familia o emisor incorrecto');
+  history.push({material,gate,id,hpBefore:hp,hpAfter:wall.hp,hits:hits.length,voices:audio.active.length,rate:source.playbackRate.value,family:voice.family,bus:voice.bus,decoded:{channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,duration:buffer.duration}});
+ }
+ audio.stop();assert(audio.active.length===0&&audio.voices.size===0,'Fuentes sin liberar');dispose();await new Promise(done=>setTimeout(done,80));assert(audio.context.state==='closed','Contexto sin cerrar');report.textContent=JSON.stringify({history,errors,muted:true,world3D:false,stoppedVoices:audio.active.length,context:audio.context.state},null,2);status.textContent='Completada';
+ }catch(e){errors.push(String(e));report.textContent=JSON.stringify({history,errors},null,2);status.textContent='FAIL: '+e.message;dispose();}};
+</script></html>

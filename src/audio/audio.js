@@ -1,3 +1,4 @@
+import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
 import {MovementAudio} from './movement-audio.js';
@@ -121,7 +122,7 @@ export class AudioSystem {
     }
   }
   async sound(id,options={}) {
-    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:id});return null;
+    if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:options.family??id});return null;
   }
   async ambientSound(id,options={}){
     if(this.context?.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;
@@ -131,7 +132,7 @@ export class AudioSystem {
     if(this.context?.state!=='running')return;
     this.ambient??=new AmbientAudio((id,opts)=>this.ambientSound(id,opts),source=>this.stopVoice(source),(source,value)=>{const gain=this.voices.get(source)?.volume.gain;if(gain){if(gain.setTargetAtTime)gain.setTargetAtTime(value,this.context.currentTime,.08);else gain.value=value;}},()=>this.context.currentTime);this.ambient.update(state,options);
   }
-  process(events,{state,listener}={}){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=eventSound[event.type];if(id)this.sound(id,eventAudioOptions(event,id,state,listener)).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
+  process(events,{state,listener}={}){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
   updateWork(state,options={}){
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);

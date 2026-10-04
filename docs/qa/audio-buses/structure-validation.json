@@ -1,0 +1,49 @@
+{
+  "sourceSha256": {
+    "src/audio/audio.js": "3bfe9b72ea7e9036e5ed826cb29e156b04fa0697f7a811b54e6a5ddad52fa04a",
+    "src/audio/structure-audio.js": "be4396bcdffe5665ff3051e55c88beee706084affc8464e9b11960002691d228",
+    "public/content/sfx-routing.json": "74d74cc7f4cb159e47baf5ca6b7cca16b737685fef2205598ee871d8ba2274e1"
+  },
+  "directedTests": {
+    "passed": 56,
+    "failed": 0,
+    "durationMs": 1454.3191
+  },
+  "completeLocalSuite": {
+    "status": "running",
+    "log": ".cache/structure-audio-full.log"
+  },
+  "build": {
+    "result": "passed",
+    "viteReportedSeconds": 6.28
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406686462,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 44,
+    "reserved": 82
+  },
+  "native": {
+    "result": "passed",
+    "cases": 10,
+    "fixture": "tests/browser/structure-audio.html",
+    "report": "docs/qa/audio-buses/structure-native.json",
+    "muted": true,
+    "world3D": false,
+    "setup": "paid structures with directed committed attack boundary; updateRaid owns damage and events",
+    "sharedFamily": "structure-contact",
+    "stoppedVoices": 0,
+    "context": "closed"
+  },
+  "limitations": [
+    "No listening evidence",
+    "No full 3D worker/beast/collapse mixture",
+    "Complete local regression is still running"
+  ]
+}
