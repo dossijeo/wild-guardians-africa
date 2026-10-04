@@ -134,7 +134,23 @@ export class AudioSystem {
     if(this.context?.state!=='running')return;
     this.ambient??=new AmbientAudio((id,opts)=>this.ambientSound(id,opts),source=>this.stopVoice(source),(source,value)=>{const gain=this.voices.get(source)?.volume.gain;if(gain){if(gain.setTargetAtTime)gain.setTargetAtTime(value,this.context.currentTime,.08);else gain.value=value;}},()=>this.context.currentTime);this.ambient.update(state,options);
   }
-  process(events,{state,listener}={}){for(const event of events){if(this.seen.has(event.id))continue;this.seen.add(event.id);if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});}if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));}
+  process(events,{state,listener}={}){
+    let start=0;
+    // Game.emit appends and shifts this bounded history. Stable frames inspect
+    // one anchor; a shifted history searches only when there are new facts.
+    if(events===this.eventHistory&&this.eventCursor>0){
+      if(events[this.eventCursor-1]===this.eventAnchor)start=this.eventCursor;
+      else {const previous=events.lastIndexOf(this.eventAnchor);if(previous>=0)start=previous+1;}
+    }
+    for(let index=start;index<events.length;index++){
+      const event=events[index];if(this.seen.has(event.id))continue;this.seen.add(event.id);
+      if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
+      const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];
+      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+    }
+    this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
+    if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));
+  }
   updateWork(state,options={}){
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);
@@ -151,7 +167,7 @@ export class AudioSystem {
     if(this.context?.state!=='running'){this.movement?.dispose();return;}
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
-  remember(events){this.seen=new Set(events.map(event=>event.id));}
+  remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
   stop(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

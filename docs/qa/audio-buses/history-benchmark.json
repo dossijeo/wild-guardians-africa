@@ -1,0 +1,59 @@
+{
+  "baselineCommit": "4eb8420eefa317fa635c963b89512eef7cc93b94",
+  "sourceSha256": {
+    "baseline": "6db917b23dfa5bfa451169bf7b885d75079b896ab19753bbc8cf92dcce605b24",
+    "current": "b5af134dca2f1011ce147615f4fce7ce7f09715865808ac02613977515ec1429"
+  },
+  "node": "v20.11.0",
+  "platform": "win32",
+  "framesPerSample": 100000,
+  "historyCap": 200,
+  "samples": 7,
+  "scope": "Isolated Node CPU dispatcher; unmapped facts; no audio decoding, browser, renderer or GPU. Not a whole-game frame-time or FPS measurement.",
+  "cases": {
+    "quiet": {
+      "baselineMs": [
+        273.0727,
+        257.4288999999999,
+        249.4280000000001,
+        249.95899999999983,
+        280.0571,
+        268.74159999999983,
+        294.94789999999966
+      ],
+      "currentMs": [
+        7.253699999999981,
+        3.7506000000000768,
+        2.23720000000003,
+        2.3039000000001124,
+        4.165000000000191,
+        3.3900000000003274,
+        2.970900000000256
+      ],
+      "baselineMedianMs": 268.74159999999983,
+      "currentMedianMs": 3.3900000000003274
+    },
+    "rollingOneEventEvery40Frames": {
+      "baselineMs": [
+        317.3361,
+        336.1723999999999,
+        259.8642,
+        258.01129999999966,
+        257.3350999999998,
+        232.1909999999998,
+        235.91690000000017
+      ],
+      "currentMs": [
+        5.809999999999945,
+        5.828500000000076,
+        3.011800000000221,
+        4.874899999999798,
+        4.056900000000496,
+        4.79989999999998,
+        2.880300000000716
+      ],
+      "baselineMedianMs": 258.01129999999966,
+      "currentMedianMs": 4.79989999999998
+    }
+  }
+}
