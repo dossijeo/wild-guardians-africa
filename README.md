@@ -3,6 +3,8 @@ Build a thriving farm, protect your village from relentless animal attacks, and 
 
 Implementación en curso basada en los labs y el [plan maestro recibido](docs/plan/Wild_Guardians_Plan_Maestro_Definitivo.md). El [registro de implementación](docs/IMPLEMENTATION.md) distingue los requisitos de las comprobaciones ejecutadas.
 
+Las reglas actuales de inicio usan 1500 monedas y una reserva de 100 para la siguiente contratación. El tutorial deja correr el tiempo al informar o esperar a los trabajadores; lo detiene durante una acción señalada por la mano, conservando la interfaz utilizable. Los cultivos maduros generan su tarea de cosecha automáticamente: el dinero solo llega cuando un trabajador recoge y entrega la caja. La primera incursión ocurre en la primera noche. [Cambios recientes, pruebas y límites](docs/qa/player-revisions-2026-10-04.md).
+
 ## Desarrollo
 
 Requiere Node.js 20 y Python 3.12 para verificar los recursos originales.
