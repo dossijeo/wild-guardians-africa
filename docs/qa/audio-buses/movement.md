@@ -1,0 +1,11 @@
+# Native movement audio
+
+The production frame now calls AudioSystem.updateMovement after simulation/render and uses the same original toe-contact data and moving-pose/crossing helpers as LocomotionVfx. A foot contact requires actual horizontal displacement, the same gait, increasing simulated time and an observed interval of at most0.25 seconds. First load, a changed state object, a long gap, stationary animation and backwards time do not replay contacts.
+
+Walking/carrying workers use biome-default soil, grass, sand or stone; running uses the original run_surface_set. Buffalo/rhino use the original heavy beast step, while the other three species use the light step. Mud/wood require an authoritative local surface resolver and remain catalog-only in the current production inventory. No raycast, terrain rebuild, per-frame scene traversal or pitch acceleration is added.
+
+Steps use the existing20/4/2 admission budgets at priority0, below work and danger/result cues, and a quarter-level distance-attenuated world gain. The gain is a technical initial mix choice, not a perceptual sign-off. Pending contacts expire after0.25 WebAudio seconds or immediately when their movement observation is invalidated. Active movement voices release on stopping, pause, actor removal, state replacement, leaving a scene or context suspension; context suspension also invalidates pending contacts when no next simulation frame is available.
+
+48/48 directed tests pass:20 native gait/species/pause/domain tests and28 audio graph/routing/lifecycle tests. A paid native walking simulation confirms audio does not mutate snapshots, money or RNG. The full local suite for the previous production commit59063b7 passes1225/1225; the new movement revision is running in `.cache/movement-audio-full.log`. The new build passes in44.98 seconds, and the web package check passes:578 files,406681333 bytes,816 relative links and20 runtime GLBs. Original126 MP3 hashes and the approved021/022 identity swap remain checked.
+
+Current inventory:27 connected and99 catalog/reserved. QA-155/156 remain partial; browser tab207's mixed scene has not yielded a readable completion result. The diagnostic source includes the new movement update and0.1-second observation cadence, but a source change or syntax check is not evidence of its runtime success.

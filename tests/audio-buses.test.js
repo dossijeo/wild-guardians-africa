@@ -1,3 +1,4 @@
+import {FOOTSTEPS} from '../src/rendering/footsteps-data.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {AudioSystem,SFX_LIMITS,eventAudioOptions,soundBus} from '../src/audio/audio.js';
@@ -43,4 +44,17 @@ test('native worker/animal metadata chooses positional world cues while UI and r
  assert.equal(eventAudioOptions({type:'WorkerHit',animalId:'animal-1',targetId:'worker-1'},'npc_hit',state,listener).emitter,'worker-1');
  assert.deepEqual(eventAudioOptions({type:'RaidSpawned'},'game_attack_alert',state,listener),{bus:'ui'});
  assert.equal(soundBus('amb_night'),'ambient');assert.equal(soundBus('ui_click'),'ui');assert.equal(soundBus('farm_harvest_pick'),'world');
+});
+
+test('a foot contact invalidated or expired during decode never creates a voice',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();let resolve,current=true;audio.buffer=()=>new Promise(done=>resolve=done);
+ const pending=audio.play('step',{emitter:'worker',isCurrent:()=>current});current=false;resolve({});assert.equal(await pending,null);assert.equal(sources.length,0);audio.dispose();
+});
+
+test('context suspension cancels a pending foot contact even when no simulation frame runs',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.context.suspend=()=>{audio.context.state='suspended';};audio.context.resume=async()=>{audio.context.state='running';};
+ audio.sfx={items:[{id:'step_dry_soil',loop:false,audio:{url:'step'}}]};let resolve;audio.buffer=()=>new Promise(done=>resolve=done);
+ const time=FOOTSTEPS.sources.olderMale.clips.Walk_Skip.contacts[0].time,worker={id:'worker',profile:'olderMale',status:'walking',x:0,z:0,walkPhase:time-.1},state={workers:[worker],biome:'sabana',elapsed:0,pauses:[]};
+ audio.updateMovement(state);worker.x=.144;worker.walkPhase=time+.1;state.elapsed=.2;audio.updateMovement(state);await new Promise(done=>setImmediate(done));assert.equal(typeof resolve,'function');
+ audio.suspend();audio.resume();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
 });

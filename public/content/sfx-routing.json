@@ -115,11 +115,10 @@
       "id": "step_dry_soil",
       "filename": "010_step_dry_soil.mp3",
       "sha256": "ed0c918c33f4d664b6b1272ba1854ab7271ee16e486ef2164e9e69891df42604",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyo de pie de trabajador sobre tierra seca."
     },
     {
@@ -127,11 +126,10 @@
       "id": "step_grass",
       "filename": "011_step_grass.mp3",
       "sha256": "6ac80454edead375948379195a4c15f17daf39750c081bf55006f5058ece5dd1",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyo de pie de trabajador sobre hierba."
     },
     {
@@ -143,7 +141,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Original clip retained. MovementAudio accepts an authoritative local surface resolver, but current production biome defaults do not identify individual mud patches or a traversable wooden surface; do not pretend those materials were detected.",
       "planned_trigger": "Apoyo de pie de trabajador sobre barro."
     },
     {
@@ -151,11 +149,10 @@
       "id": "step_sand",
       "filename": "013_step_sand.mp3",
       "sha256": "832f1c05c9568d8e71a20b067ef04dde28dcf09da514359a95286ce7d14b79c1",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyo de pie de trabajador sobre arena."
     },
     {
@@ -163,11 +160,10 @@
       "id": "step_stone",
       "filename": "014_step_stone.mp3",
       "sha256": "1f1b51f768b1192b1bd56d016060a13453ddfa39a1f9d500439253ca00a3d283",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyo de pie de trabajador sobre piedra."
     },
     {
@@ -179,7 +175,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Original clip retained. MovementAudio accepts an authoritative local surface resolver, but current production biome defaults do not identify individual mud patches or a traversable wooden surface; do not pretend those materials were detected.",
       "planned_trigger": "Apoyo de pie de trabajador sobre madera."
     },
     {
@@ -187,11 +183,10 @@
       "id": "run_surface_set",
       "filename": "016_run_surface_set.mp3",
       "sha256": "5446cf28cd8b193aac2d923609abc5d9a2b12051849671e52f9c788da54ba0df",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Carrera de personajes; usar la toma aprobada, no inventar variantes de superficie ausentes."
     },
     {
@@ -560,11 +555,10 @@
       "id": "beast_step_light",
       "filename": "047_beast_step_light.mp3",
       "sha256": "1b15c8789022a4577ae6380b411645d296185e2c97cd53880d2b128ac95cb125",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyos de bestia ligera; marcadores de animación."
     },
     {
@@ -572,11 +566,10 @@
       "id": "beast_step_heavy",
       "filename": "048_beast_step_heavy.mp3",
       "sha256": "7744efbeecc44000028140a582004a2f1b417cf2b389752b00e57bca12070c98",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "actor-foot-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Apoyos de bestia pesada; marcadores de animación."
     },
     {

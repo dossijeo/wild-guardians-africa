@@ -1,0 +1,35 @@
+{
+  "sourceSha256": {
+    "src/audio/audio.js": "433f40d632161c87bedfcded9c04ee738ce5e376d5cfd21e10c9d99920b035c3",
+    "src/audio/movement-audio.js": "735a265f1e78b025d1fd8c2601c97dc6f0412612646f72ececebba70caaa9b76",
+    "src/app/main.js": "2658a0be6b753dcd7390e8c4097c91d34634a8779aff5388458db1226e330774",
+    "public/content/sfx-routing.json": "5ea8eee71a44fce54641971677fdb216be1a36c74f04a8248ebbd6b9fce6e60d"
+  },
+  "directedTests": {
+    "passed": 48,
+    "failed": 0,
+    "durationMs": 1553.3582
+  },
+  "build": {
+    "result": "passed",
+    "durationSeconds": 44.98
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406681333,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "routing": {
+    "entries": 126,
+    "connected": 27,
+    "reserved": 99
+  },
+  "completeLocalSuite": {
+    "status": "running",
+    "log": ".cache/movement-audio-full.log"
+  },
+  "nativeMixedScene": "unverified; browser control timeouts, tab207 retained",
+  "scope": "Native foot-contact phase policy, graph cancellation, paid simulation immutability, build/package. No perceptual or mixed-scene success is inferred."
+}

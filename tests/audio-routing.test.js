@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {MOVEMENT_SOUND_IDS} from '../src/audio/movement-audio.js';
 import {AudioSystem,eventSound,SFX_LIMITS} from '../src/audio/audio.js';
 import {simulateOpening} from '../tools/check_opening.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
@@ -24,6 +25,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
   const events=Object.keys(eventSound).filter(e=>eventSound[e]===item.id);
   if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,events);assert.equal(item.loop,false);}
+  else if(MOVEMENT_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['actor-foot-contact']);assert.equal(item.loop,false);}
   else{assert.equal(route.status,'reserved');assert.ok(route.reservation_reason);assert.deepEqual(route.destination,['sfx-library-preview']);}
  }
  assert.equal(bank.items.find(i=>i.number===21).sha256,'932df6a774847cf39bc2de324f6b8db4abea41eedfcf575a4caa5ddb91bf1290');
