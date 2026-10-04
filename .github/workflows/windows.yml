@@ -28,7 +28,8 @@ jobs:
         with:
           workspaces: src-tauri -> target
       - run: npm ci
-      - run: npm run desktop:build
+      - id: desktop-build
+        run: npm run desktop:build
       - name: Check Windows executable and installer
         shell: pwsh
         run: |
@@ -88,12 +89,14 @@ jobs:
           archive: false
           retention-days: 7
       - uses: actions/upload-artifact@v7
+        if: always() && steps.desktop-build.outcome == 'success'
         with:
           path: src-tauri/target/release/bundle/nsis/*-setup.exe
           archive: false
           if-no-files-found: error
           retention-days: 7
       - uses: actions/upload-artifact@v7
+        if: always() && steps.desktop-build.outcome == 'success'
         with:
           path: src-tauri/target/release/wild-guardians-africa.exe
           archive: false
