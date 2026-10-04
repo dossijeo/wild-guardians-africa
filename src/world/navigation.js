@@ -241,6 +241,9 @@ export class Navigation {
     let visited=0,touchesBoundary=false;
     while(open.length&&visited++<maxVisited) {
       const cur=open.pop(),ck=key(cur.x,cur.z);
+      // A cheaper entry for this cell has already been processed. Keep the
+      // original pop budget, but avoid repeating its collision/neighbor work.
+      if(cur.g>costs.get(ck))continue;
       if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)touchesBoundary=true;
       if((Math.hypot(cur.x-ex,cur.z-ez)<1.5||portals.nodes.has(ck)&&distance(cur,end)<=4)&&this.segmentClear(cur,end,radius,ignore,worker)) {
         const route=[{x:end.x,z:end.z}];let k=ck;
