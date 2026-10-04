@@ -4,49 +4,49 @@
     {
       "variant": "reference",
       "run": 1,
-      "maxTickMs": 411.21630000000005,
+      "maxTickMs": 791.2186000000002,
       "steps": 1636,
       "searches": 251
     },
     {
       "variant": "cached",
       "run": 1,
-      "maxTickMs": 379.0912999999998,
+      "maxTickMs": 488.4157,
       "steps": 1636,
       "searches": 251
     },
     {
       "variant": "reference",
       "run": 2,
-      "maxTickMs": 483.40909999999985,
+      "maxTickMs": 548.4909,
       "steps": 1636,
       "searches": 251
     },
     {
       "variant": "cached",
       "run": 2,
-      "maxTickMs": 395.0642,
+      "maxTickMs": 421.4866999999999,
       "steps": 1636,
       "searches": 251
     },
     {
       "variant": "reference",
       "run": 3,
-      "maxTickMs": 442.25519999999983,
+      "maxTickMs": 525.8867,
       "steps": 1636,
       "searches": 251
     },
     {
       "variant": "cached",
       "run": 3,
-      "maxTickMs": 438.83439999999996,
+      "maxTickMs": 405.7664,
       "steps": 1636,
       "searches": 251
     }
   ],
   "medianPeakMs": {
-    "reference": 442.25519999999983,
-    "cached": 395.0642
+    "reference": 548.4909,
+    "cached": 421.4866999999999
   },
   "trajectorySha256": "98ab892b42bde416b6c122a28a31063e74420d9d382c1154d3f09fa04dd648ae",
   "identicalSerializedSteps": 1636,
@@ -57,5 +57,12 @@
     "fail": 0
   },
   "remaining": "Each worker still performs independent A*, and peak CPU latency remains substantial.",
-  "timingConditions": "Local alternating runs; repeated sample overlaps build activity. Workload-dependent timings, not an isolated hardware benchmark."
+  "timingConditions": "Local alternating runs after the full test suite finished, with no concurrent build or test suite launched. Not a GPU/mobile measurement.",
+  "fullSuite": {
+    "head": "150b8f7f9f7c307eac7b935b5ce8b31207faa4d5",
+    "tests": 1535,
+    "pass": 1535,
+    "fail": 0,
+    "durationMs": 320502.9746
+  }
 }
