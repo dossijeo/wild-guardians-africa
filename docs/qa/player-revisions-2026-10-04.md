@@ -14,7 +14,7 @@ Estas decisiones del usuario tienen prioridad sobre los labs y las reglas anteri
 | Construir muralla inmediatamente al soltar, sin modal | Pendiente. |
 | Eliminar muralla devuelve su valor restante | Pendiente de cálculo, idempotencia y texto bilingüe. |
 | Tutorial fuera de todo el lateral seguro en landscape | Pendiente de layout y capturas. |
-| Contratación obligatoria sin cierre | Pendiente de guardas de cierre, Escape y sustitución. |
+| Contratación obligatoria sin cierre | Implementado sin botón de cierre; el controlador impide cerrar o sustituirla hasta confirmar. Game Over puede sustituirla. Tests de bloqueo y resolución aprobados; interacción móvil/Escape pendiente. |
 | Primera incursión en noche 1 | Pendiente; sustituye explícitamente noche 2 anterior. |
 | Spawn cercano justo detrás de cámara real | Pendiente de conexión entre presentación y navegación, rutas e incursión visual. |
 | Pantalla permanece encendida durante ejecución | Commit 9f0d8fb, seis tests y concesión/liberación de API real documentados en screen-wake-lock.md. Prueba física móvil y política del iframe de itch.io dependen de la plataforma. |

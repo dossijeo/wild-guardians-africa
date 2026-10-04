@@ -11,13 +11,19 @@ import {updateIdle} from '../src/simulation/idle.js';
 import {ToolSession} from '../src/ui/tool-session.js';
 import {ensurePurchaseBudget} from '../src/simulation/budget.js';
 import {rational,numberOf} from '../src/simulation/money.js';
-test('Closing daily hiring defers its UI; other dialogs replace it without reopening it',()=>{
-  const ui=new GameSurfaces();ui.open('hiring');assert.equal(ui.shouldOpen('result'),false);
-  assert.equal(ui.close(),'hiring');assert.equal(ui.shouldOpen('hiring'),false);
-  ui.open('modal');assert.equal(ui.active,'modal');assert.equal(ui.shouldOpen('hiring'),false);
-  ui.close();ui.open('hiring');assert.equal(ui.deferred.has('hiring'),false);
+test('Mandatory hiring refuses closing and replacement until confirmed, while a result can supersede it',()=>{
+  const ui=new GameSurfaces();assert.equal(ui.open('hiring',{mandatory:true}),true);
+  assert.equal(ui.close(),null);assert.equal(ui.active,'hiring');assert.equal(ui.deferred.has('hiring'),false);
+  assert.equal(ui.open('modal'),false);assert.equal(ui.open('panel'),false);assert.equal(ui.active,'hiring');
+  assert.equal(ui.close({resolved:true}),'hiring');assert.equal(ui.active,null);assert.equal(ui.mandatory,false);
+  ui.open('hiring',{mandatory:true});assert.equal(ui.open('result',{force:true}),true);assert.equal(ui.active,'result');assert.equal(ui.deferred.has('hiring'),false);
   ui.reset();assert.equal(ui.shouldOpen('hiring'),true);
 });
+
+test('Optional panels still replace one another and close normally',()=>{
+  const ui=new GameSurfaces();ui.open('panel');ui.open('modal');assert.equal(ui.active,'modal');assert.equal(ui.close(),'modal');assert.equal(ui.active,null);
+});
+
 test('A dismissed instruction stays closed while its real action is pending, including after reload',()=>{
   const state=Game.newGame(),profile={read:()=>new Set(),record:()=>{},basicCompleted:false};
   const controller=new TutorialController(state,profile);controller.acknowledge();controller.dismiss();

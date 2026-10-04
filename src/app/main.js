@@ -119,7 +119,7 @@ async function startGame(loaded=null) {
 function onPick({entityId,point}) {
   if(!state||screen!=='game')return;
   safe(()=>{
-    if(state.pauses.includes('hiring')&&surfaces.deferred.has('hiring')){hiringDialog();return;}
+    if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
     if(pendingWall)return;
@@ -136,6 +136,7 @@ function onPick({entityId,point}) {
 function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close();}}
 function cancelSpellPreview({keepTool=false}={}){pendingSpell=null;world?.clearSpellPreview();if(!keepTool&&tool?.kind==='spell')tool=null;hideHudPanel();}
 function spellConfirmPanel(){
+  if(state.pauses.includes('hiring'))return;
   const name=B.spells.find(s=>s.id===pendingSpell.kind).name;
   showHudPanel(name,`<p class="panel-note">La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.</p><div class="menu-list">${button('confirm-spell','Activar poder','wood-button')}${button('cancel-spell','Cancelar','wood-button')}</div>`);
   bind('cancel-spell',cancelSpellPreview);
@@ -146,6 +147,7 @@ function spellConfirmPanel(){
 }
 function cancelWallPreview(){pendingWall=null;world?.clearWallPreview();hideHudPanel();}
 function wallPreview(points){
+  if(state.pauses.includes('hiring'))return;
   if(tool?.kind!=='wall'||tool.gate)return;
   const plan=Game.previewWallChain(state,tool.material,points,nav);pendingWall={points:points.map(p=>p.slice()),material:tool.material,plan};world.showWallPreview(plan);wallConfirmPanel();
 }
@@ -161,6 +163,7 @@ function wallConfirmPanel(){
   });
 }
 function toolPanel(type) {
+  if(state.pauses.includes('hiring'))return;
   cancelTool();
   if(pendingSpell)cancelSpellPreview();
   pendingWall=null;world.clearWallPreview();
@@ -175,12 +178,14 @@ function toolPanel(type) {
   document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{if(el.disabled)return;armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel();updateUI(true);});
 }
 function showHudPanel(title,body){
- openSurface('panel',title);
+ if(!openSurface('panel',title))return false;
  const host=document.querySelector('#panel');host.className='native-panel-host';host.innerHTML=`<section class="panel" role="dialog" aria-label="${esc(title)}"><canvas class="frame-canvas" aria-hidden="true"></canvas><header class="panel-head"><h2 class="panel-title">${esc(title)}</h2><button class="close-panel" id="close-hud-panel" aria-label="Cerrar">×</button></header><div class="panel-body">${body}</div></section>`;
  bind('close-hud-panel',()=>{closeSurface();});
  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(host.firstElementChild)framePaint(host,layoutHud(document.querySelector('#stage')),frameImages);}).catch(()=>error('No se ha podido cargar el marco del menú.'));
 }
 function openSurface(kind,key=kind){
+  if(state.pauses.includes('hiring')&&!['hiring','result'].includes(kind))return false;
+  if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
   const beforePause=state.pauses.slice();
   setTutorialInteraction(false);guardian?.hide({immediate:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
@@ -188,10 +193,11 @@ function openSurface(kind,key=kind){
   if(kind!=='modal'&&kind!=='hiring'&&kind!=='result')document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');
   if(kind!=='modal')Game.resume(state,'menu');
-  surfaces.open(kind);uiAudio.surface(kind,key);uiAudio.pause(beforePause,state.pauses);
+  uiAudio.surface(kind,key);uiAudio.pause(beforePause,state.pauses);return true;
 }
 function closeSurface(){
-  const beforePause=state.pauses.slice(),kind=surfaces.close();uiAudio.close();
+  if(surfaces.mandatory&&state.pauses.includes('hiring'))return;
+  const beforePause=state.pauses.slice(),kind=surfaces.close({resolved:!state.pauses.includes('hiring')});uiAudio.close();
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
   if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
@@ -248,6 +254,7 @@ function refreshCommandFeedback(){
 }
 
 function buildPanel(){
+  if(state.pauses.includes('hiring'))return;
  cancelTool();
  if(pendingSpell)cancelSpellPreview();
  showHudPanel('Construir',`<div class="card-grid two"><button class="choice-card" id="native-center"><img class="card-image" src="${ASSETS.home_icon.src}" alt=""><strong>Centro de trabajo</strong><span class="price">800 monedas</span></button><button class="choice-card" id="native-wall"><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>Murallas</strong></button></div><div class="menu-list">${state.postgame?button('native-village','Fundar poblado','wood-button'):''}</div>`);
@@ -256,10 +263,12 @@ function buildPanel(){
 }
 function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
 function villageCulturePanel() {
+  if(state.pauses.includes('hiring'))return;
   showHudPanel('Un nuevo poblado',`<div><p>Coste: ${localMoney({n:String(50000+25000*(state.villages.length-1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
   document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);armTool({kind:'village',culture});if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else hideHudPanel();}));
 }
 function villageConfirmPanel() {
+  if(state.pauses.includes('hiring'))return;
   const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
   bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
@@ -290,10 +299,9 @@ function narrator() {
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
 }
 function hiringDialog() {
-  openSurface('hiring');
+  if(!openSurface('hiring'))return;
   const selection={...state.hiringSelection},modal=document.querySelector('#modal');
   modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,clock:Game.clockLabel(state),hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
-  const close=document.createElement('button');close.className='surface-close';close.setAttribute('aria-label','Cerrar');close.textContent='×';close.onclick=()=>safe(closeSurface);document.querySelector('#hiring-dialog .hiring-panel').prepend(close);
   const agricultural=agriculturalDawnMessage(state);
   if(agricultural){const announcement=document.createElement('p');announcement.className='hiring-intro';announcement.id='hiringAgriculturalNotice';announcement.role='status';announcement.textContent=agricultural;document.querySelector('#hiringIntro').before(announcement);}
   const stage=document.querySelector('#stage');stage.classList.add('hiring-open');
@@ -310,13 +318,13 @@ function hiringDialog() {
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {
-  openSurface('modal','pause');
+  if(!openSurface('modal','pause'))return;
   const beforePause=state.pauses.slice();Game.pause(state,'menu');uiAudio.pause(beforePause,state.pauses);document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
   bind('resume',closeSurface);bind('save',()=>save({confirm:true}));bind('game-settings',()=>settingsDialog(true));bind('exit',menu);
 }
 function settingsDialog(inGame=false) {
   const html=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>A tu ritmo</h2><label class="settings-row">Idioma<select data-language-select id="game-language"><option value="en">English</option><option value="es">Español</option></select></label><label class="settings-row">Sonidos<input id="sfx-volume" type="range" min="0" max="1" step=".05" value="${settings.sfx}"></label><label class="settings-row">Música<input id="music-volume" type="range" min="0" max="1" step=".05" value="${settings.music}"></label><label class="settings-row">Calidad<select id="quality">${[['muy_baja','Muy baja'],['baja','Baja'],['media','Media'],['alta','Alta']].map(([id,label])=>`<option value="${id}" ${settings.quality===id?'selected':''}>${label}</option>`).join('')}</select></label><label class="settings-row">Resolución del mundo<select id="world-resolution">${WORLD_RESOLUTIONS.map(([id,label])=>`<option value="${id}" ${settings.resolution===id?'selected':''}>${label}</option>`).join('')}</select></label><p>Reduce la nitidez del mundo 3D; el HUD conserva su resolución.</p><div class="dialog-actions">${button('close-settings','Volver')}</div></section></div>`;
-  if(inGame){openSurface('modal','settings');document.querySelector('#modal').innerHTML=html;}else {const el=document.createElement('div');el.id='settings-overlay';el.innerHTML=html;app.append(el);}
+  if(inGame){if(!openSurface('modal','settings'))return;document.querySelector('#modal').innerHTML=html;}else {const el=document.createElement('div');el.id='settings-overlay';el.innerHTML=html;app.append(el);}
   document.querySelector('#game-language').value=window.WildGuardiansLanguage.getLanguage();
   for(const id of ['sfx-volume','music-volume','quality','world-resolution'])document.getElementById(id).oninput=()=>{settings.sfx=Number(document.querySelector('#sfx-volume').value);settings.music=Number(document.querySelector('#music-volume').value);const previous=settings.quality;settings.quality=document.querySelector('#quality').value;settings.resolution=worldResolution(document.querySelector('#world-resolution').value);if(world)applyWorldResolution(world,settings.resolution);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();if(world&&previous!==settings.quality){world.qualitySetting(settings.quality);world.syncChunks();}};
   bind('close-settings',()=>inGame?pauseDialog():document.querySelector('#settings-overlay').remove());
