@@ -18,6 +18,12 @@ test('native markup keeps original symbols and translated status labels',()=>{
   const markup=spellCardsMarkup(ready(),i=>`<svg data-original="${i}"></svg>`);assert.equal((markup.match(/ disabled/g)||[]).length,3);assert.equal((markup.match(/data-original=/g)||[]).length,3);
   for(const [es,en] of [['Disponible desde la noche 1','Available from night 1'],['Disponible desde el día 3','Available from day 3'],['Disponible desde el día 5','Available from day 5'],['Recargando','Cooling down'],['No disponible ahora','Unavailable now']]){assert.equal(translate(es,'es'),es);assert.equal(translate(es,'en'),en);}
 });
+test('the spell panel describes direct placement in both languages',()=>{
+ const hint='Selecciona un poder y toca la zona donde quieres aplicarlo.';
+ assert.ok(spellCardsMarkup(ready(),()=>'<svg></svg>').includes(hint));
+ assert.equal(translate(hint,'es'),hint);
+ assert.equal(translate(hint,'en'),'Choose a power and touch the area where you want to cast it.');
+});
 test('stable refresh preserves translated text, existing nodes and scroll; a state transition updates only status',()=>{
   const s=ready(),label={dataset:{source:'Disponible desde el día 3'},textContent:'Available from day 3',hidden:false},number={textContent:''},values=new Map([['--cd','0%']]),ring={style:{getPropertyValue:k=>values.get(k),setProperty:(k,v)=>values.set(k,v)}},button={dataset:{spell:'growth'},disabled:true,querySelector:k=>({'.spell-status':label,'.cooldown-number':number,'.spell-cooldown':ring}[k])},root={scrollTop:117,querySelectorAll:()=>[button]};
   for(let i=0;i<100;i++)refreshSpellCards(root,s);assert.equal(label.textContent,'Available from day 3');assert.equal(root.scrollTop,117);assert.equal(button.disabled,true);s.day=3;refreshSpellCards(root,s);assert.equal(button.disabled,false);assert.equal(label.hidden,true);assert.equal(root.scrollTop,117);s.cooldowns.growth=89.00000000000006;refreshSpellCards(root,s);assert.equal(number.textContent,'89');s.cooldowns.growth=44.2;refreshSpellCards(root,s);assert.equal(label.textContent,'Recargando');assert.equal(number.textContent,'45');assert.equal(label.hidden,false);assert.equal(root.scrollTop,117);
