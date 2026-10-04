@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {WallDrawing} from '../src/rendering/wall-drawing.js';
+import {ToolSession} from '../src/ui/tool-session.js';
 function fixture(){
   const listeners=new Map(),captured=new Set(),canvas={addEventListener:(name,fn)=>listeners.set(name,fn),removeEventListener:name=>listeners.delete(name),setPointerCapture:id=>captured.add(id),releasePointerCapture:id=>captured.delete(id)},strokes=[],taps=[],previews=[],gestures=[];
   const drawing=new WallDrawing(canvas,{point:e=>({x:e.clientX/10,z:e.clientY/10}),stroke:p=>strokes.push(p),tap:e=>taps.push(e),preview:p=>previews.push(p.map(q=>q.slice())),gesture:(a,b)=>gestures.push([a,b])});drawing.setEnabled(true);
@@ -26,4 +27,17 @@ test('Short tap stays a tap while alternate camera buttons and Shift pass throug
 test('Coalesced input keeps the native minimum spacing and disposal removes all handlers',()=>{
   const f=fixture();f.event('pointerdown',0,0);f.event('pointermove',100,0,1,{getCoalescedEvents:()=>[{clientX:.2,clientY:0},{clientX:30,clientY:30},{clientX:100,clientY:0}]});f.event('pointerup',100,0);assert.deepEqual(f.strokes[0],[[0,0],[3,3],[10,0]]);
   f.drawing.dispose();assert.equal(f.listeners.size,0);assert.equal(f.captured.size,0);
+});
+test('a held wall stroke survives tool expiry; release starts the timeout from the new successful placement',()=>{
+ const f=fixture(),session=new ToolSession();session.select({kind:'wall'},0);session.used(0);
+ f.event('pointerdown',0,0);f.event('pointermove',40,0);
+ assert.equal(f.drawing.active,true);assert.equal(session.expired(12,f.drawing.active),false);
+ f.event('pointerup',40,0);assert.equal(f.strokes.length,1);assert.equal(f.drawing.active,false);
+ session.used(12);assert.equal(session.expired(21.99,f.drawing.active),false);assert.equal(session.expired(22,f.drawing.active),true);
+});
+test('cancelling a gesture releases timeout protection without extending the last successful placement',()=>{
+ const f=fixture(),session=new ToolSession();session.select({kind:'wall'},0);session.used(0);
+ f.event('pointerdown',0,0);f.event('pointermove',40,0);assert.equal(session.expired(12,f.drawing.active),false);
+ f.event('pointercancel',40,0);assert.equal(f.drawing.active,false);assert.equal(session.expired(12,f.drawing.active),true);
+ assert.equal(f.strokes.length,0);
 });

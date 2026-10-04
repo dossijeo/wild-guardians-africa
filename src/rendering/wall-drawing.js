@@ -6,6 +6,7 @@ export class WallDrawing {
     for(const [name,handler] of Object.entries(this.handlers))canvas.addEventListener(name,handler,{capture:true});
   }
   setEnabled(enabled){if(this.enabled&&!enabled)this.cancel();this.enabled=enabled;}
+  get active(){return this.pointers.size>0;}
   consume(e){e.preventDefault();e.stopImmediatePropagation();}
   down(e){
     if(!this.enabled||e.button!==0||e.shiftKey)return;
