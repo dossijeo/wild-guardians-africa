@@ -11,11 +11,11 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Trabajador contratado va directamente a primera tarea | Implementado; 120 pruebas de rutas y tareas superadas; recorrido visual pendiente |
 | Magias directas sobre terreno/cultivos sin modal ni desactivación | Se admiten puntos finitos sin exigir terreno edificable; interacción visual pendiente |
 | Multiplicar deja marcado el beneficio hasta la recogida posterior | Implementado; pruebas de recogida y entrega tras caducidad y restauración |
-| Murallas: línea física visible al arrastrar y límite según saldo menos contratación | Revisar integración real y móvil |
+| Murallas: línea física visible al arrastrar y límite según saldo menos contratación | Arrastre, construcción al soltar y devolución de tramo intacto comprobados en móvil; línea durante pulsación y límite cubiertos en dominio, comprobación visual pendiente |
 | Temporizador de modos comienza con última colocación exitosa | Publicado; falta recorrido visual |
 | Volver centra cámara en centro de trabajo | Publicado; falta recorrido visual |
 | Jornales: ancianos 30, jóvenes 40; ajustar reserva y textos | Implementado: ancianos 30, jóvenes 40 y reserva 30; sustituye los costes anteriores |
-| Manos HUD del tutorial también en segunda partida | Pendiente |
+| Manos HUD del tutorial también en segunda partida | Comprobadas en partida móvil real tras completar la primera entrega; regresión de perfil global y guías 2D/3D superada |
 | Incursión garantizada todas las noches, nueva especie en cada una de las primeras cinco | Implementado; umbrales reducidos, presupuesto creciente y límite inicial; recordatorio de escudo disponible al entrar en la finca implementado |
 | Cultivos resisten dos golpes y edificios requieren el doble de golpes | Implementado: daño persistente en cultivos y mitad de daño estructural por golpe |
 | Recordatorios útiles periódicos de crecimiento y multiplicación | Implementados con disponibilidad, cultivos elegibles, intervalo y guardado; recorrido de partida móvil pendiente |
@@ -116,3 +116,9 @@ tests/guided-opening.test.js verifica 30 combinaciones (seis biomas × cinco cul
 En una segunda partida real de Gran cañón / Mapungubwe, a 390×844, un arrastre sobre suelo libre construyó dos módulos de adobe al soltar (655→585), sin confirmación intermedia. Tocar un tramo abrió su estado 300/300 PV y el botón de devolución de 35 monedas; eliminarlo dejó un único tramo y saldo 620. Captura wall-selected-portrait registra el panel de selección. La comprobación no captura la línea mientras el dedo sigue pulsado ni demuestra visualmente el límite monetario; las pruebas de gesto y presupuesto cubren ambos comportamientos lógicos.
 
 Se corrigió la caducidad del modo durante un segundo arrastre: los diez segundos desde la última colocación no cancelan un gesto que sigue pulsado. Al construir al soltar se reinicia el plazo; cancelar el gesto no lo reinicia y libera la protección. Siguen vigentes las cancelaciones por cambio de herramienta o permisos. Pasan 32 pruebas de gestos, presupuesto, reserva, devolución proporcional y usabilidad, además de build.
+
+## Inspección actual de regadera
+
+Visor work-vfx.html con mujer joven, Sabana/Suajili, terreno y modelos nativos, centro/semilla/contrato pagados. La UI avanzó hasta el riego real a 29,30 s simulados y congeló la presentación en 1,075 s del VFX: 45 gotas, cuatro sprites, trabajador a 0,83 m del cultivo. El diagnóstico compara la boquilla animada Can_Nozzle con el emisor transformado del runtime y mide 0,000002738 m de separación; error vacío. Captura watering-young-female.png y árbol accesible watering-young-female-diagnostic.txt en mobile-first-day. Siete pruebas actuales de emisor y aproximación pasan.
+
+Esta inspección corresponde a un perfil y un fotograma en el visor integrado con WorldScene; no acredita todavía los cuatro perfiles durante todo el clip, otras culturas/biomas ni el detalle del chorro dentro del HUD móvil. Las posiciones del trabajador y del cultivo se conservaron durante la inspección; la pausa QA sirve para observar la animación, sin sustituir el contrato o el trabajo por estados preparados.

@@ -1,10 +1,10 @@
 # Alcance de aceptación tras las revisiones del 4 de octubre
 
-Runtime inspeccionado: `e87dc25`. El registro original de 159 casos conserva su revisión base `44f5c7b`, las notas históricas y los límites de cada ensayo. Sus 156 estados verified y tres partial no equivalen a aceptación completa de todas las revisiones posteriores. Todos los archivos de evidencia enlazados existen; comprobar su existencia no acredita su contenido ni su vigencia.
+Runtime de la revisión incremental más reciente: `fdf9e30`; el informe original de esta página inspeccionaba `e87dc25`. El registro original de 159 casos conserva su revisión base `44f5c7b`, las notas históricas y los límites de cada ensayo. Sus 156 estados verified y tres partial no equivalen a aceptación completa de todas las revisiones posteriores. Todos los archivos de evidencia enlazados existen; comprobar su existencia no acredita su contenido ni su vigencia.
 
 ## Reglas actuales y alcance comprobado
 
-- Inicio con 1500 monedas, reserva salarial de 100 y cosecha automática mediante tareas FIFO, con recogida y entrega físicas obligatorias. El recorrido renderizado anterior está delimitado en `tutorial-action-first-day.json` y `player-revisions-2026-10-04.md`.
+- Inicio con 1500 monedas, jornales 30/40 y reserva salarial vigente de 30; cosecha automática mediante tareas FIFO, con recogida y entrega físicas obligatorias. La reserva de 100 fue sustituida por la petición posterior. El recorrido renderizado anterior está delimitado en `tutorial-action-first-day.json` y `player-revisions-2026-10-04.md`.
 - La información del tutorial no pausa; las manos accionables 2D/3D sí pausan el reloj, con interfaz disponible. Completar, cerrar explícitamente o saltar libera la pausa correspondiente. `tutorial-action-pause.test.js` cubre selección intermedia, otros motivos de pausa y recarga. Los overrides de QA-003, QA-005 y QA-125 ahora distinguen reloj e interfaz.
 - Completar una acción avanza inmediatamente su lectura. `tutorial-action-completion.md` delimita una cadena pagada con navegación plana de prueba y regresiones de recarga. No acredita una nueva ejecución visual móvil.
 - La explicación de defensas refleja si el ataque ya ocurrió y desaparece en la finca liberada. `tutorial-defense-timing.test.js` incluye recarga y traducción completa EN/ES; no acredita su presentación en pantalla.
@@ -21,4 +21,6 @@ Runtime inspeccionado: `e87dc25`. El registro original de 159 casos conserva su 
 | Rendimiento y memoria web/móvil | CPU local, GPU histórico y recursos originales | Frametime actual, picos de incursión y memoria de música activa en dispositivo |
 | Aceptación integral del plan y cambios posteriores | Casos originales y pruebas incrementales con alcances distintos | Contrastar los requisitos con evidencia vigente y suficiente; no sustituirlo por el conteo de tests |
 
-Las lecturas de las pestañas de audio y móvil agotan el plazo antes de ejecutar la consulta. Sus metadatos siguen presentes; no se ha declarado finalizada ni reiniciado ninguna prueba por esos timeouts. El bloqueo de observación no demuestra un fallo del juego. El objetivo completo permanece abierto.
+El acceso al navegador se ha recuperado. En el juego real a 390×844 se han comprobado carga previa al HUD, colocación guiada de centro y brote, orden de precios, contratación obligatoria automática, primera entrega cobrada, mano 2D al iniciar una segunda partida, construcción inmediata por arrastre y devolución de tramo intacto. Los detalles y capturas están en [current-player-revision.md](current-player-revision.md). Treinta pruebas de apertura guiada cubren riegos, recogida y entrega en los seis biomas y cinco culturas; no sustituyen inspección visual de todas esas combinaciones.
+
+La campaña intensiva de 100 noches sigue en ejecución; aún no queda aceptada su victoria ni el tiempo de inactividad. El recorrido visual de incursión/amanecer/magias, QA-014, QA-155, QA-156 y rendimiento en teléfono físico siguen pendientes. La recuperación del navegador no resuelve esas comprobaciones por sí sola. El objetivo completo permanece abierto.
