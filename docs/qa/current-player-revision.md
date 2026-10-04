@@ -20,7 +20,7 @@ Estas decisiones posteriores tienen prioridad sobre las tablas y comportamientos
 | Cultivos resisten dos golpes y edificios requieren el doble de golpes | Implementado: daño persistente en cultivos y mitad de daño estructural por golpe |
 | Recordatorios útiles periódicos de crecimiento y multiplicación | Implementados con disponibilidad, cultivos elegibles, intervalo y guardado; recorrido de partida móvil pendiente |
 | Campaña de 100 noches con plantación intensiva responsable y actividad constante | Pendiente; medir tiempo sin nada útil que hacer y ajustar parámetros reales si falla |
-| Mala gestión debe poder causar derrota | Pendiente; añadir casos adversos representativos |
+| Mala gestión debe poder causar derrota | Comprobada con abandono en las 30 combinaciones de bioma/cultura y con reinversión que descuida las reservas de personal/mantenimiento; mantener estos casos al calibrar la campaña intensiva |
 | Poblado inicial de Gran Cañón dentro del cañón en ambas riberas; trabajadores sobre el agua | Implementado; pruebas geométricas y de navegación; comprobación visual pendiente |
 
 ## Gran Cañón
@@ -92,3 +92,11 @@ Los avisos permiten cierre, caducan con el lector existente, no muestran manos n
 ## Fuente reproducible del balance revisado
 
 El generador cargaba solo el JSON histórico y podía reponer jornales, atracción y daño antiguos al regenerar. Ahora aplica content/balance/player_revisions.json sobre el original: inicio 1500, jornales 30/40, daños 20/25/35/40/60 y umbrales nocturnos 0/100/300/800/2000 con incursión garantizada. Game.newGame toma el importe inicial de ese balance generado; las partidas existentes conservan su libro monetario. verify:balance comprueba reproducción sin escribir archivos y se ejecuta en GitHub Actions. Pasan 39 pruebas de economía, reglas y guardados, además del verificador de balance. El CI d4acd5a superó las 1662 pruebas completas antes de este ajuste de fuente.
+
+## Simulación de plantación intensiva en curso
+
+tools/check_intensive_farm.mjs contrata desde el primer día, busca parcelas transitables nuevas sin un cupo fijo de cultivos y reinvierte entregas reales. La política responsable reserva jornales conforme crece la finca (estimación inicial de 12 cultivos por trabajador), conserva dinero de mantenimiento y solicita reparaciones por la cola FIFO normal. La entrada de animales utiliza la pose de cámara nativa centrada en el centro de trabajo. La siembra se limita a una colocación por segundo simulado para representar una interacción posible del jugador. No hay órdenes manuales de cosecha ni alteraciones de dinero, crecimiento, navegación, RNG, presupuestos o daño.
+
+Se registran por jornada saldo, personal, reservas, siembras, entregas, pérdidas, cola pendiente, reparación, acciones y periodos sin acciones útiles. La auditoría independiente verifica el libro monetario desde 1500, cada cobro al entregar, una caja por planta, madurez y todos los riegos obligatorios, más restauración. Para 100 días exige victoria real tras resolver la incursión final; una derrota no se transforma en aceptación.
+
+Dos pruebas superadas: apertura intensiva de tres jornadas con cámara real y derrota por reinvertir sin reservas, con más de cien cultivos vivos y numerosas entregas reales. Un diagnóstico previo de 20 noches con entradas por borde alcanzó 312 cultivos vivos, 1984 entregas y seis reparaciones completadas; no sustituye la aceptación con entrada inmediata por cámara. Esa campaña completa está en ejecución. El ajuste de parámetros del juego y de tiempo sin acciones útiles sigue pendiente del resultado; tampoco queda aceptada aún la campaña mixta o la matriz de culturas/biomas.
