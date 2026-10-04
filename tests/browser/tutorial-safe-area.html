@@ -1,0 +1,17 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Tutorial y lateral seguro</title><link rel="stylesheet" href="../../content/hud.css"><main id="stage"><div id="narrator"></div></main><script type="module">
+import '../../src/ui/styles.css';
+import '../../src/ui/tutorial.css';
+import {ASSETS,hudMarkup,layoutHud} from '../../src/ui/native-hud.js';
+import {assetUrl} from '../../src/rendering/asset-url.js';
+import {NativeGuardian} from '../../src/ui/guardian.js';
+import {TUTORIAL_MESSAGES} from '../../src/tutorial/messages.js';
+const stage=document.querySelector('#stage');stage.insertAdjacentHTML('afterbegin',hudMarkup+'<div id="events" hidden></div><div id="placementBanner" hidden></div>');
+for(const img of stage.querySelectorAll('[data-sprite]'))img.src=assetUrl(ASSETS[img.dataset.sprite].src);
+const report=document.createElement('pre');report.id='qa-safe-area';report.style.cssText='position:absolute;left:12px;top:100px;background:#fffdeac9;color:#203629;font:11px monospace;z-index:12;pointer-events:none';stage.append(report);
+const guardian=new NativeGuardian(document.querySelector('#narrator'));await guardian.ready;
+guardian.show({key:'safe-area',text:TUTORIAL_MESSAGES['basic.hiring'].text,gesture:'idle',dismiss:()=>guardian.hide()});
+function measure(){layoutHud(stage);const actions=document.querySelector('#actions').getBoundingClientRect(),bubble=document.querySelector('.bubble').getBoundingClientRect(),portrait=stage.classList.contains('portrait');report.textContent=JSON.stringify({viewport:[innerWidth,innerHeight],portrait,actionsLeft:actions.left,bubbleRight:bubble.right,gap:actions.left-bubble.right,entireColumnSafe:portrait?null:bubble.right<=actions.left-6,bubbleFits:bubble.left>=0&&bubble.right<=innerWidth&&bubble.top>=0&&bubble.bottom<=innerHeight},null,2);}
+new ResizeObserver(measure).observe(stage);measure();
+function frame(){guardian.update();measure();requestAnimationFrame(frame);}requestAnimationFrame(frame);
+addEventListener('pagehide',()=>guardian.dispose());
+</script></html>
