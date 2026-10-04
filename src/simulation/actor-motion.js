@@ -32,10 +32,15 @@ export function prepareActorMotion(state,actor,nav,worker){
   if(length<1e-9)return clear;
   const horizon=Math.max(4,...blockers.map(b=>2*(radius(actor)+radius(b))+.2));
   const look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
-  if(clear(actor,goal))return clear;
+  const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
+  if(clear(actor,goal)&&(!rejoin||staticClear(actor,goal))){
+    // A later waypoint can be clear while the retained first waypoint is inside
+    // another actor. Commit the safe rejoin instead of repeatedly waiting at it.
+    if(rejoin)actor.path=[goal,...actor.path.slice(rejoin+(look===length?1:0))];
+    return clear;
+  }
   if(!clear(goal,goal))return clear;
   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
-  const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
   const nodes=[{x:actor.x,z:actor.z},goal];
   for(const other of nearby){
     // Circumscribe the clearance disc: chords between adjacent samples must

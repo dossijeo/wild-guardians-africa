@@ -7,6 +7,8 @@ import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {updateRaid,reachableApproach} from '../src/simulation/raids.js';
+import {readFileSync} from 'node:fs';
+import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
 
 function fixture(species='warthog'){
@@ -118,4 +120,21 @@ test('Crowded crop approaches are recomputed outside the other native bodies and
     for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=2.2-1e-8);
   }
   assert.equal(state.raid,null);assert.ok(animals.every(a=>a.status==='gone'));assert.ok(state.events.some(e=>e.type==='AnimalLogicalHit'));
+});
+
+test('Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping',()=>{
+ const {s,nav}=createOpeningWorld(),animals=JSON.parse(readFileSync(new URL('./fixtures/actor-rejoin-sabana.json',import.meta.url)));
+ s.workers=[];s.raid={id:'recorded-rejoin',animals,reservations:{}};nav.setState(s);
+ for(const a of animals)a.pathVersion=nav.version;
+ const arrived=new Set();
+ for(let i=0;i<600&&arrived.size<animals.length;i++)for(const a of animals){
+  if(arrived.has(a.id))continue;
+  const before={x:a.x,z:a.z},others=actorBlockers(s,a,false);
+  if(walkTo(s,a,a.approach,.1,nav,{speed:3.8,worker:false}))arrived.add(a.id);
+  assert.ok(Math.hypot(a.x-before.x,a.z-before.z)<=.38+1e-8);
+  assert.ok(actorSegmentClear(before,a,a,others),'preserve native body separation');
+  assert.ok(nav.segmentClear(before,a,a.radius,null,false),'preserve terrain and prop clearance');
+ }
+ assert.equal(arrived.size,2);
+ for(const a of animals)assert.deepEqual({x:a.x,z:a.z},{x:a.approach.x,z:a.approach.z});
 });

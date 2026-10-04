@@ -48,3 +48,7 @@ Los contratos nuevos reservan la primera tarea FIFO alcanzable desde su posició
 ## Multiplicación persistente
 
 Al lanzar Multiplicar se marcan los cultivos vivos alcanzados; los brotes colocados dentro durante los 15 segundos también quedan marcados. El beneficio no se acumula con otros lanzamientos y se consume en la recogida, incorporado al valor de la caja. Caducar, guardar o restaurar no elimina el beneficio. No se abonan monedas hasta completar el transporte y la entrega. Se conserva la compatibilidad con áreas activas antiguas mediante una inicialización única, sin recorrer cultivos por esta magia en cada paso.
+
+## Bloqueo de ruta en la noche 38
+
+La batería completa tras la salida directa de trabajadores detectó dos facóqueros detenidos mutuamente. Se ha reproducido en el terreno real Sabana/712: se encontraba un punto posterior libre pero se conservaba un waypoint anterior ocupado. La corrección incorpora el tramo de reincorporación solo si respeta obstáculos estáticos y separación entre actores. La regresión grabada exige llegada de ambos, límite de velocidad y validez de cada segmento. Una reproducción adicional del guardado completo bloqueado acaba la incursión y llega al amanecer del día 39 con contratación pendiente. La campaña completa con esta corrección todavía debe ejecutarse; no se aumenta su límite ni se sustituye la aceptación intensiva pendiente.
