@@ -19,3 +19,11 @@ Se repitió el flujo nativo completo para Mapungubwe, Saheliana, Suajili, Musgum
 Antes de iniciar se comprobó el aria-label original Comenzar con el bioma/cultura elegidos. Se espera a que termine la animación del menú para actuar sobre el selector. Calidad muy baja y almacenamiento aislado en memoria, con los límites del bloque anterior.
 
 Estado actualizado: 12/30 entradas reales acreditadas; quedan 18 (Sabana4, Desierto4, Volcanes5 y Gran cañón5). QA-001 sigue parcial.
+
+## Volcanes: cinco culturas
+
+Se completó Juego nuevo, selección de Volcanes, elección de cada cultura y Comenzar en el menú/selector originales. `volcanes-five-cultures.json` registra Mapungubwe, Saheliana, Suajili, Musgum y Etíope: una carga completa por partida, 1.000 monedas iniciales y 382/468/410/444/611 renders antes de guardar y salir por el botón nativo de pausa. Se avanzaron los dos primeros mensajes del tutorial y se comprobó el HUD. `volcanes-etiope.png` conserva la quinta combinación.
+
+Todas las escenas terminan con contexto perdido, canvas desconectado, cero listeners activos, worker terminado, timer nulo y cola vacía. Cero errores globales. Se comprobó el aria-label del botón Comenzar antes de cada arranque y se esperó el final del recorrido del menú. Calidad muy baja, almacenamiento aislado y audio silenciado, con los mismos límites descritos anteriormente.
+
+Estado actualizado: 17/30 entradas reales acreditadas; faltan Gran cañón5, Sabana4 y Desierto4. QA-001 sigue parcial.
