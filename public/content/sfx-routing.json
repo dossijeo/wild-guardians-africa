@@ -387,11 +387,13 @@
       "id": "build_complete",
       "filename": "034_build_complete.mp3",
       "sha256": "89090ec32b2c9cd4252da3681ccba523a718b28e08dc6393a8354ba0adc26fd4",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "PlacementCommitted",
+        "WallChainBuilt",
+        "VillageFounded"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Construcción confirmada y terminada; no cobrar aquí una segunda vez."
     },
     {
@@ -596,11 +598,12 @@
       "id": "beast_hit_character",
       "filename": "052_beast_hit_character.mp3",
       "sha256": "579bc0efaf41058d2f22c02a05928383ac637f5fe4c667ddef728929bbc0a9c3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "WorkerHit",
+        "WorkerIncapacitated"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Contacto de bestia contra trabajador; una agresión lógica."
     },
     {

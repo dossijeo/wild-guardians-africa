@@ -11,6 +11,18 @@ function fixture(){
  return {audio,sources,nodes};
 }
 
+test('worker contact and vocal response share one committed fact with independent emitter budgets',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:['npc_hit','npc_fall','beast_hit_character'].map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url});
+ const events=[{id:'hit',type:'WorkerHit',targetId:'worker',animalId:'animal',presentation:{x:24,z:0}}];audio.process(events,{listener:{x:0,z:0}});audio.process(events);await new Promise(done=>setImmediate(done));
+ assert.deepEqual(sources.map(s=>s.buffer.url),['npc_hit','beast_hit_character']);assert.equal(sources[1].playbackRate.value,1);
+ const contact=audio.voices.get(sources[1]);assert.equal(contact.bus,'world');assert.equal(contact.family,'beast-worker-contact');assert.equal(contact.emitter,'animal');assert.equal(contact.volume.gain.value,.5);audio.dispose();
+});
+
+test('late decoding cannot play either half of an old aggression after leaving the scene',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:['npc_fall','beast_hit_character'].map(id=>({id,loop:false,audio:{url:id}}))};let resolve;const pending=new Promise(done=>resolve=done);audio.buffer=()=>pending;
+ audio.process([{id:'fall',type:'WorkerIncapacitated',targetId:'worker',animalId:'animal'}]);await new Promise(done=>setImmediate(done));audio.stop();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
+});
+
 test('native portrait disappearance uses the complete original UI source beyond visual closure',async()=>{
  const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:['spirit_appear','spirit_disappear'].map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url,duration:url==='spirit_appear'?1.6:2.48});
  audio.guardianPhase('intro');await new Promise(done=>setImmediate(done));audio.guardianPhase('reading');audio.guardianPhase('outro');await new Promise(done=>setImmediate(done));audio.guardianPhase('closed');

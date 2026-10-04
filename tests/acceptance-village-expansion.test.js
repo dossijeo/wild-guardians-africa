@@ -1,3 +1,4 @@
+import {AudioSystem} from '../src/audio/audio.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -39,6 +40,7 @@ for(const culture of Game.CULTURES)test(`QA-142 ${culture}: paid native founding
  assert.equal(numberOf(s.ledger.balance),199950000);assert.equal(s.villages.length,2);
  assert.deepEqual(s.villages[1].buildings,preview.buildings);assert.deepEqual(s.villages[1].entry,preview.entry);assert.equal(s.villages[1].culture,culture);
  assert.equal(s.events.filter(e=>e.type==='VillageFounded').length,1);assert.equal(s.commandIds.filter(id=>id==='qa-found').length,1);
+ const audio=new AudioSystem({sfx:1,music:1}),cues=[];audio.sound=async(id,options)=>{cues.push({id,options});};audio.remember(s.events.filter(e=>e.type!=='VillageFounded'));const domainBeforeAudio=serialize(s);audio.process(s.events,{state:s,listener:{x:150,z:0}});audio.process(s.events,{state:s});assert.equal(serialize(s),domainBeforeAudio);assert.deepEqual(cues.map(c=>c.id),['build_complete']);assert.equal(cues[0].options.emitter,s.villages[1].id);assert.equal(cues[0].options.gain,1);assert.deepEqual(s.events.find(e=>e.type==='VillageFounded').presentation,{x:150,z:0});
  assert.equal(new Set(s.suppressed).size,s.suppressed.length);assert.deepEqual(new Set(s.suppressed),new Set(props.map(p=>p.id)));
  const loaded=saved(s),fresh=navigation(loaded,props);assert.equal(serialize(loaded),serialize(s));assert.equal(fresh.propsAt(150,0,80).length,0);
  for(const [state,n] of [[s,nav],[loaded,fresh]]){

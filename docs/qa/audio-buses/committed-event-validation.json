@@ -1,0 +1,60 @@
+{
+  "productionSha256": {
+    "src/audio/audio.js": "91fa1aa2d4f500fc4e63287c4ac99ff66d3e6aee12d65af9b43f202072e8c808",
+    "src/simulation/game.js": "04350dd35c13a660624b2143ee6b99c6a708957ff3694f5203960238beee267c",
+    "src/simulation/encounters.js": "813ba00b6f51a0fc8082690d1bb5bd40a18c5dd79f15840d5f1e408dea7111c8",
+    "public/content/sfx-routing.json": "e826b2f7377286c391111cb0022a73ccfa42d3cb2f1366fc3c2752237d7eaa04"
+  },
+  "directedExpanded": {
+    "tests": 318,
+    "pass": 318,
+    "fail": 0,
+    "durationMs": 221877.3563,
+    "log": ".cache/committed-event-all.log"
+  },
+  "directedFinalInventory": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "durationMs": 1416.4141,
+    "log": ".cache/committed-event-final.log",
+    "reason": "Final line endings normalized without changing route JSON values; byte/routing/contact/bus checks repeated on the final file."
+  },
+  "build": {
+    "pass": true,
+    "seconds": 5.22,
+    "log": ".cache/committed-event-build-final.log"
+  },
+  "webPackage": {
+    "pass": true,
+    "files": 578,
+    "bytes": 406698421,
+    "relativeLinks": 816,
+    "runtimeGLBs": 20,
+    "log": ".cache/committed-event-package-final.log"
+  },
+  "native": {
+    "fixture": "tests/browser/committed-event-audio.html",
+    "report": "docs/qa/audio-buses/committed-event-native.json",
+    "cases": 20,
+    "acceptedOriginalSources": 160,
+    "originalWorkerContacts": 40,
+    "originalBuildCompletions": 40,
+    "errors": [],
+    "finalVoices": 0,
+    "context": "closed",
+    "muted": true,
+    "world3D": false,
+    "predecoded": true,
+    "collisionBoundarySetup": true
+  },
+  "precedingCompleteCI": {
+    "commit": "4c76690f946bf48e611305cce7f88986096d9510",
+    "run": 37186373616,
+    "status": "success",
+    "tests": 1426,
+    "pass": 1426,
+    "fail": 0
+  },
+  "completeRegression": "New commit GitHub CI pending; directed evidence is not full-suite evidence."
+}

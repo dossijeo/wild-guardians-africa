@@ -81,7 +81,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const maxHp=structureHealth(kind,material,gate);
     s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
-    s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind});
+    s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
@@ -114,7 +114,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));
     for(const update of plan.updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates});
+    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
@@ -409,7 +409,7 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
       const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
       if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
     }
-    emit(s,'VillageFounded',{culture,x,z});
+    emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
 function clockBoundaries(s){

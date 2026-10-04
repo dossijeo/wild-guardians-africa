@@ -11,12 +11,13 @@ import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss'};
+export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
-export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over'].includes(id)?2:1;
+export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
 export function eventAudioOptions(event,id,state,listener){
   const bus=soundBus(id);if(bus!=='world')return {bus};
-  const emitter=event.workerId??(event.type.startsWith('Worker')?event.targetId:event.animalId??event.targetId);
+  const emitter=id==='beast_hit_character'?event.animalId??event.targetId:event.workerId??(event.type.startsWith('Worker')?event.targetId:event.animalId??event.targetId);
   let entity=event.presentation;
   if(!entity&&state)for(const list of [state.workers,state.raid?.animals,state.structures,state.plants,state.crates]){entity=list?.find(e=>e.id===emitter);if(entity)break;}
   const distance=entity&&listener?Math.hypot(entity.x-listener.x,entity.z-listener.z):0;
@@ -149,6 +150,7 @@ export class AudioSystem {
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
       const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];
       if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});
     }
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
     if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));

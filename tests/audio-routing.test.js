@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {MOVEMENT_SOUND_IDS} from '../src/audio/movement-audio.js';
-import {AudioSystem,eventSound,SFX_LIMITS} from '../src/audio/audio.js';
+import {AudioSystem,eventSound,eventExtraSound,SFX_LIMITS} from '../src/audio/audio.js';
 import {simulateOpening} from '../tools/check_opening.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));
@@ -31,7 +31,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   const data=readFileSync(new URL('../public'+item.audio.url,import.meta.url)),hash=createHash('sha256').update(data).digest('hex');
   assert.equal(hash,item.sha256);assert.equal(hash,original.sha256);assert.equal(hash,route.sha256);assert.equal(data.length,item.bytes);
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
-  const events=Object.keys(eventSound).filter(e=>eventSound[e]===item.id);
+  const events=[...Object.keys(eventSound).filter(e=>eventSound[e]===item.id),...Object.keys(eventExtraSound).filter(e=>eventExtraSound[e]===item.id)];
   if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[...events,...(FARM_CONTACT_IDS.includes(item.id)?['native-farm-contact']:[])]);assert.equal(item.loop,false);}
   else if(Object.values(WALL_HIT_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['StructureHit:wall:'+Object.keys(WALL_HIT_SOUNDS).find(material=>WALL_HIT_SOUNDS[material]===item.id)]);assert.equal(item.loop,false);}
   else if(GUARDIAN_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-guardian-lifecycle']);assert.equal(item.loop,false);}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {AudioSystem,eventSound} from '../src/audio/audio.js';
+import {AudioSystem,eventSound,eventExtraSound} from '../src/audio/audio.js';
 import {emit,newGame} from '../src/simulation/game.js';
 
 function fixture(){
@@ -80,6 +80,6 @@ test('all logical audio routes keep their original selection when histories roll
   for(let i=0;i<200;i++)emit(state,'Unmapped');audio.remember(state.events);
   for(const type of Object.keys(eventSound))emit(state,type);
   audio.process(state.events,{state});audio.process(state.events,{state});
-  assert.deepEqual(calls.map(call=>call.id),Object.values(eventSound));
+  assert.deepEqual(calls.map(call=>call.id),Object.entries(eventSound).flatMap(([type,id])=>[id,...(eventExtraSound[type]?[eventExtraSound[type]]:[])]));
   assert.equal(calls.find(call=>call.id==='beast_hit_structure').options.family,'structure-contact');
 });

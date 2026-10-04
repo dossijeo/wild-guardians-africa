@@ -49,6 +49,7 @@ export function updateWorkerEncounters(state,nav){
       if(!collision&&nextRandom(state)>=B.raids.worker_pass_front_attack_probability)continue;
       animal.hitsRemaining--;worker.hits=(worker.hits??0)+1;worker.path=null;
       hits.add(pair);
+      const presentation={elapsed:state.elapsed,x:worker.x,z:worker.z};
       let pushed=0;
       if(collision){
         const [min,max]=B.raids.worker_collision_knockback_m;
@@ -57,10 +58,10 @@ export function updateWorkerEncounters(state,nav){
       if(worker.hits>=2){
         worker.incapacitated=true;worker.status='incapacitated';worker.fallRemaining=0;
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
-        emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,pushed});
+        emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,pushed,presentation});
       }else{
         worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;
-        emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,pushed});
+        emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,pushed,presentation});
       }
       if(distance(animal,worker)>=range)active.delete(pair);
     }
