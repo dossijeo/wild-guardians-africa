@@ -23,7 +23,7 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
-  "))+totalEmissiveRadiance; #include": [
+  "))+totalEmissiveRadiance;": [
     "src/rendering/african-toon.js"
   ],
   "))/uSoftness,": [
@@ -34,6 +34,9 @@
   ],
   "*max(dot(n,uSun),0.)*uWorldSun);": [
     "src/rendering/building-effects.js"
+  ],
+  "*t*t*.72;": [
+    "src/rendering/building-bounds.js"
   ],
   "+Y": [
     "public/library/worker-older-female/script-1.js",
@@ -50,7 +53,10 @@
   ", colapso automático en curso": [
     "public/library/destruction/script-5.js"
   ],
-  ",metalnessFactor,max(dot(toonN,toonV),0.0),vToonWorld": [
+  ",(1.-toonVisibility)/.93));": [
+    "src/rendering/african-toon.js"
+  ],
+  ",metalnessFactor,max(dot(toonN,toonV),0.0),worldPatternPosition(vToonWorld)": [
     "src/rendering/african-toon.js"
   ],
   ",nativeEmission": [
@@ -65,7 +71,19 @@
   "--action-w": [
     "src/ui/native-hud.js"
   ],
+  "--cd": [
+    "src/ui/spell-cards.js"
+  ],
+  "--hand-pivot-x": [
+    "src/ui/tutorial-hud-hand.js"
+  ],
+  "--hand-pivot-y": [
+    "src/ui/tutorial-hud-hand.js"
+  ],
   "--header": [
+    "src/ui/native-hud.js"
+  ],
+  "--hud-actions-safe-right": [
     "src/ui/native-hud.js"
   ],
   "--order": [
@@ -123,16 +141,30 @@
   "../audio/audio.js": [
     "src/app/main.js"
   ],
+  "../audio/ui-audio.js": [
+    "src/app/main.js"
+  ],
   "../persistence/snapshots.js": [
     "src/app/main.js"
   ],
   "../rendering/asset-url.js": [
     "src/app/main.js",
-    "src/ui/guardian.js"
+    "src/ui/guardian.js",
+    "src/ui/screen-wake-lock.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "../rendering/assets.js": [
     "src/app/main.js",
     "src/audio/audio.js"
+  ],
+  "../rendering/footsteps-data.js": [
+    "src/audio/movement-audio.js"
+  ],
+  "../rendering/hands-native.js": [
+    "src/ui/tutorial-hud-hand.js"
+  ],
+  "../rendering/locomotion-vfx.js": [
+    "src/audio/movement-audio.js"
   ],
   "../rendering/scene.js": [
     "src/app/main.js"
@@ -143,31 +175,61 @@
   ],
   "../simulation/balance.js": [
     "src/app/main.js",
+    "src/app/tool-label.js",
+    "src/audio/unlock-audio.js",
     "src/rendering/agriculture-vfx.js",
-    "src/rendering/shield-vfx.js"
+    "src/rendering/shield-vfx.js",
+    "src/ui/build-permissions.js",
+    "src/ui/spell-cards.js"
+  ],
+  "../simulation/budget.js": [
+    "src/app/main.js"
   ],
   "../simulation/crops.js": [
     "src/app/main.js",
-    "src/rendering/tutorial-hand-target.js",
-    "src/tutorial/controller.js"
+    "src/audio/farm-contact-audio.js",
+    "src/tutorial/controller.js",
+    "src/tutorial/magic-reminders.js"
   ],
   "../simulation/game.js": [
     "src/app/main.js",
+    "src/app/save-game.js",
+    "src/app/spell-placement.js",
+    "src/rendering/tutorial-hand-target.js",
+    "src/tutorial/action-pause.js",
     "src/tutorial/controller.js"
   ],
   "../simulation/money.js": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/build-permissions.js"
+  ],
+  "../simulation/raid-notice.js": [
+    "src/app/notices.js"
   ],
   "../simulation/rules.js": [
     "src/app/main.js",
+    "src/app/tool-label.js",
+    "src/audio/unlock-audio.js",
     "src/rendering/crop-batch.js",
+    "src/rendering/farm-focus.js",
     "src/rendering/scene.js",
-    "src/tutorial/controller.js"
+    "src/tutorial/controller.js",
+    "src/tutorial/magic-reminders.js",
+    "src/ui/build-permissions.js",
+    "src/ui/spell-cards.js"
+  ],
+  "../simulation/structure-presentation.js": [
+    "src/rendering/walls.js"
   ],
   "../simulation/workforce.js": [
     "src/app/main.js",
+    "src/audio/farm-contact-audio.js",
     "src/rendering/work-vfx.js",
-    "src/rendering/worker-actions.js"
+    "src/rendering/worker-actions.js",
+    "src/ui/native-hud.js"
+  ],
+  "../tutorial/action-pause.js": [
+    "src/app/main.js"
   ],
   "../tutorial/controller.js": [
     "src/app/main.js"
@@ -178,17 +240,48 @@
   "../tutorial/profile.js": [
     "src/app/main.js"
   ],
+  "../ui/agricultural-notice.js": [
+    "src/app/main.js"
+  ],
+  "../ui/build-permissions.js": [
+    "src/app/main.js"
+  ],
+  "../ui/command-feedback.js": [
+    "src/app/main.js"
+  ],
+  "../ui/game-surfaces.js": [
+    "src/app/main.js"
+  ],
   "../ui/guardian.js": [
+    "src/app/main.js"
+  ],
+  "../ui/hud-shortcuts.js": [
     "src/app/main.js"
   ],
   "../ui/native-hud.js": [
     "src/app/main.js"
   ],
+  "../ui/screen-wake-lock.js": [
+    "src/app/main.js"
+  ],
+  "../ui/spell-cards.js": [
+    "src/app/main.js"
+  ],
   "../ui/styles.css": [
+    "src/app/main.js"
+  ],
+  "../ui/tool-session.js": [
+    "src/app/main.js"
+  ],
+  "../ui/tutorial-hud-hand.js": [
     "src/app/main.js"
   ],
   "../ui/tutorial.css": [
     "src/app/main.js"
+  ],
+  "../world/active-region.js": [
+    "src/rendering/horizon.js",
+    "src/simulation/raids.js"
   ],
   "../world/centers.js": [
     "src/rendering/attack-vfx.js",
@@ -199,6 +292,7 @@
   ],
   "../world/footprints.js": [
     "src/simulation/actor-motion.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/game.js",
     "src/simulation/gates.js"
   ],
@@ -215,8 +309,11 @@
   ],
   "../world/terrain.js": [
     "src/rendering/asset-surface.js",
+    "src/rendering/biome-ground.js",
     "src/rendering/chunk-data.js",
+    "src/rendering/ground-mask.js",
     "src/rendering/horizon-source.js",
+    "src/rendering/mud-patches.js",
     "src/rendering/obstruction.js",
     "src/rendering/terrain-source.js",
     "src/rendering/water-source.js"
@@ -226,10 +323,14 @@
     "src/simulation/game.js"
   ],
   "../world/wall-layout.js": [
+    "src/simulation/defensive-groups.js",
     "src/simulation/game.js"
   ],
   "../world/work-points.js": [
     "src/simulation/game.js"
+  ],
+  "./active-region.js": [
+    "src/world/navigation.js"
   ],
   "./actor-motion.js": [
     "src/simulation/game.js",
@@ -246,15 +347,22 @@
   "./agriculture-vfx.js": [
     "src/rendering/scene.js"
   ],
+  "./ambient-audio.js": [
+    "src/audio/audio.js"
+  ],
   "./animal-actions-data.js": [
     "src/simulation/raids.js"
   ],
   "./animal-actions.js": [
     "src/rendering/scene.js"
   ],
+  "./animal-audio.js": [
+    "src/audio/audio.js"
+  ],
   "./asset-clip.js": [
     "src/rendering/asset-lod.js",
-    "src/rendering/scene.js"
+    "src/rendering/scene.js",
+    "src/rendering/standard-depth.js"
   ],
   "./asset-groups.js": [
     "src/rendering/scene.js"
@@ -277,18 +385,39 @@
     "src/rendering/hands.js"
   ],
   "./assets.js": [
+    "src/rendering/biome-ground.js",
     "src/rendering/scene.js",
     "src/rendering/sky.js"
   ],
   "./attack-vfx.js": [
     "src/rendering/scene.js"
   ],
+  "./autosave-events.js": [
+    "src/app/main.js"
+  ],
   "./balance.js": [
     "src/simulation/encounters.js",
     "src/simulation/game.js",
     "src/simulation/locomotion.js",
     "src/simulation/raids.js",
+    "src/simulation/rules.js",
+    "src/simulation/workforce.js"
+  ],
+  "./biome-ground.js": [
+    "src/rendering/scene.js"
+  ],
+  "./biome-material-source.js": [
+    "src/rendering/african-toon.js"
+  ],
+  "./budget.js": [
+    "src/simulation/game.js",
     "src/simulation/rules.js"
+  ],
+  "./building-bounds.js": [
+    "src/rendering/buildings.js"
+  ],
+  "./building-depth.js": [
+    "src/rendering/buildings.js"
   ],
   "./building-effects.js": [
     "src/rendering/buildings.js"
@@ -329,23 +458,56 @@
     "src/simulation/game.js",
     "src/simulation/raids.js"
   ],
+  "./defensive-groups.js": [
+    "src/simulation/raids.js"
+  ],
+  "./depth-capture.js": [
+    "src/rendering/buildings.js"
+  ],
+  "./depth-recipes.js": [
+    "src/rendering/african-toon.js",
+    "src/rendering/asset-clip.js",
+    "src/rendering/asset-surface.js",
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
+  ],
   "./destruction-effects-native.js": [
     "src/rendering/building-effects.js"
   ],
   "./destruction-native.js": [
+    "src/rendering/building-bounds.js",
+    "src/rendering/building-depth.js",
     "src/rendering/buildings.js"
   ],
   "./encounters.js": [
     "src/simulation/raids.js"
   ],
+  "./environment-endpoints.js": [
+    "src/rendering/african-toon.js"
+  ],
   "./events.js": [
     "src/simulation/game.js"
+  ],
+  "./farm-actions-data.js": [
+    "src/audio/farm-contact-audio.js",
+    "src/audio/work-audio.js"
+  ],
+  "./farm-contact-audio.js": [
+    "src/audio/audio.js",
+    "src/audio/work-audio.js"
+  ],
+  "./farm-focus.js": [
+    "src/rendering/scene.js"
+  ],
+  "./fine-noise.js": [
+    "src/rendering/african-toon.js"
   ],
   "./fluid-lighting-source.js": [
     "src/rendering/african-toon.js",
     "src/rendering/sky.js"
   ],
   "./footprints.js": [
+    "src/world/centers.js",
     "src/world/gate-passages.js",
     "src/world/navigation.js",
     "src/world/villages.js"
@@ -373,6 +535,13 @@
   ],
   "./ground-lighting-source.js": [
     "src/rendering/african-toon.js"
+  ],
+  "./ground-mask.js": [
+    "src/rendering/biome-ground.js",
+    "src/rendering/chunk-data.js"
+  ],
+  "./guardian-audio.js": [
+    "src/audio/audio.js"
   ],
   "./guardian-lifecycle.js": [
     "src/ui/guardian.js"
@@ -420,6 +589,12 @@
   "./lod-source.js": [
     "src/rendering/asset-lod.js"
   ],
+  "./magic-reminders.js": [
+    "src/tutorial/controller.js"
+  ],
+  "./material-registry.js": [
+    "src/rendering/scene.js"
+  ],
   "./material-vfx.js": [
     "src/rendering/scene.js"
   ],
@@ -428,22 +603,71 @@
     "src/tutorial/profile.js"
   ],
   "./money.js": [
+    "src/simulation/budget.js",
     "src/simulation/game.js",
     "src/simulation/raids.js"
   ],
+  "./movement-audio.js": [
+    "src/audio/audio.js"
+  ],
+  "./mud-patches.js": [
+    "src/rendering/scene.js"
+  ],
+  "./music-mixer.js": [
+    "src/audio/audio.js",
+    "src/audio/music-transport.js"
+  ],
+  "./music-policy.js": [
+    "src/audio/audio.js",
+    "src/audio/music-mixer.js",
+    "src/audio/music-transport.js"
+  ],
+  "./music-transport.js": [
+    "src/audio/audio.js"
+  ],
+  "./native-shadow-source.js": [
+    "src/rendering/native-shadow.js"
+  ],
+  "./native-shadow.js": [
+    "src/rendering/african-toon.js",
+    "src/rendering/scene.js"
+  ],
+  "./navigation-bounds.js": [
+    "src/world/navigation.js"
+  ],
+  "./notices.js": [
+    "src/app/main.js"
+  ],
   "./obstruction-source.js": [
-    "src/rendering/obstruction.js"
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
   ],
   "./obstruction.js": [
     "src/rendering/asset-lod.js",
     "src/rendering/scene.js"
   ],
+  "./raid-camera.js": [
+    "src/rendering/scene.js"
+  ],
+  "./raid-notice.js": [
+    "src/simulation/raids.js"
+  ],
   "./raids.js": [
     "src/simulation/game.js"
+  ],
+  "./render-origin.js": [
+    "src/rendering/african-toon.js",
+    "src/rendering/scene.js"
   ],
   "./render-quality.js": [
     "src/rendering/horizon.js",
     "src/rendering/scene.js"
+  ],
+  "./resident-props.js": [
+    "src/rendering/scene.js"
+  ],
+  "./resume-loaded-world.js": [
+    "src/app/main.js"
   ],
   "./rules.js": [
     "src/simulation/crops.js",
@@ -452,8 +676,21 @@
     "src/simulation/game.js",
     "src/simulation/raids.js"
   ],
+  "./save-game.js": [
+    "src/app/main.js"
+  ],
   "./search-frontier.js": [
     "src/world/navigation.js"
+  ],
+  "./settlement-terrain.js": [
+    "src/world/navigation.js",
+    "src/world/villages.js"
+  ],
+  "./shader-failure.js": [
+    "src/rendering/scene.js"
+  ],
+  "./shadow-cache.js": [
+    "src/rendering/native-shadow.js"
   ],
   "./shadow-camera.js": [
     "src/rendering/scene.js"
@@ -467,6 +704,22 @@
   "./sky.js": [
     "src/rendering/scene.js"
   ],
+  "./spell-placement.js": [
+    "src/app/main.js"
+  ],
+  "./spell-preview.js": [
+    "src/rendering/scene.js"
+  ],
+  "./standard-depth.js": [
+    "src/rendering/depth-capture.js"
+  ],
+  "./structure-audio.js": [
+    "src/audio/audio.js"
+  ],
+  "./structure-presentation.js": [
+    "src/simulation/game.js",
+    "src/simulation/rules.js"
+  ],
   "./surface-source.js": [
     "src/rendering/asset-surface.js",
     "src/rendering/assets.js"
@@ -476,6 +729,7 @@
     "src/simulation/raids.js"
   ],
   "./terrain-camera.js": [
+    "src/rendering/raid-camera.js",
     "src/rendering/scene.js"
   ],
   "./terrain-geometry.js": [
@@ -488,13 +742,19 @@
     "src/rendering/terrain-geometry.js"
   ],
   "./terrain-surface.js": [
-    "src/rendering/scene.js"
+    "src/rendering/mud-patches.js",
+    "src/rendering/scene.js",
+    "src/rendering/wall-stroke-preview.js"
   ],
   "./terrain.js": [
-    "src/world/navigation.js"
+    "src/world/navigation.js",
+    "src/world/villages.js"
   ],
   "./tutorial-hand-target.js": [
     "src/rendering/scene.js"
+  ],
+  "./unlock-audio.js": [
+    "src/audio/audio.js"
   ],
   "./vfx-native.js": [
     "src/rendering/agriculture-vfx.js",
@@ -517,6 +777,9 @@
   "./wall-layout-native.js": [
     "src/world/wall-layout.js"
   ],
+  "./wall-stroke-preview.js": [
+    "src/rendering/scene.js"
+  ],
   "./walls-native.js": [
     "src/rendering/walls.js"
   ],
@@ -531,10 +794,17 @@
     "src/rendering/scene.js"
   ],
   "./water-source.js": [
+    "src/rendering/biome-ground.js",
     "src/rendering/chunk-data.js",
     "src/rendering/terrain-source.js",
     "src/rendering/water-data.js",
     "src/rendering/water-geometry.js"
+  ],
+  "./watering-emitter.js": [
+    "src/rendering/scene.js"
+  ],
+  "./work-audio.js": [
+    "src/audio/audio.js"
   ],
   "./work-vfx.js": [
     "src/rendering/scene.js"
@@ -542,7 +812,11 @@
   "./worker-actions.js": [
     "src/rendering/scene.js"
   ],
+  "./worker-audio.js": [
+    "src/audio/audio.js"
+  ],
   "./workforce.js": [
+    "src/simulation/budget.js",
     "src/simulation/game.js",
     "src/simulation/locomotion.js",
     "src/simulation/raids.js",
@@ -552,15 +826,27 @@
     "src/rendering/african-toon.js",
     "src/rendering/scene.js"
   ],
+  "./world-resolution.js": [
+    "src/app/main.js"
+  ],
+  ".035+abs(sin(aSeed*27.0))*.045*t": [
+    "src/rendering/building-bounds.js"
+  ],
   ".5&&uSurfaceType": [
     "src/rendering/african-toon-source.js",
     "src/rendering/volcanic-source.js"
+  ],
+  ".5||p.x": [
+    "src/rendering/native-shadow-source.js"
   ],
   ".anim-button": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  ".bubble": [
+    "src/ui/guardian.js"
   ],
   ".card-name": [
     "public/selector/native.js"
@@ -580,6 +866,15 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  ".command-feedback": [
+    "src/ui/command-feedback.js"
+  ],
+  ".context": [
+    "src/app/main.js"
+  ],
+  ".cooldown-number": [
+    "src/ui/spell-cards.js"
+  ],
   ".crop-card": [
     "public/library/crops/script-4.js"
   ],
@@ -588,9 +883,6 @@
   ],
   ".frame-canvas": [
     "src/ui/native-hud.js"
-  ],
-  ".game": [
-    "src/app/main.js"
   ],
   ".glb": [
     "public/library/worker-older-female/script-1.js",
@@ -601,7 +893,10 @@
   ".health-preset": [
     "public/library/walls/script-2.js"
   ],
-  ".hint": [
+  ".hire-shift span": [
+    "src/app/main.js"
+  ],
+  ".hiring-footer": [
     "src/app/main.js"
   ],
   ".json": [
@@ -645,6 +940,12 @@
   ".next-button": [
     "src/ui/guardian.js"
   ],
+  ".panel-body": [
+    "src/ui/command-feedback.js"
+  ],
+  ".panel-subtitle": [
+    "src/app/main.js"
+  ],
   ".play-btn": [
     "public/library/sfx/script-1.js"
   ],
@@ -662,6 +963,15 @@
   ],
   ".row": [
     "public/library/sfx/script-1.js"
+  ],
+  ".shield": [
+    "src/tutorial/controller.js"
+  ],
+  ".spell-cooldown": [
+    "src/ui/spell-cards.js"
+  ],
+  ".spell-status": [
+    "src/ui/spell-cards.js"
   ],
   ".tutorial-skip": [
     "src/ui/guardian.js"
@@ -726,7 +1036,11 @@
     "public/selector/native.js"
   ],
   "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js"
+  ],
+  "0px": [
+    "src/ui/native-hud.js"
   ],
   "1 edificio disponible": [
     "public/library/destruction/script-5.js"
@@ -799,6 +1113,7 @@
     "src/simulation/animal-actions-data.js"
   ],
   "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js"
   ],
   "28 huesos": [
@@ -821,8 +1136,12 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
+    "src/rendering/wall-stroke-preview.js",
     "src/ui/guardian-native.js",
     "src/ui/native-hud.js"
+  ],
+  "2ed746d0085c7b4e306b43061253ce135dd5be987e47cd634075fc2a83f08d1c": [
+    "src/audio/music-policy.js"
   ],
   "3 contactos separados": [
     "src/rendering/vfx-native.js"
@@ -852,6 +1171,7 @@
     "public/library/crops/markup.html"
   ],
   "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js"
   ],
   "5 materiales · 4 estados independientes": [
@@ -874,6 +1194,7 @@
     "public/library/walls/script-2.js"
   ],
   "661b8ef0cd57714f78cf3d479b7ff0e5cbe25b97657c7dbb7979b4badf5eca56": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "757c7e2898ba70c5622d5648e200ff19273785452ccab340c78759a36000bd94": [
@@ -889,9 +1210,18 @@
   "800 monedas": [
     "src/app/main.js"
   ],
+  "84f3601d6793e0ada922f69a794922b995788f5bc6bbdc35ad863a11c467320c": [
+    "src/rendering/biome-material-source.js"
+  ],
   "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b": [
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js"
+  ],
+  "94e0d7203b4dce9a286520d12ff95542599d41c9fc51cf7241be2e20adde3021": [
+    "src/rendering/native-shadow-source.js"
+  ],
+  "96a767f8deb1779f2d63a33dddb9454b410d8ef59113567f6ea8c8aea6503fa6": [
+    "src/audio/music-policy.js"
   ],
   "9px -apple-system, sans-serif": [
     "public/library/walls/script-2.js"
@@ -916,6 +1246,9 @@
     "public/library/worker-older-male/markup.html",
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
+  ],
+  "; float groundRough,groundWet;": [
+    "src/rendering/african-toon.js"
   ],
   "A tu ritmo": [
     "public/menu/native.js",
@@ -1014,7 +1347,8 @@
     "public/library/crops/script-4.js"
   ],
   "AgriculturalEventApplied": [
-    "src/simulation/events.js"
+    "src/simulation/events.js",
+    "src/ui/agricultural-notice.js"
   ],
   "Agua con Fresnel": [
     "src/rendering/surface-source.js"
@@ -1029,7 +1363,16 @@
     "src/world/navigation.js"
   ],
   "Ahorro": [
-    "public/menu/native.js"
+    "public/menu/native.js",
+    "src/app/world-resolution.js"
+  ],
+  "Ahorro alto": [
+    "public/menu/native.js",
+    "src/app/world-resolution.js"
+  ],
+  "Ahorro máximo": [
+    "public/menu/native.js",
+    "src/app/world-resolution.js"
   ],
   "Ajusta la atmósfera. Los cambios se ven directamente en la escena.": [
     "public/menu/native.js"
@@ -1159,6 +1502,9 @@
   "Ampliar": [
     "public/selector/index.html"
   ],
+  "Ampliar el equipo": [
+    "src/app/main.js"
+  ],
   "Anchura RGBE incoherente.": [
     "src/rendering/sky-source.js"
   ],
@@ -1247,9 +1593,9 @@
     "public/library/crops/markup.html"
   ],
   "Arrastra para trazar una muralla": [
-    "src/app/main.js"
+    "src/app/tool-label.js"
   ],
-  "Arrastra sobre el suelo para trazar una muralla. Revisa los módulos y su coste antes de construir. Un recinto cerrado incluye su puerta sin recargo.": [
+  "Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 30 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.": [
     "src/app/main.js"
   ],
   "Arrastrar / rueda / pellizcar": [
@@ -1292,6 +1638,10 @@
   "Astillas alargadas salen de la cara golpeada. Un toque de serrín acompaña el impacto, sin chispas de metal.": [
     "src/rendering/vfx-native.js"
   ],
+  "At": [
+    "src/tutorial/controller.js",
+    "src/tutorial/magic-reminders.js"
+  ],
   "Atajos:": [
     "public/library/walls/markup.html"
   ],
@@ -1329,6 +1679,9 @@
   ],
   "Aura · CodeManu": [
     "src/rendering/vfx-native.js"
+  ],
+  "Authored native lab gesture/effect gates, traced source and original GLB hashes; seconds are native clip time before worker speed scaling. Calibration data only, not audio integration.": [
+    "src/audio/farm-actions-data.js"
   ],
   "Automático": [
     "public/library/worker-older-female/script-1.js",
@@ -1416,6 +1769,10 @@
   "Balafon's Call · tema principal de Wild Guardians.": [
     "public/menu/native.js"
   ],
+  "Banga": [
+    "public/menu/native.js",
+    "src/ui/menu-integration.js"
+  ],
   "Barrido de colmillos": [
     "src/rendering/vfx-native.js"
   ],
@@ -1448,6 +1805,9 @@
   ],
   "Bendición de la tierra": [
     "src/rendering/vfx-native.js"
+  ],
+  "Beneficio de multiplicación inválido": [
+    "src/persistence/snapshots.js"
   ],
   "Bestias": [
     "src/rendering/vfx-native.js"
@@ -1653,7 +2013,8 @@
     "public/selector/index.html"
   ],
   "Cambiar cultura": [
-    "public/selector/index.html"
+    "public/selector/index.html",
+    "src/app/main.js"
   ],
   "Cambiar de selección": [
     "public/selector/index.html"
@@ -1669,7 +2030,8 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "CampaignWon": [
-    "src/app/main.js",
+    "src/app/autosave-events.js",
+    "src/audio/audio.js",
     "src/simulation/game.js"
   ],
   "Can_Nozzle": [
@@ -1690,16 +2052,14 @@
   "Cancelar": [
     "public/library/crops/markup.html",
     "public/library/walls/markup.html",
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/command-feedback.js"
   ],
   "Cancelar carga": [
     "public/library/sfx/script-1.js"
   ],
   "Cancelar inicio": [
     "public/selector/index.html"
-  ],
-  "Cancelar trazado": [
-    "src/app/main.js"
   ],
   "Cantidad inválida": [
     "src/simulation/workforce.js"
@@ -1748,6 +2108,9 @@
   ],
   "Cargando materiales y clasificando los 40 estados…": [
     "public/library/crops/script-4.js"
+  ],
+  "Cargando…": [
+    "src/app/main.js"
   ],
   "Cargar escena": [
     "public/library/walls/markup.html"
@@ -1821,9 +2184,6 @@
   "Centrar cámara": [
     "public/library/crops/markup.html"
   ],
-  "Centro asociado durante esta jornada": [
-    "src/app/main.js"
-  ],
   "Centro de trabajo": [
     "src/app/main.js"
   ],
@@ -1836,7 +2196,9 @@
     "public/library/worker-older-male/markup.html",
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html",
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/command-feedback.js",
+    "src/ui/guardian.js"
   ],
   "Cerrar (Esc)": [
     "public/selector/index.html"
@@ -1925,16 +2287,13 @@
     "src/rendering/vfx-native.js"
   ],
   "Coloca el centro de trabajo": [
-    "src/app/main.js"
-  ],
-  "Coloca tu primer centro de trabajo por 800 monedas. Busca suelo libre junto al poblado. El centro organizará las tareas y recibirá las cajas de cosecha.": [
-    "src/tutorial/messages.js"
+    "src/app/tool-label.js"
   ],
   "Coloca una puerta": [
-    "src/app/main.js"
+    "src/app/tool-label.js"
   ],
   "Colocar": [
-    "src/app/main.js"
+    "src/app/tool-label.js"
   ],
   "Colocar una puerta individual": [
     "src/app/main.js"
@@ -2006,18 +2365,15 @@
   "Conjunto de piedras pequeñas tratado como un solo asset reutilizable.": [
     "src/world/terrain.js"
   ],
+  "Conserva las últimas 30 monedas: las necesitarás para contratar mañana.": [
+    "src/simulation/budget.js"
+  ],
   "Construcción desconocida": [
     "src/simulation/game.js"
   ],
   "Construir": [
     "src/app/main.js",
     "src/ui/native-hud.js"
-  ],
-  "Construir muralla": [
-    "src/app/main.js"
-  ],
-  "Construir por": [
-    "src/app/main.js"
   ],
   "Construir · 2": [
     "src/ui/native-hud.js"
@@ -2060,14 +2416,11 @@
   "Contorno de charca fuera de rango.": [
     "src/rendering/water-source.js"
   ],
-  "Contrata el equipo de hoy desde Construir. Puedes ajustar los cuatro perfiles al saldo disponible. El salario se cobra una sola vez al confirmar. Los trabajadores se reparten entre los centros y siguen las tareas por orden.": [
-    "src/tutorial/messages.js"
+  "Contrata más personas para este centro. Pagas solo la parte de su jornada que queda, redondeada hacia arriba.": [
+    "src/app/main.js"
   ],
   "Contrata tu equipo": [
     "src/ui/native-hud.js"
-  ],
-  "Contratar equipo": [
-    "src/app/main.js"
   ],
   "Contratar y empezar": [
     "src/ui/native-hud.js"
@@ -2116,9 +2469,6 @@
   "Cosecha en": [
     "public/library/crops/script-4.js"
   ],
-  "Cosecha solicitada": [
-    "src/app/main.js"
-  ],
   "Cosechar": [
     "src/rendering/vfx-native.js"
   ],
@@ -2141,19 +2491,19 @@
   "CrateDropped": [
     "src/simulation/game.js"
   ],
-  "Creciendo": [
-    "src/app/main.js"
-  ],
   "Crecimiento": [
     "src/simulation/balance.js"
   ],
-  "Crecimiento acelera las plantas de su zona durante 30 segundos. No sustituye los riegos obligatorios ni permite madurar con agua pendiente. Se recarga en 90 segundos desde el lanzamiento; la lectura y otras pausas congelan duración y recarga.": [
+  "Crecimiento acelera las plantas de su zona durante 30 segundos. No sustituye los riegos obligatorios ni permite madurar con agua pendiente. Se recarga en 90 segundos desde el lanzamiento; las pausas del juego congelan duración y recarga.": [
     "src/tutorial/messages.js"
   ],
   "Crecimiento y transición": [
     "public/library/crops/markup.html"
   ],
   "CropDestroyed": [
+    "src/simulation/raids.js"
+  ],
+  "CropHit": [
     "src/simulation/raids.js"
   ],
   "CropMatured": [
@@ -2241,6 +2591,9 @@
   "DAÑO ESTRUCTURAL": [
     "public/library/destruction/markup.html"
   ],
+  "DEPTH_COMPONENT24": [
+    "src/rendering/native-shadow.js"
+  ],
   "DEST requiere la malla original de una sola primitiva": [
     "src/rendering/buildings.js"
   ],
@@ -2260,8 +2613,12 @@
   "Datos del visor": [
     "public/library/crops/markup.html"
   ],
+  "David Sargent": [
+    "public/menu/native.js",
+    "src/ui/menu-integration.js"
+  ],
   "Dawn": [
-    "src/app/main.js",
+    "src/app/autosave-events.js",
     "src/simulation/game.js"
   ],
   "Dañado": [
@@ -2273,6 +2630,9 @@
   ],
   "Daño DEST no finito": [
     "src/rendering/destruction-effects-native.js"
+  ],
+  "Daño de cultivo inválido": [
+    "src/persistence/snapshots.js"
   ],
   "Daño localizado": [
     "public/library/destruction/script-5.js",
@@ -2422,6 +2782,15 @@
   "Disponible": [
     "src/ui/native-hud.js"
   ],
+  "Disponible desde el día 3": [
+    "src/ui/spell-cards.js"
+  ],
+  "Disponible desde el día 5": [
+    "src/ui/spell-cards.js"
+  ],
+  "Disponible desde la noche 1": [
+    "src/ui/spell-cards.js"
+  ],
   "Doble estela 3D": [
     "src/rendering/vfx-native.js"
   ],
@@ -2535,6 +2904,12 @@
   "El catálogo conserva los portales abiertos de adobe y piedra tal como están en los modelos. Las bases de exhibición se han eliminado de la geometría. Las resistencias son valores de juego editables. Límite: 240 módulos por escena.": [
     "public/library/walls/markup.html"
   ],
+  "El centro de trabajo no está disponible": [
+    "src/simulation/game.js"
+  ],
+  "El centro no tiene un camino válido al poblado": [
+    "src/simulation/game.js"
+  ],
   "El cielo requiere Radiance RGBE.": [
     "src/rendering/sky-source.js"
   ],
@@ -2644,12 +3019,6 @@
   "El tiempo se detiene mientras escuchas al poblado.": [
     "src/app/main.js"
   ],
-  "El trazado solapa un cultivo": [
-    "src/simulation/game.js"
-  ],
-  "El trazado verde aún no está construido. Confirma para pagar y colocarlo.": [
-    "src/app/main.js"
-  ],
   "El último centro ha caído y no puedes financiar otro.": [
     "src/simulation/raids.js"
   ],
@@ -2681,9 +3050,6 @@
   "Elige un material y activa Trazar. Dibuja una línea o una curva y suelta: se ajustará a módulos con vida independiente. Un toque coloca un solo tramo.": [
     "public/library/walls/markup.html"
   ],
-  "Elige una semilla y toca suelo libre cerca del centro. Pagas la semilla al plantar y aparece el brote. Su crecimiento empieza cuando un trabajador completa la siembra y el primer riego. Planta lo que puedas cuidar; reserva monedas para contratar.": [
-    "src/tutorial/messages.js"
-  ],
   "Elige una semilla y toca un espacio libre.": [
     "src/app/main.js"
   ],
@@ -2692,6 +3058,9 @@
   ],
   "Eliminar esta pieza · Se puede deshacer": [
     "public/library/walls/markup.html"
+  ],
+  "Eliminar muralla · +": [
+    "src/app/main.js"
   ],
   "Eliminar pieza": [
     "public/library/walls/markup.html"
@@ -2788,9 +3157,6 @@
   "Ese espacio ya está ocupado.": [
     "public/library/walls/script-2.js"
   ],
-  "Ese tramo ya está ocupado o es demasiado corto": [
-    "src/simulation/game.js"
-  ],
   "Ese tramo ya está ocupado. Dibuja en un espacio libre.": [
     "public/library/walls/script-2.js"
   ],
@@ -2821,9 +3187,6 @@
   ],
   "Espera de puerta inválida": [
     "src/persistence/snapshots.js"
-  ],
-  "Espera siembra y primer riego": [
-    "src/app/main.js"
   ],
   "Espirales tridimensionales": [
     "src/rendering/vfx-native.js"
@@ -2966,6 +3329,9 @@
   "Explorar los cinco modelos originales de cada cultivo": [
     "public/library/crops/markup.html"
   ],
+  "Exposición mágica inválida": [
+    "src/persistence/snapshots.js"
+  ],
   "F": [
     "public/library/walls/markup.html",
     "public/selector/index.html"
@@ -3005,6 +3371,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "Falta el modelo de": [
+    "src/rendering/scene.js"
+  ],
   "Falta la acción original": [
     "src/rendering/animal-actions.js",
     "src/rendering/worker-actions.js"
@@ -3024,6 +3393,9 @@
   ],
   "Fila RGBE no válida.": [
     "src/rendering/sky-source.js"
+  ],
+  "Foco de incursión inválido": [
+    "src/persistence/snapshots.js"
   ],
   "Follaje arbustivo": [
     "src/rendering/surface-source.js"
@@ -3093,7 +3465,8 @@
     "public/library/walls/markup.html"
   ],
   "Fundar poblado": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/app/tool-label.js"
   ],
   "G": [
     "public/library/walls/markup.html"
@@ -3131,7 +3504,17 @@
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "Ga Maamli": [
+    "public/menu/native.js",
+    "src/ui/menu-integration.js"
+  ],
+  "Ga Maamli · Banga · SIL OFL 1.1": [
+    "public/menu/native.js",
+    "src/ui/menu-integration.js"
+  ],
   "GameOver": [
+    "src/app/autosave-events.js",
+    "src/audio/audio.js",
     "src/simulation/game.js",
     "src/simulation/raids.js"
   ],
@@ -3274,6 +3657,12 @@
   "Guía": [
     "public/library/walls/markup.html"
   ],
+  "Guía tutorial inválida": [
+    "src/persistence/snapshots.js"
+  ],
+  "HDR endpoint sampling requires the authored environment recipe": [
+    "src/rendering/environment-endpoints.js"
+  ],
   "HDR incompleto.": [
     "src/rendering/sky-source.js"
   ],
@@ -3297,6 +3686,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/farm-actions-data.js",
     "src/rendering/worker-actions.js"
   ],
   "HarvestRequested": [
@@ -3316,6 +3706,9 @@
   ],
   "Hasta la próxima": [
     "public/menu/native.js"
+  ],
+  "Hay cultivos creciendo y Crecimiento está disponible. Úsalo sobre la plantación para acelerar la próxima cosecha; el equipo seguirá atendiendo los riegos.": [
+    "src/tutorial/messages.js"
   ],
   "Hay piezas fuera de los límites permitidos.": [
     "public/library/walls/script-2.js"
@@ -3385,6 +3778,9 @@
   "Home": [
     "public/library/walls/script-2.js",
     "public/selector/native.js"
+  ],
+  "Hora de contratación inválida": [
+    "src/simulation/workforce.js"
   ],
   "Horneando poses, agarres y accesorios a 30 fps…": [
     "public/library/worker-older-female/script-1.js",
@@ -3518,11 +3914,17 @@
   "Intro": [
     "public/selector/index.html"
   ],
+  "Invalid active terrain bounds": [
+    "src/world/navigation.js"
+  ],
   "Izquierda": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "Jornada en curso": [
+    "src/app/main.js"
   ],
   "Joven": [
     "public/library/crops/script-4.js"
@@ -3635,8 +4037,14 @@
   "La construcción solapa otro edificio": [
     "src/world/navigation.js"
   ],
+  "La contratación adicional no está disponible ahora": [
+    "src/simulation/game.js"
+  ],
   "La contratación no está abierta": [
     "src/simulation/game.js"
+  ],
+  "La contratación se abre automáticamente cuando termines de plantar. Puedes ajustar los cuatro perfiles al saldo disponible. El salario se cobra una sola vez al confirmar. Los trabajadores se reparten entre los centros y siguen las tareas por orden.": [
+    "src/tutorial/messages.js"
   ],
   "La cultura define la arquitectura de tu poblado. Puedes combinar cualquier cultura con cualquier bioma. El ojo abre la ilustración completa.": [
     "public/selector/index.html"
@@ -3659,6 +4067,9 @@
   "La incursión no encuentra una entrada transitable para su grupo completo.": [
     "src/simulation/raids.js"
   ],
+  "La jornada de este perfil ya ha terminado": [
+    "src/simulation/workforce.js"
+  ],
   "La luz cálida, los pastizales y las acacias forman el paisaje de este menú.": [
     "public/menu/native.js"
   ],
@@ -3671,6 +4082,9 @@
   "La maldición ha terminado": [
     "src/app/main.js"
   ],
+  "La muralla queda dentro de un edificio": [
+    "src/world/navigation.js"
+  ],
   "La parcela admite hasta 240 cultivos. Recolecta o retira alguno.": [
     "public/library/crops/script-4.js"
   ],
@@ -3679,6 +4093,9 @@
   ],
   "La parcela ya está vacía.": [
     "public/library/crops/script-4.js"
+  ],
+  "La partida guardada pertenece a otra ranura.": [
+    "src/persistence/snapshots.js"
   ],
   "La planta permanece hasta su recolección.": [
     "public/library/crops/script-4.js"
@@ -3692,7 +4109,7 @@
   "La presencia del guardián": [
     "src/rendering/vfx-native.js"
   ],
-  "La primera noche ha sido tranquila. Prepara las defensas desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": [
+  "La primera incursión llegará esta noche. Prepara las defensas desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": [
     "src/tutorial/messages.js"
   ],
   "La reparación se canceló: fondos insuficientes al llegar.": [
@@ -3860,6 +4277,12 @@
   "Los ambientes conservan un plano de fondo: brisa suave y noche tienen una referencia de −34 LUFS; el viento más intenso y el agua, aproximadamente −28 LUFS. Los efectos y avisos usan referencias distintas según su función.": [
     "public/library/sfx/markup.html"
   ],
+  "Los ancianos cobran 30 monedas y los jóvenes 40. Los jóvenes trabajan a ×1,50 de velocidad. Los hombres generan un 20 % más de cosecha por ciclo. Las mujeres trabajan 12 horas frente a las 10 de los hombres: un 20 % más. Ambos sexos cobran lo mismo dentro de cada edad.": [
+    "src/ui/native-hud.js"
+  ],
+  "Los animales están en la finca y Escudo está disponible. Abre Magias y protege tus cultivos en una zona libre de animales.": [
+    "src/tutorial/messages.js"
+  ],
   "Los animales han entrado en la finca. El equipo abandona sus tareas y huye hacia el poblado. La incursión termina cuando sale el último animal; después se reconstruyen las tareas de los cultivos que siguen vivos. Las reparaciones manuales interrumpidas deben pedirse de nuevo.": [
     "src/tutorial/messages.js"
   ],
@@ -3875,9 +4298,6 @@
   "Los impactos abren y amplían agujeros reales en la imagen, sin transparencia gradual.": [
     "public/library/destruction/markup.html"
   ],
-  "Los jóvenes cuestan un 20 % más y trabajan a ×1,50 de velocidad. Los hombres generan un 20 % más de cosecha por ciclo. Las mujeres trabajan 12 horas frente a las 10 de los hombres: un 20 % más. Ambos sexos cobran lo mismo dentro de cada edad.": [
-    "src/ui/native-hud.js"
-  ],
   "Los muros recorren intacto → dañado (50 % de vida) → destruido. Las puertas recorren puerta → destruido. El daño deforma continuamente regiones de las dos topologías: la anterior se repliega hacia anclajes y la siguiente se despliega. Las caras ausentes tienen área cero. No hay dithering, ruido de cobertura ni transparencia en los muros o sus sombras. Las UV se conservan. Las regiones son aproximaciones automáticas y pueden intersectarse durante el morph; no es una simulación estructural de fractura.": [
     "public/library/walls/markup.html"
   ],
@@ -3886,6 +4306,9 @@
   ],
   "Los trabajadores atienden las tareas de su centro. La cosecha se cobra al entregar cada caja.": [
     "src/ui/native-hud.js"
+  ],
+  "Los trabajadores recogen automáticamente los cultivos maduros. Cada cosecha se convierte en una caja que llevan al centro. Las monedas llegan al entregar la caja.": [
+    "src/tutorial/messages.js"
   ],
   "Luciérnagas": [
     "public/menu/native.js"
@@ -3901,6 +4324,9 @@
   ],
   "Límite de": [
     "public/library/walls/script-2.js"
+  ],
+  "Límite de incursión inicial inválido": [
+    "src/persistence/snapshots.js"
   ],
   "M": [
     "src/simulation/money.js"
@@ -3959,9 +4385,6 @@
   ],
   "Maduro": [
     "public/library/crops/script-4.js"
-  ],
-  "Maduro · listo para recoger": [
-    "src/app/main.js"
   ],
   "Magia": [
     "src/ui/native-hud.js"
@@ -4205,7 +4628,10 @@
   "Multiplicar": [
     "src/simulation/balance.js"
   ],
-  "Multiplicar aumenta el valor de las cosechas realizadas dentro de su zona durante 15 segundos. Puedes aplicarlo cuando el equipo esté recogiendo. La recarga empieza al lanzarlo y dura 120 segundos; no concede monedas antes de entregar las cajas.": [
+  "Multiplicar está disponible y hay cultivos sin su beneficio. Aplícalo sobre ellos: su próxima cosecha valdrá el doble aunque la magia termine antes de recogerla.": [
+    "src/tutorial/messages.js"
+  ],
+  "Multiplicar marca durante 15 segundos los cultivos de su zona para duplicar su próxima cosecha, aunque se recoja después. La recarga empieza al lanzarlo y dura 120 segundos; no concede monedas antes de entregar las cajas.": [
     "src/tutorial/messages.js"
   ],
   "Mundo de Wild Guardians Africa": [
@@ -4231,6 +4657,9 @@
   ],
   "Musgum": [
     "public/content/selector.json"
+  ],
+  "Music context suspended while creating deck": [
+    "src/audio/music-transport.js"
   ],
   "Muy baja": [
     "public/menu/native.js",
@@ -4270,11 +4699,14 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "Native building deformation bounds require an updated contract": [
+    "src/rendering/building-bounds.js"
+  ],
+  "Native destruction depth recipe changed": [
+    "src/rendering/building-depth.js"
+  ],
   "Native lab route speeds; median of the five native initial village-to-center walking paths on Sabana/712 at production scale.": [
     "src/simulation/locomotion-calibration.js"
-  ],
-  "Necesita riego": [
-    "src/app/main.js"
   ],
   "Necesitas separar las plantas": [
     "src/simulation/game.js"
@@ -4293,6 +4725,9 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "No disponible ahora": [
+    "src/ui/spell-cards.js"
   ],
   "No es un archivo de parcela compatible": [
     "public/library/crops/script-4.js"
@@ -4403,6 +4838,9 @@
   "No se pudo descodificar una textura.": [
     "public/library/destruction/script-5.js"
   ],
+  "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.": [
+    "src/rendering/shader-failure.js"
+  ],
   "No se pudo exportar:": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -4410,7 +4848,7 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "No se pudo guardar la partida:": [
-    "src/app/main.js"
+    "src/app/save-game.js"
   ],
   "No se pudo iniciar Wild Guardians:": [
     "src/app/main.js"
@@ -4590,7 +5028,7 @@
     "public/library/crops/script-4.js"
   ],
   "Partida guardada.": [
-    "src/app/main.js"
+    "src/app/save-game.js"
   ],
   "Partida iniciada · Simulación": [
     "public/selector/native.js"
@@ -4705,6 +5143,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "Pixel ratio limit must be positive": [
+    "src/rendering/render-quality.js"
+  ],
   "PlacementCommitted": [
     "src/simulation/game.js"
   ],
@@ -4716,6 +5157,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/farm-actions-data.js",
     "src/rendering/worker-actions.js"
   ],
   "Planta adulta": [
@@ -4732,7 +5174,7 @@
   ],
   "Plantar": [
     "public/library/crops/script-4.js",
-    "src/app/main.js"
+    "src/app/tool-label.js"
   ],
   "Plantas": [
     "src/world/terrain.js"
@@ -4818,6 +5260,9 @@
   ],
   "Praderas doradas": [
     "public/content/selector.json"
+  ],
+  "Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": [
+    "src/tutorial/messages.js"
   ],
   "Prepara tu primera aventura en la sabana.": [
     "public/menu/native.js"
@@ -4954,6 +5399,12 @@
   "Puerta · 60 % del muro ·": [
     "public/library/walls/script-2.js"
   ],
+  "Pulsa Construir y elige Centro de trabajo. Después coloca tu primer centro por 800 monedas donde señala la mano. Busca suelo libre junto al poblado. El centro organizará las tareas y recibirá las cajas de cosecha.": [
+    "src/tutorial/messages.js"
+  ],
+  "Pulsa Cultivar y elige una semilla. Después toca el suelo libre que señala la mano cerca del centro. Pagas la semilla al plantar y aparece el brote. Su crecimiento empieza cuando un trabajador completa la siembra y el primer riego. Planta lo que puedas cuidar; reserva monedas para contratar.": [
+    "src/tutorial/messages.js"
+  ],
   "Pulso de repulsión": [
     "src/rendering/vfx-native.js"
   ],
@@ -5064,7 +5515,7 @@
     "src/rendering/sky-source.js"
   ],
   "RaidEnded": [
-    "src/app/main.js",
+    "src/app/autosave-events.js",
     "src/simulation/raids.js"
   ],
   "RaidSpawned": [
@@ -5076,6 +5527,9 @@
   "Ramas entrelazadas": [
     "public/library/walls/script-2.js"
   ],
+  "Ranura inválida": [
+    "src/persistence/snapshots.js"
+  ],
   "Raíz": [
     "public/library/crops/script-4.js"
   ],
@@ -5085,14 +5539,14 @@
   "Rebote controlado": [
     "src/rendering/vfx-native.js"
   ],
+  "Recargando": [
+    "src/ui/spell-cards.js"
+  ],
   "Recibir golpe": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
-  ],
-  "Recoger grupo": [
-    "src/app/main.js"
   ],
   "Recolectar": [
     "public/library/worker-older-female/script-1.js",
@@ -5115,17 +5569,30 @@
   "Recordar la parcela en este navegador (cuando esté disponible)": [
     "public/library/crops/markup.html"
   ],
+  "Recordatorios de magia inválidos": [
+    "src/persistence/snapshots.js"
+  ],
   "Recorrido circular": [
     "public/library/worker-older-female/markup.html",
     "public/library/worker-older-male/markup.html",
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "Recorrido de regadera desactualizado:": [
+    "src/rendering/scene.js"
+  ],
+  "Recorrido de regadera inválido": [
+    "src/rendering/watering-emitter.js"
+  ],
   "Recorrido del espíritu": [
     "public/menu/index.html"
   ],
   "Recorriendo el santuario": [
     "public/menu/native.js"
+  ],
+  "Reduce la nitidez del mundo 3D; el HUD conserva su resolución.": [
+    "public/menu/native.js",
+    "src/app/main.js"
   ],
   "Reduce la plantilla para ajustarla al saldo.": [
     "src/app/main.js"
@@ -5187,6 +5654,7 @@
     "public/library/crops/markup.html"
   ],
   "RepairApplied": [
+    "src/rendering/work-vfx.js",
     "src/simulation/game.js"
   ],
   "RepairRequested": [
@@ -5249,6 +5717,10 @@
   "Resistencia de": [
     "public/library/walls/script-2.js"
   ],
+  "Resolución del mundo": [
+    "public/menu/native.js",
+    "src/app/main.js"
+  ],
   "Respiración sutil, peso relajado y manos libres. Nueva acción sobre el rig de Meshy.": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -5282,14 +5754,14 @@
   "Restos óseos estilizados. Baja frecuencia para que funcionen como detalle, no como cobertura.": [
     "src/world/terrain.js"
   ],
+  "Resultado · Abrir": [
+    "src/app/main.js"
+  ],
   "Resultados": [
     "public/library/sfx/script-1.js"
   ],
   "Resumen del catálogo": [
     "public/library/sfx/markup.html"
-  ],
-  "Retirar defensa sin reembolso": [
-    "src/app/main.js"
   ],
   "Retirar escombros": [
     "src/app/main.js"
@@ -5414,6 +5886,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/movement-audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/locomotion-vfx.js",
     "src/rendering/worker-actions.js"
@@ -5477,6 +5950,9 @@
   ],
   "Saldo restante": [
     "src/ui/native-hud.js"
+  ],
+  "Salida de animal inválida": [
+    "src/persistence/snapshots.js"
   ],
   "Salir": [
     "public/menu/native.js"
@@ -5590,6 +6066,10 @@
   "Segunda silueta arbórea, de ramificación asimétrica. Introduce variedad sin cambiar las reglas del generador.": [
     "src/world/terrain.js"
   ],
+  "Según calidad": [
+    "public/menu/native.js",
+    "src/app/world-resolution.js"
+  ],
   "Seis paisajes. Un nuevo comienzo.": [
     "public/selector/index.html",
     "public/selector/native.js"
@@ -5599,19 +6079,16 @@
     "public/selector/native.js"
   ],
   "Selecciona un poder y toca la zona donde quieres aplicarlo.": [
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
   ],
   "Selecciona un sonido": [
     "public/library/sfx/markup.html"
   ],
-  "Selecciona una cultura y pulsa Comenzar partida para iniciar la simulación. Puedes volver al bioma sin perder tus elecciones.": [
+  "Selecciona una cultura y pulsa Comenzar partida. Puedes volver al bioma sin perder tus elecciones.": [
     "public/selector/native.js"
   ],
   "Selecciona una especie y haz clic sobre la tierra para plantarla.": [
     "public/library/crops/markup.html"
-  ],
-  "Selecciona una planta madura y solicita recoger su grupo. Cada cosecha se convierte en una caja que el trabajador lleva al centro. Las monedas llegan al entregar la caja, no al ordenar la cosecha.": [
-    "src/tutorial/messages.js"
   ],
   "Seleccionar edificio": [
     "public/library/destruction/markup.html"
@@ -5659,9 +6136,6 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/markup.html",
     "public/library/worker-young-male/script-1.js"
-  ],
-  "Sin centro asociado": [
-    "src/app/main.js"
   ],
   "Sin conexión · WebGL2": [
     "public/library/walls/markup.html",
@@ -5787,6 +6261,7 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "StructureHit": [
+    "src/audio/audio.js",
     "src/simulation/raids.js"
   ],
   "StructureRuined": [
@@ -5933,6 +6408,9 @@
   "Tipo de sonido": [
     "public/library/sfx/markup.html"
   ],
+  "Toca el terreno para continuar la contratación.": [
+    "src/app/main.js"
+  ],
   "Toca los símbolos luminosos": [
     "public/menu/index.html"
   ],
@@ -6024,6 +6502,7 @@
     "public/library/walls/script-2.js"
   ],
   "Trazado de muralla inválido": [
+    "src/world/navigation.js",
     "src/world/wall-layout.js"
   ],
   "Trazar": [
@@ -6194,6 +6673,24 @@
   "Una pequeña granja. Un mundo por proteger.": [
     "public/menu/index.html"
   ],
+  "Unrecognized ground noise recipe": [
+    "src/rendering/fine-noise.js"
+  ],
+  "Unrecognized pigment recipe": [
+    "src/rendering/fine-noise.js"
+  ],
+  "Unsupported depth input": [
+    "src/rendering/shadow-cache.js"
+  ],
+  "Untracked depth shader": [
+    "src/rendering/shadow-cache.js"
+  ],
+  "Untracked line/point shadow": [
+    "src/rendering/shadow-cache.js"
+  ],
+  "Untracked shadow callback": [
+    "src/rendering/shadow-cache.js"
+  ],
   "UpLeg": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -6250,9 +6747,6 @@
   ],
   "Vaciar la parcela": [
     "public/library/crops/markup.html"
-  ],
-  "Valor base de cosecha:": [
-    "src/app/main.js"
   ],
   "Valores iniciales": [
     "public/library/walls/markup.html"
@@ -6387,9 +6881,6 @@
   "Volver a reproducir": [
     "public/library/destruction/script-5.js"
   ],
-  "Volver a un centro urbano · 1": [
-    "src/ui/native-hud.js"
-  ],
   "Volver al bioma": [
     "public/selector/index.html"
   ],
@@ -6398,6 +6889,9 @@
   ],
   "Volver al bioma:": [
     "public/selector/native.js"
+  ],
+  "Volver al centro de trabajo · 1": [
+    "src/ui/native-hud.js"
   ],
   "Volver al menú": [
     "src/app/main.js"
@@ -6432,6 +6926,9 @@
     "public/library/worker-young-male/markup.html",
     "public/selector/index.html"
   ],
+  "WORLD_SHADER_FAILURE": [
+    "src/rendering/shader-failure.js"
+  ],
   "Walk_Skip": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -6447,6 +6944,9 @@
     "src/rendering/locomotion-vfx.js",
     "src/simulation/animal-actions-data.js"
   ],
+  "Wall presentation invalid": [
+    "src/persistence/snapshots.js"
+  ],
   "WallChainBuilt": [
     "src/simulation/game.js"
   ],
@@ -6458,6 +6958,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/farm-actions-data.js",
     "src/rendering/worker-actions.js"
   ],
   "WaterSatisfied": [
@@ -6519,8 +7020,17 @@
   "Wild Guardians: Africa · Viaje del espíritu · V2.8": [
     "public/menu/index.html"
   ],
+  "Wild_Guardians_Gameplay_A_Balafon_and_Flute_Lab_V1_OFFLINE.html": [
+    "src/audio/music-policy.js"
+  ],
+  "Wild_Guardians_Gameplay_B_Warm_Afternoon_Lab_V1_OFFLINE.html": [
+    "src/audio/music-policy.js"
+  ],
   "Wild_Guardians_SFX_V12_MP3.zip": [
     "public/library/sfx/script-1.js"
+  ],
+  "Worker": [
+    "src/audio/audio.js"
   ],
   "WorkerHit": [
     "src/simulation/encounters.js"
@@ -6575,7 +7085,13 @@
     "public/library/crops/script-4.js",
     "src/app/main.js"
   ],
+  "[data-delete-slot]": [
+    "src/app/main.js"
+  ],
   "[data-demo]": [
+    "src/app/main.js"
+  ],
+  "[data-dismiss-notice]": [
     "src/app/main.js"
   ],
   "[data-filter]": [
@@ -6597,6 +7113,15 @@
   "[data-notice]": [
     "src/app/main.js"
   ],
+  "[data-placement-cancel]": [
+    "src/ui/command-feedback.js"
+  ],
+  "[data-placement-copy]": [
+    "src/ui/command-feedback.js"
+  ],
+  "[data-production-delete]": [
+    "public/menu/native.js"
+  ],
   "[data-production-lab]": [
     "public/menu/native.js",
     "src/ui/menu-integration.js"
@@ -6615,7 +7140,8 @@
     "public/library/crops/script-4.js"
   ],
   "[data-spell]": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/spell-cards.js"
   ],
   "[data-sprite]": [
     "src/app/main.js"
@@ -6639,7 +7165,20 @@
     "src/app/main.js"
   ],
   "[data-wall]": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/build-permissions.js"
+  ],
+  "[inert]": [
+    "src/ui/hud-shortcuts.js"
+  ],
+  "_aggressive": [
+    "src/audio/animal-audio.js"
+  ],
+  "_attack": [
+    "src/audio/animal-audio.js"
+  ],
+  "_charge": [
+    "src/audio/animal-audio.js"
   ],
   "_geometry_": [
     "public/library/worker-older-female/script-1.js",
@@ -6647,8 +7186,14 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "_neutral": [
+    "src/audio/animal-audio.js"
+  ],
   "_puerta": [
     "src/rendering/walls.js"
+  ],
+  "_retreat": [
+    "src/audio/animal-audio.js"
   ],
   "a": [
     "public/library/crops/script-4.js",
@@ -6658,7 +7203,8 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
-    "src/audio/audio.js"
+    "src/audio/audio.js",
+    "src/audio/music-policy.js"
   ],
   "aAnchor": [
     "src/rendering/buildings.js"
@@ -6745,6 +7291,10 @@
     "src/ui/guardian-native.js"
   ],
   "acting": [
+    "src/audio/farm-contact-audio.js",
+    "src/audio/work-audio.js",
+    "src/audio/worker-audio.js",
+    "src/rendering/scene.js",
     "src/rendering/work-vfx.js",
     "src/rendering/worker-actions.js",
     "src/simulation/game.js"
@@ -6765,6 +7315,9 @@
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js"
   ],
+  "activity": [
+    "src/audio/music-policy.js"
+  ],
   "adobe": [
     "public/library/walls/script-2.js",
     "src/rendering/material-vfx.js",
@@ -6776,12 +7329,16 @@
     "src/world/work-points.js"
   ],
   "af5568b2851f41f2da8786176e148395e9c773c459b29de25527481a9d75914e": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
-  "african-lava-hdr-v4.1.4": [
+  "affected": [
+    "src/rendering/obstruction.js"
+  ],
+  "african-lava-relative-v4.1.4|hdr-endpoints": [
     "src/rendering/african-toon.js"
   ],
-  "african-water-hdr-v4.1.4": [
+  "african-water-relative-v4.1.4|hdr-endpoints": [
     "src/rendering/african-toon.js"
   ],
   "africanToon4": [
@@ -6792,6 +7349,9 @@
   ],
   "afterbegin": [
     "public/menu/native.js"
+  ],
+  "aggressive": [
+    "src/audio/animal-audio.js"
   ],
   "agricultural-": [
     "src/simulation/events.js"
@@ -6804,7 +7364,8 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/command-feedback.js"
   ],
   "alertSeconds": [
     "src/simulation/locomotion-calibration.js"
@@ -6822,14 +7383,33 @@
   "all": [
     "public/library/sfx/script-1.js"
   ],
+  "alphaMap": [
+    "src/rendering/standard-depth.js"
+  ],
+  "alphaTest": [
+    "src/rendering/standard-depth.js"
+  ],
+  "alphaToCoverage": [
+    "src/rendering/standard-depth.js"
+  ],
   "alta": [
     "public/library/crops/script-4.js",
     "src/app/main.js",
-    "src/rendering/horizon.js",
     "src/rendering/lod-source.js",
     "src/rendering/render-quality.js",
     "src/rendering/scene.js",
-    "src/rendering/shadow-camera.js"
+    "src/rendering/shadow-camera.js",
+    "src/world/active-region.js"
+  ],
+  "amb_": [
+    "src/audio/audio.js"
+  ],
+  "ambient": [
+    "src/audio/ambient-audio.js",
+    "src/audio/audio.js"
+  ],
+  "ambient:": [
+    "src/audio/ambient-audio.js"
   ],
   "analytic-C3-reversible": [
     "public/menu/native.js"
@@ -6840,6 +7420,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "anchors": [
+    "src/audio/music-policy.js"
+  ],
   "angle": [
     "public/library/walls/script-2.js"
   ],
@@ -6847,6 +7430,7 @@
     "src/rendering/scene.js"
   ],
   "animal-": [
+    "src/audio/animal-audio.js",
     "src/simulation/raids.js"
   ],
   "animals": [
@@ -6873,8 +7457,15 @@
   "application/zip": [
     "public/library/sfx/script-1.js"
   ],
+  "approach": [
+    "src/audio/animal-audio.js"
+  ],
   "approach-": [
     "src/simulation/raids.js"
+  ],
+  "arh": [
+    "src/rendering/biome-ground.js",
+    "src/rendering/mud-patches.js"
   ],
   "arrival-": [
     "src/simulation/game.js"
@@ -6889,6 +7480,7 @@
     "public/selector/native.js"
   ],
   "asset": [
+    "src/rendering/resident-props.js",
     "src/rendering/scene.js"
   ],
   "assetData": [
@@ -6897,19 +7489,30 @@
   "async": [
     "src/ui/guardian.js"
   ],
+  "attack": [
+    "src/audio/animal-audio.js",
+    "src/audio/music-policy.js"
+  ],
   "attack-": [
     "src/simulation/raids.js"
   ],
   "attacking": [
+    "src/audio/animal-audio.js",
     "src/rendering/animal-actions.js",
     "src/rendering/attack-vfx.js",
-    "src/simulation/raids.js"
+    "src/rendering/raid-camera.js",
+    "src/simulation/raids.js",
+    "src/tutorial/magic-reminders.js"
   ],
   "attacks": [
     "src/simulation/balance.js"
   ],
   "attribute float nativeVisibility;varying float vNativeVisibility;": [
-    "src/rendering/obstruction.js"
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
+  ],
+  "attributesEnd": [
+    "src/rendering/shadow-cache.js"
   ],
   "audio/": [
     "public/library/sfx/script-1.js"
@@ -6931,7 +7534,9 @@
     "public/library/crops/script-4.js"
   ],
   "b": [
-    "src/audio/audio.js"
+    "src/audio/audio.js",
+    "src/audio/music-policy.js",
+    "src/ui/command-feedback.js"
   ],
   "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82": [
     "src/rendering/footsteps-data.js",
@@ -6976,12 +7581,21 @@
     "src/rendering/vfx-native.js"
   ],
   "base": [
+    "src/rendering/biome-ground.js",
+    "src/rendering/mud-patches.js",
     "src/ui/native-hud.js"
   ],
   "baseColor": [
     "src/rendering/assets.js"
   ],
+  "basic.": [
+    "src/app/main.js",
+    "src/rendering/tutorial-hand-target.js",
+    "src/ui/tutorial-hud-hand.js"
+  ],
   "basic.center": [
+    "src/persistence/snapshots.js",
+    "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
   "basic.complete": [
@@ -6993,6 +7607,7 @@
     "src/tutorial/messages.js"
   ],
   "basic.hiring": [
+    "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
   "basic.introduction": [
@@ -7000,9 +7615,12 @@
     "src/tutorial/messages.js"
   ],
   "basic.plant": [
+    "src/persistence/snapshots.js",
+    "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
   "basic.work": [
+    "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
   "bastion.scene": [
@@ -7028,6 +7646,7 @@
   ],
   "batata": [
     "public/library/crops/script-4.js",
+    "src/audio/farm-contact-audio.js",
     "src/rendering/crop-batch.js",
     "src/rendering/scene.js",
     "src/simulation/balance.js"
@@ -7075,6 +7694,9 @@
     "public/selector/native.js",
     "src/simulation/locomotion-calibration.js"
   ],
+  "biome-ground-4.1.10.3": [
+    "src/rendering/african-toon.js"
+  ],
   "biomeData": [
     "public/selector/native.js"
   ],
@@ -7091,13 +7713,14 @@
     "src/rendering/vfx-native.js"
   ],
   "block": [
-    "public/library/crops/script-4.js"
+    "public/library/crops/script-4.js",
+    "src/rendering/wall-stroke-preview.js"
   ],
   "block/": [
     "src/rendering/shield-vfx.js"
   ],
   "blue": [
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
   ],
   "bodyRoll": [
     "src/ui/guardian-native.js",
@@ -7124,14 +7747,26 @@
   "bounds": [
     "src/world/center-geometries.js"
   ],
+  "bpm": [
+    "src/audio/music-policy.js"
+  ],
   "bridgeData": [
     "public/library/crops/script-4.js"
   ],
+  "budget.reserve": [
+    "src/app/main.js"
+  ],
   "buffalo": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
+    "src/audio/movement-audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/balance.js"
+  ],
+  "build": [
+    "src/ui/tutorial-hud-hand.js"
   ],
   "building:": [
     "src/rendering/assets.js"
@@ -7158,7 +7793,10 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
-    "public/selector/native.js"
+    "public/selector/native.js",
+    "src/app/main.js",
+    "src/ui/command-feedback.js",
+    "src/ui/guardian.js"
   ],
   "button[data-action]": [
     "public/library/sfx/script-1.js"
@@ -7178,6 +7816,9 @@
     "src/rendering/surface-source.js",
     "src/rendering/terrain-source.js",
     "src/rendering/water-source.js"
+  ],
+  "cadence": [
+    "src/audio/music-policy.js"
   ],
   "camera": [
     "public/library/walls/script-2.js",
@@ -7208,6 +7849,7 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
+    "src/rendering/wall-stroke-preview.js",
     "src/ui/guardian-native.js"
   ],
   "canyon:mesa:": [
@@ -7220,6 +7862,8 @@
     "src/world/terrain.js"
   ],
   "canyons": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-material-source.js",
     "src/rendering/horizon.js",
     "src/world/navigation.js",
     "src/world/terrain.js"
@@ -7237,6 +7881,7 @@
     "src/simulation/locomotion.js"
   ],
   "carrying": [
+    "src/audio/farm-contact-audio.js",
     "src/persistence/snapshots.js",
     "src/rendering/locomotion-vfx.js",
     "src/rendering/worker-actions.js",
@@ -7256,14 +7901,19 @@
   "center": [
     "public/library/walls/script-2.js",
     "src/app/main.js",
+    "src/app/tool-label.js",
     "src/rendering/attack-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/tutorial-hand-target.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/game.js",
     "src/simulation/raids.js",
     "src/simulation/rules.js",
+    "src/tutorial/action-pause.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js",
+    "src/ui/build-permissions.js",
+    "src/ui/tutorial-hud-hand.js",
     "src/world/navigation.js",
     "src/world/villages.js",
     "src/world/work-points.js"
@@ -7276,10 +7926,17 @@
     "public/selector/native.js"
   ],
   "changing": [
+    "src/audio/guardian-audio.js",
     "src/ui/guardian-lifecycle.js"
   ],
   "charge": [
     "src/rendering/vfx-native.js"
+  ],
+  "childadded": [
+    "src/rendering/material-registry.js"
+  ],
+  "childremoved": [
+    "src/rendering/material-registry.js"
   ],
   "chunk": [
     "src/rendering/scene.js"
@@ -7323,10 +7980,15 @@
     "public/library/walls/script-2.js",
     "public/menu/native.js",
     "public/selector/native.js",
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "clickDamage": [
     "public/library/destruction/script-5.js"
+  ],
+  "clip": [
+    "src/rendering/asset-clip.js",
+    "src/rendering/standard-depth.js"
   ],
   "clips": [
     "src/rendering/footsteps-data.js",
@@ -7355,6 +8017,7 @@
     "public/selector/native.js"
   ],
   "closed": [
+    "src/audio/guardian-audio.js",
     "src/rendering/hands-native.js",
     "src/rendering/hands.js",
     "src/ui/guardian-lifecycle.js",
@@ -7379,10 +8042,13 @@
     "public/library/destruction/script-5.js"
   ],
   "collapsing": [
+    "src/persistence/snapshots.js",
     "src/rendering/buildings.js",
     "src/rendering/walls.js",
     "src/simulation/game.js",
+    "src/simulation/raids.js",
     "src/simulation/rules.js",
+    "src/simulation/structure-presentation.js",
     "src/world/navigation.js",
     "src/world/wall-layout.js"
   ],
@@ -7426,6 +8092,9 @@
   "contacts": [
     "src/rendering/footsteps-data.js"
   ],
+  "context": [
+    "src/app/main.js"
+  ],
   "contextmenu": [
     "public/library/crops/script-4.js",
     "public/library/destruction/script-5.js",
@@ -7452,6 +8121,12 @@
     "src/rendering/vfx-native.js",
     "src/rendering/vfx.js"
   ],
+  "cos(worldP.z*.37-worldP.x*.16-uTime*.32)": [
+    "src/rendering/african-toon.js"
+  ],
+  "cos(worldPatternPosition(worldP).z*.37-worldPatternPosition(worldP).x*.16-uTime*.32)": [
+    "src/rendering/african-toon.js"
+  ],
   "cost": [
     "src/simulation/balance.js"
   ],
@@ -7469,6 +8144,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/farm-contact-audio.js",
     "src/simulation/game.js"
   ],
   "crate-": [
@@ -7547,6 +8223,9 @@
     "public/library/walls/script-2.js",
     "src/rendering/walls-native.js"
   ],
+  "danger": [
+    "src/audio/music-policy.js"
+  ],
   "date": [
     "src/simulation/balance.js"
   ],
@@ -7554,6 +8233,10 @@
     "src/simulation/balance.js"
   ],
   "day": [
+    "src/audio/audio.js",
+    "src/audio/music-mixer.js",
+    "src/audio/music-policy.js",
+    "src/audio/music-transport.js",
     "src/simulation/raids.js"
   ],
   "dayValue": [
@@ -7572,6 +8255,7 @@
     "public/library/walls/script-2.js"
   ],
   "db0020a49d34a0c0bfefed11262d45d433abb12a8979134976800873231b1b54": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "dblclick": [
@@ -7579,7 +8263,7 @@
   ],
   "de": [
     "public/library/sfx/script-1.js",
-    "src/app/main.js",
+    "src/app/tool-label.js",
     "src/rendering/worker-actions.js",
     "src/simulation/events.js"
   ],
@@ -7610,6 +8294,9 @@
     "src/simulation/raids.js",
     "src/tutorial/controller.js"
   ],
+  "defense:": [
+    "src/simulation/defensive-groups.js"
+  ],
   "delete": [
     "public/library/walls/script-2.js"
   ],
@@ -7625,10 +8312,24 @@
   "demoBtn": [
     "public/library/crops/script-4.js"
   ],
+  "density": [
+    "src/audio/music-policy.js"
+  ],
+  "depthFunc": [
+    "src/rendering/standard-depth.js"
+  ],
+  "depthTest": [
+    "src/rendering/standard-depth.js"
+  ],
+  "depthWrite": [
+    "src/rendering/standard-depth.js"
+  ],
   "desde este HTML…": [
     "public/library/destruction/script-5.js"
   ],
   "desert": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-material-source.js",
     "src/rendering/horizon.js",
     "src/world/navigation.js",
     "src/world/terrain.js"
@@ -7685,7 +8386,26 @@
     "src/rendering/vfx-native.js"
   ],
   "disabled": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/spell-cards.js"
+  ],
+  "displacementBias": [
+    "src/rendering/standard-depth.js"
+  ],
+  "displacementMap": [
+    "src/rendering/standard-depth.js"
+  ],
+  "displacementScale": [
+    "src/rendering/standard-depth.js"
+  ],
+  "dispose": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-ground.js",
+    "src/rendering/standard-depth.js"
+  ],
+  "disposed": [
+    "src/audio/guardian-audio.js",
+    "src/ui/guardian.js"
   ],
   "distanceMetres": [
     "src/simulation/locomotion-calibration.js"
@@ -7700,7 +8420,6 @@
   "done": [
     "public/library/crops/script-4.js",
     "src/rendering/scene.js",
-    "src/rendering/tutorial-hand-target.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js"
@@ -7719,17 +8438,16 @@
   ],
   "drag": [
     "src/rendering/hands-native.js",
-    "src/rendering/hands.js",
-    "src/rendering/tutorial-hand-target.js"
+    "src/rendering/hands.js"
   ],
   "draw": [
     "public/library/walls/script-2.js"
   ],
   "due": [
-    "src/app/main.js",
     "src/simulation/crops.js",
     "src/simulation/events.js",
-    "src/simulation/game.js"
+    "src/simulation/game.js",
+    "src/tutorial/magic-reminders.js"
   ],
   "duration": [
     "public/library/destruction/script-5.js",
@@ -7740,21 +8458,30 @@
   "durationValue": [
     "public/library/destruction/script-5.js"
   ],
+  "durations": [
+    "src/audio/farm-actions-data.js"
+  ],
   "dust": [
     "src/rendering/locomotion-vfx.js",
-    "src/rendering/vfx-native.js"
+    "src/rendering/vfx-native.js",
+    "src/rendering/work-vfx.js"
   ],
   "dustRing": [
     "src/rendering/vfx-native.js"
   ],
   "e5a138f8848ca70f818ff37874b40056719fec84ffe3587cd52357065b479120": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js"
   ],
   "eco": [
     "src/rendering/lod-source.js"
+  ],
+  "economy": [
+    "src/app/world-resolution.js"
   ],
   "edificio-2": [
     "public/library/destruction/script-5.js"
@@ -7812,7 +8539,8 @@
     "public/library/walls/markup.html"
   ],
   "end": [
-    "public/menu/native.js"
+    "public/menu/native.js",
+    "src/rendering/scene.js"
   ],
   "enter": [
     "src/ui/guardian-lifecycle.js",
@@ -7823,6 +8551,7 @@
   ],
   "entering": [
     "public/menu/native.js",
+    "src/audio/animal-audio.js",
     "src/rendering/animal-actions.js",
     "src/rendering/locomotion-vfx.js",
     "src/simulation/raids.js"
@@ -7935,21 +8664,42 @@
     "public/library/walls/script-2.js",
     "public/selector/native.js"
   ],
+  "fade": [
+    "src/audio/music-policy.js"
+  ],
+  "fading": [
+    "src/rendering/obstruction.js"
+  ],
+  "failure": [
+    "src/audio/audio.js",
+    "src/audio/music-mixer.js"
+  ],
   "fall": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "fallEnd": [
+    "src/audio/farm-actions-data.js"
+  ],
   "fallSeconds": [
     "src/simulation/locomotion-calibration.js"
+  ],
+  "fallStart": [
+    "src/audio/farm-actions-data.js"
+  ],
+  "fallback": [
+    "src/rendering/native-shadow.js"
   ],
   "false": [
     "public/library/walls/script-2.js",
     "public/selector/native.js",
+    "src/app/main.js",
     "src/ui/guardian.js"
   ],
   "farewell": [
+    "src/audio/guardian-audio.js",
     "src/rendering/hands-native.js",
     "src/tutorial/messages.js",
     "src/ui/guardian-lifecycle.js",
@@ -7958,6 +8708,12 @@
   ],
   "farm": [
     "public/library/crops/script-4.js"
+  ],
+  "farm-": [
+    "src/simulation/game.js"
+  ],
+  "fauna": [
+    "src/audio/ambient-audio.js"
   ],
   "favorable": [
     "src/simulation/events.js"
@@ -7975,11 +8731,15 @@
     "public/selector/native.js"
   ],
   "fleeing": [
+    "src/audio/worker-audio.js",
     "src/rendering/locomotion-vfx.js",
     "src/rendering/worker-actions.js",
     "src/simulation/game.js",
     "src/simulation/locomotion.js",
     "src/simulation/raids.js"
+  ],
+  "flex": [
+    "src/ui/command-feedback.js"
   ],
   "floating": [
     "src/world/terrain.js"
@@ -7989,6 +8749,9 @@
   ],
   "focus": [
     "public/menu/native.js"
+  ],
+  "foliage": [
+    "src/rendering/biome-material-source.js"
   ],
   "foot": [
     "src/rendering/footsteps-data.js"
@@ -8016,6 +8779,9 @@
   "fps ·": [
     "public/library/crops/script-4.js"
   ],
+  "fractions": [
+    "src/audio/farm-actions-data.js"
+  ],
   "frame_": [
     "src/app/main.js"
   ],
@@ -8028,6 +8794,10 @@
   "frost": [
     "src/simulation/events.js"
   ],
+  "full": [
+    "src/audio/music-mixer.js",
+    "src/audio/music-policy.js"
+  ],
   "fullscreen": [
     "public/library/destruction/script-5.js"
   ],
@@ -8038,7 +8808,8 @@
     "public/selector/native.js"
   ],
   "fullscreenchange": [
-    "public/selector/native.js"
+    "public/selector/native.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "future": [
     "src/simulation/crops.js",
@@ -8061,6 +8832,9 @@
   "gate-hp-": [
     "public/library/walls/script-2.js"
   ],
+  "generic": [
+    "src/audio/audio.js"
+  ],
   "getFloat32": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -8078,6 +8852,9 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowIntensity, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, vDirectionalShadowCoord[ i ] )": [
+    "src/rendering/native-shadow.js"
   ],
   "getUint16": [
     "public/library/worker-older-female/script-1.js",
@@ -8114,8 +8891,10 @@
     "public/library/walls/markup.html"
   ],
   "gone": [
+    "src/rendering/raid-camera.js",
     "src/rendering/scene.js",
     "src/simulation/actor-motion.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/encounters.js",
     "src/simulation/game.js",
     "src/simulation/raids.js"
@@ -8137,7 +8916,7 @@
     "src/rendering/hands-native.js"
   ],
   "green": [
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
   ],
   "greeting": [
     "src/tutorial/messages.js",
@@ -8155,6 +8934,9 @@
   "gridBtn": [
     "public/library/crops/script-4.js"
   ],
+  "gridOffset": [
+    "src/audio/music-policy.js"
+  ],
   "grips": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -8165,12 +8947,23 @@
     "src/rendering/african-toon.js",
     "src/rendering/vfx.js"
   ],
+  "groupsEnd": [
+    "src/rendering/shadow-cache.js"
+  ],
+  "grow": [
+    "src/ui/tutorial-hud-hand.js"
+  ],
   "growth": [
     "src/rendering/agriculture-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/vfx-native.js",
     "src/simulation/balance.js",
-    "src/simulation/game.js"
+    "src/simulation/game.js",
+    "src/simulation/rules.js",
+    "src/tutorial/magic-reminders.js"
+  ],
+  "growthAt": [
+    "src/persistence/snapshots.js"
   ],
   "growthScrub": [
     "public/library/crops/script-4.js"
@@ -8189,14 +8982,16 @@
   "hand": [
     "public/library/walls/script-2.js"
   ],
+  "hands": [
+    "src/audio/farm-actions-data.js"
+  ],
   "harvest": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "src/app/main.js",
-    "src/rendering/scene.js",
-    "src/rendering/tutorial-hand-target.js",
+    "src/audio/farm-contact-audio.js",
     "src/rendering/vfx-native.js",
     "src/rendering/work-vfx.js",
     "src/simulation/game.js",
@@ -8208,6 +9003,9 @@
   ],
   "harvestBtn": [
     "public/library/crops/script-4.js"
+  ],
+  "harvestContact": [
+    "src/audio/farm-actions-data.js"
   ],
   "headX": [
     "src/ui/guardian-native.js",
@@ -8259,7 +9057,14 @@
     "public/library/sfx/script-1.js",
     "public/menu/native.js",
     "src/app/main.js",
-    "src/tutorial/controller.js"
+    "src/app/resume-loaded-world.js",
+    "src/audio/guardian-audio.js",
+    "src/rendering/obstruction.js",
+    "src/rendering/raid-camera.js",
+    "src/tutorial/controller.js",
+    "src/ui/guardian.js",
+    "src/ui/spell-cards.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "high": [
     "public/library/crops/script-4.js",
@@ -8273,11 +9078,7 @@
   "hinge": [
     "src/world/gate-frames-native.js"
   ],
-  "hint": [
-    "src/app/main.js"
-  ],
   "hire": [
-    "src/rendering/tutorial-hand-target.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js"
@@ -8287,8 +9088,13 @@
   ],
   "hiring": [
     "src/app/main.js",
+    "src/rendering/raid-camera.js",
     "src/simulation/game.js",
-    "src/tutorial/controller.js"
+    "src/tutorial/controller.js",
+    "src/ui/tutorial-hud-hand.js"
+  ],
+  "hiringAgriculturalNotice": [
+    "src/app/main.js"
   ],
   "hit": [
     "public/library/destruction/script-5.js",
@@ -8310,12 +9116,15 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "hoeDuringPlant": [
+    "src/audio/farm-actions-data.js"
+  ],
   "home": [
     "public/library/destruction/script-5.js",
     "public/menu/native.js",
+    "src/audio/worker-audio.js",
     "src/rendering/locomotion-vfx.js",
     "src/rendering/scene.js",
-    "src/rendering/tutorial-hand-target.js",
     "src/rendering/worker-actions.js",
     "src/simulation/actor-motion.js",
     "src/simulation/encounters.js",
@@ -8331,6 +9140,10 @@
   ],
   "homeBtn": [
     "public/library/crops/script-4.js"
+  ],
+  "horizon": [
+    "src/rendering/african-toon.js",
+    "src/rendering/standard-depth.js"
   ],
   "horn": [
     "src/rendering/vfx-native.js"
@@ -8368,6 +9181,8 @@
     "src/world/center-geometries.js"
   ],
   "hyena": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
     "src/simulation/animal-actions-data.js",
@@ -8436,10 +9251,14 @@
     "src/simulation/locomotion-calibration.js"
   ],
   "if(vNativeVisibility": [
-    "src/rendering/obstruction.js"
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
   ],
   "iframe": [
     "src/app/main.js"
+  ],
+  "illustrated-4.1.6": [
+    "src/rendering/african-toon.js"
   ],
   "image/png": [
     "public/library/walls/script-2.js",
@@ -8449,7 +9268,8 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "img": [
-    "public/selector/native.js"
+    "public/selector/native.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "impact": [
     "src/rendering/vfx-native.js"
@@ -8466,9 +9286,15 @@
     "public/library/sfx/script-1.js"
   ],
   "initial": [
+    "src/audio/farm-contact-audio.js",
+    "src/audio/work-audio.js",
+    "src/rendering/scene.js",
     "src/rendering/work-vfx.js",
     "src/rendering/worker-actions.js",
     "src/simulation/game.js"
+  ],
+  "initialTool": [
+    "src/audio/farm-actions-data.js"
   ],
   "input": [
     "public/library/sfx/script-1.js",
@@ -8491,12 +9317,16 @@
     "public/selector/native.js"
   ],
   "intact": [
+    "src/persistence/snapshots.js",
     "src/rendering/attack-vfx.js",
+    "src/rendering/raid-camera.js",
     "src/rendering/walls.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/game.js",
     "src/simulation/gates.js",
     "src/simulation/raids.js",
-    "src/simulation/rules.js"
+    "src/simulation/rules.js",
+    "src/tutorial/magic-reminders.js"
   ],
   "intacto": [
     "public/library/walls/script-1.js",
@@ -8507,7 +9337,7 @@
     "public/library/destruction/script-5.js"
   ],
   "intro": [
-    "src/rendering/tutorial-hand-target.js",
+    "src/audio/guardian-audio.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js",
@@ -8529,6 +9359,9 @@
   "json": [
     "src/rendering/asset-url.js"
   ],
+  "jump": [
+    "src/audio/music-transport.js"
+  ],
   "k triángulos": [
     "public/library/crops/script-4.js"
   ],
@@ -8544,7 +9377,8 @@
     "public/menu/native.js",
     "public/selector/native.js",
     "src/app/main.js",
-    "src/ui/guardian.js"
+    "src/ui/guardian.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "kind": [
     "src/rendering/hands-native.js"
@@ -8560,6 +9394,9 @@
   ],
   "land": [
     "src/world/terrain.js"
+  ],
+  "lastAt": [
+    "src/persistence/snapshots.js"
   ],
   "launchActions": [
     "public/selector/native.js"
@@ -8609,6 +9446,9 @@
     "public/library/walls/script-2.js",
     "src/world/gate-frames-native.js"
   ],
+  "levels": [
+    "src/audio/music-policy.js"
+  ],
   "library": [
     "public/menu/native.js",
     "src/app/main.js",
@@ -8628,6 +9468,8 @@
     "src/app/main.js"
   ],
   "lion": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
     "src/simulation/animal-actions-data.js",
@@ -8693,6 +9535,7 @@
     "public/library/crops/script-4.js",
     "public/library/destruction/script-5.js",
     "public/menu/native.js",
+    "src/app/world-resolution.js",
     "src/rendering/destruction-effects-native.js",
     "src/rendering/scene.js"
   ],
@@ -8701,6 +9544,9 @@
   ],
   "magic": [
     "src/simulation/crops.js"
+  ],
+  "magic.": [
+    "src/tutorial/controller.js"
   ],
   "magic.growth": [
     "src/tutorial/controller.js",
@@ -8721,10 +9567,14 @@
     "src/simulation/balance.js"
   ],
   "manglares": [
+    "src/audio/ambient-audio.js",
     "src/rendering/african-toon.js",
     "src/simulation/game.js"
   ],
   "mangrove": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-material-source.js",
+    "src/rendering/mud-patches.js",
     "src/rendering/surface-source.js",
     "src/world/navigation.js",
     "src/world/terrain.js"
@@ -8735,12 +9585,18 @@
   "manual": [
     "src/simulation/crops.js"
   ],
+  "map": [
+    "src/rendering/standard-depth.js"
+  ],
   "mapungubwe": [
     "src/app/main.js",
     "src/simulation/game.js",
     "src/simulation/locomotion-calibration.js",
     "src/world/center-geometries.js",
     "src/world/centers.js"
+  ],
+  "markers": [
+    "src/audio/farm-actions-data.js"
   ],
   "material": [
     "public/library/walls/script-2.js",
@@ -8777,7 +9633,8 @@
   "media": [
     "public/library/crops/script-4.js",
     "src/app/main.js",
-    "src/rendering/scene.js"
+    "src/rendering/scene.js",
+    "src/world/active-region.js"
   ],
   "medium": [
     "public/library/crops/script-4.js",
@@ -8789,8 +9646,13 @@
   ],
   "menu": [
     "src/app/main.js",
+    "src/app/resume-loaded-world.js",
+    "src/audio/ui-audio.js",
+    "src/rendering/raid-camera.js",
+    "src/simulation/game.js",
     "src/tutorial/controller.js",
-    "src/ui/native-hud.js"
+    "src/ui/native-hud.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "menuButton": [
     "src/app/main.js",
@@ -8820,6 +9682,7 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "method": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/locomotion-calibration.js"
@@ -8839,11 +9702,23 @@
     "public/menu/native.js",
     "src/ui/menu-integration.js"
   ],
+  "minimal": [
+    "src/audio/music-policy.js"
+  ],
+  "minimum": [
+    "src/app/world-resolution.js"
+  ],
+  "mix(.80,1.,smoothstep(0.,.22,nativeRelH))": [
+    "src/rendering/african-toon.js"
+  ],
   "mobileClear": [
     "public/library/crops/script-4.js"
   ],
   "mobileDemo": [
     "public/library/crops/script-4.js"
+  ],
+  "modal": [
+    "src/app/main.js"
   ],
   "model-data-2": [
     "public/library/destruction/script-5.js"
@@ -8875,10 +9750,8 @@
   "monedas": [
     "public/menu/native.js",
     "src/app/main.js",
+    "src/app/tool-label.js",
     "src/ui/menu-integration.js"
-  ],
-  "monedas.": [
-    "src/app/main.js"
   ],
   "monedas. Toca otra posición para recolocar.": [
     "src/app/main.js"
@@ -8896,18 +9769,29 @@
   "morphDuration": [
     "public/library/crops/script-4.js"
   ],
+  "morphEnd": [
+    "src/rendering/shadow-cache.js"
+  ],
   "morphing": [
     "public/library/crops/script-4.js"
   ],
   "mouseenter": [
     "public/menu/native.js"
   ],
+  "mud": [
+    "src/rendering/mud-patches.js"
+  ],
   "multiply": [
+    "src/persistence/snapshots.js",
     "src/rendering/agriculture-vfx.js",
     "src/rendering/vfx-native.js",
     "src/simulation/balance.js",
     "src/simulation/game.js",
-    "src/simulation/rules.js"
+    "src/simulation/rules.js",
+    "src/tutorial/magic-reminders.js"
+  ],
+  "multiplyAt": [
+    "src/persistence/snapshots.js"
   ],
   "musgum": [
     "src/simulation/game.js",
@@ -8922,9 +9806,6 @@
   ],
   "módulos construidos": [
     "public/library/walls/script-2.js"
-  ],
-  "módulos ·": [
-    "src/app/main.js"
   ],
   "módulos.": [
     "public/library/walls/script-2.js"
@@ -8948,6 +9829,9 @@
   "nativeClipBounds": [
     "src/rendering/asset-clip.js"
   ],
+  "nativeDirectVisibility": [
+    "src/rendering/native-shadow.js"
+  ],
   "nativeLeaf": [
     "src/rendering/african-toon.js"
   ],
@@ -8958,8 +9842,17 @@
   "nativeWet": [
     "src/rendering/african-toon.js"
   ],
+  "native_shadow_depth24": [
+    "src/rendering/native-shadow.js"
+  ],
+  "natural": [
+    "src/audio/music-transport.js"
+  ],
   "nearest": [
     "public/selector/native.js"
+  ],
+  "neutral": [
+    "src/audio/animal-audio.js"
   ],
   "new": [
     "public/menu/native.js",
@@ -8978,10 +9871,18 @@
   "nextArt": [
     "public/selector/native.js"
   ],
+  "nextReaction": [
+    "src/audio/worker-audio.js"
+  ],
+  "nextRoutine": [
+    "src/audio/worker-audio.js"
+  ],
   "night": [
+    "src/audio/ambient-audio.js",
+    "src/audio/music-policy.js",
     "src/simulation/raids.js"
   ],
-  "night_2": [
+  "night_1": [
     "src/simulation/balance.js"
   ],
   "node_": [
@@ -8998,15 +9899,20 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
-    "src/ui/guardian.js"
+    "src/rendering/wall-stroke-preview.js",
+    "src/ui/command-feedback.js",
+    "src/ui/guardian.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "normal": [
     "public/library/crops/script-4.js",
     "src/rendering/assets.js",
+    "src/rendering/biome-ground.js",
     "src/rendering/buildings.js",
     "src/rendering/crop-batch.js",
     "src/rendering/gate-articulation.js",
     "src/rendering/lod-source.js",
+    "src/rendering/mud-patches.js",
     "src/rendering/terrain-geometry.js",
     "src/rendering/walls.js"
   ],
@@ -9025,6 +9931,9 @@
   "npc_": [
     "src/ui/native-hud.js"
   ],
+  "nuevo amanecer": [
+    "src/ui/native-hud.js"
+  ],
   "null": [
     "public/library/sfx/script-1.js",
     "public/menu/native.js",
@@ -9037,7 +9946,8 @@
     "public/library/destruction/script-5.js",
     "public/library/sfx/script-1.js",
     "public/library/walls/script-2.js",
-    "public/menu/native.js"
+    "public/menu/native.js",
+    "src/simulation/budget.js"
   ],
   "nx": [
     "public/menu/native.js"
@@ -9050,25 +9960,30 @@
     "public/selector/native.js",
     "src/persistence/snapshots.js",
     "src/rendering/african-toon.js",
-    "src/rendering/asset-url.js"
+    "src/rendering/asset-url.js",
+    "src/rendering/shadow-cache.js"
   ],
   "observe": [
-    "src/rendering/scene.js",
-    "src/rendering/tutorial-hand-target.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js"
+  ],
+  "obstruction": [
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
   ],
   "offset": [
     "public/menu/native.js"
   ],
   "olderFemale": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/locomotion-calibration.js",
     "src/simulation/workforce.js",
     "src/ui/native-hud.js"
   ],
   "olderMale": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/scene.js",
     "src/simulation/locomotion-calibration.js",
@@ -9078,6 +9993,9 @@
   "on": [
     "public/menu/native.js"
   ],
+  "opacity": [
+    "src/rendering/standard-depth.js"
+  ],
   "open": [
     "public/library/sfx/script-1.js",
     "public/library/worker-older-female/script-1.js",
@@ -9085,8 +10003,7 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/selector/native.js",
-    "src/rendering/hands-native.js",
-    "src/rendering/tutorial-hand-target.js"
+    "src/rendering/hands-native.js"
   ],
   "option": [
     "public/library/destruction/script-5.js",
@@ -9101,6 +10018,7 @@
     "src/rendering/crop-batch.js"
   ],
   "outro": [
+    "src/audio/guardian-audio.js",
     "src/rendering/hands-native.js",
     "src/ui/guardian-lifecycle.js",
     "src/ui/guardian.js"
@@ -9109,7 +10027,9 @@
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/app/main.js",
+    "src/ui/command-feedback.js"
   ],
   "pageSubtitle": [
     "public/selector/native.js"
@@ -9121,7 +10041,11 @@
     "public/library/sfx/script-1.js"
   ],
   "panel": [
-    "public/menu/native.js"
+    "public/menu/native.js",
+    "src/app/main.js"
+  ],
+  "params": [
+    "src/rendering/biome-material-source.js"
   ],
   "particle": [
     "src/rendering/vfx.js"
@@ -9179,8 +10103,7 @@
     "public/library/walls/script-2.js"
   ],
   "pinch": [
-    "src/rendering/hands-native.js",
-    "src/rendering/tutorial-hand-target.js"
+    "src/rendering/hands-native.js"
   ],
   "pitch": [
     "src/ui/guardian-native.js",
@@ -9205,11 +10128,15 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "src/app/main.js",
+    "src/app/tool-label.js",
+    "src/audio/farm-contact-audio.js",
     "src/rendering/tutorial-hand-target.js",
     "src/rendering/work-vfx.js",
     "src/simulation/game.js",
+    "src/tutorial/action-pause.js",
     "src/tutorial/controller.js",
-    "src/tutorial/messages.js"
+    "src/tutorial/messages.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "plant-": [
     "src/simulation/game.js"
@@ -9240,7 +10167,8 @@
     "public/library/crops/script-4.js",
     "src/rendering/crop-batch.js",
     "src/rendering/scene.js",
-    "src/simulation/balance.js"
+    "src/simulation/balance.js",
+    "src/world/work-points.js"
   ],
   "play": [
     "public/library/destruction/script-5.js",
@@ -9261,6 +10189,9 @@
   ],
   "playing": [
     "public/library/sfx/script-1.js"
+  ],
+  "playsinline": [
+    "src/ui/screen-wake-lock.js"
   ],
   "plaza": [
     "src/rendering/hands-native.js"
@@ -9298,7 +10229,8 @@
     "public/menu/native.js",
     "public/selector/native.js",
     "src/app/main.js",
-    "src/rendering/scene.js"
+    "src/rendering/scene.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "pointerleave": [
     "public/library/crops/script-4.js",
@@ -9324,7 +10256,8 @@
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
     "public/selector/native.js",
-    "src/rendering/scene.js"
+    "src/rendering/scene.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "pond:": [
     "src/world/terrain.js"
@@ -9346,11 +10279,19 @@
     "src/rendering/buildings.js",
     "src/rendering/crop-batch.js",
     "src/rendering/hands.js",
+    "src/rendering/mud-patches.js",
     "src/rendering/sky.js",
+    "src/rendering/spell-preview.js",
     "src/rendering/terrain-geometry.js",
     "src/rendering/vfx.js",
     "src/rendering/walls.js",
     "src/rendering/water-geometry.js"
+  ],
+  "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;display:none": [
+    "src/rendering/wall-stroke-preview.js"
+  ],
+  "position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:25;background:#17261eee;color:white;padding:16px;border-radius:12px;pointer-events:none": [
+    "src/app/main.js"
   ],
   "position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee": [
     "src/app/main.js"
@@ -9361,6 +10302,12 @@
   "postgame": [
     "src/simulation/balance.js"
   ],
+  "pourEnd": [
+    "src/audio/farm-actions-data.js"
+  ],
+  "pourStart": [
+    "src/audio/farm-actions-data.js"
+  ],
   "precision highp float;": [
     "src/rendering/vfx.js"
   ],
@@ -9368,8 +10315,7 @@
     "src/simulation/animal-actions-data.js"
   ],
   "press": [
-    "src/rendering/hands-native.js",
-    "src/rendering/tutorial-hand-target.js"
+    "src/rendering/hands-native.js"
   ],
   "prev": [
     "public/library/sfx/script-1.js"
@@ -9387,6 +10333,8 @@
     "src/simulation/balance.js"
   ],
   "profile": [
+    "public/menu/native.js",
+    "src/app/world-resolution.js",
     "src/rendering/scene.js",
     "src/simulation/locomotion-calibration.js"
   ],
@@ -9403,20 +10351,20 @@
   "puerta": [
     "public/library/walls/script-1.js",
     "public/library/walls/script-2.js",
-    "src/app/main.js",
     "src/rendering/walls-native.js"
   ],
   "puertas automáticas añadidas": [
     "public/library/walls/script-2.js"
   ],
   "purple": [
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
   ],
   "px": [
     "public/library/crops/script-4.js",
     "public/library/walls/script-2.js",
     "public/menu/native.js",
-    "src/ui/native-hud.js"
+    "src/ui/native-hud.js",
+    "src/ui/tutorial-hud-hand.js"
   ],
   "px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif": [
     "public/library/walls/script-2.js"
@@ -9436,6 +10384,9 @@
   "px,": [
     "public/library/crops/script-4.js"
   ],
+  "px:": [
+    "src/ui/tutorial-hud-hand.js"
+  ],
   "px;height:": [
     "src/ui/native-hud.js"
   ],
@@ -9452,6 +10403,9 @@
     "public/library/crops/script-4.js",
     "public/library/destruction/script-5.js",
     "src/app/main.js"
+  ],
+  "quantize": [
+    "src/audio/music-policy.js"
   ],
   "quata.character-template": [
     "public/library/worker-older-female/script-1.js",
@@ -9487,6 +10441,7 @@
   ],
   "reading": [
     "src/app/main.js",
+    "src/audio/guardian-audio.js",
     "src/rendering/hands-native.js",
     "src/rendering/hands.js",
     "src/ui/guardian-lifecycle.js",
@@ -9505,9 +10460,11 @@
     "public/library/destruction/script-5.js"
   ],
   "references/extracted/Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5/script-1.js": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "references/extracted/Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5/script-1.js": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "references/extracted/Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3/script-1.js": [
@@ -9517,12 +10474,14 @@
     "src/simulation/animal-actions-data.js"
   ],
   "references/extracted/Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5/script-1.js": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "references/extracted/Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2/script-1.js": [
     "src/simulation/animal-actions-data.js"
   ],
   "references/extracted/Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7/script-1.js": [
+    "src/audio/farm-actions-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
   "references/extracted/Quata_Character_Lab_Leon_Bestiario_Corregido_v2/script-1.js": [
@@ -9542,8 +10501,27 @@
   "region": [
     "src/ui/guardian.js"
   ],
+  "release": [
+    "src/ui/screen-wake-lock.js"
+  ],
   "remainingText": [
     "public/library/crops/script-4.js"
+  ],
+  "reminder.": [
+    "src/tutorial/controller.js"
+  ],
+  "reminder.growth": [
+    "src/tutorial/magic-reminders.js",
+    "src/tutorial/messages.js"
+  ],
+  "reminder.multiply": [
+    "src/tutorial/magic-reminders.js",
+    "src/tutorial/messages.js"
+  ],
+  "reminder.shield": [
+    "src/tutorial/controller.js",
+    "src/tutorial/magic-reminders.js",
+    "src/tutorial/messages.js"
   ],
   "repair": [
     "public/library/walls/script-2.js",
@@ -9552,6 +10530,9 @@
   ],
   "repair-point-": [
     "src/world/work-points.js"
+  ],
+  "repair/": [
+    "src/rendering/work-vfx.js"
   ],
   "repair:": [
     "src/simulation/game.js"
@@ -9592,6 +10573,7 @@
     "src/app/main.js"
   ],
   "rest": [
+    "src/audio/guardian-audio.js",
     "src/simulation/idle.js",
     "src/ui/guardian-lifecycle.js"
   ],
@@ -9602,7 +10584,8 @@
     "src/simulation/animal-actions-data.js"
   ],
   "result": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/game-surfaces.js"
   ],
   "result.defeat": [
     "src/tutorial/controller.js"
@@ -9613,10 +10596,16 @@
   "resume": [
     "src/app/main.js"
   ],
+  "retreat": [
+    "src/audio/animal-audio.js"
+  ],
   "retreating": [
+    "src/audio/animal-audio.js",
     "src/rendering/animal-actions.js",
     "src/rendering/locomotion-vfx.js",
+    "src/rendering/raid-camera.js",
     "src/simulation/actor-motion.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/encounters.js",
     "src/simulation/raids.js"
   ],
@@ -9654,6 +10643,9 @@
     "src/ui/guardian-native.js"
   ],
   "rhino": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
+    "src/audio/movement-audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
     "src/simulation/animal-actions-data.js",
@@ -9686,6 +10678,12 @@
   "ripe": [
     "public/library/crops/script-4.js"
   ],
+  "riseEnd": [
+    "src/audio/farm-actions-data.js"
+  ],
+  "riseStart": [
+    "src/audio/farm-actions-data.js"
+  ],
   "roar": [
     "src/rendering/vfx-native.js"
   ],
@@ -9704,6 +10702,8 @@
   "role": [
     "public/library/walls/script-2.js",
     "public/selector/native.js",
+    "src/app/main.js",
+    "src/ui/command-feedback.js",
     "src/ui/guardian.js"
   ],
   "roll": [
@@ -9729,7 +10729,8 @@
   ],
   "round": [
     "public/library/walls/script-2.js",
-    "public/menu/native.js"
+    "public/menu/native.js",
+    "src/rendering/wall-stroke-preview.js"
   ],
   "route": [
     "public/library/walls/script-2.js",
@@ -9752,6 +10753,7 @@
     "src/simulation/game.js",
     "src/simulation/gates.js",
     "src/simulation/locomotion.js",
+    "src/simulation/structure-presentation.js",
     "src/world/navigation.js"
   ],
   "run": [
@@ -9775,7 +10777,7 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
   ],
   "s simulados y nunca sale del antiguo intervalo de transición.": [
     "public/library/crops/script-4.js"
@@ -9784,7 +10786,13 @@
     "public/library/crops/script-4.js"
   ],
   "s · recarga": [
-    "src/app/main.js"
+    "src/ui/spell-cards.js"
+  ],
+  "s2": [
+    "src/audio/music-policy.js"
+  ],
+  "s4": [
+    "src/audio/music-policy.js"
   ],
   "sabana": [
     "src/app/main.js",
@@ -9815,6 +10823,8 @@
     "src/simulation/locomotion-calibration.js"
   ],
   "savanna": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-material-source.js",
     "src/world/navigation.js"
   ],
   "save": [
@@ -9847,6 +10857,7 @@
     "public/library/crops/script-4.js"
   ],
   "schema": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/balance.js",
@@ -9855,11 +10866,20 @@
   "scratch": [
     "src/rendering/vfx-native.js"
   ],
+  "screen": [
+    "src/ui/screen-wake-lock.js"
+  ],
   "screenshot": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "script": [
+    "src/audio/farm-actions-data.js"
+  ],
+  "scriptSha256": [
+    "src/audio/farm-actions-data.js"
   ],
   "se basan en las animaciones del visor original y en la carrera nativa de Kofi joven. «Alerta» sustituye a «Con saco» como acción; el saco sigue disponible como accesorio. Las otras acciones se calculan sobre el esqueleto. En la caja, la regadera y la azada, la": [
     "public/library/worker-young-male/markup.html"
@@ -9880,6 +10900,9 @@
   ],
   "seed": [
     "src/simulation/locomotion-calibration.js"
+  ],
+  "seedDrop": [
+    "src/audio/farm-actions-data.js"
   ],
   "seek": [
     "public/library/sfx/script-1.js"
@@ -9923,7 +10946,8 @@
     "public/selector/native.js"
   ],
   "settings": [
-    "public/library/walls/script-2.js"
+    "public/library/walls/script-2.js",
+    "src/app/main.js"
   ],
   "settingsBtn": [
     "public/library/crops/script-4.js"
@@ -9937,9 +10961,14 @@
     "src/ui/menu-integration.js"
   ],
   "sha256": [
+    "src/audio/farm-actions-data.js",
+    "src/audio/music-policy.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/locomotion-calibration.js"
+  ],
+  "shade": [
+    "src/rendering/biome-material-source.js"
   ],
   "shadow": [
     "src/rendering/asset-groups.js"
@@ -9952,6 +10981,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "shape": [
+    "src/rendering/biome-material-source.js"
+  ],
   "shield": [
     "src/app/main.js",
     "src/rendering/attack-vfx.js",
@@ -9962,7 +10994,11 @@
     "src/simulation/game.js",
     "src/simulation/raids.js",
     "src/simulation/rules.js",
+    "src/tutorial/magic-reminders.js",
     "src/world/navigation.js"
+  ],
+  "shieldRaid": [
+    "src/persistence/snapshots.js"
   ],
   "short": [
     "src/ui/native-hud.js"
@@ -9989,11 +11025,23 @@
   "shrubs": [
     "src/world/terrain.js"
   ],
+  "side": [
+    "src/rendering/standard-depth.js"
+  ],
   "simulationNote": [
     "public/selector/native.js"
   ],
-  "sin recargo": [
-    "src/app/main.js"
+  "sin(worldP.x*.43+worldP.z*.18+uTime*.40)": [
+    "src/rendering/african-toon.js"
+  ],
+  "sin(worldP.z*.024)": [
+    "src/rendering/african-toon.js"
+  ],
+  "sin(worldPatternPosition(worldP).x*.43+worldPatternPosition(worldP).z*.18+uTime*.40)": [
+    "src/rendering/african-toon.js"
+  ],
+  "sin(worldPatternPosition(worldP).z*.024)": [
+    "src/rendering/african-toon.js"
   ],
   "size": [
     "public/library/walls/script-2.js"
@@ -10072,6 +11120,7 @@
     "public/library/sfx/script-1.js"
   ],
   "source": [
+    "src/audio/music-policy.js",
     "src/simulation/animal-actions-data.js"
   ],
   "sourceScript": [
@@ -10081,11 +11130,17 @@
     "src/simulation/animal-actions-data.js"
   ],
   "sources": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/locomotion-calibration.js"
   ],
+  "sowStart": [
+    "src/audio/farm-actions-data.js"
+  ],
   "span": [
-    "public/library/walls/script-2.js"
+    "public/library/walls/script-2.js",
+    "src/app/main.js",
+    "src/ui/command-feedback.js"
   ],
   "speak": [
     "src/tutorial/messages.js",
@@ -10117,7 +11172,8 @@
     "public/library/crops/script-4.js"
   ],
   "spell": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/app/tool-label.js"
   ],
   "spell-": [
     "src/simulation/game.js"
@@ -10133,10 +11189,12 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "spirit": [
+    "src/audio/music-policy.js",
     "src/rendering/vfx-native.js"
   ],
   "src": [
-    "src/ui/native-hud.js"
+    "src/ui/native-hud.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "stack": [
     "public/library/walls/script-2.js"
@@ -10162,6 +11220,8 @@
   "start": [
     "public/menu/native.js",
     "src/app/main.js",
+    "src/audio/music-transport.js",
+    "src/rendering/scene.js",
     "src/simulation/animal-actions-data.js",
     "src/ui/menu-integration.js"
   ],
@@ -10172,6 +11232,7 @@
     "public/library/destruction/script-5.js"
   ],
   "status": [
+    "src/app/main.js",
     "src/rendering/vfx-native.js",
     "src/simulation/balance.js",
     "src/simulation/raids.js"
@@ -10193,13 +11254,14 @@
     "public/menu/native.js",
     "src/persistence/snapshots.js",
     "src/rendering/asset-url.js",
+    "src/rendering/work-vfx.js",
     "src/simulation/money.js"
   ],
   "structure-": [
     "src/simulation/game.js"
   ],
   "structure:": [
-    "src/simulation/raids.js"
+    "src/simulation/defensive-groups.js"
   ],
   "structures": [
     "src/persistence/snapshots.js"
@@ -10218,12 +11280,21 @@
     "src/simulation/locomotion-calibration.js",
     "src/world/center-geometries.js"
   ],
+  "success": [
+    "src/audio/audio.js",
+    "src/audio/music-mixer.js",
+    "src/audio/music-policy.js"
+  ],
   "suelo": [
     "src/rendering/hands-native.js"
   ],
   "sun": [
     "public/menu/native.js",
+    "src/rendering/biome-material-source.js",
     "src/rendering/vfx.js"
+  ],
+  "surface": [
+    "src/rendering/asset-surface.js"
   ],
   "suspended": [
     "public/library/sfx/script-1.js"
@@ -10266,6 +11337,12 @@
   "textarea": [
     "public/library/sfx/script-1.js"
   ],
+  "texture2D( map, vMapUv )": [
+    "src/rendering/asset-surface.js"
+  ],
+  "texture2D( map, vMapUv, .65 )": [
+    "src/rendering/asset-surface.js"
+  ],
   "theta": [
     "public/library/walls/script-2.js"
   ],
@@ -10282,20 +11359,29 @@
     "src/rendering/asset-shadows.js",
     "src/rendering/asset-surface.js",
     "src/rendering/assets.js",
+    "src/rendering/biome-ground.js",
+    "src/rendering/building-bounds.js",
     "src/rendering/building-effects.js",
     "src/rendering/buildings.js",
     "src/rendering/contacts.js",
     "src/rendering/crop-batch.js",
+    "src/rendering/depth-recipes.js",
     "src/rendering/hands.js",
     "src/rendering/horizon.js",
+    "src/rendering/mud-patches.js",
+    "src/rendering/native-shadow.js",
     "src/rendering/obstruction.js",
     "src/rendering/render-quality.js",
     "src/rendering/scene.js",
+    "src/rendering/shadow-cache.js",
     "src/rendering/shadow-camera.js",
     "src/rendering/sky.js",
+    "src/rendering/spell-preview.js",
+    "src/rendering/standard-depth.js",
     "src/rendering/terrain-camera.js",
     "src/rendering/terrain-geometry.js",
     "src/rendering/vfx.js",
+    "src/rendering/wall-stroke-preview.js",
     "src/rendering/walls.js",
     "src/rendering/water-geometry.js",
     "src/rendering/worker-actions.js"
@@ -10313,6 +11399,7 @@
     "src/rendering/scene.js"
   ],
   "threshold": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js"
   ],
   "thumbnailData": [
@@ -10349,6 +11436,12 @@
   ],
   "toggle": [
     "public/library/sfx/script-1.js"
+  ],
+  "toon": [
+    "src/rendering/african-toon.js"
+  ],
+  "toon-4.1.4": [
+    "src/rendering/african-toon.js"
   ],
   "top": [
     "src/world/gate-frames-native.js"
@@ -10416,7 +11509,12 @@
     "public/library/destruction/script-5.js",
     "public/library/sfx/script-1.js",
     "public/library/walls/script-2.js",
-    "src/ui/guardian.js"
+    "src/rendering/wall-stroke-preview.js",
+    "src/ui/guardian.js",
+    "src/ui/tutorial-hud-hand.js"
+  ],
+  "tu equipo": [
+    "src/ui/native-hud.js"
   ],
   "twoHands": [
     "public/library/worker-older-female/script-1.js",
@@ -10459,7 +11557,8 @@
     "public/library/destruction/script-5.js"
   ],
   "uDamage": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uDebug": [
     "src/ui/guardian-native.js"
@@ -10505,7 +11604,8 @@
     "public/menu/native.js"
   ],
   "uHoles": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uIconOpacity": [
     "public/menu/native.js"
@@ -10514,7 +11614,8 @@
     "src/rendering/african-toon.js"
   ],
   "uInner": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uIntactDepth": [
     "public/library/destruction/script-5.js"
@@ -10543,7 +11644,8 @@
     "public/library/destruction/script-5.js"
   ],
   "uMode": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uModel": [
     "public/library/walls/script-1.js"
@@ -10552,7 +11654,8 @@
     "public/library/walls/script-1.js"
   ],
   "uNoise": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uNormal": [
     "public/menu/native.js"
@@ -10631,7 +11734,8 @@
     "public/menu/native.js"
   ],
   "uUncut": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/buildings.js"
   ],
   "uUp": [
     "public/library/destruction/script-5.js"
@@ -10650,6 +11754,12 @@
   "uWorldFogColor": [
     "src/rendering/buildings.js"
   ],
+  "ui": [
+    "src/audio/audio.js",
+    "src/audio/guardian-audio.js",
+    "src/audio/ui-audio.js",
+    "src/audio/unlock-audio.js"
+  ],
   "un": [
     "src/ui/native-hud.js"
   ],
@@ -10665,6 +11775,7 @@
     "src/simulation/balance.js"
   ],
   "url": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js"
   ],
@@ -10692,6 +11803,7 @@
     "src/rendering/crop-batch.js",
     "src/rendering/gate-articulation.js",
     "src/rendering/hands.js",
+    "src/rendering/mud-patches.js",
     "src/rendering/walls.js"
   ],
   "v": [
@@ -10705,6 +11817,12 @@
   ],
   "vColor*light,a": [
     "src/rendering/building-effects.js"
+  ],
+  "vPaintWorld": [
+    "src/rendering/african-toon.js"
+  ],
+  "vToonWorld": [
+    "src/rendering/african-toon.js"
   ],
   "valores de diseño aprobados; integración todavía no ejecutada": [
     "src/simulation/balance.js"
@@ -10725,12 +11843,19 @@
     "src/rendering/asset-surface.js"
   ],
   "varying float vNativeVisibility;": [
-    "src/rendering/obstruction.js"
+    "src/rendering/obstruction.js",
+    "src/rendering/standard-depth.js"
+  ],
+  "vertexColors": [
+    "src/rendering/standard-depth.js"
   ],
   "victory": [
     "src/app/main.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js"
+  ],
+  "video": [
+    "src/ui/screen-wake-lock.js"
   ],
   "view": [
     "public/library/worker-older-female/script-1.js",
@@ -10770,6 +11895,7 @@
   ],
   "village": [
     "src/app/main.js",
+    "src/app/tool-label.js",
     "src/simulation/game.js",
     "src/simulation/rules.js"
   ],
@@ -10787,7 +11913,8 @@
     "public/library/destruction/script-5.js",
     "public/library/walls/script-2.js",
     "public/menu/native.js",
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "visible": [
     "public/library/walls/script-2.js",
@@ -10801,6 +11928,9 @@
     "src/simulation/game.js"
   ],
   "volcanoes": [
+    "src/rendering/african-toon.js",
+    "src/rendering/biome-material-source.js",
+    "src/rendering/ground-mask.js",
     "src/rendering/surface-source.js",
     "src/world/navigation.js"
   ],
@@ -10822,7 +11952,6 @@
   ],
   "waiting": [
     "src/rendering/locomotion-vfx.js",
-    "src/rendering/tutorial-hand-target.js",
     "src/rendering/worker-actions.js",
     "src/simulation/game.js"
   ],
@@ -10842,15 +11971,22 @@
     "src/simulation/locomotion.js"
   ],
   "walking": [
+    "src/audio/animal-audio.js",
+    "src/audio/worker-audio.js",
     "src/rendering/locomotion-vfx.js",
+    "src/rendering/raid-camera.js",
     "src/rendering/worker-actions.js",
+    "src/simulation/defensive-groups.js",
     "src/simulation/game.js",
     "src/simulation/raids.js",
-    "src/simulation/tasks.js"
+    "src/simulation/tasks.js",
+    "src/tutorial/magic-reminders.js"
   ],
   "wall": [
     "public/library/walls/script-2.js",
     "src/app/main.js",
+    "src/app/tool-label.js",
+    "src/audio/structure-audio.js",
     "src/persistence/snapshots.js",
     "src/rendering/attack-vfx.js",
     "src/rendering/material-vfx.js",
@@ -10858,6 +11994,9 @@
     "src/rendering/walls.js",
     "src/simulation/game.js",
     "src/simulation/raids.js",
+    "src/simulation/rules.js",
+    "src/ui/build-permissions.js",
+    "src/world/navigation-bounds.js",
     "src/world/navigation.js",
     "src/world/wall-layout-native.js",
     "src/world/wall-layout.js"
@@ -10875,16 +12014,18 @@
     "src/ui/menu-integration.js"
   ],
   "warning": [
+    "src/app/main.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js",
     "src/ui/guardian-native.js"
   ],
   "warthog": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
     "src/simulation/animal-actions-data.js",
-    "src/simulation/balance.js",
-    "src/simulation/raids.js"
+    "src/simulation/balance.js"
   ],
   "watch": [
     "src/simulation/idle.js"
@@ -10894,11 +12035,21 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/audio/ambient-audio.js",
+    "src/audio/farm-contact-audio.js",
+    "src/audio/work-audio.js",
     "src/rendering/horizon.js",
+    "src/rendering/scene.js",
     "src/rendering/vfx-native.js",
     "src/rendering/vfx.js",
     "src/rendering/work-vfx.js",
     "src/simulation/game.js"
+  ],
+  "water-point-": [
+    "src/world/work-points.js"
+  ],
+  "waterGate": [
+    "src/audio/farm-actions-data.js"
   ],
   "wave": [
     "public/library/sfx/script-1.js",
@@ -10928,6 +12079,7 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
     "public/menu/native.js",
+    "src/rendering/native-shadow.js",
     "src/rendering/scene.js",
     "src/ui/guardian-native.js"
   ],
@@ -10936,11 +12088,15 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
+    "src/rendering/native-shadow.js",
     "src/rendering/scene.js",
     "src/ui/guardian-native.js"
   ],
   "wg-animal-actions/1": [
     "src/simulation/animal-actions-data.js"
+  ],
+  "wg-farm-actions/1": [
+    "src/audio/farm-actions-data.js"
   ],
   "wg-footsteps/1": [
     "src/rendering/footsteps-data.js"
@@ -10967,7 +12123,8 @@
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/scene.js"
   ],
   "width": [
     "src/rendering/hands-native.js"
@@ -10987,6 +12144,9 @@
   "wildguardians:": [
     "public/selector/native.js"
   ],
+  "wind": [
+    "src/audio/ambient-audio.js"
+  ],
   "windBtn": [
     "public/library/crops/script-4.js"
   ],
@@ -10995,6 +12155,12 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "wireframe": [
+    "src/rendering/standard-depth.js"
+  ],
+  "wireframeLinewidth": [
+    "src/rendering/standard-depth.js"
   ],
   "wood": [
     "src/rendering/material-vfx.js",
@@ -11017,8 +12183,19 @@
   "workspace": [
     "public/selector/native.js"
   ],
+  "world": [
+    "src/audio/animal-audio.js",
+    "src/audio/audio.js",
+    "src/audio/farm-contact-audio.js",
+    "src/audio/movement-audio.js",
+    "src/audio/work-audio.js",
+    "src/audio/worker-audio.js"
+  ],
   "world-label stage": [
     "public/library/crops/script-4.js"
+  ],
+  "world-standard-depth-v1|": [
+    "src/rendering/standard-depth.js"
   ],
   "world.expansion": [
     "src/tutorial/controller.js",
@@ -11029,6 +12206,9 @@
   ],
   "worldLabels": [
     "public/library/crops/script-4.js"
+  ],
+  "wrap": [
+    "src/audio/music-transport.js"
   ],
   "x": [
     "public/library/walls/script-2.js",
@@ -11063,12 +12243,14 @@
     "public/menu/native.js"
   ],
   "youngFemale": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/locomotion-calibration.js",
     "src/simulation/workforce.js",
     "src/ui/native-hud.js"
   ],
   "youngMale": [
+    "src/audio/farm-actions-data.js",
     "src/rendering/footsteps-data.js",
     "src/simulation/locomotion-calibration.js",
     "src/simulation/workforce.js",
@@ -11076,6 +12258,7 @@
   ],
   "yuca": [
     "public/library/crops/script-4.js",
+    "src/audio/farm-contact-audio.js",
     "src/rendering/crop-batch.js",
     "src/rendering/scene.js",
     "src/simulation/balance.js"
@@ -11094,7 +12277,7 @@
     "src/ui/guardian-native.js",
     "src/ui/guardian.js"
   ],
-  "|african-toon-v4.1.4|": [
+  "|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|": [
     "src/rendering/african-toon.js"
   ],
   "|native-chunk-clip": [
@@ -11104,7 +12287,7 @@
     "src/rendering/obstruction.js"
   ],
   "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo.": [
-    "src/simulation/raids.js"
+    "src/simulation/raid-notice.js"
   ],
   "«Guardar» exporta posiciones y progreso a JSON. Los modelos ya están integrados en el visor. Al cargar una parcela se sustituye la distribución actual, no las geometrías.": [
     "public/library/crops/markup.html"
@@ -11120,9 +12303,6 @@
   ],
   "· Destrucción v1.5": [
     "public/library/destruction/script-5.js"
-  ],
-  "· Escape para cancelar": [
-    "src/app/main.js"
   ],
   "· Límite alcanzado": [
     "public/library/walls/script-2.js"
@@ -11141,9 +12321,6 @@
   ],
   "· listo para destruir": [
     "public/library/destruction/script-5.js"
-  ],
-  "· nuevo amanecer": [
-    "src/ui/native-hud.js"
   ],
   "· reconstrucción completada": [
     "public/library/destruction/script-5.js"
@@ -11205,10 +12382,7 @@
   "▥ Defensas": [
     "src/app/main.js"
   ],
-  "◎ Poblado": [
-    "src/app/main.js"
-  ],
-  "♙ Contratar": [
+  "◎ Centro de trabajo": [
     "src/app/main.js"
   ],
   "✓ Recolectar": [

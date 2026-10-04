@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {detectLanguage,readLanguage,LANGUAGE_KEY,supportedLanguage} from '../public/i18n/locale.js';
 import {messages,translate,formatMessage} from '../public/i18n/catalog.js';
 import {TUTORIAL_MESSAGES} from '../src/tutorial/messages.js';
+import {hiringMarkup} from '../src/ui/native-hud.js';
 import {readFileSync} from 'node:fs';
 
 test('explicit language overrides browser preferences; unknown preferences fall back to English',()=>{
@@ -50,6 +51,20 @@ test('ARIA interpolation and language reversal keep source strings and user para
   assert.equal(translate('Contratar un mujer mayor más'),'Hire one more older woman');
   assert.equal(formatMessage('Contratar un {profile} más',{profile:'Amara'},'es'),'Contratar un Amara más');
   assert.equal(formatMessage('Contratar un {profile} más',{profile:'Amara'},'en'),'Hire one more Amara');
+});
+test('current hiring dialog translates revised wages and every rendered hiring stepper',()=>{
+  const html=hiringMarkup({day:1,hiring:{hasPrevious:false,draft:[0,0,0,0]}});
+  const wages=[...html.matchAll(/<p>([^<]+)<\/p>/g)].map(match=>match[1]).find(text=>text.startsWith('Los ancianos cobran'));
+  assert.ok(wages);
+  assert.ok(messages[wages]);
+  assert.match(translate(wages),/^Older workers earn 30 coins and younger workers earn 40\./);
+  const labels=[...html.matchAll(/aria-label="(Contratar [^"]+)"/g)].map(match=>match[1]);
+  assert.equal(labels.length,8);
+  for(const label of labels)assert.match(translate(label),/^Hire one (?:more|fewer) (?:young|older) (?:man|woman)$/);
+});
+test('revised reserve and dynamic damaged-wall refunds retain their amounts in English',()=>{
+  assert.equal(translate('Conserva las últimas 30 monedas: las necesitarás para contratar mañana.'),'Keep your last 30 coins: you will need them to hire tomorrow.');
+  for(const amount of [0,1,10,35,350])assert.equal(translate(`Eliminar muralla · +${amount} monedas`),`Remove wall · +${amount} coins`);
 });
 test('all tutorial messages have complete translations, including mechanics and campaign ending',()=>{
   for(const [id,message] of Object.entries(TUTORIAL_MESSAGES)){
