@@ -326,12 +326,17 @@ function completeTask(s,w,t,target,nav) {
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
 export function idleFarmAnchor(s,worker,center){
-  const plants=s.plants.filter(p=>p.alive&&p.centerId===worker.centerId);
-  if(!plants.length)return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
-  // Stay near the closest active plot, rather than roaming the far side of a
-  // center. The anchor changes when planting/harvesting changes this area.
-  const plant=nearest(plants,worker);
-  return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
+  for(const plant of s.plants){
+    if(plant.centerId!==worker.centerId)continue;
+    const distance=dist(plant,worker);
+    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
+    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
+  }
+  const plant=live??planted;
+  // Keep the cultivated area as the idle anchor after its last harvest too.
+  if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
 function updateWorkers(s,dt,nav) {
   for(const w of s.workers) {

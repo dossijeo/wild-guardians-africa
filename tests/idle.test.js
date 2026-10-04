@@ -1,3 +1,4 @@
+import {Navigation} from '../src/world/navigation.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -90,4 +91,17 @@ test('Ambient paths stay inside the local radius and original terrain/building f
     assert.ok(Math.hypot(w.x-center.x,w.z-center.z)<=8);assert.ok(actualNav.walkable(w.x,w.z,.28,null,true));
   }
   assert.ok(walked>50);
+});
+
+
+test('after the final paid harvest the idle worker returns to the cultivated area, with physical paths and identical saved replay',()=>{
+ const s=Game.newGame({seed:712,slotId:'idle-after-harvest'});Game.resume(s,'intro');
+ const flat=state=>{const n=new Navigation(712,'sabana',{});n.field={blocked:()=>false,slope:()=>0,surface:()=>0};n.propsAt=()=>[];n.setState(state);return n;};
+ const world=flat(s);Game.placeStructure(s,'center',{x:-12,z:0},world);Game.plant(s,'seed','mijo',8,4,world);Game.openInitialHiring(s);Game.hire(s,'wage',{olderFemale:1});s.tutorial.step='done';s.dayPlan={done:true};s.nightPlan={done:true};
+ for(let i=0;i<3000&&!s.crates.some(c=>c.delivered);i++)Game.tick(s,.1,world);
+ assert.equal(s.crates.filter(c=>c.delivered).length,1);assert.equal(s.plants[0].alive,false);const w=s.workers[0],plant=s.plants[0],allowance=w.runRemaining;
+ Game.tick(s,.1,world);assert.equal(w.idleState.anchorId,'farm-'+plant.id);
+ const loaded=deserialize(serialize(s)),fresh=flat(loaded),rng=s.rng,end=Math.min(s.time+65,285);let settled=0;
+ while(s.time<end){const before={x:w.x,z:w.z};Game.tick(s,.1,world);Game.tick(loaded,.1,fresh);assert.equal(serialize(s),serialize(loaded));assert.ok(world.segmentClear(before,w,.28,null,true));assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);if(end-s.time<20){assert.ok(Math.hypot(w.x-plant.x,w.z-plant.z)<=3+1e-8);settled++;}}
+ assert.ok(settled>100);assert.equal(s.rng,rng);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });

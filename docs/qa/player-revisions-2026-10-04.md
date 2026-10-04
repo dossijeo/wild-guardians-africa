@@ -92,3 +92,12 @@ Cierre del recorrido anterior: el trabajador del día 1 completó ambos riegos, 
 Se corrige el HUD para que el aviso de incursión corresponda a la incursión actual: sigue presente aunque salga el primer animal y se oculta cuando termina todo el grupo. Se conserva el historial guardado. El tutorial descarta instrucciones de incursión que ya no está activa sin marcarlas leídas, conserva la lección de Escudo y reconoce una primera entrega física aunque ocurra después del día 1. Los tutoriales ya terminados no se reabren.
 
 Validación del último ajuste: 93/93 pruebas dirigidas, incluyendo entrega real pagada en día 2, instrucciones activas/pendientes caducadas, conservación del historial, persistencia del aviso hasta la salida del último animal y pausa guiada. La batería completa de 1544 casos corresponde al ajuste anterior de geometría de encuentros; no se atribuye al último cambio de avisos.
+
+
+### Paseo después de vaciar el bancal
+
+Tras la primera entrega del recorrido anterior, el trabajador volvía al lado de servicio del centro: al quedar todas las plantas cosechadas ya no había un ancla agrícola viva. El paseo ahora prioriza el cultivo vivo más próximo y, si no queda ninguno, conserva como referencia el área plantada del mismo centro. Solo una finca que aún no haya tenido cultivos utiliza el acceso del edificio. La búsqueda usa un recorrido lineal y conserva el desempate por identificador; no realiza ordenaciones ni añade búsquedas de navegación.
+
+Verificación: 41/41 pruebas dirigidas de paseo/riego/tutorial/encuentros y 52/52 de cadenas laborales, reparación, navegación y pausa guiada. La prueba nueva completa un cultivo pagado y su entrega real, comprueba el regreso al bancal, los segmentos físicamente válidos, radio de tres metros, ausencia de carrera y consumo de reserva, una sola entrega y reproducción idéntica de guardar/cargar. Build y paquete web verificados. La comprobación visual del nuevo paseo queda pendiente: las consultas de contenido y captura de la pestaña móvil 232 agotaron su plazo; el inventario todavía la muestra abierta y no acredita una terminación.
+
+Las CI 37206486622 (`a5ee36a`) y 37206824986 (`64ec438`) terminaron con éxito. El resultado de esas CI precede al ajuste del paseo y no se atribuye a él.
