@@ -41,3 +41,5 @@ Regresión local inicial terminada: 1.469/1.510 aprobadas, con 41 fallos. Treint
 
 Prueba visual Sabana/Mapungubwe: el reloj de noche 1 genera exactamente un facóquero; rig original cargado y ninguna excepción. Con la cámara original y pasos normales de simulación, la bestia entra en pantalla y avanza hacia el centro; captura tras 12 s simulados en .cache/first-night-camera-arrival.png. Es un fixture del mundo real, no acredita aún todo el recorrido móvil. Los CI de murallas, layout y orden de cultivos finalizaron aprobados.
 Balance fuente revisado y validado: 34/34 pruebas core aprobadas, incluida igualdad exacta del JSON y el módulo generado.
+
+La ejecución corregida de campaña/core terminó: 64/64 aprobadas en 210 s. Las treinta campañas (seis biomas × cinco culturas) completan cien noches, recargan la primera incursión activa sin modificar dinero/tiempo/daño, comprueban el daño solo cuando hay ruta y continúan dos jornadas de postgame; las otras 34 pruebas cubren balance y lógica base. Esta evidencia sustituye el estado pendiente anterior de esa ejecución; el CI general de 80876ed sigue pendiente.
