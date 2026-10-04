@@ -174,6 +174,11 @@ export function hire(s,id,selection) {
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total});
 }
 export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
+function queueMatureHarvest(s,p) {
+  if(!isMature(p))return;
+  if(!p.harvestRequested){p.harvestRequested=true;emit(s,'HarvestRequested',{targetId:p.id,count:1,automatic:true});}
+  if(!s.raid&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,'harvest',p.id);
+}
 export function rebuildTasks(s) {
   const committed=new Set(s.workers.filter(w=>contractExpired(w,s)&&w.status==='acting').map(w=>w.taskId));
   s.tasks=s.tasks.filter(t=>committed.has(t.id));
@@ -186,7 +191,7 @@ export function rebuildTasks(s) {
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
     if(p.water[0].status==='due')enqueue(s,p.centerId,'initial',p.id);
     else if(p.water.some(w=>w.status==='due'))enqueue(s,p.centerId,'water',p.id);
-    if(isMature(p)&&p.harvestRequested)enqueue(s,p.centerId,'harvest',p.id);
+    queueMatureHarvest(s,p);
   }
   enqueueLooseCrates(s);
 }
@@ -443,6 +448,7 @@ export function tick(s,seconds,nav) {
       for(const p of s.plants) {
         const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
+        queueMatureHarvest(s,p);
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
       }
     }

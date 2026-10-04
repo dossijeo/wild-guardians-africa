@@ -34,11 +34,11 @@ test('A shallow incline or interior bump cannot leave a work-center floor floati
   nav.field.surface=(x,z)=>x===1&&z===1?.3:0;assert.equal(nav.placementFootprint(building).valid,false);
   nav.field.surface=()=>0;assert.equal(nav.placementFootprint(building).valid,true);
 });
-test('World hints show a mature harvest target and never follow idle work or deliveries',()=>{
+test('World hints never ask for manual harvesting or follow idle work or deliveries',()=>{
   const state={day:1,tutorial:{step:'observe'},villages:[{x:0,z:0}],structures:[],plants:[],workers:[],crates:[]},nav={field:{surface:()=>0}};
   assert.equal(tutorialHandTarget(state,nav),null);state.tutorial.step='hire';assert.equal(tutorialHandTarget(state,nav),null);
   state.tutorial.step='harvest';state.crates.push({id:'c',delivered:false});assert.equal(tutorialHandTarget(state,nav),null);
-  state.plants.push({id:'p',species:'mijo',alive:true,growth:140,x:1,z:2});assert.equal(tutorialHandTarget(state,nav).target,'p');
+  state.plants.push({id:'p',species:'mijo',alive:true,growth:140,x:1,z:2});assert.equal(tutorialHandTarget(state,nav),null);
   state.tutorial.dismissed=['basic.harvest:'];assert.equal(tutorialHandTarget(state,nav),null);
 });
 test('Actual running displacement exceeds walking by over two times; stopped fleeing actors stay idle',()=>{

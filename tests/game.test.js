@@ -91,11 +91,12 @@ test('Invalid placement makes no economic or world modification',()=>{
 });
 test('Workers physically plant, water and harvest; only crate delivery pays',()=>{
   const s=setup();assert.equal(s.plants[0].growth,0);tick(s,1,nav);assert.equal(s.plants[0].growth,0);
-  tick(s,170,nav);assert.equal(s.plants[0].growth,140);assert.equal(numberOf(s.ledger.balance),595);
-  harvest(s,'harvest',s.plants[0].id);assert.equal(numberOf(s.ledger.balance),595);
-  tick(s,4,nav);assert.equal(numberOf(s.ledger.balance),595);assert.equal(s.crates.length,1);
+  for(let i=0;i<1800&&!s.crates.length;i++)tick(s,.1,nav);
+  assert.equal(s.plants[0].growth,140);assert.equal(numberOf(s.ledger.balance),595);
+  assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,false);
   assert.equal(s.crates[0].sourcePlantId,s.plants[0].id);assert.equal(s.crates[0].species,s.plants[0].species);
-  tick(s,10,nav);assert.equal(numberOf(s.ledger.balance),606);assert.ok(s.crates[0].delivered);
+  for(let i=0;i<300&&!s.crates[0].delivered;i++)tick(s,.1,nav);
+  assert.equal(numberOf(s.ledger.balance),606);assert.ok(s.crates[0].delivered);
   const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),606);
 });
 test('Stacked pauses freeze crops and spell clocks',()=>{

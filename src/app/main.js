@@ -121,7 +121,7 @@ function onPick({entityId,point}) {
   safe(()=>{
     if(state.pauses.includes('hiring')&&surfaces.deferred.has('hiring')){hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
-    if(pickedPlant){cancelTool();closeSurface();selection=pickedPlant.id;return;}
+    if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
     if(pendingWall)return;
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
@@ -134,14 +134,14 @@ function onPick({entityId,point}) {
   });
 }
 function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close();}}
-function cancelSpellPreview(){pendingSpell=null;world?.clearSpellPreview();if(tool?.kind==='spell')tool=null;hideHudPanel();}
+function cancelSpellPreview({keepTool=false}={}){pendingSpell=null;world?.clearSpellPreview();if(!keepTool&&tool?.kind==='spell')tool=null;hideHudPanel();}
 function spellConfirmPanel(){
   const name=B.spells.find(s=>s.id===pendingSpell.kind).name;
   showHudPanel(name,`<p class="panel-note">La zona marcada es una previsualización. Toca otra zona para moverla. Confirma para activar el poder.</p><div class="menu-list">${button('confirm-spell','Activar poder','wood-button')}${button('cancel-spell','Cancelar','wood-button')}</div>`);
   bind('cancel-spell',cancelSpellPreview);
   bind('confirm-spell',()=>{
     if(!pendingSpell)return;const draft=pendingSpell;
-    Game.cast(state,commandId(),draft.kind,draft.x,draft.z,nav);cancelSpellPreview();save();
+    Game.cast(state,commandId(),draft.kind,draft.x,draft.z,nav);cancelSpellPreview({keepTool:true});save();
   });
 }
 function cancelWallPreview(){pendingWall=null;world?.clearWallPreview();hideHudPanel();}
@@ -266,12 +266,7 @@ function villageConfirmPanel() {
 function contextPanel() {
   const el=document.querySelector('#context');if(!selection){el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close();}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
   const key=JSON.stringify(p?[p.id,Math.floor(p.growth/cropSpec(p.species).growth_seconds*100),p.water.map(w=>w.status),p.harvestRequested,p.centerId,permission(state,'harvest')]:structure?[structure.id,structure.hp,structure.status,permission(state,'wall')]:null);if(el.dataset.key===key&&el.children.length)return;el.dataset.key=key;
-  if(p) {
-    const percent=Math.floor(p.growth/cropSpec(p.species).growth_seconds*100);
-    el.innerHTML=`<div class="context harvest-context"><button class="context-close" id="close-context" aria-label="Cerrar">×</button><span>${isMature(p)?'Listo para recoger':percent+' %'}</span>${button('harvest-action','Recolectar')}</div>`;
-    bind('harvest-action',()=>{Game.harvest(state,commandId(),p.id);closeSurface();save();});
-    document.querySelector('#harvest-action').disabled=!isMature(p)||p.harvestRequested||!permission(state,'harvest');
-  } else if(structure) {
+  if(p) {selection=null;el.replaceChildren();return;  } else if(structure) {
     el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Retirar defensa sin reembolso'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));
     bind('remove-wall',()=>{Game.removeWall(state,commandId(),structure.id,nav);selection=null;save();});if(document.querySelector('#remove-wall'))document.querySelector('#remove-wall').disabled=!permission(state,'wall');
   } else el.innerHTML='';if(el.querySelector('.context'))el.querySelector('.context').scrollTop=scroll;bind('close-context',closeSurface);
