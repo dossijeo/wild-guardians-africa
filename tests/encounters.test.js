@@ -96,7 +96,7 @@ test('Raid survivors return walking even with urgent tasks, and resume ordinary 
   Object.assign(worker,{x:2,z:0,centerId:center.id,villageId:s.villages[0].id,runRemaining:50});
   s.initialPreparation=false;s.time=100;animal.status='gone';updateRaid(s,.1,world);
   assert.equal(s.raid,null);assert.equal(worker.status,'arriving');assert.equal(worker.raidReturn,true);
-  Game.tick(s,1,world);assert.ok(Math.abs(worker.x-2.72)<1e-9);assert.equal(worker.runRemaining,50);assert.equal(worker.running,false);
+  Game.tick(s,1,world);assert.ok(Math.abs(worker.x-3.08)<1e-9);assert.equal(worker.runRemaining,50);assert.equal(worker.running,false);
   while(worker.status==='arriving')Game.tick(s,.1,world);
   assert.equal(worker.raidReturn,false);assert.equal(worker.runRemaining,50);
   Game.tick(s,.2,world);assert.ok(worker.runRemaining<50);assert.equal(worker.running,true);

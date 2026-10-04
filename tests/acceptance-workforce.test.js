@@ -82,7 +82,7 @@ test('QA-049/050/051: new crops and a midday center do not transfer existing sta
   assert.ok(s.tasks.filter(t=>t.centerId===added).every(t=>t.workerId===null));
   assert.ok(s.plants.slice(1).every(p=>p.growth===0&&p.water[0].status==='due'));
   s.eventPlan=null;Game.tick(s,300-s.time,nav);s.eventPlan=null;Game.tick(s,300,nav);
-  assert.equal(s.day,102);assert.ok(s.pauses.includes('hiring'));assert.ok(s.plants.every(p=>p.centerId===added));
+  assert.equal(s.day,102);assert.ok(s.pauses.includes('hiring'));assert.ok(s.plants.filter(p=>p.alive).every(p=>p.centerId===added));assert.equal(s.plants.find(p=>p.id===oldPlant).alive,false);assert.equal(s.plants.find(p=>p.id===oldPlant).centerId,old);
   assert.ok(s.tasks.every(t=>t.centerId===added));
   const cash=numberOf(s.ledger.balance);Game.hire(s,'next-day',{olderMale:4});
   assert.deepEqual(counts(s),[1,3]);assert.equal(numberOf(s.ledger.balance),cash-400);

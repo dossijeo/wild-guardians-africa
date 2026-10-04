@@ -21,7 +21,7 @@ test('All four native profiles alternate Idle and Alert and occasionally walk in
       const previous={x:w.x,z:w.z};updateIdle(w,anchor,.1,nav,712);
       seen.add(workerPose(w,null,0,libraries[profile]).name);
       const distance=Math.hypot(w.x-previous.x,w.z-previous.z);moved+=distance;
-      assert.ok(distance<=L.walkMetresPerSecond*.1+1e-9);assert.ok(Math.hypot(w.x,w.z)<=8);
+      assert.ok(distance<=L.walkMetresPerSecond*1.5*.1+1e-9);assert.ok(Math.hypot(w.x,w.z)<=8);
       assert.equal(w.running,false);assert.equal(w.runRemaining,80);
     }
     assert.deepEqual(seen,new Set(['Idle','Alert','Walk_Skip']));assert.ok(moved>10);

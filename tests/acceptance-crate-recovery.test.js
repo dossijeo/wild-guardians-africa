@@ -18,12 +18,12 @@ function tickUntil(s,predicate,limit=400){
 function carrying({late=false,bonus=false}={}){
   const s=Game.newGame({seed:712,slotId:'crate-recovery'});Game.resume(s,'intro');s.ledger.balance=rational(10000);
   s.day=21;s.completedNights=20;s.initialPreparation=false;s.tutorial.step='done';
-  Game.placeStructure(s,'center',{x:4,z:0},nav);Game.plant(s,'seed','mijo',10,4,nav);
+  Game.placeStructure(s,'center',{x:4,z:0},nav);if(late)Game.tick(s,70,nav);Game.plant(s,'seed','mijo',10,4,nav);
   Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});s.dayPlan.done=true;
-  const plant=s.plants[0],worker=s.workers[0];tickUntil(s,()=>isMature(plant),249);
-  if(late)Game.tick(s,230-s.time,nav);
+  const plant=s.plants[0],worker=s.workers[0];
   if(bonus){s.eventPlan={id:'fixture-fertile',kind:'fertile',magnitude:.1,negative:false};applyEvent(s);assert.equal(plant.harvestBonus,10);}
-  Game.harvest(s,'harvest',plant.id);tickUntil(s,()=>worker.status==='acting',30);
+  tickUntil(s,()=>isMature(plant),249);assert.equal(plant.harvestRequested,true);
+  tickUntil(s,()=>worker.status==='acting',30);
   if(bonus)Game.cast(s,'multiply','multiply',plant.x,plant.z,nav);
   const cash=numberOf(s.ledger.balance);tickUntil(s,()=>s.crates.length===1,5);
   assert.equal(worker.status,'carrying');assert.equal(numberOf(s.ledger.balance),cash);

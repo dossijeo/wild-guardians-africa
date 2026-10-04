@@ -59,7 +59,7 @@ test('QA-019: physical care completes exactly the canonical number of waterings 
     assert.ok(p.water.every(w=>w.status==='manual'));assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===p.id).length,waters);
     const wages=Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-')).length*100;
     assert.equal(numberOf(s.ledger.balance),10000-cropSpec(species).plant_cost-wages);
-    assert.equal(s.crates.length,0);assert.equal(s.tasks.length,0);
+    assert.equal(s.crates.length,0);assert.equal(s.tasks.length,1);assert.equal(s.tasks[0].kind,'harvest');assert.equal(s.tasks[0].targetId,p.id);assert.equal(p.harvestRequested,true);
   }
 });
 
@@ -81,7 +81,7 @@ test('QA-022: ten seconds of remaining banana tolerance survive the full night t
   grow(s,1);close(p.growth,growth+10);assert.equal(p.alive,true);
 });
 
-test('QA-023: a mature unrequested plant remains stable through four dawns without water or deterioration',()=>{
+test('QA-023: an automatically requested mature plant without staff remains stable through four dawns without water or deterioration',()=>{
   const s=farm(),p=sow(s);firstCare(s,p);grow(s,70);waterPlant(p);Game.rebuildTasks(s);grow(s,70);
   assert.equal(isMature(p),true);const before=JSON.stringify(p);
   for(let day=0;day<4;day++){
@@ -89,7 +89,7 @@ test('QA-023: a mature unrequested plant remains stable through four dawns witho
     assert.equal(JSON.stringify(p),before);assert.equal(s.pauses.includes('hiring'),true);
     Game.hire(s,`zero-${s.day}`,{});
   }
-  assert.equal(s.crates.length,0);assert.equal(s.tasks.length,0);
+  assert.equal(s.crates.length,0);assert.equal(s.tasks.length,1);assert.equal(s.tasks[0].kind,'harvest');assert.equal(s.tasks[0].targetId,p.id);assert.equal(p.harvestRequested,true);
 });
 
 test('QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering',()=>{
@@ -111,7 +111,7 @@ test('QA-015: large real frames stop at each dawn and charge only an explicitly 
   Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9650);
   assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),9650);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
+  assert.equal(numberOf(s.ledger.balance),9890);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 
@@ -179,20 +179,21 @@ test('QA-025/026/028: mixed group harvest reserves distinct plants for two worke
   grow(s,1);assert.equal(numberOf(s.ledger.balance),balance+22);assert.ok(ps.filter((_,i)=>i%2).every(p=>p.alive));
 });
 
-test('QA-027: group request inserts nearest-to-centre first while retaining an older watering task ahead of it',()=>{
-  const s=farm(),ps=[0,1,2].map(i=>sow(s,'mijo',8+i*1.5));ps.forEach(ripe);s.tasks=[];
+test('QA-027: automatic maturity preserves an older watering task and adds each harvest once in creation order',()=>{
+  const s=farm(),ps=[0,1,2].map(i=>sow(s,'mijo',8+i*1.5));
   const older=sow(s,'maiz',20);firstCare(s,older);older.growth=90;older.water[1].status='due';
-  enqueue(s,s.structures[0].id,'water',older.id);Game.harvest(s,'harvest',ps[2].id);
+  s.tasks=[];enqueue(s,s.structures[0].id,'water',older.id);ps.forEach(ripe);grow(s,.001);
   assert.deepEqual(s.tasks.map(t=>t.targetId),[older.id,ps[0].id,ps[1].id,ps[2].id]);
   assert.ok(s.tasks.every((t,i,a)=>i===0||t.created>a[i-1].created));
+  grow(s,1);assert.equal(s.tasks.length,4);assert.ok(ps.every(p=>p.harvestRequested));
 });
 
 test('QA-033: Multiply requested before harvest does not reward a pickup after the effect expires',()=>{
-  const s=farm(),p=sow(s);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
+  const s=farm(),p=sow(s,'mijo',70);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.cast(s,'multiply','multiply',p.x,p.z,nav);Game.harvest(s,'harvest',p.id);
-  for(let i=0;i<1200&&s.crates.length===0;i++)grow(s,.05);
+  for(let i=0;i<2400&&s.crates.length===0;i++)grow(s,.05);
   assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),10.8);
-  const balance=numberOf(s.ledger.balance);grow(s,30);assert.equal(numberOf(s.ledger.balance),balance+11);
+  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+11);
   assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
 });
 

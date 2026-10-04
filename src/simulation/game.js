@@ -448,7 +448,7 @@ export function tick(s,seconds,nav) {
       for(const p of s.plants) {
         const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
-        queueMatureHarvest(s,p);
+        if(!p.harvestRequested)queueMatureHarvest(s,p);
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
       }
     }

@@ -5,7 +5,8 @@ export class GameSurfaces {
   open(kind,{mandatory=false,force=false}={}){
     if(this.mandatory&&this.active!==kind&&!force)return false;
     if(this.active&&this.active!==kind&&!this.mandatory)this.deferred.add(this.active);
-    this.active=kind;this.mandatory=mandatory;this.deferred.delete(kind);return true;
+    const keepMandatory=this.mandatory&&this.active===kind;
+    this.active=kind;this.mandatory=mandatory||keepMandatory;this.deferred.delete(kind);return true;
   }
   close({resolved=false}={}){
     if(this.mandatory&&!resolved)return null;

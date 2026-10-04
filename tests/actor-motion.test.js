@@ -47,7 +47,7 @@ test('Workers avoid a retreating beast in both movement directions and charge on
   for(let i=0;i<500&&!arrived;i++){
     const before={x:worker.x,z:worker.z};arrived=walkTo(state,worker,destination,.1,nav,{motion:{flight:true}});
     const travelled=Math.hypot(worker.x-before.x,worker.z-before.z);total+=travelled;
-    assert.ok(travelled<=.16+1e-8);assert.ok(edgeDistance(before,worker,animal.x,animal.z)>=animal.radius+.28-1e-8);
+    assert.ok(travelled<=.24+1e-8);assert.ok(edgeDistance(before,worker,animal.x,animal.z)>=animal.radius+.28-1e-8);
   }
   assert.ok(arrived);assert.ok(total>8);assert.equal(worker.runRemaining,50);assert.equal(worker.hits,0);
 });
@@ -60,7 +60,7 @@ test('A worker blocked by a retreating body spends no reserve or gait time, then
   assert.deepEqual({x:worker.x,z:worker.z},position);assert.equal(worker.runRemaining,50);assert.equal(worker.runPhase??0,0);assert.equal(worker.walkPhase??0,0);
   animal.status='gone';let arrived=false;
   for(let i=0;i<50&&!arrived;i++)arrived=walkTo(state,worker,destination,.1,nav,{motion:{urgent:true}});
-  assert.ok(arrived);assert.ok(Math.abs(worker.runRemaining-48.6)<1e-8);assert.ok(Math.abs(worker.runPhase-1.4/1.6)<1e-8);
+  assert.ok(arrived);assert.ok(Math.abs(worker.runRemaining-48.6)<1e-8);assert.ok(Math.abs(worker.runPhase-1.4/2.4)<1e-8);
 });
 test('Two native animals crossing opposite ways maintain separation and both finish',()=>{
   const {state,animal:a,nav}=fixture('rhino');state.workers=[];

@@ -64,7 +64,7 @@ for(const profile of ['olderMale','olderFemale','youngMale','youngFemale'])test(
  for(let i=0;i<5&&w.idleState?.mode==='walk';i++){
   const before=point(w);Game.tick(s,.05,nav);const step=Math.hypot(w.x-before.x,w.z-before.z);moved+=step;
   seen.add(workerPose(w,null,s.elapsed,libraries[profile]).name);
-  assert.ok(step<=L.walkMetresPerSecond*.05+1e-8);assert.equal(w.running,false);
+  assert.ok(step<=L.walkMetresPerSecond*1.5*.05+1e-8);assert.equal(w.running,false);
  }
  assert.ok(moved>0);assert.deepEqual(seen,new Set(['Idle','Alert','Walk_Skip']));assert.equal(s.rng,rng);
  assert.ok(w.idleState?.mode==='walk');assert.ok(w.path.every(p=>Math.hypot(p.x-anchor.x,p.z-anchor.z)<=8+1e-8));

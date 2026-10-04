@@ -61,7 +61,7 @@ test('Terrain adapter permits negative elevations and follows moving targets wit
   let pose=hints.protect(hints.makePose(0,camera),.016);assert.ok(pose.root[1]<-9);assert.deepEqual(hints.intersections(pose),[]);
   s.objects.get('worker').position=[5,-11,8];pose=hints.protect(hints.makePose(0,camera),.016);assert.equal(pose.target[0],5);assert.equal(pose.target[2],8);
 });
-test('Day-one hand targets only actionable planting and mature harvesting and never modify game state',()=>{
+test('Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state',()=>{
   const state={day:1,result:null,tutorial:{step:'intro'},villages:[{id:'v',x:0,z:0,entry:{x:2,z:3}}],structures:[],plants:[],workers:[]};
   const nav={field:{surface:()=>-3},placement:()=>({valid:true})};
   const check=(step,kind,id)=>{state.tutorial.step=step;const before=JSON.stringify(state),target=tutorialHandTarget(state,nav);assert.equal(target.kind,kind);assert.equal(target.target,id);assert.equal(JSON.stringify(state),before);return target;};
@@ -70,7 +70,7 @@ test('Day-one hand targets only actionable planting and mature harvesting and ne
   check('plant','tap','plant-site');state.plants.push({id:'p',species:'mijo',alive:true,x:6,z:7,growth:140});
   state.tutorial.step='hire';assert.equal(tutorialHandTarget(state,nav),null);state.workers.push({id:'w',status:'walking',x:7,z:8,path:[{x:9,z:10}]});
   state.tutorial.step='observe';assert.equal(tutorialHandTarget(state,nav),null);
-  check('harvest','tap','p');state.day=2;assert.equal(tutorialHandTarget(state,nav),null);
+  state.tutorial.step='harvest';assert.equal(tutorialHandTarget(state,nav),null);state.day=2;assert.equal(tutorialHandTarget(state,nav),null);
   state.day=1;state.tutorial.step='done';assert.equal(tutorialHandTarget(state,nav),null);
 });
 test('Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources',async()=>{

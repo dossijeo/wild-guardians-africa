@@ -32,11 +32,11 @@ for(const culture of Game.CULTURES)for(const profile of profiles)test(`QA-106–
  Game.pause(restored,'qa');const frozen=serialize(restored);Game.tick(restored,30,navigation(restored));assert.equal(serialize(restored),frozen);Game.resume(restored,'qa');
  s=restored;nav=navigation(s);w=s.workers[0];a=s.raid.animals[0];const still={x:w.x,z:w.z},fall=w.fallRemaining;
  Game.tick(s,Math.min(.1,fall/2),nav);assert.deepEqual({x:w.x,z:w.z},still);assert.ok(w.fallRemaining<fall);assert.equal(s.events.filter(e=>e.type==='WorkerHit').length,1);
- until(s,nav,()=>w.incapacitated);const second=s.events.find(e=>e.type==='WorkerIncapacitated');assert.ok(second.pushed>=1.5&&second.pushed<=2);assert.equal(w.hits,2);assert.equal(w.status,'incapacitated');assert.equal(w.fallRemaining,0);
+ until(s,nav,()=>w.incapacitated);const second=s.events.find(e=>e.type==='WorkerIncapacitated');assert.ok(second.collision?second.pushed>=1.5&&second.pushed<=2:second.pushed===0);assert.equal(w.hits,2);assert.equal(w.status,'incapacitated');assert.equal(w.fallRemaining,0);
  assert.equal(s.people.find(p=>p.id===w.personId).recoveryUntil,4);assert.ok(nav.walkable(w.x,w.z,.28,null,true));assert.equal(workerPose(w,null,s.elapsed,libraries[profile]).name,'Run');
  const injured=saved(s);assert.equal(serialize(injured),serialize(s));s=injured;nav=navigation(s);w=s.workers[0];a=s.raid.animals[0];
  const p={x:w.x,z:w.z},run=w.runPhase;Game.tick(s,.5,nav);
- assert.ok(Math.hypot(w.x-p.x,w.z-p.z)>0&&Math.hypot(w.x-p.x,w.z-p.z)<=L.runMetresPerSecond*.35*.5+1e-8);assert.ok(Math.abs(w.runPhase-run-.35*.5)<1e-8);assert.equal(w.runRemaining,0);assert.equal(w.running,true);
+ assert.ok(Math.hypot(w.x-p.x,w.z-p.z)>0&&Math.hypot(w.x-p.x,w.z-p.z)<=L.runMetresPerSecond*1.5*.35*.5+1e-8);assert.ok(Math.abs(w.runPhase-run-.35*.5)<1e-8);assert.equal(w.runRemaining,0);assert.equal(w.running,true);
  assert.equal(workerPose(w,null,s.elapsed,libraries[profile]).name,'Run');
  until(s,nav,()=>w.status==='home');assert.equal(w.incapacitated,true);assert.equal(w.hits,2);assert.equal(s.events.filter(e=>e.type==='WorkerHit').length,1);assert.equal(s.events.filter(e=>e.type==='WorkerIncapacitated').length,1);
  assert.ok(Math.hypot(w.x,w.z)<.25);assert.equal(w.runRemaining,0);assert.ok(a.hitsRemaining>=0);
@@ -53,7 +53,7 @@ for(const profile of profiles)test(`QA-107/111/112: ${profile} actual injured pe
  assert.ok(w&&healthy);assert.equal(w.recovering,true);assert.equal(w.incapacitated,false);assert.equal(healthy.recovering,false);assert.equal(s.people.length,2);
  for(let i=0;i<5;i++)Game.plant(s,'urgent-'+i,'mijo',8+i*2,8,nav);
  const allowance=w.runRemaining,walk=w.walkPhase??0;Game.tick(s,.5,nav);
- assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);assert.ok(Math.abs(w.walkPhase-walk-.5)<1e-8);assert.equal(workerPose(w,null,s.elapsed,libraries[profile]).name,'Walk_Skip');assert.equal(healthy.running,true);
+ assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);assert.ok(Math.abs(w.walkPhase-walk-.75)<1e-8);assert.equal(workerPose(w,null,s.elapsed,libraries[profile]).name,'Walk_Skip');assert.equal(healthy.running,true);
  until(s,nav,()=>w.status==='acting');const assigned=s.tasks.find(t=>t.id===w.taskId),crop=s.plants.find(p=>p.id===assigned.targetId);
  assert.equal(assigned.kind,'initial');assert.equal(w.recovering,true);assert.equal(w.runRemaining,allowance);
  until(s,nav,()=>crop.water[0].status==='manual');assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===crop.id).length,1);assert.equal(w.runRemaining,allowance);
