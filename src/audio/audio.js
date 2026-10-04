@@ -1,3 +1,4 @@
+import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
 import {AnimalAudio} from './animal-audio.js';
 import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
@@ -151,6 +152,10 @@ export class AudioSystem {
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
     if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));
   }
+  updateWorkers(state,options={}){
+    if(this.context?.state!=='running'){this.workers?.dispose();return;}
+    this.workers??=new WorkerAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.workers.update(state,options);
+  }
   updateWork(state,options={}){
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);
@@ -168,6 +173,6 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
-  stop(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
+  stop(){this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  suspend(){this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

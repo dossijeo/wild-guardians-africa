@@ -1,0 +1,231 @@
+{
+  "results": [
+    {
+      "profile": "olderMale",
+      "actualProfile": "olderMale",
+      "steps": 1105,
+      "simulatedSeconds": 55.199999999999,
+      "raidStarted": true,
+      "accepted": [
+        {
+          "id": "npc_acknowledge",
+          "elapsed": 45.799999999999535,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "walking",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_work_effort",
+          "elapsed": 53.549999999999095,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "acting",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_danger_react",
+          "elapsed": 53.64999999999909,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        },
+        {
+          "id": "npc_flee_shout",
+          "elapsed": 55.199999999999,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "profile": "olderFemale",
+      "actualProfile": "olderFemale",
+      "steps": 1105,
+      "simulatedSeconds": 55.199999999999,
+      "raidStarted": true,
+      "accepted": [
+        {
+          "id": "npc_acknowledge",
+          "elapsed": 45.799999999999535,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "walking",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_work_effort",
+          "elapsed": 53.549999999999095,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "acting",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_danger_react",
+          "elapsed": 53.64999999999909,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        },
+        {
+          "id": "npc_flee_shout",
+          "elapsed": 55.199999999999,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "profile": "youngMale",
+      "actualProfile": "youngMale",
+      "steps": 1105,
+      "simulatedSeconds": 55.199999999999,
+      "raidStarted": true,
+      "accepted": [
+        {
+          "id": "npc_acknowledge",
+          "elapsed": 45.799999999999535,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "walking",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_work_effort",
+          "elapsed": 53.549999999999095,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "acting",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_danger_react",
+          "elapsed": 53.64999999999909,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        },
+        {
+          "id": "npc_flee_shout",
+          "elapsed": 55.199999999999,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        }
+      ],
+      "finalVoices": 0
+    },
+    {
+      "profile": "youngFemale",
+      "actualProfile": "youngFemale",
+      "steps": 1105,
+      "simulatedSeconds": 55.199999999999,
+      "raidStarted": true,
+      "accepted": [
+        {
+          "id": "npc_acknowledge",
+          "elapsed": 45.799999999999535,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "walking",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_work_effort",
+          "elapsed": 53.549999999999095,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "acting",
+          "task": "initial",
+          "rate": 1
+        },
+        {
+          "id": "npc_danger_react",
+          "elapsed": 53.64999999999909,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        },
+        {
+          "id": "npc_flee_shout",
+          "elapsed": 55.199999999999,
+          "emitter": "worker-6",
+          "family": "worker-voice",
+          "bus": "world",
+          "status": "fleeing",
+          "task": null,
+          "rate": 1
+        }
+      ],
+      "finalVoices": 0
+    }
+  ],
+  "decoded": {
+    "npc_work_effort": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 0.8
+    },
+    "npc_danger_react": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 0.88
+    },
+    "npc_flee_shout": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 1.2
+    },
+    "npc_acknowledge": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 0.6802291666666667
+    }
+  },
+  "context": "closed",
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "predecoded": true
+}

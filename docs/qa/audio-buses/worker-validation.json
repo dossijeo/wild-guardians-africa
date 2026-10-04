@@ -1,0 +1,41 @@
+{
+  "productionSha256": {
+    "src/audio/worker-audio.js": "5e2168f5f4065310012aefd117319fe4f544c3f01e8d6e7fae8bc91bf9e66634",
+    "src/audio/audio.js": "cdcc92dad613180fba4c7d742e76eef249aaa4702ab0dc25a29a22d3ec2f8b7e",
+    "src/app/main.js": "6bf2093cb69e53f05c5e58ce70a6bd3643e3ede26623766773615d1611cd191a",
+    "public/content/sfx-routing.json": "f75fd7313261d9370f3f1b4dec9daaa1d8b143e6fad0a8b2a3ffdcf23aa4de1d"
+  },
+  "directed": {
+    "tests": 227,
+    "pass": 227,
+    "fail": 0,
+    "durationMs": 3226.5948,
+    "log": ".cache/worker-audio-all.log"
+  },
+  "build": {
+    "pass": true,
+    "seconds": 6.26,
+    "log": ".cache/worker-audio-build.log"
+  },
+  "webPackage": {
+    "pass": true,
+    "files": 578,
+    "bytes": 406696402,
+    "relativeLinks": 816,
+    "runtimeGLBs": 20,
+    "log": ".cache/worker-audio-package.log"
+  },
+  "native": {
+    "fixture": "tests/browser/worker-audio.html",
+    "report": "docs/qa/audio-buses/worker-native.json",
+    "profiles": 4,
+    "acceptedOriginalSources": 16,
+    "errors": [],
+    "finalVoices": 0,
+    "context": "closed",
+    "muted": true,
+    "world3D": false,
+    "predecoded": true
+  },
+  "completeRegression": "New commit GitHub CI pending; directed evidence is not full-suite evidence."
+}

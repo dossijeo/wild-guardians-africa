@@ -1,4 +1,5 @@
 import {FARM_CONTACT_IDS} from '../src/audio/farm-contact-audio.js';
+import {WORKER_SOUND_IDS} from '../src/audio/worker-audio.js';
 import {UiAudio,UI_SOUND_IDS} from '../src/audio/ui-audio.js';
 import {FOOTSTEPS} from '../src/rendering/footsteps-data.js';
 import test from 'node:test';
@@ -9,6 +10,22 @@ function fixture(){
  audio.context={state:'running',destination:{},async resume(){},close(){this.state='closed';},createGain(){const node={gain:{value:0},connect(to){this.destination=to;},disconnect(){this.disconnected=true;}};nodes.push(node);return node;},createBufferSource(){const source={playbackRate:{value:0},connect(to){this.destination=to;},disconnect(){this.disconnected=true;},start(){},stop(){this.stopped=true;}};sources.push(source);return source;}};
  return {audio,sources,nodes};
 }
+
+test('four original NPC reactions share one voice family, pitch and world bus',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.sfx={items:WORKER_SOUND_IDS.map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url});
+ for(let i=0;i<4;i++)assert.ok(await audio.sound(WORKER_SOUND_IDS[i],{family:'worker-voice',emitter:'w'+i,bus:'world'}));
+ assert.equal(await audio.sound(WORKER_SOUND_IDS[0],{family:'worker-voice',emitter:'w4',bus:'world'}),null);
+ assert.equal(sources.length,4);assert.ok(sources.every(s=>s.playbackRate.value===1&&!s.loop));
+ assert.ok([...audio.voices.values()].every(v=>v.family==='worker-voice'&&v.bus==='world'&&v.volume.destination===audio.sfxBuses.world));audio.dispose();
+});
+
+test('context suspension invalidates a pending NPC reaction before another frame',async()=>{
+ const {audio,sources}=fixture();await audio.unlock();audio.context.currentTime=0;audio.context.suspend=()=>{audio.context.state='suspended';};audio.context.resume=async()=>{audio.context.state='running';};
+ audio.sfx={items:[{id:'npc_danger_react',loop:false,audio:{url:'danger'}}]};let resolve;audio.buffer=()=>new Promise(done=>resolve=done);
+ const worker={id:'worker',status:'idle',x:0,z:0},state={elapsed:0,pauses:[],workers:[worker],tasks:[],raid:null};audio.updateWorkers(state);
+ state.raid={};worker.status='fleeing';state.elapsed=.1;audio.updateWorkers(state);await new Promise(done=>setImmediate(done));assert.equal(typeof resolve,'function');
+ audio.suspend();audio.resume();resolve({});await new Promise(done=>setImmediate(done));assert.equal(sources.length,0);audio.dispose();
+});
 test('four buses preserve public music/SFX controls, remain reusable on stop and release on disposal',async()=>{
  const {audio,nodes}=fixture();await audio.unlock();const buses=audio.sfxBuses;
  assert.equal(audio.musicGain.gain.value,.7);assert.equal(audio.sfxGain.gain.value,.4);
