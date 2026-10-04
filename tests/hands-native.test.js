@@ -62,9 +62,9 @@ test('Terrain adapter permits negative elevations and follows moving targets wit
   s.objects.get('worker').position=[5,-11,8];pose=hints.protect(hints.makePose(0,camera),.016);assert.equal(pose.target[0],5);assert.equal(pose.target[2],8);
 });
 test('Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state',()=>{
-  const state={day:1,result:null,tutorial:{step:'intro'},villages:[{id:'v',x:0,z:0,entry:{x:2,z:3}}],structures:[],plants:[],workers:[]};
-  const nav={field:{surface:()=>-3},placement:()=>({valid:true})};
-  const check=(step,kind,id)=>{state.tutorial.step=step;const before=JSON.stringify(state),target=tutorialHandTarget(state,nav);assert.equal(target.kind,kind);assert.equal(target.target,id);assert.equal(JSON.stringify(state),before);return target;};
+  const state={culture:'mapungubwe',day:1,result:null,tutorial:{step:'intro'},villages:[{id:'v',x:0,z:0,entry:{x:2,z:3}}],structures:[],plants:[],workers:[]};
+  const nav={field:{surface:()=>-3},placement:()=>({valid:true}),path:(_a,b)=>[{x:b.x,z:b.z}]};
+  const check=(step,kind,id)=>{state.tutorial.step=step;const before=JSON.stringify(state),target=tutorialHandTarget(state,nav,step);assert.equal(target.kind,kind);assert.equal(target.target,id);assert.equal(JSON.stringify(state),before);return target;};
   assert.equal(tutorialHandTarget(state,nav),null);state.tutorial.step='center';assert.equal(tutorialHandTarget(state,nav),null);
   state.structures.push({id:'c',kind:'center',x:4,z:5,status:'intact'});
   check('plant','tap','plant-site');state.plants.push({id:'p',species:'mijo',alive:true,x:6,z:7,growth:140});

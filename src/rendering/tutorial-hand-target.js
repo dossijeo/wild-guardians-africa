@@ -1,40 +1,29 @@
-import {centerGeometry} from '../world/centers.js';
-// These IDs describe real game entities or proposed, legal ground positions.
-// No demonstration cart or parcel is inserted into the simulation.
-export function tutorialHandTarget(state,nav){
-  if(state.day!==1||state.result||state.tutorial.step==='done')return null;
+import {previewCenter} from '../simulation/game.js';
+import {centerGeometry,centerServicePoint} from '../world/centers.js';
+// World hands appear only after the corresponding placement tool is chosen.
+export function tutorialHandTarget(state,nav,toolKind=null){
+  const step=state.tutorial.step;
+  if(state.day!==1||state.result||state.tutorial.basicSkipped||!['center','plant'].includes(step)||toolKind!==step)return null;
+  if(state.tutorial.dismissed?.includes('basic.'+step+':')&&!state.tutorial.guideAfterAuto?.includes('basic.'+step))return null;
   const village=state.villages[0],entry=village.entry??village;
   const center=state.structures.find(s=>s.kind==='center'&&s.status!=='ruined');
-  const plant=state.plants.find(p=>p.alive);
-  // Waiting, hiring and watching workers require no gesture in the world.
-  if(state.tutorial.step!=='plant')return null;
-  const message='basic.plant';
-  if(state.tutorial.dismissed?.includes(message+':'))return null;
-  const position=p=>[p.x,nav.field.surface(p.x,p.z)+.025,p.z];
-  const target=(kind,p,id=p.id)=>({kind,target:id,position:position(p)});
-  const ground=(anchor,radius)=>{
+  const target=(kind,p,id)=>({kind,target:id,position:[p.x,nav.field.surface(p.x,p.z)+.025,p.z]});
+  if(step==='center'){
+    if(center)return null;
+    if(village.center&&previewCenter(state,village.center,nav).valid)return target('point',village.center,'center-site');
+    const radius=centerGeometry({culture:village.culture},state).radius;
     for(let ring=1;ring<=8;ring++)for(let i=0;i<16;i++){
-      const a=i*Math.PI/8,p={x:anchor.x+Math.sin(a)*(radius+ring),z:anchor.z+Math.cos(a)*(radius+ring)};
-      if(nav.placement(p.x,p.z,radius).valid)return p;
+      const angle=i*Math.PI/8,p={x:entry.x+Math.sin(angle)*(radius+ring),z:entry.z+Math.cos(angle)*(radius+ring)};
+      if(previewCenter(state,p,nav).valid)return target('point',p,'center-site');
     }
     return null;
-  };
-  switch(state.tutorial.step){
-    case 'intro':return target('open',entry,'village-entry');
-    case 'center':{
-      const site=center??ground(entry,centerGeometry({culture:village.culture},state).radius);return site?target('point',site,center?.id??'center-site'):null;
-    }
-    case 'plant':{
-      const site=plant??(center&&ground(center,.5));return site?target('tap',site,plant?.id??'plant-site'):null;
-    }
-    case 'hire':return center?target('press',center):null;
-    case 'observe':{
-      const worker=state.workers.find(w=>!['home','waiting'].includes(w.status));
-      if(!worker)return plant?target('open',plant):null;
-      const path=[worker,...(worker.path??[])];
-      if(path.length===1&&center)path.push(center);
-      return {...target('drag',worker),route:path.map(position)};
-    }
-    default:return null;
   }
+  if(!center||state.plants.some(p=>p.alive))return null;
+  const departure=centerServicePoint(center,state,.8),seen=new Set();
+  for(let ring=1;ring<=8;ring++)for(let i=0;i<16;i++){
+    const angle=i*Math.PI/8,p={x:Math.round((center.x+Math.sin(angle)*(ring+.5))/1.5)*1.5,z:Math.round((center.z+Math.cos(angle)*(ring+.5))/1.5)*1.5},key=p.x+','+p.z;
+    if(seen.has(key))continue;seen.add(key);
+    if(nav.placement(p.x,p.z,.4).valid&&nav.path(departure,p,.28,null,true))return target('tap',p,'plant-site');
+  }
+  return null;
 }

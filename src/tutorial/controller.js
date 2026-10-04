@@ -18,6 +18,7 @@ export class TutorialController {
     const t=state.tutorial??={step:'intro',seen:[]};
     t.seen=[...new Set((t.seen??[]).filter(id=>known.has(id)))];
     t.pending=[...new Set((t.pending??[]).filter(id=>known.has(id)))];
+    t.guideAfterAuto=[...new Set((t.guideAfterAuto??[]).filter(id=>['basic.center','basic.plant'].includes(id)))];
     if(!BASIC_STEPS.includes(t.step))t.step='intro';
     if(!known.has(t.reading))t.reading=null;
     t.basicSkipped=t.basicSkipped===true;
@@ -81,13 +82,15 @@ export class TutorialController {
     this.presentationAge=(this.presentationAge??0)+Math.max(0,seconds);
     const duration=Math.max(8,Math.min(24,message.text.trim().split(/\s+/).length*60/155+2));
     if(this.presentationAge<duration)return false;
-    return this.dismiss();
+    return this.dismiss({automatic:true});
   }
-  dismiss(){
+  dismiss({automatic=false}={}){
     const message=this.presentation();if(!message)return false;
     if(message.reading)this.acknowledge();
     const t=this.state.tutorial;
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
+    t.guideAfterAuto=(t.guideAfterAuto??[]).filter(id=>id!==message.id);
+    if(automatic&&['basic.center','basic.plant'].includes(message.id))t.guideAfterAuto.push(message.id);
     return true;
   }
   presentation(){

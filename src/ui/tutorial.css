@@ -8,3 +8,8 @@
 
 /* Reserve the whole landscape action column, including its hover/focus margin. */
 #stage:not(.portrait) #guardian-root .bubble{right:max(22px,calc(var(--hud-actions-safe-right,0px) + var(--safe-right)))}
+
+.tutorial-hud-hand{position:fixed;z-index:19;pointer-events:none;object-fit:contain;transform:translate(var(--hand-pivot-x),var(--hand-pivot-y));filter:drop-shadow(0 2px 2px #20362933);animation:tutorial-hud-point 1.6s ease-in-out infinite}
+.tutorial-hud-hand[hidden]{display:none}
+@keyframes tutorial-hud-point{50%{transform:translate(var(--hand-pivot-x),var(--hand-pivot-y)) translateX(-5px)}}
+@media(prefers-reduced-motion:reduce){.tutorial-hud-hand{animation:none}}

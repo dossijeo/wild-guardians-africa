@@ -284,11 +284,10 @@ export class WorldScene {
   }
   updateHands(dt){
     if(!this.hands)return;
-    const step=this.state.tutorial.step,key=step+':'+this.nav.version;
+    const step=this.state.tutorial.step,key=step+':'+this.tutorialToolKind+':'+this.nav.version;
     let config=null;
     if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&step!=='done'){
-      if(['observe','harvest'].includes(step))config=tutorialHandTarget(this.state,this.nav);
-      else {if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav);}config=this.handTargetCache;}
+      if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind);}config=this.handTargetCache;
     }
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
