@@ -11,3 +11,11 @@ Desde `tests/browser/world-lifecycle.html` se pulsó Juego nuevo en el menú ori
 El almacenamiento del padre de la fixture está aislado en memoria. Se usa calidad muy baja y audio nativo silenciado: este ensayo acredita entrada real y conservación de la selección, no rendimiento en otros perfiles ni calidad perceptual del audio. El inspector tiene pointer-events desactivados salvo su botón para no interceptar los controles del HUD. Se comprobó también el botón nativo de pausa, sin recurrir a Escape.
 
 Estado de QA-001: parcial. Se suman estas cinco entradas a Sabana/Mapungubwe y Desierto/Etíope documentadas anteriormente: 7/30 entradas reales. Faltan las otras 23. No se equipara la matriz visual de WorldScene aislado con esta prueba del flujo real de producción.
+
+## Gran río: cinco culturas
+
+Se repitió el flujo nativo completo para Mapungubwe, Saheliana, Suajili, Musgum y Etíope. `gran-rio-five-cultures.json` registra cinco partidas, cada una con una carga completa, 1.000 monedas y renders reales antes de guardar/salir. Los contadores fueron 538/454/412/571/980. Todas dejan sus contextos perdidos, canvas desconectados, listeners cero, worker terminado, timer nulo y cola vacía; cero errores globales. `gran-rio-etiope.png` muestra el mundo y HUD de la quinta combinación.
+
+Antes de iniciar se comprobó el aria-label original Comenzar con el bioma/cultura elegidos. Se espera a que termine la animación del menú para actuar sobre el selector. Calidad muy baja y almacenamiento aislado en memoria, con los límites del bloque anterior.
+
+Estado actualizado: 12/30 entradas reales acreditadas; quedan 18 (Sabana4, Desierto4, Volcanes5 y Gran cañón5). QA-001 sigue parcial.
