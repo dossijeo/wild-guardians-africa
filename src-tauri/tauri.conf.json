@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.wildguardians.africa",
   "build": {
-    "beforeDevCommand": "npm run dev",
-    "devUrl": "http://127.0.0.1:5173",
+    "beforeDevCommand": "npm run dev -- --port 1420 --strictPort",
+    "devUrl": "http://127.0.0.1:1420",
     "beforeBuildCommand": "npm run build && npm run test:web-package",
     "frontendDist": "../dist"
   },

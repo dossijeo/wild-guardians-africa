@@ -17,7 +17,7 @@
     "qa:web-package": "node tools/serve_web_package.mjs",
     "package:itch": "npm run build && npm run test:web-package && python tools/package_itch.py",
     "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "desktop:build": "tauri build -- --locked"
   },
   "dependencies": {
     "three": "0.180.0",
