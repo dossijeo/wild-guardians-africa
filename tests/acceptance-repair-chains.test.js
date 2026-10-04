@@ -16,7 +16,7 @@ function fixture(){
  Game.placeStructure(s,'center',{x:10,z:0},nav);Game.placeStructure(s,'wall',{kind:'wall',material:'adobe',x:35,z:0},nav);
  const target=s.structures.at(-1);target.hp=219;Game.plant(s,'opening-crop','mijo',20,10,nav);
  Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});s.dayPlan.done=true;
- assert.equal(numberOf(s.ledger.balance),60);
+ assert.equal(numberOf(s.ledger.balance),560);
  return {s,nav,target,worker:s.workers[0]};
 }
 function until(s,nav,condition,limit=180){
@@ -31,35 +31,35 @@ function until(s,nav,condition,limit=180){
 }
 function ordered(){
  const f=fixture();Game.requestRepair(f.s,'repair-order',f.target.id);
- assert.equal(numberOf(f.s.ledger.balance),60);assert.equal(f.s.tasks.filter(t=>t.kind==='repair').length,1);
+ assert.equal(numberOf(f.s.ledger.balance),560);assert.equal(f.s.tasks.filter(t=>t.kind==='repair').length,1);
  until(f.s,f.nav,()=>f.worker.status==='walking'&&f.s.tasks.find(t=>t.id===f.worker.taskId)?.kind==='repair');
  assert.ok(Math.hypot(f.worker.x-f.target.x,f.worker.z-f.target.z)>10);
- assert.equal(numberOf(f.s.ledger.balance),60);return f;
+ assert.equal(numberOf(f.s.ledger.balance),560);return f;
 }
-function spendFiftyFive(s,nav){
- for(let i=0;i<5;i++)Game.placeStructure(s,`other-wall-${i}`,{kind:'wall',material:'zarzas',x:-20+i*4,z:15},nav);
- Game.plant(s,'other-seed','mijo',-20,30,nav);assert.equal(numberOf(s.ledger.balance),5);
+function spendToReserve(s,nav){
+ for(let i=0;i<45;i++)Game.placeStructure(s,`other-wall-${i}`,{kind:'wall',material:'zarzas',x:-20+i*4,z:15},nav);
+ Game.plant(s,'other-seed','mijo',-20,30,nav);assert.equal(numberOf(s.ledger.balance),105);
 }
 
 test('QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival',()=>{
  const {s,nav,target}=ordered();assert.deepEqual(Game.repairCost(target),rational(189,20));
  hitStructure(target,51,s.elapsed);nav.setState(s);assert.equal(target.hp,168);assert.deepEqual(Game.repairCost(target),rational(77,5));
  until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'));
- assert.equal(target.hp,300);assert.equal(target.status,'intact');assert.equal(target.wallPresentation.to,1);assert.equal(target.wallPresentation.collapseFrom,undefined);assert.equal(numberOf(s.ledger.balance),44);
+ assert.equal(target.hp,300);assert.equal(target.status,'intact');assert.equal(target.wallPresentation.to,1);assert.equal(target.wallPresentation.collapseFrom,undefined);assert.equal(numberOf(s.ledger.balance),544);
  assert.deepEqual(Object.values(s.ledger.entries).filter(v=>v.n==='-16'),[rational(-16)]);
 });
 
-test('QA-077: genuine purchases exhaust request funds; rejection adds no task, command or partial payment',()=>{
- const {s,nav,target}=fixture();spendFiftyFive(s,nav);const before=serialize(s);
- assert.throws(()=>Game.requestRepair(s,'unaffordable',target.id),/Fondos insuficientes/);
+test('QA-077: genuine purchases preserve the hiring reserve and reject an unaffordable repair; rejection adds no task, command or partial payment',()=>{
+ const {s,nav,target}=fixture();spendToReserve(s,nav);const before=serialize(s);
+ assert.throws(()=>Game.requestRepair(s,'unaffordable',target.id),/últimas 100 monedas/);
  assert.equal(serialize(s),before);assert.ok(!s.tasks.some(t=>t.kind==='repair'));
 });
 
 test('QA-080: funds spent on other defenses while walking cancel repair only at physical arrival',()=>{
- const {s,nav,target,worker}=ordered();spendFiftyFive(s,nav);
+ const {s,nav,target,worker}=ordered();spendToReserve(s,nav);
  const task=s.tasks.find(t=>t.id===worker.taskId);assert.equal(task.kind,'repair');assert.equal(task.workerId,worker.id);
  until(s,nav,()=>!s.tasks.some(t=>t.id===task.id));
- assert.equal(target.hp,219);assert.equal(target.status,'intact');assert.equal(numberOf(s.ledger.balance),5);
+ assert.equal(target.hp,219);assert.equal(target.status,'intact');assert.equal(numberOf(s.ledger.balance),105);
  assert.ok(s.messages.some(m=>m.target===target.id&&m.text.includes('fondos insuficientes')));
  assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,0);assert.ok(!Object.keys(s.ledger.entries).some(id=>id.startsWith('repair:')));
 });
@@ -67,10 +67,10 @@ test('QA-080: funds spent on other defenses while walking cancel repair only at 
 test('QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost',()=>{
  let {s,nav,target}=ordered();hitStructure(target,219);nav.setState(s);
  until(s,nav,()=>target.status==='ruined',2);
- assert.equal(target.hp,0);assert.equal(numberOf(s.ledger.balance),60);assert.ok(s.tasks.some(t=>t.kind==='repair'));
+ assert.equal(target.hp,0);assert.equal(numberOf(s.ledger.balance),560);assert.ok(s.tasks.some(t=>t.kind==='repair'));
  s=deserialize(serialize(s));nav.setState(s);target=s.structures.find(t=>t.id===target.id);
  until(s,nav,()=>target.status==='intact');
- assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);assert.equal(numberOf(s.ledger.balance),25);
+ assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);assert.equal(numberOf(s.ledger.balance),525);
  assert.equal(s.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,1);
 });
 
@@ -78,7 +78,7 @@ test('QA-082: outside an attack, full destruction just before physical arrival b
  const {s,nav,target,worker}=ordered();until(s,nav,()=>worker.taskApproach&&Math.hypot(worker.x-worker.taskApproach.destination.x,worker.z-worker.taskApproach.destination.z)<.25);
  hitStructure(target,219);nav.setState(s);assert.equal(target.status,'collapsing');assert.equal(target.collapseRemaining,1.4);assert.equal(s.raid,null);
  until(s,nav,()=>target.status==='intact',1);
- assert.equal(numberOf(s.ledger.balance),25);assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);
+ assert.equal(numberOf(s.ledger.balance),525);assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);
  assert.ok(!s.events.some(e=>e.type==='StructureRuined'&&e.targetId===target.id));assert.ok(!s.tasks.some(t=>t.kind==='repair'));
 });
 
@@ -86,30 +86,30 @@ test('QA-081/082: active raid cancels walking repair before any arrival; it is n
  const {s,nav,target,worker}=ordered();spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);
  assert.equal(worker.status,'fleeing');assert.equal(worker.taskId,null);assert.ok(!s.tasks.some(t=>t.kind==='repair'));
  until(s,nav,()=>s.raid===null,180);
- assert.equal(numberOf(s.ledger.balance),60);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,0);
+ assert.equal(numberOf(s.ledger.balance),560);assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,0);
  Game.rebuildTasks(s);const loaded=deserialize(serialize(s));nav.setState(loaded);Game.tick(loaded,5,nav);
- assert.ok(!loaded.tasks.some(t=>t.kind==='repair'));assert.equal(numberOf(loaded.ledger.balance),60);
+ assert.ok(!loaded.tasks.some(t=>t.kind==='repair'));assert.equal(numberOf(loaded.ledger.balance),560);
  assert.equal(loaded.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,0);
 });
 
 test('QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice',()=>{
  const {s,nav,target}=ordered();until(s,nav,()=>target.hp===target.maxHp);
- assert.equal(numberOf(s.ledger.balance),50);
+ assert.equal(numberOf(s.ledger.balance),550);
  const repairId=Object.keys(s.ledger.entries).find(id=>id.startsWith('repair:'));assert.ok(repairId);
  assert.equal(transact(s.ledger,repairId,rational(-10)),false);Game.tick(s,5,nav);
  const loaded=deserialize(serialize(s));nav.setState(loaded);Game.tick(loaded,5,nav);
- assert.equal(numberOf(loaded.ledger.balance),50);assert.equal(loaded.events.filter(e=>e.type==='RepairApplied').length,1);
+ assert.equal(numberOf(loaded.ledger.balance),550);assert.equal(loaded.events.filter(e=>e.type==='RepairApplied').length,1);
  assert.equal(loaded.structures.find(t=>t.id===target.id).hp,300);assert.ok(!loaded.tasks.some(t=>t.kind==='repair'));
 });
 
 test('QA-083: stale completion identity cannot restore later damage or emit a second repair burst',()=>{
  const {s,nav,target,worker}=ordered(),stale={...s.tasks.find(t=>t.id===worker.taskId)};
- until(s,nav,()=>target.hp===target.maxHp);assert.equal(numberOf(s.ledger.balance),50);
+ until(s,nav,()=>target.hp===target.maxHp);assert.equal(numberOf(s.ledger.balance),550);
  hitStructure(target,20);nav.setState(s);assert.equal(target.hp,280);
  // Explicit callback replay fixture: same consumed task identity, not a new order.
  // The worker still follows the normal reservation/arrival route.
  s.tasks.push({...stale,workerId:null});
  until(s,nav,()=>!s.tasks.some(t=>t.id===stale.id));
- assert.equal(numberOf(s.ledger.balance),50);assert.equal(target.hp,280);
+ assert.equal(numberOf(s.ledger.balance),550);assert.equal(target.hp,280);
  assert.equal(s.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,1);
 });

@@ -19,10 +19,14 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
     cancelIdle(worker);
     idle=worker.idleState={anchorId:anchor.id,mode:'rest',elapsed:0,rng:seedFor(worker,seed),remaining:source.idleSeconds*2};
   }
-  worker.running=false;
+  worker.running=false;idle.approachRetry=Math.max(0,(idle.approachRetry??0)-seconds);
+  if(idle.mode!=='walk'&&idle.approachRetry===0&&anchor.idleRadius&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.idleRadius){
+    idle.approachRetry=1;const path=nav.path(worker,anchor,.28,null,true);
+    if(path){idle.mode='walk';idle.destination=anchor;idle.pathVersion=nav.version;idle.elapsed=0;worker.path=path;worker.destinationId=anchor.id;worker.pathVersion=nav.version;}
+  }
   if(idle.mode==='walk'){
     if(idle.pathVersion!==nav.version){
-      const path=localPath(worker,idle.destination,anchor,nav);
+      const path=idle.destination.id===anchor.id?nav.path(worker,idle.destination,.28,null,true):localPath(worker,idle.destination,anchor,nav);
       if(!path){cancelWalk(worker,idle,source);return;}
       worker.path=path;idle.pathVersion=nav.version;
     }
@@ -37,9 +41,9 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
   if(idle.mode==='rest'){
     idle.mode='watch';idle.elapsed=0;idle.remaining=source.alertSeconds*(1+Math.floor(random(idle)*2));return;
   }
-  if(random(idle)<1/3&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)<=8){
+  if(random(idle)<1/3&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)<=(anchor.idleRadius??8)){
     for(let attempt=0;attempt<12;attempt++){
-      const angle=random(idle)*Math.PI*2,radius=2+random(idle)*5.5;
+      const angle=random(idle)*Math.PI*2,radius=Math.min(2,anchor.idleRadius??8)+random(idle)*Math.max(0,(anchor.idleRadius??7.5)-2);
       const destination={id:`idle-${worker.id}`,x:anchor.x+Math.sin(angle)*radius,z:anchor.z+Math.cos(angle)*radius};
       const path=localPath(worker,destination,anchor,nav);
       if(!path||Math.hypot(worker.x-destination.x,worker.z-destination.z)<.75)continue;
@@ -51,7 +55,7 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
 }
 function localPath(worker,destination,anchor,nav){
   const path=nav.path(worker,destination,.28,null,true);
-  return path&&path.every(p=>Math.hypot(p.x-anchor.x,p.z-anchor.z)<=8)?path:null;
+  return path&&path.every(p=>Math.hypot(p.x-anchor.x,p.z-anchor.z)<=(anchor.idleRadius??8))?path:null;
 }
 function cancelWalk(worker,idle,source){
   worker.path=null;worker.destinationId=null;idle.mode='rest';idle.elapsed=0;

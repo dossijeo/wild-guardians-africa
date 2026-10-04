@@ -120,7 +120,7 @@ export class Navigation {
   placementFootprint(building) {
     const polygon=building.footprint;
     if(!polygon?.length)return this.placement(building.x,building.z,building.radius);
-    const base=this.field.surface?.(building.x,building.z);
+    const base=this.field?.surface?.(building.x,building.z);
     // The native floor is horizontal at the center anchor. Validate its whole
     // occupied area, including shallow slopes that pass the walking limit.
     const terrainPoint=p=>this.terrainValid(p.x,p.z,0)&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);

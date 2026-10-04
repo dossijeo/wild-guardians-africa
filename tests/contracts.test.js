@@ -23,29 +23,29 @@ test('A harvest begun before shift end completes its native action and physical 
   Object.assign(plant,{x:250,z:0,alive:true,growth:140,harvestRequested:false});plant.water.forEach(w=>w.status='manual');
   Game.harvest(s,'late-harvest',plant.id);Game.tick(s,.01,nav);assert.equal(worker.status,'walking');
   Game.tick(s,.01,nav);assert.equal(worker.status,'acting');Game.tick(s,4,nav);
-  assert.equal(plant.alive,false);assert.equal(worker.status,'carrying');assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),500);
+  assert.equal(plant.alive,false);assert.equal(worker.status,'carrying');assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),1000);
   Game.tick(s,300,nav);assert.equal(s.day,102);assert.equal(worker.status,'carrying');assert.ok(worker.x>7.2);
   const loaded=deserialize(serialize(s));Game.hire(loaded,'hire-next',{});Game.tick(loaded,60,nav);
-  assert.equal(loaded.crates[0].delivered,true);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),509);
+  assert.equal(loaded.crates[0].delivered,true);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1009);
   assert.equal(loaded.events.filter(e=>e.type==='CropPicked').length,1);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload',()=>{
   const {s,worker,crate}=carrying();Game.tick(s,.2,nav);
   assert.equal(s.day,102);assert.equal(s.workers[0].id,worker.id);assert.equal(worker.contractDay,101);assert.equal(contractExpired(worker,s),true);
-  assert.equal(crate.carrierId,worker.id);assert.equal(numberOf(s.ledger.balance),500);assert.deepEqual(s.pauses,['hiring']);
+  assert.equal(crate.carrierId,worker.id);assert.equal(numberOf(s.ledger.balance),1000);assert.deepEqual(s.pauses,['hiring']);
   const loaded=deserialize(serialize(s));Game.hire(loaded,'hire-next',{});
-  assert.equal(loaded.workers.length,1);assert.equal(numberOf(loaded.ledger.balance),500);
-  Game.tick(loaded,2,nav);assert.equal(loaded.crates[0].delivered,true);assert.equal(numberOf(loaded.ledger.balance),511);
+  assert.equal(loaded.workers.length,1);assert.equal(numberOf(loaded.ledger.balance),1000);
+  Game.tick(loaded,2,nav);assert.equal(loaded.crates[0].delivered,true);assert.equal(numberOf(loaded.ledger.balance),1011);
   assert.equal(loaded.workers[0].status,'returning');assert.equal(loaded.workers[0].taskId,null);
-  Game.tick(loaded,20,nav);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),511);
+  Game.tick(loaded,20,nav);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1011);
   assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('A busy person cannot be hired twice; only the new daily contract is charged',()=>{
   const {s,worker}=carrying();Game.tick(s,.2,nav);Game.hire(s,'hire-next',{olderMale:1});
   assert.equal(s.workers.length,2);const current=s.workers.find(w=>w.contractDay===102);
-  assert.notEqual(current.personId,worker.personId);assert.equal(current.profile,worker.profile);assert.equal(numberOf(s.ledger.balance),400);
+  assert.notEqual(current.personId,worker.personId);assert.equal(current.profile,worker.profile);assert.equal(numberOf(s.ledger.balance),900);
   assert.equal(Game.hire(s,'hire-next-again',{olderMale:1}),false);assert.equal(s.workers.length,2);
-  Game.tick(s,2,nav);assert.equal(numberOf(s.ledger.balance),411);
+  Game.tick(s,2,nav);assert.equal(numberOf(s.ledger.balance),911);
 });
 test('An expired carrier finishes its chain but cannot take ordinary tasks from the new day',()=>{
   const {s,worker}=carrying();Game.tick(s,.2,nav);Game.hire(s,'hire-next',{});
@@ -65,7 +65,7 @@ test('Cargo coordinates follow the actual carrier after every movement step',()=
 test('Losing the carrier center drops the box at its physical position without paying or deleting it',()=>{
   const {s,worker,crate}=carrying();s.time=598;s.structures[0].status='ruined';s.structures[0].hp=0;
   Game.tick(s,.1,nav);assert.equal(worker.crateId,null);assert.equal(crate.carrierId,null);assert.equal(crate.x,worker.x);assert.equal(crate.z,worker.z);
-  assert.equal(crate.delivered,false);assert.equal(numberOf(s.ledger.balance),500);assert.equal(worker.status,'returning');
+  assert.equal(crate.delivered,false);assert.equal(numberOf(s.ledger.balance),1000);assert.equal(worker.status,'returning');
   assert.equal(s.events.filter(e=>e.type==='CrateDropped').length,1);
 });
 test('Snapshot validation rejects orphaned, duplicated or inconsistent carrier links',()=>{

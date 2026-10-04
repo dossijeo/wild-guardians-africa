@@ -31,6 +31,9 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 .dialog{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
 #stage .native-hiring .hiring-panel{position:relative;overflow:auto;overscroll-behavior:contain}
 #stage .panel-body,#stage .context{overscroll-behavior:contain;overflow-anchor:none}
+#stage #context .harvest-context{width:auto;max-width:220px;left:12px;right:auto;display:flex;align-items:center;gap:8px;padding:12px 36px 12px 12px;font-size:13px}
+.harvest-context .context-close{position:absolute;right:2px;top:2px;padding:0;width:30px;height:30px;background:transparent;border:0;font-size:22px}
+.harvest-context #harvest-action{padding:8px 10px;font-size:14px}
 @media(max-width:600px){
   #stage .native-panel-host{left:8px;right:8px;width:auto;--panel-max:calc(100dvh - var(--header) - 24px)}
   #stage #context .context{left:8px;right:8px;width:auto;max-height:calc(100dvh - var(--header) - 24px)}

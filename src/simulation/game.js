@@ -1,3 +1,4 @@
+import {ensurePurchaseBudget} from './budget.js';
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
@@ -23,8 +24,8 @@ export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
 export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slotId=crypto.randomUUID()}={}) {
   if(!BIOMES.includes(biome)||!CULTURES.includes(culture))throw new Error('Combinación desconocida');
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,postgame:false,result:null,
-    initialPreparation:true,ledger:{balance:rational(1000),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
-    pauses:['intro'],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
+    initialPreparation:true,ledger:{balance:rational(1500),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
+    pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
     cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
@@ -77,7 +78,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?800:wallSpec(material).cost;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
-    transact(s.ledger,id,rational(-cost));
+    ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const maxHp=structureHealth(kind,material,gate);
     s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind});
@@ -110,7 +111,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   const plan=previewWallChain(s,material,points,nav,options),newPieces=plan.pieces;
   return commit(s,id,'wall',()=>{
-    transact(s.ledger,id,rational(-plan.cost));
+    ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));
     for(const update of plan.updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
     emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates});
@@ -132,7 +133,7 @@ export function plant(s,id,species,x,z,nav) {
   if(s.plants.some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
   return commit(s,id,'plant',()=>{
-    transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
+    ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
     const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'CropPlaced',{targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
@@ -228,6 +229,7 @@ export function dropCarriedCrate(s,worker){
 export function requestRepair(s,id,targetId) {
   const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
+  ensurePurchaseBudget(s,repairCost(target));
   return commit(s,id,'repair',()=>{
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
@@ -294,6 +296,7 @@ function completeTask(s,w,t,target,nav) {
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
     try {
+      ensurePurchaseBudget(s,repairCost(target));
       if(transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)))){
         const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
         delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
@@ -305,6 +308,14 @@ function completeTask(s,w,t,target,nav) {
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
+}
+export function idleFarmAnchor(s,worker,center){
+  const plants=s.plants.filter(p=>p.alive&&p.centerId===worker.centerId);
+  if(!plants.length)return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
+  // Stay near the closest active plot, rather than roaming the far side of a
+  // center. The anchor changes when planting/harvesting changes this area.
+  const plant=nearest(plants,worker);
+  return {...plant,id:'farm-'+plant.id,idleRadius:3};
 }
 function updateWorkers(s,dt,nav) {
   for(const w of s.workers) {
@@ -336,7 +347,7 @@ function updateWorkers(s,dt,nav) {
     if(!t) {
       if(w.status!=='idle')w.status='idle';
       if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-      else updateIdle(w,center,dt,nav,s.seed,s.structures);
+      else updateIdle(w,idleFarmAnchor(s,w,center),dt,nav,s.seed,s.structures);
       continue;
     }
     const target=[...s.plants,...s.crates,...s.structures].find(e=>e.id===t.targetId);
@@ -391,7 +402,7 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
     const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
-    transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
+    ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {
       const departure=centerServicePoint(center,s);
@@ -411,7 +422,6 @@ function prepareClockEvents(s,nav){
 }
 export function tick(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
-  if(s.initialPreparation)return;
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     prepareClockEvents(s,nav);
@@ -451,8 +461,7 @@ export function tick(s,seconds,nav) {
 export function advanceReal(s,seconds,nav) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
-    if(s.initialPreparation)return;
-    prepareClockEvents(s,nav);
+      prepareClockEvents(s,nav);
     const speed=s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;

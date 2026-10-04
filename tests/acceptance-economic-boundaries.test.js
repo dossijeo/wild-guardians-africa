@@ -61,14 +61,14 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
  }
 });
 
-for(const culture of Game.CULTURES)test(`QA-130: ${culture} 800 permits a new center after an explicit raid at a daylight clock has physically ended`,()=>{
- const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(800);
+for(const culture of Game.CULTURES)test(`QA-130: ${culture} 900 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
+ const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(900);
  // Explicit group, not the daytime 10%/attraction planner. Exercise physical
  // combat and the recovery permission at a daylight clock without altering it.
  spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);
  finish(s,nav);assert.equal(s.result,null);assert.equal(s.structures.some(operational),false);assert.ok(s.time<300);
  Game.placeStructure(s,'replacement',{x:-12,z:12},nav);assert.equal(s.structures.filter(operational).length,1);
- assert.equal(numberOf(s.ledger.balance),0);assert.equal(s.events.filter(e=>e.type==='GameOver').length,0);
+ assert.equal(numberOf(s.ledger.balance),100);assert.equal(s.events.filter(e=>e.type==='GameOver').length,0);
  assert.equal(s.events.filter(e=>e.type==='PlacementCommitted').length,2);assert.equal(s.ledger.entries.replacement.n,'-800');
 });
 

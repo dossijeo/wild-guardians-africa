@@ -27,7 +27,7 @@ for(const biome of Game.BIOMES)for(const culture of Game.CULTURES)test(`${biome}
   const plot=plots[0];
   assert.ok(plot,'At least one legal crop plot must be reachable in both directions');
   Game.plant(s,'seed','mijo',plot.x,plot.z,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
-  const p=s.plants[0];assert.equal(p.growth,0);assert.equal(numberOf(s.ledger.balance),95);
+  const p=s.plants[0];assert.equal(p.growth,0);assert.equal(numberOf(s.ledger.balance),595);
   const physicalTick=(state,seconds)=>{
     const starts=state.workers.map(w=>({x:w.x,z:w.z}));Game.tick(state,seconds,nav);
     for(const [i,w] of state.workers.entries()){
@@ -38,11 +38,11 @@ for(const biome of Game.BIOMES)for(const culture of Game.CULTURES)test(`${biome}
   while(s.time<240&&!isMature(p))physicalTick(s,.5);
   assert.ok(isMature(p),`Crop must mature during the work shift: ${JSON.stringify({time:s.time,growth:p.growth,water:p.water,worker:s.workers[0]})}`);
   assert.ok(p.water.every(w=>w.status==='manual'));
-  Game.harvest(s,'harvest',p.id);assert.equal(numberOf(s.ledger.balance),95);
+  Game.harvest(s,'harvest',p.id);assert.equal(numberOf(s.ledger.balance),595);
   while(s.time<250&&!s.crates.length)physicalTick(s,.1);
-  assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),95,'Picking must not pay before physical delivery');
+  assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),595,'Picking must not pay before physical delivery');
   const loaded=deserialize(serialize(s));nav.setState(loaded);
   while(loaded.time<299&&!loaded.crates[0].delivered)physicalTick(loaded,.5);
   assert.ok(loaded.crates[0].delivered,'A carried crate must reach the real center after reloading');
-  assert.equal(numberOf(loaded.ledger.balance),106);Game.tick(loaded,1,nav);assert.equal(numberOf(loaded.ledger.balance),106);
+  assert.equal(numberOf(loaded.ledger.balance),606);Game.tick(loaded,1,nav);assert.equal(numberOf(loaded.ledger.balance),606);
 });

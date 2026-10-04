@@ -9,7 +9,7 @@ export function hiringMarkup(state){
  const previous=state.hiring.hasPrevious?'Hemos recuperado tu última selección. Puedes ajustarla antes de pagar.':'Elige cuántas personas trabajarán hoy. Ajusta la selección a tu presupuesto.';
  return `<section class="panel hiring-panel" role="dialog" aria-modal="true" aria-labelledby="hiringTitle" aria-describedby="hiringIntro">
  <canvas class="frame-canvas" aria-hidden="true"></canvas>
- <header class="panel-head"><div><h2 class="panel-title" id="hiringTitle" tabindex="-1">Contrata tu equipo</h2><p class="panel-subtitle">Día ${state.day} · ${hhmm(HIRING_RULES.dawnMinute)} · nuevo amanecer</p></div><span class="hiring-pause"><i aria-hidden="true">Ⅱ</i><span>Tiempo en pausa</span></span></header>
+ <header class="panel-head"><div><h2 class="panel-title" id="hiringTitle" tabindex="-1">Contrata tu equipo</h2><p class="panel-subtitle">Día ${state.day} · ${state.clock??hhmm(HIRING_RULES.dawnMinute)} · ${state.day===1?'tu equipo':'nuevo amanecer'}</p></div><span class="hiring-pause"><i aria-hidden="true">Ⅱ</i><span>Tiempo en pausa</span></span></header>
  <div class="panel-body hiring-body"><p id="hiringIntro" class="hiring-intro">${previous}</p>
  <div class="hiring-grid">${NPC_TYPES.map((p,i)=>`<article class="hire-card" data-crew-card="${i}">
  <img class="hire-portrait" src="${ASSETS['npc_'+p.key].src}" alt="${p.name}">

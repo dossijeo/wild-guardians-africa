@@ -61,7 +61,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     // Fill this strategy's fixed set of plots. It is not a gameplay entity limit.
     // After startup, keep a full next-day wage while financing the following crop cohort.
     // If nothing survives, restart production instead of reserving an unusable wage.
-    const end=PROFILES.find(p=>p.id===profile).end,reserve=!live.length||s.day===startDay&&s.time<30?0:120;
+    const end=PROFILES.find(p=>p.id===profile).end,reserve=!live.length||s.day===startDay&&s.time<30?100:120;
     if(s.time<end-10){
       for(const [i,p] of plots.slice(0,plotCount).entries()){
         if(live.some(plant=>distance(plant,p)<1.1))continue;

@@ -38,7 +38,7 @@ for(const culture of Game.CULTURES)test(`QA-135/136 ${culture}: continue actual 
   const day=101+night;assert.equal(s.day,day);assert.deepEqual(s.pauses,['hiring']);
   if(night%25===0){repo.save(s);const text=serialize(s);s=repo.load(s.slotId);nav=navigation(s);assert.equal(serialize(s),text);controller=new TutorialController(s,profile);const held=serialize(s);Game.tick(s,10,nav);assert.equal(serialize(s),held);reloads++;}
   Game.hire(s,'qa-postgame-hire-'+day,{});controller.update();
-  if(controller.presentation()?.blocking){assert.equal(controller.presentation().id,'world.expansion');controller.acknowledge();}
+  if(controller.presentation()?.reading){assert.equal(controller.presentation().id,'world.expansion');controller.acknowledge();}
   assert.equal(controller.presentation(),null);assert.ok(attraction(s.plants)>=10000);
   advance(300);assert.equal(s.time,300);assert.equal(s.day,day);assert.equal(s.dayPlan.done,true);dayPlans++;
   assert.deepEqual(s.nightPlan.group,[]);assert.equal(s.nightPlan.done,false);assert.ok(s.nightPlan.at>300&&s.nightPlan.at<600);nightPlans++;

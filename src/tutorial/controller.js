@@ -21,12 +21,13 @@ export class TutorialController {
     if(!BASIC_STEPS.includes(t.step))t.step='intro';
     if(!known.has(t.reading))t.reading=null;
     t.basicSkipped=t.basicSkipped===true;
-    if(!t.reading)resume(state,reason);
+    resume(state,reason);resume(state,'intro');
     this.update();
   }
   seen(id,globalSeen){return this.state.tutorial.seen.includes(id)||globalSeen.has(id);}
   update(){
     const s=this.state,t=s.tutorial,globalSeen=this.profile.read();
+    resume(s,reason);resume(s,'intro');
     if(s.result==='defeat'){t.reading=null;resume(s,reason);return;}
     if(t.basicSkipped){t.step='done';resume(s,'intro');}
     else if(s.day===1&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
@@ -43,7 +44,7 @@ export class TutorialController {
     enqueue('world.expansion',s.postgame&&!s.result);
     // A saved, acknowledged message must not hold a stale pause indefinitely.
     if(t.reading&&t.seen.includes(t.reading)){t.reading=null;resume(s,reason);}
-    if(t.reading){pause(s,reason);return;}
+    if(t.reading)return;
     if(s.pauses.some(p=>['menu','hidden','context-lost','hiring'].includes(p)))return;
     const basicId=BASIC_MESSAGES[t.step];
     const basicAvailable=!t.basicSkipped&&(s.day===1||t.step==='done')&&(t.step!=='done'||delivered(s));
@@ -57,7 +58,7 @@ export class TutorialController {
         t.reading=urgent||t.pending.shift()||null;
       }
     }
-    if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);pause(s,reason);emit(s,'TutorialMessageStarted',{messageId:t.reading});}
+    if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);emit(s,'TutorialMessageStarted',{messageId:t.reading});}
   }
   acknowledge(){
     const t=this.state.tutorial,id=t.reading;if(!id)return false;
@@ -72,22 +73,32 @@ export class TutorialController {
     if(!this.profile.basicCompleted||t.step!=='intro'||t.reading!=='basic.introduction')return false;
     t.basicSkipped=true;t.step='done';t.reading=null;resume(this.state,'intro');resume(this.state,reason);this.update();return true;
   }
+  advance(seconds,{visible=true}={}){
+    const message=this.presentation();
+    if(!message||!visible){this.presentationAge=0;return false;}
+    const key=message.id+':'+(message.variant??'')+':'+!!message.reading;
+    if(key!==this.presentationKey){this.presentationKey=key;this.presentationAge=0;}
+    this.presentationAge=(this.presentationAge??0)+Math.max(0,seconds);
+    const duration=Math.max(8,Math.min(24,message.text.trim().split(/\s+/).length*60/155+2));
+    if(this.presentationAge<duration)return false;
+    return this.dismiss();
+  }
   dismiss(){
     const message=this.presentation();if(!message)return false;
-    if(message.blocking)this.acknowledge();
+    if(message.reading)this.acknowledge();
     const t=this.state.tutorial;
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
     return true;
   }
   presentation(){
     const message=this.currentPresentation();
-    if(message&&!message.blocking&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
+    if(message&&!message.reading&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
     return message;
   }
   currentPresentation(){
     const s=this.state,t=s.tutorial;
     if(s.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
-    if(t.reading){const id=t.reading;return {id,...TUTORIAL_MESSAGES[id],blocking:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};}
+    if(t.reading){const id=t.reading;return {id,...TUTORIAL_MESSAGES[id],blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};}
     if(s.result==='victory')return {id:'campaign.liberation',...TUTORIAL_MESSAGES['campaign.liberation'],blocking:false,result:true};
     if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'No quedan recursos suficientes para continuar.',blocking:false,result:true};
     if(s.day===1&&!t.basicSkipped&&t.step!=='done'){

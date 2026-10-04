@@ -30,9 +30,9 @@ for(const building of catalogue)test(`${building.culture}: native GLB scale, rot
  template.dispose();
  const nav=flat(),state=Game.newGame({culture:building.culture,seed:712});Game.resume(state,'intro');
  Game.placeStructure(state,'center',{x:30,z:0,yaw:.73},nav);const center=state.structures[0],shape=centerFootprint(center,state);
- assert.equal(center.culture,building.culture);assert.equal(state.ledger.balance.n,'200');
+ assert.equal(center.culture,building.culture);assert.equal(state.ledger.balance.n,'700');
  assert.equal(nav.walkable(center.x,center.z,.28,null,true),false);
- assert.throws(()=>Game.plant(state,'inside','mijo',center.x,center.z,nav));assert.equal(state.ledger.balance.n,'200');
+ assert.throws(()=>Game.plant(state,'inside','mijo',center.x,center.z,nav));assert.equal(state.ledger.balance.n,'700');
  for(let i=0;i<32;i++){
   const point=centerBoundaryPoint(center,i*Math.PI/16,0,state);
   assert.ok(Math.min(...shape.footprint.map((p,j)=>edgeDistance(p,shape.footprint[(j+1)%shape.footprint.length],point.x,point.z)))<1e-8);
@@ -53,7 +53,7 @@ for(const building of catalogue)test(`${building.culture}: native GLB scale, rot
   if(isMature(state.plants[0])&&!state.plants[0].harvestRequested)Game.harvest(state,'harvest',state.plants[0].id);
   Game.tick(state,.05,nav);
  }
- assert.equal(state.crates.filter(c=>c.delivered).length,1);assert.equal(state.ledger.balance.n,'106');
+ assert.equal(state.crates.filter(c=>c.delivered).length,1);assert.equal(state.ledger.balance.n,'606');
  const loaded=deserialize(serialize(state));assert.equal(centerCulture(loaded.structures[0],loaded),building.culture);
  loaded.villages[0].culture=building.culture==='suajili'?'mapungubwe':'suajili';
  assert.equal(centerCulture(loaded.structures[0],loaded),building.culture,'Logistical reassignment cannot replace the physical model');

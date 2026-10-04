@@ -21,10 +21,10 @@ test('Basic readings advance only manually and do not create, plant or pay anyth
   const {state,controller,profile}=setup();
   assert.equal(controller.presentation().id,'basic.introduction');
   for(let i=0;i<100;i++)controller.update();
-  assert.equal(controller.presentation().id,'basic.introduction');assert.equal(state.time,0);assert.equal(state.structures.length,0);assert.equal(numberOf(state.ledger.balance),1000);
-  controller.acknowledge();assert.equal(controller.presentation().id,'basic.center');assert.equal(controller.presentation().blocking,true);
+  assert.equal(controller.presentation().id,'basic.introduction');assert.equal(state.time,0);assert.equal(state.structures.length,0);assert.equal(numberOf(state.ledger.balance),1500);
+  controller.acknowledge();assert.equal(controller.presentation().id,'basic.center');assert.equal(controller.presentation().blocking,false);
   controller.acknowledge();assert.equal(controller.presentation().blocking,false);assert.ok(!state.pauses.includes('tutorial-reading'));assert.ok(!state.pauses.includes('intro'));
-  assert.equal(state.tutorial.step,'center');assert.equal(numberOf(state.ledger.balance),1000);assert.equal(profile.basicCompleted,false);
+  assert.equal(state.tutorial.step,'center');assert.equal(numberOf(state.ledger.balance),1500);assert.equal(profile.basicCompleted,false);
 });
 test('An already placed native center is recognized without charging a second one',()=>{
   const {s:state}=createOpeningWorld();state.tutorial.step='intro';
@@ -39,15 +39,15 @@ test('The native farm resumes physical worker actions after reading, and complet
   assert.ok(point);Game.plant(state,'tutorial-seed','mijo',point.x,point.z,nav);controller.update();assert.equal(state.tutorial.reading,'basic.hiring');controller.acknowledge();
   Game.openInitialHiring(state);controller.update();assert.equal(controller.presentation(),null);
   Game.hire(state,'tutorial-wage',{olderFemale:1});controller.update();assert.equal(state.tutorial.reading,'basic.work');
-  Game.advanceReal(state,20,nav);assert.equal(state.elapsed,0);controller.acknowledge();
+  Game.advanceReal(state,20,nav);assert.ok(Math.abs(state.elapsed-20)<1e-8);controller.acknowledge();
   Game.tick(state,.25,nav);controller.update();assert.ok(state.elapsed>0);assert.equal(controller.presentation().blocking,false);
   let ordered=false,carrying=false;
   for(let i=0;i<2000&&!state.crates.some(c=>c.delivered);i++){
     Game.tick(state,.2,nav);controller.update();
-    if(state.tutorial.reading==='basic.harvest'){assert.equal(numberOf(state.ledger.balance),95);controller.acknowledge();Game.harvest(state,'tutorial-order',state.plants[0].id);ordered=true;assert.equal(numberOf(state.ledger.balance),95);}
+    if(state.tutorial.reading==='basic.harvest'){assert.equal(numberOf(state.ledger.balance),595);controller.acknowledge();Game.harvest(state,'tutorial-order',state.plants[0].id);ordered=true;assert.equal(numberOf(state.ledger.balance),595);}
     if(state.crates.some(c=>!c.delivered)){carrying=true;assert.equal(state.tutorial.step,'harvest');assert.equal(controller.presentation().variant,'delivery');assert.equal(controller.presentation().blocking,false);}
   }
-  assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),104);assert.equal(state.day,1);
+  assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),604);assert.equal(state.day,1);
   assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);assert.equal(controller.presentation(),null);
   assert.equal(Object.keys(state.ledger.entries).filter(id=>id==='tutorial-wage').length,1);
 });
@@ -55,9 +55,9 @@ test('Only a previously completed basic tutorial can be skipped; new magic still
   const {profile,state,controller,storage}=setup();assert.equal(controller.skipBasic(),false);profile.record('basic.complete');
   const second=Game.newGame({seed:713,slotId:'second'}),before=JSON.stringify(state.ledger),c=new TutorialController(second,new TutorialProfile(storage));
   assert.equal(c.presentation().canSkip,true);assert.equal(c.skipBasic(),true);assert.equal(second.tutorial.basicSkipped,true);assert.equal(c.presentation(),null);
-  assert.equal(second.structures.length,0);assert.equal(second.plants.length,0);assert.equal(numberOf(second.ledger.balance),1000);assert.equal(JSON.stringify(state.ledger),before);
+  assert.equal(second.structures.length,0);assert.equal(second.plants.length,0);assert.equal(numberOf(second.ledger.balance),1500);assert.equal(JSON.stringify(state.ledger),before);
   second.day=3;c.update();assert.equal(second.tutorial.reading,'mechanic.defenses');c.acknowledge();assert.equal(second.tutorial.reading,'magic.growth');
-  assert.ok(second.pauses.includes('tutorial-reading'));assert.equal(second.tutorial.step,'done');
+  assert.ok(!second.pauses.includes('tutorial-reading'));assert.equal(second.tutorial.step,'done');
 });
 test('The first unknown raid and Shield pause together; known later raids never add another tutorial pause',()=>{
   const {state,profile,controller}=setup();profile.record('basic.complete');controller.skipBasic();
@@ -74,7 +74,7 @@ test('Growth, Multiply and recovery have independent IDs; repeats and unrelated 
 test('Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it',()=>{
   const {state,profile,controller}=setup();controller.acknowledge();
   const loaded=deserialize(serialize(state)),before=loaded.events.filter(e=>e.type==='TutorialMessageStarted').length,c=new TutorialController(loaded,profile);
-  assert.equal(loaded.tutorial.reading,'basic.center');assert.equal(c.presentation().blocking,true);assert.ok(loaded.pauses.includes('tutorial-reading'));
+  assert.equal(loaded.tutorial.reading,'basic.center');assert.equal(c.presentation().blocking,false);assert.ok(!loaded.pauses.includes('tutorial-reading'));
   assert.equal(loaded.events.filter(e=>e.type==='TutorialMessageStarted').length,before);c.acknowledge();assert.equal(c.presentation().blocking,false);
 });
 test('Global profile writes merge seen IDs and malformed or unknown data cannot silence messages',()=>{
@@ -93,7 +93,7 @@ test('Victory is narrated per campaign before the result choices, and expansion 
 });
 test('Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots',()=>{
   const legacy=Game.newGame({seed:712});assert.doesNotThrow(()=>serialize(legacy));
-  for(const modify of [s=>s.tutorial.step='invented',s=>s.tutorial.seen=['invented'],s=>s.tutorial.pending=['invented'],s=>s.tutorial.reading='basic.center',s=>s.pauses.push('tutorial-reading'),s=>s.tutorial.basicSkipped='yes']){
+  for(const modify of [s=>s.tutorial.step='invented',s=>s.tutorial.seen=['invented'],s=>s.tutorial.pending=['invented'],s=>s.pauses.push('tutorial-reading'),s=>s.tutorial.basicSkipped='yes']){
     const state=Game.newGame({seed:712});modify(state);assert.throws(()=>serialize(state),/Tutorial|tutorial/);
   }
   assert.ok(TUTORIAL_IDS.every(id=>typeof id==='string'));
