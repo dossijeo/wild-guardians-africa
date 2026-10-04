@@ -18,7 +18,7 @@ export function eventAudioOptions(event,id,state,listener){
   return {bus,emitter,gain:Number.isFinite(distance)?1/(1+(distance/24)**2):1};
 }
 export class AudioSystem {
-  constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;}
+  constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;this.musicGeneration=0;this.musicBuffers=new Set();this.musicRetryAt=0;this.menuActive=false;}
   async unlock() {
     this.context??=new AudioContext();await this.context.resume();
     if(!this.sfxGain){this.sfxGain=this.context.createGain();this.sfxGain.connect(this.context.destination);this.musicGain=this.context.createGain();this.musicGain.connect(this.context.destination);}
@@ -71,28 +71,37 @@ export class AudioSystem {
   }
   async play(url,options={}) {
     if(!this.context||this.context.state!=='running')return null;
-    const generation=this.generation,buffer=await this.buffer(url);
-    if(generation!==this.generation||this.context.state!=='running'||options.isCurrent&&!options.isCurrent())return null;
+    const generation=this.generation,musicGeneration=this.musicGeneration;if(options.music)this.musicBuffers.add(url);const buffer=await this.buffer(url);
+    if(generation!==this.generation||options.music&&musicGeneration!==this.musicGeneration||this.context.state!=='running'||options.isCurrent&&!options.isCurrent())return null;
     return this.startBuffer(buffer,options);
   }
   async menu(){
-    const request=this.generation;await this.unlock();if(request!==this.generation)return;
-    this.stop();const generation=this.generation,data=await this.resources.json('/content/menu.json');
-    if(generation!==this.generation)return;
-    if(data.music)await this.play(data.music,{loop:true,music:true,gain:.7});
+    const request=this.generation;await this.unlock();if(request!==this.generation||this.menuActive)return;
+    this.stop();this.menuActive=true;const generation=this.generation,musicGeneration=this.musicGeneration;
+    try{
+      const data=await this.resources.json('/content/menu.json');
+      if(generation!==this.generation||musicGeneration!==this.musicGeneration)return;
+      if(data.music){const source=await this.play(data.music,{loop:true,music:true,gain:.7});if(!source&&musicGeneration===this.musicGeneration)this.stopMusic();}
+    }catch(error){if(musicGeneration===this.musicGeneration){this.stopMusic();this.musicError=error;}throw error;}
+  }
+  stopMusic({preserveEvent=false}={}){
+    this.musicGeneration++;this.transport?.dispose();this.transport=null;this.mixer=null;if(!preserveEvent)this.musicEvent=null;
+    for(const [source,voice] of [...this.voices])if(voice.music)this.stopVoice(source);
+    for(const url of this.musicBuffers)this.buffers.delete(url);this.musicBuffers.clear();this.pack=null;this.menuActive=false;
   }
   async gameplay(day) {
     if(!this.context||this.context.state!=='running')return;
     const pack=day%2?'a':'b';if(this.pack===pack)return;
-    this.stop();this.musicError=null;this.pack=pack;const generation=this.generation;
+    this.stopMusic({preserveEvent:true});this.musicError=null;this.pack=pack;const generation=this.musicGeneration;
     try{
-      await this.sfxBank();if(this.pack!==pack||generation!==this.generation)return;
+      await this.sfxBank();if(this.pack!==pack||generation!==this.musicGeneration)return;
       const bank=await this.resources.json(`/content/music-${pack}.json`);
-      if(this.pack!==pack||generation!==this.generation)return;
-      // Schedule original synchronized stems on one WebAudio clock, one pack at a time.
-      const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>({track:t,buffer:await this.buffer(t.data.url)})));
-      if(this.pack!==pack||generation!==this.generation)return;
-      if(this.context.state!=='running'){this.pack=null;return;}
+      if(this.pack!==pack||generation!==this.musicGeneration)return;
+      // Keep only the current original pack decoded; the transport owns its decks.
+      const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>{this.musicBuffers.add(t.data.url);return {track:t,buffer:await this.buffer(t.data.url)};}));
+      if(this.pack!==pack||generation!==this.musicGeneration)return;
+      if(this.context.state!=='running'){this.stopMusic({preserveEvent:true});return;}
+      this.musicRetryAt=0;
       if(bank.navigation?.sections?.length){this.transport=new MusicTransport(this,pack,bank,loaded,this.resources.musicTransport);return;}
       const when=this.context.currentTime+.1;
       const scene=this.musicScene??'day',policy=MUSIC_POLICIES[pack],voices=new Map();
@@ -102,11 +111,14 @@ export class AudioSystem {
         if(source&&track.id)voices.set(track.id,this.voices.get(source).volume.gain);
       }
       if(voices.size)this.mixer=new MusicMixer(pack,bank,voices,when,scene,{automatic:true});
-    }catch(error){if(this.pack===pack&&generation===this.generation)this.stop();throw error;}
+    }catch(error){if(this.pack===pack&&generation===this.musicGeneration){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}throw error;}
   }
   updateMusic(state){
     this.musicScene=gameplayMusicScene(state);
-    if(this.context?.state==='running'){try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stop();this.musicError=error;}}
+    if(this.context?.state==='running'){
+      const pack=state.day%2?'a':'b';if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&this.pack!==pack&&this.context.currentTime>=this.musicRetryAt)this.gameplay(state.day).catch(()=>{});
+      try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}
+    }
   }
   async sound(id,options={}) {
     if(!this.context||this.context.state!=='running')return null;const generation=this.generation;await this.sfxBank();if(generation!==this.generation)return null;const item=this.sfx.items.find(i=>i.id===id);if(item&&!item.loop)return this.play(item.audio.url,{bus:soundBus(id),...options,priority:soundPriority(id),family:id});return null;
@@ -129,6 +141,6 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));}
-  stop(){this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.transport?.dispose();this.transport=null;this.mixer=null;this.musicEvent=null;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

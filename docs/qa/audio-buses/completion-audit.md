@@ -26,3 +26,7 @@ Next binding evidence identified in the current source:
 These are implementation opportunities still requiring work and tests, not accepted results or a replacement for the original AppendixA scope.
 
 The work-audio revision passes1281/1281 local regression tests,70/70 directed audio tests, build and web-package checks. The preceding ambient commit42888de is independently green in GitHub CI37177001846. This evidence does not promote QA-155/156 or the unreadable native mixed-scene run to complete.
+
+Native automatic music selection now consumes the current day and preserves SFX during pack switches. Independent music generations and previous-pack cache eviction are covered by64 directed tests and a real twenty-original-stem paid-dawn WebAudio diagnostic (music-scenes.md). Actual sample payload is573235200 bytes forA and690739200 forB; this exposes remaining active-pack mobile memory scope. QA-156 remains partial for listening and full-world/campaign integration, not lack of this directed domain/audio dawn evidence.
+
+Final menu lifecycle now coalesces repeated requests and preserves an already active original song; native WebAudio confirms twenty repeated menu requests share one source. The final directed set passes66/66. The earlier1288-test run started before this menu fix and is not used as complete-regression proof of the final code; the final local suite is recorded separately in music-scenes-validation.json.

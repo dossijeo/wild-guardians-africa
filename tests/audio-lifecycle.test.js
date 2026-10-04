@@ -70,3 +70,43 @@ test('a rejected resume leaves audio idle and the next gesture can unlock the sa
  await assert.rejects(audio.unlock(),/gesture required/);assert.equal(audio.active.length,0);assert.equal(sources.length,0);
  await audio.unlock();assert.equal(audio.context,original);assert.equal(audio.context.state,'running');assert.equal(attempts,2);
 });
+
+
+test('pack switching preserves active world/UI/ambient voices and pending SFX decode',async()=>{
+ const delayed=deferred();const {audio,sources}=fixture({json:async url=>bank(url.includes('music-a')?'A':'B'),bytes:async url=>url==='pending'?delayed.promise:{url}});audio.sfx={items:[]};
+ const world=audio.startBuffer({}, {family:'watering',emitter:'worker',bus:'world'}),ui=audio.startBuffer({}, {bus:'ui'}),ambient=audio.startBuffer({}, {loop:true,bus:'ambient'});
+ const pending=audio.play('pending',{family:'hit'});await settle();await audio.gameplay(1);const a=sources.at(-1),generation=audio.generation;await audio.gameplay(2);delayed.resolve({url:'pending'});const hit=await pending;
+ assert.equal(audio.generation,generation);assert.ok(hit);assert.ok(a.stopped);assert.ok([world,ui,ambient,hit].every(s=>!s.stopped));assert.equal(audio.active.length,5);assert.equal(audio.pack,'b');audio.stop();
+});
+test('decoded pack cache retains only current music and preserves reusable SFX',async()=>{
+ const {audio}=fixture({json:async url=>bank(url.includes('music-a')?'A':'B'),bytes:async url=>({url})});audio.sfx={items:[]};await audio.buffer('SFX');
+ await audio.gameplay(1);assert.ok(audio.buffers.has('A'));await audio.gameplay(2);assert.ok(!audio.buffers.has('A'));assert.ok(audio.buffers.has('B')&&audio.buffers.has('SFX'));audio.stopMusic();assert.ok(!audio.buffers.has('B'));assert.ok(audio.buffers.has('SFX'));assert.equal(audio.musicBuffers.size,0);
+});
+test('automatic daily selection coalesces frames, changes without a gesture and preserves results',async()=>{
+ let requests=0;const {audio,sources}=fixture({json:async url=>{requests++;return bank(url.includes('music-a')?'A':'B');},bytes:async url=>({url})});audio.sfx={items:[]};const state={day:1,time:0,pauses:[],workers:[],spells:[]};
+ for(let frame=0;frame<100;frame++)audio.updateMusic(state);await settle();assert.equal(requests,1);assert.equal(audio.pack,'a');state.day=2;for(let frame=0;frame<100;frame++)audio.updateMusic(state);await settle();assert.equal(requests,2);assert.equal(audio.pack,'b');assert.equal(audio.active.length,1);assert.ok(sources[0].stopped);
+ state.day=3;state.result='defeat';audio.updateMusic(state);await settle();assert.equal(requests,2);assert.equal(audio.pack,'b');audio.stop();
+});
+test('automatic retry is bounded and a failed pack does not stop world effects',async()=>{
+ let requests=0,fail=true;const {audio}=fixture({json:async()=>{requests++;if(fail)throw Error('offline');return bank('A');},bytes:async()=>({})});audio.sfx={items:[]};const source=audio.startBuffer({}, {family:'watering'}),state={day:1,time:0,workers:[],pauses:[],spells:[]};
+ audio.updateMusic(state);await settle();assert.equal(requests,1);assert.equal(audio.pack,null);assert.equal(source.stopped,undefined);assert.match(audio.musicError.message,/offline/);
+ for(let frame=0;frame<100;frame++)audio.updateMusic(state);await settle();assert.equal(requests,1);audio.context.currentTime+=2;fail=false;audio.updateMusic(state);await settle();assert.equal(requests,2);assert.equal(audio.pack,'a');assert.equal(audio.musicError,null);audio.stop();
+});
+test('old menu JSON and old decoded music cannot survive a music-only transition',async()=>{
+ const menu=deferred();const {audio,sources}=fixture({json:async url=>url.includes('menu')?menu.promise:bank('B'),bytes:async url=>({url})});audio.sfx={items:[]};const request=audio.menu();await settle();await audio.gameplay(2);menu.resolve({music:'menu'});await request;assert.equal(sources.length,1);assert.equal(audio.pack,'b');
+ const decode=deferred();audio.buffer=()=>decode.promise;const old=audio.play('old',{music:true});audio.stopMusic();decode.resolve({});assert.equal(await old,null);assert.equal(audio.active.length,0);
+});
+test('music transport failure releases only music and retains pending result feedback',()=>{
+ const {audio}=fixture({});const world=audio.startBuffer({}, {family:'hit'}),music=audio.startBuffer({}, {music:true});audio.musicEvent='failure';audio.transport={update(){throw Error('transport fault');},dispose(){}};
+ audio.updateMusic({result:'defeat',time:0,workers:[],pauses:[],spells:[]});assert.ok(music.stopped);assert.equal(world.stopped,undefined);assert.equal(audio.musicEvent,'failure');assert.match(audio.musicError.message,/transport fault/);assert.equal(audio.pack,null);audio.stop();
+});
+
+
+test('repeated menu gestures share one pending load and preserve the active original player',async()=>{
+ const json=deferred();let requests=0,decoded=0;const {audio,sources}=fixture({json:async()=>{requests++;return json.promise;},bytes:async()=>{decoded++;return {};}});
+ const first=audio.menu();await settle();await Promise.all(Array.from({length:20},()=>audio.menu()));assert.equal(requests,1);json.resolve({music:'menu'});await first;const source=sources[0];assert.equal(decoded,1);
+ await Promise.all(Array.from({length:20},()=>audio.menu()));assert.equal(requests,1);assert.equal(decoded,1);assert.equal(sources.length,1);assert.equal(source.stopped,undefined);audio.stop();assert.equal(audio.menuActive,false);await audio.menu();assert.equal(requests,2);assert.equal(decoded,2);audio.stop();
+});
+test('a failed menu request is retryable without retaining a false active player',async()=>{
+ let fail=true;const {audio}=fixture({json:async()=>{if(fail)throw Error('menu offline');return {music:'menu'};},bytes:async()=>({})});await assert.rejects(audio.menu(),/menu offline/);assert.equal(audio.menuActive,false);fail=false;await audio.menu();assert.equal(audio.menuActive,true);assert.equal(audio.active.length,1);audio.stop();
+});

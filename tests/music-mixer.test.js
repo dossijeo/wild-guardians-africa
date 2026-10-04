@@ -50,3 +50,15 @@ test('alternating packs cleans all old stems; scene mixing reads but never mutat
  await audio.gameplay(2);assert.equal(sources.length,20);assert.ok(sources.slice(0,10).every(s=>s.stopped&&s.closed));assert.equal(audio.active.length,10);
  audio.updateMusic(state);assert.equal(JSON.stringify(state),before);assert.ok(sources.every(s=>s.playbackRate.value===1));
 });
+
+
+import * as Game from '../src/simulation/game.js';
+import {rational} from '../src/simulation/money.js';
+import {serialize} from '../src/persistence/snapshots.js';
+test('paid native dawn automatically selects the next original ten-stem pack without touching domain or SFX',async()=>{
+ const state=Game.newGame({seed:712,slotId:'music-dawn'});Game.resume(state,'intro');state.ledger.balance=rational(10000);state.day=101;state.completedNights=100;state.postgame=true;state.initialPreparation=false;state.tutorial.step='done';
+ const nav={placement:()=>({valid:true,suppress:[]}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};Game.placeStructure(state,'center',{x:4,z:0},nav);Game.plant(state,'seed','mijo',10,4,nav);Game.pause(state,'hiring');Game.hire(state,'hire',{olderFemale:1});
+ const {audio,sources}=fixture();const world=audio.startBuffer({}, {family:'watering',bus:'world'});let before=serialize(state);audio.updateMusic(state);await new Promise(done=>setImmediate(done));assert.equal(serialize(state),before);assert.equal(audio.pack,'a');assert.equal(audio.transport.primary.sources.length,10);const previous=audio.transport.primary.sources.slice();
+ Game.tick(state,600,nav);assert.equal(state.day,102);assert.ok(state.events.some(e=>e.type==='Dawn'));assert.ok(state.pauses.includes('hiring'));before=serialize(state);audio.updateMusic(state);await new Promise(done=>setImmediate(done));assert.equal(serialize(state),before);assert.equal(audio.pack,'b');assert.equal(audio.transport.primary.sources.length,10);assert.ok(previous.every(s=>s.stopped&&s.closed));assert.equal(world.stopped,undefined);assert.equal(audio.active.length,11);
+ assert.ok(audio.transport.primary.sources.every(s=>s.playbackRate.value===1));assert.equal(new Set(audio.transport.primary.sources.map(s=>s.when)).size,1);assert.ok(banks.a.tracks.filter(t=>!t.silent).every(t=>!audio.buffers.has(t.data.url)));assert.ok(banks.b.tracks.filter(t=>!t.silent).every(t=>audio.buffers.has(t.data.url)));audio.stop();assert.ok(sources.every(s=>s.stopped));
+});

@@ -1,0 +1,70 @@
+{
+  "sourceSha256": {
+    "src/audio/audio.js": "8f2f55c746d847538297403917f48a66f07c0855ec518533038d4bc600bc9e5b",
+    "src/audio/music-transport.js": "32af523fde73f9e4af2e9d3860f71121d6673c296ab30ba9814e1db005d16bda",
+    "src/audio/music-policy.js": "7be642794e96f63352943801a432ae6a77577cbd830870e3bc53020289e22d7e",
+    "src/app/main.js": "1bee9e7f5321a471d059540ea1825bec8f8cd67751b5aaa929e5451ec217f6a3"
+  },
+  "directedTests": {
+    "passed": 66,
+    "failed": 0,
+    "durationMs": 1884.2965
+  },
+  "nativeWebAudio": {
+    "result": "passed",
+    "report": "music-scenes-web-audio.json",
+    "screenshot": "music-scenes-web-audio.png",
+    "decodedOriginalStems": 20,
+    "dayTransition": [
+      101,
+      102
+    ],
+    "packs": [
+      "a",
+      "b"
+    ],
+    "musicVoicesPerPack": 10,
+    "retainedAmbientVoices": 1,
+    "afterStop": 0,
+    "retainedMusicUrls": 0,
+    "context": "closed",
+    "muted": true,
+    "geometry": "clear-path-directed",
+    "menu": {
+      "repeatedRequests": 20,
+      "sameSource": true,
+      "decodedOriginalDurationSeconds": 88.04,
+      "musicVoices": 1,
+      "retainedMusicUrls": 1,
+      "rate": 1
+    }
+  },
+  "decodedSamplePayloadBytes": {
+    "a": 573235200,
+    "b": 690739200,
+    "measurement": "Native AudioBuffer channel count times frame count times four bytes. Not total browser memory or physical-phone measurement."
+  },
+  "build": {
+    "result": "passed",
+    "durationSeconds": 38.69
+  },
+  "webPackage": {
+    "result": "passed",
+    "files": 578,
+    "bytes": 406686573,
+    "relativeLinks": 816,
+    "runtimeGlbs": 20
+  },
+  "completeLocalSuite": {
+    "status": "running",
+    "sessionId": 15879,
+    "log": ".cache/music-scene-final-full.log"
+  },
+  "intermediateLocalSuite": {
+    "passed": 1288,
+    "failed": 0,
+    "durationMs": 556830.8279,
+    "log": ".cache/music-scene-full.log",
+    "scope": "Intermediate run; menu lifecycle changed after this run started. Not complete-regression proof of the final source."
+  }
+}
