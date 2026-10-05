@@ -1,0 +1,60 @@
+[
+  {
+    "key": "sabana-suajili",
+    "original": "test-results/intensive-parallel-100-1791165506398/sabana-suajili-state.json",
+    "rawBytes": 7784364,
+    "gzipBytes": 562484,
+    "sha256": "7d07491ff9b4af541d2340a70b022355ce06206399208ce8c888f8e37e2e3c3f",
+    "sourceConsistent": false,
+    "completedNights": 100,
+    "money": 8360,
+    "maximumLiving": 795,
+    "planted": 13295,
+    "delivered": 12170,
+    "destroyed": 352,
+    "activity": {
+      "daylightSeconds": 30000,
+      "unoccupiedSeconds": 16136,
+      "unoccupiedFraction": 0.5378666666666667,
+      "idleSecondsByReason": {
+        "budget": 14142,
+        "space": 0,
+        "shift-end": 1994,
+        "incursion": 5298,
+        "night": 25030
+      },
+      "longestIdle": 128,
+      "p90LongestIdle": 89
+    },
+    "speciesObserved": 8
+  },
+  {
+    "key": "gran-rio-saheliana",
+    "original": "test-results/intensive-parallel-100-1791165506398/gran-rio-saheliana-state.json",
+    "rawBytes": 6608942,
+    "gzipBytes": 467503,
+    "sha256": "f22222077d4716d87cd5802034e1e7f24f8e48a824ddff17775d3566e78357e6",
+    "sourceConsistent": false,
+    "completedNights": 100,
+    "money": 1255,
+    "maximumLiving": 288,
+    "planted": 11349,
+    "delivered": 10806,
+    "destroyed": 349,
+    "activity": {
+      "daylightSeconds": 30000,
+      "unoccupiedSeconds": 18296,
+      "unoccupiedFraction": 0.6098666666666667,
+      "idleSecondsByReason": {
+        "budget": 16305,
+        "space": 0,
+        "shift-end": 1991,
+        "incursion": 4847,
+        "night": 25270
+      },
+      "longestIdle": 129,
+      "p90LongestIdle": 89
+    },
+    "speciesObserved": 8
+  }
+]

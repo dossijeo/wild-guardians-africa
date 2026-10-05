@@ -1,5 +1,11 @@
 # Minimización y restauración nativas
 
+## Verificación posterior sobre fc3c138
+
+La [Action 37258267129](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37258267129) terminó correctamente con EXE e instalador NSIS. El informe original `desktop-visibility-fc3c138.json` confirma guardado mediante IndexedDB, `ok:true`, ausencia de errores y `visibility.passed:true`. Registra 300047,3 ms ocultos sin cambios en los campos de simulación, conservación de la pausa de menú al restaurar y 1,0072 segundos simulados tras reanudar. Incluye las correcciones de tráfico de animales de ese commit, aunque este escenario de primera incursión no reproduce las noches 65/78. Esta comprobación tampoco mide la capacidad de un guardado nativo de cien noches ni el comportamiento de un teléfono físico.
+
+## Escenario y antecedentes
+
 La comprobación añadida al workflow Windows ejecuta el EXE empaquetado con un slot preparado mediante la simulación normal: Gran cañón/Mapungubwe, centro pagado, yuca de 12 monedas, trabajadora joven de 40 y primera incursión nativa. Se lanza el escudo legalmente, con duración 20 y recarga 90. La guía se omite para aislar esta prueba; no se alteran dinero, reloj, crecimiento, RNG ni daño.
 
 El binario admite cargar este fixture y minimizar/restaurar su ventana únicamente con `--smoke-report`. Se utilizan [las operaciones nativas de WebviewWindow](https://docs.rs/tauri/latest/tauri/webview/struct.WebviewWindow.html), sin redefinir document.hidden ni fabricar visibilitychange. La comprobación prolongada programa la restauración en un hilo nativo a los 310 segundos, independiente de los temporizadores del documento oculto.
