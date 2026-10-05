@@ -1,0 +1,75 @@
+{
+  "sourceHead": "6d5e92e",
+  "scope": "Read-only reconstruction of terminal saved geometry. Counterfactual walls/gate edits exist only in cloned diagnostic states, not campaign or production. Does not replay days 11–17.",
+  "rows": [
+    {
+      "mode": "recorded",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "destination": {
+        "x": 87.95499901771545,
+        "z": 0
+      },
+      "path": null,
+      "ms": 344.96939999999995,
+      "gates": []
+    },
+    {
+      "mode": "without-walls",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "destination": {
+        "x": 87.95499901771545,
+        "z": 0
+      },
+      "path": [
+        {
+          "x": 70,
+          "z": 3
+        },
+        {
+          "x": 77,
+          "z": 2
+        },
+        {
+          "x": 83,
+          "z": 3
+        },
+        {
+          "x": 88,
+          "z": 3
+        },
+        {
+          "x": 87.95499901771545,
+          "z": 0
+        }
+      ],
+      "ms": 96.37699999999995,
+      "gates": []
+    },
+    {
+      "mode": "nearest-wall-as-gate",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "destination": {
+        "x": 87.95499901771545,
+        "z": 0
+      },
+      "path": null,
+      "ms": 347.3761999999999,
+      "gates": [
+        {
+          "id": "structure-7623",
+          "x": 73,
+          "z": 0.7053571428571459
+        }
+      ]
+    }
+  ]
+}
