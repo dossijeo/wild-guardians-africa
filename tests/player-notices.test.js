@@ -1,11 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {RAID_NOTICE_TEXT} from '../src/simulation/raid-notice.js';
-import {visibleNotices} from '../src/app/notices.js';
+import {visibleNotices,NoticeLifetime} from '../src/app/notices.js';
 const warning={id:'warning',text:RAID_NOTICE_TEXT,target:'animal-1'};
 test('finished raids do not leave a live attack warning on the HUD or change saved history',()=>{
  const state={messages:[warning,{id:'funds',text:'Fondos insuficientes',target:null}],raid:null},before=JSON.stringify(state);
  assert.deepEqual(visibleNotices(state),[state.messages[1]]);assert.equal(JSON.stringify(state),before);
+});
+test('raid tutorial replaces the same raid warning permanently without deleting saved history',()=>{
+ for(const id of ['mechanic.first-raid','magic.shield','reminder.shield']){
+  const state={messages:[warning],raid:{animals:[{id:'animal-1'}]}},before=JSON.stringify(state),notices=new NoticeLifetime();
+  assert.deepEqual(notices.visible(state,0,{id,text:'Explicación de la incursión'}),[]);
+  assert.deepEqual(notices.visible(state,1),[]);assert.equal(JSON.stringify(state),before);
+ }
+});
+test('unrelated events wait behind the tutorial and get their full readable lifetime afterwards',()=>{
+ const state={messages:[{id:'season',text:'Noche húmeda'}],raid:null},notices=new NoticeLifetime(15);
+ assert.deepEqual(notices.visible(state,0,{id:'basic.work',text:'Aprende a regar'}),[]);
+ assert.deepEqual(notices.visible(state,30,{id:'basic.work',text:'Aprende a regar'}),[]);
+ assert.deepEqual(notices.visible(state,31),state.messages);
+ assert.deepEqual(notices.visible(state,45.99),state.messages);assert.deepEqual(notices.visible(state,46),[]);
+});
+test('the defeat explanation suppresses its identical event; unrelated errors remain available',()=>{
+ const state={messages:[{id:'defeat',text:'Sin recursos'},{id:'repair',text:'Reparación cancelada'}],raid:null},notices=new NoticeLifetime();
+ assert.deepEqual(notices.visible(state,0,{id:'result.defeat',text:'Sin recursos'}),[]);
+ assert.deepEqual(notices.visible(state,10),[state.messages[1]]);
 });
 test('the current raid warning persists until the whole raid ends, including after its first animal exits',()=>{
  const state={messages:[warning],raid:{animals:[{id:'animal-1',status:'gone'},{id:'animal-2',status:'attacking'}]}};

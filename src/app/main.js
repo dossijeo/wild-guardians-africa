@@ -220,8 +220,8 @@ function updateUI(force=false) {
   }
   document.querySelector('#center-action').disabled=!permission(state,'center');document.querySelector('#plant-action').disabled=!permission(state,'plant');document.querySelector('#wall-action').disabled=!permission(state,'wall');document.querySelector('#spell-action').disabled=!permission(state,'shield');
   if(surfaces.active==='panel'&&!document.querySelector('#panel').children.length)surfaces.active=null;
-  contextPanel();narrator();
-  document.querySelector('#notices').innerHTML=noticeLifetime.visible(state,now/1000).map(m=>`<div class="notice-card"><button data-notice="${m.id}">${esc(m.text)}</button><button data-dismiss-notice="${m.id}" aria-label="Cerrar">×</button></div>`).join('');
+  contextPanel();const activeTutorial=narrator();
+  document.querySelector('#notices').innerHTML=noticeLifetime.visible(state,now/1000,activeTutorial).map(m=>`<div class="notice-card"><button data-notice="${m.id}">${esc(m.text)}</button><button data-dismiss-notice="${m.id}" aria-label="Cerrar">×</button></div>`).join('');
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
@@ -288,10 +288,11 @@ function narrator() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase));
   tutorial?.update();const warning=performance.now()<budgetWarningUntil;const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
-  if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return;}
+  if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
   const advance=message.reading?()=>safe(()=>{tutorial.acknowledge();save();}):null;
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss();save();}),
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
+  return message;
 }
 function hiringDialog(centerId=null) {
   const additional=centerId!==null;
