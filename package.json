@@ -13,7 +13,7 @@
     "verify:balance": "python tools/generate_balance.py --check",
     "assets:compress": "node tools/compress_web_assets.mjs",
     "verify:web-assets": "node tools/verify_web_assets.mjs",
-    "verify:audio-runtime": "node tools/verify_audio_runtime.mjs",
+    "verify:audio-runtime": "node tools/verify_audio_runtime.mjs && node tools/verify_sfx_runtime.mjs",
     "test:web-package": "node tools/check_web_package.mjs",
     "qa:web-package": "node tools/serve_web_package.mjs",
     "package:itch": "npm run build && npm run test:web-package && python tools/package_itch.py",

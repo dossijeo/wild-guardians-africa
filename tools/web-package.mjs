@@ -13,7 +13,7 @@ export function publicText(text,path,manifest){
   return text.replace(/(?<![.\w/:+-])\/(assets|content|library|menu|selector|runtime|i18n)(?=\/|\.html)/g,prefix+'$1');
 }
 export function webPackagePlugin(){
-  let config;const manifest=()=>{const geometry=JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));const audio=JSON.parse(readFileSync(resolve(config.root,'content/manifests/audio-runtime.json'),'utf8'));return {...geometry,audioCodec:audio.codec,records:[...geometry.records,...audio.records]};};
+  let config;const manifest=()=>{const geometry=JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));const audio=JSON.parse(readFileSync(resolve(config.root,'content/manifests/audio-runtime.json'),'utf8'));const sfx=JSON.parse(readFileSync(resolve(config.root,'content/manifests/sfx-runtime.json'),'utf8'));return {...geometry,audioCodec:audio.codec,records:[...geometry.records,...audio.records,...sfx.records]};};
   return {name:'itch-web-package',configResolved(value){config=value;},
     configureServer(server){server.middlewares.use((req,res,next)=>{try{const path=decodeURIComponent((req.url??'').split('?')[0]).replace(/^\//,'').replace(config.base.replace(/^\//,''),'');const file=resolve(config.root,'public',path);if(!file.startsWith(resolve(config.root,'public')+sep)||!['.html','.js','.json','.css'].includes(extname(file)))return next();const text=publicText(readFileSync(file,'utf8'),path,manifest());res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css'})[extname(file)]);res.end(text);}catch{next();}});},
     closeBundle(){const dist=resolve(config.root,config.build.outDir),mapping=manifest();

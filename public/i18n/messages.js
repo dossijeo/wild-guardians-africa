@@ -1559,5 +1559,20 @@ export const messages = {
   "Hora de contratación inválida": "Invalid hiring time",
   "Jornada en curso": "Shift in progress",
   "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base",
-  "No se puede construir sobre agua o lava": "You cannot build on water or lava"
+  "No se puede construir sobre agua o lava": "You cannot build on water or lava",
+  "Busca un sonido, escúchalo y descarga su Opus.": "Find a sound, listen to it and download its Opus file.",
+  "Ficha técnica · Opus": "Technical details · Opus",
+  "Wild Guardians · SFX Opus · 48 kHz · Estéreo · VBR 96 kb/s": "Wild Guardians · SFX Opus · 48 kHz · Stereo · VBR 96 kb/s",
+  "Reproducción y descarga usan el mismo Opus. No se vuelve a normalizar ni recortar el audio.": "Playback and downloads use the same Opus file. Audio is not normalized again or trimmed.",
+  "Las mediciones de LUFS, pico verdadero y forma de onda pertenecen al MP3 de origen. El ZIP conserva su auditoría y añade los hashes y tamaños de los Opus.": "LUFS, true peak measurements and waveforms belong to the source MP3. The ZIP retains its audit and adds Opus hashes and sizes.",
+  "Derivados con pérdida desde MP3 normalizados. Escucha, móvil físico y Tauri pendientes.": "Lossy derivatives of normalized MP3 files. Listening, physical mobile and Tauri checks are pending.",
+  "Descargar Opus": "Download Opus",
+  "Descargar el Opus actual": "Download the current Opus file",
+  "Opus · VBR 96 kb/s · 48 kHz · estéreo": "Opus · VBR 96 kb/s · 48 kHz · stereo",
+  "Sonoridad del MP3 de origen": "Source MP3 loudness",
+  "Pico verdadero del MP3 de origen": "Source MP3 true peak",
+  "Huella SHA-256 del Opus:": "Opus SHA-256 hash:",
+  "ZIP listo: 126 Opus.": "ZIP ready: 126 Opus files.",
+  "No se pudo crear el ZIP. Los Opus individuales siguen disponibles.": "Could not create the ZIP. Individual Opus files are still available.",
+  "No se pudo reproducir. Prueba a descargar el Opus o abrir el HTML en Chrome.": "Could not play audio. Try downloading the Opus file or opening the HTML in Chrome."
 };

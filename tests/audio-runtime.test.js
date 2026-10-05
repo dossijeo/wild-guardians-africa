@@ -23,9 +23,11 @@ test('all musical aliases remain relative in native documents and nested menu',(
   assert.equal(publicText(`fetch('/${record.source}')`,'menu/native.js',manifest),`fetch('../${record.runtime}')`);
  }
 });
-test('SFX original preview and export resources keep their existing MP3 representation',()=>{
+test('SFX source provenance remains available while runtime uses matching Opus metadata',()=>{
+ const sfxManifest=read('content/manifests/sfx-runtime.json');
  for(const item of read('public/content/sfx.json').items){
-  assert.equal(assetUrl(item.audio.url),item.audio.url);
-  assert(item.audio.url.endsWith('.mp3'));
+  const r=sfxManifest.records.find(r=>r.id===item.id),runtime=read('public/content/sfx-opus.json').items.find(i=>i.id===item.id);
+  assert.equal(assetUrl(item.audio.url),'/'+r.runtime);assert(item.audio.url.endsWith('.mp3'));
+  assert.equal(runtime.sha256,r.runtimeSha256);assert.equal(runtime.normalizedSource.sha256,item.sha256);
  }
 });

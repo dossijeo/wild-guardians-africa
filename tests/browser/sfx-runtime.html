@@ -1,0 +1,29 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA SFX Opus de producción</title>
+<style>body{font:16px system-ui;background:#17261e;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>SFX Opus · ruta de producción</h1><p>126 recursos a 48/44,1 kHz. Reproducción nativa silenciada; no acredita escucha ni la asignación de todos los sonidos en gameplay.</p>
+<button id="run">Verificar los 126 SFX</button><p id="status">Preparado</p><pre id="summary"></pre><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+const rows=[],errors=[],status=document.querySelector('#status'),report=document.querySelector('#report'),summary=document.querySelector('#summary');
+function check(ok,message){if(!ok)throw Error(message);}
+function paint(){summary.textContent=JSON.stringify({cases:rows.length,errors:errors.length,peakPcmBytes:Math.max(0,...rows.map(r=>r.pcmBytes))},null,2);report.textContent=JSON.stringify({rows,errors},null,2);}
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;let audio;
+ try{
+  for(const rate of [48000,44100]){
+   audio=new AudioSystem({music:0,sfx:0});audio.context=new AudioContext({sampleRate:rate});await audio.unlock();const sourceBytes=audio.resources.bytes;let lastSha;
+   audio.resources={...audio.resources,bytes:async url=>{check(url.endsWith('.opus')&&new URL(url).pathname.startsWith('/nested/itch/audio-qa/'),'Non-Opus or non-nested route');const b=await sourceBytes(url);lastSha=[...new Uint8Array(await crypto.subtle.digest('SHA-256',b))].map(n=>n.toString(16).padStart(2,'0')).join('');return b;}};
+   const bank=await audio.sfxBank();check(bank.runtimeCodec==='opus'&&bank.items.length===126,'Default catalogue did not resolve to Opus');
+   for(const item of bank.items){
+    status.textContent=`${rate} Hz · ${item.number}/126`;const source=await (item.loop?audio.ambientSound(item.id):audio.sound(item.id));
+    check(source&&source.buffer,'No native source '+item.id);check(lastSha===item.sha256,'Actual bytes do not match runtime metadata');
+    const b=source.buffer;check(b.numberOfChannels===2&&Math.abs(b.length-Math.round(item.duration*rate))<=1,'Sample count/channels '+item.id);check(source.loop===item.loop,'Loop policy '+item.id);
+    rows.push({rate,id:item.id,sha256:lastSha,samples:b.length,channels:b.numberOfChannels,loop:source.loop,pcmBytes:b.length*b.numberOfChannels*4});
+    audio.stopVoice(source);audio.buffers.clear();check(audio.active.length===0&&audio.voices.size===0,'Voice was retained');if(item.number%21===0)paint();
+   }
+   audio.dispose();await new Promise(resolve=>setTimeout(resolve,40));check(audio.context.state==='closed','Context not closed');audio=null;
+  }
+  status.textContent='PASS: 252 descodificaciones y fuentes nativas Opus';paint();
+ }catch(error){errors.push(error.stack);audio?.dispose();status.textContent='FAIL';paint();}
+};
+</script></html>

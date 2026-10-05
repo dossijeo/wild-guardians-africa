@@ -9,16 +9,19 @@ async function collect(dir){for(const name of await readdir(dir)){const path=res
 await collect(root);
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
 for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
-const audioManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
+const musicManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
+const sfxManifest=JSON.parse(await readFile('content/manifests/sfx-runtime.json','utf8'));
+const audioManifest={records:[...musicManifest.records,...sfxManifest.records]};
+assert.equal(sfxManifest.records.filter(r=>r.kind==='sfx').length,126);
 const sha=data=>createHash('sha256').update(data).digest('hex');
 assert.equal(audioManifest.records.filter(r=>r.kind==='music').length,21);
 assert.equal(audioManifest.records.filter(r=>r.kind==='music-index').length,2);
 for(const item of audioManifest.records){
- assert(!await exists(resolve(root,item.source)),'Original musical resource duplicated: '+item.source);
- assert(await exists(resolve(root,item.runtime)),'Runtime musical resource missing: '+item.runtime);
+ assert(!await exists(resolve(root,item.source)),'Original audio resource duplicated: '+item.source);
+ assert(await exists(resolve(root,item.runtime)),'Runtime audio resource missing: '+item.runtime);
  const packaged=await readFile(resolve(root,item.runtime));
- if(item.kind==='music')assert.equal(sha(packaged),item.runtimeSha256,'Runtime music bytes changed: '+item.runtime);
- else assert.equal(packaged.toString('utf8'),publicText(await readFile(resolve('public',item.runtime),'utf8'),item.runtime,audioManifest),'Musical index changed beyond relative routes');
+ if(item.kind==='music'||item.kind==='sfx')assert.equal(sha(packaged),item.runtimeSha256,'Runtime audio bytes changed: '+item.runtime);
+ else assert.equal(packaged.toString('utf8'),publicText(await readFile(resolve('public',item.runtime),'utf8'),item.runtime,audioManifest),'Audio metadata changed beyond relative routes');
 }
 for(const pack of ['a','b']){
  const index=JSON.parse(await readFile(resolve(root,`content/music-opus-windows-${pack}.json`),'utf8'));
