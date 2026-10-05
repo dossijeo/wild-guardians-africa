@@ -5,7 +5,8 @@ import {WallDrawing} from '../src/rendering/wall-drawing.js';
 import {BALANCE as B} from '../src/simulation/balance.js';
 import {rational,numberOf,transact} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
-const nav={placement:()=>({valid:true,suppress:[]}),wallPlacement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(a,b)=>[{x:b.x,z:b.z}]};
+import {clearNavigation} from './clear-navigation.js';
+const nav=clearNavigation();
 function fixture(balance){const s=Game.newGame({seed:712});Game.placeStructure(s,'center',{x:-20,z:0},nav);s.day=101;s.postgame=true;s.initialPreparation=false;s.ledger.balance=rational(balance);return s;}
 for(const spec of B.walls)test(`${spec.id}: a long visible native stroke stops at the affordable modules and keeps the wage reserve`,()=>{
  const s=fixture(30+spec.cost*3+spec.cost-1),points=[[0,0],[100,0]],before=serialize(s),draft=Game.affordableWallStroke(s,spec.id,points);

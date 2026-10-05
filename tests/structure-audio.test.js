@@ -8,7 +8,8 @@ import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {rational} from '../src/simulation/money.js';
 import {serialize} from '../src/persistence/snapshots.js';
 const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));
-const nav={placement:()=>({valid:true,suppress:[]}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+import {clearNavigation} from './clear-navigation.js';
+const nav=clearNavigation();
 function fixture(){const audio=new AudioSystem({sfx:1,music:1});audio.context={state:'running',createBufferSource:()=>({playbackRate:{value:0},connect(){},disconnect(){},start(){},stop(){}}),createGain:()=>({gain:{value:0},connect(){},disconnect(){}})};audio.sfx=bank;audio.buffer=async url=>({url});return audio;}
 for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))for(const gate of [false,true])test(`paid ${material} ${gate?'gate':'wall'}: one actual raid hit chooses one original material clip`,async()=>{
  const s=Game.newGame({seed:712,slotId:`qa-wall-audio-${material}-${gate}`});Game.resume(s,'intro');s.ledger.balance=rational(10000);s.day=3;s.initialPreparation=false;s.tutorial.step='done';

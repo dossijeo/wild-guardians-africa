@@ -7,7 +7,8 @@ import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
 import {autosaveEventAfter} from '../src/app/autosave-events.js';
 import {saveGame} from '../src/app/save-game.js';
 
-const nav={placement:()=>({valid:true,suppress:[]}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+import {clearNavigation} from './clear-navigation.js';
+const nav=clearNavigation();
 function storage(){const data=new Map();let writes=0;return {data,get writes(){return writes;},getItem:k=>data.get(k)??null,setItem:(k,v)=>{writes++;data.set(k,v);},removeItem:k=>data.delete(k)};}
 function farm(slotId='autosave-a'){
  const s=Game.newGame({seed:712,slotId});Game.resume(s,'intro');s.ledger.balance=rational(10000);

@@ -8,7 +8,8 @@ import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
-const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url))),nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+import {clearNavigation} from './clear-navigation.js';
+const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url))),nav=clearNavigation();
 function fixture(material,gate=false){
  const s=Game.newGame({slotId:'material',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);Game.placeStructure(s,'wall',{kind:'wall',material,gate,x:6,z:4,yaw:Math.PI/3},nav);s.initialPreparation=false;s.day=2;s.time=320;
  const wall=s.structures[1],duration=ANIMAL_ACTIONS.animals.warthog.clips.Right_Hand_Sword_Slash.duration;

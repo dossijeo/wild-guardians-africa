@@ -7,7 +7,8 @@ import {cropSpec,hitStructure} from '../src/simulation/rules.js';
 import {planNight,spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {applyEvent} from '../src/simulation/events.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
-const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
+import {clearNavigation} from './clear-navigation.js';
+const nav=clearNavigation();
 const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
 const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
 test('A route blocked after reservation releases its worker without deleting the task or starting an action',()=>{
