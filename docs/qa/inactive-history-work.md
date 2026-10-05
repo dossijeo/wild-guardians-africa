@@ -9,3 +9,5 @@ Se ejecutó una campaña nativa intensiva de tres noches de sabana / Mapungubwe,
 Pasan 42 pruebas dirigidas de juego, cosecha automática, reservas FIFO, primer destino del trabajador y persistencia de multiplicación. La suite de 1.748 pruebas anterior corresponde a la optimización precedente de reservas: no se atribuye retrospectivamente a estas dos modificaciones posteriores.
 
 La equivalencia es de simulación; no mide FPS, GPU, teléfono ni almacenamiento nativo del navegador. Las campañas largas ya activas siguen utilizando los módulos que cargaron al empezar y tampoco se consideran prueba de esta revisión posterior.
+
+La suite completa ejecutada después de `c0a2d84` terminó con código 0: 1.748 pruebas aprobadas, sin fallos ni omisiones, en 845.879 ms con otras campañas activas. La revisión posterior de disposición del tutorial cuenta con sus propias pruebas de UI y no se incluye retrospectivamente en esa ejecución.
