@@ -1,0 +1,50 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Incursión en finca poblada</title>
+<style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;background:#fff9edee;padding:12px;width:350px}pre{max-height:35vh;overflow:auto}button{padding:12px}</style>
+<header><p>Primera incursión alcanzada con cultivos y jornales pagados. Carga del guardado previo, preparación de entrada y ataque físico; sin adelantar el reloj.</p><button id="run" disabled>Preparar entrada y seguir el ataque</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas></canvas>
+<script type="module">
+import {json} from '../../src/rendering/assets.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {tick} from '../../src/simulation/game.js';
+import {raidEntryKey,raidEntryRequest} from '../../src/world/raid-entry-data.js';
+const biome=new URLSearchParams(location.search).get('biome')??'desierto',errors=[],result={biome,errors};
+let world,worker,state,nav,source;
+const output=document.querySelector('#report'),status=document.querySelector('#status'),paint=()=>output.textContent=JSON.stringify(result,null,2);
+const fail=error=>{errors.push(String(error.message??error));result.ok=false;status.textContent='FAIL';worker?.terminate();paint();};
+addEventListener('error',e=>fail(e.error??e.message));addEventListener('unhandledrejection',e=>fail(e.reason));addEventListener('pagehide',()=>{worker?.terminate();world?.dispose();});
+try{
+ source=await json('../../docs/qa/populated-raids/'+biome+'.json');state=deserialize(source.timing.navigationContext.state);
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);
+ world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=fail;world.qualitySetting('muy_baja');await world.load(state,nav,payload);world.focus(state.structures[0]);
+ await world.whenChunksReady();world.render(0);
+ while(!world.actorsReady()){await new Promise(requestAnimationFrame);world.render(0);}
+ result.living=state.plants.filter(p=>p.alive).length;result.workers=state.workers.length;result.before={day:state.day,time:state.time,elapsed:state.elapsed,money:state.ledger.balance};
+ status.textContent='Guardado cargado · '+result.living+' cultivos';document.querySelector('#run').disabled=false;paint();
+}catch(e){fail(e);}
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;
+ try{
+  const before=serialize(state),key=raidEntryKey(state,nav,source.group),request=raidEntryRequest(state,nav,source.group,key,1),started=performance.now();
+  worker=new Worker(new URL('../../src/world/raid-entry-worker.js',import.meta.url),{type:'module'});
+  const reply=await new Promise((resolve,reject)=>{const deadline=setTimeout(()=>reject(Error('Worker deadline')),30000);worker.onmessage=({data})=>{clearTimeout(deadline);data.error?reject(Error(data.error)):resolve(data);};worker.onerror=()=>{clearTimeout(deadline);reject(Error('Worker failed'));};worker.postMessage(request);});
+  result.preparationMs=performance.now()-started;worker.terminate();worker=null;
+  if(serialize(state)!==before||reply.key!==raidEntryKey(state,nav,source.group))throw Error('Preparation changed or outlived its inputs');
+  let used=0;nav.preparedRaidEntry=(s,g,b)=>{if(reply.key!==raidEntryKey(s,nav,g,b))return;used++;return reply;};
+  const spawnStart=performance.now();spawnRaid(state,source.plan,nav);result.spawnMs=performance.now()-spawnStart;delete nav.preparedRaidEntry;result.preparedUsed=used;
+  if(used!==1||!state.raid)throw Error('Prepared entry absent');world.render(0);
+  while(!world.actorsReady()){await new Promise(requestAnimationFrame);world.render(0);}
+  const initialHits=state.events.filter(e=>['CropHit','StructureHit'].includes(e.type)).length,updates=[];let steps=0;
+  while(state.raid&&steps<600&&state.events.filter(e=>['CropHit','StructureHit'].includes(e.type)).length===initialHits){
+   const started=performance.now();tick(state,.05,nav);updates.push(performance.now()-started);world.render(.05);steps++;await new Promise(requestAnimationFrame);
+  }
+  result.firstHit=state.events.filter(e=>['CropHit','StructureHit'].includes(e.type)).at(-1)??null;
+  result.steps=steps;result.simulatedSeconds=steps*.05;result.maximumGameTickMs=Math.max(...updates);
+  result.after={day:state.day,time:state.time,elapsed:state.elapsed,money:state.ledger.balance};result.ok=!!result.firstHit&&!errors.length;
+  result.scope='Naturally reached paid first-night snapshot, loaded into native WorldScene. Camera and active bounds come from this diagnostic view. Native worker and physical first hit; very-low quality, no audio/HUD, no physical-phone or FPS acceptance.';
+  status.textContent=result.ok?'Ataque físico confirmado':'FAIL: sin ataque';paint();
+ }catch(e){fail(e);}
+};
+</script></html>
