@@ -1896,15 +1896,17 @@
       "area": "Guardado y presentación",
       "scenario": "Acumular muchos agricultores, animales y colapsos",
       "expected": "Mezcla con prioridad y límites, sin explosión de voces o partículas.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-routing.md",
         "docs/qa/audio-buses/context-reservations.md",
         "docs/qa/audio-buses/integrated-domain-load.json",
         "docs/qa/audio-buses/native-phases.md",
-        "docs/qa/audio-buses/plural-collapses.md"
+        "docs/qa/audio-buses/plural-collapses.md",
+        "docs/qa/audio-buses/plural-collapses-windows-final.json",
+        "docs/qa/audio-buses/plural-collapses-windows-console.json"
       ],
-      "notes": "Decode-completion race fixed:20 SFX cap,4 per clip ID,critical danger/result replaces only lower-priority routine; deterministic oldest tie. Doubles and real muted AudioContext browser:100 same clip=>4,100 distinct families=>20,attack/victory admitted at20,stop=>0 nodes registered; stems gain/source cleanup included. Remaining: integrated many-worker/animal/collapse perceptual mix,independent per-emitter policy and particle concurrency. Technical limits are presentation configuration,not audited balance or measured listening quality. Current per-emitter limit is 2 and independent family/global admission is covered by 41 routing/bus/mud tests; the earlier pending-per-emitter note is superseded. Domain stress reproduction completes eight-worker/five-species incursion and one center collapse, but excludes WebAudio and renderer. Full-world/perceptual/plural-collapse acceptance remains unverified; current browser tab223 has no readable terminal result. Simultaneous home-route searches expose a CPU spike; active music PCM remains 547–659 MiB per pack."
+      "notes": "Native rendered Sabana/Mapungubwe stress fixture on e1f1e5e: 32 paid crops, eight paid employees, five-species incursion and three paid centers; explicit QA10000 credit and two forced collapses isolate concurrent load. Fifty physical watering completions; third center collapses after native animal contact; two centers observed collapsing together, all three end ruined and raid ends. Peak17 SFX respects total20, per-emitter2 and per-family4; priority admission separately covered by routing/bus tests. Peak101 smoke/95 debris per building and620 aggregate rendered debris instances; prepared ash arrays are not active particle counts. Audio leaves domain snapshots unchanged; pitch remains1. Window music at48kHz retains no full-track buffers and peaks40845312 PCM bytes with16 window sources including overlap. Stop leaves0 voices and context closes. No fixture/WebGL errors; one ANGLE environment4 initialization warning is archived. This proves technical concurrency limits of QA-155; muted/predecoded-SFX fixture does not prove perceptual listening, cold-load performance, total RAM or physical phone. Those limitations are not claimed as verified."
     },
     {
       "id": "QA-156",

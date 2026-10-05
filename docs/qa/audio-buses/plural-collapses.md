@@ -13,3 +13,37 @@ Máximos observados: 17 SFX, dos voces por emisor, cuatro por familia y 20 fuent
 La evidencia verifica carga simultánea renderizada, mezcla técnica y limpieza de recursos en esta escena preparada. No acredita aún QA-155 completo, escucha perceptual, carga fría, HUD, teléfono físico ni alternancia A/B. Pedir cinco especies no prueba cinco ataques o cinco voces: los contactos breves y clips aceptados corresponden a facóquero/hiena. Las otras especies tienen su carga retenida antes de avanzar, pero no se las declara escuchadas.
 
 La CI 37236607582 de `140b00d` terminó aprobada con 1741/1741 pruebas, build, verificación relativa y paquete itch. Ese resultado precede a esta nueva página de QA; no se atribuye a ella ni a Tauri/Windows.
+
+## Revalidación con ventanas musicales (5 de octubre)
+
+La revisión `e1f1e5e` se comprobó con la versión 3 del mismo fixture, adaptada al
+transporte musical actual. Se mantuvieron los 32 cultivos, ocho trabajadores,
+cinco especies y tres centros; también el crédito QA y los dos colapsos
+provocados como preparación de carga. Los SFX se precargan en este fixture para
+aislar concurrencia: no representa la carga fría ni el uso de RAM total de una
+partida normal.
+
+Resultado terminal: 50 riegos, dos colapsos simultáneos, tres centros arruinados,
+un contacto estructural animal y una planta destruida. La incursión termina a
+162,9 segundos simulados. Los máximos son 17 SFX, dos por emisor, cuatro por
+familia, 101 entradas de humo y 95 escombros por edificio, con 620 instancias
+de escombros agregadas. Las aserciones de admisión, partículas, pitch 1 y dominio
+sin mutaciones del audio pasan. Al detener, quedan cero voces y el contexto
+se cierra.
+
+`MusicWindowTransport` usa el AudioContext de 48 kHz y alcanza 40.845.312 bytes
+de PCM musical en el pool (38,95 MiB), sin buffers de pistas completas. Se
+observan hasta 16 fuentes de ventanas, incluida la superposición prevista;
+este contador no equivale a 16 pistas completas decodificadas. No se ha medido
+RAM total ni una mejora de FPS en esta prueba.
+
+Evidencia: `plural-collapses-windows-final.json/png` y
+`plural-collapses-windows-console.json`. No hay errores del fixture ni WebGL.
+ANGLE registra una advertencia de posible variable no inicializada en
+`environment4`; no se presenta la consola como libre de warnings. El audio está
+silenciado: la evidencia verifica los límites técnicos de QA-155, no una escucha
+perceptual, el teléfono físico ni alternancia A/B.
+
+La regresión local de la misma revisión termina con 1912/1912 pruebas y cero
+fallos. Compilación y paquete web relativo pasan (586 archivos, 839 referencias
+relativas, 20 GLB de ejecución). La CI remota se comprueba por separado.
