@@ -11,6 +11,9 @@ export class MusicWindowTransport extends MusicTransport {
     for(const {track} of this.loaded){
       const volume=audio.context.createGain(),index=this.bank.tracks.indexOf(track);
       const level=this.mixer?this.mixer.value(track.id,when):this.policy.levels[this.scene][index];
+      // Match startBuffer's immediate level as well as future automation.
+      // Leaving the default gain (1) until a fractional event leaks one sample.
+      volume.gain.value=level*(this.bank.safetyGain??.5)*.45;
       volume.gain.setValueAtTime(level*(this.bank.safetyGain??.5)*.45,when);volume.connect(gain);
       const voice={id:track.id,volume,native:new Map(),scheduled:new Set(),stopAt:Infinity,
         stop(at){
@@ -56,14 +59,20 @@ export class MusicWindowTransport extends MusicTransport {
         const first=Math.floor(position/this.pool.index.secondsPerWindow);
         for(let number=first;number<=first+1&&number<track.windows.length;number++){
           const entry={...track.windows[number],id:voice.id,window:number,key:this.pool.key(voice.id,number)};
-          const start=Math.max(deck.start,deck.start+entry.startSample/rate-deck.offset),end=Math.min(limit,deck.start+entry.endSample/rate-deck.offset,voice.stopAt);
+          const start=Math.max(deck.start,deck.start+entry.startSample/rate-deck.offset);
+          const boundary=Math.ceil((deck.start+entry.endSample/rate-deck.offset)*rate-1e-7)/rate;
+          const end=Math.min(limit,boundary,voice.stopAt);
           if(end<=now||end<=start||!this.mixer.audibleDuring(voice.id,Math.max(now,start),end))continue;
           this.request(entry,keep);if(voice.scheduled.has(entry.key))continue;
           const ready=this.pool.ready.get(entry.key);if(!ready)continue;
           // A late entrance uses the current shared position, never offset zero.
           const audibleFrom=this.mixer.audibleFrom(voice.id,Math.max(now,start),end);
           if(audibleFrom===null)continue;
-          const when=Math.max(start,now+.02,audibleFrom),offset=deck.offset+when-deck.start-entry.firstSample/rate;
+          // A fractional start is rounded by the native sample clock. Make
+          // that rounding explicit and compensate the read position so a new
+          // window follows the original continuously running source phase.
+          const when=Math.ceil(Math.max(start,now+.02,audibleFrom)*rate-1e-7)/rate;
+          const offset=(deck.offset*rate+(when-deck.start)*rate-entry.firstSample)/rate;
           if(when>=end)continue;
           const source=this.audio.startBuffer(ready.buffer,{music:true,destination:voice.volume,gain:1,when,offset,stopAt:end});
           if(!source)throw Error('Music context suspended while scheduling a window');

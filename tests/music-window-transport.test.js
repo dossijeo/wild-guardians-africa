@@ -58,3 +58,20 @@ test('a logical silent layer is loaded at the current position before its schedu
  for(let now=2;now<20;now+=.1)await tick(now,'minimal');
  assert.ok(new Set(decoded).size>3);assert.ok(!decoded.includes('s0')&&!decoded.includes('s6'));audio.stop();
 });
+test('fractional offsets join adjacent windows on the same native sample without a gap',async()=>{
+ const {audio,transport,sources,tick}=await fixture('a',{offset:29.91327});transport.mixer.automatic=false;
+ for(let now=1;now<15;now+=.1)await tick(now);
+ const windows=sources.filter(source=>source.musicWindowKey.startsWith('s2:')).sort((a,b)=>a.when-b.when);
+ assert.ok(windows.length>=3);
+ for(const source of windows)assert.ok(Math.abs(source.when*48000-Math.round(source.when*48000))<1e-8);
+ for(let i=1;i<windows.length;i++)assert.equal(windows[i-1].musicWindowEnd,windows[i].when);
+ audio.stop();
+});
+test('logical track gains have the original immediate level before future automation',async()=>{
+ const {audio,transport}=await fixture('a');
+ for(const voice of transport.primary.sources){
+  const index=banks.a.tracks.findIndex(track=>track.id===voice.id);
+  assert.equal(voice.volume.gain.value,MUSIC_POLICIES.a.levels.day[index]*banks.a.safetyGain*.45);
+ }
+ audio.stop();
+});

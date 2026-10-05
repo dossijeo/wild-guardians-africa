@@ -1,0 +1,611 @@
+{
+  "status": "completed",
+  "maximumError": 0.04516829364001751,
+  "totalComparedSamples": 23040000,
+  "results": [
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1152000,
+      "maximumError": 4.547473508864641e-13,
+      "rmsError": 1.0283552355384099e-15,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.011124749573471024,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1152000,
+      "maximumError": 4.547473508864641e-13,
+      "rmsError": 8.058380471384377e-16,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.014210077372632005,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1152000,
+      "maximumError": 0.02628694847226143,
+      "rmsError": 0.000027519439648427207,
+      "changedAbove1e7": 2,
+      "referenceRms": 0.010831670284868098,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1152000,
+      "maximumError": 4.547473508864641e-13,
+      "rmsError": 1.431208036111109e-15,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.008323432517379216,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.005572477169166524,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 1.740181061761083e-15,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.0024126317819488843,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 2.1804665889811336e-15,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.005852360764247622,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1152000,
+      "maximumError": 0.04516829364001751,
+      "rmsError": 0.00005231017248185399,
+      "changedAbove1e7": 2,
+      "referenceRms": 0.005740022276246607,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 2.958437733319989e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.006335580660360295,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.014464385646040889,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.014916500850367628,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1152000,
+      "maximumError": 0.005970255471765995,
+      "rmsError": 0.0000067080106578335465,
+      "changedAbove1e7": 2,
+      "referenceRms": 0.01470861462134582,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1152000,
+      "maximumError": 2.842170943040401e-14,
+      "rmsError": 4.742506959055254e-17,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.011361330074790588,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.01566746841636798,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.006890803997846576,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.003970621562289116,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1152000,
+      "maximumError": 0.0008875886851456016,
+      "rmsError": 8.898786642140143e-7,
+      "changedAbove1e7": 2,
+      "referenceRms": 0.007871946329639478,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 3.265343233397358e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "referenceRms": 0.007263921900981913,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    }
+  ]
+}
