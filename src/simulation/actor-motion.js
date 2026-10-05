@@ -33,6 +33,17 @@ export function prepareActorMotion(state,actor,nav,worker){
   const horizon=Math.max(4,...blockers.map(b=>2*(radius(actor)+radius(b))+.2));
   let look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
   const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
+  const yieldToOpposing=()=>{
+    const opposing=blockers.find(other=>edgeDistance(actor,goal,other.x,other.z)<radius(actor)+radius(other)+.1&&
+      other.path?.length&&String(actor.id)>String(other.id)&&
+      (next.x-actor.x)*(other.path[0].x-other.x)+(next.z-actor.z)*(other.path[0].z-other.z)<0);
+    if(!opposing)return;
+    const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),r=radius(actor)+radius(opposing)+.5;
+    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
+      const point={x:actor.x+Math.sin(angle+offset)*r,z:actor.z+Math.cos(angle+offset)*r};
+      if(clear(actor,point)&&staticClear(actor,point)){actor.path=[point,...actor.path];return;}
+    }
+  };
   // Skipping occupied bends creates a new connector. Its tail beyond the
   // local lookahead must also be clear before it can replace the saved route.
   if(rejoin&&look<length&&!staticClear(goal,next)){look=length;goal={x:next.x,z:next.z};}
@@ -51,7 +62,10 @@ export function prepareActorMotion(state,actor,nav,worker){
       const point={x:actor.x+(next.x-actor.x)*candidate/length,z:actor.z+(next.z-actor.z)*candidate/length};
       if(clear(point,point)){look=candidate;goal=point;break;}
     }
-    if(!clear(goal,goal))return clear;
+    // A short retained exit can be entirely occupied by opposing traffic.
+    // Give its elected actor the same verified yield used after graph search;
+    // returning here first made both bodies wait forever at the saved route.
+    if(!clear(goal,goal)){yieldToOpposing();return clear;}
   }
   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
   const nodes=[{x:actor.x,z:actor.z},goal];
@@ -83,17 +97,7 @@ export function prepareActorMotion(state,actor,nav,worker){
   // Opposing traffic beside a solid corner may have no room to pass directly.
   // One actor yields into verified free space while retaining its full route.
   // Stable identity chooses only one side; stationary bodies never cause this.
-  const opposing=nearby.find(other=>other.path?.length&&String(actor.id)>String(other.id)&&
-    (next.x-actor.x)*(other.path[0].x-other.x)+(next.z-actor.z)*(other.path[0].z-other.z)<0);
-  if(opposing){
-    const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),r=radius(actor)+radius(opposing)+.5;
-    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
-      const point={x:actor.x+Math.sin(angle+offset)*r,z:actor.z+Math.cos(angle+offset)*r};
-      if(clear(actor,point)&&staticClear(actor,point)){
-        actor.path=[point,...actor.path];return clear;
-      }
-    }
-  }
+  yieldToOpposing();
   // A narrow occupied passage waits; neither teleport nor discard the route.
   return clear;
 }
