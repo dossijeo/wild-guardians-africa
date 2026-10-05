@@ -1,0 +1,237 @@
+{
+  "scope": "Native HUD and Guardian UI fixture in CSS viewports; hiring, center and planting messages. Translates message body only; not a complete English game, hiring modal, physical phone or touch test. Hidden-hand fits is not evidence of a visible hand.",
+  "cases": [
+    {
+      "case": "portrait-en-hiring",
+      "diagnostic": {
+        "handVisible": false,
+        "handSelector": null,
+        "tip": {
+          "x": 0,
+          "y": 0
+        },
+        "target": null,
+        "handFits": true,
+        "viewport": [
+          320,
+          568
+        ],
+        "portrait": true,
+        "actionsLeft": 246.6750030517578,
+        "bubbleRight": 230.6750030517578,
+        "gap": 16,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "landscape-en-hiring",
+      "diagnostic": {
+        "handVisible": false,
+        "handSelector": null,
+        "tip": {
+          "x": 0,
+          "y": 0
+        },
+        "target": null,
+        "handFits": true,
+        "viewport": [
+          568,
+          320
+        ],
+        "portrait": false,
+        "actionsLeft": 464.8625183105469,
+        "bubbleRight": 452.8625183105469,
+        "gap": 12,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "landscape-es-hiring",
+      "diagnostic": {
+        "handVisible": false,
+        "handSelector": null,
+        "tip": {
+          "x": 0,
+          "y": 0
+        },
+        "target": null,
+        "handFits": true,
+        "viewport": [
+          568,
+          320
+        ],
+        "portrait": false,
+        "actionsLeft": 464.8625183105469,
+        "bubbleRight": 452.8625183105469,
+        "gap": 12,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "portrait-es-hiring",
+      "diagnostic": {
+        "handVisible": false,
+        "handSelector": null,
+        "tip": {
+          "x": 0,
+          "y": 0
+        },
+        "target": null,
+        "handFits": true,
+        "viewport": [
+          320,
+          568
+        ],
+        "portrait": true,
+        "actionsLeft": 246.6750030517578,
+        "bubbleRight": 230.6750030517578,
+        "gap": 16,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "portrait-es-close",
+      "ariaHidden": "true",
+      "inert": ""
+    },
+    {
+      "case": "portrait-en-center",
+      "diagnostic": {
+        "handVisible": true,
+        "handSelector": "[data-menu=\"build\"]",
+        "tip": {
+          "x": 277.338,
+          "y": 201.762
+        },
+        "target": {
+          "x": 277.33750343322754,
+          "y": 201.7624969482422
+        },
+        "handAvoidsBubble": true,
+        "handFits": true,
+        "viewport": [
+          320,
+          568
+        ],
+        "portrait": true,
+        "actionsLeft": 246.6750030517578,
+        "bubbleRight": 230.6750030517578,
+        "gap": 16,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "portrait-es-plant",
+      "diagnostic": {
+        "handVisible": true,
+        "handSelector": "[data-menu=\"grow\"]",
+        "tip": {
+          "x": 277.338,
+          "y": 291.525
+        },
+        "target": {
+          "x": 277.33750343322754,
+          "y": 291.5249938964844
+        },
+        "handAvoidsBubble": true,
+        "handFits": true,
+        "viewport": [
+          320,
+          568
+        ],
+        "portrait": true,
+        "actionsLeft": 246.6750030517578,
+        "bubbleRight": 230.6750030517578,
+        "gap": 16,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "landscape-es-plant",
+      "diagnostic": {
+        "handVisible": true,
+        "handSelector": "[data-menu=\"grow\"]",
+        "tip": {
+          "x": 510.431,
+          "y": 160.975
+        },
+        "target": {
+          "x": 510.43127059936523,
+          "y": 160.97500610351562
+        },
+        "handAvoidsBubble": true,
+        "handFits": true,
+        "viewport": [
+          568,
+          320
+        ],
+        "portrait": false,
+        "actionsLeft": 464.8625183105469,
+        "bubbleRight": 452.8625183105469,
+        "gap": 12,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "landscape-en-center",
+      "diagnostic": {
+        "handVisible": true,
+        "handSelector": "[data-menu=\"build\"]",
+        "tip": {
+          "x": 510.431,
+          "y": 115.988
+        },
+        "target": {
+          "x": 510.43127059936523,
+          "y": 115.98750305175781
+        },
+        "handAvoidsBubble": true,
+        "handFits": true,
+        "viewport": [
+          568,
+          320
+        ],
+        "portrait": false,
+        "actionsLeft": 464.8625183105469,
+        "bubbleRight": 452.8625183105469,
+        "gap": 12,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    },
+    {
+      "case": "portrait-390-en-center",
+      "diagnostic": {
+        "handVisible": true,
+        "handSelector": "[data-menu=\"build\"]",
+        "tip": {
+          "x": 331.6,
+          "y": 277.575
+        },
+        "target": {
+          "x": 331.6000175476074,
+          "y": 277.57501220703125
+        },
+        "handAvoidsBubble": true,
+        "handFits": true,
+        "viewport": [
+          390,
+          844
+        ],
+        "portrait": true,
+        "actionsLeft": 284.8000183105469,
+        "bubbleRight": 268.8000183105469,
+        "gap": 16,
+        "entireColumnSafe": true,
+        "bubbleFits": true
+      }
+    }
+  ]
+}

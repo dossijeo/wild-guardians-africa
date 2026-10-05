@@ -1,0 +1,9 @@
+# Tutorial en viewports pequeños
+
+La prueba visual encontró que en 320 × 568 el globo de contratación llegaba a x=308 mientras la botonera empezaba en x=246,675: tapaba Cultivar y Magia. El diagnóstico previo devolvía null para la reserva lateral en vertical; se conserva sin modificar en `compact-tutorial/before.json`, junto con la captura original. El fixture anterior también mostraba una mano de Construir para todos los mensajes, incluido contratación; no se atribuye ese detalle a la guía del juego real.
+
+El globo vertical ahora queda por encima del Espíritu, con margen para la cabecera y el área segura del dispositivo, y reserva la columna de acciones. Las manos 2D señalan desde arriba del botón y permanecen en el lateral, evitando el globo y su cierre. Se mantiene el asset original, el punto de anclaje y la animación mediante CSS; no se añaden recursos ni temporizadores. El fixture muestra automáticamente manos solo para las explicaciones de centro/cultivo y comprueba la reserva lateral en ambas orientaciones.
+
+En el navegador real pasan los límites del globo y del lateral para los mensajes de contratación en inglés y español, en 320 × 568 y 568 × 320. Las manos de Construir/Cultivar caben y no se superponen al globo en ambas orientaciones; la punta prevista coincide con el borde superior del botón. También se verifica 390 × 844. El cierre manual del mensaje español deja `aria-hidden=true` e `inert` en el overlay.
+
+Las capturas y diagnósticos posteriores están en `compact-tutorial/after.json` y su carpeta. La prueba utiliza el HUD y Guardian originales en un fixture de UI. Traduce el cuerpo del mensaje; sus etiquetas HUD estáticas permanecen en español. No prueba el juego inglés completo, la modal de contratación, gestos táctiles, rendimiento de teléfono ni pantalla encendida. Las cuatro comprobaciones sin mano no acreditan por sí solas su colocación: esa evidencia procede de los casos explícitos de centro/cultivo.

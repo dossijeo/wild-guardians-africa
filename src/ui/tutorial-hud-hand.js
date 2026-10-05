@@ -22,9 +22,10 @@ export class TutorialHudHand{
     const target=this.selector&&this.stage.querySelector(this.selector),rect=target?.getBoundingClientRect();
     this.image.hidden=!rect||!rect.width||!rect.height||target.disabled||document.hidden;
     if(this.image.hidden)return;
-    const position=(rect.left-5)+'px:'+ (rect.top+rect.height*.5)+'px';
+    const x=rect.left+rect.width*.5,y=rect.top-5;
+    const position=x+'px:'+y+'px';
     if(position===this.position)return;this.position=position;
-    this.image.style.left=(rect.left-5)+'px';this.image.style.top=(rect.top+rect.height*.5)+'px';
+    this.image.style.left=x+'px';this.image.style.top=y+'px';
   }
   dispose(){this.observer.disconnect();this.image.remove();}
 }
