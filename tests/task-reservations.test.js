@@ -13,6 +13,21 @@ function reference(state,canExecute){
  }
 }
 function state(){return {day:2,plants:[{id:'plot',x:0,z:0}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
+
+test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{
+ const s=state();
+ s.plants=Array.from({length:14558},(_,i)=>({id:'plot-'+i,x:i%25,z:Math.floor(i/25),alive:i>=14300}));
+ s.crates=Array.from({length:14095},(_,i)=>({id:'crate-'+i,x:i%25,z:0,delivered:i<14090}));
+ s.structures=[{id:'repair-target',x:3,z:2}];
+ s.tasks=Array.from({length:60},(_,i)=>({id:'task-'+i,created:i,centerId:'center',targetId:i===0?'missing':i===1?'repair-target':i%3===0?'crate-'+(14090+i%5):'plot-'+(14300+i),workerId:null,blocked:i===0}));
+ s.workers=Array.from({length:40},(_,i)=>({id:'worker-'+i,x:i%10,z:0,centerId:'center',status:'idle',taskId:null,contractDay:2,incapacitated:false}));
+ const prior=structuredClone(s),reachable=(w,t)=>!(t.id==='task-2'&&w.x<4);
+ reference(prior,reachable);reserveTasks(s,reachable);assert.deepEqual(s,prior);
+ // A subsequent reservation must see new entities; no cross-call index survives.
+ s.plants.push({id:'new-plot',x:1,z:0});s.tasks.push({id:'new-task',created:61,centerId:'center',targetId:'new-plot',workerId:null,blocked:false});
+ s.workers.push({id:'new-worker',x:1,z:0,centerId:'center',status:'idle',taskId:null,contractDay:2});
+ const next=structuredClone(s);reference(next,reachable);reserveTasks(s,reachable);assert.deepEqual(s,next);
+});
 test('reachable nearest employee requires only one route query; blocked nearest candidates fall through in order',()=>{
  const s=state(),queried=[];reserveTasks(s,w=>{queried.push(w.id);return true;});assert.deepEqual(queried,['worker-1']);assert.equal(s.tasks[0].workerId,'worker-1');
  const blocked=state(),attempts=[];reserveTasks(blocked,w=>{attempts.push(w.id);return w.id==='worker-3';});assert.deepEqual(attempts,['worker-1','worker-2','worker-3']);assert.equal(blocked.tasks[0].workerId,'worker-3');

@@ -189,9 +189,10 @@
       "evidence": [
         "docs/qa-acceptance-clock.md",
         "docs/qa/windows-desktop/native-visibility.md",
-        "docs/qa/windows-desktop/desktop-visibility-ccb2ce2.json"
+        "docs/qa/windows-desktop/desktop-visibility-ccb2ce2.json",
+        "docs/qa/windows-desktop/desktop-visibility-7495dac.json"
       ],
-      "notes": "1800-second blocked real-time advances leave entire game state identical with menu plus hidden, and after only hidden clears. Remaining: actual browser hidden/restored timing and clock reset without offline advancement. Native Windows ccb2ce2 now observes genuine hidden/visible transitions after synchronizing the WebView host: 3505.5 ms measured with unchanged simulation, menu retained on restore, 1 simulated second during 2254 ms visible. This brief interval does not prove many minutes; the five-minute CI extension remains unverified. QA-014 stays partial."
+      "notes": "Domain checks preserve the whole simulation during 1800 seconds of blocked real time. Native Windows 7495dac additionally verifies genuine hidden/visible transitions and 300912.8 ms of unchanged simulation: elapsed 372.1, shield 18.5 and cooldown 88.5. Restoration keeps menu; resuming advances 0.8 simulated seconds during 2517.5 visible ms without offline catch-up. QA-014 remains partial: real web browser tab hiding and physical phone are not proved by the Windows result."
     },
     {
       "id": "QA-015",

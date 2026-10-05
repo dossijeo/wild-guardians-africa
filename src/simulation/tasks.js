@@ -7,9 +7,19 @@ export function enqueue(state,centerId,kind,targetId) {
   state.tasks.push(t);return t;
 }
 export function reserveTasks(state,canExecute=()=>true) {
+  // Resolve pending targets once. Historical crops/crates remain in the save,
+  // but must not be copied and searched separately for every queued task.
+  const needed=new Set(state.tasks.filter(t=>!t.workerId).map(t=>t.targetId)),targets=new Map();
+  for(const group of [state.plants,state.crates,state.structures]) {
+    if(!needed.size)break;
+    for(const entity of group) {
+      if(needed.delete(entity.id))targets.set(entity.id,entity);
+      if(!needed.size)break;
+    }
+  }
   for(const t of [...state.tasks].sort((a,b)=>a.created-b.created||a.id.localeCompare(b.id))) {
     if(t.workerId)continue;
-    const target=[...state.plants,...state.crates,...state.structures].find(e=>e.id===t.targetId);
+    const target=targets.get(t.targetId);
     if(!target)continue;
     const workers=state.workers.filter(w=>w.centerId===t.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state));
     // Reachability can require A*: test nearest candidates until one succeeds.
