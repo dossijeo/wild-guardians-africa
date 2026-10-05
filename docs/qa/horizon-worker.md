@@ -1,0 +1,15 @@
+# Generate native horizons away from the render thread
+
+The remaining camera spike came from `makeCanyonHorizon`/`makeDesertHorizon`, not downloading an animal. Their original recipes and fine/coarse seam vertices remain unchanged. A dedicated module worker now generates their interleaved vertex arrays and transfers the buffers to the main thread. GPU buffer creation and bounds computation still occur on the main thread.
+
+Generation holds at most one running job and one latest destination. Obsolete replies are ignored. The preceding horizon and resident rectangle stay active until the matching replacement data is ready; the render adopts the new horizon and rectangle together. This preserves the preceding horizon's centre hole and clipping bounds while generation runs. Resident chunks still stream progressively after adoption as before; this is not a claim that all transient seam/streaming behavior or arbitrary long camera teleports have been verified.
+
+Initial world loading waits for the first horizon before revealing gameplay. The material cache from the preceding optimization survives compatible replacements. Worker creation, messaging or generation failure permits the synchronous recipe fallback. Closing the world terminates the worker and releases pending readiness waiters; late replies cannot install geometry. No worker is created for biomes without a native horizon.
+
+Six new cases cover latest-destination coalescing, stale replies, fallback, malformed buffers, shutdown and adoption of the matching resident rectangle. Together with the native horizon recipes, clipping/material ownership, rendering-quality, cold-actor, animal-preload and world-disposal cases, 27 tests pass with zero failures or skips.
+
+The final production build passes. Web-package validation reports 582 files, 406822549 bytes, 819 relative links and 20 compressed runtime GLBs, including the bundled horizon worker. The complete suite/Windows build for this revision require their own terminal CI evidence; earlier green runs belong to their recorded commits.
+
+The [Grand Canyon sample](horizon-worker/gran-canon.json) uses a real worker, finishes its pending work, keeps seven model downloads and introduces no new programs. Its first render is 16.4 ms, including 0.2 ms in `NativeHorizon.update`, compared with 205.7 ms / 189.9 ms in the earlier recorded sample. The [Desert sample](horizon-worker/desierto.json) is 9.1 ms / 0.1 ms, compared with 299.7 ms / 290.6 ms earlier. Both show five prepared animal rigs on the second draw. These are single desktop samples under varying concurrent load; they demonstrate removal of synchronous horizon generation, not a controlled FPS gain or phone performance.
+
+Desert raid planning itself still takes 343.1 ms in the new sample (Grand Canyon 93.2 ms). That work remains an independent hitch requiring investigation. Physical-phone testing, rapid travel/quality transitions in the full HUD, steady GPU frametime and full campaign acceptance remain pending. The new reports use the recorded working-tree renderer changes, not the old campaign versions.

@@ -127,7 +127,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>this.nav.field.canyon?this.nav.workerSurface(x,z):renderedTerrainSurface(this.nav.field,x,z));
     const village=state.villages[0];this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focus(savedFarmFocus(state));
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
-    this.syncChunks();await this.chunkStream.whenReady();if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
+    this.syncChunks();await Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]);if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
     await this.hands.ready;
     await this.warmAnimalGpu();
@@ -170,9 +170,13 @@ export class WorldScene {
   whenChunksReady(){return this.chunkStream?.whenIdle()??Promise.resolve({cancelled:false});}
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
-    const region=nativeNearRegion(this.camera.position,this.quality),{cx,cz,range}=region;this.nearBounds=region.bounds;this.nav.setActiveBounds?.(region.bounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
+    const requested=nativeNearRegion(this.camera.position,this.quality);
     this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz);if(material.userData.biomeGround)material.userData.biomeGround.uGroundMapped.value=0;});
-    this.horizon.update(this.nav.config,this.pack.profile,region,this.quality,force);
+    // Adopt the horizon and its matching resident rectangle in the same frame.
+    // Keeping the preceding rectangle while the worker runs avoids exposing
+    // the old horizon's centre hole or overlapping its seam with new chunks.
+    const region=this.horizon.update(this.nav.config,this.pack.profile,requested,this.quality,force)??requested,{cx,cz,range}=region;
+    this.nearBounds=region.bounds;this.nav.setActiveBounds?.(region.bounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){disposeAssetShadows(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;}
     if(this.chunkStream){const key=cx+','+cz+':'+range;if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
