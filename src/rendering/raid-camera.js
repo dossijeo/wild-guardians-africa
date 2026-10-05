@@ -1,13 +1,6 @@
 import {beginTerrainCameraTravel,stepTerrainCameraTravel} from './terrain-camera.js';
-// Freeze the farm envelope once per incursion. Growing crops do not require
-// scanning the plantation again each frame while waiting for an arrival.
-export function raidFarmBounds(state){
- const points=[...state.plants.filter(p=>p.alive),...state.structures.filter(s=>s.status==='intact')];
- if(!points.length)return null;
- let minX=Infinity,minZ=Infinity,maxX=-Infinity,maxZ=-Infinity;
- for(const p of points){minX=Math.min(minX,p.x);minZ=Math.min(minZ,p.z);maxX=Math.max(maxX,p.x);maxZ=Math.max(maxZ,p.z);}
- return [minX-12,minZ-12,maxX+12,maxZ+12];
-}
+import {raidFarmBounds} from '../world/farm-envelope.js';
+export {raidFarmBounds} from '../world/farm-envelope.js';
 const active=a=>!['gone','retreating'].includes(a.status);
 export class RaidCameraDirector {
  constructor(camera,controls,field){this.camera=camera;this.controls=controls;this.field=field;this.raidId=null;this.travel=null;}

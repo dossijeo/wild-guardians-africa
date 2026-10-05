@@ -2,6 +2,7 @@ import {UnlockAudio} from './unlock-audio.js';
 import {GuardianAudio} from './guardian-audio.js';
 import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
+import {RaidArrivalAudio} from './raid-arrival-audio.js';
 import {AnimalAudio,ANIMAL_SOUND_ROUTES} from './animal-audio.js';
 import {structureHitSound,structureAlertSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
@@ -18,7 +19,7 @@ import {startWindowMusic} from './start-window-music.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
-export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','game_building_attacked','game_wall_critical','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
+export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','game_enemy_detected','game_building_attacked','game_wall_critical','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
 export function eventAudioOptions(event,id,state,listener){
   const bus=soundBus(id);if(bus!=='world')return id==='ui_unlock'?{bus,emitter:'ui:unlock'}:{bus};
@@ -214,7 +215,8 @@ export class AudioSystem {
     this.farm??=new FarmContactAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.farm.update(state,options);
   }
   updateAnimals(state,options={}){
-    if(this.context?.state!=='running'){this.animals?.dispose();return;}
+    if(this.context?.state!=='running'){this.raidArrival?.dispose();this.animals?.dispose();return;}
+    this.raidArrival??=new RaidArrivalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.raidArrival.update(state);
     this.prepareAnimalSounds(state);
     this.animals??=new AnimalAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime,(source,gain)=>{this.voices.get(source)?.volume.gain.setTargetAtTime(gain,this.context.currentTime,.025);});this.animals.update(state,options);
   }
@@ -223,7 +225,7 @@ export class AudioSystem {
     this.animalSoundPreparation??=new Map();
     for(const id of new Set([...species,...(state.raid?.animals.map(a=>a.species)??[])])){
       if(this.animalSoundPreparation.has(id))continue;
-      const pending=this.sfxBank().then(bank=>Promise.all(Object.values(ANIMAL_SOUND_ROUTES[id]??{}).map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
+      const pending=this.sfxBank().then(bank=>Promise.all([...Object.values(ANIMAL_SOUND_ROUTES[id]??{}),'game_enemy_detected'].map(sound=>{const item=bank.items.find(i=>i.id===sound);return item?this.buffer(item.audio.url):null;})));
       this.animalSoundPreparation.set(id,pending);pending.catch(()=>{if(this.animalSoundPreparation.get(id)===pending)this.animalSoundPreparation.delete(id);});
     }
   }
@@ -232,8 +234,8 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
-  stop(){this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.menuStream?.pause();this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}
+  stop(){this.raidArrival?.dispose();this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  suspend(){this.raidArrival?.dispose();this.menuStream?.pause();this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}
   resume(){this.context?.resume().then(()=>this.menuStream?.play()).catch(error=>{this.musicError=error;});}
   dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

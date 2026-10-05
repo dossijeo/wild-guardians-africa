@@ -13,6 +13,7 @@ import {WORK_SOUND_IDS} from '../src/audio/work-audio.js';
 import {WORKER_SOUND_IDS} from '../src/audio/worker-audio.js';
 import {GUARDIAN_SOUND_IDS} from '../src/audio/guardian-audio.js';
 import {UNLOCK_SOUND_IDS} from '../src/audio/unlock-audio.js';
+import {RAID_ARRIVAL_SOUND_IDS} from '../src/audio/raid-arrival-audio.js';
 import {UI_SOUND_ROUTES} from '../src/audio/ui-audio.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
@@ -39,6 +40,7 @@ for(const [file,selector,ids,trigger] of [
  ['work-audio','WORK_SOUND_IDS',WORK_SOUND_IDS,'WorkAudio.update: visible native watering window'],
  ['worker-audio','WORKER_SOUND_IDS',WORKER_SOUND_IDS,'WorkerAudio.update: observed assignment/work/flight reaction'],
  ['guardian-audio','GUARDIAN_SOUND_IDS',GUARDIAN_SOUND_IDS,'GuardianAudio.observe: actual rendered portrait lifecycle'],
+ ['raid-arrival-audio','RAID_ARRIVAL_SOUND_IDS',RAID_ARRIVAL_SOUND_IDS,'RaidArrivalAudio.update: first observed physical farm entry per raid'],
  ['unlock-audio','UNLOCK_SOUND_IDS',UNLOCK_SOUND_IDS,'UnlockAudio.update: newly reached permanent magic milestone'],
 ])for(const id of ids)add(id,`src/audio/${file}.js`,`export const ${selector}`,trigger);
 for(const [id,trigger] of Object.entries(UI_SOUND_ROUTES))add(id,'src/audio/ui-audio.js','export const UI_SOUND_ROUTES',trigger);

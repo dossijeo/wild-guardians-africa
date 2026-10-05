@@ -1,0 +1,618 @@
+TAP version 13
+# Subtest: returning the camera restores the volume of an attack already in progress without replaying it
+ok 1 - returning the camera restores the volume of an attack already in progress without replaying it
+  ---
+  duration_ms: 16.2567
+  ...
+# Subtest: lion actual observed phase routing and one cue per phase
+ok 2 - lion actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 2.9648
+  ...
+# Subtest: hyena actual observed phase routing and one cue per phase
+ok 3 - hyena actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 2.0752
+  ...
+# Subtest: buffalo actual observed phase routing and one cue per phase
+ok 4 - buffalo actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 3.8686
+  ...
+# Subtest: rhino actual observed phase routing and one cue per phase
+ok 5 - rhino actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 1.6634
+  ...
+# Subtest: warthog actual observed phase routing and one cue per phase
+ok 6 - warthog actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 2.0182
+  ...
+# Subtest: restored entering never replays its onset
+ok 7 - restored entering never replays its onset
+  ---
+  duration_ms: 0.9568
+  ...
+# Subtest: restored walking never replays its onset
+ok 8 - restored walking never replays its onset
+  ---
+  duration_ms: 1.5138
+  ...
+# Subtest: restored attacking never replays its onset
+ok 9 - restored attacking never replays its onset
+  ---
+  duration_ms: 0.9617
+  ...
+# Subtest: restored retreating never replays its onset
+ok 10 - restored retreating never replays its onset
+  ---
+  duration_ms: 1.209
+  ...
+# Subtest: pause, result and a long observation gap stop activity without replay on resume
+ok 11 - pause, result and a long observation gap stop activity without replay on resume
+  ---
+  duration_ms: 3.6253
+  ...
+# Subtest: pending phase decode is invalidated by actor mutation before another audio frame
+ok 12 - pending phase decode is invalidated by actor mutation before another audio frame
+  ---
+  duration_ms: 1.1828
+  ...
+# Subtest: expired decode, removal, state replacement and disposal cannot attach a late source
+ok 13 - expired decode, removal, state replacement and disposal cannot attach a late source
+  ---
+  duration_ms: 1.6541
+  ...
+# Subtest: state/economy/RNG are untouched and failed audio cannot fail the simulation frame
+ok 14 - state/economy/RNG are untouched and failed audio cannot fail the simulation frame
+  ---
+  duration_ms: 1.4327
+  ...
+# Subtest: lion native paid center raid produces actual approach/attack/retreat audio facts
+ok 15 - lion native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 428.9487
+  ...
+# Subtest: hyena native paid center raid produces actual approach/attack/retreat audio facts
+ok 16 - hyena native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 294.8769
+  ...
+# Subtest: buffalo native paid center raid produces actual approach/attack/retreat audio facts
+ok 17 - buffalo native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 320.1621
+  ...
+# Subtest: rhino native paid center raid produces actual approach/attack/retreat audio facts
+ok 18 - rhino native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 282.8871
+  ...
+# Subtest: warthog native paid center raid produces actual approach/attack/retreat audio facts
+ok 19 - warthog native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 197.7697
+  ...
+# Subtest: a synchronous audio failure is contained and neutral requests remain rate limited
+ok 20 - a synchronous audio failure is contained and neutral requests remain rate limited
+  ---
+  duration_ms: 0.8641
+  ...
+# (node:43848) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: switching while music fetches discards eight queued old stems and skips obsolete decoding
+ok 21 - switching while music fetches discards eight queued old stems and skips obsolete decoding
+  ---
+  duration_ms: 40.5079
+  ...
+# Subtest: already running music decodes share the two-job limit with the replacement pack
+ok 22 - already running music decodes share the two-job limit with the replacement pack
+  ---
+  duration_ms: 8.9693
+  ...
+# Subtest: a cancelled music fetch is evicted without poisoning a later request for the same URL
+ok 23 - a cancelled music fetch is evicted without poisoning a later request for the same URL
+  ---
+  duration_ms: 2.6408
+  ...
+# Subtest: leaving during menu JSON cannot start or decode stale music
+ok 24 - leaving during menu JSON cannot start or decode stale music
+  ---
+  duration_ms: 17.488
+  ...
+# Subtest: leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+ok 25 - leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+  ---
+  duration_ms: 0.7167
+  ...
+# Subtest: late pack A loading and rejection cannot start A or stop the newer B stems
+ok 26 - late pack A loading and rejection cannot start A or stop the newer B stems
+  ---
+  duration_ms: 3.1223
+  ...
+# Subtest: failed network and failed decoder caches are evicted and one later request can retry
+ok 27 - failed network and failed decoder caches are evicted and one later request can retry
+  ---
+  duration_ms: 1.6672
+  ...
+# Subtest: failed SFX catalogue is coalesced, released and retryable
+ok 28 - failed SFX catalogue is coalesced, released and retryable
+  ---
+  duration_ms: 1.2358
+  ...
+# Subtest: failed stem allows same-day retry and partial playback start is cleaned up
+ok 29 - failed stem allows same-day retry and partial playback start is cleaned up
+  ---
+  duration_ms: 3.2551
+  ...
+# Subtest: suspending during decode does not falsely mark an inaudible pack as playing
+ok 30 - suspending during decode does not falsely mark an inaudible pack as playing
+  ---
+  duration_ms: 3.8936
+  ...
+# Subtest: twenty menu enter/exit cycles release all source and volume nodes
+ok 31 - twenty menu enter/exit cycles release all source and volume nodes
+  ---
+  duration_ms: 3.4256
+  ...
+# Subtest: a rejected resume leaves audio idle and the next gesture can unlock the same context
+ok 32 - a rejected resume leaves audio idle and the next gesture can unlock the same context
+  ---
+  duration_ms: 0.8138
+  ...
+# Subtest: pack switching preserves active world/UI/ambient voices and pending SFX decode
+ok 33 - pack switching preserves active world/UI/ambient voices and pending SFX decode
+  ---
+  duration_ms: 3.2516
+  ...
+# Subtest: decoded pack cache retains only current music and preserves reusable SFX
+ok 34 - decoded pack cache retains only current music and preserves reusable SFX
+  ---
+  duration_ms: 1.1707
+  ...
+# Subtest: automatic daily selection coalesces frames, changes without a gesture and preserves results
+ok 35 - automatic daily selection coalesces frames, changes without a gesture and preserves results
+  ---
+  duration_ms: 3.0536
+  ...
+# Subtest: automatic retry is bounded and a failed pack does not stop world effects
+ok 36 - automatic retry is bounded and a failed pack does not stop world effects
+  ---
+  duration_ms: 2.0773
+  ...
+# Subtest: old menu JSON and old decoded music cannot survive a music-only transition
+ok 37 - old menu JSON and old decoded music cannot survive a music-only transition
+  ---
+  duration_ms: 13.2166
+  ...
+# Subtest: music transport failure releases only music and retains pending result feedback
+ok 38 - music transport failure releases only music and retains pending result feedback
+  ---
+  duration_ms: 0.9896
+  ...
+# Subtest: repeated menu gestures share one pending load and preserve the active original player
+ok 39 - repeated menu gestures share one pending load and preserve the active original player
+  ---
+  duration_ms: 1.7682
+  ...
+# Subtest: a failed menu request is retryable without retaining a false active player
+ok 40 - a failed menu request is retryable without retaining a false active player
+  ---
+  duration_ms: 0.8689
+  ...
+# (node:43704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 41 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 69.778
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 42 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.0698
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 43 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 5.4544
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 44 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.6569
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 45 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 2970.5444
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 46 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 21.7053
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 47 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 16.8994
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 48 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 11.0078
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 49 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 12.373
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 50 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 13.7425
+  ...
+# (node:31400) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: farm bounds match live crops and intact buildings, frozen only by the observers
+ok 51 - farm bounds match live crops and intact buildings, frozen only by the observers
+  ---
+  duration_ms: 4.2216
+  ...
+# Subtest: one physical arrival per group, independent of the camera and not the spawn alert
+ok 52 - one physical arrival per group, independent of the camera and not the spawn alert
+  ---
+  duration_ms: 21.1937
+  ...
+# Subtest: loaded animal already inside entering seeds silently
+ok 53 - loaded animal already inside entering seeds silently
+  ---
+  duration_ms: 0.4287
+  ...
+# Subtest: loaded animal already inside walking seeds silently
+ok 54 - loaded animal already inside walking seeds silently
+  ---
+  duration_ms: 0.2064
+  ...
+# Subtest: loaded animal already inside attacking seeds silently
+ok 55 - loaded animal already inside attacking seeds silently
+  ---
+  duration_ms: 0.2209
+  ...
+# Subtest: retreating and gone animals cannot trigger detection; missing farm cannot trigger
+ok 56 - retreating and gone animals cannot trigger detection; missing farm cannot trigger
+  ---
+  duration_ms: 0.3689
+  ...
+# Subtest: long live frame catches current arrival without rebuilding bounds per frame
+ok 57 - long live frame catches current arrival without rebuilding bounds per frame
+  ---
+  duration_ms: 0.4414
+  ...
+# Subtest: paused/resumed and replaced snapshots never replay an existing detection
+ok 58 - paused/resumed and replaced snapshots never replay an existing detection
+  ---
+  duration_ms: 5.7191
+  ...
+# Subtest: next raid receives its own cue while an elapsed rewind seeds silently
+ok 59 - next raid receives its own cue while an elapsed rewind seeds silently
+  ---
+  duration_ms: 0.812
+  ...
+# Subtest: late detection decode rejected after expired
+ok 60 - late detection decode rejected after expired
+  ---
+  duration_ms: 8.7756
+  ...
+# Subtest: late detection decode rejected after pause
+ok 61 - late detection decode rejected after pause
+  ---
+  duration_ms: 1.478
+  ...
+# Subtest: late detection decode rejected after retreat
+ok 62 - late detection decode rejected after retreat
+  ---
+  duration_ms: 0.9589
+  ...
+# Subtest: late detection decode rejected after raid-end
+ok 63 - late detection decode rejected after raid-end
+  ---
+  duration_ms: 0.8324
+  ...
+# Subtest: late detection decode rejected after replace
+ok 64 - late detection decode rejected after replace
+  ---
+  duration_ms: 0.9683
+  ...
+# Subtest: late detection decode rejected after dispose
+ok 65 - late detection decode rejected after dispose
+  ---
+  duration_ms: 0.7695
+  ...
+# Subtest: failed cue never changes state, events or RNG
+ok 66 - failed cue never changes state, events or RNG
+  ---
+  duration_ms: 4.0543
+  ...
+# Subtest: AudioSystem connects arrival to the bounded UI danger bus and releases it on stop
+ok 67 - AudioSystem connects arrival to the bounded UI danger bus and releases it on stop
+  ---
+  duration_ms: 2.6539
+  ...
+# Subtest: warthog paid center and actual domain raid movement cross the farm once
+ok 68 - warthog paid center and actual domain raid movement cross the farm once
+  ---
+  duration_ms: 331.2663
+  ...
+# Subtest: hyena paid center and actual domain raid movement cross the farm once
+ok 69 - hyena paid center and actual domain raid movement cross the farm once
+  ---
+  duration_ms: 273.8277
+  ...
+# Subtest: buffalo paid center and actual domain raid movement cross the farm once
+ok 70 - buffalo paid center and actual domain raid movement cross the farm once
+  ---
+  duration_ms: 296.408
+  ...
+# Subtest: lion paid center and actual domain raid movement cross the farm once
+ok 71 - lion paid center and actual domain raid movement cross the farm once
+  ---
+  duration_ms: 259.584
+  ...
+# Subtest: rhino paid center and actual domain raid movement cross the farm once
+ok 72 - rhino paid center and actual domain raid movement cross the farm once
+  ---
+  duration_ms: 275.1187
+  ...
+# Subtest: arrival sound preloads with the upcoming species and shares one cached decode
+ok 73 - arrival sound preloads with the upcoming species and shares one cached decode
+  ---
+  duration_ms: 17.3365
+  ...
+# (node:27668) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 74 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 18.5177
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 75 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.5535
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 76 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 8.412
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 77 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 3.8509
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 78 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 15.8105
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 79 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 1.7242
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 80 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 2.7982
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 81 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 822.1479
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 82 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 664.0114
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 83 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1159.0101
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 84 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 514.48
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 85 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 752.819
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 86 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2722.8822
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 87 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 454.6426
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 88 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 423.1996
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 89 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 837.6027
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 90 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 383.9453
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 91 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 630.9234
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 92 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2733.9995
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 93 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 478.3716
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 94 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 465.5163
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 95 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 812.39
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 96 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 424.5242
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 97 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 602.6007
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 98 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2712.8814
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 99 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 434.1818
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 100 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 413.1371
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 101 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 849.0688
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 102 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 414.4384
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 103 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 627.3739
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 104 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2711.6425
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 105 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 525.5947
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 106 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 513.1141
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 107 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 830.7652
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 108 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 390.9616
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 109 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 637.3352
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 110 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2577.2023
+  ...
+# Subtest: travel waits for farm entry, then smoothly follows the moving animal once per incursion
+ok 111 - travel waits for farm entry, then smoothly follows the moving animal once per incursion
+  ---
+  duration_ms: 16.7844
+  ...
+# Subtest: manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+ok 112 - manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+  ---
+  duration_ms: 0.8594
+  ...
+# Subtest: menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+ok 113 - menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+  ---
+  duration_ms: 0.6761
+  ...
+# Subtest: a departing animal or ended raid stops the trip; saved focus does not replay on reload
+ok 114 - a departing animal or ended raid stops the trip; saved focus does not replay on reload
+  ---
+  duration_ms: 2.2793
+  ...
+# Subtest: sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 115 - sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 800.215
+  ...
+# Subtest: gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 116 - gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 588.3718
+  ...
+# Subtest: manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 117 - manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 483.8745
+  ...
+# Subtest: volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 118 - volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 479.8624
+  ...
+# Subtest: gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 119 - gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 722.4684
+  ...
+# Subtest: desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 120 - desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 2771.2001
+  ...
+1..120
+# tests 120
+# suites 0
+# pass 120
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29098.8902

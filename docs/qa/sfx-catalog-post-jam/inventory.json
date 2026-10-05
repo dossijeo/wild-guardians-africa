@@ -3,15 +3,16 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "38a73182d3efc8da93805292ec12f5195694f5745178d838060bcc3e3a23bdd6",
+    "public/content/sfx-routing.json": "ae29d41ae5a3efa235940f588e994d7a0a5d9c4887abf31fdadb51395fb9092c",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "0b8e10131699c5374a62887855c145fffba38e6438ba720d9e8e769a07d9b965",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "acd5ff0e4a23bcb4b69260299370ce26770912b47dfa46622a42e6becbf9ff4a",
+    "src/audio/audio.js": "bb1906e517f317c25581466ae3793a19de95c1758844ad7ff848774e8d44f3b4",
     "src/audio/farm-contact-audio.js": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7",
+    "src/audio/raid-arrival-audio.js": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
     "src/audio/structure-audio.js": "9f586a24f3b3f7df14919e5edcde44cd7fe5c08e743c438e2390e8ca178ac418",
     "src/audio/ui-audio.js": "23c14ac33fa9d2bfa547ff440889ed89a87da41f68e52ea92f39f697806d46ca",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
@@ -21,8 +22,8 @@
     "src/simulation/raids.js": "bd9586312511da6fc8356374841987f86d6d3c8045b87e8b71ba5007a9e82ab4"
   },
   "total": 126,
-  "assigned": 81,
-  "unassigned": 45,
+  "assigned": 82,
+  "unassigned": 44,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -149,7 +150,6 @@
       "eco_gain",
       "eco_spend",
       "eco_item_pickup",
-      "game_enemy_detected",
       "game_farmer_hurt"
     ],
     "Alternativa / contextual / assigned": [
@@ -157,6 +157,7 @@
       "beast_hit_structure",
       "npc_acknowledge",
       "ui_buy",
+      "game_enemy_detected",
       "game_building_attacked",
       "game_wall_critical"
     ]
@@ -644,7 +645,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "CropPicked"
         }
       ],
@@ -665,7 +666,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "CrateDropped"
         },
         {
@@ -721,12 +722,12 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "PlacementCommitted"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "WallChainBuilt"
         }
       ],
@@ -807,17 +808,17 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 19,
+          "line": 20,
           "trigger": "PlacementCommitted (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 19,
+          "line": 20,
           "trigger": "WallChainBuilt (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 19,
+          "line": 20,
           "trigger": "VillageFounded (extra contact/completion)"
         }
       ],
@@ -838,7 +839,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "RepairApplied"
         }
       ],
@@ -859,7 +860,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "WallRemoved"
         }
       ],
@@ -1030,7 +1031,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "StructureRuined"
         }
       ],
@@ -1138,7 +1139,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "StructureHit"
         }
       ],
@@ -1159,12 +1160,12 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 19,
+          "line": 20,
           "trigger": "WorkerHit (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
-          "line": 19,
+          "line": 20,
           "trigger": "WorkerIncapacitated (extra contact/completion)"
         }
       ],
@@ -1818,7 +1819,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "WorkerHit"
         }
       ],
@@ -1839,7 +1840,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "WorkerIncapacitated"
         }
       ],
@@ -2028,7 +2029,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "SpellActivated"
         }
       ],
@@ -2064,7 +2065,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "TutorialMessageStarted"
         }
       ],
@@ -2085,7 +2086,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "HarvestRequested"
         }
       ],
@@ -2169,7 +2170,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "CropPlaced"
         }
       ],
@@ -2226,7 +2227,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "HiringConfirmed"
         }
       ],
@@ -2277,7 +2278,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "PostgameStarted"
         },
         {
@@ -2375,7 +2376,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "CrateDelivered"
         }
       ],
@@ -2426,7 +2427,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "RaidSpawned"
         }
       ],
@@ -2443,10 +2444,16 @@
       "sha256": "107ae80e704de9891bd0dea9108d135b4c887b3127bb1e2b7461c1df7c81c59c",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Detección/localización de enemigo; variante local, sin repetir el aviso global.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/raid-arrival-audio.js",
+          "line": 2,
+          "trigger": "RaidArrivalAudio.update: first observed physical farm entry per raid"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 121,
@@ -2519,7 +2526,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "RaidEnded"
         }
       ],
@@ -2540,7 +2547,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "CampaignWon"
         }
       ],
@@ -2561,7 +2568,7 @@
       "codePoints": [
         {
           "file": "src/audio/audio.js",
-          "line": 18,
+          "line": 19,
           "trigger": "GameOver"
         }
       ],
