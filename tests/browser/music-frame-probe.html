@@ -9,7 +9,7 @@ import {MusicWindowPool} from '/src/audio/music-window-pool.js';
 import {musicRangeReader} from '/src/audio/music-range-reader.js';
 let running=false;const status=document.querySelector('#status'),report=document.querySelector('#report');
 document.querySelector('#run').onclick=async()=>{
- if(running)return;running=true;const results=[],context=new AudioContext({sampleRate:48000});
+ if(running)return;running=true;const results=[],requestedRate=Number(new URLSearchParams(location.search).get('rate')??48000),context=new AudioContext({sampleRate:requestedRate});
  try{
   const index=await fetch('./music-frame-probe.json').then(r=>r.json());
   for(const track of index.tracks){
@@ -34,7 +34,7 @@ document.querySelector('#run').onclick=async()=>{
  finally{await context.close();running=false;}
 };
 document.querySelector('#windows').onclick=async()=>{
- if(running)return;running=true;const results=[],context=new AudioContext({sampleRate:48000});
+ if(running)return;running=true;const results=[],requestedRate=Number(new URLSearchParams(location.search).get('rate')??48000),context=new AudioContext({sampleRate:requestedRate});
  const reader=musicRangeReader({fetch:async()=>{throw Error('No network allowed for candidate windows');}});
  let pool,peakWindowPcmBytes=0,totalComparedSamples=0,maximumError=0;
  try{
@@ -46,11 +46,12 @@ document.querySelector('#windows').onclick=async()=>{
     const full=await context.decodeAudioData(await bytes(track.url)),windows=[];
     for(let number=0;number<track.windows.length;number++){
      const part=await pool.load(track.id,number);peakWindowPcmBytes=Math.max(peakWindowPcmBytes,pool.pcmBytes());
-     let max=0,count=0;const local=part.startSample-part.firstSample;
+     let max=0,count=0;const ratio=context.sampleRate/index.sampleRate,local=Math.round((part.startSample-part.firstSample)*ratio),global=Math.round(part.startSample*ratio),end=Math.min(full.length,Math.round(part.endSample*ratio));
+     if(local+end-global>part.buffer.length)throw Error('Decoded range cannot cover its original samples');
      for(let channel=0;channel<2;channel++){
       const original=full.getChannelData(channel),decoded=part.buffer.getChannelData(channel);
-      for(let sample=0;sample<part.endSample-part.startSample;sample++){
-       max=Math.max(max,Math.abs(original[part.startSample+sample]-decoded[local+sample]));count++;
+      for(let sample=0;sample<end-global;sample++){
+       max=Math.max(max,Math.abs(original[global+sample]-decoded[local+sample]));count++;
       }
      }
      windows.push({number,maximumError:max,comparedSamples:count,decodedSamples:part.buffer.length});maximumError=Math.max(maximumError,max);totalComparedSamples+=count;pool.retain([]);

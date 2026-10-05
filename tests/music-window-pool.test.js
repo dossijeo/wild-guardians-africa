@@ -31,3 +31,18 @@ test('invalid decoder lengths, channels and unvalidated resampling cannot silent
     const pool=new MusicWindowPool(index,{readRange:async()=>({}),decode:async()=>invalid});await assert.rejects(pool.load('s0',0),/source index/);assert.equal(pool.pcmBytes(),0);
   }
 });
+
+test('native resampling requires an explicitly supported rate and globally aligned range origins',async()=>{
+  const aligned={...index,supportedSampleRates:[44100,48000]};
+  assert.throws(()=>new MusicWindowPool(aligned,{sampleRate:32000}),/sample rate/);
+  const shifted=structuredClone(aligned);shifted.tracks[0].windows[1].firstSample++;
+  assert.throws(()=>new MusicWindowPool(shifted,{sampleRate:44100}),/sample rate/);
+  for(const length of [264600,264599]){
+    const pool=new MusicWindowPool(aligned,{sampleRate:44100,readRange:async()=>({}),decode:async()=>({length,sampleRate:44100,numberOfChannels:2})});
+    await pool.load('s0',0);assert.equal(pool.pcmBytes(),length*8);pool.dispose();
+  }
+  for(const invalid of [{length:264598,sampleRate:44100,numberOfChannels:2},{length:264601,sampleRate:44100,numberOfChannels:2},{length:264600,sampleRate:48000,numberOfChannels:2}]){
+    const pool=new MusicWindowPool(aligned,{sampleRate:44100,readRange:async()=>({}),decode:async()=>invalid});
+    await assert.rejects(pool.load('s0',0),/source index/);assert.equal(pool.pcmBytes(),0);
+  }
+});

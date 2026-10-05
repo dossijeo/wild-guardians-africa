@@ -1,0 +1,1693 @@
+{
+  "status": "completed",
+  "outputSampleRate": 44100,
+  "indexSampleRate": 48000,
+  "maximumError": 0.0023573553189635277,
+  "sameSourceMaximumError": 0.0032429886050522327,
+  "results": [
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 0.00014112726785242558,
+      "sameSourceMaximumError": 0.0009310310706496239,
+      "seamMaximumError": 0.000050965696573257446,
+      "rmsError": 0.0000030631919601582505,
+      "referenceRms": 0.005572267201405265,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 8235,
+          "seconds": 0.186734693877551,
+          "original": -0.0005014979396946728,
+          "continuous": -0.0005241337930783629,
+          "candidate": -0.0005016272771172225
+        },
+        {
+          "channel": 0,
+          "sample": 8236,
+          "seconds": 0.18675736961451248,
+          "original": -0.0005952155916020274,
+          "continuous": -0.0006221580551937222,
+          "candidate": -0.0005953839863650501
+        },
+        {
+          "channel": 0,
+          "sample": 8237,
+          "seconds": 0.1867800453514739,
+          "original": -0.0007043145596981049,
+          "continuous": -0.0007260968559421599,
+          "candidate": -0.000702864839695394
+        },
+        {
+          "channel": 0,
+          "sample": 8238,
+          "seconds": 0.18680272108843538,
+          "original": -0.0007954628672450781,
+          "continuous": -0.0008158378186635673,
+          "candidate": -0.0007953905733302236
+        },
+        {
+          "channel": 0,
+          "sample": 8239,
+          "seconds": 0.18682539682539684,
+          "original": -0.0008809276623651385,
+          "continuous": -0.0009049628279171884,
+          "candidate": -0.0008822702802717686
+        },
+        {
+          "channel": 0,
+          "sample": 8240,
+          "seconds": 0.18684807256235827,
+          "original": -0.0009775523794814944,
+          "continuous": -0.001000541727989912,
+          "candidate": -0.0009769187308847904
+        },
+        {
+          "channel": 0,
+          "sample": 8241,
+          "seconds": 0.18687074829931974,
+          "original": -0.001069484744220972,
+          "continuous": -0.0010882577626034617,
+          "candidate": -0.0010677010286599398
+        },
+        {
+          "channel": 0,
+          "sample": 8242,
+          "seconds": 0.18689342403628117,
+          "original": -0.0011455494677647948,
+          "continuous": -0.0011620288714766502,
+          "candidate": -0.0011446414282545447
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0010904129594564438,
+      "sameSourceMaximumError": 2.2351741790771484e-8,
+      "seamMaximumError": 0.00002324674278497696,
+      "rmsError": 0.000013117037907794233,
+      "referenceRms": 0.008323124234735772,
+      "firstDifferences": [],
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1058400,
+      "maximumError": 0.00206145946867764,
+      "sameSourceMaximumError": 0.0012293605832383037,
+      "seamMaximumError": 0.00022028852254152298,
+      "rmsError": 0.0000686541133352853,
+      "referenceRms": 0.011124211257425144,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 37257,
+          "seconds": 0.8448299319727891,
+          "original": -0.005838092416524887,
+          "continuous": -0.005884096026420593,
+          "candidate": -0.005854236427694559
+        },
+        {
+          "channel": 0,
+          "sample": 37258,
+          "seconds": 0.8448526077097506,
+          "original": -0.005634392611682415,
+          "continuous": -0.005682450719177723,
+          "candidate": -0.005651064682751894
+        },
+        {
+          "channel": 0,
+          "sample": 37259,
+          "seconds": 0.844875283446712,
+          "original": -0.0054166605696082115,
+          "continuous": -0.005467986688017845,
+          "candidate": -0.005434692371636629
+        },
+        {
+          "channel": 0,
+          "sample": 37260,
+          "seconds": 0.8448979591836735,
+          "original": -0.0051949359476566315,
+          "continuous": -0.005246156360954046,
+          "candidate": -0.0052130697295069695
+        },
+        {
+          "channel": 0,
+          "sample": 37261,
+          "seconds": 0.844920634920635,
+          "original": -0.00497291749343276,
+          "continuous": -0.005024058278650045,
+          "candidate": -0.004989669192582369
+        },
+        {
+          "channel": 0,
+          "sample": 37262,
+          "seconds": 0.8449433106575964,
+          "original": -0.004732684697955847,
+          "continuous": -0.004788463935256004,
+          "candidate": -0.004750367254018784
+        },
+        {
+          "channel": 0,
+          "sample": 37263,
+          "seconds": 0.8449659863945578,
+          "original": -0.004465675447136164,
+          "continuous": -0.004528429824858904,
+          "candidate": -0.004487642087042332
+        },
+        {
+          "channel": 0,
+          "sample": 37264,
+          "seconds": 0.8449886621315192,
+          "original": -0.004198544658720493,
+          "continuous": -0.004261397756636143,
+          "candidate": -0.004222360905259848
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0023573553189635277,
+      "sameSourceMaximumError": 0.0032429886050522327,
+      "seamMaximumError": 0.00032435357570648193,
+      "rmsError": 0.00007315165331650143,
+      "referenceRms": 0.014209485778156708,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 85366,
+          "seconds": 1.9357369614512472,
+          "original": 0.012016373686492443,
+          "continuous": 0.011882663704454899,
+          "candidate": 0.012016628868877888
+        },
+        {
+          "channel": 0,
+          "sample": 85367,
+          "seconds": 1.9357596371882086,
+          "original": 0.011624753475189209,
+          "continuous": 0.011470223776996136,
+          "candidate": 0.01162257231771946
+        },
+        {
+          "channel": 0,
+          "sample": 85368,
+          "seconds": 1.9357823129251701,
+          "original": 0.011172677390277386,
+          "continuous": 0.010991834104061127,
+          "candidate": 0.011168082244694233
+        },
+        {
+          "channel": 0,
+          "sample": 85369,
+          "seconds": 1.9358049886621316,
+          "original": 0.010644979774951935,
+          "continuous": 0.010444541461765766,
+          "candidate": 0.010641018860042095
+        },
+        {
+          "channel": 0,
+          "sample": 85370,
+          "seconds": 1.935827664399093,
+          "original": 0.01006205752491951,
+          "continuous": 0.009856593795120716,
+          "candidate": 0.010061492212116718
+        },
+        {
+          "channel": 0,
+          "sample": 85371,
+          "seconds": 1.9358503401360545,
+          "original": 0.009465130046010017,
+          "continuous": 0.00926207285374403,
+          "candidate": 0.009466265328228474
+        },
+        {
+          "channel": 0,
+          "sample": 85372,
+          "seconds": 1.935873015873016,
+          "original": 0.008874027989804745,
+          "continuous": 0.008672235533595085,
+          "candidate": 0.008874702267348766
+        },
+        {
+          "channel": 0,
+          "sample": 85373,
+          "seconds": 1.9358956916099774,
+          "original": 0.008287182077765465,
+          "continuous": 0.008088404312729836,
+          "candidate": 0.008288928307592869
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0021807141602039337,
+      "sameSourceMaximumError": 0.0023072324693202972,
+      "seamMaximumError": 0.0003461982123553753,
+      "rmsError": 0.00007634778956610092,
+      "referenceRms": 0.010831194632359691,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 61312,
+          "seconds": 1.390294784580499,
+          "original": -0.0002175143890781328,
+          "continuous": -0.00021669680427294225,
+          "candidate": -0.00021946498600300401
+        },
+        {
+          "channel": 0,
+          "sample": 61313,
+          "seconds": 1.3903174603174604,
+          "original": -0.0002000180829782039,
+          "continuous": -0.00020289325038902462,
+          "candidate": -0.00020168359333183616
+        },
+        {
+          "channel": 0,
+          "sample": 61314,
+          "seconds": 1.3903401360544219,
+          "original": -0.00021554113482125103,
+          "continuous": -0.0002174127585021779,
+          "candidate": -0.00021358039521146566
+        },
+        {
+          "channel": 0,
+          "sample": 61315,
+          "seconds": 1.3903628117913833,
+          "original": -0.00024148731608875096,
+          "continuous": -0.00023999072436708957,
+          "candidate": -0.00023806742683518678
+        },
+        {
+          "channel": 0,
+          "sample": 61317,
+          "seconds": 1.390408163265306,
+          "original": -0.00025151920272037387,
+          "continuous": -0.00025379599537700415,
+          "candidate": -0.00025244656717404723
+        },
+        {
+          "channel": 0,
+          "sample": 61318,
+          "seconds": 1.3904308390022675,
+          "original": -0.0002687431697268039,
+          "continuous": -0.00027056390536017716,
+          "candidate": -0.00026768454699777067
+        },
+        {
+          "channel": 0,
+          "sample": 61319,
+          "seconds": 1.390453514739229,
+          "original": -0.0002925315930042416,
+          "continuous": -0.0002945860323961824,
+          "candidate": -0.00029110669856891036
+        },
+        {
+          "channel": 0,
+          "sample": 61320,
+          "seconds": 1.3904761904761904,
+          "original": -0.00032552043558098376,
+          "continuous": -0.00032894936157390475,
+          "candidate": -0.00032388820545747876
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0006126719526946545,
+      "sameSourceMaximumError": 0.0009157136082649231,
+      "seamMaximumError": 0.0006126719526946545,
+      "rmsError": 0.00001465284305503122,
+      "referenceRms": 0.006335475812482987,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 8235,
+          "seconds": 0.186734693877551,
+          "original": 0.01098181214183569,
+          "continuous": 0.01086172740906477,
+          "candidate": 0.010981559753417969
+        },
+        {
+          "channel": 0,
+          "sample": 8236,
+          "seconds": 0.18675736961451248,
+          "original": 0.010498774237930775,
+          "continuous": 0.010397916659712791,
+          "candidate": 0.010496892966330051
+        },
+        {
+          "channel": 0,
+          "sample": 8237,
+          "seconds": 0.1867800453514739,
+          "original": 0.010069874115288258,
+          "continuous": 0.009871761314570904,
+          "candidate": 0.010042797774076462
+        },
+        {
+          "channel": 0,
+          "sample": 8238,
+          "seconds": 0.18680272108843538,
+          "original": 0.00928118173032999,
+          "continuous": 0.009016077034175396,
+          "candidate": 0.009264113381505013
+        },
+        {
+          "channel": 0,
+          "sample": 8239,
+          "seconds": 0.18682539682539684,
+          "original": 0.008234740234911442,
+          "continuous": 0.007995965890586376,
+          "candidate": 0.00824508536607027
+        },
+        {
+          "channel": 0,
+          "sample": 8240,
+          "seconds": 0.18684807256235827,
+          "original": 0.007242177147418261,
+          "continuous": 0.006993810646235943,
+          "candidate": 0.007235477678477764
+        },
+        {
+          "channel": 0,
+          "sample": 8241,
+          "seconds": 0.18687074829931974,
+          "original": 0.0062074135057628155,
+          "continuous": 0.005940787959843874,
+          "candidate": 0.006202977616339922
+        },
+        {
+          "channel": 0,
+          "sample": 8242,
+          "seconds": 0.18689342403628117,
+          "original": 0.005159183871001005,
+          "continuous": 0.00494492519646883,
+          "candidate": 0.005183178931474686
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0000022792119125369936,
+      "sameSourceMaximumError": 4.874891601502895e-10,
+      "seamMaximumError": 0,
+      "rmsError": 1.1339930273517628e-8,
+      "referenceRms": 2.9584446012159207e-7,
+      "firstDifferences": [],
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1058400,
+      "maximumError": 0.00012097600847482681,
+      "sameSourceMaximumError": 0.0011891705798916519,
+      "seamMaximumError": 0,
+      "rmsError": 0.0000059097668286846306,
+      "referenceRms": 0.0024125856072680267,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 83926,
+          "seconds": 1.9030839002267574,
+          "original": -0.000004296015049476409,
+          "continuous": -0.000005699729626940098,
+          "candidate": -0.000004609027200785931
+        },
+        {
+          "channel": 0,
+          "sample": 83945,
+          "seconds": 1.903514739229025,
+          "original": -6.503339591290569e-7,
+          "continuous": 0.0000011790800726885209,
+          "candidate": -5.0877343227284655e-8
+        },
+        {
+          "channel": 0,
+          "sample": 83994,
+          "seconds": 1.904625850340136,
+          "original": 5.219528702582465e-7,
+          "continuous": -0.0000011652806506390334,
+          "candidate": -5.692180593541707e-8
+        },
+        {
+          "channel": 0,
+          "sample": 84048,
+          "seconds": 1.9058503401360545,
+          "original": 0.000004895992333331378,
+          "continuous": 0.0000032625580388412345,
+          "candidate": 0.000004314074885769514
+        },
+        {
+          "channel": 0,
+          "sample": 84053,
+          "seconds": 1.9059637188208616,
+          "original": -4.892483502771938e-7,
+          "continuous": 8.592309654886776e-7,
+          "candidate": -1.7776503113964282e-7
+        },
+        {
+          "channel": 0,
+          "sample": 84056,
+          "seconds": 1.906031746031746,
+          "original": 8.553701604796515e-7,
+          "continuous": -0.0000012496370800363366,
+          "candidate": -1.9478024171348807e-7
+        },
+        {
+          "channel": 0,
+          "sample": 84063,
+          "seconds": 1.9061904761904762,
+          "original": 0.000005456040980789112,
+          "continuous": 0.000003662643393909093,
+          "candidate": 0.000004824751613341505
+        },
+        {
+          "channel": 0,
+          "sample": 84086,
+          "seconds": 1.9067120181405897,
+          "original": 1.9685454333284724e-7,
+          "continuous": -0.0000021472139906109078,
+          "candidate": -9.436560048925458e-7
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0008555976673960686,
+      "sameSourceMaximumError": 0.0013404636410996318,
+      "seamMaximumError": 0.0002557493280619383,
+      "rmsError": 0.00005976810098451899,
+      "referenceRms": 0.005852392879202332,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 85366,
+          "seconds": 1.9357369614512472,
+          "original": -0.0011788830161094666,
+          "continuous": -0.001221739104948938,
+          "candidate": -0.0011791063006967306
+        },
+        {
+          "channel": 0,
+          "sample": 85367,
+          "seconds": 1.9357596371882086,
+          "original": -0.0013034400762990117,
+          "continuous": -0.0013490113196894526,
+          "candidate": -0.0013037490425631404
+        },
+        {
+          "channel": 0,
+          "sample": 85368,
+          "seconds": 1.9357823129251701,
+          "original": -0.0014361819485202432,
+          "continuous": -0.00148467265535146,
+          "candidate": -0.0014367004623636603
+        },
+        {
+          "channel": 0,
+          "sample": 85369,
+          "seconds": 1.9358049886621316,
+          "original": -0.0015773859340697527,
+          "continuous": -0.0016284361481666565,
+          "candidate": -0.0015780007233843207
+        },
+        {
+          "channel": 0,
+          "sample": 85370,
+          "seconds": 1.935827664399093,
+          "original": -0.001726037124171853,
+          "continuous": -0.0017789038829505444,
+          "candidate": -0.0017265417845919728
+        },
+        {
+          "channel": 0,
+          "sample": 85371,
+          "seconds": 1.9358503401360545,
+          "original": -0.0018798204837366939,
+          "continuous": -0.0019331859657540917,
+          "candidate": -0.0018799265380948782
+        },
+        {
+          "channel": 0,
+          "sample": 85372,
+          "seconds": 1.935873015873016,
+          "original": -0.0020342166535556316,
+          "continuous": -0.0020861076191067696,
+          "candidate": -0.002033680910244584
+        },
+        {
+          "channel": 0,
+          "sample": 85373,
+          "seconds": 1.9358956916099774,
+          "original": -0.002182926284149289,
+          "continuous": -0.0022320610005408525,
+          "candidate": -0.0021821053232997656
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "a",
+      "track": "s9",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0012019129935652018,
+      "sameSourceMaximumError": 0.0010177318472415209,
+      "seamMaximumError": 0.0009122621268033981,
+      "rmsError": 0.00008506926758039627,
+      "referenceRms": 0.005740071783064511,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 61312,
+          "seconds": 1.390294784580499,
+          "original": -0.001026785233989358,
+          "continuous": -0.0010378469014540315,
+          "candidate": -0.0010078229242935777
+        },
+        {
+          "channel": 0,
+          "sample": 61313,
+          "seconds": 1.3903174603174604,
+          "original": -0.0012449671048671007,
+          "continuous": -0.0012617954052984715,
+          "candidate": -0.0012282537063583732
+        },
+        {
+          "channel": 0,
+          "sample": 61314,
+          "seconds": 1.3903401360544219,
+          "original": -0.0014960127882659435,
+          "continuous": -0.0015031876973807812,
+          "candidate": -0.001470811665058136
+        },
+        {
+          "channel": 0,
+          "sample": 61315,
+          "seconds": 1.3903628117913833,
+          "original": -0.0016963935922831297,
+          "continuous": -0.0016782523598521948,
+          "candidate": -0.001667657634243369
+        },
+        {
+          "channel": 0,
+          "sample": 61316,
+          "seconds": 1.3903854875283446,
+          "original": -0.0016900348709896207,
+          "continuous": -0.0016693385550752282,
+          "candidate": -0.0016843011835590005
+        },
+        {
+          "channel": 0,
+          "sample": 61317,
+          "seconds": 1.390408163265306,
+          "original": -0.0015493985265493393,
+          "continuous": -0.0015545530477538705,
+          "candidate": -0.0015710248844698071
+        },
+        {
+          "channel": 0,
+          "sample": 61318,
+          "seconds": 1.3904308390022675,
+          "original": -0.001513948431238532,
+          "continuous": -0.0015386780723929405,
+          "candidate": -0.0015322876861318946
+        },
+        {
+          "channel": 0,
+          "sample": 61319,
+          "seconds": 1.390453514739229,
+          "original": -0.0016839004820212722,
+          "continuous": -0.0017078353557735682,
+          "candidate": -0.0016775595722720027
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 0.00007653533248230815,
+      "sameSourceMaximumError": 0.0003811512142419815,
+      "seamMaximumError": 0.00007426703814417124,
+      "rmsError": 0.0000024842381444369027,
+      "referenceRms": 0.015666833382865893,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 8235,
+          "seconds": 0.186734693877551,
+          "original": -0.0003023074532393366,
+          "continuous": -0.00031697278609499335,
+          "candidate": -0.00030250861891545355
+        },
+        {
+          "channel": 0,
+          "sample": 8236,
+          "seconds": 0.18675736961451248,
+          "original": -0.00036211489350534976,
+          "continuous": -0.0003771371557377279,
+          "candidate": -0.0003620547940954566
+        },
+        {
+          "channel": 0,
+          "sample": 8237,
+          "seconds": 0.1867800453514739,
+          "original": -0.00042377461795695126,
+          "continuous": -0.00043905965867452323,
+          "candidate": -0.0004239495028741658
+        },
+        {
+          "channel": 0,
+          "sample": 8238,
+          "seconds": 0.18680272108843538,
+          "original": -0.00048642753972671926,
+          "continuous": -0.0005020031821914017,
+          "candidate": -0.00048641645116731524
+        },
+        {
+          "channel": 0,
+          "sample": 8239,
+          "seconds": 0.18682539682539684,
+          "original": -0.0005500632687471807,
+          "continuous": -0.0005657451110891998,
+          "candidate": -0.0005502456333488226
+        },
+        {
+          "channel": 0,
+          "sample": 8240,
+          "seconds": 0.18684807256235827,
+          "original": -0.0006155399605631828,
+          "continuous": -0.0006343743880279362,
+          "candidate": -0.0006169842090457678
+        },
+        {
+          "channel": 0,
+          "sample": 8241,
+          "seconds": 0.18687074829931974,
+          "original": -0.0006929500959813595,
+          "continuous": -0.0007138835499063134,
+          "candidate": -0.000693771755322814
+        },
+        {
+          "channel": 0,
+          "sample": 8242,
+          "seconds": 0.18689342403628117,
+          "original": -0.0007773793768137693,
+          "continuous": -0.000797751999925822,
+          "candidate": -0.0007772326353006065
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1058400,
+      "maximumError": 0.00007382035255432129,
+      "sameSourceMaximumError": 1.4901161193847656e-8,
+      "seamMaximumError": 0.000003041233867406845,
+      "rmsError": 0.000001107284433965086,
+      "referenceRms": 0.011360870152764784,
+      "firstDifferences": [],
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0003858613781630993,
+      "sameSourceMaximumError": 0.00013880792539566755,
+      "seamMaximumError": 0.00010739080607891083,
+      "rmsError": 0.00004725618054858166,
+      "referenceRms": 0.014463795573814943,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 29401,
+          "seconds": 0.6666893424036281,
+          "original": -0.0006184618687257171,
+          "continuous": -0.0006184930680319667,
+          "candidate": -0.0006043014000169933
+        },
+        {
+          "channel": 0,
+          "sample": 29402,
+          "seconds": 0.6667120181405896,
+          "original": -0.0007933710585348308,
+          "continuous": -0.0007933344459161162,
+          "candidate": -0.0007790541858412325
+        },
+        {
+          "channel": 0,
+          "sample": 29403,
+          "seconds": 0.666734693877551,
+          "original": -0.0009683597600087523,
+          "continuous": -0.0009672165033407509,
+          "candidate": -0.0009535601711831987
+        },
+        {
+          "channel": 0,
+          "sample": 29404,
+          "seconds": 0.6667573696145125,
+          "original": -0.001132044242694974,
+          "continuous": -0.0011307288659736514,
+          "candidate": -0.0011182132875546813
+        },
+        {
+          "channel": 0,
+          "sample": 29405,
+          "seconds": 0.666780045351474,
+          "original": -0.0012827205937355757,
+          "continuous": -0.001283480552956462,
+          "candidate": -0.0012712219031527638
+        },
+        {
+          "channel": 0,
+          "sample": 29406,
+          "seconds": 0.6668027210884354,
+          "original": -0.0014392059529200196,
+          "continuous": -0.001441528438590467,
+          "candidate": -0.0014280742034316063
+        },
+        {
+          "channel": 0,
+          "sample": 29407,
+          "seconds": 0.6668253968253969,
+          "original": -0.0016149926232174039,
+          "continuous": -0.0016159525839611888,
+          "candidate": -0.0016012361738830805
+        },
+        {
+          "channel": 0,
+          "sample": 29408,
+          "seconds": 0.6668480725623582,
+          "original": -0.0017976346425712109,
+          "continuous": -0.0017970353364944458,
+          "candidate": -0.0017823238158598542
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0003858613781630993,
+      "sameSourceMaximumError": 0.00013880792539566755,
+      "seamMaximumError": 0.000036352634197101,
+      "rmsError": 0.00004598338854043702,
+      "referenceRms": 0.014915882438808566,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 509601,
+          "seconds": 11.555578231292516,
+          "original": 0.009986532852053642,
+          "continuous": 0.009958443231880665,
+          "candidate": 0.009979372844099998
+        },
+        {
+          "channel": 0,
+          "sample": 509602,
+          "seconds": 11.55560090702948,
+          "original": 0.010077599436044693,
+          "continuous": 0.010049713775515556,
+          "candidate": 0.010070206597447395
+        },
+        {
+          "channel": 0,
+          "sample": 509603,
+          "seconds": 11.55562358276644,
+          "original": 0.010169264860451221,
+          "continuous": 0.010141251608729362,
+          "candidate": 0.010162228718400002
+        },
+        {
+          "channel": 0,
+          "sample": 509604,
+          "seconds": 11.555646258503401,
+          "original": 0.01026428397744894,
+          "continuous": 0.010234987363219261,
+          "candidate": 0.010256477631628513
+        },
+        {
+          "channel": 0,
+          "sample": 509605,
+          "seconds": 11.555668934240362,
+          "original": 0.010357649996876717,
+          "continuous": 0.010329791344702244,
+          "candidate": 0.010349685326218605
+        },
+        {
+          "channel": 0,
+          "sample": 509606,
+          "seconds": 11.555691609977325,
+          "original": 0.010440641082823277,
+          "continuous": 0.010416076518595219,
+          "candidate": 0.010433320887386799
+        },
+        {
+          "channel": 0,
+          "sample": 509607,
+          "seconds": 11.555714285714286,
+          "original": 0.010510193184018135,
+          "continuous": 0.010489970445632935,
+          "candidate": 0.010504853911697865
+        },
+        {
+          "channel": 0,
+          "sample": 509608,
+          "seconds": 11.555736961451247,
+          "original": 0.01057592686265707,
+          "continuous": 0.01055658794939518,
+          "candidate": 0.010571775957942009
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s2",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1058400,
+      "maximumError": 0.000321627056109719,
+      "sameSourceMaximumError": 0.0002576131373643875,
+      "seamMaximumError": 0.00006271293386816978,
+      "rmsError": 0.00004226777972683644,
+      "referenceRms": 0.014708016461999193,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 245001,
+          "seconds": 5.555578231292517,
+          "original": -0.0027785790152847767,
+          "continuous": -0.0027458828408271074,
+          "candidate": -0.0027697174809873104
+        },
+        {
+          "channel": 0,
+          "sample": 245002,
+          "seconds": 5.555600907029478,
+          "original": -0.002891292329877615,
+          "continuous": -0.0028564909007400274,
+          "candidate": -0.002882067346945405
+        },
+        {
+          "channel": 0,
+          "sample": 245003,
+          "seconds": 5.55562358276644,
+          "original": -0.003008446656167507,
+          "continuous": -0.002972519490867853,
+          "candidate": -0.002998804673552513
+        },
+        {
+          "channel": 0,
+          "sample": 245004,
+          "seconds": 5.555646258503401,
+          "original": -0.0031244177371263504,
+          "continuous": -0.003089318983256817,
+          "candidate": -0.0031148355919867754
+        },
+        {
+          "channel": 0,
+          "sample": 245005,
+          "seconds": 5.555668934240363,
+          "original": -0.0032363105565309525,
+          "continuous": -0.003202424617484212,
+          "candidate": -0.0032272483222186565
+        },
+        {
+          "channel": 0,
+          "sample": 245006,
+          "seconds": 5.555691609977324,
+          "original": -0.0033463616855442524,
+          "continuous": -0.003312833374366164,
+          "candidate": -0.0033377502113580704
+        },
+        {
+          "channel": 0,
+          "sample": 245007,
+          "seconds": 5.555714285714286,
+          "original": -0.0034584524109959602,
+          "continuous": -0.003424200462177396,
+          "candidate": -0.0034496490843594074
+        },
+        {
+          "channel": 0,
+          "sample": 245008,
+          "seconds": 5.555736961451247,
+          "original": -0.0035719014704227448,
+          "continuous": -0.0035372613929212093,
+          "candidate": -0.003562676953151822
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0003825160674750805,
+      "sameSourceMaximumError": 0.0018474362441338599,
+      "seamMaximumError": 0.000011802294466178864,
+      "rmsError": 0.000011792664427688693,
+      "referenceRms": 0.007263800717855025,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 8235,
+          "seconds": 0.186734693877551,
+          "original": 0.00003684611147036776,
+          "continuous": 0.00003466780617600307,
+          "candidate": 0.00003682033275254071
+        },
+        {
+          "channel": 0,
+          "sample": 8236,
+          "seconds": 0.18675736961451248,
+          "original": 0.00002807211239996832,
+          "continuous": 0.000024577175281592645,
+          "candidate": 0.000027674515877151862
+        },
+        {
+          "channel": 0,
+          "sample": 8237,
+          "seconds": 0.1867800453514739,
+          "original": 0.000014119978914095555,
+          "continuous": 0.000010636314073053654,
+          "candidate": 0.000014473952433036175
+        },
+        {
+          "channel": 0,
+          "sample": 8238,
+          "seconds": 0.18680272108843538,
+          "original": 4.40241905153016e-7,
+          "continuous": 2.2635904262102713e-10,
+          "candidate": 0.0000012838351040045382
+        },
+        {
+          "channel": 0,
+          "sample": 8240,
+          "seconds": 0.18684807256235827,
+          "original": -0.0000023347490696323803,
+          "continuous": -5.860353553543973e-7,
+          "candidate": -0.0000016554012063352275
+        },
+        {
+          "channel": 0,
+          "sample": 8242,
+          "seconds": 0.18689342403628117,
+          "original": -0.0000145599942698027,
+          "continuous": -0.000021611891497741453,
+          "candidate": -0.000015688689018134028
+        },
+        {
+          "channel": 0,
+          "sample": 8243,
+          "seconds": 0.18691609977324264,
+          "original": -0.00003688955257530324,
+          "continuous": -0.00003849366112262942,
+          "candidate": -0.000034593696909723803
+        },
+        {
+          "channel": 0,
+          "sample": 8244,
+          "seconds": 0.18693877551020407,
+          "original": -0.000039670001569902524,
+          "continuous": -0.000041195722587872297,
+          "candidate": -0.00004007965617347509
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1058400,
+      "maximumError": 0.000003381650458322838,
+      "sameSourceMaximumError": 4.638422979041934e-10,
+      "seamMaximumError": 0,
+      "rmsError": 2.1137055667702563e-8,
+      "referenceRms": 3.2652151850799556e-7,
+      "firstDifferences": [],
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1058400,
+      "maximumError": 0.001620385330170393,
+      "sameSourceMaximumError": 0.0009296350181102753,
+      "seamMaximumError": 0.00021125695639057085,
+      "rmsError": 0.0001208108864606843,
+      "referenceRms": 0.006890682699058659,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 29401,
+          "seconds": 0.6666893424036281,
+          "original": 0.0013044587103649974,
+          "continuous": 0.0013041227357462049,
+          "candidate": 0.0013169074663892388
+        },
+        {
+          "channel": 0,
+          "sample": 29402,
+          "seconds": 0.6667120181405896,
+          "original": 0.0011458360822871327,
+          "continuous": 0.0011452353792265058,
+          "candidate": 0.001158790080808103
+        },
+        {
+          "channel": 0,
+          "sample": 29403,
+          "seconds": 0.666734693877551,
+          "original": 0.0009770955657586455,
+          "continuous": 0.000976604176685214,
+          "candidate": 0.000990761211141944
+        },
+        {
+          "channel": 0,
+          "sample": 29404,
+          "seconds": 0.6667573696145125,
+          "original": 0.0008015143102966249,
+          "continuous": 0.0008015230414457619,
+          "candidate": 0.000815891195088625
+        },
+        {
+          "channel": 0,
+          "sample": 29405,
+          "seconds": 0.666780045351474,
+          "original": 0.0006250992882996798,
+          "continuous": 0.000625487940851599,
+          "candidate": 0.0006396959070116282
+        },
+        {
+          "channel": 0,
+          "sample": 29406,
+          "seconds": 0.6668027210884354,
+          "original": 0.0004517427587416023,
+          "continuous": 0.0004518752102740109,
+          "candidate": 0.0004658745019696653
+        },
+        {
+          "channel": 0,
+          "sample": 29407,
+          "seconds": 0.6668253968253969,
+          "original": 0.0002792969171423465,
+          "continuous": 0.0002788584679365158,
+          "candidate": 0.0002929606707766652
+        },
+        {
+          "channel": 0,
+          "sample": 29408,
+          "seconds": 0.6668480725623582,
+          "original": 0.0001025819728965871,
+          "continuous": 0.00010189893509959802,
+          "candidate": 0.00011642570461845025
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1058400,
+      "maximumError": 0.001620385330170393,
+      "sameSourceMaximumError": 0.0009296350181102753,
+      "seamMaximumError": 0.000019805309420917183,
+      "rmsError": 0.00011305112437387731,
+      "referenceRms": 0.003970564563408014,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 509601,
+          "seconds": 11.555578231292516,
+          "original": -0.0003366416203789413,
+          "continuous": -0.0003489622031338513,
+          "candidate": -0.00034004729241132736
+        },
+        {
+          "channel": 0,
+          "sample": 509602,
+          "seconds": 11.55560090702948,
+          "original": -0.00029611881473101676,
+          "continuous": -0.000308297632727772,
+          "candidate": -0.0002993377565871924
+        },
+        {
+          "channel": 0,
+          "sample": 509603,
+          "seconds": 11.55562358276644,
+          "original": -0.00025844902847893536,
+          "continuous": -0.00027004137518815696,
+          "candidate": -0.00026115510263480246
+        },
+        {
+          "channel": 0,
+          "sample": 509604,
+          "seconds": 11.555646258503401,
+          "original": -0.0002156930131604895,
+          "continuous": -0.0002298242470715195,
+          "candidate": -0.00021820762776769698
+        },
+        {
+          "channel": 0,
+          "sample": 509605,
+          "seconds": 11.555668934240362,
+          "original": -0.0001565390411997214,
+          "continuous": -0.0001759135484462604,
+          "candidate": -0.00015917065320536494
+        },
+        {
+          "channel": 0,
+          "sample": 509606,
+          "seconds": 11.555691609977325,
+          "original": -0.00006486595520982519,
+          "continuous": -0.00009413412044523284,
+          "candidate": -0.00006825228774687275
+        },
+        {
+          "channel": 0,
+          "sample": 509607,
+          "seconds": 11.555714285714286,
+          "original": 0.00008309954137075692,
+          "continuous": 0.00003671313970698975,
+          "candidate": 0.00007614603964611888
+        },
+        {
+          "channel": 0,
+          "sample": 509608,
+          "seconds": 11.555736961451247,
+          "original": 0.00030149926897138357,
+          "continuous": 0.00023365678498521447,
+          "candidate": 0.00028727733297273517
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "pack": "b",
+      "track": "s9",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1058400,
+      "maximumError": 0.0019938332843594253,
+      "sameSourceMaximumError": 0.0006589519325643778,
+      "seamMaximumError": 0.00042298249900341034,
+      "rmsError": 0.0001629768788151164,
+      "referenceRms": 0.007871802600704738,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 245001,
+          "seconds": 5.555578231292517,
+          "original": -0.00018339006055612117,
+          "continuous": -0.00016742832667659968,
+          "candidate": -0.00018002153956331313
+        },
+        {
+          "channel": 0,
+          "sample": 245002,
+          "seconds": 5.555600907029478,
+          "original": -0.00021354935597628355,
+          "continuous": -0.00020521679834928364,
+          "candidate": -0.00021110865054652095
+        },
+        {
+          "channel": 0,
+          "sample": 245004,
+          "seconds": 5.555646258503401,
+          "original": -0.00020333443535491824,
+          "continuous": -0.0002132425579475239,
+          "candidate": -0.00020359517657198012
+        },
+        {
+          "channel": 0,
+          "sample": 245005,
+          "seconds": 5.555668934240363,
+          "original": -0.00015026747132651508,
+          "continuous": -0.00016843306366354227,
+          "candidate": -0.0001544435799587518
+        },
+        {
+          "channel": 0,
+          "sample": 245006,
+          "seconds": 5.555691609977324,
+          "original": -0.00008758961485000327,
+          "continuous": -0.00010687846224755049,
+          "candidate": -0.000093663482402917
+        },
+        {
+          "channel": 0,
+          "sample": 245007,
+          "seconds": 5.555714285714286,
+          "original": -0.00003528281376929954,
+          "continuous": -0.000050737009587464854,
+          "candidate": -0.00003974588253186084
+        },
+        {
+          "channel": 0,
+          "sample": 245008,
+          "seconds": 5.555736961451247,
+          "original": 0.000013573035175795667,
+          "continuous": -0.000001173830696643563,
+          "candidate": 0.000010282833500241395
+        },
+        {
+          "channel": 0,
+          "sample": 245009,
+          "seconds": 5.555759637188209,
+          "original": 0.00007025635568425059,
+          "continuous": 0.00005264783976599574,
+          "candidate": 0.0000656400152365677
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    }
+  ]
+}

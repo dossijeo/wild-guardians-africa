@@ -1,12 +1,12 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA transporte musical por ventanas</title>
 <style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:10px;margin:3px}pre{white-space:pre-wrap}</style>
-<h1>Transporte por ventanas · WebAudio real</h1><p>Ruta de gameplay de producción a 48 kHz, MP3 originales desde caché, salida silenciada.</p>
+<h1>Transporte por ventanas · WebAudio real</h1><p>Ruta de gameplay de producción, MP3 originales desde caché, salida silenciada. Frecuencia seleccionable con el parámetro rate.</p>
 <div id="cases"></div><button id="all">Comprobar ocho casos</button><button id="stop">Parar</button><p id="status">Preparado</p><pre id="report"></pre>
 <script type="module">
 import {AudioSystem} from '/src/audio/audio.js';
 import {musicRangeReader} from '/src/audio/music-range-reader.js';
 import {json} from '/src/rendering/assets.js';
-let audio,timer,result={},generation=0;
+let audio,timer,result={},generation=0;const requestedRate=Number(new URLSearchParams(location.search).get('rate')??48000);
 const status=document.querySelector('#status'),report=document.querySelector('#report');
 function paint(){
  const pool=audio?.musicWindowPool,transport=audio?.transport;
@@ -29,7 +29,8 @@ async function run(pack,edge){
   const reader=musicRangeReader({fetch:async()=>{throw Error('Production windows must be cached for this proof');}});result.reader=reader.stats;
   const navigation=edge==='wrap'?null:bank.navigation.edges.find(e=>e.id===edge),from=navigation?bank.navigation.sections.find(s=>s.id===navigation.source):null;
   const offset=from?from.end-6:bank.duration-8;
-  audio=new AudioSystem({music:0,sfx:0},{json,musicReader:reader,musicTransport:{offset,random:edge==='wrap'?()=>1:()=>0}});audio.sfx={items:[]};audio.context=new AudioContext({sampleRate:48000});await audio.unlock();
+  audio=new AudioSystem({music:0,sfx:0},{json:async url=>{const value=await json(url);(result.jsonRequests??=[]).push({url,sections:value.navigation?.sections?.length,indexVersion:value.version});return value;},musicReader:reader,musicTransport:{offset,random:edge==='wrap'?()=>1:()=>0}});audio.sfx={items:[]};audio.context=new AudioContext({sampleRate:requestedRate});await audio.unlock();result.sampleRate=audio.context.sampleRate;
+  result.nativeWindowRates=AudioSystem.prototype.gameplay.toString().match(/\[[^\]]*\]\.includes\(this.context.sampleRate\)/)?.[0]??'not present';
   const original=audio.context.createBufferSource.bind(audio.context);audio.context.createBufferSource=()=>{const source=original(),start=source.start.bind(source);source.start=(when,offset)=>{source.whenAtStart=when;source.offsetAtStart=offset;return start(when,offset);};return source;};
   const day=pack==='a'?1:2;await audio.gameplay(day);result.transport=audio.transport?.constructor.name;Object.defineProperty(result,'initialTransport',{value:audio.transport,writable:true});result.restarts=0;result.initialContextTime=audio.context.currentTime;result.initialPrimaryStart=audio.transport?.primary.start;result.initialOffset=offset;result.bankDuration=bank.duration;
   if(own!==generation)return;

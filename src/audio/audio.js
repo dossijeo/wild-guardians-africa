@@ -126,9 +126,9 @@ export class AudioSystem {
       if(this.pack!==pack||generation!==this.musicGeneration)return;
       const current=()=>this.pack===pack&&generation===this.musicGeneration;
       this.musicLoads??=new MusicLoadQueue();
-      // Original indexed MP3 windows are validated at 48 kHz. Other context
-      // rates keep the original transport until their resampling is verified.
-      if(bank.navigation?.sections?.length&&this.context.sampleRate===48000&&this.resources.musicWindows!==false){
+      // Aligned original MP3 ranges are validated at both common native rates.
+      // Other rates retain the original route until their resampling is checked.
+      if(bank.navigation?.sections?.length&&[44100,48000].includes(this.context.sampleRate)&&this.resources.musicWindows!==false){
         await startWindowMusic(this,pack,bank,current);return;
       }
       // Compatibility route: retain only the current pack's full PCM.

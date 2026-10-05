@@ -19,7 +19,7 @@ function fixture({read,decode,rate=48000}={}){
  audio.context={state:'running',sampleRate:rate,currentTime:1,
   createGain:()=>({gain:{value:1,setValueAtTime(){},cancelScheduledValues(){},linearRampToValueAtTime(){}},connect(){},disconnect(){}}),
   createBufferSource:()=>{const source={playbackRate:{value:1},connect(){},disconnect(){},start(){},stop(){this.stopped=true;}};sources.push(source);return source;},
-  async decodeAudioData(item){decoded.push(item);await decode?.(item);return item.full?item:{length:item.entry.decodedSamples,sampleRate:48000,numberOfChannels:2};}
+  async decodeAudioData(item){decoded.push(item);await decode?.(item);return item.full?item:{length:Math.floor(item.entry.decodedSamples*rate/48000),sampleRate:rate,numberOfChannels:2};}
  };
  audio.sfx={items:[]};audio.musicGain={};return {audio,reads,decoded,fullReads,sources};
 }
@@ -57,6 +57,15 @@ test('leaving or suspending during a short decode cannot start stale music or re
  }
 });
 test('an unvalidated sample rate preserves the original source transport',async()=>{
- const {audio,reads,fullReads}=fixture({rate:44100});await audio.gameplay(1);
+ const {audio,reads,fullReads}=fixture({rate:32000});await audio.gameplay(1);
  assert.equal(audio.transport.constructor,MusicTransport);assert.equal(reads.length,0);assert.equal(fullReads.length,10);assert.equal(audio.musicWindowPool,null);audio.stop();
+});
+
+test('native 44.1 kHz gameplay decodes only audible windows and never reads full PCM tracks',async()=>{
+ const {audio,reads,decoded,fullReads}=fixture({rate:44100});audio.musicScene='minimal';
+ await audio.gameplay(2);assert.ok(audio.transport instanceof MusicWindowTransport);
+ assert.equal(reads.length,3);assert.equal(decoded.length,3);assert.equal(fullReads.length,0);assert.equal(audio.buffers.size,0);
+ assert.equal(audio.musicWindowPool.sampleRate,44100);assert.ok([...audio.musicWindowPool.ready.values()].every(v=>v.buffer.sampleRate===44100));
+ audio.updateMusic({day:2,time:0,workers:[],spells:[]});assert.equal(audio.active.length,3);
+ audio.stop();assert.equal(audio.musicWindowPool,null);assert.equal(audio.active.length,0);
 });

@@ -43,7 +43,7 @@ export class MusicWindowTransport extends MusicTransport {
     });
   }
   pump(now){
-    const keep=new Set(),rate=this.pool.index.sampleRate;
+    const keep=new Set(),rate=this.pool.index.sampleRate,clockRate=this.audio.context.sampleRate??rate;
     if(this.plan&&this.plan.kind!=='natural'&&!this.plan.deck){
       const {when,offset}=this.spliceFor(this.plan);
       // Keep only the imminent registered destination, not every possible edge.
@@ -60,7 +60,7 @@ export class MusicWindowTransport extends MusicTransport {
         for(let number=first;number<=first+1&&number<track.windows.length;number++){
           const entry={...track.windows[number],id:voice.id,window:number,key:this.pool.key(voice.id,number)};
           const start=Math.max(deck.start,deck.start+entry.startSample/rate-deck.offset);
-          const boundary=Math.ceil((deck.start+entry.endSample/rate-deck.offset)*rate-1e-7)/rate;
+          const boundary=Math.ceil((deck.start+entry.endSample/rate-deck.offset)*clockRate-1e-7)/clockRate;
           const end=Math.min(limit,boundary,voice.stopAt);
           if(end<=now||end<=start||!this.mixer.audibleDuring(voice.id,Math.max(now,start),end))continue;
           this.request(entry,keep);if(voice.scheduled.has(entry.key))continue;
@@ -71,7 +71,7 @@ export class MusicWindowTransport extends MusicTransport {
           // A fractional start is rounded by the native sample clock. Make
           // that rounding explicit and compensate the read position so a new
           // window follows the original continuously running source phase.
-          const when=Math.ceil(Math.max(start,now+.02,audibleFrom)*rate-1e-7)/rate;
+          const when=Math.ceil(Math.max(start,now+.02,audibleFrom)*clockRate-1e-7)/clockRate;
           // Cancellation around an exact wrap can leave -1e-14 seconds. Native
           // start() rejects even that negative zero; the first valid sample is 0.
           const offset=Math.max(0,(deck.offset*rate+(when-deck.start)*rate-entry.firstSample)/rate);

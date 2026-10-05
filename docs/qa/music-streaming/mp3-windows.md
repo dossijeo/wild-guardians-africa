@@ -1,5 +1,10 @@
 # Original MP3 windows and silent logical stems
 
+Historical investigation before production integration. The current gameplay
+route supports native 44.1 and 48 kHz; see
+[native-rate validation](../music-window-44100/README.md). The measurements and
+pending-work statements below describe this earlier candidate, not current status.
+
 The candidate reads short MPEG frame windows from the original files; it does
 not re-encode, concatenate media clocks, add new audio assets or change the
 lab's mix. `tools/prepare_music_windows.mjs` indexes all twenty original files

@@ -1,0 +1,32 @@
+{
+  "sourceHashes": {
+    "src/audio/audio.js": "47199b048e88d6e875d9d7ad436ccf097430e47cd82ac0d3410bd70c01bcf4a3",
+    "src/audio/start-window-music.js": "7c0400baedcbcd9391fbb64ffc272f5a674b589308489cbdd181df2756952bf3",
+    "src/audio/music-window-pool.js": "781038b5a08e0697b16c9e2165d36fcfec8640dd066439a02988246a7715a20a",
+    "src/audio/music-window-transport.js": "1e71a84dcfaf4c4e4418d11c1414c55a0b245de4f65676116bdba957547eade2",
+    "tools/prepare_music_windows.mjs": "2b345620737c559c9e84e8a0658e1fb1772e0cbfc547cf83406ce0ce5fe256fd",
+    "public/content/music-windows-a.json": "23a9b77e0e3c5f652aaa746f7d8084465e176dcd2cd129b565160bf2761bc183",
+    "public/content/music-windows-b.json": "57dbab4a6bed78d3f487e449191dbfa9a7cc28c7319c50ce3b4eb8efed30ab4e",
+    "tests/browser/music-frame-probe.html": "7a82581eecc3639181fdfb4f02ab46e5047e0ec920e2451ece15735d1c502e5e",
+    "tests/browser/music-window-resampling.html": "5994eae68881071bc4e839936dff303b7dd03230f0480638787d76dff36efb60",
+    "tests/browser/music-window-transport.html": "71915f0ac649dfc61bfd03c0abb61fb83385f486e7baa2c4c97d8057158bc79c"
+  },
+  "audioTests": {
+    "logSha256": "53213214636b9822f882849863138ce7211ae674cb4424ace0dd583087197f06",
+    "passed": 341,
+    "failed": 0
+  },
+  "baselineFullSuite": {
+    "passed": 1883,
+    "commit": "24bb0eb48c7db6d3b43b8cfc8e797c6b8d9cdb62",
+    "failed": 0,
+    "logSha256": "845e0e18344fc9d6567f2bd1b6d94099ebafe3de439dff058b153d40e027beba",
+    "scope": "Previous raid-navigation baseline; started before this audio rate work. Not a full-suite claim for the new audio path."
+  },
+  "webPackage": {
+    "bytes": 407001020,
+    "runtimeGlbs": 20,
+    "relativeLinks": 839,
+    "files": 586
+  }
+}

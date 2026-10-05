@@ -1,0 +1,104 @@
+{
+  "status": "failed",
+  "error": "Error: Decoded MP3 window does not match its source index: s2:24, 259307/259308 samples, 44100/44100 Hz, 2 channels",
+  "results": [
+    {
+      "pack": "a",
+      "track": "s2",
+      "case": "fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "sameSourceMaximumError": 0.0009324578568339348,
+      "seamMaximumError": 9.313225746154785e-10,
+      "rmsError": 3.494225916722414e-10,
+      "referenceRms": 0.005572267201405265,
+      "firstDifferences": [
+        {
+          "channel": 0,
+          "sample": 4494,
+          "seconds": 0.1019047619047619,
+          "original": -0.0002451216569170356,
+          "continuous": -0.00024388282326981425,
+          "candidate": -0.0002451216569170356
+        },
+        {
+          "channel": 0,
+          "sample": 4497,
+          "seconds": 0.10197278911564626,
+          "original": -0.0002420677919872105,
+          "continuous": -0.00024094036780297756,
+          "candidate": -0.0002420677919872105
+        },
+        {
+          "channel": 0,
+          "sample": 4498,
+          "seconds": 0.10199546485260771,
+          "original": -0.00024002778809517622,
+          "continuous": -0.0002383991377428174,
+          "candidate": -0.00024002775899134576
+        },
+        {
+          "channel": 0,
+          "sample": 4499,
+          "seconds": 0.10201814058956916,
+          "original": -0.00023626584152225405,
+          "continuous": -0.00023484541452489793,
+          "candidate": -0.0002362658706260845
+        },
+        {
+          "channel": 0,
+          "sample": 4500,
+          "seconds": 0.10204081632653061,
+          "original": -0.00023328261158894747,
+          "continuous": -0.00023207766935229301,
+          "candidate": -0.00023328261158894747
+        },
+        {
+          "channel": 0,
+          "sample": 4501,
+          "seconds": 0.10206349206349206,
+          "original": -0.0002306014357600361,
+          "continuous": -0.00022915973386261612,
+          "candidate": -0.00023060145031195134
+        },
+        {
+          "channel": 0,
+          "sample": 4502,
+          "seconds": 0.10208616780045351,
+          "original": -0.00022679741960018873,
+          "continuous": -0.00022521737264469266,
+          "candidate": -0.0002267974050482735
+        },
+        {
+          "channel": 0,
+          "sample": 4503,
+          "seconds": 0.10210884353741496,
+          "original": -0.00022273894865065813,
+          "continuous": -0.00022121604706626385,
+          "candidate": -0.0002227389340987429
+        }
+      ],
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    }
+  ]
+}

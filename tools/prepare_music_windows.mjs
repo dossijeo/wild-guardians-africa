@@ -3,7 +3,9 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-const sampleRate=48000,samplesPerFrame=1152,framesPerWindow=250,prerollFrames=24,tailFrames=2;
+// 25 frames keep every range origin on an integer sample at both 48 and
+// 44.1 kHz (five MP3 frames = 5,760 source samples = 5,292 at 44.1 kHz).
+const sampleRate=48000,samplesPerFrame=1152,framesPerWindow=250,prerollFrames=25,tailFrames=2;
 for(const pack of ['a','b']){
   const bank=JSON.parse(readFileSync(`public/content/music-${pack}.json`)),tracks=[];
   for(const track of bank.tracks.filter(t=>!t.silent)){
@@ -20,6 +22,6 @@ for(const pack of ['a','b']){
     tracks.push({id:track.id,url:track.data.url,sha256:createHash('sha256').update(raw).digest('hex'),bytes:raw.length,windows});
   }
   const path=`public/content/music-windows-${pack}.json`;
-  writeFileSync(path,JSON.stringify({version:1,sampleRate,samplesPerFrame,secondsPerWindow:6,prerollFrames,tailFrames,duration:bank.duration,tracks})+'\n');
+  writeFileSync(path,JSON.stringify({version:2,sampleRate,supportedSampleRates:[44100,48000],samplesPerFrame,secondsPerWindow:6,prerollFrames,tailFrames,duration:bank.duration,tracks})+'\n');
   console.log(JSON.stringify({path,tracks:tracks.length,windows:tracks.reduce((sum,t)=>sum+t.windows.length,0)}));
 }

@@ -13,7 +13,8 @@ for(const pack of ['a','b'])test(`${pack}: every indexed window references the u
   let cursor=0;
   for(const window of track.windows){
    assert.equal(window.startSample,cursor);assert.ok(window.endSample>cursor);assert.ok(window.endSample-window.startSample<=6*48000);
-   assert.ok(window.firstSample<=window.startSample);assert.ok(window.startSample-window.firstSample<=24*1152);
+   assert.ok(window.firstSample<=window.startSample);assert.ok(window.startSample-window.firstSample<=25*1152);
+   assert.equal(window.firstSample*44100%48000,0,'Every range origin must preserve native resampling phase');
    assert.ok(window.decodedSamples>=window.endSample-window.firstSample);assert.ok(window.decodedSamples-(window.endSample-window.firstSample)<=2*1152);
    assert.ok(window.startByte>=0&&window.endByte>window.startByte&&window.endByte<=data.length);cursor=window.endSample;
   }

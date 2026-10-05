@@ -1,0 +1,66 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Ventanas musicales a 44,1 kHz</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Ventanas de 48 kHz reproducidas a 44,1 kHz</h1>
+<p>Comparación nativa con las pistas completas: uniones, avance fraccional, saltos y retorno. Diagnóstico; no activa esta ruta en el juego.</p>
+<button id="run">Comparar remuestreo nativo</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {MusicTransport} from '../../src/audio/music-transport.js';
+import {MusicWindowTransport} from '../../src/audio/music-window-transport.js';
+import {MusicWindowPool} from '../../src/audio/music-window-pool.js';
+import {musicRangeReader} from '../../src/audio/music-range-reader.js';
+import {json,bytes} from '../../src/rendering/assets.js';
+const status=document.querySelector('#status'),report=document.querySelector('#report'),results=[];
+const rate=44100,seconds=12,decoder48=new OfflineAudioContext(2,1,48000),decoder44=new OfflineAudioContext(2,1,rate);
+async function render(kind,pack,bank,index,track,full,item){
+  const offline=new OfflineAudioContext(2,seconds*rate,rate),audio=new AudioSystem({music:1,sfx:0});audio.musicScene='day';
+  const facade={state:'running',currentTime:0,sampleRate:rate,
+    createGain(){const gain=offline.createGain();gain.disconnect=()=>{};return gain;},
+    createBufferSource(){const source=offline.createBufferSource(),stop=source.stop.bind(source);let end=Infinity;
+      source.disconnect=()=>{};source.stop=at=>{end=Math.min(end,at??facade.currentTime);stop(end);};return source;}};
+  audio.context=facade;audio.musicGain=offline.createGain();audio.musicGain.connect(offline.destination);
+  if(kind==='windows'){
+    const reader=musicRangeReader();audio.musicWindowPool=new MusicWindowPool(index,{readRange:reader.readRange,decode:data=>decoder44.decodeAudioData(data),sampleRate:rate});
+    await audio.musicWindowPool.load(track.id,audio.musicWindowPool.at(track.id,item.offset).window);
+  }
+  const Transport=kind==='windows'?MusicWindowTransport:MusicTransport;
+  audio.transport=new Transport(audio,pack,bank,[{track,buffer:full}],{offset:item.offset,random:item.jump?()=>0:()=>1});audio.mixer.automatic=false;
+  for(let step=0;step<seconds*40;step++){
+    facade.currentTime=step*.025;audio.transport.update('day',facade.currentTime);
+    if(audio.musicWindowPool){await Promise.all([...audio.musicWindowPool.pending.values()]);audio.transport.update('day',facade.currentTime);}
+  }
+  const history=audio.transport.history.slice(),output=await offline.startRendering();audio.stop();return {output,history};
+}
+document.querySelector('#run').onclick=async()=>{
+  document.querySelector('#run').disabled=true;
+  try{
+    for(const pack of ['a','b']){
+      const bank=await json(`/content/music-${pack}.json`),index=await json(`/content/music-windows-${pack}.json`);
+      for(const id of ['s2','s9']){
+        const track=bank.tracks.find(t=>t.id===id),encoded=await bytes(track.data.url);
+        const full48=await decoder48.decodeAudioData(encoded.slice(0)),full44=await decoder44.decodeAudioData(encoded.slice(0));
+        const cases=[{id:'fractional',offset:29.91327},{id:'wrap',offset:bank.duration-8},...bank.navigation.edges.map(edge=>({id:edge.id,jump:true,offset:bank.navigation.sections.find(s=>s.id===edge.source).end-6}))];
+        for(const item of cases){
+          status.textContent=`Render ${pack}/${id}/${item.id}`;
+          const reference=await render('full',pack,bank,index,track,full44,item),sameSource=await render('full',pack,bank,index,track,full48,item),candidate=await render('windows',pack,bank,index,track,full48,item);
+          let maximumError=0,sameSourceMaximumError=0,sum=0,energy=0,seamMaximumError=0;const firstDifferences=[];
+          for(let channel=0;channel<2;channel++){
+            const original=reference.output.getChannelData(channel),continuous=sameSource.output.getChannelData(channel),windows=candidate.output.getChannelData(channel);
+            for(let sample=0;sample<windows.length;sample++){
+              const difference=Math.abs(original[sample]-windows[sample]),shared=Math.abs(continuous[sample]-windows[sample]);
+              maximumError=Math.max(maximumError,difference);sameSourceMaximumError=Math.max(sameSourceMaximumError,shared);sum+=difference*difference;energy+=original[sample]*original[sample];
+              const position=item.offset+sample/rate-.1,nearSeam=Math.abs(position/6-Math.round(position/6))*6<.01;
+              if(nearSeam)seamMaximumError=Math.max(seamMaximumError,difference);
+              if(shared>1e-6&&firstDifferences.length<8)firstDifferences.push({channel,sample,seconds:sample/rate,original:original[sample],continuous:continuous[sample],candidate:windows[sample]});
+            }
+          }
+          const comparedSamples=seconds*rate*2;
+          results.push({pack,track:id,case:item.id,offset:item.offset,comparedSamples,maximumError,sameSourceMaximumError,seamMaximumError,rmsError:Math.sqrt(sum/comparedSamples),referenceRms:Math.sqrt(energy/comparedSamples),firstDifferences,referenceHistory:reference.history,candidateHistory:candidate.history});
+          report.textContent=JSON.stringify({status:'running',results},null,2);
+        }
+      }
+    }
+    status.textContent='Comparación terminada';report.textContent=JSON.stringify({status:'completed',outputSampleRate:rate,indexSampleRate:48000,maximumError:Math.max(...results.map(r=>r.maximumError)),sameSourceMaximumError:Math.max(...results.map(r=>r.sameSourceMaximumError)),results},null,2);
+  }catch(error){status.textContent='Error';report.textContent=JSON.stringify({status:'failed',error:String(error),results},null,2);}
+};
+</script></html>
