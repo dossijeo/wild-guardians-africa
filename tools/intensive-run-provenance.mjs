@@ -18,6 +18,8 @@ export function intensiveRunProvenance(args){
     }
   };
   scan('src/');
-  for(const path of ['package-lock.json','tools/check_intensive_farm.mjs','tools/check_intensive_matrix.mjs','tools/summarize_intensive_farm.mjs','tools/check_opening.mjs','tools/intensive-run-provenance.mjs'])sourceHashes[path]=hash(readFileSync(new URL(path,root)));
+  scan('public/content/');
+  scan('content/manifests/');
+  for(const path of ['package-lock.json','tools/check_intensive_farm.mjs','tools/check_intensive_matrix.mjs','tools/check_intensive_case.mjs','tools/check_intensive_matrix_parallel.mjs','tools/summarize_intensive_farm.mjs','tools/check_opening.mjs','tools/intensive-run-provenance.mjs'])sourceHashes[path]=hash(readFileSync(new URL(path,root)));
   return {startedAt:new Date().toISOString(),node:process.version,arguments:args,gitHead:git('rev-parse','HEAD'),trackedChanges:git('diff','--name-only','HEAD').split('\n').filter(Boolean),sourceHashes};
 }
