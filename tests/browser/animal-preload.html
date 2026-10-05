@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Animal preload QA</title><style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh}pre{position:fixed;top:0;left:0;max-width:520px;padding:12px;background:#172019ed;white-space:pre-wrap}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body><canvas></canvas><pre id="report">Loading native world and five species…</pre><script type="module">
+import * as Game from '/src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
+import {findInitialLocationAsync} from '/src/world/villages.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {json} from '/src/rendering/assets.js';
+import {spawnRaid} from '/src/simulation/raids.js';
+const biome=new URLSearchParams(location.search).get('biome')??'gran-canon',errors=[];
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712,biome,slotId:'qa-animal-preload'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
+const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('media');
+let downloads=0;const original=world.assets.loader.loadAsync.bind(world.assets.loader);world.assets.loader.loadAsync=(...args)=>{downloads++;return original(...args);};
+const started=performance.now();await world.load(state,nav,payload);world.render(0);
+const animalPrograms=models=>{const ids=new Set();for(const model of models)model.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])for(const program of world.renderer.properties.get(material).programs?.values()??[])ids.add(program.id);});return [...ids];};
+const before={downloads,programs:world.renderer.info.programs.length,programIds:world.renderer.info.programs.map(p=>p.id),animalPrograms:animalPrograms((await world.animalPreload.spares()).map(r=>r.model))},species=['warthog','hyena','buffalo','lion','rhino'];
+const appearance=performance.now();spawnRaid(state,{group:species},nav);
+world.focus({x:state.raid.animals.reduce((sum,a)=>sum+a.x,0)/state.raid.animals.length,z:state.raid.animals.reduce((sum,a)=>sum+a.z,0)/state.raid.animals.length});
+world.render(0);await new Promise(resolve=>setTimeout(resolve,0));world.render(0);
+const rigs=state.raid.animals.map(a=>({species:a.species,ready:world.mixers.has(a.id)}));
+const after={downloads,programs:world.renderer.info.programs.length,newPrograms:world.renderer.info.programs.filter(p=>!before.programIds.includes(p.id)).map(p=>({id:p.id,name:p.name})),animalPrograms:animalPrograms(state.raid.animals.map(a=>world.mixers.get(a.id).model))};
+after.newAnimalPrograms=after.animalPrograms.filter(id=>!before.animalPrograms.includes(id));
+const report={ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],rigs,before,after,appearanceMs:performance.now()-appearance,loadingMs:appearance-started,errors,scope:'Native WorldScene, normal paid center and real five-species spawn. Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
+document.querySelector('#report').textContent=JSON.stringify(report,null,2);
+let last=performance.now();function frame(now){world.render(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+}catch(error){document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,errors},null,2);}
+</script></body></html>

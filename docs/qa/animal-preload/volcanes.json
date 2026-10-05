@@ -1,0 +1,91 @@
+{
+  "ok": true,
+  "biome": "volcanes",
+  "gpuReady": true,
+  "warmed": [
+    "hyena",
+    "rhino",
+    "buffalo",
+    "warthog",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true
+    },
+    {
+      "species": "hyena",
+      "ready": true
+    },
+    {
+      "species": "buffalo",
+      "ready": true
+    },
+    {
+      "species": "lion",
+      "ready": true
+    },
+    {
+      "species": "rhino",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 16,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "animalPrograms": [
+      0,
+      7,
+      1,
+      8
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 19,
+    "newPrograms": [
+      {
+        "id": 16,
+        "name": ""
+      },
+      {
+        "id": 17,
+        "name": ""
+      },
+      {
+        "id": 18,
+        "name": ""
+      }
+    ],
+    "animalPrograms": [
+      0,
+      7,
+      1,
+      8
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 762.3000000119209,
+  "loadingMs": 9511,
+  "errors": [],
+  "scope": "Native WorldScene, normal paid center and real five-species spawn. Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}
