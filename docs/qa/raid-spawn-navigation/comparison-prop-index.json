@@ -1,0 +1,312 @@
+{
+  "biome": "desierto",
+  "repeats": 8,
+  "source": "docs/qa/raid-spawn-navigation/desierto-profile.json",
+  "sourceHashes": {
+    "src/world/navigation.js": "54a24c330edcd70d3af0d8bcc8566fdf968dc2dbbf8736e718a7ff1c4f34a356",
+    "src/simulation/raids.js": "a59dae092332f3d5b1b4c778869e92940fd9ca2369f2a073de380d4257a7f72b",
+    "tools/benchmark_raid_spawn.mjs": "58ad9d4287cbd7ce4b8dbae79d8943c282592c39f938215671f3418bbb69ebaf",
+    "tools/prop-index-candidate.mjs": "69a8fe2ed3ca450ecd89cd4a726220b6fa17fc6e64604a938ff227595529b785"
+  },
+  "stateSha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff",
+  "summary": {
+    "reference": {
+      "medianMs": 274.59825
+    },
+    "props-only": {
+      "medianMs": 291.2314500000002
+    },
+    "terrain-only": {
+      "medianMs": 275.63554999999997
+    },
+    "optimized": {
+      "medianMs": 295.3155499999998
+    },
+    "indexed": {
+      "medianMs": 311.63325
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 396.68449999999996,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 0,
+      "mode": "props-only",
+      "ms": 340.2478,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 0,
+      "mode": "terrain-only",
+      "ms": 313.81539999999995,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 0,
+      "mode": "optimized",
+      "ms": 327.8461,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 0,
+      "mode": "indexed",
+      "ms": 296.31870000000004,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "indexed",
+      "ms": 250.88799999999992,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "optimized",
+      "ms": 281.57119999999986,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "terrain-only",
+      "ms": 256.27829999999994,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "props-only",
+      "ms": 268.57220000000007,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 290.05740000000014,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 278.1877999999997,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "props-only",
+      "ms": 302.15290000000005,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "terrain-only",
+      "ms": 308.2483000000002,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "optimized",
+      "ms": 301.46100000000024,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "indexed",
+      "ms": 334.1104999999998,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "indexed",
+      "ms": 336.924,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "optimized",
+      "ms": 292.6896999999999,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "terrain-only",
+      "ms": 266.6723000000002,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "props-only",
+      "ms": 290.1385,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 319.4943000000003,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 243.98139999999967,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "props-only",
+      "ms": 292.3244000000004,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "terrain-only",
+      "ms": 306.0558999999994,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "optimized",
+      "ms": 390.3037000000004,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "indexed",
+      "ms": 344.60490000000027,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "indexed",
+      "ms": 285.7934000000005,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "optimized",
+      "ms": 269.85039999999935,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "terrain-only",
+      "ms": 262.5475000000006,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "props-only",
+      "ms": 293.02729999999974,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 267.22409999999945,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 271.0087000000003,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "props-only",
+      "ms": 253.85989999999947,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "terrain-only",
+      "ms": 277.53160000000025,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "optimized",
+      "ms": 287.15650000000096,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "indexed",
+      "ms": 326.9477999999999,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "indexed",
+      "ms": 291.34609999999884,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "optimized",
+      "ms": 297.9413999999997,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "terrain-only",
+      "ms": 273.7394999999997,
+      "terrainChecks": 11103,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "props-only",
+      "ms": 250.90519999999924,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 254.26319999999942,
+      "terrainChecks": 13894,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    }
+  ],
+  "scope": "Alternating synchronous native spawn benchmark with identical pre-state, warmed prop chunks, radius rules and RNG. Reference uses unchanged production Navigation.propsAt. Timings exclude setup and rendering; not phone frametime."
+}

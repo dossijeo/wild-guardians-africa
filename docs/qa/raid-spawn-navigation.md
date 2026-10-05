@@ -48,3 +48,22 @@ node tools/benchmark_raid_spawn.mjs docs/qa/raid-spawn-navigation/desierto-profi
 Next: compare identical native browser cases across biomes and assess moving
 route-entry preparation outside the spawn frame, with geometry/camera revision
 checks to reject obsolete results. Retain synchronous correctness fallback.
+
+## Small-cell spatial index trial
+
+`comparison-prop-index.json` adds a diagnostic index of immutable native chunk
+props in 8-metre bins for small-radius queries, retaining original chunk/list
+order, strict circular distance and live suppression filtering. Weak keys release
+the index with evicted chunks. Long-radius queries retain the full scan.
+
+The seven differential tests in `tests/prop-index-candidate.test.js` pass across
+all six biomes, chunk boundaries, multiple radii, suppression changes, eviction
+and regeneration. The forty alternating spawn replays also produce one identical
+complete post-state hash. These are correctness checks, not performance wins.
+
+In this eight-repeat trial, the unchanged production median was 274.60 ms and
+the indexed candidate 311.63 ms. The axis prefilter measured 291.23 ms, scoped
+terrain cache 275.64 ms, and their combination 295.32 ms. Background campaign
+processes were active; absolute timings are not directly comparable to the
+earlier run. The candidate did not demonstrate a benefit and remains outside
+production. This result does not support adding an index to the game's runtime.
