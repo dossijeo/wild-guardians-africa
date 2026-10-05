@@ -2,15 +2,36 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {WallDrawing} from '../src/rendering/wall-drawing.js';
 import {ToolSession} from '../src/ui/tool-session.js';
-function fixture(){
+function fixture(options={}){
   const listeners=new Map(),captured=new Set(),canvas={addEventListener:(name,fn)=>listeners.set(name,fn),removeEventListener:name=>listeners.delete(name),setPointerCapture:id=>captured.add(id),releasePointerCapture:id=>captured.delete(id)},strokes=[],taps=[],previews=[],gestures=[];
-  const drawing=new WallDrawing(canvas,{point:e=>({x:e.clientX/10,z:e.clientY/10}),stroke:p=>strokes.push(p),tap:e=>taps.push(e),preview:p=>previews.push(p.map(q=>q.slice())),gesture:(a,b)=>gestures.push([a,b])});drawing.setEnabled(true);
+  const drawing=new WallDrawing(canvas,{point:e=>({x:e.clientX/10,z:e.clientY/10}),stroke:p=>strokes.push(p),tap:e=>taps.push(e),preview:p=>previews.push(p.map(q=>q.slice())),gesture:(a,b)=>gestures.push([a,b]),...options});drawing.setEnabled(true);
   const event=(type,x,y,id=1,extra={})=>{const e={pointerId:id,button:0,clientX:x,clientY:y,shiftKey:false,preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;},...extra};listeners.get(type)(e);return e;};
   return {drawing,strokes,taps,previews,gestures,listeners,captured,event};
 }
 test('Dragging submits only the completed world-space stroke and preserves curved samples',()=>{
   const f=fixture();f.event('pointerdown',10,10);f.event('pointermove',40,50);f.event('pointermove',70,20);
   assert.equal(f.strokes.length,0);f.event('pointerup',70,20);assert.deepEqual(f.strokes,[[[1,1],[4,5],[7,2]]]);assert.equal(f.taps.length,0);assert.equal(f.captured.size,0);
+});
+test('many input events produce one preview per frame while release retains every curve sample',()=>{
+ const frames=new Map();let next=0;
+ const f=fixture({requestFrame:callback=>{frames.set(++next,callback);return next;},cancelFrame:id=>frames.delete(id)});
+ f.event('pointerdown',0,0);
+ for(let i=1;i<=100;i++)f.event('pointermove',i*10,Math.sin(i)*30);
+ assert.equal(frames.size,1);assert.equal(f.previews.length,1);
+ const callback=frames.values().next().value;frames.clear();callback();
+ assert.equal(f.previews.length,2);assert.equal(f.previews[1].length,101);
+ f.event('pointermove',1010,10);assert.equal(frames.size,1);
+ f.event('pointerup',1010,10);assert.equal(frames.size,0);
+ assert.equal(f.strokes[0].length,102);assert.deepEqual(f.previews.at(-1),[]);
+});
+test('cancel and two-finger camera gestures cancel pending previews',()=>{
+ for(const action of ['cancel','multi','dispose']){
+  const frames=new Map();let next=0;
+  const f=fixture({requestFrame:cb=>{frames.set(++next,cb);return next;},cancelFrame:id=>frames.delete(id)});
+  f.event('pointerdown',0,0);f.event('pointermove',100,10);assert.equal(frames.size,1);
+  if(action==='cancel')f.event('pointercancel',100,10);else if(action==='multi')f.event('pointerdown',200,10,2);else f.drawing.dispose();
+  assert.equal(frames.size,0);assert.deepEqual(f.previews.at(-1),[]);assert.equal(f.strokes.length,0);
+ }
 });
 test('Pointer cancellation and disabling cannot submit a partial chain',()=>{
   for(const action of ['cancel','disable']){const f=fixture();f.event('pointerdown',0,0);f.event('pointermove',100,0);if(action==='cancel')f.event('pointercancel',100,0);else f.drawing.setEnabled(false);f.event('pointerup',100,0);assert.equal(f.strokes.length,0);assert.equal(f.taps.length,0);assert.equal(f.captured.size,0);assert.deepEqual(f.previews.at(-1),[]);}

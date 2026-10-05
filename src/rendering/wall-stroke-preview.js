@@ -4,7 +4,7 @@ import {renderedTerrainSurface} from './terrain-surface.js';
 // two-pixel dashed green centre, round ends. Terrain cannot hide this guide.
 export class WallStrokePreview{
  constructor(canvas){
-  this.source=canvas;this.points=[];this.vector=new Vector3();this.canvas=document.createElement('canvas');
+  this.source=canvas;this.points=[];this.terrainPoints=[];this.vector=new Vector3();this.canvas=document.createElement('canvas');
   this.canvas.setAttribute('aria-hidden','true');this.canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;display:none';
   canvas.parentElement.append(this.canvas);this.context=this.canvas.getContext('2d');
  }
@@ -14,9 +14,13 @@ export class WallStrokePreview{
   const {width,height}=this.source.getBoundingClientRect(),ratio=Math.min(2,devicePixelRatio||1),c=this.context;
   if(this.canvas.width!==Math.round(width*ratio)||this.canvas.height!==Math.round(height*ratio)){this.canvas.width=Math.round(width*ratio);this.canvas.height=Math.round(height*ratio);}
   c.setTransform(ratio,0,0,ratio,0,0);c.clearRect(0,0,width,height);camera.updateMatrixWorld();
-  const projected=this.points.map(([x,z])=>{this.vector.set(x,renderedTerrainSurface(field,x,z)+.075,z).project(camera);return {x:(this.vector.x+1)*width/2,y:(1-this.vector.y)*height/2};});
+  if(this.terrainField!==field){this.terrainField=field;this.terrainPoints=[];}
+  const projected=this.points.map(([x,z],i)=>{
+   let p=this.terrainPoints[i];if(!p||p.x!==x||p.z!==z)p=this.terrainPoints[i]={x,z,y:renderedTerrainSurface(field,x,z)+.075};
+   this.vector.set(x,p.y,z).project(camera);return {x:(this.vector.x+1)*width/2,y:(1-this.vector.y)*height/2};
+  });this.terrainPoints.length=this.points.length;
   c.beginPath();projected.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.lineJoin='round';c.lineCap='round';c.setLineDash([]);c.lineWidth=5;c.strokeStyle='#fffdf7b3';c.stroke();c.lineWidth=2;c.strokeStyle='#49623d';c.setLineDash([6,5]);c.stroke();c.setLineDash([]);
   for(const p of [projected[0],projected.at(-1)]){c.beginPath();c.arc(p.x,p.y,4,0,Math.PI*2);c.fillStyle='#49623d';c.fill();c.strokeStyle='#f4f3e7';c.lineWidth=2;c.stroke();}
  }
- dispose(){this.canvas.remove();this.points=[];}
+ dispose(){this.canvas.remove();this.points=[];this.terrainPoints=[];this.terrainField=null;}
 }

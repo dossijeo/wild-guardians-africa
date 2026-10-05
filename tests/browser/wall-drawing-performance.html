@@ -1,0 +1,41 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA · Wall drawing performance</title>
+<style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;top:0;left:0;z-index:4;background:#fffd;padding:8px;max-width:75vw}pre{max-height:140px;overflow:auto;white-space:pre-wrap}</style>
+<header>Controlled native world: paid centre and seeds, paused clock. Drag on the terrain to build a paid wall. Benchmark compares full entity picking with terrain-only picking on the same resident geometry; it does not measure GPU frame time.<br><button id="bench" disabled>Compare picking CPU</button><pre id="report">Loading…</pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const report=document.querySelector('#report'),errors=[];
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+ const biome=new URLSearchParams(location.search).get('biome')??'sabana';
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const s=Game.newGame({seed:712,biome}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(s.villages[0],site);s.suppressed.push(...site.suppress);nav.setState(s);Game.resume(s,'intro');Game.placeStructure(s,'center',site.center,nav);
+ for(let dz=-12;dz<=12&&s.plants.length<30;dz+=1.5)for(let dx=6;dx<=21&&s.plants.length<30;dx+=1.5){
+  const x=site.center.x+dx,z=site.center.z+dz;if(nav.placement(x,z,.4).valid)Game.plant(s,'seed-'+s.plants.length,'mijo',x,z,nav);
+ }
+ const world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');await world.load(s,nav,payload);world.focus(site.center);Game.pause(s,'qa');
+ let bench=null,drawSamples=0,previews=0,walls=0;
+ world.limitWallStroke=p=>Game.affordableWallStroke(s,'zarzas',p).points;
+ const point=world.wallDrawing.point;world.wallDrawing.point=e=>{drawSamples++;return point(e);};
+ const preview=world.wallDrawing.preview;world.wallDrawing.preview=p=>{previews++;preview(p);};
+ world.onWallStroke=points=>{
+  try{Game.resume(s,'qa');Game.buildWallChain(s,'wall-'+walls,'zarzas',points,nav,{maxPieces:Game.wallCapacity(s,'zarzas')});walls++;world.syncResidentProps();}catch(e){errors.push(e.message);}finally{Game.pause(s,'qa');paint();}
+ };
+ world.wallDrawing.setEnabled(true);world.controls.enabled=false;
+ const paint=()=>report.textContent=JSON.stringify({biome,plants:s.plants.length,money:s.ledger.balance,walls:s.structures.filter(p=>p.kind==='wall').length,drawSamples,previews,bench,errors},null,2);
+ document.querySelector('#bench').disabled=false;document.querySelector('#bench').onclick=()=>{
+  const rect=world.canvas.getBoundingClientRect(),positions=Array.from({length:48},(_,i)=>({clientX:rect.left+rect.width*(.25+(i%8)*.06),clientY:rect.top+rect.height*(.32+Math.floor(i/8)*.045)}));
+  const run=terrainOnly=>{const ms=[],points=[];for(const e of positions){const start=performance.now(),p=world.pick(e,{terrainOnly}).point;ms.push(performance.now()-start);points.push(p);}const sorted=[...ms].sort((a,b)=>a-b);return {p50:sorted[24],p95:sorted[45],max:sorted.at(-1),total:ms.reduce((a,b)=>a+b,0),points};};
+  run(true);run(false);const full=run(false),terrain=run(true);
+  const sameGround=full.points.every((p,i)=>p===null?terrain.points[i]===null:terrain.points[i]&&Math.hypot(p.x-terrain.points[i].x,p.z-terrain.points[i].z)<1e-8);
+  delete full.points;delete terrain.points;bench={full,terrain,sameGround,samples:positions.length};paint();
+ };paint();
+ const frame=()=>{world.render(0);requestAnimationFrame(frame);};frame();
+ addEventListener('pagehide',()=>world.dispose(),{once:true});
+}catch(e){report.textContent=JSON.stringify({error:e.message,errors});}
+</script>

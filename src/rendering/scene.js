@@ -70,7 +70,7 @@ export class WorldScene {
     this.preview=new THREE.Mesh(new THREE.RingGeometry(.35,.5,40),new THREE.MeshBasicMaterial({color:'#e8c878',side:THREE.DoubleSide,depthWrite:false}));this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;this.scene.add(this.preview);
     this.spellPreview=new SpellPreview(this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.strokePreview=new WallStrokePreview(canvas);
-    this.wallDrawing=new WallDrawing(canvas,{point:e=>this.pick(e).point,stroke:points=>this.onWallStroke?.(points),tap:e=>onPick(this.pick(e)),preview:points=>this.showWallStroke(points),gesture:(old,next)=>this.wallCameraGesture(old,next)});
+    this.wallDrawing=new WallDrawing(canvas,{point:e=>this.pick(e,{terrainOnly:true}).point,stroke:points=>this.onWallStroke?.(points),tap:e=>onPick(this.pick(e)),preview:points=>this.showWallStroke(points),gesture:(old,next)=>this.wallCameraGesture(old,next)});
     this.canvasEvents=new AbortController();const listenerOptions={signal:this.canvasEvents.signal};
     this.controls.addEventListener('start',()=>this.raidCamera?.beginManual());
     this.controls.addEventListener('end',()=>this.raidCamera?.endManual());
@@ -90,7 +90,7 @@ export class WorldScene {
   }
   wallCameraGesture(old,next){
     this.raidCamera?.cancel();
-    const a=this.pick({clientX:old.x,clientY:old.y}).point,b=this.pick({clientX:next.x,clientY:next.y}).point;
+    const a=this.pick({clientX:old.x,clientY:old.y},{terrainOnly:true}).point,b=this.pick({clientX:next.x,clientY:next.y},{terrainOnly:true}).point;
     if(a&&b){const delta=new THREE.Vector3(a.x-b.x,0,a.z-b.z);this.controls.target.add(delta);this.camera.position.add(delta);}
     const offset=this.camera.position.clone().sub(this.controls.target),distance=offset.length(),ratio=old.distance/Math.max(10,next.distance);
     offset.multiplyScalar(Math.max(this.controls.minDistance,Math.min(this.controls.maxDistance,distance*ratio))/distance);this.camera.position.copy(this.controls.target).add(offset);this.updateCamera();
@@ -324,9 +324,10 @@ export class WorldScene {
     this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);
   }
-  pick(event) {
+  pick(event,{terrainOnly=false}={}) {
     protectTerrainCamera(this.camera,this.controls,this.nav?.field);
     const rect=this.canvas.getBoundingClientRect();this.cursor.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);this.raycaster.setFromCamera(this.cursor,this.camera);
+    if(terrainOnly){const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId:null,point:ground?{x:ground.point.x,z:ground.point.z}:null};}
     const hits=this.raycaster.intersectObjects([...this.objects.values()],true);
     let entityId=null;for(const hit of hits){let object=hit.object;while(object&&!object.userData.entityId)object=object.parent;if(object){entityId=object.userData.entityId;break;}}
     let closest=hits[0]?.distance??Infinity;const point=new THREE.Vector3(),box=new THREE.Box3();
