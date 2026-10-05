@@ -11,6 +11,35 @@ import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
 
+test('opposed animals route around each other when both short lookahead goals are occupied',()=>{
+ const a={id:'outbound',x:94.1096081493741,z:14.519706064422435,radius:1.1,status:'retreating',hitsRemaining:0};
+ const b={id:'inbound',x:95.98513086550021,z:17.985130865500206,radius:1.1,status:'walking',hitsRemaining:3};
+ const state={workers:[],raid:{animals:[a,b]}},nav={version:1,path:(_a,p)=>[{x:p.x,z:p.z}],segmentClear:()=>true,walkable:()=>true};
+ const pairs=[[a,{id:'exit',x:105.52299355996654,z:34.34482534604684},3.8],[b,{id:'crop',x:93.40403760684815,z:-2.84871152966769},1.5]];
+ for(let step=0;step<600&&pairs.some(([actor])=>actor.status!=='gone');step++)for(const [actor,target,speed] of pairs){
+  if(actor.status==='gone')continue;
+  const other=actor===a?b:a,before={x:actor.x,z:actor.z};
+  const arrived=walkTo(state,actor,target,.1,nav,{speed,worker:false});
+  if(other.status!=='gone')assert.ok(edgeDistance(before,actor,other.x,other.z)>=a.radius+b.radius-1e-8,'Swept bodies must remain disjoint');
+  if(arrived){assert.ok(Math.hypot(actor.x-target.x,actor.z-target.z)<1e-8);actor.status='gone';}
+ }
+ assert.equal(a.status,'gone');assert.equal(b.status,'gone');
+});
+test('recorded five-animal Musgum traffic clears without overlapping bodies or changing destination',()=>{
+ const raid=JSON.parse(readFileSync(new URL('../docs/qa/raid-musgum-deadlock/raid-before.json',import.meta.url),'utf8'));
+ const state={workers:[],raid},nav={version:4080,path:(_a,p)=>[{x:p.x,z:p.z}],segmentClear:()=>true,walkable:()=>true};
+ const destinations=new Map(raid.animals.map(actor=>[actor.id,actor.status==='retreating'?{...actor.exit,id:'exit-'+actor.id}:actor.approach]));
+ for(let step=0;step<600&&raid.animals.some(actor=>actor.status!=='gone');step++)for(const actor of raid.animals){
+  if(actor.status==='gone')continue;
+  const before={x:actor.x,z:actor.z},others=actorBlockers(state,actor,false),target=destinations.get(actor.id),speed=actor.status==='retreating'?3.8:1.5;
+  const arrived=walkTo(state,actor,target,.1,nav,{speed,worker:false});
+  assert.ok(Math.hypot(actor.x-before.x,actor.z-before.z)<=speed*.1+1e-8);
+  assert.ok(actorSegmentClear(before,actor,actor,others),'Each swept native body must stay outside the others');
+  if(arrived){assert.ok(Math.hypot(actor.x-target.x,actor.z-target.z)<1e-8);actor.status='gone';}
+ }
+ assert.ok(raid.animals.every(actor=>actor.status==='gone'));
+});
+
 function fixture(species='warthog'){
   const state=newGame({seed:712,slotId:'actor-clearance'});state.pauses=[];
   const animal={id:'animal',species,x:-4,z:0,status:'retreating',hitsRemaining:0,radius:ANIMAL_ACTIONS.animals[species].presentation.footprint.radius};

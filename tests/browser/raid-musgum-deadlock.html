@@ -1,0 +1,35 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Incursión Musgum atascada</title>
+<style>body{margin:0;font:14px system-ui;background:#efe8d4}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9eded;padding:8px;max-width:60vw}pre{max-height:150px;overflow:auto;font-size:10px}button{padding:8px}</style>
+<header><strong>Guardado real de Sabana/Musgum, noche 32</strong><div id="status">Cargando terreno y modelos originales…</div><button id="run" disabled>Resolver incursión</button><details><summary>Datos de comprobación</summary><pre id="data"></pre></details></header><canvas id="world"></canvas>
+<script type="module">
+import {deserialize} from '../../src/persistence/snapshots.js';
+import {tick} from '../../src/simulation/game.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const status=document.querySelector('#status'),data=document.querySelector('#data'),button=document.querySelector('#run'),errors=[];
+const fail=error=>{errors.push(String(error.message??error));status.textContent='ERROR: '+errors.join(' · ');};
+addEventListener('error',event=>fail(event.error??event));addEventListener('unhandledrejection',event=>fail(event.reason));
+try{
+ const response=await fetch('../../docs/qa/raid-musgum-deadlock/state-before.json');if(!response.ok)throw Error('Missing recorded snapshot');
+ const state=deserialize(await response.text()),pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='musgum');
+ const nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);
+ const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('media');await world.load(state,nav,payload);
+ const actors=state.raid.animals,starts=actors.map(actor=>({id:actor.id,x:actor.x,z:actor.z}));
+ world.focus({x:95,z:16});world.sync(0);await Promise.all([...world.assets.cache.values()]);world.render(0);await world.whenChunksReady();
+ let playing=false,elapsed=0,last=performance.now(),finished=false;
+ button.disabled=false;button.onclick=()=>{playing=true;button.disabled=true;};
+ const update=()=>{
+  status.textContent=finished?'Incursión terminada: contratación del día 33':playing?'Animales siguiendo sus rutas y salidas originales':'Cinco animales listos, en las posiciones del atasco';
+  data.textContent=JSON.stringify({finished,simulatedSeconds:elapsed,day:state.day,pauses:state.pauses,errors,animals:actors.map(actor=>({id:actor.id,species:actor.species,status:actor.status,x:actor.x,z:actor.z,moved:Math.hypot(actor.x-starts.find(a=>a.id===actor.id).x,actor.z-starts.find(a=>a.id===actor.id).z),meshPresent:world.objects.has(actor.id),rigLoaded:world.objects.get(actor.id)?.children.length>0})),scope:'Recorded native day-32 state. Original models, terrain, collision, damage and timing. Camera placement only; no audio or physical phone acceptance.'},null,2);
+ };
+ update();
+ requestAnimationFrame(function frame(now){
+  try{
+   const dt=Math.min(.05,(now-last)/1000);last=now;
+   if(playing&&!finished){tick(state,dt,nav);elapsed+=dt;finished=!state.raid;}
+   world.render(dt);update();requestAnimationFrame(frame);
+  }catch(error){fail(error);}
+ });
+}catch(error){fail(error);}
+</script></html>

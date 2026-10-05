@@ -31,7 +31,7 @@ export function prepareActorMotion(state,actor,nav,worker){
   const next=actor.path[rejoin],length=distance(actor,next);
   if(length<1e-9)return clear;
   const horizon=Math.max(4,...blockers.map(b=>2*(radius(actor)+radius(b))+.2));
-  const look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
+  let look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
   const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
   if(clear(actor,goal)&&(!rejoin||staticClear(actor,goal))){
     // A later waypoint can be clear while the retained first waypoint is inside
@@ -39,7 +39,17 @@ export function prepareActorMotion(state,actor,nav,worker){
     if(rejoin)actor.path=[goal,...actor.path.slice(rejoin+(look===length?1:0))];
     return clear;
   }
-  if(!clear(goal,goal))return clear;
+  if(!clear(goal,goal)){
+    // Dense opposing traffic can occupy every short lookahead goal at once.
+    // Find a clear point further along the same authoritative segment, then
+    // route around the bodies; neither their size nor the destination changes.
+    const initial=look;
+    for(const candidate of [...new Set([Math.min(length,initial+horizon),Math.min(length,initial+2*horizon),length])]){
+      const point={x:actor.x+(next.x-actor.x)*candidate/length,z:actor.z+(next.z-actor.z)*candidate/length};
+      if(clear(point,point)){look=candidate;goal=point;break;}
+    }
+    if(!clear(goal,goal))return clear;
+  }
   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
   const nodes=[{x:actor.x,z:actor.z},goal];
   for(const other of nearby){

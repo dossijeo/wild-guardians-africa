@@ -1,0 +1,17 @@
+# Atasco real de cinco animales en Sabana/Musgum
+
+La matriz de cien noches detectó una incursión sin terminar en la noche 32 de Sabana/Musgum, semilla 712. Superó el límite existente de 2400 segundos simulados por jornada. Dos animales agotados seguían retirándose y otros tres conservaban golpes y sus objetivos. `raid-musgum-deadlock/failure-before.json` conserva el resultado y la procedencia de ese proceso; no se amplió el límite ni se retiraron animales para hacer pasar la prueba.
+
+Una reproducción independiente volvió a fallar. Se conserva su snapshot completo y validado en `state-before.json`, con 3532 plantas históricas, así como `reproduction-status.json`. Su incursión es idéntica al JSON de la primera ejecución fallida. El ejecutor ahora guarda también el último estado si el simulador lanza una excepción; si la validación falla, lo etiqueta expresamente como diagnóstico no validado. No se confunde ese archivo con un guardado jugable.
+
+El problema está en la evasión local: cuando el punto de búsqueda próximo cae dentro de otro cuerpo, se espera sin intentar una ruta. En este grupo los cinco puntos próximos se bloquean entre sí; la situación tampoco se resuelve en un espacio completamente libre de edificios. La regresión con esos cinco cuerpos y rutas reales fallaba antes de la corrección.
+
+`prepareActorMotion` busca ahora un punto libre más adelante dentro del mismo segmento de la ruta original y usa su grafo de evasión existente para rodear los cuerpos. Solo realiza esa búsqueda adicional cuando el punto próximo está ocupado. Los radios, velocidades, golpes y destinos permanecen los originales. Los bordes del terreno y las construcciones siguen siendo obstáculos; una ruta imposible sigue esperando y no teletransporta al actor.
+
+La regresión de tráfico pasa y las dieciséis pruebas de movimiento pasan. La reproducción sobre el snapshot y el terreno nativo también pasa: todos salen por sus salidas originales, cada movimiento respeta la velocidad y la geometría sólida, los cuerpos no se solapan, la incursión termina y se abre contratación en el día 33. Pasa el round-trip del estado final. El grupo dirigido de navegación, salida, escudos, vuelta de trabajadores y recarga de incursiones pasa 148 pruebas. Compilación web y paquete pasan con 580 archivos, 816 enlaces relativos y 20 GLB de runtime.
+
+La campaña completa corregida de Musgum se está ejecutando por separado. Resolver este guardado no verifica por sí solo cien noches con el nuevo movimiento ni todas las combinaciones del juego. Las ejecuciones anteriores mantienen sus fuentes originales; la matriz registra las diferencias de hashes entre procesos que arrancan después de cambios de código.
+
+En el navegador integrado se cargan los cinco rigs originales desde ese guardado, con el bioma y la cultura reales. Al pulsar Resolver incursión, los animales se separan, ejecutan sus recorridos y salen por sus destinos guardados. El diagnóstico registra 44,7079 segundos simulados hasta contratación del día 33, cinco animales gone y ningún error. Las capturas y `browser-before.json`/`browser-after.json` conservan la evidencia. Es una prueba del mundo 3D, sin audio ni el HUD completo; no acredita un teléfono físico.
+
+La repetición con el diagnóstico plegado termina en 43,9399 segundos simulados, otra vez en el día 33 y sin errores. `browser-after-compact.json/png` conserva ese segundo resultado; las dos mediciones usan los dt reales del render, y no se sustituyen por un tiempo idéntico artificial.
