@@ -37,12 +37,19 @@ for(const biome of Game.BIOMES)test(`QA-085 ${biome}: a native large prop leaves
  const target=chain.pieces[chain.checks.findIndex(c=>!c.valid)];const saved=serialize(state);
  assert.equal(Game.placeStructure(state,'skipped-single',target,nav),false);assert.equal(serialize(state),saved);
 });
-for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: native blocked terrain permits paid walls while preserving crop restrictions`,async()=>{
+for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: wholly submerged native walls are silently skipped without payment`,async()=>{
  const {nav,state,center}=await fixture(biome);let point;
  for(let z=-100;z<=100&&!point;z+=4)for(let x=-100;x<=100&&!point;x+=4){const p={x:center.x+x,z:center.z+z};
-  if(nav.field.blocked(p.x,p.z,.15)&&nav.wallPlacement({kind:'wall',material:'zarzas',yaw:0,...p}).valid)point=p;
+  if(nav.wallPlacement({kind:'wall',material:'zarzas',yaw:0,...p}).fluid)point=p;
  }
- assert.ok(point,'native water/lava point without a large prop');assert.equal(nav.placement(point.x,point.z,.4).valid,false);
- const before=Number(state.ledger.balance.n);Game.placeStructure(state,'wet-wall',{kind:'wall',material:'zarzas',...point},nav);
- assert.equal(Number(state.ledger.balance.n),before-10);assert.equal(state.structures.at(-1).kind,'wall');
+ assert.ok(point,'native water/lava footprint');const saved=serialize(state);
+ assert.equal(Game.placeStructure(state,'wet-wall',{kind:'wall',material:'zarzas',...point},nav),false);
+ assert.equal(serialize(state),saved);
+});
+for(const material of ['zarzas','madera','adobe','piedra','reforzado'])for(const gate of [false,true])test(`${material}/${gate}: a wall may touch shore but an entirely fluid piece is skipped`,()=>{
+ const nav=new Navigation(712,'gran-rio',{});nav.propsAt=()=>[];
+ nav.field={surface:()=>0,slope:()=>0,waterInfo:x=>({inside:x>0,level:1})};
+ const wall={kind:'wall',material,gate,x:0,z:0,yaw:0};
+ assert.equal(nav.wallPlacement(wall).valid,true);
+ assert.equal(nav.wallPlacement({...wall,x:5}).fluid,true);
 });

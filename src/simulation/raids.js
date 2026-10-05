@@ -50,6 +50,11 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
       candidates.sort((a,b)=>a.distance-b.distance);
       for(const candidate of candidates){
         const point={x:candidate.x,z:candidate.z},exit={x:point.x+bx*3,z:point.z+bz*3};
+        // A reachable lateral probe can still be far outside the near-arrival
+        // area, especially once canyon water becomes traversable. Keep the
+        // original camera/farm distance contract before spending path searches.
+        const camera=nav.raidView?.eye??view.eye;
+        if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12))continue;
         if([point,exit].some(p=>p.x-radius<minX||p.x+radius>maxX||p.z-radius<minZ||p.z+radius>maxZ))continue;
         if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.walkable(exit.x,exit.z,radius,null,false))continue;
         if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1))continue;

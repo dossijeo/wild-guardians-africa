@@ -1558,5 +1558,6 @@ export const messages = {
   "El centro de trabajo no está disponible": "The work centre is unavailable",
   "Hora de contratación inválida": "Invalid hiring time",
   "Jornada en curso": "Shift in progress",
-  "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base"
+  "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base",
+  "No se puede construir sobre agua o lava": "You cannot build on water or lava"
 };

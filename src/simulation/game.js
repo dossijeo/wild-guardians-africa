@@ -1,3 +1,4 @@
+import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
@@ -54,10 +55,10 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   for(const village of villages){
     const culture=village.culture??s.culture;
     if(!cultures.has(culture)){
-      const candidate={kind:'center',x,z,yaw,culture},footprint=centerFootprint(candidate,s);
-      const check=nav.placementFootprint?.(footprint)??nav.placement(x,z,footprint.radius);
-      const crop=s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4);
-      cultures.set(culture,{candidate,footprint,check:crop?{valid:false,reason:'Un cultivo ocupa este terreno'}:check});
+      const resolved=resolveFluidPlacement(nav,(px,pz)=>[centerFootprint({kind:'center',x:px,z:pz,yaw,culture},s)],x,z,footprint=>s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4)?{valid:false,reason:'Un cultivo ocupa este terreno'}:null);
+      const footprint=resolved.shapes[0],candidate={kind:'center',x:resolved.x,z:resolved.z,yaw,culture};
+      const check=resolved.checks[0];
+      cultures.set(culture,{candidate,footprint,check});
     }
     const {candidate,footprint,check}=cultures.get(culture);
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
@@ -76,6 +77,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
+  if(draft?.valid){x=draft.x;z=draft.z;}
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
   if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
@@ -523,7 +525,8 @@ function closeNight(s) {
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
   if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
-  const buildings=villageLayout(payload,x,z),checks=buildings.map(b=>nav.placementFootprint?nav.placementFootprint(b):nav.placement(b.x,b.z,b.radius));
+  const resolved=resolveFluidPlacement(nav,(px,pz)=>villageLayout(payload,px,pz),x,z),buildings=resolved.shapes,checks=resolved.checks;
+  x=resolved.x;z=resolved.z;
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
@@ -531,7 +534,7 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
   return commit(s,id,'village',()=>{
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
-    const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);
+    const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);x=preview.x;z=preview.z;
     ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
     for(const center of s.structures.filter(operational)) {

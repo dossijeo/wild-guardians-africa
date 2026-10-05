@@ -1,3 +1,4 @@
+import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
 import {navigationPathKey} from './raid-navigation-warmth.js';
 import {villageTerrainSite} from './settlement-terrain.js';
@@ -93,12 +94,17 @@ export class Navigation {
     const ground=this.field.surface(x,z);
     return this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
   }
+  actorSurface(x,z){
+    const ground=this.field.surface(x,z),water=this.field.canyon&&this.field.waterInfo(x,z);
+    return water?.inside?Math.max(ground,water.level-.10):ground;
+  }
   terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
-      if(worker&&this.field.canyon){
+      if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
+      if(this.field.canyon){
         const surface=(px,pz)=>this.workerSurface(px,pz);
         if(Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6>.5)return false;
-      }else if((!worker&&!allowFluid&&this.field.blocked(x+dx,z+dz,.15))||this.field.slope(x+dx,z+dz)>.5)return false;
+      }else if(this.field.slope(x+dx,z+dz)>.5)return false;
     }
     return true;
   }
@@ -128,7 +134,8 @@ export class Navigation {
     return !this.propsAt(x,z,radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,point)<(p.radius??1.5)+radius);
   }
   placement(x,z,radius=1,{ignoreWalls=false}={}) {
-    if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius,false,true))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    if([[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]].some(([dx,dz])=>fluidAt(this.field,x+dx,z+dz)))return {valid:false,fluid:true,reason:FLUID_PLACEMENT_REASON};
     if(this.obstacles.some(o=>!(ignoreWalls&&o.kind==='wall')&&(o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius)))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(x,z,radius+4);
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
@@ -141,6 +148,7 @@ export class Navigation {
     for(let i=0;i<=steps;i++)for(const dz of [-depth,0,depth]){
       const dx=-half+half*2*i/steps;points.push({x:wall.x+dx*c+dz*s,z:wall.z-dx*s+dz*c});
     }
+    if(points.every(p=>fluidAt(this.field,p.x,p.z)))return {valid:false,fluid:true,reason:FLUID_PLACEMENT_REASON};
     if(this.obstacles.some(o=>o.kind!=='wall'&&points.every(p=>o.footprint?footprintDistance(o.footprint,p.x,p.z)<1e-8:distance(o,p)<=o.radius)))return {valid:false,reason:'La muralla queda dentro de un edificio'};
     for(const p of points){const props=this.propsAt(p.x,p.z,4);
       if(props.some(prop=>(prop.slot<4||prop.slot>=10&&prop.slot<=12||prop.slot>=18)&&distance(prop,p)<(prop.radius??1.5)+.05))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
@@ -151,12 +159,12 @@ export class Navigation {
   placementFootprint(building) {
     const polygon=building.footprint;
     if(!polygon?.length)return this.placement(building.x,building.z,building.radius);
+    if(footprintFluidSample(this.field,polygon))return {valid:false,fluid:true,reason:FLUID_PLACEMENT_REASON};
     const base=this.field?.surface?.(building.x,building.z);
     // The native floor is horizontal at the center anchor. Validate its whole
     // occupied area, including shallow slopes that pass the walking limit.
-    // Centers may occupy water/lava in every culture. Workers use the same
-    // fluid allowance so an accepted center can still receive its crew.
-    const terrainPoint=p=>this.terrainValid(p.x,p.z,0,false,building.kind==='center')&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);
+    // Fluid occupancy was checked against the actual surface above.
+    const terrainPoint=p=>this.terrainValid(p.x,p.z,0,false,true)&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);
     const terrainFailure={valid:false,reason:building.kind==='center'?'El edificio necesita suelo nivelado en toda su base':'Agua, lava o pendiente no edificable'};
     if(!polygon.every(terrainPoint))return terrainFailure;
     const xs=polygon.map(p=>p.x),zs=polygon.map(p=>p.z);

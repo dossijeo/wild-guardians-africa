@@ -52,10 +52,10 @@ for(const culture of Game.CULTURES)test(`QA-142 ${culture}: paid native founding
 for(const culture of Game.CULTURES)test(`QA-138/140 ${culture}: one invalid native unit or spent preview funds cannot partially found`,()=>{
  const {s,nav}=fixture(culture,50000),native=payload(culture),layout=villageLayout(native,150,0);
  let badPoint;
- for(const b of layout){for(const point of b.footprint){nav.field.blocked=(x,z)=>Math.hypot(x-point.x,z-point.z)<.01;const bad=layout.filter(unit=>!nav.placementFootprint(unit).valid);if(bad.length===1){badPoint=point;break;}}if(badPoint)break;}
+ for(const b of layout){for(const point of b.footprint){nav.field.slope=(x,z)=>Math.hypot(x-point.x,z-point.z)<.01?.6:0;const bad=layout.filter(unit=>!nav.placementFootprint(unit).valid);if(bad.length===1){badPoint=point;break;}}if(badPoint)break;}
  assert.ok(badPoint,'exactly one unit is unbuildable');const before=serialize(s),preview=Game.previewVillage(s,culture,150,0,native,nav);
  assert.equal(preview.valid,false);assert.equal(preview.buildings.length,layout.length);assert.throws(()=>Game.foundVillage(s,'qa-invalid',culture,150,0,native,nav));assert.equal(serialize(s),before);
- nav.field.blocked=()=>false;assert.equal(Game.previewVillage(s,culture,150,0,native,nav).valid,true);
+ nav.field.slope=()=>0;assert.equal(Game.previewVillage(s,culture,150,0,native,nav).valid,true);
  Game.placeStructure(s,'qa-other-purchase',{kind:'wall',material:'adobe',x:100,z:100,yaw:0},nav);assert.equal(numberOf(s.ledger.balance),49965);
  const spent=serialize(s);assert.throws(()=>Game.foundVillage(s,'qa-unfunded',culture,150,0,native,nav),e=>e.code==='hiring-reserve');assert.equal(serialize(s),spent);
  assert.ok(!s.commandIds.includes('qa-invalid')&&!s.commandIds.includes('qa-unfunded'));assert.equal(s.villages.length,1);
