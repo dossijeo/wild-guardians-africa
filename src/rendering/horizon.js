@@ -11,21 +11,26 @@ export class NativeHorizon{
   constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.groundMaterial=groundMaterial;this.group=null;this.key=null;}
   update(config,profile,region,quality,force=false){
     const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range]);
-    if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);return;}
-    this.dispose();this.key=key;
+    const materialKey=JSON.stringify([config.biome,config.seed,config.relief,config.river,quality==='muy_baja']);
+    if(!force&&this.key===key){if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);this.materialKey=materialKey;return;}
+    const retained=this.materialKey===materialKey?this.group?.children.find(o=>o.userData.nativeHorizon==='terrain')?.material:null;
+    this.dispose(retained);this.key=key;this.materialKey=materialKey;
     if(!['canyons','desert'].includes(config.biome))return;
     const make=config.biome==='desert'?makeDesertHorizon:makeCanyonHorizon;
     const data=make(config,profile,region.cx,region.cz,region.bounds),group=new THREE.Group();group.name='native-horizon';group.position.set(region.cx*48,0,region.cz*48);
-    const material=nativeGroundMaterial(quality);
-    this.groundMaterial?.(material,region.cx,region.cz);
+    // Keep the only horizon shader owner alive while replacing its geometry.
+    // Disposing it on every camera-region change deletes the GPU program and
+    // makes the next horizon draw compile that shader synchronously again.
+    const material=retained??nativeGroundMaterial(quality);
+    if(!retained)this.groundMaterial?.(material,region.cx,region.cz);
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
-    if(config.biome==='canyons')material.userData.horizonBounds=new THREE.Vector4(...region.bounds);
+    if(config.biome==='canyons'){material.userData.horizonBounds??=new THREE.Vector4();material.userData.horizonBounds.set(...region.bounds);}
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';group.add(ground);
     if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);}
     this.group=group;this.scene.add(group);
   }
-  dispose(){
-    if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});this.group=null;}
+  dispose(retained=null){
+    if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){o.geometry.dispose();if(o.material!==retained)o.material.dispose();}});this.group=null;}
     this.key=null;
   }
 }

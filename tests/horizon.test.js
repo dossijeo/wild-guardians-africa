@@ -42,13 +42,15 @@ test('streaming uses the eye and original resident radii, including negative bou
   }
 });
 
-test('horizon resources survive static frames and are released once on travel, quality change and close',()=>{
+test('horizon retains its terrain shader on travel and releases resources on quality change and close',()=>{
   const scene=new THREE.Scene(),horizon=new NativeHorizon(scene,(bounds,outside)=>paintedWaterMaterial('#49aeb6',false,712,bounds,null,outside)),config={seed:'712',biome:'canyons',relief:1,river:true},profile=pack('canyons').profile,region=nativeNearRegion({x:0,z:0},'media');
   horizon.update(config,profile,region,'media');const first=horizon.group;assert.equal(first.position.x,0);assert.equal(first.children.length,2);assert.ok(first.children.every(o=>!o.castShadow&&!o.receiveShadow));
   let geos=0,mats=0;first.children.forEach(o=>{o.geometry.addEventListener('dispose',()=>geos++);o.material.addEventListener('dispose',()=>mats++);});
   horizon.update(config,profile,region,'media');assert.equal(horizon.group,first);assert.equal(geos,0);
-  horizon.update(config,profile,nativeNearRegion({x:-48,z:48},'media'),'media');assert.equal(geos,2);assert.equal(mats,2);assert.equal(first.parent,null);assert.deepEqual(horizon.group.position.toArray(),[-48,0,48]);
-  horizon.update(config,profile,region,'muy_baja');assert.ok(horizon.group.children[0].material.isMeshBasicMaterial);
+  const firstMaterial=first.children[0].material,clipBounds=firstMaterial.userData.horizonBounds;
+  horizon.update(config,profile,nativeNearRegion({x:-48,z:48},'media'),'media');assert.equal(geos,2);assert.equal(mats,1);assert.equal(first.parent,null);assert.deepEqual(horizon.group.position.toArray(),[-48,0,48]);
+  assert.equal(horizon.group.children[0].material,firstMaterial);assert.equal(firstMaterial.userData.horizonBounds,clipBounds);assert.deepEqual(clipBounds.toArray(),nativeNearRegion({x:-48,z:48},'media').bounds);
+  horizon.update(config,profile,region,'muy_baja');assert.ok(horizon.group.children[0].material.isMeshBasicMaterial);assert.equal(mats,2);
   horizon.dispose();horizon.dispose();assert.equal(scene.children.length,0);
   horizon.update({...config,biome:'savanna'},profile,region,'media');assert.equal(horizon.group,null);assert.equal(scene.children.length,0);
 });

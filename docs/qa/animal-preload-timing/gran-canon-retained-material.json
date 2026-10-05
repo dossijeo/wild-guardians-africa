@@ -1,0 +1,803 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "warthog",
+    "hyena",
+    "rhino",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true
+    },
+    {
+      "species": "hyena",
+      "ready": true
+    },
+    {
+      "species": "buffalo",
+      "ready": true
+    },
+    {
+      "species": "lion",
+      "ready": true
+    },
+    {
+      "species": "rhino",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 19,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      7
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 19,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      7
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 479.60000002384186,
+  "loadingMs": 5032.199999988079,
+  "errors": [],
+  "timing": {
+    "settle": [
+      {
+        "cpuMs": 7.299999952316284,
+        "intervalMs": null,
+        "actorsReady": 0,
+        "queuedChunks": 13
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 631.6000000000004,
+        "actorsReady": 0,
+        "queuedChunks": 12
+      },
+      {
+        "cpuMs": 5.900000035762787,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 0,
+        "queuedChunks": 12
+      },
+      {
+        "cpuMs": 6.100000023841858,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 12
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 11
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 0,
+        "queuedChunks": 11
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 0,
+        "queuedChunks": 10
+      },
+      {
+        "cpuMs": 9.399999976158142,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 9
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 8
+      },
+      {
+        "cpuMs": 7.599999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 0,
+        "queuedChunks": 8
+      },
+      {
+        "cpuMs": 7.900000035762787,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 7
+      },
+      {
+        "cpuMs": 4.899999976158142,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 0,
+        "queuedChunks": 7
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 0,
+        "queuedChunks": 6
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 5
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 9.899999976158142,
+        "intervalMs": 66.60000000000036,
+        "actorsReady": 0,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.400000035762787,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.699999988079071,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.200000047683716,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.699999988079071,
+        "intervalMs": 16.799999999999272,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.100000023841858,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      }
+    ],
+    "baseline": [
+      {
+        "cpuMs": 7.100000023841858,
+        "intervalMs": null,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.600000023841858,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.599999964237213,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.599999964237213,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 33.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.100000023841858,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.199999988079071,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.700000047683716,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.300000011920929,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.900000035762787,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.699999988079071,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.600000023841858,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.100000023841858,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 16.5,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.5,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.100000023841858,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.299999952316284,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.200000047683716,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.800000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.899999976158142,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 0,
+        "queuedChunks": 0
+      }
+    ],
+    "appearance": [
+      {
+        "cpuMs": 13.399999976158142,
+        "intervalMs": null,
+        "actorsReady": 5,
+        "queuedChunks": 8
+      },
+      {
+        "cpuMs": 9.400000035762787,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 5,
+        "queuedChunks": 8
+      },
+      {
+        "cpuMs": 12,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 7
+      },
+      {
+        "cpuMs": 13.399999976158142,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 5,
+        "queuedChunks": 6
+      },
+      {
+        "cpuMs": 11.100000023841858,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 5,
+        "queuedChunks": 6
+      },
+      {
+        "cpuMs": 13.200000047683716,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 5
+      },
+      {
+        "cpuMs": 14.700000047683716,
+        "intervalMs": 50.100000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 16.899999976158142,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 12.399999976158142,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 14.900000035762787,
+        "intervalMs": 49.79999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 5,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 17.400000035762787,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.600000023841858,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.399999976158142,
+        "intervalMs": 66.60000000000036,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.399999976158142,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.900000035762787,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.399999976158142,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.699999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.199999988079071,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.5,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 14.699999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 13.599999964237213,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.899999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.5,
+        "intervalMs": 33.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.599999964237213,
+        "intervalMs": 16.400000000000546,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.800000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.099999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.899999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.599999964237213,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.5,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.900000035762787,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.400000035762787,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.300000011920929,
+        "intervalMs": 33.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.5,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.699999988079071,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.100000023841858,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.100000023841858,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.900000035762787,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.100000023841858,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.900000035762787,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 13.099999964237213,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.900000035762787,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 16.599999999998545,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.899999976158142,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.599999964237213,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.800000011920929,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.100000023841858,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.099999964237213,
+        "intervalMs": 16.5,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.700000047683716,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.100000023841858,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 16.599999999998545,
+        "actorsReady": 5,
+        "queuedChunks": 0
+      }
+    ],
+    "takes": [
+      {
+        "species": "warthog",
+        "ms": 10.800000011920929
+      },
+      {
+        "species": "hyena",
+        "ms": 10.699999988079071
+      },
+      {
+        "species": "buffalo",
+        "ms": 10.699999988079071
+      },
+      {
+        "species": "lion",
+        "ms": 10.699999988079071
+      },
+      {
+        "species": "rhino",
+        "ms": 10.699999988079071
+      }
+    ],
+    "firstRenderCalls": [
+      {
+        "cpuMs": 299.60000002384186,
+        "actorsBefore": 0,
+        "actorsAfter": 0
+      },
+      {
+        "cpuMs": 20.19999998807907,
+        "actorsBefore": 5,
+        "actorsAfter": 5
+      }
+    ],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "spawnMs": 86.19999998807907,
+    "focusMs": 0.40000003576278687,
+    "summary": {
+      "baseline": {
+        "frames": 24,
+        "cpuMs": {
+          "median": 6.599999964237213,
+          "p95": 8.199999988079071,
+          "maximum": 9.5
+        },
+        "intervalMs": {
+          "median": 16.699999999999818,
+          "p95": 33.30000000000018,
+          "maximum": 33.5
+        }
+      },
+      "appearance": {
+        "frames": 60,
+        "cpuMs": {
+          "median": 11.599999964237213,
+          "p95": 14.700000047683716,
+          "maximum": 17.400000035762787
+        },
+        "intervalMs": {
+          "median": 33.099999999999454,
+          "p95": 49.79999999999927,
+          "maximum": 66.60000000000036
+        }
+      }
+    },
+    "newProgramUsers": []
+  },
+  "scope": "Native WorldScene, normal paid center and real five-species spawn. Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}
