@@ -1,0 +1,32 @@
+{
+  "scenario": "Native Sabana/Mapungubwe seed 712, original intensive policy, three complete days. Same process and ordinary commands. Reference performs the former full navigation setState for each crop.",
+  "rows": [
+    {
+      "mode": "reference",
+      "ms": 26546.1142,
+      "sha256": "2e3a31cb41bb301079b641a135810973ea9715ca05ec0dd3c7272ee66716358d",
+      "counters": {
+        "cropSyncs": 232,
+        "emptyPlacements": 232,
+        "fullStateRebuilds": 254
+      },
+      "planted": 232,
+      "delivered": 151,
+      "money": 359
+    },
+    {
+      "mode": "cached",
+      "ms": 17636.058299999997,
+      "sha256": "2e3a31cb41bb301079b641a135810973ea9715ca05ec0dd3c7272ee66716358d",
+      "counters": {
+        "cropSyncs": 232,
+        "emptyPlacements": 232,
+        "fullStateRebuilds": 22
+      },
+      "planted": 232,
+      "delivered": 151,
+      "money": 359
+    }
+  ],
+  "scope": "Single-run CPU timings with concurrent campaigns and tests, not a stable median, GPU frametime or phone FPS. Exact complete-state hash and work counters are the acceptance evidence."
+}

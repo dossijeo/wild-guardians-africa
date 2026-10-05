@@ -71,6 +71,15 @@ export class Navigation {
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
     this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
   }
+  syncCropPlacement(state,removedProps=[]) {
+    // Crops are not navigation obstacles. Replanting already cleared ground
+    // can retain static-query caches and the obstacle index. Keep the existing
+    // route epoch change so worker replanning and saved route behaviour match
+    // the established simulation. Real prop removals still rebuild normally.
+    if(this.state!==state||removedProps.length){this.setState(state);return;}
+    this.version=(this.version??0)+1;
+    state.navigationVersion=this.version;
+  }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
     return Object.assign(Object.create(this),{

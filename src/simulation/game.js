@@ -150,7 +150,9 @@ export function plant(s,id,species,x,z,nav) {
     const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);
     if(spellAt(s,'multiply',p))p.multiplyHarvest=true;
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);
-    s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'CropPlaced',{targetId:p.id});
+    const removedProps=check.suppress??[];s.suppressed.push(...removedProps);
+    if(nav.syncCropPlacement)nav.syncCropPlacement(s,removedProps);else nav.setState(s);
+    emit(s,'CropPlaced',{targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
