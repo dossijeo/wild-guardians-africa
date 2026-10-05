@@ -1,0 +1,11 @@
+# Crop lifecycle observations in an intensive farm
+
+Run `node tools/check_crop_lifecycle.mjs 20 olderMale OUTPUT_DIRECTORY` to observe cotton and banana in the existing Sabana/Mapungubwe intensive strategy, with seed 712 and ordinary proportional midday hiring. The command records full source provenance, progress, original report, final snapshot, financial summary and lifecycle observations. It refuses to reuse an existing directory and preserves a failure snapshot and lifecycle recording when the campaign fails.
+
+The observer reads state after each ordinary simulation tick. It records the first observation, task queue/assignment/worker-state changes, completed or pending waterings, entry into and exit from water-induced growth freezes, maturity, physical pickup, destruction and settled crate delivery. Terminal records survive domain reloads and cannot duplicate delivered income. A report is an independent copy.
+
+Each transition carries the previous and current observation clocks. These intervals bracket a change; they are not exact timestamps of intermediate simulation substeps. The first observation may already include a completed action. The recorded strategy never manually removes crops, so dead plants without a crate are destruction losses. Pending watering at destruction is state evidence rather than proof of the cause. Growing plants' water waits and attack-hit counts are retained in their last alive observation.
+
+No gameplay commands or state changes are introduced by the observer. A normal paid one-night native campaign produces byte-identical complete serialized state with and without observation. Every observed delivered crop maps to its real crate and settled ledger income, after pickup. The focused watering/task/reload check passes, and mutating an exported report does not modify the observer. Both tests pass. The one-night CLI run also passes, and repeating its output directory is rejected.
+
+This is a diagnostic for the unresolved large-farm balance and pacing work. It does not change the original strategy, grant funds, speed up growth, reorder FIFO tasks or adjust animal damage. It does not establish mobile presentation, GPU frametime or 100-night acceptance across all combinations.
