@@ -1,0 +1,57 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA transporte musical por ventanas</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:10px;margin:3px}pre{white-space:pre-wrap}</style>
+<h1>Transporte por ventanas · WebAudio real</h1><p>MP3 originales desde caché, salida silenciada. Candidato aún no activado en partida.</p>
+<div id="cases"></div><button id="all">Comprobar ocho casos</button><button id="stop">Parar</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '/src/audio/audio.js';
+import {MusicWindowPool} from '/src/audio/music-window-pool.js';
+import {MusicWindowTransport} from '/src/audio/music-window-transport.js';
+import {musicRangeReader} from '/src/audio/music-range-reader.js';
+import {MUSIC_POLICIES} from '/src/audio/music-policy.js';
+import {json} from '/src/rendering/assets.js';
+let audio,timer,result={},generation=0;
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+function paint(){
+ const pool=audio?.musicWindowPool,transport=audio?.transport;
+ result.peakPoolPcmBytes=Math.max(result.peakPoolPcmBytes??0,pool?.pcmBytes()??0);result.peakSources=Math.max(result.peakSources??0,audio?.active.length??0);
+ const sources=audio?.active??[];let maximumClockError=0;
+ for(const source of sources)maximumClockError=Math.max(maximumClockError,Math.abs(source.musicWindowFirstSample/48000+(source.offsetAtStart??0)-(source.musicDeckOffset+source.whenAtStart-source.musicDeckStart)));
+ result.maximumClockError=Math.max(result.maximumClockError??0,maximumClockError);
+ report.textContent=JSON.stringify({...result,section:transport?.section.id,edge:transport?.lastEdge,jumps:transport?.jumps,loops:transport?.loops,decks:transport?.decks.length,activeSources:sources.length,currentPoolPcmBytes:pool?.pcmBytes()??0,decodedKeys:[...(pool?.ready.keys()??[])],history:transport?.history,musicError:audio?.musicError?.message??null},null,2);
+}
+function stop(){generation++;clearInterval(timer);audio?.dispose();audio=null;paint();}
+async function run(pack,edge){
+ stop();const own=generation;result={pack,requestedEdge:edge,errors:[]};status.textContent='Cargando';
+ try{
+  const bank=await json(`/content/music-${pack}.json`),index=await json(`/content/music-windows-${pack}.json`);
+  audio=new AudioSystem({music:0,sfx:0});audio.context=new AudioContext({sampleRate:48000});await audio.unlock();
+  const original=audio.context.createBufferSource.bind(audio.context);audio.context.createBufferSource=()=>{const source=original(),start=source.start.bind(source);source.start=(when,offset)=>{source.whenAtStart=when;source.offsetAtStart=offset;return start(when,offset);};return source;};
+  const reader=musicRangeReader({fetch:async()=>{throw Error('Candidate windows must be cached');}});result.reader=reader.stats;
+  const navigation=edge==='wrap'?null:bank.navigation.edges.find(e=>e.id===edge),from=navigation?bank.navigation.sections.find(s=>s.id===navigation.source):null;
+  const offset=from?from.end-6:bank.duration-8;
+  audio.musicWindowPool=new MusicWindowPool(index,{sampleRate:audio.context.sampleRate,readRange:reader.readRange,decode:data=>audio.context.decodeAudioData(data)});
+  await Promise.all(bank.tracks.filter((track,i)=>MUSIC_POLICIES[pack].levels.day[i]>0).map(track=>audio.musicWindowPool.load(track.id,audio.musicWindowPool.at(track.id,offset).window)));
+  if(own!==generation)return;
+  audio.transport=new MusicWindowTransport(audio,pack,bank,bank.tracks.map(track=>({track})),{offset,random:edge==='wrap'?()=>1:()=>0});
+  status.textContent='Reproduciendo';timer=setInterval(()=>{audio.updateMusic({time:100,raid:null});paint();},25);paint();
+ }catch(error){if(own===generation){result.errors.push(error.message);status.textContent='Error';paint();}}
+}
+for(const pack of ['a','b']){
+ const bank=await json(`/content/music-${pack}.json`);
+ for(const edge of [...bank.navigation.edges.map(e=>e.id),'wrap']){const button=document.createElement('button');button.textContent=`${pack.toUpperCase()} ${edge}`;button.onclick=()=>run(pack,edge);document.querySelector('#cases').append(button);}
+}
+document.querySelector('#stop').onclick=()=>{stop();status.textContent='Parado';};window.addEventListener('pagehide',stop);
+document.querySelector('#all').onclick=async()=>{
+ const captures=[];
+ for(const pack of ['a','b']){
+  const bank=await json(`/content/music-${pack}.json`);
+  for(const edge of [...bank.navigation.edges.map(e=>e.id),'wrap']){
+   await run(pack,edge);if(!audio?.transport)return;
+   const own=generation,until=audio.context.currentTime+9.5;
+   while(audio?.context.currentTime<until){await new Promise(resolve=>setTimeout(resolve,100));if(generation!==own)return;}
+   paint();captures.push(JSON.parse(report.textContent));
+  }
+ }
+ stop();status.textContent='Ocho casos terminados';report.textContent=JSON.stringify({status:'completed',cases:captures},null,2);
+};
+</script></html>

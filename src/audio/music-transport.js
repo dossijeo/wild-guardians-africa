@@ -12,6 +12,11 @@ export class MusicTransport {
     audio.mixer=this.mixer;this.section=this.sectionFor(offset);this.visit('start');
   }
   sectionFor(position){return this.nav.sections.find(s=>position>=s.start-.001&&position<s.end-.001)||this.nav.sections.at(-1);}
+  spliceFor(plan){
+    const fade=plan.target.start<.01?Math.min(4,Math.max(.25,plan.from.end-plan.from.start-.2)):Math.min(this.nav.spliceFade,plan.target.start,.45);
+    return {fade,when:plan.at-fade,offset:plan.target.start<.01?0:plan.target.start-fade};
+  }
+  deckReady(){return true;}
   visit(kind){this.history.push({section:this.section.id,kind});if(this.history.length>24)this.history.shift();}
   createDeck(when,offset,fade) {
     const audio=this.audio,gain=audio.context.createGain(),deck={start:when,offset,end:when+this.bank.duration-offset,gain,voices:new Map(),sources:[]};
@@ -51,10 +56,10 @@ export class MusicTransport {
     if(!this.plan){const at=this.primary.start+this.section.end-this.primary.offset;this.plan={...this.choose(Math.max(now,at)),from:this.section,at};}
     const plan=this.plan;
     if(plan.kind!=='natural'&&!plan.deck){
-      const fade=plan.target.start<.01?Math.min(4,Math.max(.25,plan.from.end-plan.from.start-.2)):Math.min(this.nav.spliceFade,plan.target.start,.45);
+      const {fade,when,offset}=this.spliceFor(plan);
       if(now>=plan.at-fade-2.2){
         if(now<plan.at-fade-.02){
-          const when=plan.at-fade,offset=plan.target.start<.01?0:plan.target.start-fade;
+          if(!this.deckReady(when,offset))return;
           plan.deck=this.createDeck(when,offset,fade);
           this.primary.gain.gain.cancelScheduledValues(when);this.primary.gain.gain.setValueAtTime(1,when);this.primary.gain.gain.linearRampToValueAtTime(0,plan.at);
           for(const source of this.primary.sources)source.stop(plan.at+.012);

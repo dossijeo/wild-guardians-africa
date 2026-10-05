@@ -1,0 +1,64 @@
+{
+  "pack": "a",
+  "requestedEdge": "B_A",
+  "errors": [],
+  "reader": {
+    "diskReads": 168,
+    "networkReads": 0
+  },
+  "peakPoolPcmBytes": 81395712,
+  "peakSources": 32,
+  "maximumClockError": 0,
+  "section": "C",
+  "edge": "B_A",
+  "jumps": 1,
+  "loops": 0,
+  "decks": 1,
+  "activeSources": 16,
+  "currentPoolPcmBytes": 61046784,
+  "decodedKeys": [
+    "s1:16",
+    "s0:16",
+    "s2:16",
+    "s3:16",
+    "s4:16",
+    "s6:16",
+    "s8:16",
+    "s9:16",
+    "s1:17",
+    "s0:17",
+    "s2:17",
+    "s3:17",
+    "s4:17",
+    "s6:17",
+    "s8:17",
+    "s9:17",
+    "s1:6",
+    "s0:6",
+    "s2:6",
+    "s3:6",
+    "s4:6",
+    "s6:6",
+    "s8:6",
+    "s9:6"
+  ],
+  "history": [
+    {
+      "section": "B",
+      "kind": "start"
+    },
+    {
+      "section": "A",
+      "kind": "jump"
+    },
+    {
+      "section": "B",
+      "kind": "natural"
+    },
+    {
+      "section": "C",
+      "kind": "natural"
+    }
+  ],
+  "musicError": null
+}

@@ -12,6 +12,7 @@ test('a future entrance is visible for prefetch before it is audible',()=>{
   const mixer=new MusicMixer('a',bank,new Map(),0,'day');mixer.pending=[{id:'s7',to:.5,when:8}];
   assert.equal(mixer.audibleDuring('s7',0,7),false);assert.equal(mixer.audibleDuring('s7',0,9),true);
   assert.equal(mixer.value('s7',7),0);
+  assert.equal(mixer.audibleFrom('s7',0,7),null);assert.equal(mixer.audibleFrom('s7',0,9),8);
 });
 test('a stem with no source still advances its fade and a later voice joins at the correct level',()=>{
   const mixer=new MusicMixer('a',bank,new Map(),0,'day');mixer.setCurve('s7',.8,10,2);

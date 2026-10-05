@@ -111,6 +111,7 @@ export class AudioSystem {
   stopMusic({preserveEvent=false}={}){
     this.menuStream?.dispose();this.menuStream=null;
     this.musicGeneration++;this.transport?.dispose();this.transport=null;this.mixer=null;if(!preserveEvent)this.musicEvent=null;
+    this.musicWindowPool?.dispose();this.musicWindowPool=null;
     for(const [source,voice] of [...this.voices])if(voice.music)this.stopVoice(source);
     for(const url of this.musicBuffers)this.buffers.delete(url);this.musicBuffers.clear();this.pack=null;this.menuActive=false;
   }

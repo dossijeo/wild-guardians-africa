@@ -23,6 +23,13 @@ export class MusicMixer {
     // Quiet logical tracks still follow the same clock and gain curves.
     return Math.max(this.value(id,from),this.value(id,to))>0||this.pending.some(task=>task.id===id&&task.to>0&&task.when<=to);
   }
+  audibleFrom(id,from,to){
+    if(this.value(id,from)>0)return from;
+    const curve=this.curves.get(id),starts=[];
+    if(curve.to>0&&curve.end>from&&curve.start<=to)starts.push(Math.max(from,curve.start));
+    for(const task of this.pending)if(task.id===id&&task.to>0&&task.when<=to)starts.push(Math.max(from,task.when));
+    return starts.length?Math.min(...starts):null;
+  }
   addVoices(voices,when) {
     for(const [id,gain] of voices){
       this.voices.get(id).add(gain);gain.setValueAtTime(this.value(id,when)*this.scale,when);
