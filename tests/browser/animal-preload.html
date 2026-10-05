@@ -5,6 +5,7 @@ import {findInitialLocationAsync} from '/src/world/villages.js';
 import {WorldScene} from '/src/rendering/scene.js';
 import {json} from '/src/rendering/assets.js';
 import {spawnRaid} from '/src/simulation/raids.js';
+import {serialize} from '/src/persistence/snapshots.js';
 const params=new URLSearchParams(location.search),biome=params.get('biome')??'gran-canon',measureTiming=params.get('timing')==='1',errors=[];
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
@@ -24,7 +25,14 @@ async function sampleFrames(target,count){let previous=null;for(let i=0;i<count;
 if(measureTiming){await sampleFrames(timing.settle,24);await Promise.all([world.chunkStream.whenIdle(),world.horizon.whenReady()]);world.render(0);await world.chunkStream.whenIdle();await sampleFrames(timing.baseline,24);const take=world.animalPreload.take.bind(world.animalPreload);world.animalPreload.take=async species=>{const stamp=performance.now(),rig=await take(species);timing.takes.push({species,ms:performance.now()-stamp});return rig;};}
 const animalPrograms=models=>{const ids=new Set();for(const model of models)model.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])for(const program of world.renderer.properties.get(material).programs?.values()??[])ids.add(program.id);});return [...ids];};
 const before={downloads,programs:world.renderer.info.programs.length,programIds:world.renderer.info.programs.map(p=>p.id),animalPrograms:animalPrograms((await world.animalPreload.spares()).map(r=>r.model))},species=['warthog','hyena','buffalo','lion','rhino'];
+const originals=new Map();
+if(measureTiming&&params.get('profile')==='1'){
+ timing.navigationContext={state:serialize(state),activeBounds:nav.activeBounds,raidView:nav.raidView,warmedChunks:[...nav.chunks.keys()]};
+ timing.navigation={scope:'Inclusive nested CPU times; do not add them. Walkability/terrain/props counters omit per-call clocks to reduce measurement overhead.',methods:{}};
+ for(const name of ['path','approachPath','segmentClear','walkable','terrainValid','testTerrainValid','propsAt']){const original=nav[name];if(typeof original!=='function')continue;originals.set(name,original);const row=timing.navigation.methods[name]={calls:0,ms:0,maximumMs:0};nav[name]=function(...args){row.calls++;const clock=['path','approachPath','segmentClear'].includes(name),started=clock?performance.now():0;try{return original.apply(this,args);}finally{if(clock){const ms=performance.now()-started;row.ms+=ms;row.maximumMs=Math.max(row.maximumMs,ms);}}};}
+}
 const appearance=performance.now();spawnRaid(state,{group:species},nav);
+for(const [name,original] of originals)nav[name]=original;
 if(measureTiming)timing.spawnMs=performance.now()-appearance;
 const focusStarted=performance.now();
 world.focus({x:state.raid.animals.reduce((sum,a)=>sum+a.x,0)/state.raid.animals.length,z:state.raid.animals.reduce((sum,a)=>sum+a.z,0)/state.raid.animals.length});
