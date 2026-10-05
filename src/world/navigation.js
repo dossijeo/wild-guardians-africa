@@ -93,12 +93,12 @@ export class Navigation {
     const ground=this.field.surface(x,z);
     return this.field.canyon?Math.max(ground,this.field.riverLevel):ground;
   }
-  terrainValid(x,z,radius=.3,worker=false) {
+  terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
       if(worker&&this.field.canyon){
         const surface=(px,pz)=>this.workerSurface(px,pz);
         if(Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6>.5)return false;
-      }else if(this.field.blocked(x+dx,z+dz,.15)||this.field.slope(x+dx,z+dz)>.5)return false;
+      }else if((!worker&&!allowFluid&&this.field.blocked(x+dx,z+dz,.15))||this.field.slope(x+dx,z+dz)>.5)return false;
     }
     return true;
   }
@@ -154,16 +154,19 @@ export class Navigation {
     const base=this.field?.surface?.(building.x,building.z);
     // The native floor is horizontal at the center anchor. Validate its whole
     // occupied area, including shallow slopes that pass the walking limit.
-    const terrainPoint=p=>this.terrainValid(p.x,p.z,0)&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);
-    if(!polygon.every(terrainPoint))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    // Centers may occupy water/lava in every culture. Workers use the same
+    // fluid allowance so an accepted center can still receive its crew.
+    const terrainPoint=p=>this.terrainValid(p.x,p.z,0,false,building.kind==='center')&&(building.kind!=='center'||!Number.isFinite(base)||Math.abs(this.field.surface(p.x,p.z)-base)<=.12);
+    const terrainFailure={valid:false,reason:building.kind==='center'?'El edificio necesita suelo nivelado en toda su base':'Agua, lava o pendiente no edificable'};
+    if(!polygon.every(terrainPoint))return terrainFailure;
     const xs=polygon.map(p=>p.x),zs=polygon.map(p=>p.z);
     const minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
     // Sample the occupied interior and edges, rather than the empty corners of
     // a bounding circle. Native hull coordinates use the same scale as render.
-    for(let x=minX;x<=maxX;x+=.5)for(let z=minZ;z<=maxZ;z+=.5)if(containsPoint(polygon,x,z)&&!terrainPoint({x,z}))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+    for(let x=minX;x<=maxX;x+=.5)for(let z=minZ;z<=maxZ;z+=.5)if(containsPoint(polygon,x,z)&&!terrainPoint({x,z}))return terrainFailure;
     for(let i=0;i<polygon.length;i++){
       const a=polygon[i],b=polygon[(i+1)%polygon.length],steps=Math.ceil(distance(a,b));
-      for(let j=1;j<steps;j++)if(!terrainPoint({x:a.x+(b.x-a.x)*j/steps,z:a.z+(b.z-a.z)*j/steps}))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
+      for(let j=1;j<steps;j++)if(!terrainPoint({x:a.x+(b.x-a.x)*j/steps,z:a.z+(b.z-a.z)*j/steps}))return terrainFailure;
     }
     if(this.obstacles.some(o=>o.footprint?footprintsOverlap(polygon,o.footprint):footprintDistance(polygon,o.x,o.z)<o.radius))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(building.x,building.z,building.radius+4);

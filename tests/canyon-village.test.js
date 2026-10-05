@@ -50,11 +50,12 @@ for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope'])test
     }
   }
 });
-test('water crossing stays exclusive to canyon workers and solid collision remains active',()=>{
+test('crew can cross fluid in every biome while solid collision remains active',()=>{
   for(const biome of ['sabana','gran-rio']){
     const profile=JSON.parse(readFileSync('public/content/biome-'+(biome==='sabana'?'savanna':'grand_river')+'.json')).profile;
     const nav=new Navigation(712,biome,profile),z=0,x=nav.field.riverX(z);
-    assert.equal(nav.terrainValid(x,z,.28,true),false);
+    assert.equal(nav.terrainValid(x,z,.28,true),true);
+    assert.equal(nav.terrainValid(x,z,.28,false),false);
     assert.equal(nav.workerSurface(x,z),nav.field.surface(x,z));
   }
   const {s,nav}=createOpeningWorld({biome:'gran-canon'}),house=s.villages[0].buildings.find(b=>b.kind!=='Zona común');

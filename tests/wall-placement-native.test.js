@@ -37,7 +37,7 @@ for(const biome of Game.BIOMES)test(`QA-085 ${biome}: a native large prop leaves
  const target=chain.pieces[chain.checks.findIndex(c=>!c.valid)];const saved=serialize(state);
  assert.equal(Game.placeStructure(state,'skipped-single',target,nav),false);assert.equal(serialize(state),saved);
 });
-for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: native blocked terrain permits paid walls without changing plant or centre restrictions`,async()=>{
+for(const biome of ['gran-rio','manglares','volcanes','gran-canon'])test(`QA-085 ${biome}: native blocked terrain permits paid walls while preserving crop restrictions`,async()=>{
  const {nav,state,center}=await fixture(biome);let point;
  for(let z=-100;z<=100&&!point;z+=4)for(let x=-100;x<=100&&!point;x+=4){const p={x:center.x+x,z:center.z+z};
   if(nav.field.blocked(p.x,p.z,.15)&&nav.wallPlacement({kind:'wall',material:'zarzas',yaw:0,...p}).valid)point=p;

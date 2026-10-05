@@ -1333,6 +1333,7 @@ export const messages = {
   "Contratar una {profile} menos": "Hire one fewer {profile}",
   "Contratar una {profile} más": "Hire one more {profile}",
   "Agua, lava o pendiente no edificable": "Water, lava or unbuildable slope",
+  "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base",
   "Zona común": "Common area",
   "No se pudieron generar todos los chunks": "Could not generate all chunks",
   "Canto del disco": "Disc edge",
