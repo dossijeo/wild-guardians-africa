@@ -14,6 +14,7 @@ import {MusicTransport} from './music-transport.js';
 import {MusicLoadQueue} from './music-load-queue.js';
 import {MusicStream} from './music-stream.js';
 import {prepareMusicDiskCache} from './music-disk-cache.js';
+import {startWindowMusic} from './start-window-music.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
@@ -123,9 +124,14 @@ export class AudioSystem {
       await this.sfxBank();if(this.pack!==pack||generation!==this.musicGeneration)return;
       const bank=await this.resources.json(`/content/music-${pack}.json`);
       if(this.pack!==pack||generation!==this.musicGeneration)return;
-      // Keep only the current original pack decoded; the transport owns its decks.
       const current=()=>this.pack===pack&&generation===this.musicGeneration;
       this.musicLoads??=new MusicLoadQueue();
+      // Original indexed MP3 windows are validated at 48 kHz. Other context
+      // rates keep the original transport until their resampling is verified.
+      if(bank.navigation?.sections?.length&&this.context.sampleRate===48000&&this.resources.musicWindows!==false){
+        await startWindowMusic(this,pack,bank,current);return;
+      }
+      // Compatibility route: retain only the current pack's full PCM.
       const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(t=>{
         this.musicBuffers.add(t.data.url);
         return this.musicLoads.run(current,async()=>({track:t,buffer:await this.buffer(t.data.url,{current})}));

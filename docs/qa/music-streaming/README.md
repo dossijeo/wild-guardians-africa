@@ -1,4 +1,10 @@
-# Compressed disk cache and media streaming
+# Current gameplay integration
+
+The tested 48 kHz gameplay route now uses short decoded MP3 windows; see
+[production-windows.md](production-windows.md) for current selection, measured
+scope and limitations. The experiments below retain their historical results.
+
+## Compressed disk cache and media streaming
 
 The production menu now uses the original MP3 through an HTML media element
 connected to the existing WebAudio music bus. It preserves loop, pitch,

@@ -8,11 +8,11 @@ import {MUSIC_POLICIES} from '../src/audio/music-policy.js';
 const banks=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-${pack}.json`,import.meta.url)))]));
 const indices=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-windows-${pack}.json`,import.meta.url)))]));
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
-async function fixture(pack,{offset=0,random=()=>1,scene='day'}={}){
+async function fixture(pack,{offset=0,random=()=>1,scene='day',beforeRead}={}){
  const sources=[],decoded=[],gains=[],index=indices[pack],bank=banks[pack],audio=new AudioSystem({sfx:0,music:0});
  audio.context={state:'running',currentTime:1,createGain(){const node={gain:{setValueAtTime(){},cancelScheduledValues(){},linearRampToValueAtTime(){}},connect(){},disconnect(){this.closed=true;}};gains.push(node);return node;},createBufferSource(){const source={playbackRate:{value:0},connect(){},disconnect(){this.closed=true;},start(when,offset){this.when=when;this.offset=offset;},stop(at){this.stopAt=at??-Infinity;}};sources.push(source);return source;}};
  audio.musicGain={};audio.musicScene=scene;
- audio.musicWindowPool=new MusicWindowPool(index,{readRange:async(url,start)=>({url,start}),decode:async data=>{
+ audio.musicWindowPool=new MusicWindowPool(index,{readRange:async(url,start)=>{await beforeRead?.(url,start);return {url,start};},decode:async data=>{
   const track=index.tracks.find(t=>t.url===data.url),window=track.windows.find(w=>w.startByte===data.start);decoded.push(track.id);
   return {length:window.decodedSamples,numberOfChannels:2,sampleRate:48000};
  }});
@@ -73,5 +73,51 @@ test('logical track gains have the original immediate level before future automa
   const index=banks.a.tracks.findIndex(track=>track.id===voice.id);
   assert.equal(voice.volume.gain.value,MUSIC_POLICIES.a.levels.day[index]*banks.a.safetyGain*.45);
  }
+ audio.stop();
+});
+
+test('delayed silent-layer entrances join the current clock without starting from zero',async()=>{
+ let hold=false;const blocked=[];
+ const {audio,transport,sources,decoded,tick}=await fixture('b',{scene:'minimal',beforeRead:()=>hold?new Promise(resolve=>blocked.push(resolve)):undefined});
+ transport.mixer.automatic=false;hold=true;
+ const initial=new Set(decoded);
+ transport.mixer.transition(new Map(banks.b.tracks.map((t,i)=>[t.id,MUSIC_POLICIES.b.levels.day[i]])),2,false);
+ for(let now=2;now<8;now+=.1)await tick(now,'minimal');
+ assert.equal(blocked.length,2);assert.deepEqual(new Set(decoded),initial);
+ hold=false;blocked.forEach(resolve=>resolve());
+ for(let now=8;now<9;now+=.05)await tick(now,'minimal');
+ const joined=sources.filter(source=>!initial.has(source.musicWindowKey.split(':')[0]));
+ assert.ok(joined.length>0);
+ for(const source of joined){
+  assert.ok(source.when>=8);
+  assert.ok(Math.abs(source.musicWindowFirstSample/48000+source.offset-(source.when-transport.primary.start))<1e-10);
+ }
+ assert.ok(!decoded.includes('s0')&&!decoded.includes('s6'));audio.stop();
+});
+
+test('a missed window deadline skips expired audio and recovers in phase with bounded PCM',async()=>{
+ let hold=false;const blocked=[];
+ const {audio,transport,pool,sources,tick}=await fixture('a',{beforeRead:()=>hold?new Promise(resolve=>blocked.push(resolve)):undefined});
+ transport.mixer.automatic=false;hold=true;
+ for(let now=1;now<15;now+=.1)await tick(now);
+ assert.equal(blocked.length,2);
+ hold=false;blocked.forEach(resolve=>resolve());
+ for(let now=15;now<16;now+=.05)await tick(now);
+ const recovered=sources.filter(source=>source.when>=15);
+ assert.ok(recovered.length>=8);
+ for(const source of recovered){
+  assert.ok(source.musicWindowEnd>source.when);
+  assert.ok(Math.abs(source.musicWindowFirstSample/48000+source.offset-(source.when-transport.primary.start))<1e-10);
+ }
+ assert.ok(pool.pcmBytes()<80*1024*1024);assert.equal(transport.windowError,undefined);audio.stop();
+});
+
+test('a wrap rounded a fraction below its start never passes a negative offset to native WebAudio',async()=>{
+ const {audio,transport,sources}=await fixture('b');transport.mixer.automatic=false;
+ const start=4.220000000000001;
+ transport.createDeck(start,0,4);transport.pump(1.2);
+ const wrap=sources.filter(source=>source.musicDeckStart===start);
+ assert.ok(wrap.length>=8);assert.ok(wrap.every(source=>source.offset>=0));
+ assert.ok(wrap.filter(source=>source.musicWindowFirstSample===0).every(source=>source.offset===0));
  audio.stop();
 });

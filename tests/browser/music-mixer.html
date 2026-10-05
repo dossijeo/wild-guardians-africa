@@ -8,7 +8,7 @@ import {AudioSystem} from '/src/audio/audio.js';
 const audio=new AudioSystem({music:0,sfx:0}),state={time:100,raid:null},errors=[],history=[];
 const status=document.querySelector('#status'),report=document.querySelector('#report');
 let timer;
-function snapshot(){return {pack:audio.pack??null,scene:audio.mixer?.scene??null,active:audio.active.length,rates:audio.active.map(s=>s.playbackRate.value),pending:audio.mixer?.pending.map(p=>({...p}))??[],levels:audio.mixer?audio.mixer.bank.tracks.map(t=>({id:t.id,value:audio.voices.get(audio.active[audio.mixer.bank.tracks.indexOf(t)])?.volume.gain.value})):[],errors,history};}
+function snapshot(){return {pack:audio.pack??null,scene:audio.mixer?.scene??null,active:audio.active.length,rates:audio.active.map(s=>s.playbackRate.value),pending:audio.mixer?.pending.map(p=>({...p}))??[],levels:audio.mixer?audio.mixer.bank.tracks.map(t=>({id:t.id,logical:audio.mixer.value(t.id,audio.context.currentTime),actual:[...audio.mixer.voices.get(t.id)].map(g=>g.value)})):[],errors,history};}
 function paint(){audio.updateMusic(state);report.textContent=JSON.stringify(snapshot(),null,2);}
 async function load(day){status.textContent='Cargando';try{await audio.unlock();await audio.gameplay(day);history.push({action:'load',pack:audio.pack,active:audio.active.length});status.textContent='Listo';clearInterval(timer);timer=setInterval(paint,100);paint();}catch(e){errors.push(e.message);status.textContent='Error';paint();}}
 document.querySelector('#a').onclick=()=>load(1);document.querySelector('#b').onclick=()=>load(2);

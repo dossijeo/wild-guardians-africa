@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA decks musicales originales</title>
 <style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px;margin:4px}pre{white-space:pre-wrap;font-size:14px}</style>
-<h1>Decks A/B · WebAudio real</h1><p>MP3 originales, salida silenciada. Offset inicial cercano al corte para probarlo; los tiempos y fundidos mantienen su duración real.</p>
+<h1>Decks A/B · referencia PCM completa</h1><p>Referencia original con MP3 completos, salida silenciada. Offset inicial cercano al corte para probarlo; los tiempos y fundidos mantienen su duración real. La ruta de producción por ventanas se comprueba en music-window-transport.html.</p>
 <button data-pack="a" data-mode="wrap">Retorno A</button><button data-pack="b" data-mode="wrap">Retorno B</button><button data-pack="a" data-mode="branch">Salto A</button><button data-pack="b" data-mode="branch">Salto B</button><button id="stop">Parar</button>
 <p id="status">Preparado</p><pre id="report"></pre>
 <script type="module">
@@ -18,7 +18,7 @@ async function load(pack,mode){
  clearInterval(timer);audio?.dispose();history=[];last='';peak=0;errors=[];status.textContent='Cargando';
  try{
   const bank=await json(`/content/music-${pack}.json`),offset=mode==='wrap'?bank.duration-10:bank.navigation.sections.find(s=>s.id==='A').end-6;
-  audio=new AudioSystem({music:0,sfx:0},{json,bytes,musicTransport:{offset,random:mode==='wrap'?()=>1:()=>0}});
+  audio=new AudioSystem({music:0,sfx:0},{json,bytes,musicWindows:false,musicTransport:{offset,random:mode==='wrap'?()=>1:()=>0}});
   await audio.unlock();await audio.gameplay(pack==='a'?1:2);status.textContent='Listo';timer=setInterval(paint,50);paint();
  }catch(e){errors.push(e.message);status.textContent='Error';paint();}
 }

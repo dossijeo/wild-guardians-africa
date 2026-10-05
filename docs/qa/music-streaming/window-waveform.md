@@ -31,6 +31,7 @@ nonzero reference signal RMS are recorded per case. Original full-track
 samples and all 550 decoded windows were separately compared previously.
 
 This proves the tested seams and fades, not every arrangement or device.
-Physical-mobile listening, other sample rates, rendered scene changes and
-result envelopes, difficult load timing, and production selection remain
-pending. Production gameplay still uses the full-buffer transport.
+At commit 650a776, physical-mobile listening, other sample rates, rendered
+scene changes and result envelopes, difficult load timing and production
+selection remained pending. Subsequent integration and additional evidence
+are recorded in [production-windows.md](production-windows.md).

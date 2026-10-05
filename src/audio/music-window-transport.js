@@ -72,7 +72,9 @@ export class MusicWindowTransport extends MusicTransport {
           // that rounding explicit and compensate the read position so a new
           // window follows the original continuously running source phase.
           const when=Math.ceil(Math.max(start,now+.02,audibleFrom)*rate-1e-7)/rate;
-          const offset=(deck.offset*rate+(when-deck.start)*rate-entry.firstSample)/rate;
+          // Cancellation around an exact wrap can leave -1e-14 seconds. Native
+          // start() rejects even that negative zero; the first valid sample is 0.
+          const offset=Math.max(0,(deck.offset*rate+(when-deck.start)*rate-entry.firstSample)/rate);
           if(when>=end)continue;
           const source=this.audio.startBuffer(ready.buffer,{music:true,destination:voice.volume,gain:1,when,offset,stopAt:end});
           if(!source)throw Error('Music context suspended while scheduling a window');
