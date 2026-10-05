@@ -27,8 +27,8 @@ export function planNight(s) {
   s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
-export function cameraRaidEntry(s,specs,bounds,nav){
-  const view=nav.raidView;if(!view)return null;
+export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){
+  if(!view)return null;
   const dx=view.eye.x-view.target.x,dz=view.eye.z-view.target.z,length=Math.hypot(dx,dz);if(length<1e-6)return null;
   const bx=dx/length,bz=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
   const [minX,minZ,maxX,maxZ]=bounds;
@@ -60,7 +60,7 @@ export function cameraRaidEntry(s,specs,bounds,nav){
           const approach=target.kind==='center'?centerDeliveryPoint(target,point,s,radius+.5):{x:target.x+Math.sin(angle)*(radius+1.2),z:target.z+Math.cos(angle)*(radius+1.2)};
           if(!nav.walkable(approach.x,approach.z,radius,null,false))continue;
           if(nav.segmentClear?.(point,approach,radius,null,false)){reachable=true;break;}
-          if(searches>=2)continue;searches++;
+          if(searches>=maxSearches)continue;searches++;
           if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){reachable=true;break;}
         }
         if(!reachable)continue;chosen={point,exit};break;
@@ -71,12 +71,27 @@ export function cameraRaidEntry(s,specs,bounds,nav){
   }
   return null;
 }
+function nearFarmRaidEntry(s,specs,bounds,nav){
+  const focus=s.structures.find(operational),view=nav.raidView;
+  if(!focus||!view)return null;
+  const angle=Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z);
+  // A dune or river can disconnect the entire rear of the camera. Try clear
+  // approaches around the farm before falling back to a distant map edge.
+  // These candidates require direct native reachability; no repeated A* here.
+  const offsets=[0];for(let i=1;i<8;i++)offsets.push(-i*Math.PI/8,i*Math.PI/8);offsets.push(Math.PI);
+  for(const offset of offsets){
+    const heading=angle+offset,eye={x:focus.x+Math.sin(heading)*8,z:focus.z+Math.cos(heading)*8};
+    const entry=cameraRaidEntry(s,specs,bounds,nav,{eye,target:focus},0);
+    if(entry)return entry;
+  }
+  return null;
+}
 export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   const focus=s.structures.find(operational)??s.villages[0];
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
-  const nearby=cameraRaidEntry(s,specs,bounds,nav);
+  const nearby=cameraRaidEntry(s,specs,bounds,nav)??nearFarmRaidEntry(s,specs,bounds,nav);
   let entries=nearby?.entries??null,exits=nearby?.exits??null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;

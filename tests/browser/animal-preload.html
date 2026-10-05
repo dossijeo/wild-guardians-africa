@@ -57,6 +57,16 @@ const rigs=state.raid.animals.map(a=>({species:a.species,ready:world.mixers.has(
 const after={downloads,programs:world.renderer.info.programs.length,newPrograms:world.renderer.info.programs.filter(p=>!before.programIds.includes(p.id)).map(p=>({id:p.id,name:p.name})),animalPrograms:animalPrograms(state.raid.animals.map(a=>world.mixers.get(a.id).model))};
 if(measureTiming){const ids=new Set(after.newPrograms.map(p=>p.id));timing.newProgramUsers=[];world.scene.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])if([...world.renderer.properties.get(material).programs?.values()??[]].some(p=>ids.has(p.id)))timing.newProgramUsers.push({mesh:mesh.name,parent:mesh.parent?.name,material:material.type,userDataKeys:Object.keys(mesh.userData),transparent:material.transparent,alphaTest:material.alphaTest,skinned:!!mesh.isSkinnedMesh,instanced:!!mesh.isInstancedMesh});});}
 after.newAnimalPrograms=after.animalPrograms.filter(id=>!before.animalPrograms.includes(id));
+if(params.get('motion')==='1'){
+ const hp=state.structures[0].hp,updates=[];let steps=0;
+ while(state.structures[0].hp===hp&&state.raid&&steps<600){
+  const started=performance.now();Game.tick(state,.05,nav);updates.push(performance.now()-started);
+  world.render(.05);steps++;await new Promise(requestAnimationFrame);
+ }
+ timing.motion={steps,simulatedSeconds:steps*.05,centerHpBefore:hp,centerHpAfter:state.structures[0].hp,
+  firstHit:state.events.find(e=>e.type==='StructureHit')??null,maximumGameTickMs:Math.max(...updates),medianGameTickMs:percentile(updates,.5)};
+ if(!timing.motion.firstHit)throw Error('Animals did not reach and hit the paid centre');
+}
 const report={ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],rigs,before,after,appearanceMs:firstAppearanceMs,loadingMs,errors,...(measureTiming?{timing}:{}),scope:'Native WorldScene, normal paid center and real five-species spawn. Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
 document.querySelector('#report').textContent=JSON.stringify(report,null,2);
 let last=performance.now();function frame(now){world.render(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);

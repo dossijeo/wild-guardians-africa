@@ -33,6 +33,10 @@ The optimization is not considered a complete fix for first-incursion fluency.
 The previous browser appearance evidence has no subsequent Game ticks, so its
 0.9 ms spawn measurement must not be used to imply cheap target acquisition.
 
+The subsequent near-farm entry correction resolves this recorded case and
+verifies an actual centre hit. See [near-farm-entry.md](near-farm-entry.md).
+This report remains the unchanged historical failure evidence.
+
 Reproduce with a fresh output name:
 
 ```

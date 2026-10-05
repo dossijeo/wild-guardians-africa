@@ -63,6 +63,8 @@ search in both the preceding reference and prepared route, with all five animals
 retreating without a reachable target in this desert context. See
 [first-routes.md](first-routes.md). The appearance-only result does not resolve
 that remaining navigation/entry problem.
+The later [near-farm-entry.md](near-farm-entry.md) records the targeted correction
+and its physical attack check; it does not establish all populated-farm cases.
 
 Build and relative web-package checks pass. The module worker is emitted as a
 separate 67 KiB asset with the normal relative Vite URL. The isolated hundred-
