@@ -28,6 +28,18 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
  row.timeline.length=0;assert.ok(observer.report().crops[0].timeline.length>0,'reports must not expose mutable observer state');
 });
 
+test('a crop with pending watering is recorded as destroyed only after actual hit-state changes',()=>{
+ const plant=createPlant('plant-2','algodon',0,0,'center-1'),observer=createCropLifecycleObserver();
+ const s={day:1,time:300,elapsed:300,plants:[plant],workers:[],tasks:[],crates:[],ledger:{entries:{}}};
+ observer.observe(s);s.time=s.elapsed=301;plant.attackHits=1;observer.observe(s);
+ assert.equal(observer.report().crops[0].outcome,'living');
+ s.time=s.elapsed=302;plant.attackHits=2;plant.alive=false;observer.observe(s);
+ const row=observer.report().crops[0];assert.equal(row.outcome,'destroyed');
+ assert.deepEqual(row.timeline.filter(e=>e.type==='attack-hit').map(e=>e.hits),[1,2]);
+ assert.equal(row.lastAlive.attackHits,1);assert.equal(row.lastAlive.water[0].status,'due');
+ observer.observe(structuredClone(s));assert.equal(observer.report().crops[0].timeline.filter(e=>e.type==='destroyed').length,1);
+});
+
 test('native paid farming with lifecycle observation preserves the complete state and requires physical crate delivery',()=>{
  const options={days:1,seed:712},baseline=simulateIntensiveFarm(options),observer=createCropLifecycleObserver(['mijo']);
  const observed=simulateIntensiveFarm({...options,onTick:s=>observer.observe(s)});

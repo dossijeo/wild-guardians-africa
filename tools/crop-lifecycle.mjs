@@ -29,9 +29,10 @@ export function createCropLifecycleObserver(species=['algodon','platano']){
    const workKey=JSON.stringify(work);
    if(row.water!==undefined&&row.water!==water)append(row,s,'watering-change',observation(plant));
    if(row.dry!==undefined&&row.dry!==dry)append(row,s,dry?'growth-frozen-by-water':'water-freeze-ended',observation(plant));
+   if((plant.attackHits??0)>(row.attackHits??0))append(row,s,'attack-hit',{hits:plant.attackHits});
    if(mature&&!row.mature)append(row,s,'mature',observation(plant));
    if(row.workKey!==workKey)append(row,s,'task-change',{task:work});
-   row.water=water;row.dry=dry;row.mature=mature;row.workKey=workKey;
+   row.water=water;row.dry=dry;row.mature=mature;row.workKey=workKey;row.attackHits=plant.attackHits??0;
    if(plant.alive)row.lastAlive={...at(s),...observation(plant)};
    else {
     const crate=crates.get(plant.id);row.outcome=crate?'picked':'destroyed';
@@ -48,7 +49,7 @@ export function createCropLifecycleObserver(species=['algodon','platano']){
   samples++;previous=at(s);
  }
  function report(){
-  const crops=[...records.values()].map(({water,dry,mature,workKey,...row})=>row);
+  const crops=[...records.values()].map(({water,dry,mature,workKey,attackHits,...row})=>row);
   return structuredClone({samples,lastObserved:previous,species:[...selected],crops,scope:'Read-only post-tick samples. Transition intervals bracket observations; intermediate actions may occur within a tick. A picked crop is not income until its physical crate is delivered. No simulation commands, price, growth, task or damage overrides.'});
  }
  return {observe,report};
