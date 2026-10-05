@@ -1,0 +1,39 @@
+{
+  "scope": "Post-tick observation durations with night time excluded. First-observation and first-water sample boundaries have tick-sized uncertainty. Medians include only crops observed receiving their first watering; missing waterings are counted separately. Worker policies change later decisions and RNG consumption, so this is not an identical-incursion causal comparison.",
+  "cases": {
+    "twelve": {
+      "source": "crop-lifecycle-bbdbe6d-20/lifecycle.json",
+      "species": {
+        "algodon": {
+          "observed": 38,
+          "observedFirstWaterings": 38,
+          "medianObservedDaylightToFirstWater": 147.49999999999272,
+          "maximumObservedDaylightToFirstWater": 237.00000000000372
+        },
+        "platano": {
+          "observed": 21,
+          "observedFirstWaterings": 17,
+          "medianObservedDaylightToFirstWater": 146.9999999999939,
+          "maximumObservedDaylightToFirstWater": 232.000000000004
+        }
+      }
+    },
+    "eight": {
+      "source": "crop-lifecycle-80f64ff-eight-20/lifecycle.json",
+      "species": {
+        "algodon": {
+          "observed": 102,
+          "observedFirstWaterings": 98,
+          "medianObservedDaylightToFirstWater": 72.99999999999578,
+          "maximumObservedDaylightToFirstWater": 304.00000000000006
+        },
+        "platano": {
+          "observed": 90,
+          "observedFirstWaterings": 86,
+          "medianObservedDaylightToFirstWater": 69.49999999999648,
+          "maximumObservedDaylightToFirstWater": 304.00000000000006
+        }
+      }
+    }
+  }
+}
