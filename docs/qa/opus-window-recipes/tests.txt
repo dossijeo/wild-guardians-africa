@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: a silent stem keeps a logical clock without a decoded voice and is not considered audible
+ok 1 - a silent stem keeps a logical clock without a decoded voice and is not considered audible
+  ---
+  duration_ms: 3.3891
+  ...
+# Subtest: a future entrance is visible for prefetch before it is audible
+ok 2 - a future entrance is visible for prefetch before it is audible
+  ---
+  duration_ms: 0.5605
+  ...
+# Subtest: a stem with no source still advances its fade and a later voice joins at the correct level
+ok 3 - a stem with no source still advances its fade and a later voice joins at the correct level
+  ---
+  duration_ms: 1.7211
+  ...
+# Subtest: a completed fade to zero can release PCM, but a fade still audible within the window cannot
+ok 4 - a completed fade to zero can release PCM, but a fade still audible within the window cannot
+  ---
+  duration_ms: 0.3173
+  ...
+# Subtest: success and failure envelopes affect logical tracks even when no media is allocated
+ok 5 - success and failure envelopes affect logical tracks even when no media is allocated
+  ---
+  duration_ms: 1.1454
+  ...
+# (node:30764) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a compressed disk file supplies repeated windows without any network request
+ok 6 - a compressed disk file supplies repeated windows without any network request
+  ---
+  duration_ms: 99.7398
+  ...
+# Subtest: concurrent first windows download and store the compressed file once
+ok 7 - concurrent first windows download and store the compressed file once
+  ---
+  duration_ms: 12.9192
+  ...
+# Subtest: denied storage uses network ranges and does not require whole-track PCM
+ok 8 - denied storage uses network ranges and does not require whole-track PCM
+  ---
+  duration_ms: 2.334
+  ...
+# Subtest: quota failure returns the requested bytes and subsequent reads use HTTP ranges
+ok 9 - quota failure returns the requested bytes and subsequent reads use HTTP ranges
+  ---
+  duration_ms: 6.0062
+  ...
+# Subtest: storage becoming unreadable after open falls back to ranges without downloading a whole file
+ok 10 - storage becoming unreadable after open falls back to ranges without downloading a whole file
+  ---
+  duration_ms: 2.302
+  ...
+# Subtest: storage becoming unreadable after the first fill falls back and stays disabled
+ok 11 - storage becoming unreadable after the first fill falls back and stays disabled
+  ---
+  duration_ms: 3.4737
+  ...
+# Subtest: quota fallback rejects a truncated original file before handing bytes to the decoder
+ok 12 - quota fallback rejects a truncated original file before handing bytes to the decoder
+  ---
+  duration_ms: 3.5067
+  ...
+# Subtest: incorrect ranges and truncated cached files are rejected before decoding
+ok 13 - incorrect ranges and truncated cached files are rejected before decoding
+  ---
+  duration_ms: 8.3668
+  ...
+# Subtest: a: every indexed window references the unchanged original MP3 and covers the full musical timeline
+ok 14 - a: every indexed window references the unchanged original MP3 and covers the full musical timeline
+  ---
+  duration_ms: 68.7002
+  ...
+# Subtest: b: every indexed window references the unchanged original MP3 and covers the full musical timeline
+ok 15 - b: every indexed window references the unchanged original MP3 and covers the full musical timeline
+  ---
+  duration_ms: 79.6832
+  ...
+# Subtest: only the requested audible stems and short byte ranges are read and decoded
+ok 16 - only the requested audible stems and short byte ranges are read and decoded
+  ---
+  duration_ms: 5.5519
+  ...
+# Subtest: duplicate prefetches coalesce and failed decoding is retryable
+ok 17 - duplicate prefetches coalesce and failed decoding is retryable
+  ---
+  duration_ms: 2.0065
+  ...
+# Subtest: evicting an in-flight range prevents obsolete PCM decoding
+ok 18 - evicting an in-flight range prevents obsolete PCM decoding
+  ---
+  duration_ms: 15.721
+  ...
+# Subtest: decodes already in progress do not reappear after window eviction or disposal
+ok 19 - decodes already in progress do not reappear after window eviction or disposal
+  ---
+  duration_ms: 4.6614
+  ...
+# Subtest: invalid decoder lengths, channels and unvalidated resampling cannot silently shift the music clock
+ok 20 - invalid decoder lengths, channels and unvalidated resampling cannot silently shift the music clock
+  ---
+  duration_ms: 1.264
+  ...
+# Subtest: native resampling requires an explicitly supported rate and globally aligned range origins
+ok 21 - native resampling requires an explicitly supported rate and globally aligned range origins
+  ---
+  duration_ms: 1.6375
+  ...
+# (node:27636) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a: silent stems have no PCM and every window uses the shared source position
+ok 22 - a: silent stems have no PCM and every window uses the shared source position
+  ---
+  duration_ms: 217.593
+  ...
+# Subtest: a: all original registered edges retain target, preroll and shared deck fade
+ok 23 - a: all original registered edges retain target, preroll and shared deck fade
+  ---
+  duration_ms: 483.4587
+  ...
+# Subtest: a: wrap and natural section navigation preserve the original transport
+ok 24 - a: wrap and natural section navigation preserve the original transport
+  ---
+  duration_ms: 179.8053
+  ...
+# Subtest: b: silent stems have no PCM and every window uses the shared source position
+ok 25 - b: silent stems have no PCM and every window uses the shared source position
+  ---
+  duration_ms: 128.1014
+  ...
+# Subtest: b: all original registered edges retain target, preroll and shared deck fade
+ok 26 - b: all original registered edges retain target, preroll and shared deck fade
+  ---
+  duration_ms: 366.8896
+  ...
+# Subtest: b: wrap and natural section navigation preserve the original transport
+ok 27 - b: wrap and natural section navigation preserve the original transport
+  ---
+  duration_ms: 139.7865
+  ...
+# Subtest: a logical silent layer is loaded at the current position before its scheduled entrance
+ok 28 - a logical silent layer is loaded at the current position before its scheduled entrance
+  ---
+  duration_ms: 140.2381
+  ...
+# Subtest: fractional offsets join adjacent windows on the same native sample without a gap
+ok 29 - fractional offsets join adjacent windows on the same native sample without a gap
+  ---
+  duration_ms: 100.3875
+  ...
+# Subtest: logical track gains have the original immediate level before future automation
+ok 30 - logical track gains have the original immediate level before future automation
+  ---
+  duration_ms: 2.4992
+  ...
+# Subtest: delayed silent-layer entrances join the current clock without starting from zero
+ok 31 - delayed silent-layer entrances join the current clock without starting from zero
+  ---
+  duration_ms: 57.3822
+  ...
+# Subtest: a missed window deadline skips expired audio and recovers in phase with bounded PCM
+ok 32 - a missed window deadline skips expired audio and recovers in phase with bounded PCM
+  ---
+  duration_ms: 92.4671
+  ...
+# Subtest: a wrap rounded a fraction below its start never passes a negative offset to native WebAudio
+ok 33 - a wrap rounded a fraction below its start never passes a negative offset to native WebAudio
+  ---
+  duration_ms: 3.7103
+  ...
+# Subtest: real Opus crop keeps encoded packets, 48/44.1 kHz alignment and sufficient decoder history
+ok 34 - real Opus crop keeps encoded packets, 48/44.1 kHz alignment and sufficient decoder history
+  ---
+  duration_ms: 18.765
+  ...
+# Subtest: damaged CRC, truncation, missing end and chained streams are rejected
+ok 35 - damaged CRC, truncation, missing end and chained streams are rejected
+  ---
+  duration_ms: 8.7453
+  ...
+# Subtest: invalid crop ranges or insufficient history never produce a candidate
+ok 36 - invalid crop ranges or insufficient history never produce a candidate
+  ---
+  duration_ms: 29.1557
+  ...
+# Subtest: TOC duration includes multi-frame packets and rejects invalid frame counts
+ok 37 - TOC duration includes multi-frame packets and rejects invalid frame counts
+  ---
+  duration_ms: 0.8502
+  ...
+# Subtest: partial full-file recipes reconstruct the already validated Ogg windows byte for byte
+ok 38 - partial full-file recipes reconstruct the already validated Ogg windows byte for byte
+  ---
+  duration_ms: 16.7929
+  ...
+# Subtest: truncated input, corrupt data, oversized allocation and inconsistent recipes cannot silently reach decode
+ok 39 - truncated input, corrupt data, oversized allocation and inconsistent recipes cannot silently reach decode
+  ---
+  duration_ms: 8.1952
+  ...
+# Subtest: pool reads only requested original-file bytes and passes the reconstructed Opus to native decode
+ok 40 - pool reads only requested original-file bytes and passes the reconstructed Opus to native decode
+  ---
+  duration_ms: 3.4477
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2432.5711

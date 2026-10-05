@@ -1,3 +1,4 @@
+import {assembleOpusWindow} from './opus-window-recipe.js';
 import {MusicLoadQueue} from './music-load-queue.js';
 
 // Only requested short windows are decoded. Callers retain the current,
@@ -20,8 +21,9 @@ export class MusicWindowPool {
       let pending;
       const current=()=>!this.disposed&&this.pending.get(key)===pending;
       pending=Promise.resolve().then(()=>this.queue.run(current,async()=>{
-        const encoded=await this.readRange(track.url,entry.startByte,entry.endByte);
+        const range=await this.readRange(track.url,entry.startByte,entry.endByte);
         if(!current())return null;
+        const encoded=entry.recipe?assembleOpusWindow(range,entry.recipe):range;
         const buffer=await this.decode(encoded);
         if(!current())return null;
         const samples=entry.decodedSamples*this.sampleRate/this.index.sampleRate;
@@ -30,7 +32,7 @@ export class MusicWindowPool {
         // never the aligned range origin or musical clock. Source-rate decoding
         // must still match its index exactly.
         const rounding=this.sampleRate===this.index.sampleRate?0:1;
-        if(buffer.length<Math.floor(samples)-rounding||buffer.length>Math.ceil(samples)||buffer.sampleRate!==this.sampleRate||buffer.numberOfChannels!==2)throw Error(`Decoded MP3 window does not match its source index: ${key}, ${buffer.length}/${samples} samples, ${buffer.sampleRate}/${this.sampleRate} Hz, ${buffer.numberOfChannels} channels`);
+        if(buffer.length<Math.floor(samples)-rounding||buffer.length>Math.ceil(samples)||buffer.sampleRate!==this.sampleRate||buffer.numberOfChannels!==2)throw Error(`Decoded music window does not match its source index: ${key}, ${buffer.length}/${samples} samples, ${buffer.sampleRate}/${this.sampleRate} Hz, ${buffer.numberOfChannels} channels`);
         const result={buffer,...entry,key,id,window};this.ready.set(key,result);return result;
       }));
       this.pending.set(key,pending);

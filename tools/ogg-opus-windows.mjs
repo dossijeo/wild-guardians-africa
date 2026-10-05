@@ -9,7 +9,7 @@ export function opusPacketSamples(packet){
  assert.ok(count>0&&count*frame<=5760,'Invalid Opus frame count');return count*frame;
 }
 export function readOggOpus(bytes){
- const packets=[],parts=[];let serial,sequence=0,offset=0,finalGranule=null,ended=false;
+ const packets=[],packetRanges=[],parts=[],ranges=[];let serial,sequence=0,offset=0,finalGranule=null,ended=false;
  while(offset<bytes.length){
   assert.ok(!ended&&offset+27<=bytes.length,'Truncated or chained Ogg');
   const header=bytes.subarray(offset,offset+27);assert.equal(header.toString('ascii',0,4),'OggS');assert.equal(header[4],0);
@@ -20,7 +20,11 @@ export function readOggOpus(bytes){
   assert.equal(Boolean(header[5]&1),parts.length>0,'Invalid packet continuation');
   if(sequence===1)assert.ok(header[5]&2,'Missing stream beginning');
   let position=27+count;
-  for(const n of laces){parts.push(page.subarray(position,position+n));position+=n;if(n<255){packets.push(Buffer.concat(parts));parts.length=0;}}
+  for(const n of laces){
+   parts.push(page.subarray(position,position+n));
+   if(n){const previous=ranges.at(-1),start=offset+position;if(previous&&previous[0]+previous[1]===start)previous[1]+=n;else ranges.push([start,n]);}
+   position+=n;if(n<255){packets.push(Buffer.concat(parts));packetRanges.push(ranges.splice(0));parts.length=0;}
+  }
   if(header[5]&4){assert.equal(parts.length,0);finalGranule=Number(header.readBigUInt64LE(6));ended=true;}
   offset+=length;
  }
@@ -29,7 +33,7 @@ export function readOggOpus(bytes){
  assert.equal(head.length,19,'Only mono/stereo mapping 0 supported');assert.equal(head[18],0);assert.ok([1,2].includes(head[9]));
  const preSkip=head.readUInt16LE(10),samples=audio.map(opusPacketSamples),total=samples.reduce((a,b)=>a+b,0);
  assert.ok(finalGranule<=total&&finalGranule>total-samples.at(-1)&&finalGranule>=preSkip,'Invalid final trimming');
- return {head,tags,audio,samples,preSkip,finalGranule,serial,decodedSamples:finalGranule-preSkip};
+ return {head,tags,audio,audioRanges:packetRanges.slice(2),samples,preSkip,finalGranule,serial,decodedSamples:finalGranule-preSkip};
 }
 function page(packets,{flags,granule,serial,sequence}){
  const laces=[];for(const packet of packets){let left=packet.length;while(left>=255){laces.push(255);left-=255;}laces.push(left);}
@@ -58,4 +62,27 @@ export function cropOpusWindow(stream,startSample,endSample,{prerollPackets=30,t
  }
  return {bytes:Buffer.concat(chunks),firstPacket:first,lastPacket:last,preSkip:skip,firstSample,
   decodedSamples:Math.min(stream.finalGranule,last*960)-first*960-skip};
+}
+
+// Precompute only new Ogg headers and copy ranges. Runtime need not regenerate CRCs,
+// parse packets or carry a second encoded copy of every musical stem.
+export function opusWindowRecipe(stream,window){
+ const chunks=[];let offset=0,packet=window.firstPacket;
+ while(offset<window.bytes.length){
+  const count=window.bytes[offset+26],headerLength=27+count,laces=window.bytes.subarray(offset+27,offset+headerLength);
+  const size=headerLength+laces.reduce((n,x)=>n+x,0),page=window.bytes.subarray(offset,offset+size);
+  if(chunks.length<2)chunks.push({header:page.toString('base64'),ranges:[]});
+  else{
+   const ranges=[];
+   for(const lace of laces)if(lace<255){
+    for(const [start,length] of stream.audioRanges[packet++]){const last=ranges.at(-1);if(last&&last[0]+last[1]===start)last[1]+=length;else ranges.push([start,length]);}
+   }
+   chunks.push({header:page.subarray(0,headerLength).toString('base64'),ranges});
+  }
+  offset+=size;
+ }
+ assert.equal(packet,window.lastPacket);
+ const ranges=chunks.flatMap(c=>c.ranges),startByte=Math.min(...ranges.map(r=>r[0])),endByte=Math.max(...ranges.map(r=>r[0]+r[1]));
+ for(const chunk of chunks)for(const range of chunk.ranges)range[0]-=startByte;
+ return {startByte,endByte,recipe:{bytes:window.bytes.length,chunks}};
 }

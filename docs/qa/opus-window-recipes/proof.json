@@ -1,0 +1,28 @@
+{
+  "scope": "Full-file Opus recipe reconstruction and native decode; optional pool path, candidate catalogues not activated.",
+  "sourceHashes": {
+    "tools/ogg-opus-windows.mjs": "25406bd6d9ff8cf8313acb2c35d7a530ef6147d4f2135e2d676362c27979930a",
+    "tools/prepare_music_opus_recipes.mjs": "c6100df41c933bb867e8d4f2c3b119d2f66e2e5176fe7718c34de279bdd08e70",
+    "src/audio/opus-window-recipe.js": "d14a3e960f4df218c52cffcb383484569984f2bb3145e428c2ad7daa0f30576a",
+    "src/audio/music-window-pool.js": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7",
+    "tests/opus-window-recipe.test.js": "b71a6234167d213a09a9e3589177e94b20598de92f834fd5294f0d775e404f3f",
+    "tests/browser/opus-music-recipes.html": "018534b8820fdb872455808e6df293ea6a9bd68e73aaa1c9006466060434c2ba"
+  },
+  "bytes": {
+    "completeOpusStems": 38258002,
+    "recipeIndices": 1377756,
+    "duplicatedWindowPackAvoided": 42799366
+  },
+  "browser": {
+    "cases": 1100,
+    "errors": 0,
+    "maximumError": 1.1920928955078125e-07,
+    "prepareLatencyMs": {
+      "max": 1.5,
+      "p50": 0.10000002384185791,
+      "p95": 0.30000001192092896
+    },
+    "timingScope": "Latency from returned byte range to native decoder call, includes microtask scheduling and allocation; desktop with other simulation jobs running. Not isolated CPU or GPU/mobile frametime."
+  },
+  "normalizationNote": "New helper/preparer/test source files were normalized to LF after browser observation. Logic unchanged; final normalized source hashes recorded. Directed tests reran after normalization."
+}

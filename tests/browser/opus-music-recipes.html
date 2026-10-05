@@ -1,0 +1,42 @@
+<!doctype html><meta charset="utf-8"><title>Ventanas Opus desde archivo único</title>
+<style>body{font:17px system-ui;background:#14251e;color:#eaf5ed;max-width:950px;margin:40px auto;padding:20px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;font-size:13px}#report{display:none}</style>
+<h1>Opus · ventanas desde un único archivo</h1><p>Compara cada ventana con su Opus completo, usando el pool y la caché en disco del juego. No activa Opus en gameplay.</p>
+<button id="probe">Prueba inicial (4 ventanas por pista)</button><button id="run">Comprobar todas las ventanas</button><p id="status">Lista</p><pre id="summary"></pre><pre id="report"></pre>
+<script type="module">
+import {MusicWindowPool} from '../../src/audio/music-window-pool.js';
+import {musicRangeReader} from '../../src/audio/music-range-reader.js';
+const status=document.querySelector('#status'),buttons=[...document.querySelectorAll('button')];
+async function check(all){
+ buttons.forEach(b=>b.disabled=true);const report={scope:'Decoded Opus window recipes vs their full Opus, with existing pool/cache. Preparation latency includes microtask scheduling. Not listening, real-time frametime or mobile validation.',rows:[],errors:[],sampleTolerance:1,maxErrorTolerance:0.00001,reader:[],userAgent:navigator.userAgent};
+ try{for(const rate of [48000,44100]){
+  const context=new AudioContext({sampleRate:rate});
+  try{for(const pack of ['a','b']){
+   const index=await (await fetch(`../../.cache/opus-recipes/music-windows-${pack}.json`)).json();
+   const reader=musicRangeReader();let bytesReady=0,prepareMs=0;const pool=new MusicWindowPool(index,{readRange:async(...range)=>{const encoded=await reader.readRange(...range);bytesReady=performance.now();return encoded;},decode:b=>{prepareMs=performance.now()-bytesReady;return context.decodeAudioData(b);},sampleRate:rate});
+   try{for(const track of index.tracks){
+    const full=await context.decodeAudioData(await (await fetch(track.fullUrl)).arrayBuffer());
+    const selected=all?track.windows.map((_,i)=>i):[...new Set([0,1,Math.floor(track.windows.length/2),track.windows.length-1])];
+    for(const n of selected){
+     status.textContent=`${rate} Hz · ${pack}/${track.id} · ventana ${n+1}/${track.windows.length}`;
+     const decoded=await pool.load(track.id,n),entry=track.windows[n],start=entry.startSample*rate/48000,end=Math.min(full.length,Math.round(entry.endSample*rate/48000)),offset=(entry.startSample-entry.firstSample)*rate/48000;
+     if(!Number.isInteger(start)||!Number.isInteger(offset))throw Error('Unaligned resampling origin');
+     let maximumError=0,sum=0,count=0,boundaryError=0;
+     for(let channel=0;channel<2;channel++){
+      const a=full.getChannelData(channel),b=decoded.buffer.getChannelData(channel);
+      for(let i=start;i<end;i++){const error=Math.abs(a[i]-b[offset+i-start]);maximumError=Math.max(maximumError,error);if(i-start<32)boundaryError=Math.max(boundaryError,error);sum+=error*error;count++;}
+     }
+     const valid=Number.isFinite(maximumError)&&maximumError<=report.maxErrorTolerance;
+     const row={pack,track:track.id,rate,window:n,comparedSamples:count,maximumError,boundaryError,rmsError:Math.sqrt(sum/count),decodedSamples:decoded.buffer.length,prepareMs,valid};report.rows.push(row);if(!valid)report.errors.push(row);
+     pool.retain([]);
+    }
+   }}finally{pool.dispose();}
+   report.reader.push({rate,pack,...reader.stats});
+  }}finally{await context.close();}
+ }
+ status.textContent=report.errors.length?'Completada con diferencias':'Completada';
+ }catch(e){report.errors.push({message:e.message});status.textContent='Error';}
+ document.querySelector('#summary').textContent=JSON.stringify({cases:report.rows.length,errors:report.errors.length,maximumError:Math.max(...report.rows.map(r=>r.maximumError)),maxPrepareMs:Math.max(...report.rows.map(r=>r.prepareMs)),reader:report.reader},null,2);
+ document.querySelector('#report').textContent=JSON.stringify(report,null,2);buttons.forEach(b=>b.disabled=false);
+}
+document.querySelector('#probe').onclick=()=>check(false);document.querySelector('#run').onclick=()=>check(true);
+</script>

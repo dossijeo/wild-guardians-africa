@@ -20,7 +20,7 @@ Las ondas de pisadas en el agua del Gran Cañón son **VFX**. El usuario autoriz
 - Probar decodificación y reproducción en la versión web de itch.io, Chrome móvil y Windows/Tauri antes de sustituir los recursos distribuidos.
 - Registrar ahorro total y por archivo, parámetros de conversión y pruebas de regresión; conservar los originales fuera del paquete de distribución.
 
-Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/README.md): 25,13 % menos de bytes y 294 comparaciones de descodificación Web Audio correctas. Los candidatos están fuera del runtime. [Ventanas Opus experimentales](qa/opus-music-windows/README.md): 1.100 comparaciones de señal correctas a 44,1/48 kHz y caché en disco verificada; todavía fuera del runtime. [Transporte Opus renderizado](qa/opus-music-transport/README.md): 108 casos de saltos, bucles, offsets, capas y resultados correctos a ambas frecuencias. Pendientes: escucha, coste/RAM en partida, fallback, pruebas móvil/itch.io/Tauri e integración distribuida sin duplicados.
+Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/README.md): 25,13 % menos de bytes y 294 comparaciones de descodificación Web Audio correctas. Los candidatos están fuera del runtime. [Ventanas Opus experimentales](qa/opus-music-windows/README.md): 1.100 comparaciones de señal correctas a 44,1/48 kHz y caché en disco verificada; todavía fuera del runtime. [Transporte Opus renderizado](qa/opus-music-transport/README.md): 108 casos de saltos, bucles, offsets, capas y resultados correctos a ambas frecuencias. [Lecturas Opus desde archivo único](qa/opus-window-recipes/README.md): ruta opcional incorporada al pool, 550 reconstrucciones idénticas por bytes y 1.100 comparaciones nativas correctas; catálogos aún sin activar. Pendientes: metadatos/exports de labs, escucha, coste/RAM en partida, fallback, pruebas móvil/itch.io/Tauri e integración distribuida sin duplicados.
 
 ## Imágenes WebP y Tinify (pedido el 5 de octubre de 2026)
 
@@ -42,3 +42,9 @@ Estado: pendiente; no se han enviado imágenes a Tinify por esta anotación.
 - Integrar los demás biomas y estudiar una segunda fase solo después de superar los criterios visuales y de coste. Distancias, densidad y resolución configurables; los ejemplos no son valores definitivos.
 
 Estado: pendiente de prototipo aislado; esta anotación no genera atlas ni activa el sistema en gameplay.
+
+## Ritmo económico con restricciones de fluidos reactivadas
+
+La [campaña nativa de Manglares/Saheliana sobre 7a14cb9](qa/intensive-mangrove-shield-100/README.md) termina 100 noches con victoria, pero registra 58,17 % de tiempo diurno sin acciones disponibles: 15.455 segundos por presupuesto y 1.995 al final de turno. El flujo operativo neto es solo 403 monedas en cien noches.
+
+Pendiente: revisar matemáticamente el margen y los parámetros reales del juego para permitir expansión rápida y reducir la inactividad, con la estrategia responsable preservada y ensayos de mala gestión que todavía puedan perder. La victoria aislada no satisface la petición de ritmo/actividad del usuario. No se modifican ahora los parámetros ni el ensayo a raíz de esta anotación.
