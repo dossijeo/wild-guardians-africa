@@ -136,7 +136,7 @@ export class Navigation {
   placement(x,z,radius=1,{ignoreWalls=false}={}) {
     if(!Number.isFinite(x)||!Number.isFinite(z)||!this.terrainValid(x,z,radius,false,true))return {valid:false,reason:'Agua, lava o pendiente no edificable'};
     if([[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]].some(([dx,dz])=>fluidAt(this.field,x+dx,z+dz)))return {valid:false,fluid:true,reason:FLUID_PLACEMENT_REASON};
-    if(this.obstacles.some(o=>!(ignoreWalls&&o.kind==='wall')&&(o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius)))return {valid:false,reason:'La construcción solapa otro edificio'};
+    if(this.obstacles.some(o=>o.kind!=='shield'&&!(ignoreWalls&&o.kind==='wall')&&(o.footprint?footprintDistance(o.footprint,x,z)<radius:distance(o,{x,z})<o.radius+radius)))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(x,z,radius+4);
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(p,{x,z})<(p.radius??1.5)+radius))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
     return {valid:true,suppress:props.filter(p=>distance(p,{x,z})<radius+(p.radius??.5)).map(p=>p.id)};
@@ -149,7 +149,7 @@ export class Navigation {
       const dx=-half+half*2*i/steps;points.push({x:wall.x+dx*c+dz*s,z:wall.z-dx*s+dz*c});
     }
     if(points.every(p=>fluidAt(this.field,p.x,p.z)))return {valid:false,fluid:true,reason:FLUID_PLACEMENT_REASON};
-    if(this.obstacles.some(o=>o.kind!=='wall'&&points.every(p=>o.footprint?footprintDistance(o.footprint,p.x,p.z)<1e-8:distance(o,p)<=o.radius)))return {valid:false,reason:'La muralla queda dentro de un edificio'};
+    if(this.obstacles.some(o=>o.kind!=='shield'&&o.kind!=='wall'&&points.every(p=>o.footprint?footprintDistance(o.footprint,p.x,p.z)<1e-8:distance(o,p)<=o.radius)))return {valid:false,reason:'La muralla queda dentro de un edificio'};
     for(const p of points){const props=this.propsAt(p.x,p.z,4);
       if(props.some(prop=>(prop.slot<4||prop.slot>=10&&prop.slot<=12||prop.slot>=18)&&distance(prop,p)<(prop.radius??1.5)+.05))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
       for(const prop of props)if(distance(prop,p)<(prop.radius??.5)+.05)suppressed.add(prop.id);
@@ -176,7 +176,7 @@ export class Navigation {
       const a=polygon[i],b=polygon[(i+1)%polygon.length],steps=Math.ceil(distance(a,b));
       for(let j=1;j<steps;j++)if(!terrainPoint({x:a.x+(b.x-a.x)*j/steps,z:a.z+(b.z-a.z)*j/steps}))return terrainFailure;
     }
-    if(this.obstacles.some(o=>o.footprint?footprintsOverlap(polygon,o.footprint):footprintDistance(polygon,o.x,o.z)<o.radius))return {valid:false,reason:'La construcción solapa otro edificio'};
+    if(this.obstacles.some(o=>o.kind!=='shield'&&(o.footprint?footprintsOverlap(polygon,o.footprint):footprintDistance(polygon,o.x,o.z)<o.radius)))return {valid:false,reason:'La construcción solapa otro edificio'};
     const props=this.propsAt(building.x,building.z,building.radius+4);
     if(props.some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&footprintDistance(polygon,p.x,p.z)<(p.radius??1.5)))return {valid:false,reason:'Un árbol o roca grande ocupa este terreno'};
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};

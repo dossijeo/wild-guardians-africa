@@ -1,0 +1,36 @@
+{
+  "scope": "Native archived failed day-65 planting command plus targeted collision regressions; not a completed 100-night campaign.",
+  "original": {
+    "day": 65,
+    "time": 4.000000000000002,
+    "point": {
+      "x": 60,
+      "z": -12
+    },
+    "shieldRemaining": 1.8999999999999853,
+    "placement": {
+      "valid": false,
+      "reason": "La construcción solapa otro edificio"
+    },
+    "plantError": "La construcción solapa otro edificio",
+    "stateUnchanged": true
+  },
+  "corrected": {
+    "placement": {
+      "valid": true,
+      "suppress": []
+    },
+    "plantError": null,
+    "stateUnchanged": false
+  },
+  "tests": {
+    "pass": 72,
+    "fail": 0,
+    "skipped": 0
+  },
+  "sourceHashes": {
+    "src/world/navigation.js": "5ed4d56b4634cd456416aada73cb6195ed8b06ecf460774372508d96dbe02796",
+    "tests/shield-placement-collision.test.js": "6ec80659116d413134827fb4cbe10a36ebae4a9e9fab79479d569ed54967d432",
+    "docs/qa/intensive-post-jam-b0d19a5/manglares-saheliana-failure/manglares-saheliana-failure-state.json.gz": "95ba1c5893938c0bafb37ce9cc8edddf36d68fe4fae5f26375dc2979df8fc731"
+  }
+}
