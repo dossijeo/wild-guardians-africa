@@ -1,0 +1,37 @@
+import * as THREE from 'three';
+
+// A single instanced draw for all water contacts, without a depth capture,
+// textures, lights or audio. Step timestamps use the simulation clock.
+export class StepRipples {
+ constructor(scene,capacity=128){
+  this.capacity=capacity;this.contacts=[];this.matrix=new THREE.Matrix4();
+  this.geometry=new THREE.RingGeometry(.86,1,24);
+  this.alpha=new THREE.InstancedBufferAttribute(new Float32Array(capacity),1);
+  this.alpha.setUsage(THREE.DynamicDrawUsage);this.geometry.setAttribute('stepAlpha',this.alpha);
+  this.material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,
+   vertexShader:'attribute float stepAlpha; varying float opacity; void main(){opacity=stepAlpha; gl_Position=projectionMatrix*modelViewMatrix*instanceMatrix*vec4(position,1.);}',
+   fragmentShader:'varying float opacity; void main(){gl_FragColor=vec4(.56,.75,.76,opacity);\n #include <tonemapping_fragment>\n #include <colorspace_fragment>\n}',
+  });
+  this.mesh=new THREE.InstancedMesh(this.geometry,this.material,capacity);
+  this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.mesh.count=0;
+  this.mesh.frustumCulled=false;this.mesh.raycast=()=>{};this.mesh.name='canyon-step-ripples';scene.add(this.mesh);
+ }
+ add(x,z,level,birth){
+  if(![x,z,level,birth].every(Number.isFinite))return;
+  if(this.contacts.length===this.capacity)this.contacts.shift();
+  this.contacts.push({x,z,level,birth});
+ }
+ update(elapsed){
+  if(this.elapsed===elapsed)return;
+  this.elapsed=elapsed;this.contacts=this.contacts.filter(p=>elapsed-p.birth<.85&&elapsed>=p.birth);
+  for(let i=0;i<this.contacts.length;i++){
+   const p=this.contacts[i],t=(elapsed-p.birth)/.85,r=.06+t*.43;
+   // RingGeometry lies in XY; this matrix rotates it onto the water surface.
+   this.matrix.set(r,0,0,p.x, 0,0,-r,p.level+.015, 0,r,0,p.z, 0,0,0,1);
+   this.mesh.setMatrixAt(i,this.matrix);this.alpha.setX(i,.48*(1-t)*(1-t));
+  }
+  this.mesh.count=this.contacts.length;this.mesh.visible=this.mesh.count>0;
+  if(this.mesh.count){this.mesh.instanceMatrix.clearUpdateRanges();this.mesh.instanceMatrix.addUpdateRange(0,this.mesh.count*16);this.alpha.clearUpdateRanges();this.alpha.addUpdateRange(0,this.mesh.count);this.mesh.instanceMatrix.needsUpdate=true;this.alpha.needsUpdate=true;}
+ }
+ dispose(){this.mesh.removeFromParent();this.mesh.dispose();this.geometry.dispose();this.material.dispose();this.contacts=[];}
+}

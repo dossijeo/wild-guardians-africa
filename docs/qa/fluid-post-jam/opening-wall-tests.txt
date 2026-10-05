@@ -1,0 +1,187 @@
+TAP version 13
+# (node:24684) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+ok 1 - canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 967.9534
+  ...
+# Subtest: canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+ok 2 - canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 2663.2018
+  ...
+# Subtest: canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+ok 3 - canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 712.1096
+  ...
+# Subtest: canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+ok 4 - canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 1146.1498
+  ...
+# Subtest: canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+ok 5 - canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 1039.7593
+  ...
+# Subtest: crew avoids fluid outside the canyon while solid collision remains active
+ok 6 - crew avoids fluid outside the canyon while solid collision remains active
+  ---
+  duration_ms: 847.6866
+  ...
+# Subtest: river-bank layouts also work for different seeds without reusing a single suitable location
+ok 7 - river-bank layouts also work for different seeds without reusing a single suitable location
+  ---
+  duration_ms: 9787.6996
+  ...
+# Subtest: olderMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 8 - olderMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 3152.4636
+  ...
+# Subtest: olderMale: excessive first-day sowing cannot bypass the economic defeat check
+ok 9 - olderMale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 4926.513
+  ...
+# Subtest: olderFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 10 - olderFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 2974.2126
+  ...
+# Subtest: olderFemale: excessive first-day sowing cannot bypass the economic defeat check
+ok 11 - olderFemale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 3989.4268
+  ...
+# Subtest: youngMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 12 - youngMale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 2257.7113
+  ...
+# Subtest: youngMale: excessive first-day sowing cannot bypass the economic defeat check
+ok 13 - youngMale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 2896.8593
+  ...
+# Subtest: youngFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+ok 14 - youngFemale: eight original-terrain crops pay only their physical deliveries and permit dawn hiring
+  ---
+  duration_ms: 2353.5303
+  ...
+# Subtest: youngFemale: excessive first-day sowing cannot bypass the economic defeat check
+ok 15 - youngFemale: excessive first-day sowing cannot bypass the economic defeat check
+  ---
+  duration_ms: 4330.2144
+  ...
+# Subtest: QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+ok 16 - QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2048.5203
+  ...
+# Subtest: QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+ok 17 - QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1776.7539
+  ...
+# Subtest: QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+ok 18 - QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2007.4503
+  ...
+# Subtest: QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+ok 19 - QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1661.7406
+  ...
+# Subtest: QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+ok 20 - QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 973.1386
+  ...
+# Subtest: QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+ok 21 - QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 4782.8304
+  ...
+# Subtest: QA-085 gran-rio: wholly submerged native walls are silently skipped without payment
+ok 22 - QA-085 gran-rio: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 487.4124
+  ...
+# Subtest: QA-085 manglares: wholly submerged native walls are silently skipped without payment
+ok 23 - QA-085 manglares: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 550.3764
+  ...
+# Subtest: QA-085 volcanes: wholly submerged native walls are silently skipped without payment
+ok 24 - QA-085 volcanes: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 488.6849
+  ...
+# Subtest: QA-085 gran-canon: wholly submerged native walls are silently skipped without payment
+ok 25 - QA-085 gran-canon: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 705.1597
+  ...
+# Subtest: zarzas/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 26 - zarzas/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.5929
+  ...
+# Subtest: zarzas/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 27 - zarzas/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.148
+  ...
+# Subtest: madera/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 28 - madera/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.132
+  ...
+# Subtest: madera/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 29 - madera/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2527
+  ...
+# Subtest: adobe/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 30 - adobe/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.112
+  ...
+# Subtest: adobe/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 31 - adobe/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1073
+  ...
+# Subtest: piedra/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 32 - piedra/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1552
+  ...
+# Subtest: piedra/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 33 - piedra/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2202
+  ...
+# Subtest: reforzado/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 34 - reforzado/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1314
+  ...
+# Subtest: reforzado/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 35 - reforzado/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.127
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27269.083

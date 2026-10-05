@@ -1,0 +1,248 @@
+TAP version 13
+# (node:29436) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# QA-137: {"villages":100,"routeQueries":99,"spent":126225000,"balance":73775000}
+# Subtest: QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+ok 1 - QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 341.596
+  ...
+# Subtest: QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+ok 2 - QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 283.8596
+  ...
+# Subtest: QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+ok 3 - QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 224.1166
+  ...
+# Subtest: QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+ok 4 - QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 205.614
+  ...
+# Subtest: QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+ok 5 - QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 262.6622
+  ...
+# Subtest: QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+ok 6 - QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 164.0317
+  ...
+# Subtest: QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+ok 7 - QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 195.9446
+  ...
+# Subtest: QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+ok 8 - QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 163.4344
+  ...
+# Subtest: QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+ok 9 - QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 210.7869
+  ...
+# Subtest: QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+ok 10 - QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 320.1309
+  ...
+# Subtest: QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+ok 11 - QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 229.8179
+  ...
+# Subtest: QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+ok 12 - QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 224.7031
+  ...
+# Subtest: QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+ok 13 - QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 174.8519
+  ...
+# Subtest: QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+ok 14 - QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 164.5703
+  ...
+# Subtest: QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+ok 15 - QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 229.408
+  ...
+# Subtest: QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+ok 16 - QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+  ---
+  duration_ms: 11836.5464
+  ...
+# Subtest: QA-139: switching all native cultures and repositioning previews never pays or suppresses props
+ok 17 - QA-139: switching all native cultures and repositioning previews never pays or suppresses props
+  ---
+  duration_ms: 457.0871
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 18 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 962.1728
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 19 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 787.4043
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 20 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1715.7229
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 21 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 717.064
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 22 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1039.2643
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 23 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 6347.0145
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 24 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1056.0985
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 25 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1181.2471
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 26 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1948.1209
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 27 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 828.2485
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 28 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1222.4706
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 29 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 5618.2066
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 30 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 932.7671
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 31 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 796.3183
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 32 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1704.3505
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 33 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 744.4935
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 34 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1218.5872
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 35 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 6120.5118
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 36 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 801.8841
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 37 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 850.2637
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 38 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1646.1576
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 39 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 683.3294
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 40 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1248.1115
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 41 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 5112.0833
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 42 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1087.7478
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 43 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1046.9175
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 44 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1461.9877
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 45 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 734.086
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 46 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1165.7032
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 47 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4987.9365
+  ...
+1..47
+# tests 47
+# suites 0
+# pass 47
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 56835.8373

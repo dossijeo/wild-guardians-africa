@@ -10,4 +10,4 @@
 
 Estado: pendiente; esta anotación no acredita una auditoría de los 126 efectos.
 
-Las ondas de pisadas en el agua del Gran Cañón son **VFX**, no un SFX nuevo.
+Las ondas de pisadas en el agua del Gran Cañón son **VFX**. El usuario autorizó después vincular el SFX 012 (Pasos barro) a dichas pisadas y el SFX 006 (Agua de río) al ambiente del río; esta asignación concreta no sustituye el barrido completo pendiente.

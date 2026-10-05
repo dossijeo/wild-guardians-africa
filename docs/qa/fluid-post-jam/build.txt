@@ -1,0 +1,21 @@
+
+> wild-guardians-africa@0.1.0 build
+> vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 191 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                0.56 kB │ gzip:   0.38 kB
+dist/assets/horizon-worker-MJdtEVl_.js        15.24 kB
+dist/assets/chunk-worker-BmINS3iG.js          32.51 kB
+dist/assets/raid-entry-worker-D0VlXGgB.js     80.95 kB
+dist/assets/index-B4KgtKzM.css                18.34 kB │ gzip:   4.78 kB
+dist/assets/index-BOANWPnq.js              1,315.71 kB │ gzip: 399.07 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 19.16s

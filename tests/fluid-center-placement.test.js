@@ -74,3 +74,16 @@ for(const culture of Object.keys(CENTER_GEOMETRIES))test(`${culture}: native vol
  assert.equal(footprintFluidSample(nav.field,centerFootprint(s.structures[0],s).footprint),null);
  assert.ok(nav.path(s.villages[0].entry,centerServicePoint(s.structures[0],s,.8),.28,null,true));
 });
+
+for(const biome of ['gran-rio','volcanes'])for(const culture of Object.keys(CENTER_GEOMETRIES))test(`${biome}/${culture}: native hydrology near a flat river bank relocates a slightly overlapping hull`,()=>{
+ const nav=new Navigation(712,biome,{}),riverX=nav.field.riverX(0),state=Game.newGame({seed:712,biome,culture});
+ const terrainSite={x:riverX,z:0,y:2,yaw:0,hx:30,hz:30,clearRadius:40,softRadius:46,haloRadius:53};
+ Object.assign(state.villages[0],{x:riverX+22,z:0,entry:{x:riverX+22,z:0},buildings:[],terrainSite});nav.setState(state);nav.propsAt=()=>[];
+ const hull=centerFootprint({kind:'center',culture,x:0,z:0}).footprint;
+ const x=Math.max(...hull.map(p=>nav.field.riverX(p.z)+6.1-p.x))-.1;
+ const before=centerFootprint({kind:'center',culture,x,z:0});assert.ok(footprintFluidSample(nav.field,before.footprint));
+ const preview=Game.previewCenter(state,{x,z:0},nav);assert.equal(preview.valid,true);assert.ok(preview.x>x);
+ assert.equal(footprintFluidSample(nav.field,preview.footprint.footprint),null);
+ Game.placeStructure(state,'native-shore-center',{x,z:0},nav);assert.equal(state.structures[0].x,preview.x);
+ assert.ok(nav.path(state.villages[0].entry,centerServicePoint(state.structures[0],state,.8),.28,null,true));
+});

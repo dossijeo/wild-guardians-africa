@@ -1,3 +1,4 @@
+import {StepRipples} from './step-ripples.js';
 import {FOOTSTEPS} from './footsteps-data.js';
 import {vfxEnvironment} from './vfx-native.js';
 const lifetime=1.6;
@@ -20,7 +21,7 @@ export function crossedFootsteps(clip,start,end){
  return contacts.sort((a,b)=>a.phase-b.phase);
 }
 export class LocomotionVfx {
- constructor(library,pipeline,scene,surface){this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();this.observations=new Map();this.elapsed=null;}
+ constructor(library,pipeline,scene,surface,waterAt=()=>null){this.waterAt=waterAt;this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();this.observations=new Map();this.elapsed=null;}
  update(state,objects=new Map()){
   if(this.stateRef&&this.stateRef!==state)this.dispose();
   if(this.elapsed!==null&&state.elapsed<this.elapsed)this.dispose();
@@ -36,6 +37,10 @@ export class LocomotionVfx {
      const u=(step.phase-previous.pose.phase)/(pose.phase-previous.pose.phase),c=Math.cos(yaw),s=Math.sin(yaw),[px,pz]=step.point;
      const x=previous.x+(actor.x-previous.x)*u+c*px+s*pz,z=previous.z+(actor.z-previous.z)*u-s*px+c*pz,key=`${actor.id}/${pose.name}/${step.cycle}/${step.index}`;
      if(this.effects.has(key))continue;
+     const water=this.waterAt(x,z);
+     if(water?.inside&&Number.isFinite(water.level)){
+      this.ripples??=new StepRipples(this.scene);this.ripples.add(x,z,water.level,state.elapsed-dt*(1-u));continue;
+     }
      const effect=this.library.create('dust',this.pipeline,{worldSurface:this.surface,stepMode:true});effect.position.set(x,this.surface(x,z),z);effect.rotation.y=yaw;effect.userData.birth=state.elapsed-dt*(1-u);this.effects.set(key,effect);this.scene.add(effect);
     }
    }
@@ -48,9 +53,10 @@ export class LocomotionVfx {
    effect.environment=environment;const time=Math.max(1e-6,age);
    if(effect.native.time===0||time<effect.native.time-1e-8)effect.seek(time);else effect.advance(Math.max(0,time-effect.native.time));
   }
+  this.ripples?.update(state.elapsed);
   this.elapsed=state.elapsed;
   this.stateRef=state;
  }
  prepare(camera){let depth=false;for(const effect of this.effects.values())depth=effect.prepare(camera,this.scene)||depth;return depth;}
- dispose(){for(const effect of this.effects.values())effect.dispose();this.effects.clear();this.observations.clear();this.elapsed=null;this.stateRef=null;}
+ dispose(){this.ripples?.dispose();this.ripples=null;for(const effect of this.effects.values())effect.dispose();this.effects.clear();this.observations.clear();this.elapsed=null;this.stateRef=null;}
 }

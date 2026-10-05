@@ -1,0 +1,42 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Pisadas del río</title>
+<style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;background:#fff9eded;padding:8px;max-width:75vw;z-index:2}pre{max-height:130px;overflow:auto;font-size:10px}button{padding:8px}</style>
+<header>Terreno y modelos nativos. Cruce preparado para inspección visual, no campaña simulada.<br><button id="step" disabled>Avanzar pisadas</button><button id="close" disabled>Cerrar prueba</button><pre id="data">Cargando…</pre></header><canvas id="world"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid} from '../../src/simulation/raids.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {AudioSystem} from '../../src/audio/audio.js';
+import {Box3} from 'three';
+const errors=[],data=document.querySelector('#data'),audio=new AudioSystem({sfx:0,music:0}),audioCalls=[];let world,closed=false,finished=false,bounds;
+for(const method of ['sound','ambientSound']){const original=audio[method].bind(audio);audio[method]=async(id,options)=>{const source=await original(id,options);if(source)audioCalls.push({id,loop:!!options.loop,rate:source.playbackRate.value});return source;};}
+const fail=e=>{errors.push(String(e.message??e));data.textContent=JSON.stringify({errors});};
+addEventListener('error',e=>fail(e.error??e));addEventListener('unhandledrejection',e=>fail(e.reason));
+try{
+ const payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe'),pack=await json('/content/biome-canyons.json');
+ const state=Game.newGame({seed:712,biome:'gran-canon'}),nav=new Navigation(712,'gran-canon',pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);
+ Game.placeStructure(state,'qa-center',site.center,nav);
+ let plant;for(let r=5;r<15&&!plant;r+=1)for(let a=0;a<16&&!plant;a++){const p={x:site.center.x+Math.cos(a*Math.PI/8)*r,z:site.center.z+Math.sin(a*Math.PI/8)*r};if(nav.placement(p.x,p.z,.45).valid)plant=p;}
+ if(!plant)throw Error('No hay terreno seco para la siembra pagada');Game.plant(state,'qa-plant','mijo',plant.x,plant.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-hire',{olderMale:1});
+ state.day=6;state.time=350;spawnRaid(state,{group:['warthog']},nav);Game.pause(state,'qa');
+ const worker=state.workers[0],animal=state.raid.animals[0],z=site.z+8,x=nav.field.riverX(z);
+ Object.assign(worker,{x:x-3,z,status:'walking',walkPhase:0,heading:0,running:false});Object.assign(animal,{x:x+2,z:z+1,status:'walking',motionPhase:0,heading:0});
+ state.raid.cameraFocusedAnimalId=animal.id;
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');world.onError=fail;await world.load(state,nav,payload);world.focus({x,z:z+1});world.controls.target.set(x,nav.field.riverLevel,z+1);world.camera.position.set(x+1,nav.field.riverLevel+8,z+18);world.controls.update();
+ let frames=0;
+ const report=()=>{data.textContent=JSON.stringify({ready:world.actorsReady(),finished,elapsed:state.elapsed,water:nav.field.waterInfo(x,z),workerY:world.objects.get(worker.id)?.position.y,animalY:world.objects.get(animal.id)?.position.y,bounds,rippleCount:world.locomotionVfx.ripples?.mesh.count??0,rippleDraws:world.locomotionVfx.ripples?1:0,muted:true,audioCalls,errors},null,2);};
+ requestAnimationFrame(function frame(){if(closed)return;try{world.render(0);if(++frames%30===0)report();if(world.actorsReady())document.querySelector('#step').disabled=false;requestAnimationFrame(frame);}catch(e){fail(e);}});
+ document.querySelector('#step').onclick=async()=>{try{
+  await audio.unlock();const bank=await audio.sfxBank();await Promise.all(['step_mud','amb_river'].map(id=>audio.buffer(bank.items.find(p=>p.id===id).audio.url)));
+  const presentation={...state,pauses:[]};audio.updateMovement(presentation,{surfaceAt:world.movementSurfaceAt});
+  audio.updateAmbient(state,{listener:{x,z},waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:nav.field.riverActive})});
+  for(let i=0;i<12;i++){state.elapsed+=.05;worker.z+=.04;worker.walkPhase+=.05;animal.z+=.03;animal.motionPhase+=.05;world.render(0);presentation.elapsed=state.elapsed;audio.updateMovement(presentation,{surfaceAt:world.movementSurfaceAt});await new Promise(done=>requestAnimationFrame(done));}
+  bounds={workerMinY:new Box3().setFromObject(world.objects.get(worker.id),true).min.y,animalMinY:new Box3().setFromObject(world.objects.get(animal.id),true).min.y};finished=true;report();
+ }catch(e){fail(e);}};
+ document.querySelector('#close').disabled=false;document.querySelector('#close').onclick=()=>{closed=true;audio.dispose();world.dispose();data.textContent='Prueba cerrada';};
+ addEventListener('pagehide',()=>{audio.dispose();if(!closed)world?.dispose();});
+}catch(e){fail(e);}
+</script></html>

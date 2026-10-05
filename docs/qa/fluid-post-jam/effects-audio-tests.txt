@@ -1,0 +1,510 @@
+TAP version 13
+# Subtest: all connected ambience comes from original loop clips without introducing weather
+ok 1 - all connected ambience comes from original loop clips without introducing weather
+  ---
+  duration_ms: 107.5258
+  ...
+# Subtest: sabana: background follows actual day/night and never assumes water without evidence
+ok 2 - sabana: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 10.8525
+  ...
+# Subtest: gran-rio: background follows actual day/night and never assumes water without evidence
+ok 3 - gran-rio: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.4827
+  ...
+# Subtest: manglares: background follows actual day/night and never assumes water without evidence
+ok 4 - manglares: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 1.3601
+  ...
+# Subtest: volcanes: background follows actual day/night and never assumes water without evidence
+ok 5 - volcanes: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.5948
+  ...
+# Subtest: gran-canon: background follows actual day/night and never assumes water without evidence
+ok 6 - gran-canon: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.4135
+  ...
+# Subtest: desierto: background follows actual day/night and never assumes water without evidence
+ok 7 - desierto: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.3691
+  ...
+# Subtest: water needs a matching biome, active hydrology and a nearby measured shoreline
+ok 8 - water needs a matching biome, active hydrology and a nearby measured shoreline
+  ---
+  duration_ms: 1.1519
+  ...
+# Subtest: many identical frames share pending loads and water sampling is cached by listener cell/revision
+ok 9 - many identical frames share pending loads and water sampling is cached by listener cell/revision
+  ---
+  duration_ms: 26.7719
+  ...
+# Subtest: day/night crossfade releases old fauna, while a pause changes only ambient levels
+ok 10 - day/night crossfade releases old fauna, while a pause changes only ambient levels
+  ---
+  duration_ms: 9.2612
+  ...
+# Subtest: a loading loop invalidated by scene change cannot survive late completion
+ok 11 - a loading loop invalidated by scene change cannot survive late completion
+  ---
+  duration_ms: 2.4838
+  ...
+# Subtest: an evicted loop retries at most once per audio second and an unchanged scene never duplicates it
+ok 12 - an evicted loop retries at most once per audio second and an unchanged scene never duplicates it
+  ---
+  duration_ms: 2.4773
+  ...
+# Subtest: result and replacement state stop ambience without altering simulation or resurrecting old voices
+ok 13 - result and replacement state stop ambience without altering simulation or resurrecting old voices
+  ---
+  duration_ms: 3.1957
+  ...
+# Subtest: the requested water clips retain catalogue numbers 012 and 006
+ok 14 - the requested water clips retain catalogue numbers 012 and 006
+  ---
+  duration_ms: 114.6381
+  ...
+# Subtest: youngMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 15 - youngMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 35.7928
+  ...
+# Subtest: youngMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 16 - youngMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 17.786
+  ...
+# Subtest: olderMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 17 - olderMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 3.0183
+  ...
+# Subtest: olderMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 18 - olderMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 17.414
+  ...
+# Subtest: olderFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 19 - olderFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.0048
+  ...
+# Subtest: olderFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 20 - olderFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.2113
+  ...
+# Subtest: youngFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 21 - youngFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.2617
+  ...
+# Subtest: youngFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 22 - youngFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 24.6999
+  ...
+# Subtest: warthog/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 23 - warthog/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 5.1809
+  ...
+# Subtest: warthog/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 24 - warthog/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.5763
+  ...
+# Subtest: hyena/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 25 - hyena/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.129
+  ...
+# Subtest: hyena/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 26 - hyena/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.7853
+  ...
+# Subtest: buffalo/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 27 - buffalo/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 7.3266
+  ...
+# Subtest: buffalo/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 28 - buffalo/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 5.6212
+  ...
+# Subtest: lion/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 29 - lion/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.5879
+  ...
+# Subtest: lion/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 30 - lion/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.7864
+  ...
+# Subtest: rhino/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 31 - rhino/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.6242
+  ...
+# Subtest: rhino/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 32 - rhino/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 13.7247
+  ...
+# Subtest: 006 river ambience shares one nearby loop and fades away when the camera leaves the river
+ok 33 - 006 river ambience shares one nearby loop and fades away when the camera leaves the river
+  ---
+  duration_ms: 10.2435
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 34 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 3.808
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 35 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.425
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 36 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.4269
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 37 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 145.9715
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 38 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 84.558
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 39 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 131.1582
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 40 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 1.0163
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 41 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 40.2221
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 42 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 2.6025
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 43 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 3.0579
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 44 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 14.3541
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 45 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 3.4945
+  ...
+# Subtest: youngMale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 46 - youngMale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 813.2114
+  ...
+# Subtest: olderMale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 47 - olderMale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 412.5342
+  ...
+# Subtest: olderFemale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 48 - olderFemale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 382.0805
+  ...
+# Subtest: youngFemale: foot contacts reproduce original native toe trajectories and clip cycles
+ok 49 - youngFemale: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 365.0823
+  ...
+# Subtest: warthog: foot contacts reproduce original native toe trajectories and clip cycles
+ok 50 - warthog: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 333.1811
+  ...
+# Subtest: hyena: foot contacts reproduce original native toe trajectories and clip cycles
+ok 51 - hyena: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 165.8723
+  ...
+# Subtest: buffalo: foot contacts reproduce original native toe trajectories and clip cycles
+ok 52 - buffalo: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 229.0499
+  ...
+# Subtest: lion: foot contacts reproduce original native toe trajectories and clip cycles
+ok 53 - lion: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 229.0283
+  ...
+# Subtest: rhino: foot contacts reproduce original native toe trajectories and clip cycles
+ok 54 - rhino: foot contacts reproduce original native toe trajectories and clip cycles
+  ---
+  duration_ms: 368.4773
+  ...
+# Subtest: Paid walking emits only measured single-step dust, freezes on pause and does not invent a trail after reload or a long jump
+ok 55 - Paid walking emits only measured single-step dust, freezes on pause and does not invent a trail after reload or a long jump
+  ---
+  duration_ms: 235.3774
+  ...
+# Subtest: Waiting, falling, incapacitation, stationary animation and backwards time cannot generate footsteps
+ok 56 - Waiting, falling, incapacitation, stationary animation and backwards time cannot generate footsteps
+  ---
+  duration_ms: 29.2717
+  ...
+# Subtest: warthog: real animal movement phases drive native dust independently of combat budgets
+ok 57 - warthog: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 84.6262
+  ...
+# Subtest: hyena: real animal movement phases drive native dust independently of combat budgets
+ok 58 - hyena: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 71.0874
+  ...
+# Subtest: buffalo: real animal movement phases drive native dust independently of combat budgets
+ok 59 - buffalo: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 39.9694
+  ...
+# Subtest: lion: real animal movement phases drive native dust independently of combat budgets
+ok 60 - lion: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 59.9334
+  ...
+# Subtest: rhino: real animal movement phases drive native dust independently of combat budgets
+ok 61 - rhino: real animal movement phases drive native dust independently of combat budgets
+  ---
+  duration_ms: 46.097
+  ...
+# Subtest: youngMale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 62 - youngMale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 27.4491
+  ...
+# Subtest: youngMale Run: original contact phases emit steps only after actual displacement
+ok 63 - youngMale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 31.204
+  ...
+# Subtest: youngMale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 64 - youngMale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 3.8975
+  ...
+# Subtest: youngFemale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 65 - youngFemale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 21.2267
+  ...
+# Subtest: youngFemale Run: original contact phases emit steps only after actual displacement
+ok 66 - youngFemale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 4.5953
+  ...
+# Subtest: youngFemale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 67 - youngFemale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 5.5234
+  ...
+# Subtest: olderMale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 68 - olderMale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 2.798
+  ...
+# Subtest: olderMale Run: original contact phases emit steps only after actual displacement
+ok 69 - olderMale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 4.6327
+  ...
+# Subtest: olderMale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 70 - olderMale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 4.1235
+  ...
+# Subtest: olderFemale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 71 - olderFemale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 8.3899
+  ...
+# Subtest: olderFemale Run: original contact phases emit steps only after actual displacement
+ok 72 - olderFemale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 2.8246
+  ...
+# Subtest: olderFemale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 73 - olderFemale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 3.0711
+  ...
+# Subtest: warthog: native animal toe contacts select original weight category
+ok 74 - warthog: native animal toe contacts select original weight category
+  ---
+  duration_ms: 5.572
+  ...
+# Subtest: hyena: native animal toe contacts select original weight category
+ok 75 - hyena: native animal toe contacts select original weight category
+  ---
+  duration_ms: 7.0917
+  ...
+# Subtest: buffalo: native animal toe contacts select original weight category
+ok 76 - buffalo: native animal toe contacts select original weight category
+  ---
+  duration_ms: 36.4265
+  ...
+# Subtest: lion: native animal toe contacts select original weight category
+ok 77 - lion: native animal toe contacts select original weight category
+  ---
+  duration_ms: 5.8941
+  ...
+# Subtest: rhino: native animal toe contacts select original weight category
+ok 78 - rhino: native animal toe contacts select original weight category
+  ---
+  duration_ms: 7.7414
+  ...
+# Subtest: pause, actor removal, reload and an unobserved gap cancel active or pending footstep sounds
+ok 79 - pause, actor removal, reload and an unobserved gap cancel active or pending footstep sounds
+  ---
+  duration_ms: 9.7118
+  ...
+# Subtest: surface override, running selection and distance attenuation do not invent clip variants
+ok 80 - surface override, running selection and distance attenuation do not invent clip variants
+  ---
+  duration_ms: 0.5817
+  ...
+# Subtest: paid native walking and cadence changes never mutate simulation or replay historical contacts
+ok 81 - paid native walking and cadence changes never mutate simulation or replay historical contacts
+  ---
+  duration_ms: 90.4227
+  ...
+# Subtest: every emitted mud triangle centroid is classified by its exact resident outline in signed chunks
+ok 82 - every emitted mud triangle centroid is classified by its exact resident outline in signed chunks
+  ---
+  duration_ms: 268.2011
+  ...
+# Subtest: concave contour rejects its bounding-circle corners and includes edges
+ok 83 - concave contour rejects its bounding-circle corners and includes edges
+  ---
+  duration_ms: 0.6748
+  ...
+# Subtest: youngMale: the authored toe point chooses mud even when the body is on moss
+ok 84 - youngMale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 58.903
+  ...
+# Subtest: youngFemale: the authored toe point chooses mud even when the body is on moss
+ok 85 - youngFemale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 5.738
+  ...
+# Subtest: olderMale: the authored toe point chooses mud even when the body is on moss
+ok 86 - olderMale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 1.3835
+  ...
+# Subtest: olderFemale: the authored toe point chooses mud even when the body is on moss
+ok 87 - olderFemale: the authored toe point chooses mud even when the body is on moss
+  ---
+  duration_ms: 1.3273
+  ...
+# Subtest: runner: surface-independent originals never query mud
+ok 88 - runner: surface-independent originals never query mud
+  ---
+  duration_ms: 11.6406
+  ...
+# Subtest: beast: surface-independent originals never query mud
+ok 89 - beast: surface-independent originals never query mud
+  ---
+  duration_ms: 3.1365
+  ...
+# Subtest: ripples stay on the water, share one draw, freeze on pause and release resources
+ok 90 - ripples stay on the water, share one draw, freeze on pause and release resources
+  ---
+  duration_ms: 19.2619
+  ...
+# Subtest: youngMale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 91 - youngMale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 6.5086
+  ...
+# Subtest: olderMale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 92 - olderMale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 1.9979
+  ...
+# Subtest: olderFemale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 93 - olderFemale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 2.2277
+  ...
+# Subtest: youngFemale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 94 - youngFemale: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 1.79
+  ...
+# Subtest: warthog: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 95 - warthog: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 3.495
+  ...
+# Subtest: hyena: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 96 - hyena: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 2.3709
+  ...
+# Subtest: buffalo: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 97 - buffalo: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 2.2486
+  ...
+# Subtest: lion: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 98 - lion: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 2.0288
+  ...
+# Subtest: rhino: measured water steps create ripples instead of dust; pause and reload create no extra steps
+ok 99 - rhino: measured water steps create ripples instead of dust; pause and reload create no extra steps
+  ---
+  duration_ms: 1.9923
+  ...
+# Subtest: canyon actors sink only their feet rather than standing on the river bed; routes use the water plane
+ok 100 - canyon actors sink only their feet rather than standing on the river bed; routes use the water plane
+  ---
+  duration_ms: 8.9322
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 100
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5605.2723
