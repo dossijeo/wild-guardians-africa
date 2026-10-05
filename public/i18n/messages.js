@@ -1333,7 +1333,6 @@ export const messages = {
   "Contratar una {profile} menos": "Hire one fewer {profile}",
   "Contratar una {profile} más": "Hire one more {profile}",
   "Agua, lava o pendiente no edificable": "Water, lava or unbuildable slope",
-  "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base",
   "Zona común": "Common area",
   "No se pudieron generar todos los chunks": "Could not generate all chunks",
   "Canto del disco": "Disc edge",
@@ -1558,5 +1557,6 @@ export const messages = {
   "La contratación adicional no está disponible ahora": "Additional hiring is currently unavailable",
   "El centro de trabajo no está disponible": "The work centre is unavailable",
   "Hora de contratación inválida": "Invalid hiring time",
-  "Jornada en curso": "Shift in progress"
+  "Jornada en curso": "Shift in progress",
+  "El edificio necesita suelo nivelado en toda su base": "The building needs level ground beneath its entire base"
 };
