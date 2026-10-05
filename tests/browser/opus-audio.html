@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>Opus — descodificación experimental</title>
+<style>body{font:17px system-ui;background:#14251e;color:#eaf5ed;max-width:900px;margin:50px auto;padding:20px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;font-size:13px}#report{display:none}</style>
+<h1>Audio Opus — prueba experimental</h1>
+<p>Descodificación secuencial de originales y candidatos a 48 y 44,1 kHz. Sin reproducción ni cambios en el juego.</p>
+<button id="run">Comprobar audio</button><p id="status">Lista</p><pre id="summary"></pre><pre id="report"></pre>
+<script type="module">
+const button=document.querySelector('#run'),status=document.querySelector('#status');
+button.onclick=async()=>{
+ button.disabled=true;const report={scope:'Full-file Web Audio decoding, not listening, mobile or windowed-streaming validation.',userAgent:navigator.userAgent,rows:[],errors:[],contexts:[]};
+ try{
+  const response=await fetch('../../.cache/opus-audit/report.json');if(!response.ok)throw Error('Missing experimental conversion report');
+  const conversion=await response.json();if(conversion.status!=='measured'||conversion.records.length!==conversion.expectedFiles)throw Error('Conversion is not complete');
+  for(const rate of [48000,44100]){
+   const context=new AudioContext({sampleRate:rate});if(context.sampleRate!==rate)throw Error('Requested sample rate unavailable');
+   try{for(const record of conversion.records){
+    status.textContent=`Comprobando ${rate} Hz · ${report.rows.length+1}/294`;
+    async function decode(url){const res=await fetch(url);if(!res.ok)throw Error('Missing candidate: '+url);const buffer=await context.decodeAudioData(await res.arrayBuffer());return {samples:buffer.length,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate};}
+    const original=await decode(record.source),opus=await decode('../../.cache/opus-audit/'+record.sourceSha256+'.opus');
+    const expected=record.before.samples48000*rate/48000;
+    const valid=original.channels===record.channels&&opus.channels===record.channels&&opus.sampleRate===rate&&Math.abs(opus.samples-original.samples)<=1&&Math.abs(opus.samples-expected)<=1;
+    report.rows.push({source:record.source,id:record.id,role:record.role,rate,original,opus,expected,valid});
+    if(!valid)report.errors.push({source:record.source,rate,original,opus,expected});
+   }}finally{await context.close();report.contexts.push({sampleRate:rate,state:context.state});}
+  }
+  status.textContent=report.errors.length?'Completada con diferencias':'Completada';
+ }catch(error){report.errors.push({message:error.message});status.textContent='Error';}
+ document.querySelector('#summary').textContent=JSON.stringify({cases:report.rows.length,errors:report.errors.length,contexts:report.contexts},null,2);
+ document.querySelector('#report').textContent=JSON.stringify(report,null,2);button.disabled=false;
+};
+</script>
