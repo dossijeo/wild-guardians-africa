@@ -1,18 +1,20 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>Native save storage capacity</title>
 <style>body{font:16px system-ui;background:#172c26;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
 <h1>Native save storage capacity</h1><p>Uses recorded native campaign snapshots. Only temporary QA slot keys are written and removed.</p>
-<label>Recorded campaign <select id="snapshot"><option value="ten">Audited ten-night canyon</option><option value="hundred">Finished hundred-night savanna</option></select></label>
+<label>Recorded campaign <select id="snapshot"><option value="ten">Audited ten-night canyon</option><option value="hundred">Finished hundred-night savanna</option><option value="hundred-mixed">Finished hundred-night mixed savanna</option></select></label>
+<label>Save backend <select id="backend"><option value="legacy">Legacy localStorage</option><option value="indexed">Production IndexedDB</option></select></label>
 <button id="run">Check native save capacity</button><p id="summary">Ready</p><details><summary>Full diagnostic</summary><pre id="result">Ready</pre></details>
 <script type="module">
 import {SaveRepository,deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
 const button=document.querySelector('#run'),out=document.querySelector('#result');
 button.onclick=async()=>{
  button.disabled=true;
- const prefix='qa-storage-capacity-'+crypto.randomUUID(),repo=new SaveRepository(localStorage),slots=[];
- const hundred=document.querySelector('#snapshot').value==='hundred';
- const report={origin:location.origin,status:'running',snapshot:hundred?'hundred-night-savanna':'ten-night-canyon',scope:'Native localStorage and production SaveRepository; clones of the recorded native state differ only in slot identity. No game balances, growth or damage overrides.',attempts:[]};
+ const prefix='qa-storage-capacity-'+crypto.randomUUID(),indexed=document.querySelector('#backend').value==='indexed',repo=indexed?new BrowserSaveRepository(localStorage):new SaveRepository(localStorage),slots=[];
+ const selected=document.querySelector('#snapshot').value,hundred=selected!=='ten';
+ const report={origin:location.origin,status:'running',backend:indexed?'IndexedDB':'localStorage',snapshot:selected==='hundred-mixed'?'hundred-night-mixed-savanna':hundred?'hundred-night-savanna':'ten-night-canyon',scope:'Native browser storage and production save repository; clones of the recorded native state differ only in slot identity. No game balances, growth or damage overrides.',attempts:[]};
  try{
-  const path=hundred?'../../test-results/intensive-sabana-mapungubwe-712-state.json':'../../docs/qa/intensive-canyon-10/state.json';
+  const path=selected==='hundred-mixed'?'../../docs/qa/intensive-mixed-100/state.json':hundred?'../../test-results/intensive-sabana-mapungubwe-712-state.json':'../../docs/qa/intensive-canyon-10/state.json';
   const response=await fetch(path);if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Recorded snapshot unavailable');
   const original=await response.text();report.originalSnapshotCharacters=original.length;
   const recorded=deserialize(original);report.snapshotDay=recorded.day;report.completedNights=recorded.completedNights;report.result=recorded.result;report.plants=recorded.plants.length;report.crates=recorded.crates.length;
@@ -21,18 +23,19 @@ button.onclick=async()=>{
    const state=deserialize(original);state.slotId=prefix+'-'+index;slots.push(state.slotId);
    const row={index,snapshotCharacters:serialize(state).length,savesCompleted:0};report.attempts.push(row);
    try{
-    repo.save(state);row.savesCompleted++;
-    repo.save(state);row.savesCompleted++;
-    row.roundTrip=serialize(repo.load(state.slotId))===serialize(state);
+    await repo.save(state);row.savesCompleted++;
+    await repo.save(state);row.savesCompleted++;
+    const reopened=indexed?new BrowserSaveRepository(localStorage):repo;
+    row.roundTrip=serialize(await reopened.load(state.slotId))===serialize(state);
     if(!row.roundTrip)throw Error('Saved state differs');
-   }catch(error){row.error={name:error.name,message:error.message};const key=repo.key(state.slotId);row.partialKeys={primary:localStorage.getItem(key)!==null,backup:localStorage.getItem(key+':backup')!==null,pending:localStorage.getItem(key+':pending')!==null};report.status=error.name==='QuotaExceededError'?'quota-reproduced':'failed';break;}
+   }catch(error){row.error={name:error.name,message:error.message};if(!indexed){const key=repo.key(state.slotId);row.partialKeys={primary:localStorage.getItem(key)!==null,backup:localStorage.getItem(key+':backup')!==null,pending:localStorage.getItem(key+':pending')!==null};}report.status=error.name==='QuotaExceededError'?'quota-reproduced':'failed';break;}
   }
   if(report.status==='running')report.status=hundred?'hundred-night-slot-saved':'twelve-slots-saved';
-  report.previousPlayableSlots=report.attempts.filter(row=>row.savesCompleted===2).every(row=>repo.load(prefix+'-'+row.index).day===report.snapshotDay);
+  report.previousPlayableSlots=(await Promise.all(report.attempts.filter(row=>row.savesCompleted===2).map(async row=>(await repo.load(prefix+'-'+row.index)).day===report.snapshotDay))).every(Boolean);
  }catch(error){report.status='failed';report.error={name:error.name,message:error.message};}
  finally{
-  for(const slot of slots)repo.delete(slot);
-  report.temporaryKeysRemaining=Object.keys(localStorage).filter(key=>key.startsWith('wild-guardians:slot:'+prefix)).length;
+  for(const slot of slots)await repo.delete(slot);
+  report.temporaryKeysRemaining=Object.keys(localStorage).filter(key=>key.startsWith('wild-guardians:slot:'+prefix)).length+(indexed?(await repo.list()).filter(slot=>slot.slotId.startsWith(prefix)).length:0);
   const failed=report.attempts.find(row=>row.error);
   document.querySelector('#summary').textContent=`${report.attempts.filter(row=>row.savesCompleted===2).length} saved slots remain playable: ${report.previousPlayableSlots}. Failed staging copy remains: ${failed?.partialKeys?.pending??'not tested'}. Temporary QA keys after cleanup: ${report.temporaryKeysRemaining}.`;
   out.textContent=JSON.stringify(report,null,2);button.disabled=false;

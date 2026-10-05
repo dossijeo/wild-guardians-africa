@@ -1,5 +1,7 @@
 # Capacidad nativa y limpieza de guardados fallidos
 
+Actualización: la campaña mixta de cien noches ha permitido medir una sola ranura de unos 7,3 MB. localStorage la rechaza; el nuevo backend IndexedDB la guarda y recupera íntegra. Véanse `intensive-mixed-100.md` y sus pruebas reales. Los resultados siguientes documentan el backend anterior y su corrección de staging, que se conserva para recuperar guardados antiguos.
+
 `tests/browser/save-storage-capacity.html` utiliza el SaveRepository de producción y localStorage real del navegador integrado en `http://127.0.0.1:5181`. Cada ranura QA contiene una copia del snapshot legal de diez noches de Gran cañón/Mapungubwe, cambiando únicamente slotId. Se guarda dos veces para incluir la copia de recuperación y se verifica que la partida sigue siendo jugable. No se altera economía, crecimiento, daño ni RNG.
 
 El snapshot original ocupa 374555 caracteres; cada identidad QA lo lleva a 374606. En este origen, seis ranuras se guardan y recuperan correctamente. La primera escritura de la séptima alcanza la cuota nativa y falla al reemplazar la copia principal. Antes de la corrección deja `pending:true`, aunque no hay primary ni backup de esa nueva ranura. Esa copia temporal no se usa en load y continúa consumiendo espacio tras el fallo.

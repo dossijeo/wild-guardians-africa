@@ -1,0 +1,30 @@
+{
+  "origin": "http://127.0.0.1:5181",
+  "status": "quota-reproduced",
+  "snapshot": "hundred-night-mixed-savanna",
+  "scope": "Native localStorage and production SaveRepository; clones of the recorded native state differ only in slot identity. No game balances, growth or damage overrides.",
+  "attempts": [
+    {
+      "index": 0,
+      "snapshotCharacters": 7265595,
+      "savesCompleted": 0,
+      "error": {
+        "name": "QuotaExceededError",
+        "message": "Failed to execute 'setItem' on 'Storage': Setting the value of 'wild-guardians:slot:qa-storage-capacity-3e0314be-42f4-47b9-967f-e55808ab99d4-0:pending' exceeded the quota."
+      },
+      "partialKeys": {
+        "primary": false,
+        "backup": false,
+        "pending": false
+      }
+    }
+  ],
+  "originalSnapshotCharacters": 7265544,
+  "snapshotDay": 101,
+  "completedNights": 100,
+  "result": "victory",
+  "plants": 12486,
+  "crates": 11935,
+  "previousPlayableSlots": true,
+  "temporaryKeysRemaining": 0
+}

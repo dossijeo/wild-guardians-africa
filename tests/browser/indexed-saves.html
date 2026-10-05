@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Native IndexedDB save recovery</title>
+<style>body{font:16px system-ui;background:#172c26;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
+<h1>Native IndexedDB save recovery</h1><p>Production repository, real browser transactions, temporary QA slots only.</p>
+<button id="run">Check migration and recovery</button><p id="summary">Ready</p><pre id="result">Ready</pre>
+<button id="prepare">Prepare temporary save for production menu</button><button id="cleanup">Remove prepared QA save</button><p id="prepared">No prepared save</p>
+<script type="module">
+import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
+import {SaveRepository,serialize} from '../../src/persistence/snapshots.js';
+import {saveGame} from '../../src/app/save-game.js';
+import {newGame} from '../../src/simulation/game.js';
+const button=document.querySelector('#run');
+let menuSlot=null;
+document.querySelector('#prepare').onclick=async()=>{
+ if(menuSlot)await new BrowserSaveRepository(localStorage).delete(menuSlot);
+ menuSlot='qa-indexed-menu-'+crypto.randomUUID();
+ const state=newGame({seed:712,slotId:menuSlot});state.savedAt=Date.now();
+ await new BrowserSaveRepository(localStorage).save(state);
+ document.querySelector('#prepared').textContent=menuSlot;
+};
+document.querySelector('#cleanup').onclick=async()=>{
+ if(menuSlot){const repo=new BrowserSaveRepository(localStorage);await repo.delete(menuSlot);document.querySelector('#prepared').textContent=(await repo.list()).some(row=>row.slotId===menuSlot)?'Cleanup failed':'Prepared QA save removed';menuSlot=null;}
+};
+button.onclick=async()=>{
+ button.disabled=true;
+ const prefix='qa-indexed-'+crypto.randomUUID(),slots=[prefix+'-legacy',prefix+'-queue',prefix+'-other'];
+ const repo=new BrowserSaveRepository(localStorage),legacy=new SaveRepository(localStorage),report={origin:location.origin,checks:[],errors:[]};
+ const check=(name,condition)=>{report.checks.push({name,passed:!!condition});if(!condition)throw Error(name);};
+ const edit=async(slotId,change)=>{const db=await repo.open();await new Promise((resolve,reject)=>{const tx=db.transaction('slots','readwrite'),store=tx.objectStore('slots'),get=store.get(slotId);get.onsuccess=()=>store.put(change(get.result));tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error);});};
+ try{
+  const old=newGame({seed:712,slotId:slots[0]});legacy.save(old);
+  check('Existing localStorage save loads unchanged',serialize(await repo.load(old.slotId))===serialize(old));
+  check('Existing save appears once in continue list',(await repo.list()).filter(row=>row.slotId===old.slotId).length===1);
+  old.day=2;await repo.save(old);
+  check('Migration commits before removing legacy copies',localStorage.getItem(legacy.key(old.slotId))===null&&serialize(await repo.load(old.slotId))===serialize(old));
+  await edit(old.slotId,record=>({...record,primary:'corrupt'}));
+  check('Damaged primary recovers pre-migration day one backup',(await repo.load(old.slotId)).day===1);
+  old.day=3;await repo.save(old);await edit(old.slotId,record=>({...record,primary:serialize(newGame({seed:913,slotId:slots[2]}))}));
+  check('Wrong-slot primary is rejected and older backup retained',(await repo.load(old.slotId)).day===1);
+  old.day=4;await repo.save(old);
+  const other=newGame({seed:913,slotId:slots[2]});await repo.save(other);const otherText=serialize(await repo.load(other.slotId));
+  const queued=newGame({seed:712,slotId:slots[1]});const first=repo.save(queued);queued.day=2;const second=repo.save(queued);queued.day=99;await Promise.all([first,second]);
+  check('Queued autosaves capture invocation state and commit in order',(await repo.load(queued.slotId)).day===2);
+  await edit(queued.slotId,record=>({...record,primary:'corrupt'}));
+  check('Queued save backup is first captured day',(await repo.load(queued.slotId)).day===1);
+  queued.day=3;await repo.save(queued);
+  const open=repo.open.bind(repo),db=await open();repo.open=async()=>({transaction(...args){const tx=db.transaction(...args);queueMicrotask(()=>tx.abort());return tx;}});
+  const errors=[];queued.day=4;
+  const saved=await saveGame(queued,repo,{confirm:true,onError:error=>errors.push(error)});repo.open=open;
+  check('Aborted native transaction reports failure without success notice',saved===false&&errors.length===1&&!queued.messages.some(row=>row.text==='Partida guardada.'));
+  check('Aborted transaction retains last committed day',(await repo.load(queued.slotId)).day===3);
+  check('Recovery and failed writes leave another slot unchanged',serialize(await repo.load(other.slotId))===otherText);
+  await repo.delete(queued.slotId);let deleted=false;try{await repo.load(queued.slotId);}catch{deleted=true;}
+  check('Deleting a slot removes primary and backup',deleted&&!(await repo.list()).some(row=>row.slotId===queued.slotId));
+  report.status='passed';
+ }catch(error){report.status='failed';report.errors.push({name:error.name,message:error.message});}
+ finally{
+  for(const slot of slots)await repo.delete(slot);
+  report.temporarySlotsRemaining=(await repo.list()).filter(row=>row.slotId.startsWith(prefix)).length;
+  document.querySelector('#summary').textContent=`${report.status}: ${report.checks.length} checks; temporary slots remaining: ${report.temporarySlotsRemaining}`;
+  document.querySelector('#result').textContent=JSON.stringify(report,null,2);button.disabled=false;
+ }
+};
+</script></html>

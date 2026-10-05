@@ -1,0 +1,23 @@
+# Campaña intensiva de cien noches y capacidad de guardado
+
+La ejecución `node tools/check_intensive_farm.mjs 100 sabana mapungubwe mixed` terminó con código 0 y victoria tras las cien noches. Sus archivos reales están en `intensive-mixed-100/report.json` y `state.json`. El analizador volvió a validar el dinero entero, semillas cobradas, riegos obligatorios, recogida física, entregas y round-trip del snapshot; su resultado está en `summary.json`.
+
+Se plantaron 12486 cultivos de ocho especies, se entregaron 11935 cajas, se perdieron 343 cultivos y hubo un máximo de 282 plantas vivas. El saldo final fue 992 monedas: `1500 + 134685 de entregas - 76311 en semillas - 54420 en jornales - 3662 en reparaciones - 800 en el centro = 992`. La simulación contrató y sobrevivió a una incursión en cada una de las cien noches.
+
+La campaña empezó antes de incorporar la cabecera de procedencia. No conocemos el commit exacto cargado al arrancar; `provenance:null` se conserva. Esta victoria no verifica retrospectivamente el HEAD actual ni las treinta combinaciones. La matriz secuencial anterior sigue activa. La matriz paralela iniciada en `0a0d1c5` registra los hashes de cada proceso; los cambios posteriores de persistencia e interfaz podrán marcar diferencias entre procesos. No se ocultarán ni se declarará una matriz homogénea si sus fuentes difieren.
+
+El tiempo diurno sin acciones de esta estrategia fue 17174/30000 segundos (57,25 %): 15184 por presupuesto y 1990 al final de la jornada. El máximo continuo fue 127 segundos. Es una medida de decisiones simuladas, no de aburrimiento humano ni de frametime. El cultivo mixto incluye 32 plátanos sin entregas y 84 algodones con una sola entrega: completar cien noches con predominio de mijo no acredita que cada especie esté bien equilibrada. Queda comparar los otros mundos y revisar estas pérdidas y esperas antes de aceptar el balance general.
+
+## Fallo real de capacidad y corrección
+
+El snapshot completo tiene unos 7,3 MB. El fixture `tests/browser/save-storage-capacity.html`, con localStorage nativo del navegador integrado, reprodujo `QuotaExceededError` en el primer guardado de una sola ranura. No existía primary, backup ni pending de esa ranura después del fallo. `legacy-quota.json` y la captura conservan el resultado; no se redujo el historial ni se inventó una partida equivalente.
+
+El juego pasa a `BrowserSaveRepository`, con IndexedDB nativo. Cada escritura captura y valida el estado al invocar el guardado y se procesa en orden. Una transacción sustituye primary y backup de forma atómica; solo se confirma el guardado después de completarse. El menú espera esa confirmación antes de disponer el mundo. La identidad y formato de las partidas siguen intactos. Las partidas previas de localStorage aparecen en Continuar; al guardarlas se retiran sus copias antiguas únicamente después de la transacción correcta. Un fallo de IndexedDB se informa, sin anunciar éxito ni borrar otras partidas para conseguir espacio. Si el navegador no ofrece IndexedDB se conserva el backend anterior y sus límites.
+
+La prueba real con IndexedDB guardó dos veces esta misma campaña, abrió una nueva conexión y recuperó el snapshot completo sin diferencias, incluidas 12486 plantas históricas y 11935 cajas. `indexed-quota.json` conserva la comparación; las claves de prueba se eliminaron al terminar. Las capturas permiten comparar el fallo anterior y la lectura correcta.
+
+El fixture `tests/browser/indexed-saves.html` pasó once comprobaciones con transacciones nativas: lectura del backend anterior, lista sin duplicados, migración, recuperación de primary corrupto, rechazo de identidad ajena, captura y orden de autosaves simultáneos, conservación de backup, fallo de una transacción abortada sin falso éxito, conservación del último guardado, aislamiento de otra ranura y eliminación completa. `indexed-recovery.json` acredita cero ranuras temporales restantes.
+
+También se verificó el menú real con una ranura temporal de día uno: lista, Continuar, mundo listo, Guardar y volver al menú y Eliminar partida. `indexed-menu.json` registra cero botones de la ranura eliminada y ningún error de consola. No se modificaron otras partidas. Esta prueba de interfaz no renderiza la campaña de cien noches ni acredita persistencia en un teléfono físico.
+
+Pasan 34 pruebas dirigidas de guardado, autosave, identidad, multiplicación e idiomas. Compilación web y comprobación de paquete pasan: 580 archivos, 816 enlaces relativos y 20 GLB de runtime. Los nuevos errores de almacenamiento tienen traducción inglesa. La compilación Windows y la suite completa del siguiente commit se comprobarán en sus Actions; los resultados anteriores no se atribuyen a este cambio.

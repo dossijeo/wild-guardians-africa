@@ -26,3 +26,12 @@ test('autosave is silent; an explicit confirmation is emitted only after a succe
  assert.equal(saveGame(s,repo,{confirm:true}),true);assert.equal(JSON.parse(writes[1]).messages.length,0);
  assert.equal(s.messages[0].text,'Partida guardada.');assert.equal(saveGame(null,repo),false);assert.equal(writes.length,2);
 });
+test('asynchronous saves confirm only after commit and report rejection without success',async()=>{
+ const state=Game.newGame({seed:712,slotId:'async-save'});let commit;
+ const pending=saveGame(state,{save:()=>new Promise(resolve=>{commit=resolve;})},{confirm:true});
+ assert.equal(state.messages.length,0);commit();assert.equal(await pending,true);
+ assert.equal(state.messages.filter(row=>row.text==='Partida guardada.').length,1);
+ state.messages=[];const errors=[];
+ assert.equal(await saveGame(state,{save:()=>Promise.reject(Error('Transaction aborted'))},{confirm:true,onError:error=>errors.push(error)}),false);
+ assert.deepEqual(errors,['No se pudo guardar la partida: Transaction aborted']);assert.equal(state.messages.length,0);
+});
