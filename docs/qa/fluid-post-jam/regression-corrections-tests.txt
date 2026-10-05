@@ -1,0 +1,312 @@
+TAP version 13
+# Subtest: Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+ok 1 - Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+  ---
+  duration_ms: 981.8481
+  ...
+# Subtest: suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 2 - suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1547.7731
+  ...
+# Subtest: etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 3 - etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1163.4614
+  ...
+# Subtest: mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 4 - mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 993.0383
+  ...
+# Subtest: saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 5 - saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1250.7883
+  ...
+# Subtest: musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 6 - musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1107.6317
+  ...
+# (node:30716) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resume uses the HUD home destination, without a separate crop centroid or orientation
+ok 7 - resume uses the HUD home destination, without a separate crop centroid or orientation
+  ---
+  duration_ms: 2.2466
+  ...
+# Subtest: home skips ruined centres and walls; without a centre it returns to the first village
+ok 8 - home skips ruined centres and walls; without a centre it returns to the first village
+  ---
+  duration_ms: 0.3043
+  ...
+# Subtest: home restores exactly the same camera pose after panning, zooming and an active raid in every biome
+ok 9 - home restores exactly the same camera pose after panning, zooming and an active raid in every biome
+  ---
+  duration_ms: 43.7053
+  ...
+# Subtest: walls allow building-edge intersections and partial fluid contact, but reject fully enclosed or submerged pieces
+ok 10 - walls allow building-edge intersections and partial fluid contact, but reject fully enclosed or submerged pieces
+  ---
+  duration_ms: 2.6685
+  ...
+# Subtest: gran-rio/suajili: a native submerged center is rejected without charging or modifying the world
+ok 11 - gran-rio/suajili: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 35.3597
+  ...
+# Subtest: gran-rio/etiope: a native submerged center is rejected without charging or modifying the world
+ok 12 - gran-rio/etiope: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 8.5889
+  ...
+# Subtest: gran-rio/mapungubwe: a native submerged center is rejected without charging or modifying the world
+ok 13 - gran-rio/mapungubwe: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 6.394
+  ...
+# Subtest: gran-rio/saheliana: a native submerged center is rejected without charging or modifying the world
+ok 14 - gran-rio/saheliana: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 9.5696
+  ...
+# Subtest: gran-rio/musgum: a native submerged center is rejected without charging or modifying the world
+ok 15 - gran-rio/musgum: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 12.1164
+  ...
+# Subtest: volcanes/suajili: a native submerged center is rejected without charging or modifying the world
+ok 16 - volcanes/suajili: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 5.4124
+  ...
+# Subtest: volcanes/etiope: a native submerged center is rejected without charging or modifying the world
+ok 17 - volcanes/etiope: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 10.9464
+  ...
+# Subtest: volcanes/mapungubwe: a native submerged center is rejected without charging or modifying the world
+ok 18 - volcanes/mapungubwe: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 5.0169
+  ...
+# Subtest: volcanes/saheliana: a native submerged center is rejected without charging or modifying the world
+ok 19 - volcanes/saheliana: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 6.3954
+  ...
+# Subtest: volcanes/musgum: a native submerged center is rejected without charging or modifying the world
+ok 20 - volcanes/musgum: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 6.0934
+  ...
+# Subtest: suajili/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 21 - suajili/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 48.6897
+  ...
+# Subtest: suajili/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 22 - suajili/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 8.6127
+  ...
+# Subtest: etiope/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 23 - etiope/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 8.0275
+  ...
+# Subtest: etiope/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 24 - etiope/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 21.225
+  ...
+# Subtest: mapungubwe/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 25 - mapungubwe/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 4.5185
+  ...
+# Subtest: mapungubwe/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 26 - mapungubwe/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 5.593
+  ...
+# Subtest: saheliana/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 27 - saheliana/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 12.2804
+  ...
+# Subtest: saheliana/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 28 - saheliana/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 22.1879
+  ...
+# Subtest: musgum/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 29 - musgum/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 10.3382
+  ...
+# Subtest: musgum/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 30 - musgum/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 6.8855
+  ...
+# Subtest: interior ponds, corner overlap, collisions and maximum relocation are respected
+ok 31 - interior ponds, corner overlap, collisions and maximum relocation are respected
+  ---
+  duration_ms: 54.2344
+  ...
+# Subtest: dry surfaces remain buildable despite conservative scatter exclusion; slope and collisions still reject
+ok 32 - dry surfaces remain buildable despite conservative scatter exclusion; slope and collisions still reject
+  ---
+  duration_ms: 3.0801
+  ...
+# Subtest: suajili: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 33 - suajili: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 84.6255
+  ...
+# Subtest: etiope: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 34 - etiope: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 232.6706
+  ...
+# Subtest: mapungubwe: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 35 - mapungubwe: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 192.5756
+  ...
+# Subtest: saheliana: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 36 - saheliana: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 139.0554
+  ...
+# Subtest: musgum: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 37 - musgum: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 135.5915
+  ...
+# Subtest: suajili: native volcano opening remains playable with restored fluid restrictions
+ok 38 - suajili: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 831.8124
+  ...
+# Subtest: etiope: native volcano opening remains playable with restored fluid restrictions
+ok 39 - etiope: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 1006.8448
+  ...
+# Subtest: mapungubwe: native volcano opening remains playable with restored fluid restrictions
+ok 40 - mapungubwe: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 697.1236
+  ...
+# Subtest: saheliana: native volcano opening remains playable with restored fluid restrictions
+ok 41 - saheliana: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 1076.8243
+  ...
+# Subtest: musgum: native volcano opening remains playable with restored fluid restrictions
+ok 42 - musgum: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 788.7823
+  ...
+# Subtest: gran-rio/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 43 - gran-rio/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 47.469
+  ...
+# Subtest: gran-rio/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 44 - gran-rio/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 20.5495
+  ...
+# Subtest: gran-rio/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 45 - gran-rio/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 16.6962
+  ...
+# Subtest: gran-rio/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 46 - gran-rio/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 51.682
+  ...
+# Subtest: gran-rio/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 47 - gran-rio/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 28.1696
+  ...
+# Subtest: volcanes/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 48 - volcanes/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 24.2729
+  ...
+# Subtest: volcanes/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 49 - volcanes/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 18.7499
+  ...
+# Subtest: volcanes/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 50 - volcanes/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 13.1632
+  ...
+# Subtest: volcanes/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 51 - volcanes/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 48.0927
+  ...
+# Subtest: volcanes/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 52 - volcanes/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 21.6537
+  ...
+# Subtest: watering cannot bridge a canyon cliff even when horizontal coordinates are close
+ok 53 - watering cannot bridge a canyon cliff even when horizontal coordinates are close
+  ---
+  duration_ms: 4.9345
+  ...
+# Subtest: a saved watering action on the wrong elevation never irrigates or starts growth
+ok 54 - a saved watering action on the wrong elevation never irrigates or starts growth
+  ---
+  duration_ms: 31.8542
+  ...
+# Subtest: a legally planted native canyon plateau crop stays dormant without a physical worker route
+ok 55 - a legally planted native canyon plateau crop stays dormant without a physical worker route
+  ---
+  duration_ms: 9963.3268
+  ...
+# Subtest: olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 56 - olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 22.1382
+  ...
+# Subtest: olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 57 - olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 18.5025
+  ...
+# Subtest: youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 58 - youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 17.8387
+  ...
+# Subtest: youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 59 - youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 13.8744
+  ...
+# Subtest: watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+ok 60 - watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+  ---
+  duration_ms: 3.5682
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10637.2017

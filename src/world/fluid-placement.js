@@ -15,7 +15,7 @@ export function resolveFluidPlacement(nav,shapesAt,x,z,extraCheck=()=>null){
   const shapes=shapesAt(px,pz),checks=[];
   for(const shape of shapes){
    const check=nav.placementFootprint?nav.placementFootprint(shape):nav.placement(shape.x,shape.z,shape.radius);
-   checks.push(check.valid?(extraCheck(shape)??check):check);
+   const extra=extraCheck(shape);checks.push(extra?{...check,...extra}:check);
    if(!all&&!checks.at(-1).valid)break;
   }
   return {x:px,z:pz,shapes,checks,valid:checks.length===shapes.length&&checks.every(c=>c.valid)};

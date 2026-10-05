@@ -5,12 +5,12 @@ import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import * as Game from '../src/simulation/game.js';
 
-test('Musgum canyon retreat rejoins its original entry corridor and physically leaves before dawn, including reload',()=>{
+test('Musgum canyon retreat uses a valid river crossing and physically exits, including reload',()=>{
  let s=deserialize(readFileSync(new URL('./fixtures/canyon-retreat-musgum.json',import.meta.url),'utf8'));
  const profile=JSON.parse(readFileSync(new URL(`../public/content/biome-${BIOME_IDS[s.biome]}.json`,import.meta.url),'utf8')).profile;
  const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
  const initial=s.raid.animals.find(a=>a.status==='retreating'),exit={...initial.exit},radius=initial.radius;
- assert.equal(nav.path(initial,exit,radius,null,false,64),null);
+ assert.ok(nav.path(initial,exit,radius,null,false,64),'the restored canyon water permission allows a direct retreat route');
  assert.ok(nav.path(initial,initial.spawn,radius,null,false));
  assert.ok(nav.segmentClear(initial.spawn,exit,radius,null,false));
  const money=structuredClone(s.ledger.balance),hits=s.events.filter(e=>e.type==='AnimalLogicalHit').length,ended=s.events.filter(e=>e.type==='RaidEnded').length;

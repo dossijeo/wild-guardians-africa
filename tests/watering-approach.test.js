@@ -28,14 +28,16 @@ for(const profile of ['olderMale','olderFemale','youngMale','youngFemale'])test(
  assert.equal(serialize(loaded),serialize(s));assert.equal(plant.water[0].status,'manual');assert.equal(s.events.filter(e=>e.type==='WaterSatisfied').length,1);
 });
 
-test('watering approaches avoid solid obstacles, allow fluid and reject inaccessible slopes',()=>{
+test('watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes',()=>{
  const s=Game.newGame({seed:712,slotId:'obstacle-approach'}),nav=flat(s),plant={id:'crop',x:0,z:0,species:'platano'},worker={x:0,z:3};
  nav.obstacles=[{id:'rock',kind:'house',x:0,z:1.03,radius:.3}];
  const route=wateringRoute(worker,plant,nav);assert.ok(route);assert.notEqual(route.destination.x,0);assert.ok(Math.hypot(route.destination.x,route.destination.z)>1);
  let previous=worker;for(const point of route.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
  nav.field={blocked:()=>true,slope:()=>0,surface:()=>0};nav.walkCache.clear();
+ nav.segmentCache.clear();nav.failedPaths.clear();assert.equal(wateringRoute(worker,plant,nav),null);
+ nav.field.canyon=true;nav.field.riverLevel=.2;nav.field.waterInfo=()=>({inside:true,level:.2});nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
  const fluidRoute=wateringRoute(worker,plant,nav);assert.ok(fluidRoute);
  previous=worker;for(const point of fluidRoute.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
- nav.field.slope=()=>.6;nav.walkCache.clear();nav.segmentCache.clear();
+ nav.field.canyon=false;nav.field.waterInfo=()=>({inside:false});nav.field.slope=()=>.6;nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
  assert.equal(wateringRoute(worker,plant,nav),null);
 });

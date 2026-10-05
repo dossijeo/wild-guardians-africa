@@ -26,8 +26,8 @@ test('home restores exactly the same camera pose after panning, zooming and an a
   assert.deepEqual(world.camera.position.toArray(),eye);assert.deepEqual(world.controls.target.toArray(),target);assert.equal(cancelled,2);assert.equal(world.controls.enableDamping,true);assert.equal(JSON.stringify(state),before);
  }
 });
-test('walls only reject pieces fully inside buildings, allowing edge intersections, water and lava',()=>{
- const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>true,slope:()=>2,surface:()=>0};nav.propsAt=()=>[];
+test('walls allow building-edge intersections and partial fluid contact, but reject fully enclosed or submerged pieces',()=>{
+ const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>true,waterInfo:()=>({inside:false}),slope:()=>2,surface:()=>0};nav.propsAt=()=>[];
  nav.obstacles=[{kind:'house',footprint:[{x:-3,z:-3},{x:3,z:-3},{x:3,z:3},{x:-3,z:3}]}];
  const wall={kind:'wall',x:0,z:0,yaw:0,material:'zarzas'};
  assert.equal(nav.wallPlacement(wall).valid,false);
@@ -35,4 +35,5 @@ test('walls only reject pieces fully inside buildings, allowing edge intersectio
  assert.equal(nav.wallPlacement({...wall,x:10}).valid,true);
  assert.equal(nav.placement(10,0,.4).valid,false);
  for(const yaw of [0,.5,Math.PI/2])assert.equal(nav.wallPlacement({...wall,yaw}).valid,false);
+ nav.field.waterInfo=x=>({inside:x>10});assert.equal(nav.wallPlacement({...wall,x:10}).valid,true);assert.equal(nav.wallPlacement({...wall,x:14}).valid,false);
 });
