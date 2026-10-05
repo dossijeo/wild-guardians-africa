@@ -1,0 +1,18 @@
+/* Shared production controls; illustrated frames retain their native artwork. */
+:root{--wg-ink:#203629;--wg-paper:#f7efd9;--wg-gold:#ebc57b;--wg-forest:#213a2a;--wg-border:#bca57c;--wg-primary-start:#839452;--wg-primary-end:#63763f;--wg-control-radius:9px;--wg-panel-radius:14px;--wg-body-font:'Banga',sans-serif;--wg-title-font:'Ga Maamli',serif}
+body :is(button,input,select,textarea){font-family:var(--wg-body-font);font-synthesis:none}
+body button{touch-action:manipulation;line-height:1.2}
+body :is(button,input,select,textarea):focus-visible{outline:3px solid var(--wg-gold);outline-offset:3px}
+body button:disabled{cursor:default;opacity:.45}
+body :is(.primary,.secondary,.confirm-button,.secondary-button,.back-button,.dialog-actions button,.context button):not(:disabled):active{transform:translateY(1px)}
+body :is(.primary,.secondary,.confirm-button,.secondary-button,.back-button,.wood-button,.dialog-actions button,.context button){min-height:44px;border-radius:var(--wg-control-radius);font-weight:700}
+body :is([data-back],.text-button){min-height:44px}
+body :is(.round-button,.iconbutton){min-width:44px;min-height:44px}
+body :is(.primary,.confirm-button),body .dialog-actions button:not(.secondary):not(.ghost){background:linear-gradient(var(--wg-primary-start),var(--wg-primary-end));color:#fff0ca;border:1px solid #5b6b36;text-shadow:0 1px #47512d}
+#stage.portrait .hire-confirm{min-height:44px}
+body :is(.secondary,.secondary-button){background-color:var(--wg-forest);color:var(--wg-paper);border-color:var(--wg-border)}
+body :is(.dialog,.context){border-radius:var(--wg-panel-radius);border-color:var(--wg-border);color:var(--wg-ink)}
+body :is(.dialog,.context) :is(h1,h2,h3){font-family:var(--wg-title-font);font-weight:400}
+body .dialog-actions{gap:10px;flex-wrap:wrap}
+body .dialog-actions button{flex-shrink:0}
+@media(prefers-reduced-motion:reduce){body button{transition:none}body :is(.primary,.secondary,.confirm-button,.secondary-button,.back-button,.dialog-actions button,.context button):not(:disabled):active{transform:none}}

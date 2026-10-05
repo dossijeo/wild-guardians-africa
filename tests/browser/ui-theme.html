@@ -1,0 +1,10 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Production UI theme QA</title><link rel="stylesheet" href="/content/fonts.css"><link rel="stylesheet" href="/content/hud.css"><link rel="stylesheet" href="/src/ui/styles.css"><link rel="stylesheet" href="/ui-theme.css"></head><body><main id="stage" class="game"></main><script type="module">
+import {hudMarkup,hiringMarkup,ASSETS,layoutHud,framePaint} from '/src/ui/native-hud.js';
+const stage=document.querySelector('#stage');
+stage.innerHTML=hudMarkup+'<div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"><div class="overlay native-hiring">'+hiringMarkup({day:1,clock:'08:00',hiring:{hasPrevious:false,draft:[0,0,0,0]}})+'</div></div>';
+for(const sprite of stage.querySelectorAll('[data-sprite]'))sprite.src=ASSETS[sprite.dataset.sprite].src;
+const art=Object.fromEntries(await Promise.all(Object.entries(ASSETS).map(async([id,asset])=>{const image=new Image();image.src=asset.src;await image.decode();return [id,image];})));
+function layout(){const dims=layoutHud(stage);framePaint(stage.querySelector('.hiring-panel'),dims,art);}
+for(const [id,value] of [['hireAvailable','1500'],['hireCost','0'],['hireBalance','1500']])document.getElementById(id).textContent=value;
+layout();addEventListener('resize',layout);document.title='Production UI theme QA — ready';
+</script></body></html>
