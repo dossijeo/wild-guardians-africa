@@ -69,8 +69,9 @@ maximum difference 9.094947017729282e-13) and
 maximum difference zero). No sample exceeds the unchanged 1e-7 threshold.
 
 The native-world dawn diagnostic now reports window ownership rather than
-assuming every loaded descriptor has a full-track buffer. Its fresh execution
-is still pending; the older full-buffer world report retains its original
-scope. The original PCM diagnostic explicitly selects the reference route,
+assuming every loaded descriptor has a full-track buffer. Its fresh native
+workday, first incursion and A-to-B dawn pass on d1b5763; see
+[native-world-dawn.md](native-world-dawn.md) for its measured scope. The older
+full-buffer world report retains its original scope. The original PCM diagnostic explicitly selects the reference route,
 and the mixer diagnostic reads gains by logical track ID instead of assuming
 one source per stem in array order.

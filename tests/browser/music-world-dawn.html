@@ -13,7 +13,7 @@ import {serialize} from '../../src/persistence/snapshots.js';
 const status=document.querySelector('#status'),output=document.querySelector('#report');
 const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[],seen=new Set();
 const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0};
-let state,nav,world,phase='setup';
+let state,nav,world,lastTransport,lastPack,phase='setup';
 const assert=(v,message)=>{if(!v)throw Error(message);},flush=()=>new Promise(done=>setTimeout(done,0));
 const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
 const fail=e=>{errors.push(String(e.message??e));phase='failed';status.textContent='FAIL: '+errors.join(' · ');audio.stop();paint();};
@@ -23,6 +23,8 @@ function observe(){
  for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);result.events[e.type]=(result.events[e.type]??0)+1;}
  const before=serialize(state),listener=world.controls.target;
  audio.process(state.events,{state,listener});audio.updateMusic(state);audio.updateUnlocks(state);
+ assert(!audio.musicError,audio.musicError?.message??'Music error');
+ if(audio.transport){assert(lastPack!==audio.pack||!lastTransport||lastTransport===audio.transport,'Unexpected music transport restart');lastTransport=audio.transport;lastPack=audio.pack;}
  audio.updateAmbient(state,{listener,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});
  audio.updateWorkers(state,{listener});audio.updateWork(state,{listener});audio.updateFarm(state,{listener});audio.updateAnimals(state,{listener});audio.updateMovement(state,{listener,surfaceAt:world.movementSurfaceAt});
  assert(serialize(state)===before,'Presentation changes domain');
@@ -58,7 +60,7 @@ document.querySelector('#run').onclick=async()=>{
   }
   assert(state.day===2&&!state.result&&state.completedNights===1&&!state.raid,'First night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
   assert(result.events.CrateDelivered===1,'Paid crop delivery absent or repeated');assert(result.events.RaidSpawned===1&&result.events.RaidEnded===1,'Native incursion absent');
-  phase='music-b';status.textContent='Amanecer: cargando B original…';const dawn=serialize(state);observe();await loaded('b');observe();history.push(capture());
+  phase='music-b';status.textContent='Amanecer: cargando ventanas B…';const dawn=serialize(state);observe();await loaded('b');observe();history.push(capture());
   assert(serialize(state)===dawn,'Music changes paused dawn');assert(history[1].transport==='MusicWindowTransport','B did not select validated windows');assert(new Set(history[1].stems.map(s=>s.id)).size===8,'B audible group absent');
   assert(audio.voices.has(wind)&&audio.ambient.entries.get('wind').source===wind,'Daily music replaced native wind');
   assert(oldUrls.every(url=>!audio.buffers.has(url))&&oldPool.disposed&&oldPool.pcmBytes()===0,'Old music pack retained');result.windPreserved=true;result.oldPackEvicted=true;
