@@ -5,7 +5,7 @@ import {numberOf} from '../src/simulation/money.js';
 for(const profile of ['olderMale','olderFemale','youngMale','youngFemale']){
   test(`${profile}: eight original-terrain crops pay only their physical deliveries and permit dawn hiring`,()=>{
     const report=simulateOpening(profile,8),wage=profile.startsWith('young')?40:30;
-    const value=profile.endsWith('Male')?11:9;
+    const value=profile.endsWith('Male')?14:11;
     assert.equal(report.initialBalance,1500-800-8*5-wage);
     assert.equal(report.plots,8);assert.ok(report.delivered>0&&report.delivered<=8);
     assert.equal(report.money,report.initialBalance+report.delivered*value);

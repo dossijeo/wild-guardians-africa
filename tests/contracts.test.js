@@ -26,7 +26,7 @@ test('A harvest begun before shift end completes its native action and physical 
   assert.equal(plant.alive,false);assert.equal(worker.status,'carrying');assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),1070);
   Game.tick(s,300,nav);assert.equal(s.day,102);assert.equal(worker.status,'carrying');assert.ok(worker.x>7.2);
   const loaded=deserialize(serialize(s));Game.hire(loaded,'hire-next',{});Game.tick(loaded,100,nav);
-  assert.equal(loaded.crates[0].delivered,true);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1079);
+  assert.equal(loaded.crates[0].delivered,true);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1081);
   assert.equal(loaded.events.filter(e=>e.type==='CropPicked').length,1);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('A delivery crossing dawn retains its carrier, position and unpaid value through zero hiring and reload',()=>{

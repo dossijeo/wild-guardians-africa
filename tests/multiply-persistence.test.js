@@ -22,10 +22,10 @@ for(const reloadAt of ['none','active','expired','carrying'])test(`marked sprout
  until(s,nav,()=>s.crates.length===1);
  assert.equal(s.plants[0].alive,false);assert.equal(s.plants[0].multiplyHarvest,false);
  assert.equal(s.plants[0].water.every(w=>w.status==='manual'),true);
- assert.equal(numberOf(s.crates[0].value),18);assert.equal(s.crates[0].delivered,false);assert.equal(numberOf(s.ledger.balance),cash);
+ assert.equal(numberOf(s.crates[0].value),22);assert.equal(s.crates[0].delivered,false);assert.equal(numberOf(s.ledger.balance),cash);
  if(reloadAt==='carrying'){s=deserialize(serialize(s));nav.setState(s);}
- until(s,nav,()=>s.crates[0].delivered,60);assert.equal(numberOf(s.ledger.balance),cash+18);
- Game.tick(s,10,nav);assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),cash+18);
+ until(s,nav,()=>s.crates[0].delivered,60);assert.equal(numberOf(s.ledger.balance),cash+22);
+ Game.tick(s,10,nav);assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),cash+22);
  assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('exposure includes new sprouts during the active interval, but neither outside nor after expiry',()=>{
@@ -61,5 +61,5 @@ test('repeated casts mark the same slow-growing crop without stacking beyond dou
  s.nightPlan={done:true,group:[]};s.eventPlan=null;Game.tick(s,300,nav);
  Game.hire(s,'next-day',{olderFemale:1});s.dayPlan={done:true};
  until(s,nav,()=>s.crates.some(c=>c.sourcePlantId===p.id),295);
- const crate=s.crates.find(c=>c.sourcePlantId===p.id);assert.equal(numberOf(crate.value),56);
+ const crate=s.crates.find(c=>c.sourcePlantId===p.id);assert.equal(numberOf(crate.value),64);
 });

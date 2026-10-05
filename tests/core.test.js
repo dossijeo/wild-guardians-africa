@@ -10,8 +10,10 @@ import {enqueue,reserveTasks,releaseTask} from '../src/simulation/tasks.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
 import {newGame} from '../src/simulation/game.js';
 
-test('Original balance preserves unrelated values with explicit approved wage, raid and damage revisions',()=>{
+test('Original balance preserves unrelated values with explicit player revisions and post-jam harvest margins',()=>{
  const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
+ const harvest={mijo:11,girasol:36,sorgo:13,maiz:17,batata:23,algodon:178,yuca:32,platano:267};
+ original.crops.forEach(c=>{c.base_harvest_value=harvest[c.id];});
  original.initial_money=1500;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];});
  original.workers.older_wage=30;original.workers.young_wage=40;
@@ -79,8 +81,8 @@ test('FIFO chooses oldest task, proximity chooses its worker and reserves atomic
   reserveTasks(s);assert.equal(s.tasks.length,2);releaseTask(s,s.workers[1]);assert.equal(first.workerId,null);
 });
 test('Threat boundaries and attraction are live plant base values',()=>{
-  assert.equal(attraction(Array.from({length:20},()=>({species:'mijo',alive:true}))),180);
-  assert.equal(attraction(Array.from({length:10},()=>({species:'platano',alive:true}))),2400);
+  assert.equal(attraction(Array.from({length:20},()=>({species:'mijo',alive:true}))),220);
+  assert.equal(attraction(Array.from({length:10},()=>({species:'platano',alive:true}))),2670);
   assert.equal(threatTier(0).threat_max,2);assert.equal(threatTier(99).threat_max,2);assert.equal(threatTier(100).threat_max,4);assert.equal(threatTier(2000).night_attack_probability,1);
 });
 test('Every reachable threat budget has unique legal unordered compositions',()=>{
