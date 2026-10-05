@@ -33,6 +33,9 @@ export function prepareActorMotion(state,actor,nav,worker){
   const horizon=Math.max(4,...blockers.map(b=>2*(radius(actor)+radius(b))+.2));
   let look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
   const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
+  // Skipping occupied bends creates a new connector. Its tail beyond the
+  // local lookahead must also be clear before it can replace the saved route.
+  if(rejoin&&look<length&&!staticClear(goal,next)){look=length;goal={x:next.x,z:next.z};}
   if(clear(actor,goal)&&(!rejoin||staticClear(actor,goal))){
     // A later waypoint can be clear while the retained first waypoint is inside
     // another actor. Commit the safe rejoin instead of repeatedly waiting at it.

@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: opposed animals route around each other when both short lookahead goals are occupied
+ok 1 - opposed animals route around each other when both short lookahead goals are occupied # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.8524
+  ...
+# Subtest: recorded five-animal Musgum traffic clears without overlapping bodies or changing destination
+ok 2 - recorded five-animal Musgum traffic clears without overlapping bodies or changing destination # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1539
+  ...
+# Subtest: rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+ok 3 - rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+  ---
+  duration_ms: 11.1221
+  ...
+# Subtest: warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 4 - warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1564
+  ...
+# Subtest: hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 5 - hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1623
+  ...
+# Subtest: buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 6 - buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1384
+  ...
+# Subtest: lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 7 - lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1168
+  ...
+# Subtest: rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 8 - rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3091
+  ...
+# Subtest: An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+ok 9 - An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1692
+  ...
+# Subtest: Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+ok 10 - Workers avoid a retreating beast in both movement directions and charge only travelled running metres # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3116
+  ...
+# Subtest: A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+ok 11 - A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1397
+  ...
+# Subtest: Two native animals crossing opposite ways maintain separation and both finish
+ok 12 - Two native animals crossing opposite ways maintain separation and both finish # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1155
+  ...
+# Subtest: Saving midway through a detour preserves its route and deterministic motion
+ok 13 - Saving midway through a detour preserves its route and deterministic motion # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1076
+  ...
+# Subtest: Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+ok 14 - Physical clearance preserves active encounters but protects incapacitated people and exhausted states # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1953
+  ...
+# Subtest: Legacy overlaps may escape continuously but cannot move deeper or across the other body
+ok 15 - Legacy overlaps may escape continuously but cannot move deeper or across the other body # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1166
+  ...
+# Subtest: Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+ok 16 - Crowded crop approaches are recomputed outside the other native bodies and the raid completes # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1349
+  ...
+# Subtest: Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping
+ok 17 - Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2492
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 16
+# todo 0
+# duration_ms 247.7749

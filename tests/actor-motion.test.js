@@ -49,6 +49,28 @@ function fixture(species='warthog'){
   nav.walkCache=new Map();nav.segmentCache=new Map();nav.failedPaths=new Set();nav.closedRegions=new Map();nav.chunks=new Map();nav.setState(state);
   return {state,animal,worker,nav};
 }
+test('rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building',()=>{
+ const {state,animal,nav}=fixture();state.workers=[];
+ Object.assign(animal,{id:'traveller',x:0,z:0,radius:.5,status:'retreating',hitsRemaining:0,path:[{x:1,z:3},{x:5,z:3},{x:8,z:0}],destinationId:'finish',pathVersion:nav.version});
+ const others=[{id:'body-a',x:1,z:3},{id:'body-b',x:5,z:3}].map(a=>({...a,radius:.8,status:'walking',hitsRemaining:3,path:null}));
+ state.raid.animals.push(...others);
+ nav.obstacles=[{id:'solid-building',kind:'house',footprint:[{x:5,z:-.5},{x:6,z:-.5},{x:6,z:.5},{x:5,z:.5}]}];
+ const target={id:'finish',x:8,z:0};
+ let previous={x:animal.x,z:animal.z};
+ for(const point of animal.path){assert.ok(nav.segmentClear(previous,point,.5,null,false),'The original bent route is valid');previous=point;}
+ for(let step=0;step<30;step++){
+  const before={x:animal.x,z:animal.z};walkTo(state,animal,target,.1,nav,{speed:3.8,worker:false});
+  assert.ok(nav.segmentClear(before,animal,.5,null,false),'The unchecked tail of a shortcut must not cross the building');
+  assert.ok(actorSegmentClear(before,animal,animal,others));
+ }
+ for(const other of others)other.status='gone';
+ let arrived=false;
+ for(let step=0;step<100&&!arrived;step++){
+  const before={x:animal.x,z:animal.z};arrived=walkTo(state,animal,target,.1,nav,{speed:3.8,worker:false});
+  assert.ok(nav.segmentClear(before,animal,.5,null,false));assert.ok(Math.hypot(animal.x-before.x,animal.z-before.z)<=.38+1e-8);
+ }
+ assert.ok(arrived);assert.deepEqual({x:animal.x,z:animal.z},{x:8,z:0});
+});
 for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhausted native body detours around a worker without a hit, speed increase or invalid segment`,()=>{
   const {state,animal,worker,nav}=fixture(species),destination={id:'exit',x:4,z:0},rng=state.rng,events=state.events.length;
   let arrived=false,detoured=false;

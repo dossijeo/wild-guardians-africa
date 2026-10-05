@@ -1,0 +1,21 @@
+{
+  "source": "test-results/intensive-corners-fc3c138-river-100",
+  "sha256": "a989c6dacdfe4afde6eb136f9ad3ba8e1eb8b9d21d67b02c981d6a6612305627",
+  "rawBytes": 5215060,
+  "day": 64,
+  "remaining": [
+    {
+      "id": "animal-88204",
+      "species": "buffalo",
+      "x": 86.54676456753897,
+      "z": -1.8773127447132976,
+      "status": "retreating",
+      "path": null,
+      "walkable": false,
+      "insideBuilding": [
+        "structure-2"
+      ]
+    }
+  ],
+  "scope": "Recorded night-64 failure; the actor is already inside an intact center. The regression proves an unsafe retained-shortcut mechanism, not the exact earlier frame that produced this snapshot."
+}
