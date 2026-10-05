@@ -1,4 +1,5 @@
-import {nativeWallLayout,simplify,smoothPath,resample,WALL_UNIT} from './wall-layout-native.js';
+import {nativeWallLayout,smoothPath,WALL_UNIT} from './wall-layout-native.js';
+import {resampleWallStroke as resample,simplifyWallStroke as simplify} from './wall-stroke-sampling.js';
 export {WALL_UNIT};
 export const gateScale=material=>({adobe:1.4,piedra:1.4,reforzado:1.6}[material]??1);
 export function wallLayout(structures,hp){

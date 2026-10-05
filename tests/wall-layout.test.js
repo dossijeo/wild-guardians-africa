@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import {wallStroke,wallLayout} from '../src/world/wall-layout.js';
 import {nativeWallLayout,resample} from '../src/world/wall-layout-native.js';
+import {resampleWallStroke,simplifyWallStroke} from '../src/world/wall-stroke-sampling.js';
 import * as Game from '../src/simulation/game.js';
 import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -12,7 +13,7 @@ const manifest=JSON.parse(readFileSync(new URL('../content/manifests/wall-layout
 const source=readFileSync(new URL('../'+manifest.source,import.meta.url),'utf8');
 const methods=source.slice(source.indexOf(' endpoints(p){'),source.indexOf(' beginCollapse(')).replace('\n closedFaces(){',',\n closedFaces(){').replace('\n ensureAutomaticGates(){',',\n ensureAutomaticGates(){');
 const context=vm.createContext({});
-vm.runInContext("const UNIT=2.18,clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]),gateScale=(m,k)=>k==='gate'?({adobe:1.4,piedra:1.4,reforzado:1.6}[m]||1):1;"+source.slice(source.indexOf('function pointSegment('),source.indexOf('class BastionApp'))+'this.sample=resample;this.layout={'+methods+'};',context);
+vm.runInContext("const UNIT=2.18,clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]),gateScale=(m,k)=>k==='gate'?({adobe:1.4,piedra:1.4,reforzado:1.6}[m]||1):1;"+source.slice(source.indexOf('function pointSegment('),source.indexOf('class BastionApp'))+'this.sample=resample;this.simplifyNative=simplify;this.layout={'+methods+'};',context);
 const hp={zarzas:100,empalizada:200,adobe:300,piedra:500,reforzado:400};
 const square=[[0,0],[8,0],[8,8],[0,8],[0,0]];
 function flat(){const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];return nav;}
@@ -106,4 +107,22 @@ test('Removing a reserved repair releases its worker and refunds the removed pie
   const worker={id:'qa-worker',taskId:'qa-task',status:'acting',path:[{x:1,z:0}],taskApproach:{x:1,z:0}};
   state.workers.push(worker);state.tasks.push({id:'qa-task',targetId:wall.id,workerId:worker.id});const balance=state.ledger.balance.n;
   Game.removeWall(state,'remove',wall.id,nav);assert.equal(worker.taskId,null);assert.equal(worker.taskApproach,null);assert.equal(worker.path,null);assert.equal(worker.status,'idle');assert.equal(state.tasks.length,0);assert.equal(Number(state.ledger.balance.n),Number(balance)+10);
+});
+
+
+test('one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths',()=>{
+ const cases=[[],[[0,0]],[[0,0],[0,0]],[[0,0],[.149,0]],[[0,0],[.15,0]],[[0,0],[2.18,0]],square];
+ let seed=712;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+ for(let trial=0;trial<30;trial++){
+  const path=[[trial*4096,-trial*4096]];
+  for(let i=1;i<3000;i++){const p=path.at(-1);path.push(i%11===0?[...p]:[p[0]+(random()-.3)*.8,p[1]+(random()-.5)*.8]);}
+  if(trial%2===0)path.push([...path[0]]);cases.push(path);
+ }
+ for(const points of cases){
+  const before=structuredClone(points),expected=JSON.stringify(context.sample(points));
+  assert.equal(JSON.stringify(resampleWallStroke(points)),expected);
+  for(const epsilon of [0,.12,.13,.8])assert.equal(JSON.stringify(simplifyWallStroke(points,epsilon)),JSON.stringify(context.simplifyNative(points,epsilon)));
+  assert.deepEqual(points,before);
+ }
+ assert.equal(resampleWallStroke([[0,0],[10000,0]]).length,350);
 });
