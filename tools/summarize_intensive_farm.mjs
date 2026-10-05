@@ -47,6 +47,7 @@ export function summarizeIntensiveFarm(report){
     provenance:report.provenance??null,
     policy:report.policy,
     additionalHiring:report.additionalHiring??null,
+    defense:report.defense??null,
     campaign100:report.result==='victory'&&report.completedNights===100?'verified':'unverified',
     completedNights:report.completedNights,daysObserved:days,money:report.money,
     maximumLiving:report.maximumLiving,speciesObserved:Object.keys(bySpecies).length,bySpecies,
