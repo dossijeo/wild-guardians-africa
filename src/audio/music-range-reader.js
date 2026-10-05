@@ -18,10 +18,16 @@ export function musicRangeReader({fetch=globalThis.fetch,caches=globalThis.cache
   }
   async function readRange(source,start,end){
     if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||end<=start)throw Error('Invalid music byte window');
-    const url=resolve(source),cache=await storage;
+    const url=resolve(source);let cache=await storage,stored;
+    if(cache)try{stored=await cache.match(url);}
+    catch{storage=Promise.resolve(null);cache=null;}
     if(cache){
-      let stored=await cache.match(url);
-      if(!stored){const fallback=await fill(url,cache);if(fallback)return fallback.slice(start,end).arrayBuffer();stored=await cache.match(url);}
+      if(!stored){
+        const fallback=await fill(url,cache);
+        if(fallback){if(end>fallback.size)throw Error('Music file is truncated');return fallback.slice(start,end).arrayBuffer();}
+        try{stored=await cache.match(url);}
+        catch{storage=Promise.resolve(null);}
+      }
       if(stored){stats.diskReads++;const file=await stored.blob();if(end>file.size)throw Error('Cached music file is truncated');return file.slice(start,end).arrayBuffer();}
     }
     stats.networkReads++;const response=await fetch(url,{headers:{Range:`bytes=${start}-${end-1}`}});

@@ -16,6 +16,11 @@ Original compressed MP3 files are stored in the existing Cache Storage disk
 cache. Subsequent windows read compressed slices from it. A first uncached
 track downloads its compressed file; unavailable storage uses HTTP ranges.
 No MP3 re-encoding or whole-track PCM is used on this selected route.
+If Cache Storage becomes unreadable after opening or after its first write,
+the reader disables it and uses validated HTTP byte ranges for subsequent
+windows. A quota fallback also rejects a truncated compressed file before
+decoding. Dedicated regressions cover those failures without treating corrupt
+cached content as valid audio.
 The decoder shares the same two-job queue across pack replacements; stale
 queued windows are skipped and disposed pools cannot retain late results.
 
