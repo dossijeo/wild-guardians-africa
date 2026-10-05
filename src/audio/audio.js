@@ -126,7 +126,7 @@ export class AudioSystem {
       if(this.pack!==pack||generation!==this.musicGeneration)return;
       const current=()=>this.pack===pack&&generation===this.musicGeneration;
       this.musicLoads??=new MusicLoadQueue();
-      // Aligned original MP3 ranges are validated at both common native rates.
+      // Prepared byte windows are validated at both common native rates.
       // Other rates retain the original route until their resampling is checked.
       if(bank.navigation?.sections?.length&&[44100,48000].includes(this.context.sampleRate)&&this.resources.musicWindows!==false){
         await startWindowMusic(this,pack,bank,current);return;

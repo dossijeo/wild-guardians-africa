@@ -1,0 +1,108 @@
+{
+  "results": [
+    {
+      "rate": 48000,
+      "day": 1,
+      "codec": "ogg-opus-recipe",
+      "activeSources": 8,
+      "windowPcmBytes": 18596352,
+      "decodedKeys": [
+        "s1:0",
+        "s0:0",
+        "s2:0",
+        "s3:0",
+        "s4:0",
+        "s6:0",
+        "s8:0",
+        "s9:0"
+      ],
+      "decodes": 8,
+      "reader": {
+        "diskReads": 8,
+        "networkReads": 8
+      },
+      "nestedUrls": true,
+      "released": true
+    },
+    {
+      "rate": 48000,
+      "day": 2,
+      "codec": "ogg-opus-recipe",
+      "activeSources": 8,
+      "windowPcmBytes": 18596352,
+      "decodedKeys": [
+        "s1:0",
+        "s2:0",
+        "s4:0",
+        "s3:0",
+        "s5:0",
+        "s7:0",
+        "s8:0",
+        "s9:0"
+      ],
+      "decodes": 16,
+      "reader": {
+        "diskReads": 16,
+        "networkReads": 16
+      },
+      "nestedUrls": true,
+      "released": true
+    },
+    {
+      "rate": 44100,
+      "day": 1,
+      "codec": "ogg-opus-recipe",
+      "activeSources": 8,
+      "windowPcmBytes": 17085376,
+      "decodedKeys": [
+        "s1:0",
+        "s0:0",
+        "s2:0",
+        "s3:0",
+        "s6:0",
+        "s4:0",
+        "s8:0",
+        "s9:0"
+      ],
+      "decodes": 8,
+      "reader": {
+        "diskReads": 8,
+        "networkReads": 0
+      },
+      "nestedUrls": true,
+      "released": true
+    },
+    {
+      "rate": 44100,
+      "day": 2,
+      "codec": "ogg-opus-recipe",
+      "activeSources": 8,
+      "windowPcmBytes": 17085376,
+      "decodedKeys": [
+        "s2:0",
+        "s1:0",
+        "s3:0",
+        "s4:0",
+        "s7:0",
+        "s5:0",
+        "s8:0",
+        "s9:0"
+      ],
+      "decodes": 16,
+      "reader": {
+        "diskReads": 16,
+        "networkReads": 0
+      },
+      "nestedUrls": true,
+      "released": true
+    },
+    {
+      "menu": true,
+      "url": "http://127.0.0.1:4176/nested/itch/audio-qa/assets/audio/419dd42ea4cf8a3aa5b8b5b62d8315a7ff49217b3061a61d071daf671fb78bf5.opus",
+      "streaming": true,
+      "currentTime": 1.210667,
+      "fullPcmBuffers": 0
+    }
+  ],
+  "errors": []
+}

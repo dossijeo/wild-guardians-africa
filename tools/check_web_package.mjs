@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {publicText} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -7,6 +9,25 @@ async function collect(dir){for(const name of await readdir(dir)){const path=res
 await collect(root);
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
 for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
+const audioManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
+const sha=data=>createHash('sha256').update(data).digest('hex');
+assert.equal(audioManifest.records.filter(r=>r.kind==='music').length,21);
+assert.equal(audioManifest.records.filter(r=>r.kind==='music-index').length,2);
+for(const item of audioManifest.records){
+ assert(!await exists(resolve(root,item.source)),'Original musical resource duplicated: '+item.source);
+ assert(await exists(resolve(root,item.runtime)),'Runtime musical resource missing: '+item.runtime);
+ const packaged=await readFile(resolve(root,item.runtime));
+ if(item.kind==='music')assert.equal(sha(packaged),item.runtimeSha256,'Runtime music bytes changed: '+item.runtime);
+ else assert.equal(packaged.toString('utf8'),publicText(await readFile(resolve('public',item.runtime),'utf8'),item.runtime,audioManifest),'Musical index changed beyond relative routes');
+}
+for(const pack of ['a','b']){
+ const index=JSON.parse(await readFile(resolve(root,`content/music-opus-windows-${pack}.json`),'utf8'));
+ for(const track of index.tracks){
+  assert.equal(track.url,track.fullUrl,'Windows and compatibility must share one resource');
+  assert(!track.url.startsWith('/'),'Root musical route in web package');
+  assert(await exists(resolve(root,track.url)),'Missing Opus window source');
+ }
+}
 async function walk(dir){for(const name of await readdir(dir)){const path=resolve(dir,name),info=await stat(path);if(info.isDirectory()){await walk(path);continue;}files++;bytes+=info.size;
  if(!['.html','.css','.json'].includes(extname(path)))continue;
  const text=await readFile(path,'utf8');assert(!/(?:src|href)=["']\/(?!\/)/.test(text),'Root HTML route in '+path);assert(!/url\(["']?\/(?!\/)/.test(text),'Root CSS route in '+path);

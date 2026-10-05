@@ -1,0 +1,37 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA Opus musical distribuido</title>
+<style>body{font:16px system-ui;background:#17261e;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Opus musical · paquete anidado</h1><p>Ruta musical de producción, ambos conjuntos a 48/44,1 kHz y menú. Salida silenciada; no acredita escucha ni móvil.</p>
+<button id="run">Verificar rutas nativas</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {musicRangeReader} from '../../src/audio/music-range-reader.js';
+const results=[],errors=[],status=document.querySelector('#status'),report=document.querySelector('#report');
+function check(ok,message){if(!ok)throw Error(message);}
+function paint(){report.textContent=JSON.stringify({results,errors},null,2);}
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;let audio;
+ try{
+  for(const rate of [48000,44100]){
+   audio=new AudioSystem({music:0,sfx:0});audio.context=new AudioContext({sampleRate:rate});await audio.unlock();
+   const reader=musicRangeReader();audio.resources={...audio.resources,musicReader:reader};
+   let decodes=0;const nativeDecode=audio.context.decodeAudioData.bind(audio.context);audio.context.decodeAudioData=data=>{decodes++;return nativeDecode(data);};
+   for(const day of [1,2]){
+    status.textContent=`Conjunto ${day===1?'A':'B'} a ${rate} Hz`;
+    await audio.gameplay(day);check(!audio.musicError,audio.musicError?.message);const pool=audio.musicWindowPool;
+    check(pool?.index.codec==='ogg-opus-recipe','Default route is not the Opus recipe index');
+    check(pool.index.tracks.every(t=>t.url===t.fullUrl&&t.url.endsWith('.opus')&&new URL(t.url).pathname.startsWith('/nested/itch/audio-qa/')),'Resource escaped nested package');
+    await new Promise(resolve=>setTimeout(resolve,1200));audio.updateMusic({day,time:100,workers:[],spells:[],raid:null});
+    check(audio.active.length>0,'No native musical source');check(audio.buffers.size===0,'Full PCM cached by window route');
+    const row={rate,day,codec:pool.index.codec,activeSources:audio.active.length,windowPcmBytes:pool.pcmBytes(),decodedKeys:[...pool.ready.keys()],decodes,reader:{...reader.stats},nestedUrls:true};
+    audio.stopMusic();check(pool.ready.size===0&&pool.pending.size===0&&audio.active.length===0,'Musical resources not released');row.released=true;results.push(row);paint();
+   }
+   audio.dispose();await new Promise(resolve=>setTimeout(resolve,50));check(audio.context.state==='closed','Context remained open');audio=null;
+  }
+  audio=new AudioSystem({music:0,sfx:0});await audio.menu();const media=audio.menuStream?.media;
+  check(media?.src.endsWith('.opus')&&new URL(media.src).pathname.startsWith('/nested/itch/audio-qa/'),'Menu is not streaming nested Opus');
+  await new Promise(resolve=>setTimeout(resolve,1200));check(media.currentTime>0&&!media.paused,'Menu stream did not advance');
+  results.push({menu:true,url:media.src,streaming:true,currentTime:media.currentTime,fullPcmBuffers:audio.buffers.size});
+  audio.dispose();audio=null;status.textContent='PASS: cuatro rutas de ventanas y menú Opus';paint();
+ }catch(error){errors.push(error.stack);audio?.dispose();status.textContent='FAIL';paint();}
+};
+</script></html>
