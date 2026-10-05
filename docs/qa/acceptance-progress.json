@@ -7,8 +7,8 @@
     {
       "id": "QA-001",
       "area": "Inicio y UI",
-      "scenario": "Nueva partida con cada combinación de seis biomas y cinco culturas",
-      "expected": "Dos pasos, selección conservada y combinación válida; no se crea una sexta cultura.",
+      "scenario": "Nueva partida con cada combinaciÃ³n de seis biomas y cinco culturas",
+      "expected": "Dos pasos, selecciÃ³n conservada y combinaciÃ³n vÃ¡lida; no se crea una sexta cultura.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -20,8 +20,8 @@
     {
       "id": "QA-002",
       "area": "Inicio y UI",
-      "scenario": "Doble pulsación en Comenzar",
-      "expected": "Un mundo y una ranura; el inicio simulado del lab no se ejecuta detrás.",
+      "scenario": "Doble pulsaciÃ³n en Comenzar",
+      "expected": "Un mundo y una ranura; el inicio simulado del lab no se ejecuta detrÃ¡s.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -34,7 +34,7 @@
       "id": "QA-003",
       "area": "Inicio y UI",
       "scenario": "Entrar al tutorial con 1.000 monedas y sin centro",
-      "expected": "Se permite colocar el primer centro por 800; no bloquea la condición de infraestructura.",
+      "expected": "Se permite colocar el primer centro por 800; no bloquea la condiciÃ³n de infraestructura.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -56,7 +56,7 @@
     {
       "id": "QA-004",
       "area": "Inicio y UI",
-      "scenario": "Colocación de centro inválida o cancelada",
+      "scenario": "ColocaciÃ³n de centro invÃ¡lida o cancelada",
       "expected": "No se cobra ni se suprimen props; se conserva la partida anterior.",
       "audit_status": "verified",
       "evidence": [
@@ -69,8 +69,8 @@
     {
       "id": "QA-005",
       "area": "Inicio y UI",
-      "scenario": "Llegar al primer turno del día 1",
-      "expected": "Contratación en el momento del guion, no antes de colocar el centro.",
+      "scenario": "Llegar al primer turno del dÃ­a 1",
+      "expected": "ContrataciÃ³n en el momento del guion, no antes de colocar el centro.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -91,8 +91,8 @@
     {
       "id": "QA-006",
       "area": "Inicio y UI",
-      "scenario": "Pantallas pequeñas vertical/horizontal y texto largo",
-      "expected": "Precios, retratos, confirmación y texto no se cortan ni pisan la franja del Espíritu.",
+      "scenario": "Pantallas pequeÃ±as vertical/horizontal y texto largo",
+      "expected": "Precios, retratos, confirmaciÃ³n y texto no se cortan ni pisan la franja del EspÃ­ritu.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -104,7 +104,7 @@
       "id": "QA-007",
       "area": "Inicio y UI",
       "scenario": "Abrir varias causas de pausa y cerrar solo una",
-      "expected": "La simulación continúa pausada mientras quede otra causa activa.",
+      "expected": "La simulaciÃ³n continÃºa pausada mientras quede otra causa activa.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-start.md",
@@ -115,7 +115,7 @@
     {
       "id": "QA-008",
       "area": "Inicio y UI",
-      "scenario": "Mostrar un error de fondos o selección inválida",
+      "scenario": "Mostrar un error de fondos o selecciÃ³n invÃ¡lida",
       "expected": "Feedback legible, sin restaurar toasts invasivos o ejecutar el comando rechazado.",
       "audit_status": "verified",
       "evidence": [
@@ -127,8 +127,8 @@
     {
       "id": "QA-009",
       "area": "Reloj",
-      "scenario": "Avanzar 300 s diurnos a ×1",
-      "expected": "Transcurre el periodo 07:05–19:05 y solo esos 300 s alimentan crecimiento.",
+      "scenario": "Avanzar 300 s diurnos a Ã—1",
+      "expected": "Transcurre el periodo 07:05â€“19:05 y solo esos 300 s alimentan crecimiento.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md",
@@ -140,7 +140,7 @@
       "id": "QA-010",
       "area": "Reloj",
       "scenario": "Noche tranquila completa",
-      "expected": "Se acelera a ×5 sin consumir agua ni crecimiento; reloj interno correcto.",
+      "expected": "Se acelera a Ã—5 sin consumir agua ni crecimiento; reloj interno correcto.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md"
@@ -150,8 +150,8 @@
     {
       "id": "QA-011",
       "area": "Reloj",
-      "scenario": "Aparecer incursión durante ×5",
-      "expected": "Cambio a ×1 antes de procesar movimiento y contactos del ataque.",
+      "scenario": "Aparecer incursiÃ³n durante Ã—5",
+      "expected": "Cambio a Ã—1 antes de procesar movimiento y contactos del ataque.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md"
@@ -162,7 +162,7 @@
       "id": "QA-012",
       "area": "Reloj",
       "scenario": "Retirarse primer animal mientras otros siguen presentes",
-      "expected": "No termina la incursión ni vuelve ×5 todavía.",
+      "expected": "No termina la incursiÃ³n ni vuelve Ã—5 todavÃ­a.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md"
@@ -172,8 +172,8 @@
     {
       "id": "QA-013",
       "area": "Reloj",
-      "scenario": "Retirarse último animal durante la noche",
-      "expected": "Fin único del evento y ×5 si no queda otra pausa.",
+      "scenario": "Retirarse Ãºltimo animal durante la noche",
+      "expected": "Fin Ãºnico del evento y Ã—5 si no queda otra pausa.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md"
@@ -183,8 +183,8 @@
     {
       "id": "QA-014",
       "area": "Reloj",
-      "scenario": "Ocultar pestaña y volver tras muchos minutos",
-      "expected": "No hay ganancias, daño, riego ni avance offline.",
+      "scenario": "Ocultar pestaÃ±a y volver tras muchos minutos",
+      "expected": "No hay ganancias, daÃ±o, riego ni avance offline.",
       "audit_status": "partial",
       "evidence": [
         "docs/qa-acceptance-clock.md",
@@ -197,8 +197,8 @@
     {
       "id": "QA-015",
       "area": "Reloj",
-      "scenario": "Gran paso de tiempo cruza contratación o checkpoint",
-      "expected": "La simulación se divide y no omite el evento ni cobra dos jornadas.",
+      "scenario": "Gran paso de tiempo cruza contrataciÃ³n o checkpoint",
+      "expected": "La simulaciÃ³n se divide y no omite el evento ni cobra dos jornadas.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md",
@@ -210,7 +210,7 @@
       "id": "QA-016",
       "area": "Reloj",
       "scenario": "Ataque nocturno cruza amanecer",
-      "expected": "Aplicar el contrato C07 cuando se cierre; no perder ataque, contratación ni control de terminales.",
+      "expected": "Aplicar el contrato C07 cuando se cierre; no perder ataque, contrataciÃ³n ni control de terminales.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md"
@@ -221,7 +221,7 @@
       "id": "QA-017",
       "area": "Agricultura",
       "scenario": "Plantar las ocho especies",
-      "expected": "Precio canónico, ID estable y brote; no aparecen arroz, calabaza ni judías del HUD.",
+      "expected": "Precio canÃ³nico, ID estable y brote; no aparecen arroz, calabaza ni judÃ­as del HUD.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md",
@@ -232,7 +232,7 @@
     {
       "id": "QA-018",
       "area": "Agricultura",
-      "scenario": "Mijo y plátano continuamente atendidos con día/noche",
+      "scenario": "Mijo y plÃ¡tano continuamente atendidos con dÃ­a/noche",
       "expected": "Tiempos efectivos 140 y 570 s; la noche no los acorta.",
       "audit_status": "verified",
       "evidence": [
@@ -244,7 +244,7 @@
       "id": "QA-019",
       "area": "Agricultura",
       "scenario": "Crear riegos inicial y posteriores",
-      "expected": "Exactamente R checkpoints lógicos, inicial incluido, sin cobrar agua adicional ni duplicar tarea.",
+      "expected": "Exactamente R checkpoints lÃ³gicos, inicial incluido, sin cobrar agua adicional ni duplicar tarea.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -254,7 +254,7 @@
     {
       "id": "QA-020",
       "area": "Agricultura",
-      "scenario": "Checkpoint del plátano con margen de tolerancia",
+      "scenario": "Checkpoint del plÃ¡tano con margen de tolerancia",
       "expected": "Margen derivado 23,75 s de tiempo diurno; no usar un porcentaje fijo de todo el ciclo.",
       "audit_status": "verified",
       "evidence": [
@@ -277,7 +277,7 @@
       "id": "QA-022",
       "area": "Agricultura",
       "scenario": "Llegar la noche con deuda de agua y 10 s de margen restante",
-      "expected": "Margen permanece igual hasta el día siguiente.",
+      "expected": "Margen permanece igual hasta el dÃ­a siguiente.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -299,7 +299,7 @@
       "id": "QA-024",
       "area": "Agricultura",
       "scenario": "Primer cuidado y deuda que cruza madurez con tolerancia larga",
-      "expected": "Cubrir C04 explícitamente; no añadir riegos ni eliminar deuda por intuición.",
+      "expected": "Cubrir C04 explÃ­citamente; no aÃ±adir riegos ni eliminar deuda por intuiciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -320,7 +320,7 @@
     {
       "id": "QA-026",
       "area": "Agricultura",
-      "scenario": "Dos órdenes de cosecha del mismo grupo",
+      "scenario": "Dos Ã³rdenes de cosecha del mismo grupo",
       "expected": "Una tarea reservable por planta, sin dos cajas ni doble ingreso.",
       "audit_status": "verified",
       "evidence": [
@@ -332,7 +332,7 @@
       "id": "QA-027",
       "area": "Agricultura",
       "scenario": "Orden de grupo emitida al mismo instante",
-      "expected": "Se inserta de cerca a lejos del centro y después respeta FIFO.",
+      "expected": "Se inserta de cerca a lejos del centro y despuÃ©s respeta FIFO.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -343,7 +343,7 @@
       "id": "QA-028",
       "area": "Agricultura",
       "scenario": "Recogida individual con dos trabajadores",
-      "expected": "Plantas y reservas distintas, posible ejecución paralela sin compartir objetivo.",
+      "expected": "Plantas y reservas distintas, posible ejecuciÃ³n paralela sin compartir objetivo.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -354,7 +354,7 @@
       "id": "QA-029",
       "area": "Agricultura",
       "scenario": "Aplicar Crecimiento sobre cultivo con riego previo pendiente",
-      "expected": "No cura la carencia ni avanza crecimiento hasta atención manual.",
+      "expected": "No cura la carencia ni avanza crecimiento hasta atenciÃ³n manual.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -376,7 +376,7 @@
       "id": "QA-031",
       "area": "Agricultura",
       "scenario": "Riego manual llega mientras Crecimiento sigue activo",
-      "expected": "Reanuda con ×1,5 y satisface automáticamente los siguientes checkpoints cruzados durante el efecto.",
+      "expected": "Reanuda con Ã—1,5 y satisface automÃ¡ticamente los siguientes checkpoints cruzados durante el efecto.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -397,8 +397,8 @@
     {
       "id": "QA-033",
       "area": "Agricultura",
-      "scenario": "Cosecha con Multiplicar solicitado antes pero recogido después de caducar",
-      "expected": "No recibe ×2; manda el instante de recogida.",
+      "scenario": "Cosecha con Multiplicar solicitado antes pero recogido despuÃ©s de caducar",
+      "expected": "No recibe Ã—2; manda el instante de recogida.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -408,8 +408,8 @@
     {
       "id": "QA-034",
       "area": "Agricultura",
-      "scenario": "Cosecha dentro del área activa por hombre",
-      "expected": "Aplicar +20% del recolector y ×2 según C02, fijando el valor una sola vez.",
+      "scenario": "Cosecha dentro del Ã¡rea activa por hombre",
+      "expected": "Aplicar +20% del recolector y Ã—2 segÃºn C02, fijando el valor una sola vez.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-agriculture.md"
@@ -432,7 +432,7 @@
     {
       "id": "QA-036",
       "area": "Agricultura",
-      "scenario": "Comparar estados originales y transición de cada especie",
+      "scenario": "Comparar estados originales y transiciÃ³n de cada especie",
       "expected": "Cuarenta modelos, puentes locales opacos y UV correctas; sin dithering de cultivos.",
       "audit_status": "verified",
       "evidence": [
@@ -447,7 +447,7 @@
       "id": "QA-037",
       "area": "Trabajadores y colas",
       "scenario": "Confirmar plantilla mayor/joven del mismo sexo o sexo distinto",
-      "expected": "100/120 de salario por edad, no por sexo, pago único por jornada.",
+      "expected": "100/120 de salario por edad, no por sexo, pago Ãºnico por jornada.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md"
@@ -457,7 +457,7 @@
     {
       "id": "QA-038",
       "area": "Trabajadores y colas",
-      "scenario": "Editar cantidades o recordar selección impagable",
+      "scenario": "Editar cantidades o recordar selecciÃ³n impagable",
       "expected": "No se descuenta; confirmar se bloquea hasta que el coste sea asumible.",
       "audit_status": "verified",
       "evidence": [
@@ -469,7 +469,7 @@
       "id": "QA-039",
       "area": "Trabajadores y colas",
       "scenario": "Confirmar cero trabajadores con partida recuperable",
-      "expected": "Jornada continúa sin plantilla; no reembolso ni producción ficticia.",
+      "expected": "Jornada continÃºa sin plantilla; no reembolso ni producciÃ³n ficticia.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md"
@@ -480,7 +480,7 @@
       "id": "QA-040",
       "area": "Trabajadores y colas",
       "scenario": "6 contratados y centros con 100/20/0 plantas",
-      "expected": "Reparto 4/1/1 con desempate por antigüedad; el centro vacío conserva su base.",
+      "expected": "Reparto 4/1/1 con desempate por antigÃ¼edad; el centro vacÃ­o conserva su base.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md"
@@ -490,7 +490,7 @@
     {
       "id": "QA-041",
       "area": "Trabajadores y colas",
-      "scenario": "Menos trabajadores que centros y números de plantas distintos",
+      "scenario": "Menos trabajadores que centros y nÃºmeros de plantas distintos",
       "expected": "Uno a cada centro mayor hasta agotarlos; nunca dos en uno antes de ese reparto.",
       "audit_status": "verified",
       "evidence": [
@@ -502,7 +502,7 @@
       "id": "QA-042",
       "area": "Trabajadores y colas",
       "scenario": "Empate de plantas con personal escaso",
-      "expected": "Desempate determinista por antigüedad/ID.",
+      "expected": "Desempate determinista por antigÃ¼edad/ID.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md",
@@ -524,7 +524,7 @@
     {
       "id": "QA-044",
       "area": "Trabajadores y colas",
-      "scenario": "Mismo número de plantas con especies, precios y riegos diferentes",
+      "scenario": "Mismo nÃºmero de plantas con especies, precios y riegos diferentes",
       "expected": "Mismo peso de reparto; no optimiza carga ni bonus ocultamente.",
       "audit_status": "verified",
       "evidence": [
@@ -535,7 +535,7 @@
     {
       "id": "QA-045",
       "area": "Trabajadores y colas",
-      "scenario": "Poblados con tamaños muy distintos",
+      "scenario": "Poblados con tamaÃ±os muy distintos",
       "expected": "Reparto directo por centros del mundo, no 50/50 por poblado.",
       "audit_status": "verified",
       "evidence": [
@@ -547,7 +547,7 @@
       "id": "QA-046",
       "area": "Trabajadores y colas",
       "scenario": "Cuatro perfiles con cupos desiguales",
-      "expected": "Mezcla equilibrada dentro de lo posible; no asignación por bonus de cosecha.",
+      "expected": "Mezcla equilibrada dentro de lo posible; no asignaciÃ³n por bonus de cosecha.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md"
@@ -558,7 +558,7 @@
       "id": "QA-047",
       "area": "Trabajadores y colas",
       "scenario": "Dos trabajadores libres y una tarea antigua",
-      "expected": "FIFO escoge tarea; la ejecuta el libre de ese centro más cercano.",
+      "expected": "FIFO escoge tarea; la ejecuta el libre de ese centro mÃ¡s cercano.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -569,8 +569,8 @@
     {
       "id": "QA-048",
       "area": "Trabajadores y colas",
-      "scenario": "Dos agentes evalúan la misma planta/caja",
-      "expected": "Reserva atómica al aceptar; solo un propietario.",
+      "scenario": "Dos agentes evalÃºan la misma planta/caja",
+      "expected": "Reserva atÃ³mica al aceptar; solo un propietario.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -592,8 +592,8 @@
     {
       "id": "QA-050",
       "area": "Trabajadores y colas",
-      "scenario": "Nuevo centro al mediodía junto a cultivos existentes",
-      "expected": "No migra plantas ni tareas; reasociación al siguiente amanecer.",
+      "scenario": "Nuevo centro al mediodÃ­a junto a cultivos existentes",
+      "expected": "No migra plantas ni tareas; reasociaciÃ³n al siguiente amanecer.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md",
@@ -604,8 +604,8 @@
     {
       "id": "QA-051",
       "area": "Trabajadores y colas",
-      "scenario": "Nueva planta junto a centro recién construido",
-      "expected": "Se vincula al centro más cercano ahora; espera si ese centro no tiene plantilla.",
+      "scenario": "Nueva planta junto a centro reciÃ©n construido",
+      "expected": "Se vincula al centro mÃ¡s cercano ahora; espera si ese centro no tiene plantilla.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-workforce.md"
@@ -616,7 +616,7 @@
       "id": "QA-052",
       "area": "Trabajadores y colas",
       "scenario": "Nuevo poblado cambia centro de residencia territorial",
-      "expected": "Trabajador de hoy conserva residencia de salida y vuelve allí.",
+      "expected": "Trabajador de hoy conserva residencia de salida y vuelve allÃ­.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-territory.md"
@@ -627,7 +627,7 @@
       "id": "QA-053",
       "area": "Trabajadores y colas",
       "scenario": "Destruir centro y quedar otro operativo del mismo poblado",
-      "expected": "Tras ataque se reasignan trabajadores desplazados según necesidad definida, sin cobrar otra jornada.",
+      "expected": "Tras ataque se reasignan trabajadores desplazados segÃºn necesidad definida, sin cobrar otra jornada.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -638,7 +638,7 @@
     {
       "id": "QA-054",
       "area": "Trabajadores y colas",
-      "scenario": "Destruir último centro del poblado y no quedar destino",
+      "scenario": "Destruir Ãºltimo centro del poblado y no quedar destino",
       "expected": "Regresan; no teletransportar a un poblado ajeno ni prolongar turno.",
       "audit_status": "verified",
       "evidence": [
@@ -650,8 +650,8 @@
     {
       "id": "QA-055",
       "area": "Trabajadores y colas",
-      "scenario": "Construir sustituto y haber desplazados aún disponibles",
-      "expected": "Aplicar excepción de destrucción, sin reasignar empleados normales de otros centros.",
+      "scenario": "Construir sustituto y haber desplazados aÃºn disponibles",
+      "expected": "Aplicar excepciÃ³n de destrucciÃ³n, sin reasignar empleados normales de otros centros.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -674,7 +674,7 @@
       "id": "QA-057",
       "area": "Trabajadores y colas",
       "scenario": "Rehacer cola con cosecha ya ordenada",
-      "expected": "Aplicar C05 expresamente; madurez sola nunca se convierte en orden automática.",
+      "expected": "Aplicar C05 expresamente; madurez sola nunca se convierte en orden automÃ¡tica.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-chains.md"
@@ -684,7 +684,7 @@
     {
       "id": "QA-058",
       "area": "Trabajadores y colas",
-      "scenario": "Finalizar turno camino de tarea aún no ejecutada",
+      "scenario": "Finalizar turno camino de tarea aÃºn no ejecutada",
       "expected": "Se libera reserva y no comienza tarea nueva fuera del turno.",
       "audit_status": "verified",
       "evidence": [
@@ -695,8 +695,8 @@
     {
       "id": "QA-059",
       "area": "Trabajadores y colas",
-      "scenario": "Finalizar turno durante ejecución física",
-      "expected": "Completa esa tarea según la regla de jornada y se retira.",
+      "scenario": "Finalizar turno durante ejecuciÃ³n fÃ­sica",
+      "expected": "Completa esa tarea segÃºn la regla de jornada y se retira.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-chains.md"
@@ -707,7 +707,7 @@
       "id": "QA-060",
       "area": "Trabajadores y colas",
       "scenario": "Inactividad sin tarea",
-      "expected": "Alterna reposo/vigilar y paseos caminando a máximo aproximado 8 m.",
+      "expected": "Alterna reposo/vigilar y paseos caminando a mÃ¡ximo aproximado 8 m.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -719,7 +719,7 @@
       "id": "QA-061",
       "area": "Trabajadores y colas",
       "scenario": "Aparecer tarea durante paseo",
-      "expected": "Cancela paseo y sale desde posición actual, sin teletransporte.",
+      "expected": "Cancela paseo y sale desde posiciÃ³n actual, sin teletransporte.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-routing.md",
@@ -742,7 +742,7 @@
       "id": "QA-063",
       "area": "Trabajadores y colas",
       "scenario": "Urgencia de cola bajo/por encima de 2 por trabajador",
-      "expected": "Solo afecta carrera ordinaria, nunca distribución de plantilla.",
+      "expected": "Solo afecta carrera ordinaria, nunca distribuciÃ³n de plantilla.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-worker-chains.md"
@@ -775,7 +775,7 @@
       "id": "QA-066",
       "area": "Cajas y contabilidad",
       "scenario": "Ataque sorprende portador",
-      "expected": "Caja cae en su posición y no es objetivo animal.",
+      "expected": "Caja cae en su posiciÃ³n y no es objetivo animal.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-crate-recovery.md",
@@ -788,7 +788,7 @@
       "id": "QA-067",
       "area": "Cajas y contabilidad",
       "scenario": "Volver tras ataque con cajas sueltas",
-      "expected": "Tarea de transporte reservable individualmente cuando exista centro válido.",
+      "expected": "Tarea de transporte reservable individualmente cuando exista centro vÃ¡lido.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-crate-recovery.md",
@@ -801,7 +801,7 @@
       "id": "QA-068",
       "area": "Cajas y contabilidad",
       "scenario": "Caja sin centro operativo",
-      "expected": "Persiste sin convertirse en ingresos ni tarea hasta infraestructura válida.",
+      "expected": "Persiste sin convertirse en ingresos ni tarea hasta infraestructura vÃ¡lida.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-crate-recovery.md",
@@ -827,7 +827,7 @@
       "id": "QA-070",
       "area": "Cajas y contabilidad",
       "scenario": "Mostrar 150.000 y cantidades de millones",
-      "expected": "HUD abreviado sin desbordamiento; saldo real no pierde precisión.",
+      "expected": "HUD abreviado sin desbordamiento; saldo real no pierde precisiÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-money-display.md",
@@ -838,7 +838,7 @@
     {
       "id": "QA-071",
       "area": "Cajas y contabilidad",
-      "scenario": "Combinación de bonus produce una fracción monetaria",
+      "scenario": "CombinaciÃ³n de bonus produce una fracciÃ³n monetaria",
       "expected": "C02 decide redondeo una vez; no importar Math.round del lab silenciosamente.",
       "audit_status": "verified",
       "evidence": [
@@ -850,8 +850,8 @@
     },
     {
       "id": "QA-072",
-      "area": "Defensas y reparación",
-      "scenario": "Cerrar perímetro de cada material",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Cerrar perÃ­metro de cada material",
       "expected": "Se genera la puerta determinista; misma compra y 60% de PV.",
       "audit_status": "verified",
       "evidence": [
@@ -862,7 +862,7 @@
     },
     {
       "id": "QA-073",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Golpear zarzas intactas dos veces a 40 PV",
       "expected": "Al quedar 20 PV comienza el colapso; no exige un tercer golpe.",
       "audit_status": "verified",
@@ -874,9 +874,9 @@
     },
     {
       "id": "QA-074",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Golpear centro de 600 PV con cada especie",
-      "expected": "Colapso tras 12/10/7/6/4 golpes desde intacto sin reparación.",
+      "expected": "Colapso tras 12/10/7/6/4 golpes desde intacto sin reparaciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-defenses.md",
@@ -886,9 +886,9 @@
     },
     {
       "id": "QA-075",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Entrar al umbral de BAST o DEST",
-      "expected": "Respeta 20% de vida/79% de daño respectivamente, sin unificación silenciosa.",
+      "expected": "Respeta 20% de vida/79% de daÃ±o respectivamente, sin unificaciÃ³n silenciosa.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-defenses.md",
@@ -898,9 +898,9 @@
     },
     {
       "id": "QA-076",
-      "area": "Defensas y reparación",
-      "scenario": "Ordenar reparación con fondos suficientes",
-      "expected": "Se encola pero todavía no se cobra ni reserva dinero ficticio.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Ordenar reparaciÃ³n con fondos suficientes",
+      "expected": "Se encola pero todavÃ­a no se cobra ni reserva dinero ficticio.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -911,9 +911,9 @@
     },
     {
       "id": "QA-077",
-      "area": "Defensas y reparación",
-      "scenario": "Ordenar reparación con fondos insuficientes en ese instante",
-      "expected": "Se rechaza la solicitud, sin tarea inválida añadida.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Ordenar reparaciÃ³n con fondos insuficientes en ese instante",
+      "expected": "Se rechaza la solicitud, sin tarea invÃ¡lida aÃ±adida.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -924,9 +924,9 @@
     },
     {
       "id": "QA-078",
-      "area": "Defensas y reparación",
-      "scenario": "Daño aumenta antes de llegada del reparador",
-      "expected": "Coste se recalcula al llegar, no se mantiene la cotización inicial.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "DaÃ±o aumenta antes de llegada del reparador",
+      "expected": "Coste se recalcula al llegar, no se mantiene la cotizaciÃ³n inicial.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -937,8 +937,8 @@
     },
     {
       "id": "QA-079",
-      "area": "Defensas y reparación",
-      "scenario": "Objetivo pasa a ruina antes de ejecutar orden todavía válida",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Objetivo pasa a ruina antes de ejecutar orden todavÃ­a vÃ¡lida",
       "expected": "No se cancela solo por destruirse; coste 100% y se reconstruye si alcanza.",
       "audit_status": "verified",
       "evidence": [
@@ -950,7 +950,7 @@
     },
     {
       "id": "QA-080",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Saldo disminuye por otras compras antes de reparar",
       "expected": "Revalida saldo al llegar; si no alcanza, cancela sin cargo.",
       "audit_status": "verified",
@@ -963,9 +963,9 @@
     },
     {
       "id": "QA-081",
-      "area": "Defensas y reparación",
-      "scenario": "Ataque interrumpe una reparación en camino",
-      "expected": "Huida y reconstrucción de cola; esa reparación manual no se regenera sola.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Ataque interrumpe una reparaciÃ³n en camino",
+      "expected": "Huida y reconstrucciÃ³n de cola; esa reparaciÃ³n manual no se regenera sola.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -976,9 +976,9 @@
     },
     {
       "id": "QA-082",
-      "area": "Defensas y reparación",
-      "scenario": "Trabajador llega durante animación de colapso",
-      "expected": "Resolver C06 sin cancelar D144 ni confundir reset del lab con permiso de reparación.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "Trabajador llega durante animaciÃ³n de colapso",
+      "expected": "Resolver C06 sin cancelar D144 ni confundir reset del lab con permiso de reparaciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -989,9 +989,9 @@
     },
     {
       "id": "QA-083",
-      "area": "Defensas y reparación",
-      "scenario": "Reparación exitosa repetida por callback",
-      "expected": "Pago y restauración únicos, VFX de polvo sin doble transformación.",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "ReparaciÃ³n exitosa repetida por callback",
+      "expected": "Pago y restauraciÃ³n Ãºnicos, VFX de polvo sin doble transformaciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-repair-chains.md",
@@ -1002,9 +1002,9 @@
     },
     {
       "id": "QA-084",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Trazar muralla o usar atajo durante noche/ataque",
-      "expected": "Rechazo común por permisos; no bloquear animales creando nuevas piezas.",
+      "expected": "Rechazo comÃºn por permisos; no bloquear animales creando nuevas piezas.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-wall-permissions.md",
@@ -1014,8 +1014,8 @@
     },
     {
       "id": "QA-085",
-      "area": "Defensas y reparación",
-      "scenario": "Colocación atraviesa props grandes o terreno inválido",
+      "area": "Defensas y reparaciÃ³n",
+      "scenario": "ColocaciÃ³n atraviesa props grandes o terreno invÃ¡lido",
       "expected": "Sin compra parcial ni solapamiento visible.",
       "audit_status": "verified",
       "evidence": [
@@ -1027,7 +1027,7 @@
     },
     {
       "id": "QA-086",
-      "area": "Defensas y reparación",
+      "area": "Defensas y reparaciÃ³n",
       "scenario": "Destruir estructura y descargar/cargar chunk",
       "expected": "Estado y ruina persisten; colisiones no resucitan con el render.",
       "audit_status": "verified",
@@ -1042,7 +1042,7 @@
     {
       "id": "QA-087",
       "area": "Incursiones e IA",
-      "scenario": "Atracción en 0/1/499/500/1499/1500/3999/4000/9999/10000",
+      "scenario": "AtracciÃ³n en 0/1/499/500/1499/1500/3999/4000/9999/10000",
       "expected": "Tabla exacta, sin dependencia del saldo ni valor de cajas.",
       "audit_status": "verified",
       "evidence": [
@@ -1054,8 +1054,8 @@
     {
       "id": "QA-088",
       "area": "Incursiones e IA",
-      "scenario": "Noche 1 y noche 2 con atracción cero",
-      "expected": "Primera tranquila; segunda un facóquero tutorial garantizado.",
+      "scenario": "Noche 1 y noche 2 con atracciÃ³n cero",
+      "expected": "Primera tranquila; segunda un facÃ³quero tutorial garantizado.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1068,7 +1068,7 @@
       "id": "QA-089",
       "area": "Incursiones e IA",
       "scenario": "Varias noches consecutivas con resultado igual",
-      "expected": "Tiradas independientes, sin sistema de compensación oculto.",
+      "expected": "Tiradas independientes, sin sistema de compensaciÃ³n oculto.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1080,7 +1080,7 @@
       "id": "QA-090",
       "area": "Incursiones e IA",
       "scenario": "Presupuesto 3 con hiena desbloqueada",
-      "expected": "Composiciones válidas: tres facóqueros o una hiena.",
+      "expected": "Composiciones vÃ¡lidas: tres facÃ³queros o una hiena.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1092,7 +1092,7 @@
       "id": "QA-091",
       "area": "Incursiones e IA",
       "scenario": "Enumerar cada presupuesto de cada nivel",
-      "expected": "Al menos una composición, ≤5 animales, límites por especie y gasto 75–100%.",
+      "expected": "Al menos una composiciÃ³n, â‰¤5 animales, lÃ­mites por especie y gasto 75â€“100%.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1103,8 +1103,8 @@
     {
       "id": "QA-092",
       "area": "Incursiones e IA",
-      "scenario": "Permutar orden de generación del mismo grupo",
-      "expected": "No duplica su probabilidad; se elige composición, no orden de animales.",
+      "scenario": "Permutar orden de generaciÃ³n del mismo grupo",
+      "expected": "No duplica su probabilidad; se elige composiciÃ³n, no orden de animales.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1115,7 +1115,7 @@
     {
       "id": "QA-093",
       "area": "Incursiones e IA",
-      "scenario": "Intentar introducir especie todavía bloqueada",
+      "scenario": "Intentar introducir especie todavÃ­a bloqueada",
       "expected": "No aparece aunque el presupuesto permita pagarla.",
       "audit_status": "verified",
       "evidence": [
@@ -1128,7 +1128,7 @@
       "id": "QA-094",
       "area": "Incursiones e IA",
       "scenario": "Generar el grupo",
-      "expected": "Aparece simultáneamente en puntos separados de una misma zona del borde activo.",
+      "expected": "Aparece simultÃ¡neamente en puntos separados de una misma zona del borde activo.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-safe-exit.md",
@@ -1140,7 +1140,7 @@
     {
       "id": "QA-095",
       "area": "Incursiones e IA",
-      "scenario": "Mover cámara durante aproximación",
+      "scenario": "Mover cÃ¡mara durante aproximaciÃ³n",
       "expected": "Animal no desaparece ni reinicia su cupo por salir del dibujo.",
       "audit_status": "verified",
       "evidence": [
@@ -1168,7 +1168,7 @@
       "id": "QA-097",
       "area": "Incursiones e IA",
       "scenario": "Destruir objetivo y conservar golpes",
-      "expected": "Busca otro libre o se retira si ninguno es válido.",
+      "expected": "Busca otro libre o se retira si ninguno es vÃ¡lido.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-reload.md",
@@ -1194,7 +1194,7 @@
       "id": "QA-099",
       "area": "Incursiones e IA",
       "scenario": "Ejecutar cualquiera de los dos combos",
-      "expected": "Exactamente un golpe lógico y consumo de un cupo; varios contactos VFX son decorativos.",
+      "expected": "Exactamente un golpe lÃ³gico y consumo de un cupo; varios contactos VFX son decorativos.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-reload.md",
@@ -1206,8 +1206,8 @@
     {
       "id": "QA-100",
       "area": "Incursiones e IA",
-      "scenario": "Agotar último golpe",
-      "expected": "No ejecuta un ataque extra por colisión con trabajador; salida mantiene separación física.",
+      "scenario": "Agotar Ãºltimo golpe",
+      "expected": "No ejecuta un ataque extra por colisiÃ³n con trabajador; salida mantiene separaciÃ³n fÃ­sica.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-motion-shield.md",
@@ -1220,7 +1220,7 @@
       "id": "QA-101",
       "area": "Incursiones e IA",
       "scenario": "Encontrar Escudo",
-      "expected": "No lo atraviesa; golpea borde, gasta cupo y no daña lo protegido.",
+      "expected": "No lo atraviesa; golpea borde, gasta cupo y no daÃ±a lo protegido.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-motion-shield.md",
@@ -1232,8 +1232,8 @@
     {
       "id": "QA-102",
       "area": "Incursiones e IA",
-      "scenario": "Tirada diurna con candidato antes/después de cruzar 10.000",
-      "expected": "Solo importa atracción al candidato; única tirada de 10%, sin sondeo repetido.",
+      "scenario": "Tirada diurna con candidato antes/despuÃ©s de cruzar 10.000",
+      "expected": "Solo importa atracciÃ³n al candidato; Ãºnica tirada de 10%, sin sondeo repetido.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-daytime-raids.md",
@@ -1245,7 +1245,7 @@
     {
       "id": "QA-103",
       "area": "Incursiones e IA",
-      "scenario": "Ataque diurno y nocturno el mismo día",
+      "scenario": "Ataque diurno y nocturno el mismo dÃ­a",
       "expected": "Pueden coexistir en el calendario como eventos independientes.",
       "audit_status": "verified",
       "evidence": [
@@ -1258,8 +1258,8 @@
     {
       "id": "QA-104",
       "area": "Incursiones e IA",
-      "scenario": "Finalizar última incursión",
-      "expected": "Aviso de fin único, liberar estado/reservas y reconstruir necesidades al regreso.",
+      "scenario": "Finalizar Ãºltima incursiÃ³n",
+      "expected": "Aviso de fin Ãºnico, liberar estado/reservas y reconstruir necesidades al regreso.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-reload.md",
@@ -1288,46 +1288,46 @@
     {
       "id": "QA-106",
       "area": "Lesiones",
-      "scenario": "Trayectoria del trabajador cruzaría el volumen del animal",
-      "expected": "Agresión obligada cuando el animal puede atacar y empuje 1,5–2 m hacia posición válida.",
+      "scenario": "Trayectoria del trabajador cruzarÃ­a el volumen del animal",
+      "expected": "AgresiÃ³n obligada cuando el animal puede atacar y empuje 1,5â€“2 m hacia posiciÃ³n vÃ¡lida.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-107",
       "area": "Lesiones",
       "scenario": "Huida con cupo de carrera ordinario agotado",
-      "expected": "Corre igualmente; la emergencia ignora esa limitación.",
+      "expected": "Corre igualmente; la emergencia ignora esa limitaciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-108",
       "area": "Lesiones",
       "scenario": "Primer golpe al trabajador",
-      "expected": "Interrumpe tarea, caída/recuperación y huida con estado persistente.",
+      "expected": "Interrumpe tarea, caÃ­da/recuperaciÃ³n y huida con estado persistente.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-109",
       "area": "Lesiones",
-      "scenario": "Segundo golpe dentro de la misma incursión",
+      "scenario": "Segundo golpe dentro de la misma incursiÃ³n",
       "expected": "Incapacitado el resto de esa jornada y excluido de nuevas agresiones.",
       "audit_status": "verified",
       "evidence": [
@@ -1335,46 +1335,46 @@
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-110",
       "area": "Lesiones",
       "scenario": "Retirada de incapacitado",
-      "expected": "Clip de correr ralentizado y desplazamiento lento coherente, no caminar saltarín.",
+      "expected": "Clip de correr ralentizado y desplazamiento lento coherente, no caminar saltarÃ­n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-111",
       "area": "Lesiones",
-      "scenario": "Trabajador en recuperación en la jornada siguiente",
-      "expected": "Trabaja con restricción ordinaria de carrera; huida sigue disponible.",
+      "scenario": "Trabajador en recuperaciÃ³n en la jornada siguiente",
+      "expected": "Trabaja con restricciÃ³n ordinaria de carrera; huida sigue disponible.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-112",
       "area": "Lesiones",
       "scenario": "Recontratar un perfil que contiene un lesionado",
-      "expected": "Aplicar identidad según C08; no incapacitar a toda la categoría ni curarlo por cambiar cantidad.",
+      "expected": "Aplicar identidad segÃºn C08; no incapacitar a toda la categorÃ­a ni curarlo por cambiar cantidad.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-live-injury.md",
         "tests/acceptance-live-injury.test.js",
         "docs/qa/live-injury/directed.txt"
       ],
-      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5–2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
+      "notes": "Twenty real paid sowing/flight scenarios across four profiles and five native centre cultures: seed 19 explicit rhino causes two physical collisions without actor positioning or forced injuries, 1.5â€“2 m valid pushes, interrupted task, real Fall, SaveRepository/paused persistence, personal day-4 recovery, slowed Run and no third hit. Four multi-day real rehiring scenarios preserve injured personId with healthy same-profile colleague; urgent ordinary recovery walks and completes paid initial care, emergency flight runs with exhausted allowance; day-5 lower selection retains identity and clears recovery. Funded flat Navigation fixture and explicit attack groups; native GLB action tests complement pose logic, no new WebGL inspection."
     },
     {
       "id": "QA-113",
@@ -1392,8 +1392,8 @@
     {
       "id": "QA-114",
       "area": "Magias",
-      "scenario": "Superponer áreas de poderes iguales o diferentes",
-      "expected": "Colocación inválida mientras hay intersección de áreas activas.",
+      "scenario": "Superponer Ã¡reas de poderes iguales o diferentes",
+      "expected": "ColocaciÃ³n invÃ¡lida mientras hay intersecciÃ³n de Ã¡reas activas.",
       "audit_status": "verified",
       "evidence": [
         "tests/spell-preview.test.js",
@@ -1405,8 +1405,8 @@
     {
       "id": "QA-115",
       "area": "Magias",
-      "scenario": "Campo atraviesa cambio día/noche",
-      "expected": "Respetar permisos de activación y regla nocturna de cultivos; VFX no avanza agricultura por sí mismo.",
+      "scenario": "Campo atraviesa cambio dÃ­a/noche",
+      "expected": "Respetar permisos de activaciÃ³n y regla nocturna de cultivos; VFX no avanza agricultura por sÃ­ mismo.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-agriculture-season.md",
@@ -1417,7 +1417,7 @@
     {
       "id": "QA-116",
       "area": "Magias",
-      "scenario": "Pausa, ×1 y ×5 durante recarga",
+      "scenario": "Pausa, Ã—1 y Ã—5 durante recarga",
       "expected": "Cooldown sigue el tiempo simulado y conserva estado al guardar.",
       "audit_status": "verified",
       "evidence": [
@@ -1431,7 +1431,7 @@
       "id": "QA-117",
       "area": "Magias",
       "scenario": "Multiplicar sin trabajadores o durante noche/ataque",
-      "expected": "Activación bloqueada.",
+      "expected": "ActivaciÃ³n bloqueada.",
       "audit_status": "verified",
       "evidence": [
         "tests/spell-preview.test.js",
@@ -1443,8 +1443,8 @@
     {
       "id": "QA-118",
       "area": "Magias",
-      "scenario": "Escudo vence con animales aún con cupo",
-      "expected": "Continúan con objetivos válidos; no desaparecen automáticamente.",
+      "scenario": "Escudo vence con animales aÃºn con cupo",
+      "expected": "ContinÃºan con objetivos vÃ¡lidos; no desaparecen automÃ¡ticamente.",
       "audit_status": "verified",
       "evidence": [
         "tests/shield-expiry.test.js",
@@ -1460,7 +1460,7 @@
       "id": "QA-119",
       "area": "Magias",
       "scenario": "Plantar un Escudo con borde sobre un animal",
-      "expected": "Validar geometrÃ­a y no teletransportar ni introducir poder RepulsiÃ³n.",
+      "expected": "Validar geometrÃƒÂ­a y no teletransportar ni introducir poder RepulsiÃƒÂ³n.",
       "audit_status": "verified",
       "evidence": [
         "tests/spell-preview.test.js",
@@ -1474,8 +1474,8 @@
     {
       "id": "QA-120",
       "area": "Magias",
-      "scenario": "Duración de VFX demo distinta del efecto lógico",
-      "expected": "La presentación persiste/reconfigura hasta durar 20/30/15 s según magia; no dicta gameplay.",
+      "scenario": "DuraciÃ³n de VFX demo distinta del efecto lÃ³gico",
+      "expected": "La presentaciÃ³n persiste/reconfigura hasta durar 20/30/15 s segÃºn magia; no dicta gameplay.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-agriculture-season.md",
@@ -1486,7 +1486,7 @@
     {
       "id": "QA-121",
       "area": "Tutorial y eventos",
-      "scenario": "Mostrar los ocho gestos del Espíritu",
+      "scenario": "Mostrar los ocho gestos del EspÃ­ritu",
       "expected": "Se usan identificadores reales de V8; manos y entrada/salida siguen sistemas separados.",
       "audit_status": "verified",
       "evidence": [
@@ -1497,8 +1497,8 @@
     {
       "id": "QA-122",
       "area": "Tutorial y eventos",
-      "scenario": "Mano tutorial junto a obstáculo con cámara girando",
-      "expected": "Protección del plano completo; no corta suelo ni pared.",
+      "scenario": "Mano tutorial junto a obstÃ¡culo con cÃ¡mara girando",
+      "expected": "ProtecciÃ³n del plano completo; no corta suelo ni pared.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-tutorial-native.md"
@@ -1508,8 +1508,8 @@
     {
       "id": "QA-123",
       "area": "Tutorial y eventos",
-      "scenario": "Mensaje posterior al día 1",
-      "expected": "Espíritu sí, manos básicas no.",
+      "scenario": "Mensaje posterior al dÃ­a 1",
+      "expected": "EspÃ­ritu sÃ­, manos bÃ¡sicas no.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-tutorial-native.md"
@@ -1519,8 +1519,8 @@
     {
       "id": "QA-124",
       "area": "Tutorial y eventos",
-      "scenario": "Omitir introducción ya completada en otra ranura",
-      "expected": "Mensajes todavía no vistos de magia/lesión siguen apareciendo.",
+      "scenario": "Omitir introducciÃ³n ya completada en otra ranura",
+      "expected": "Mensajes todavÃ­a no vistos de magia/lesiÃ³n siguen apareciendo.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-tutorial-native.md"
@@ -1530,8 +1530,8 @@
     {
       "id": "QA-125",
       "area": "Tutorial y eventos",
-      "scenario": "Esperar acción de trabajador tras explicación",
-      "expected": "Lectura cerrada y simulación activa; no deadlock del tutorial.",
+      "scenario": "Esperar acciÃ³n de trabajador tras explicaciÃ³n",
+      "expected": "Lectura cerrada y simulaciÃ³n activa; no deadlock del tutorial.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-tutorial-native.md",
@@ -1552,8 +1552,8 @@
     {
       "id": "QA-126",
       "area": "Tutorial y eventos",
-      "scenario": "Evento agrícola nocturno sorteado",
-      "expected": "Máximo uno, anunciado al amanecer como sorpresa; severidad y destinatario se guardan.",
+      "scenario": "Evento agrÃ­cola nocturno sorteado",
+      "expected": "MÃ¡ximo uno, anunciado al amanecer como sorpresa; severidad y destinatario se guardan.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-agricultural-events.md"
@@ -1563,7 +1563,7 @@
     {
       "id": "QA-127",
       "area": "Tutorial y eventos",
-      "scenario": "Cargar antes/después de aplicar un evento",
+      "scenario": "Cargar antes/despuÃ©s de aplicar un evento",
       "expected": "No se vuelve a sortear ni a aplicar dos veces.",
       "audit_status": "verified",
       "evidence": [
@@ -1574,8 +1574,8 @@
     {
       "id": "QA-128",
       "area": "Tutorial y eventos",
-      "scenario": "Evento específico sin cinco plantas de una especie elegible",
-      "expected": "No escogerla; resolver selección/fallback dentro de C01.",
+      "scenario": "Evento especÃ­fico sin cinco plantas de una especie elegible",
+      "expected": "No escogerla; resolver selecciÃ³n/fallback dentro de C01.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-agricultural-events.md"
@@ -1584,9 +1584,9 @@
     },
     {
       "id": "QA-129",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Fin de ataque con cero centros y 799 monedas",
-      "expected": "Game Over inmediato tras concluir incursión.",
+      "expected": "Game Over inmediato tras concluir incursiÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
@@ -1596,9 +1596,9 @@
     },
     {
       "id": "QA-130",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Fin de ataque con cero centros y 800 monedas",
-      "expected": "No derrota inmediata por D141; recuperación solo en fase legal.",
+      "expected": "No derrota inmediata por D141; recuperaciÃ³n solo en fase legal.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
@@ -1608,8 +1608,8 @@
     },
     {
       "id": "QA-131",
-      "area": "Finales y expansión",
-      "scenario": "Amanecer en cada combinación de centro y recursos",
+      "area": "Finales y expansiÃ³n",
+      "scenario": "Amanecer en cada combinaciÃ³n de centro y recursos",
       "expected": "Umbrales 100/105/900/905 exactos antes de contratar.",
       "audit_status": "verified",
       "evidence": [
@@ -1620,9 +1620,9 @@
     },
     {
       "id": "QA-132",
-      "area": "Finales y expansión",
-      "scenario": "Selección recordada cuesta más que saldo pero ruta mínima existe",
-      "expected": "No Game Over por la selección; permitir ajustarla.",
+      "area": "Finales y expansiÃ³n",
+      "scenario": "SelecciÃ³n recordada cuesta mÃ¡s que saldo pero ruta mÃ­nima existe",
+      "expected": "No Game Over por la selecciÃ³n; permitir ajustarla.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
@@ -1633,9 +1633,9 @@
     },
     {
       "id": "QA-133",
-      "area": "Finales y expansión",
-      "scenario": "Saldo en umbral con único cultivo lento",
-      "expected": "Medir viabilidad real de varios días; conservar regla aprobada y registrar riesgo, no presumir demostración matemática.",
+      "area": "Finales y expansiÃ³n",
+      "scenario": "Saldo en umbral con Ãºnico cultivo lento",
+      "expected": "Medir viabilidad real de varios dÃ­as; conservar regla aprobada y registrar riesgo, no presumir demostraciÃ³n matemÃ¡tica.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
@@ -1645,9 +1645,9 @@
     },
     {
       "id": "QA-134",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Llegar al inicio de noche 100",
-      "expected": "Aún no victoria; hay que completar la noche y resolver lo que corresponda.",
+      "expected": "AÃºn no victoria; hay que completar la noche y resolver lo que corresponda.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-economic-boundaries.md",
@@ -1657,9 +1657,9 @@
     },
     {
       "id": "QA-135",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Completar noche 100",
-      "expected": "Narración de maldición levantada y continuación opcional en la misma partida.",
+      "expected": "NarraciÃ³n de maldiciÃ³n levantada y continuaciÃ³n opcional en la misma partida.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-postgame.md"
@@ -1668,9 +1668,9 @@
     },
     {
       "id": "QA-136",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Continuar postgame cientos de noches",
-      "expected": "Cero ataques nocturnos y diurnos; no relanzar tutorial del facóquero.",
+      "expected": "Cero ataques nocturnos y diurnos; no relanzar tutorial del facÃ³quero.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-postgame.md"
@@ -1679,9 +1679,9 @@
     },
     {
       "id": "QA-137",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Construir poblados 2/3/4/10/20/50/100",
-      "expected": "Costes 50K/75K/100K/250K/500K/1,25M/2,5M sin límite artificial.",
+      "expected": "Costes 50K/75K/100K/250K/500K/1,25M/2,5M sin lÃ­mite artificial.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-village-expansion.md"
@@ -1690,9 +1690,9 @@
     },
     {
       "id": "QA-138",
-      "area": "Finales y expansión",
-      "scenario": "Previsualizar poblado con una sola casa inválida",
-      "expected": "Conjunto inválido entero, sin pago parcial ni cambios persistentes.",
+      "area": "Finales y expansiÃ³n",
+      "scenario": "Previsualizar poblado con una sola casa invÃ¡lida",
+      "expected": "Conjunto invÃ¡lido entero, sin pago parcial ni cambios persistentes.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-village-expansion.md"
@@ -1701,9 +1701,9 @@
     },
     {
       "id": "QA-139",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Cambiar cultura o recolocar fantasma",
-      "expected": "No cobra ni borra props, no añade nuevas páginas de configuración inicial.",
+      "expected": "No cobra ni borra props, no aÃ±ade nuevas pÃ¡ginas de configuraciÃ³n inicial.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-village-expansion.md"
@@ -1712,8 +1712,8 @@
     },
     {
       "id": "QA-140",
-      "area": "Finales y expansión",
-      "scenario": "Confirmar poblado con saldo gastado desde previsualización",
+      "area": "Finales y expansiÃ³n",
+      "scenario": "Confirmar poblado con saldo gastado desde previsualizaciÃ³n",
       "expected": "Revalida y rechaza sin crear medias aldeas.",
       "audit_status": "verified",
       "evidence": [
@@ -1723,9 +1723,9 @@
     },
     {
       "id": "QA-141",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Colocar poblados contiguos sin solapar",
-      "expected": "Permitido; no radio mínimo artificial entre centros de poblado.",
+      "expected": "Permitido; no radio mÃ­nimo artificial entre centros de poblado.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-village-expansion.md"
@@ -1734,7 +1734,7 @@
     },
     {
       "id": "QA-142",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Confirmar poblado y guardar/cargar",
       "expected": "Coste, ordinal, edificios, cultura y supresiones aparecen una sola vez.",
       "audit_status": "verified",
@@ -1745,9 +1745,9 @@
     },
     {
       "id": "QA-143",
-      "area": "Finales y expansión",
+      "area": "Finales y expansiÃ³n",
       "scenario": "Construir un poblado durante jornada",
-      "expected": "Nueva asociación territorial no cambia la residencia ni centro de trabajadores de hoy.",
+      "expected": "Nueva asociaciÃ³n territorial no cambia la residencia ni centro de trabajadores de hoy.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-territory.md",
@@ -1757,7 +1757,7 @@
     },
     {
       "id": "QA-144",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Guardar desde cada disparador aprobado",
       "expected": "Snapshot del slot actual; sin sobrescribir otra ranura.",
       "audit_status": "verified",
@@ -1771,9 +1771,9 @@
     },
     {
       "id": "QA-145",
-      "area": "Guardado y presentación",
-      "scenario": "Cargar durante una incursión",
-      "expected": "Mismos animales, golpes restantes, daño y resultado programado; no nueva tirada.",
+      "area": "Guardado y presentaciÃ³n",
+      "scenario": "Cargar durante una incursiÃ³n",
+      "expected": "Mismos animales, golpes restantes, daÃ±o y resultado programado; no nueva tirada.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-raid-reload.md",
@@ -1784,9 +1784,9 @@
     },
     {
       "id": "QA-146",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Cargar durante jornada con empleados pagados",
-      "expected": "No nueva contratación ni nuevo cobro; mantiene asignaciones del día.",
+      "expected": "No nueva contrataciÃ³n ni nuevo cobro; mantiene asignaciones del dÃ­a.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-paid-reload.md"
@@ -1795,9 +1795,9 @@
     },
     {
       "id": "QA-147",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Guardar caja transportada y volver a cargar",
-      "expected": "Una caja, un portador y valor único; no crear dinero al restaurar la animación.",
+      "expected": "Una caja, un portador y valor Ãºnico; no crear dinero al restaurar la animaciÃ³n.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-paid-reload.md"
@@ -1806,9 +1806,9 @@
     },
     {
       "id": "QA-148",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Guardar colapso o cooldown en curso",
-      "expected": "Estado no reversible accidentalmente; restaurar duración/estado coherente.",
+      "expected": "Estado no reversible accidentalmente; restaurar duraciÃ³n/estado coherente.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-wall-reload.md",
@@ -1822,9 +1822,9 @@
     },
     {
       "id": "QA-149",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Abrir Biblioteca y volver",
-      "expected": "No cambia progreso ni ejecuta economía de la partida detrás de los labs.",
+      "expected": "No cambia progreso ni ejecuta economÃ­a de la partida detrÃ¡s de los labs.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-library-isolation.md"
@@ -1833,8 +1833,8 @@
     },
     {
       "id": "QA-150",
-      "area": "Guardado y presentación",
-      "scenario": "Salir a menú y entrar repetidamente",
+      "area": "Guardado y presentaciÃ³n",
+      "scenario": "Salir a menÃº y entrar repetidamente",
       "expected": "Liberar audio, WebGL, listeners y timers de la escena anterior.",
       "audit_status": "verified",
       "evidence": [
@@ -1846,7 +1846,7 @@
     },
     {
       "id": "QA-151",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Cargar recursos faltantes o audio sin permiso inicial",
       "expected": "Error o fallback controlado; no pantalla infinita ni mundo corrupto.",
       "audit_status": "verified",
@@ -1860,9 +1860,9 @@
     },
     {
       "id": "QA-152",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Mapear los 126 SFX",
-      "expected": "Cada ID tiene destino o reserva explícita; 021/022 conservan los bytes intercambiados aprobados.",
+      "expected": "Cada ID tiene destino o reserva explÃ­cita; 021/022 conservan los bytes intercambiados aprobados.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-routing.md"
@@ -1871,8 +1871,8 @@
     },
     {
       "id": "QA-153",
-      "area": "Guardado y presentación",
-      "scenario": "Reproducir acción con variantes genéricas/específicas",
+      "area": "Guardado y presentaciÃ³n",
+      "scenario": "Reproducir acciÃ³n con variantes genÃ©ricas/especÃ­ficas",
       "expected": "Evitar disparar todas juntas; un ingreso o golpe sigue siendo uno.",
       "audit_status": "verified",
       "evidence": [
@@ -1882,9 +1882,9 @@
     },
     {
       "id": "QA-154",
-      "area": "Guardado y presentación",
-      "scenario": "Comparar audio a ×1/×5",
-      "expected": "Tono y velocidad de reproducción iguales; cambia cadencia lógica, no pitch.",
+      "area": "Guardado y presentaciÃ³n",
+      "scenario": "Comparar audio a Ã—1/Ã—5",
+      "expected": "Tono y velocidad de reproducciÃ³n iguales; cambia cadencia lÃ³gica, no pitch.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-speed.md"
@@ -1893,9 +1893,9 @@
     },
     {
       "id": "QA-155",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Acumular muchos agricultores, animales y colapsos",
-      "expected": "Mezcla con prioridad y límites, sin explosión de voces o partículas.",
+      "expected": "Mezcla con prioridad y lÃ­mites, sin explosiÃ³n de voces o partÃ­culas.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-audio-routing.md",
@@ -1910,9 +1910,9 @@
     },
     {
       "id": "QA-156",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Alternar Gameplay A/B",
-      "expected": "No fusionar stems incompatibles; se usa la política del lab musical al importarlo.",
+      "expected": "No fusionar stems incompatibles; se usa la polÃ­tica del lab musical al importarlo.",
       "audit_status": "partial",
       "evidence": [
         "docs/qa-native-music-mixes.md",
@@ -1921,24 +1921,25 @@
         "docs/qa/audio-buses/music-scenes.md",
         "docs/qa/audio-buses/native-world-dawn.md",
         "docs/qa/music-streaming/production-windows.md",
-        "docs/qa/music-streaming/native-world-dawn.md"
+        "docs/qa/music-streaming/native-world-dawn.md",
+        "docs/qa/music-window-44100/README.md"
       ],
-      "notes": "Native independent presets and vertical scene mixing plus section transport imported. Six registered candidate edges retain shared ten-stem offsets/preroll, native branch probabilities/cooldowns/recent-history weights, natural continuity without new deck, 4s global wrap and conservative delayed-callback fallback. 38 directed tests include all six edges, disposal of two decks and partial-start recovery without throwing into simulation. Real muted WebAudio: both wraps and A_D/A_E branch fixtures, peak20 scheduled music sources then10, rate1 and stop0. Native 16-bar one-layer evolution and distinct 8-bar success/failure arrangements now integrated; 47 directed audio tests cover snapshots, repeats, protected cuts, overlapping decks, suspension and result deduplication. Actual muted WebAudio observes both packs evolving with ten music voices at rate1 and original event gains; no perceptual claim. Remaining: perceptual listening of candidate edges and fully integrated campaign alternation; odd/even day pack selection is a technical integration choice, not a lab-prescribed A/B campaign rule. Additional native paid-domain dawn evidence: day101->102 automatically selects original A thenB, ten real decoded stems per pack at rate1, ambient preserved, previous pack cache evicted, stop0/context closed. Directed clear-path WebAudio fixture has no3D world and is muted; full-world campaign/perceptual coverage remains unverified. On d1b5763 the 48 kHz production route streams short MP3 windows from compressed disk cache. Eight real-time jumps/wraps have zero transient errors/restarts; 36 native waveform cases compare 69.12 million values with no difference over 1e-7. Fresh native 3D paid workday completes two waterings, physical harvest/crate delivery, guaranteed first incursion and day-two hiring with A-to-B music. Wind preserved, A PCM pool released, stop0/context closed, no browser/WebGL/music errors; sampled pool peak73.688MiB. This remains partial: physical-mobile/perceptual/full-campaign acceptance and other sample rates are unverified."
+      "notes": "Native independent presets and vertical scene mixing plus section transport imported. Six registered candidate edges retain shared ten-stem offsets/preroll, native branch probabilities/cooldowns/recent-history weights, natural continuity without new deck, 4s global wrap and conservative delayed-callback fallback. 38 directed tests include all six edges, disposal of two decks and partial-start recovery without throwing into simulation. Real muted WebAudio: both wraps and A_D/A_E branch fixtures, peak20 scheduled music sources then10, rate1 and stop0. Native 16-bar one-layer evolution and distinct 8-bar success/failure arrangements now integrated; 47 directed audio tests cover snapshots, repeats, protected cuts, overlapping decks, suspension and result deduplication. Actual muted WebAudio observes both packs evolving with ten music voices at rate1 and original event gains; no perceptual claim. Remaining: perceptual listening of candidate edges and fully integrated campaign alternation; odd/even day pack selection is a technical integration choice, not a lab-prescribed A/B campaign rule. Additional native paid-domain dawn evidence: day101->102 automatically selects original A thenB, ten real decoded stems per pack at rate1, ambient preserved, previous pack cache evicted, stop0/context closed. Directed clear-path WebAudio fixture has no3D world and is muted; full-world campaign/perceptual coverage remains unverified. On d1b5763 the 48 kHz production route streams short MP3 windows from compressed disk cache. Eight real-time jumps/wraps have zero transient errors/restarts; 36 native waveform cases compare 69.12 million values with no difference over 1e-7. Fresh native 3D paid workday completes two waterings, physical harvest/crate delivery, guaranteed first incursion and day-two hiring with A-to-B music. Wind preserved, A PCM pool released, stop0/context closed, no browser/WebGL/music errors; sampled pool peak73.688MiB. This remains partial: physical-mobile/perceptual/full-campaign acceptance remains unverified. Native 44.1 kHz validation is now retained in docs/qa/music-window-44100/README.md: all 550 windows across 20 tracks compared with original decoder output, 290319080 stereo values, maximum error 1.1920929e-7; all 550 windows at 48 kHz remain exact. Eight real-time 44.1 kHz edge/wrap cases pass with zero errors/restarts and zero candidate audio network reads. The ten source fingerprints match current main. Rates other than 44.1/48 kHz retain the full-PCM compatibility path and are not claimed validated. Output was muted, so this does not close perceptual or physical-phone acceptance."
     },
     {
       "id": "QA-157",
-      "area": "Guardado y presentación",
-      "scenario": "Importar fuentes y créditos",
-      "expected": "Comprobar nombres y licencias reales; no distribuir archivos tipográficos en este paquete documental.",
+      "area": "Guardado y presentaciÃ³n",
+      "scenario": "Importar fuentes y crÃ©ditos",
+      "expected": "Comprobar nombres y licencias reales; no distribuir archivos tipogrÃ¡ficos en este paquete documental.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-fonts.md"
       ],
-      "notes": "Actual SFNT names/copyright/license/fvar/post/STAT audited for the three supplied fonts, byte hashes preserved. Banga normal and italic expose separate 200–800 variable ranges; incorrect italic-as-bold mapping fixed. Ga Maamli/Banga applied in native menu/selector/HUD; shared relative font URLs, full original OFL/authors notices bundled and HTTP200 byte-equal, reachable library credit links. Native FontFaceSet fixture reports all three loaded; desktop EN/ES character/long-number specimen and actual selector/HUD/crops panel have recorded computed styles/screenshots. Original documentary plan package unchanged; no font binaries added to docs."
+      "notes": "Actual SFNT names/copyright/license/fvar/post/STAT audited for the three supplied fonts, byte hashes preserved. Banga normal and italic expose separate 200â€“800 variable ranges; incorrect italic-as-bold mapping fixed. Ga Maamli/Banga applied in native menu/selector/HUD; shared relative font URLs, full original OFL/authors notices bundled and HTTP200 byte-equal, reachable library credit links. Native FontFaceSet fixture reports all three loaded; desktop EN/ES character/long-number specimen and actual selector/HUD/crops panel have recorded computed styles/screenshots. Original documentary plan package unchanged; no font binaries added to docs."
     },
     {
       "id": "QA-158",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Escena grande lejos del origen y tras descargar chunks",
       "expected": "Colocaciones estables, colisiones y persistencia; perf se mide, no se infiere de MAX_PLANTS=240.",
       "audit_status": "verified",
@@ -1949,9 +1950,9 @@
     },
     {
       "id": "QA-159",
-      "area": "Guardado y presentación",
+      "area": "Guardado y presentaciÃ³n",
       "scenario": "Semilla y comandos repetidos",
-      "expected": "Mismos resultados del dominio; diversidad visual no altera azar de eventos económicos.",
+      "expected": "Mismos resultados del dominio; diversidad visual no altera azar de eventos econÃ³micos.",
       "audit_status": "verified",
       "evidence": [
         "docs/qa-seed-replay.md"
