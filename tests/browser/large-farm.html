@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA finca grande y origen</title>
 <style>body{margin:0;font:14px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;left:0;top:0;background:#fffdeacc;padding:10px;max-width:460px}button{padding:8px;margin:3px}pre{max-height:180px;overflow:auto;font-size:11px}</style>
 <header><strong>Finca grande · Sabana/Mapungubwe</strong><p>600 cultivos de ocho especies. Crédito QA explícito de 1000000; construcciones y semillas pagadas. Preparación botánica mediante riego/crecimiento nativos. Guarda únicamente qa-large-farm en este origen QA.</p>
-<button id="measure" disabled>Medir finca</button><button id="compare" disabled>Comparar CPU anterior/actual</button><button id="resolution" disabled>Comparar resolución del mundo</button><button id="away" disabled>Descargar chunks de finca</button><button id="back" disabled>Volver y medir</button><button id="reload" disabled>Guardar y recargar</button>
+<button id="measure" disabled>Medir finca</button><button id="compare" disabled>Comparar CPU anterior/actual</button><button id="terraincompare" disabled>Comparar caché de alturas CPU</button><button id="resolution" disabled>Comparar resolución del mundo</button><button id="away" disabled>Descargar chunks de finca</button><button id="back" disabled>Volver y medir</button><button id="reload" disabled>Guardar y recargar</button>
 <p id="status">Preparando finca…</p><p id="summary"></p><pre id="report"></pre><details><summary>Snapshot público</summary><pre id="snapshot"></pre></details></header><canvas id="world" aria-label="Finca grande lejos del origen"></canvas>
 <script type="module">
 import * as THREE from 'three';
@@ -49,6 +49,10 @@ try{
  // Explicit postgame QA checkpoint: founding villages is unavailable in campaign.
  state.initialPreparation=false;state.postgame=true;state.day=101;state.completedNights=100;
  let deadline=performance.now()+8,site;
+ // Reuse the previously recorded legal candidate only after fresh native validation.
+ // Fall back to the full search if terrain or placement rules ever change.
+ const recordedSite={x:4215.403693043848,z:-4084.051858408502};
+ if(Game.previewVillage(state,'mapungubwe',recordedSite.x,recordedSite.z,payload,nav).valid)site=recordedSite;
  for(let ring=0;ring<70&&!site;ring++)for(let angle=0,count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;angle<count&&!site;angle++){
   const x=4096+Math.cos(angle/count*Math.PI*2)*ring*12,z=-4096+Math.sin(angle/count*Math.PI*2)*ring*12;
   if(Game.previewVillage(state,'mapungubwe',x,z,payload,nav).valid)site={x,z};
@@ -90,6 +94,14 @@ try{
    status.textContent='Midiendo '+label;world.cropBatch.dispose();world.cropBatch=factory(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity);await measure(label);
   }}finally{world.cropBatch.dispose();world.cropBatch=createCropBatch(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity);world.render(0);}
  });
+ document.querySelector('#terraincompare').onclick=()=>run(async()=>{
+  const capacity=world.cropBatch.capacity;
+  try{for(const [label,cached] of [['Alturas dinámicas A1',false],['Alturas cacheadas B1',true],['Alturas cacheadas B2',true],['Alturas dinámicas A2',false]]){
+   world.cropBatch.dispose();const batch=createCropBatch(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity),update=batch.update;let groundCalls=0;
+   batch.update=(plants,clock,ground,origin,key)=>update(plants,clock,(x,z)=>{groundCalls++;return ground(x,z);},origin,cached?key:null);
+   world.cropBatch=batch;await measure(label);steps.at(-1).groundCallsIncludingWarmup=groundCalls;steps.at(-1).terrainCached=cached;publish();
+  }}finally{world.cropBatch.dispose();world.cropBatch=createCropBatch(world.scene,world.renderer,world.cropGltf,world.cropBridgeData,capacity);world.render(0);}
+ });
  document.querySelector('#resolution').onclick=()=>run(async()=>{
   const previous=world.pixelRatioLimit,quality=world.quality,shadowMap=world.renderer.shadowMap,chunks=[...world.chunks.keys()].join('|');
   try{for(const [label,preset] of [['Perfil A1','profile'],['DPR 1 B1','economy'],['DPR 1 B2','economy'],['Perfil A2','profile']]){
@@ -101,9 +113,13 @@ try{
  document.querySelector('#away').onclick=()=>run(async()=>{camera(true);await settle();invariants();assert([...world.chunks.keys()].every(k=>!homeChunks.has(k)),'Chunks de finca siguen residentes');steps.push({stage:'Finca descargada',...geometryReport()});publish();status.textContent='Chunks de finca descargados';});
  document.querySelector('#back').onclick=()=>run(async()=>{camera();await settle();assert([...world.chunks.keys()].every(k=>homeChunks.has(k)),'Chunks de regreso diferentes');await measure('Medición tras streaming');});
  document.querySelector('#reload').onclick=()=>run(async()=>{const before=serialize(state),start=performance.now();repo.save(state);const saved=localStorage.getItem(repo.key(state.slotId));state=repo.load(state.slotId);assert(saved===before&&serialize(state)===before,'Guardado no es exacto');const storageMs=performance.now()-start;
-  world.dispose();nav=new Navigation(712,'sabana',pack.profile);nav.setState(state);farm=state.structures.find(s=>s.id===farm.id);home=state.villages.find(v=>v.id===home.id);
+  world.dispose();world=null;
+  // dispose intentionally loses the old WebGL context: use a fresh canvas as the
+  // gameplay screen does, rather than constructing a renderer on a lost context.
+  const oldCanvas=document.querySelector('#world');oldCanvas.replaceWith(oldCanvas.cloneNode(false));
+  nav=new Navigation(712,'sabana',pack.profile);nav.setState(state);farm=state.structures.find(s=>s.id===farm.id);home=state.villages.find(v=>v.id===home.id);
   const loadStart=performance.now();world=new WorldScene(document.querySelector('#world'),()=>{});world.qualitySetting('media');await world.load(state,nav,payload);camera();await settle();assert(serialize(state)===before,'Recarga cambia datos');steps.push({stage:'Recarga exacta',storageMs,worldLoadMs:performance.now()-loadStart,snapshotBytes:new TextEncoder().encode(saved).length});await measure('Medición tras recarga');});
 }catch(e){errors.push(String(e));status.textContent='FAIL: '+e.message;console.error(e);if(state)publish();}
-function frame(){if(disposed)return;if(world&&!busy)world.render(0);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+function frame(){if(disposed)return;if(world&&!busy&&!world.disposed)world.render(0);requestAnimationFrame(frame);}requestAnimationFrame(frame);
 addEventListener('pagehide',()=>{disposed=true;world?.dispose();});
 </script></html>

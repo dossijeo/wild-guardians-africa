@@ -293,7 +293,7 @@ export class WorldScene {
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity){this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));}
-    this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin);
+    this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
     for(const e of [...s.structures,...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {

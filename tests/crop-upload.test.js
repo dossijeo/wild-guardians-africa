@@ -57,3 +57,44 @@ test('multiple updates before a GPU draw retain earlier dirty ranges and never u
   plants[0].growth*=1.1;f.batch.update(plants,0,()=>0);const first={...attr.updateRanges[0]};plants[1].growth*=1.2;f.batch.update(plants,0,()=>0);
   assert.deepEqual(attr.updateRanges[0],first);assert.equal(attr.updateRanges.length,2);assert.ok(attr.updateRanges.every(r=>r.start+r.count<=8));f.close();
 });
+
+
+test('immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling',()=>{
+  const f=fixture(),plants=[f.plant(1),f.plant(2,.065+(.27-.065)*.81)],before=structuredClone(plants),field={};let calls=0;
+  const ground=(x,z)=>{calls++;return x*.2+z*.3;};
+  f.batch.update(plants,0,ground,undefined,field);assert.equal(calls,2);
+  for(let frame=0;frame<60;frame++)f.batch.update([...plants].reverse(),frame/60,ground,{x:48,z:-48},field);
+  assert.equal(calls,2);assert.deepEqual(plants,before);
+  plants[0].growth*=.8;f.batch.update(plants,2,ground,undefined,field);assert.equal(calls,2);
+  plants[0].x+=3;f.batch.update(plants,3,ground,undefined,field);assert.equal(calls,3);
+  f.batch.update(plants,4,ground,undefined,{});assert.equal(calls,5);
+  f.batch.update(structuredClone(plants),5,ground,undefined,field);assert.equal(calls,7);
+  f.close();
+});
+
+test('unkeyed ground remains dynamic, including after leaving keyed terrain',()=>{
+  const f=fixture(),plants=[f.plant(1)],field={},matrix=new THREE.Matrix4();let height=2,calls=0;
+  const ground=()=>{calls++;return height;};
+  f.batch.update(plants,0,ground,undefined,field);height=3;
+  f.batch.update(plants,1,ground);f.active()[0].getMatrixAt(0,matrix);assert.equal(matrix.elements[13],3);
+  height=4;f.batch.update(plants,2,ground);f.active()[0].getMatrixAt(0,matrix);assert.equal(matrix.elements[13],4);assert.equal(calls,3);
+  f.close();
+});
+
+test('cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs',()=>{
+  const a=fixture(),b=fixture(),plants=[a.plant(1),a.plant(2,.22),a.plant(3,.01)],field={};
+  const ground=(x,z)=>Math.sin(x)*.1+Math.cos(z)*.3;
+  for(let frame=0;frame<20;frame++){
+    if(frame===3){plants[0].species='mijo';plants[0].id='p99';}
+    if(frame===7)plants[1].z+=2;
+    if(frame===10)plants.reverse();
+    plants[2].growth+=.1;
+    const origin={x:frame>12?96:0,z:-48};
+    a.batch.update(plants,frame,ground,origin,field);b.batch.update(plants,frame,ground,origin);
+    for(let i=0;i<a.scene.children.length;i++){
+      const x=a.scene.children[i],y=b.scene.children[i];assert.equal(x.count,y.count);assert.equal(x.visible,y.visible);
+      assert.deepEqual(x.instanceMatrix.array,y.instanceMatrix.array);assert.deepEqual(attribute(x).array,attribute(y).array);
+    }
+  }
+  a.close();b.close();
+});

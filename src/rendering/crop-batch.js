@@ -11,6 +11,9 @@ export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
  // A bounded sample per species and one synchronous pose avoid copying plant
  // state and allocating identical botanical recipes for mature/paused cohorts.
  const stageSamples=Array(8),renderPlant={};
+ // Presentation-only metadata; logical entities are never changed. Height caching
+ // is opt-in for an immutable terrain identity, not arbitrary ground callbacks.
+ let entitySamples=new WeakMap(),terrainIdentity=null;
  const uniforms={clock:{value:0},wind:{value:1}},tmpObj=new THREE.Object3D();
  const cycleDuration=crop=>cropSpec(ids[crop]).growth_seconds;
 const GROWTH_DECL=`attribute vec4 iGrowth; uniform float uGround; uniform float uHeight; uniform float uClock; uniform float uWind;`;
@@ -246,11 +249,19 @@ function writeInstance(modelIndex,plant,part){
  prepareModels(gltf);prepareBridges(bridgeData);
  return {
   capacity:MAX_PLANTS,
-  update(plants,clock,ground,origin={x:0,z:0}) {
+  update(plants,clock,ground,origin={x:0,z:0},groundKey=null) {
+   if(groundKey!==terrainIdentity){entitySamples=new WeakMap();terrainIdentity=groundKey;}
    renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges])model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
    for(const entity of plants){
-    const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=ids.indexOf(entity.species);p.growth=entity.growth/cropSpec(entity.species).growth_seconds;p.y=ground(entity.x,entity.z);p.seed=Number(entity.id.replace(/\D/g,''))||0;
+    let entry=entitySamples.get(entity);
+    if(!entry||entry.id!==entity.id||entry.species!==entity.species){
+     entry={id:entity.id,species:entity.species,crop:ids.indexOf(entity.species),duration:cropSpec(entity.species).growth_seconds,seed:Number(entity.id.replace(/\D/g,''))||0};entitySamples.set(entity,entry);
+    }
+    if(groundKey===null||entry.x!==entity.x||entry.z!==entity.z||!entry.hasHeight){
+     entry.y=ground(entity.x,entity.z);entry.x=entity.x;entry.z=entity.z;entry.hasHeight=true;
+    }
+    const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=entry.crop;p.growth=entity.growth/entry.duration;p.y=entry.y;p.seed=entry.seed;
     const cached=stageSamples[p.crop];
     const sample=cached?.growth===p.growth?cached.sample:stageSample(p.crop,p.growth);
     if(cached?.growth!==p.growth)stageSamples[p.crop]={growth:p.growth,sample};
@@ -261,7 +272,7 @@ function writeInstance(modelIndex,plant,part){
    for(let i=0;i<bridges.length;i++){const b=bridges[i];b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
    for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
-  dispose(){for(const model of [...models,...bridges]){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
+  dispose(){entitySamples=new WeakMap();terrainIdentity=null;for(const model of [...models,...bridges]){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
  };
 }

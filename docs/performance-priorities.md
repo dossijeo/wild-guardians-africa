@@ -21,13 +21,16 @@ separado. No se atribuye una mejora de FPS al recuento de trabajo evitado.
    paleta y contornos. Evaluar ruido de textura/receta barata/calidad/distancia
    con comparación visual. [Lectura HDR en extremos día/noche implementada](qa-hdr-endpoints.md).
    PCF compartido ya implementado; no duplicar ese trabajo.
+   [Volumen R8 de ruido fino evaluado](qa/noise-volume/README.md): ganancias GPU medias
+   pequeñas (0,8–2,0 %) y p95 algo peor en desierto; no se adopta en el juego.
 5. **Bounds y selección por luz (implementados):** [evidencia de las cinco culturas](qa-village-bounds.md);
    [envolvente conservadora de centros y colapso](qa-center-bounds.md) y
    [selección de chunks contra la luz](qa-light-volume.md), conservando casters
    fuera de cámara que siguen dentro del volumen de sombra.
 6. **Cultivos (subidas implementadas):** matrices estables, atributos de crecimiento/morph
    separados, subidas únicamente de rangos cambiados. El viento usa reloj, sin
-   reenviar matrices. Registro de materiales/agua implementado: [evidencia y límites](qa-material-registry.md).
+   reenviar matrices. [Alturas y metadatos cacheados por entidad/terreno](qa/crop-terrain-cache/README.md).
+   Registro de materiales/agua implementado: [evidencia y límites](qa-material-registry.md).
    [Caché de obstrucciones implementada](qa-obstruction-cache.md), conservando fades
    y reempaquetado al cambiar LOD; otros recorridos CPU siguen pendientes.
 7. **Profundidad VFX (ampliación opaca implementada):** [rutas nativas y medición](qa-standard-depth.md),
