@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Tutorial notice priority</title>
+<main id="stage" class="game"><header style="position:absolute;z-index:20;padding:10px;max-width:75vw">Controlled presentation test: original Spirit component and NoticeLifetime; no simulated campaign.<br><button id="raid">Explain raid</button><button id="dismiss">Dismiss explanation</button><pre id="report"></pre></header><div id="narrator"></div><div id="notices" class="notices"></div></main>
+<script type="module">
+import '../../src/ui/styles.css';
+import '../../src/ui/tutorial.css';
+import {NativeGuardian} from '../../src/ui/guardian.js';
+import {NoticeLifetime} from '../../src/app/notices.js';
+import {TUTORIAL_MESSAGES} from '../../src/tutorial/messages.js';
+import {RAID_NOTICE_TEXT} from '../../src/simulation/raid-notice.js';
+const state={messages:[],raid:null},notices=new NoticeLifetime(),errors=[];
+let presentation=null;
+const guardian=new NativeGuardian(document.querySelector('#narrator'),e=>errors.push(e.message));
+const show=()=>{
+ const visible=notices.visible(state,performance.now()/1000,presentation);
+ const region=document.querySelector('#notices');region.replaceChildren();
+ for(const message of visible){const card=document.createElement('div');card.className='notice-card';card.textContent=message.text;region.append(card);}
+ document.querySelector('#report').textContent=JSON.stringify({tutorial:presentation?.id??null,noticeIds:visible.map(m=>m.id),savedHistory:state.messages,errors},null,2);
+};
+document.querySelector('#raid').onclick=()=>{
+ state.raid={animals:[{id:'animal'}]};state.messages=[{id:'raid',text:RAID_NOTICE_TEXT,target:'animal'},{id:'weather',text:'Noche húmeda: aumenta la tolerancia de las plantas.'}];
+ notices.reset();presentation={id:'mechanic.first-raid',...TUTORIAL_MESSAGES['mechanic.first-raid']};
+ guardian.show({key:presentation.id,...presentation,dismiss:()=>document.querySelector('#dismiss').click()});show();
+};
+document.querySelector('#dismiss').onclick=()=>{presentation=null;guardian.hide({immediate:true});show();};
+const frame=()=>{guardian.update();show();requestAnimationFrame(frame);};frame();
+addEventListener('pagehide',()=>guardian.dispose(),{once:true});
+</script>
