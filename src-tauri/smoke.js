@@ -23,16 +23,29 @@
     document.addEventListener('visibilitychange',()=>transitions.push({state:document.visibilityState,at:performance.now()}));
     const until=async predicate=>{const deadline=performance.now()+20000;while(!predicate()){if(performance.now()>deadline)throw Error('Native visibility transition absent');await wait(100);}};
     const core=s=>Object.fromEntries(['day','time','elapsed','rng','ledger','plants','structures','workers','crates','tasks','spells','cooldowns','raid','nightPlan','dayPlan','result','completedNights','postgame','commandIds','villages','suppressed'].map(key=>[key,s[key]]));
-    const sample=({resume=true}={})=>{
+    const readSlot=()=>new Promise((resolve,reject)=>{
+      const request=indexedDB.open('wild-guardians-saves',1);
+      request.onerror=()=>reject(request.error);
+      request.onsuccess=()=>{
+        const db=request.result,tx=db.transaction('slots','readonly'),get=tx.objectStore('slots').get(fixture.slotId);let text=null;
+        get.onsuccess=()=>{text=get.result?.primary??null;};
+        tx.oncomplete=()=>{db.close();resolve(text);};tx.onabort=()=>{db.close();reject(tx.error);};
+      };
+    });
+    const sample=async({resume=true}={})=>{
+      const previous=await readSlot();
       if(!document.querySelector('#save'))document.querySelector('#menuButton').click();
       const save=document.querySelector('#save');if(!save)throw Error('Pause/save UI missing');save.click();
-      const snapshot=JSON.parse(localStorage.getItem('wild-guardians:slot:'+fixture.slotId));
+      const deadline=performance.now()+20000;let text=await readSlot();
+      while(!text||text===previous){if(performance.now()>deadline)throw Error('IndexedDB save did not commit');await wait(50);text=await readSlot();}
+      const snapshot=JSON.parse(text);
+      report.checks.saveBackend='IndexedDB';
       if(snapshot.slotId!==fixture.slotId)throw Error('Wrong visibility slot');
       if(resume)document.querySelector('#resume').click();
       return snapshot;
     };
     if(document.hidden)throw Error('Visibility fixture starts hidden');
-    const before=sample();await wait(2000);const advancing=sample();
+    const before=await sample();await wait(2000);const advancing=await sample();
     if(advancing.elapsed<=before.elapsed||advancing.pauses.some(p=>p!=='menu'))throw Error('Visible fixture does not advance freely');
     if(!advancing.raid||!advancing.spells.some(s=>s.kind==='shield'&&s.remaining>0))throw Error('Visibility fixture lost active raid or magic');
     report.checks.visibility.phase='minimize';
@@ -42,19 +55,19 @@
     report.checks.visibility.phase='hidden-interval';
     // Saving briefly opens the menu; close it so hidden is the sole blocker
     // during the measured interval. Retain the menu only at its end.
-    const hiddenStart=sample(),hiddenAt=performance.now();
+    const hiddenStart=await sample(),hiddenAt=performance.now();
     if(!hiddenStart.pauses.includes('hidden')||!hiddenStart.pauses.includes('menu'))throw Error('Hidden/menu pauses not stacked');
     await wait(300000);
     if(!document.hidden)throw Error('Native hidden interval too short');
-    const hiddenEnd=sample({resume:false}),hiddenMs=performance.now()-hiddenAt;
+    const hiddenEnd=await sample({resume:false}),hiddenMs=performance.now()-hiddenAt;
     if(JSON.stringify(core(hiddenStart))!==JSON.stringify(core(hiddenEnd)))throw Error('Game progressed while genuinely hidden');
     report.checks.visibility.phase='restore';
     await until(()=>!document.hidden);
-    const visibleMenu=sample({resume:false});
+    const visibleMenu=await sample({resume:false});
     if(visibleMenu.pauses.includes('hidden')||!visibleMenu.pauses.includes('menu'))throw Error('Native restore released the wrong pause');
     if(JSON.stringify(core(hiddenEnd))!==JSON.stringify(core(visibleMenu)))throw Error('Game advanced behind retained menu');
     report.checks.visibility.phase='resume';
-    document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=sample();
+    document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=await sample();
     const delta=resumed.elapsed-visibleMenu.elapsed,visibleMs=performance.now()-resumedAt;
     const maxScale=visibleMenu.raid&&resumed.raid&&visibleMenu.raid.id===resumed.raid.id?1:5;
     if(delta<=0||delta>visibleMs/1000*maxScale+.1)throw Error('Visible game failed to resume or caught up hidden time');
