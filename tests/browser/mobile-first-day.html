@@ -11,6 +11,10 @@ const qaDatabase=window.indexedDB;
 Object.defineProperty(window,'indexedDB',{value:{open:(name,version)=>qaDatabase.open(name+'-qa-mobile-first-day',version)},configurable:true});
 Object.defineProperty(window,'localStorage',{value:{get length(){return memory.size;},key:i=>[...memory.keys()][i]??null,getItem:k=>memory.get(String(k))??null,setItem:(k,v)=>memory.set(String(k),String(v)),removeItem:k=>memory.delete(String(k)),clear:()=>memory.clear()},configurable:true});
 const worlds=[],systems=new Set(),errors=[],listeners=[],terminated=new WeakSet();
+const homeFocus=WorldScene.prototype.focusFarm;
+WorldScene.prototype.focusFarm=function(){homeFocus.call(this);const r=worlds.find(r=>r.world===this);if(r)(r.homeFocus??=[]).push({eye:this.camera.position.toArray(),target:this.controls.target.toArray()});};
+const cameraReport=document.createElement('pre');cameraReport.id='qaCamera';document.querySelector('#qaMobile').append(cameraReport);
+const cameraTimer=setInterval(()=>{const w=worlds.at(-1);cameraReport.textContent=JSON.stringify({homeFocus:w?.homeFocus??[],eye:w?.world.camera.position.toArray(),target:w?.world.controls.target.toArray()});},500);addEventListener('pagehide',()=>clearInterval(cameraTimer));
 const add=EventTarget.prototype.addEventListener,remove=EventTarget.prototype.removeEventListener;
 EventTarget.prototype.addEventListener=function(type,callback,options){if(this instanceof HTMLCanvasElement)listeners.push({target:this,type,callback,capture:typeof options==='boolean'?options:!!options?.capture,signal:options?.signal,removed:false});return add.call(this,type,callback,options);};
 EventTarget.prototype.removeEventListener=function(type,callback,options){const capture=typeof options==='boolean'?options:!!options?.capture;for(const l of listeners)if(l.target===this&&l.type===type&&l.callback===callback&&l.capture===capture)l.removed=true;return remove.call(this,type,callback,options);};
@@ -42,5 +46,14 @@ function player(){
 function paint(){player();document.querySelector('#qaReport').textContent=JSON.stringify({cycles:worlds.map((r,i)=>({cycle:i+1,biome:r.biome,culture:r.culture,initialMoney:r.initialMoney,loads:r.loads,disposals:r.disposals,renders:r.renders,rendersAfterDispose:r.rendersAfterDispose,disposed:!!r.world.disposed,contextLost:r.gl.isContextLost(),canvasConnected:r.world.renderer.domElement.isConnected,canvasListenersLive:listeners.filter(l=>l.target===r.world.renderer.domElement&&!l.removed&&!l.signal?.aborted).length,ownListenersAborted:r.world.canvasEvents?.signal.aborted,workerTerminated:r.worker?terminated.has(r.worker):null,streamDead:r.world.chunkStream?.dead,streamTimer:r.world.chunkStream?.timer,streamQueue:r.world.chunkStream?.queue.length,geometryCount:r.geometryCount,geometryDisposed:r.geometryDisposed,materialCount:r.materialCount,materialDisposed:r.materialDisposed})),audio:[...systems].map(a=>({voices:a.voices.size,active:a.active.length,transport:!!a.transport,context:a.context?.state})),worldCanvases:document.querySelectorAll('#world').length,menuFrames:document.querySelectorAll('#native-menu').length,isolatedSlots:[...memory.keys()].filter(k=>/^wild-guardians:slot:/.test(k)&&!k.endsWith(':backup')&&!k.endsWith(':pending')).length,errors,limits:'Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active.'},null,2);}
 document.querySelector('#qaRead').onclick=paint;
 const timer=setInterval(paint,500);addEventListener('pagehide',()=>clearInterval(timer));
+// Opt-in saved-world setup exercises the actual Continue menu and HUD button.
+// This controlled camera fixture stays paused and uses only the QA save DB.
+if(new URLSearchParams(location.search).has('resume-camera')){
+ const Game=await import('../../src/simulation/game.js'),{Navigation,BIOME_IDS}=await import('../../src/world/navigation.js'),{findInitialLocationAsync}=await import('../../src/world/villages.js'),{json}=await import('../../src/rendering/assets.js'),{BrowserSaveRepository}=await import('../../src/persistence/browser-saves.js');
+ const biome=new URLSearchParams(location.search).get('biome')??'sabana',s=Game.newGame({seed:712,biome,slotId:'qa-resume-camera'}),pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe'),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(s.villages[0],site);s.suppressed.push(...site.suppress);nav.setState(s);Game.placeStructure(s,'qa-paid-center',site.center,nav);
+ for(let dz=-4;dz<=4;dz+=2)for(let dx=5;dx<=10;dx+=2)if(s.plants.length<4&&nav.placement(site.center.x+dx,site.center.z+dz,.4).valid)Game.plant(s,'qa-plant-'+s.plants.length,'mijo',site.center.x+dx,site.center.z+dz,nav);
+ s.tutorial.step='done';s.initialPreparation=false;s.hiringPaidDay=1;Game.pause(s,'qa-camera');await new BrowserSaveRepository(localStorage).save(s);
+}
 await import('../../src/app/main.js');paint();
 </script></html>

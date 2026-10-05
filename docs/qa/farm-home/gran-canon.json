@@ -1,0 +1,85 @@
+{
+  "biome": "gran-canon",
+  "home": {
+    "homeFocus": [
+      {
+        "eye": [
+          -30.684595436780327,
+          16.813501619394103,
+          62.008910071391654
+        ],
+        "target": [
+          -30.684595436780327,
+          3.8620575909201187,
+          30.572305649518967
+        ]
+      },
+      {
+        "eye": [
+          -30.684595436780327,
+          16.813501619394103,
+          62.008910071391654
+        ],
+        "target": [
+          -30.684595436780327,
+          3.8620575909201187,
+          30.572305649518967
+        ]
+      }
+    ],
+    "eye": [
+      -30.684595436780327,
+      16.813501619394103,
+      62.008910071391654
+    ],
+    "target": [
+      -30.684595436780327,
+      3.8620575909201187,
+      30.572305649518967
+    ]
+  },
+  "diagnostic": {
+    "cycles": [
+      {
+        "cycle": 1,
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "initialMoney": {
+          "n": "680",
+          "d": "1"
+        },
+        "loads": 1,
+        "disposals": 0,
+        "renders": 1967,
+        "rendersAfterDispose": 0,
+        "disposed": false,
+        "contextLost": false,
+        "canvasConnected": true,
+        "canvasListenersLive": 22,
+        "ownListenersAborted": false,
+        "workerTerminated": false,
+        "streamDead": false,
+        "streamTimer": null,
+        "streamQueue": 0,
+        "geometryCount": 254,
+        "geometryDisposed": 0,
+        "materialCount": 113,
+        "materialDisposed": 0
+      }
+    ],
+    "audio": [
+      {
+        "voices": 13,
+        "active": 13,
+        "transport": true,
+        "context": "running"
+      }
+    ],
+    "worldCanvases": 1,
+    "menuFrames": 0,
+    "isolatedSlots": 0,
+    "errors": [],
+    "limits": "Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active."
+  },
+  "scope": "Real Continue menu, isolated controlled saved world, HUD Volver; simulation held by qa-camera pause."
+}

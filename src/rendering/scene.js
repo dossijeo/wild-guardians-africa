@@ -1,6 +1,6 @@
 import {WallStrokePreview} from './wall-stroke-preview.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
-import {savedFarmFocus} from './farm-focus.js';
+import {farmHomeFocus} from './farm-focus.js';
 import {createWateringEmitter} from './watering-emitter.js';
 import {MudPatches,residentMudSurface} from './mud-patches.js';
 import {installShaderFailureGuard} from './shader-failure.js';
@@ -125,7 +125,7 @@ export class WorldScene {
     this.agricultureVfx=new AgricultureVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.materialVfx=new MaterialVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>this.nav.field.canyon?this.nav.workerSurface(x,z):renderedTerrainSurface(this.nav.field,x,z));
-    const village=state.villages[0];this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focus(savedFarmFocus(state));
+    this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]);if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
@@ -134,6 +134,7 @@ export class WorldScene {
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
+  focusFarm(){this.focus(farmHomeFocus(this.state));}
   focusTutorialPlacement(kind){
     const target=tutorialHandTarget(this.state,this.nav,kind);
     if(target)this.focus({x:target.position[0],z:target.position[2]});
