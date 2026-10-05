@@ -9,7 +9,10 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 // Funded postgame, clear-path fixtures isolate task/clock/ledger integration.
 // Worker positions and task reservations are always produced by Game.tick.
-const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+const nav={placement:()=>({valid:true,suppress:[]}),wallPlacement:()=>({valid:true,suppress:[]}),
+  field:{canyon:false},obstacles:[],suppressed:new Set(),propsAt:()=>[],
+  forBuildingPlacement(){return {...this};},segmentClear:()=>true,
+  setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function farm(){
   const s=Game.newGame({seed:712,slotId:'worker-chains'});Game.resume(s,'intro');s.ledger.balance=rational(10000);
   s.day=101;s.completedNights=100;s.postgame=true;s.initialPreparation=false;s.tutorial.step='done';

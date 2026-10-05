@@ -8,6 +8,9 @@ import {centerServicePoint} from '../src/world/centers.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {wallSpec} from '../src/simulation/rules.js';
 import {rational} from '../src/simulation/money.js';
+import {wallLayout} from '../src/world/wall-layout.js';
+import {ensureBoundaryGates} from '../src/world/boundary-gates.js';
+import {BALANCE} from '../src/simulation/balance.js';
 const options={smooth:false,snap:false};
 function flat(){
  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];
@@ -95,4 +98,27 @@ test('an existing usable gate survives later perimeter edits without adding anot
  const gate=structuredClone(s.structures.find(p=>p.autoGate)),wall=s.structures.find(p=>p.kind==='wall'&&!p.gate);
  Game.removeWall(s,'remove',wall.id,nav);Game.placeStructure(s,'restore',{kind:'wall',material:'adobe',x:wall.x,z:wall.z,yaw:wall.yaw},nav);
  assert.deepEqual(s.structures.find(p=>p.id===gate.id),gate);assert.equal(s.structures.filter(p=>p.autoGate).length,1);assert.equal(s.structures.at(-1).gate,false);
+});
+
+for(const material of ['zarzas','empalizada','adobe','piedra','reforzado'])test(`an existing ${material} door is preserved when multiple gaps are rebuilt with other materials`,()=>{
+ const {s,nav}=flat();s.ledger.balance=rational(20000);
+ Game.buildWallChain(s,'ring',material,[[0,0],[12,0],[12,12],[0,12],[0,0]],nav,options);
+ const originalGate=s.structures.find(p=>p.autoGate);assert.ok(originalGate);
+ originalGate.hp=originalGate.maxHp*.5;originalGate.status='damaged';nav.setState(s);
+ const gate=structuredClone(originalGate),walls=s.structures.filter(p=>p.kind==='wall'&&!p.gate).slice(-2);
+ assert.equal(walls.length,2);
+ for(const wall of walls)Game.removeWall(s,'remove-'+wall.id,wall.id,nav);
+ for(const [i,wall] of walls.entries()){
+  Game.placeStructure(s,'restore-'+wall.id,{kind:'wall',material:['adobe','piedra'][i],x:wall.x,z:wall.z,yaw:wall.yaw},nav);
+  assert.equal(s.structures.filter(p=>p.gate).length,1);assert.deepEqual(s.structures.find(p=>p.id===gate.id),gate);
+ }
+ const loaded=deserialize(serialize(s));assert.equal(loaded.structures.filter(p=>p.gate).length,1);assert.equal(JSON.stringify(loaded.structures.find(p=>p.id===gate.id)),JSON.stringify(gate));
+});
+
+test('an obstructed approach to an existing door does not make the planner create a second door',()=>{
+ const {s,nav}=flat();Game.buildWallChain(s,'ring','zarzas',[[0,0],[8,0],[8,8],[0,8],[0,0]],nav,options);
+ const layout=wallLayout(s.structures,Object.fromEntries(BALANCE.walls.map(p=>[p.id,p.hp]))),before=structuredClone(layout.pieces);
+ // Simulate a blocked approach without changing the already built door.
+ const canHost=p=>p.kind!=='gate';
+ assert.equal(ensureBoundaryGates(layout,nav,canHost,()=>true),0);assert.deepEqual(layout.pieces,before);
 });
