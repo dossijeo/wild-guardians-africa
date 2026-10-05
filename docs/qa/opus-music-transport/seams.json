@@ -1,0 +1,1942 @@
+{
+  "status": "completed",
+  "scope": "Rendered Opus full-file vs windows, native Web Audio offline with controlled clock; not live/mobile listening.",
+  "mode": "seams",
+  "errors": [],
+  "maximumError": 2.2351741790771484e-8,
+  "totalComparedSamples": 66312000,
+  "results": [
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s1",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1152000,
+      "maximumError": 1.1368683772161603e-13,
+      "rmsError": 1.5219235047339874e-16,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0014533009102688237,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s1",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1152000,
+      "maximumError": 4.0178029569121155e-41,
+      "rmsError": 2.764033961664916e-41,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.00022089478094689837,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s1",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1152000,
+      "maximumError": 4.0178029569121155e-41,
+      "rmsError": 1.6533862952660914e-41,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0003619236299861284,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s1",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1152000,
+      "maximumError": 3.552713678800501e-15,
+      "rmsError": 5.4603274646512235e-18,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.004383851606195549,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s1",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 4.284517901092169e-35,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s2",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1152000,
+      "maximumError": 4.547473508864641e-13,
+      "rmsError": 8.114743891410118e-16,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.011113420791087094,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s2",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 1.1093542435807526e-15,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.01420855048050583,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s2",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.010824301095124373,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 1.904010728606688e-15,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.008314948081283795,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005575360738017341,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s9",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 1.7932451489486462e-15,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0024136572282363222,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s9",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 3.0561075452033955e-15,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005854040864331559,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s9",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005740614775831406,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 2.966202982569209e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "a",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006338383672903527,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s1",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006016499597968428,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s1",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006114334178758518,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s1",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006002496231743497,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s1",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1152000,
+      "maximumError": 9.094947017729282e-13,
+      "rmsError": 1.8807846689139706e-15,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0019447632062723254,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s1",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006612850205846215,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s2",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1152000,
+      "maximumError": 9.313225746154785e-10,
+      "rmsError": 3.722053492575618e-12,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014454701816523051,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s2",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014897832194973601,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s2",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1152000,
+      "maximumError": 3.725290298461914e-9,
+      "rmsError": 1.6555696834440928e-11,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014708977066612715,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1152000,
+      "maximumError": 5.684341886080802e-14,
+      "rmsError": 6.949605496897741e-17,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.011346343816356276,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 9.313225746154785e-10,
+      "rmsError": 1.9523442992065595e-12,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.01567774083227465,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s9",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1152000,
+      "maximumError": 6.984919309616089e-10,
+      "rmsError": 4.247884630608751e-12,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006892737320997063,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s9",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1152000,
+      "maximumError": 3.4438311059246704e-41,
+      "rmsError": 9.941484080246075e-42,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.003972749935597865,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s9",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1152000,
+      "maximumError": 0,
+      "rmsError": 0,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.007874651997402993,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1152000,
+      "maximumError": 3.4438311059246704e-41,
+      "rmsError": 1.618396575498415e-41,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 3.2550915498700123e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "pack": "b",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1152000,
+      "maximumError": 3.4438311059246704e-41,
+      "rmsError": 7.434472735921089e-42,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.007266376328604003,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s1",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1058400,
+      "maximumError": 3.725290298461914e-9,
+      "rmsError": 9.790749112743912e-11,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0014532447289895786,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s1",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1058400,
+      "maximumError": 9.313225746154785e-10,
+      "rmsError": 1.554446590841251e-11,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.00022088215399469651,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s1",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1058400,
+      "maximumError": 1.3969838619232178e-9,
+      "rmsError": 2.5803165304661627e-11,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0003619119205077119,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s1",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 3.0082715697763817e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.004383677041678981,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s1",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1479437019748901e-41,
+      "rmsError": 2.8514113730055073e-42,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 4.284310922004157e-35,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s2",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 7.139155275947253e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.011112883244919521,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s2",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 9.799092224234841e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014207958655974011,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s2",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 7.577879943103666e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.010823825432106603,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 4.6221802645228294e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.008314640094789784,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 3.5165463914355225e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005575150682248193,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s9",
+      "case": "B_A",
+      "offset": 65.255182,
+      "comparedSamples": 1058400,
+      "maximumError": 3.725290298461914e-9,
+      "rmsError": 1.6551984853191842e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0024136110213196973,
+      "referenceHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "B",
+          "kind": "start"
+        },
+        {
+          "section": "A",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s9",
+      "case": "C_B",
+      "offset": 100.164273,
+      "comparedSamples": 1058400,
+      "maximumError": 5.587935447692871e-9,
+      "rmsError": 4.1482467715658265e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005854073272556287,
+      "referenceHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "C",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s9",
+      "case": "A_D",
+      "offset": 34.709727,
+      "comparedSamples": 1058400,
+      "maximumError": 5.587935447692871e-9,
+      "rmsError": 3.8888079289941483e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.005740664651345456,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "D",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 141.28,
+      "comparedSamples": 1058400,
+      "maximumError": 5.4569682106375694e-12,
+      "rmsError": 2.1603914507435414e-14,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 2.966209715605798e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "a",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 5.587935447692871e-9,
+      "rmsError": 3.8461461387929937e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006338278796500032,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "natural"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s1",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1058400,
+      "maximumError": 2.2351741790771484e-8,
+      "rmsError": 4.1824040170938623e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006016256206764923,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s1",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1058400,
+      "maximumError": 2.2351741790771484e-8,
+      "rmsError": 4.283531873434207e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006114085485196774,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s1",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1058400,
+      "maximumError": 2.2351741790771484e-8,
+      "rmsError": 4.231506507946237e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006002247033443025,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s1",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 1.3935005949967127e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0019446872180389331,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s1",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 3.9109726847068973e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0066125824252169065,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s2",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 1.0067030747648493e-9,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014454112376907967,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s2",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 1.0396042918929684e-9,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.014897214594844319,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s2",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 1.0331444381490524e-9,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.01470837889625741,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s2",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1058400,
+      "maximumError": 1.4901161193847656e-8,
+      "rmsError": 7.982207957875963e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.01134588449281352,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s2",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 9.653527655366305e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.015677105517156367,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s9",
+      "case": "D_B",
+      "offset": 137.433333,
+      "comparedSamples": 1058400,
+      "maximumError": 7.450580596923828e-9,
+      "rmsError": 4.896635544223616e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.006892615925910256,
+      "referenceHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "D",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s9",
+      "case": "E_B",
+      "offset": 164.1,
+      "comparedSamples": 1058400,
+      "maximumError": 5.587935447692871e-9,
+      "rmsError": 2.7072802686886627e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.0039726926167562475,
+      "referenceHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "E",
+          "kind": "start"
+        },
+        {
+          "section": "B",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s9",
+      "case": "A_E",
+      "offset": 48.544444,
+      "comparedSamples": 1058400,
+      "maximumError": 7.450580596923828e-9,
+      "rmsError": 5.533934051640714e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.007874508154528965,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        },
+        {
+          "section": "E",
+          "kind": "jump"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s9",
+      "case": "wrap",
+      "offset": 171.88,
+      "comparedSamples": 1058400,
+      "maximumError": 7.275957614183426e-12,
+      "rmsError": 2.4090656006580574e-14,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 3.2549605017569964e-7,
+      "referenceHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "F",
+          "kind": "start"
+        },
+        {
+          "section": "I",
+          "kind": "wrap"
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "pack": "b",
+      "track": "s9",
+      "case": "natural-fractional",
+      "offset": 29.91327,
+      "comparedSamples": 1058400,
+      "maximumError": 1.1175870895385742e-8,
+      "rmsError": 4.749555690061609e-10,
+      "changedAbove1e7": 0,
+      "firstDifferences": [],
+      "referenceRms": 0.007266255032501548,
+      "referenceHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ],
+      "candidateHistory": [
+        {
+          "section": "A",
+          "kind": "start"
+        }
+      ]
+    }
+  ]
+}
