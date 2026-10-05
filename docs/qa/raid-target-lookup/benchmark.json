@@ -1,0 +1,41 @@
+{
+  "node": "v20.11.0",
+  "fixture": "docs/qa/raid-traffic-corners/sabana-musgum-state.json.gz",
+  "snapshotSha256": "d18c122cab80cae98b842376b5f2d4a4b1c6cd8b7928c2e7a38bdf19aa007503",
+  "plants": 9446,
+  "structures": 1,
+  "ids": [
+    "plant-88702",
+    "plant-90489",
+    "structure-2",
+    "missing",
+    null
+  ],
+  "reference": {
+    "callsPerSample": 400,
+    "samplesMs": [
+      192.2092,
+      139.43039999999996,
+      152.85529999999994,
+      151.65650000000005,
+      122.86580000000004,
+      95.49660000000017,
+      96.29629999999997
+    ],
+    "medianMs": 139.43039999999996
+  },
+  "optimized": {
+    "callsPerSample": 400,
+    "samplesMs": [
+      139.5041000000001,
+      250.38850000000002,
+      198.08309999999983,
+      72.7211000000002,
+      82.03780000000006,
+      72.03970000000027,
+      68.62950000000001
+    ],
+    "medianMs": 82.03780000000006
+  },
+  "scope": "Synthetic CPU target lookup microbenchmark on recorded history; not rendered frametime or GPU performance"
+}

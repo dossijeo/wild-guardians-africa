@@ -150,6 +150,12 @@ export function reachableApproach(a,target,nav,shield=null){
 function canAttackCrop(s,p){
   return p.alive&&((p.attackHits??0)<1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
 }
+export function raidTarget(s,id){
+  const eligible=t=>t.id===id&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact');
+  // Keep crop-first selection and eligibility without allocating a copy of
+  // the complete farm history for every animal and simulation step.
+  return s.plants.find(eligible)??s.structures.find(eligible);
+}
 function targetFor(s,a,nav) {
   const groups=[],seen=new Set();
   for(const p of s.plants.filter(p=>p.alive))if(!seen.has(p.id)) {
@@ -180,7 +186,7 @@ export function updateRaid(s,dt,nav) {
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);
       if(a.attackRemaining>1e-9)continue;
-      const target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact'));
+      const target=raidTarget(s,a.targetId);
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;
         const shield=target?spellAt(s,'shield',target):null;
@@ -211,7 +217,7 @@ export function updateRaid(s,dt,nav) {
       if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
-    let target=[...s.plants,...s.structures].find(t=>t.id===a.targetId&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact'));
+    let target=raidTarget(s,a.targetId);
     if(!target) {
       release(s,a);const selected=targetFor(s,a,nav);
       if(!selected){a.status='retreating';continue;}
