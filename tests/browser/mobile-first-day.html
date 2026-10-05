@@ -1,11 +1,14 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Production world lifecycle</title>
-<script src="/i18n/loader.js"></script><div id="app"></div>
+<script src="/i18n/loader.js"></script><link rel="stylesheet" href="/ui-theme.css?v=2"><div id="app"></div>
 <details id="qaMobile" style="position:fixed;left:0;top:0;max-width:390px;max-height:35vh;overflow:auto;z-index:100000;background:#fffdeae8;font:10px system-ui;color:#18231e"><summary>QA</summary><button id="qaRead">Leer diagnóstico</button><pre id="qaReport"></pre><pre id="qaPlayer"></pre></details>
 <script type="module">
 import {Vector3} from 'three';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {AudioSystem} from '../../src/audio/audio.js';
 const memory=new Map([['wild-guardians:settings',JSON.stringify({quality:'muy_baja',sfx:0,music:0})]]);
+// This fixture runs the real app, but its saves must not share the player's DB.
+const qaDatabase=window.indexedDB;
+Object.defineProperty(window,'indexedDB',{value:{open:(name,version)=>qaDatabase.open(name+'-qa-mobile-first-day',version)},configurable:true});
 Object.defineProperty(window,'localStorage',{value:{get length(){return memory.size;},key:i=>[...memory.keys()][i]??null,getItem:k=>memory.get(String(k))??null,setItem:(k,v)=>memory.set(String(k),String(v)),removeItem:k=>memory.delete(String(k)),clear:()=>memory.clear()},configurable:true});
 const worlds=[],systems=new Set(),errors=[],listeners=[],terminated=new WeakSet();
 const add=EventTarget.prototype.addEventListener,remove=EventTarget.prototype.removeEventListener;
