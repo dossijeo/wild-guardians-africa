@@ -1,0 +1,708 @@
+{
+  "rows": [
+    {
+      "culture": "mapungubwe",
+      "kind": "center",
+      "first": {
+        "kind": "center",
+        "previousHp": 600,
+        "hp": 580,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "center",
+        "previousHp": 580,
+        "hp": 560,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_building_attacked",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "saheliana",
+      "kind": "center",
+      "first": {
+        "kind": "center",
+        "previousHp": 600,
+        "hp": 580,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "center",
+        "previousHp": 580,
+        "hp": 560,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_building_attacked",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "suajili",
+      "kind": "center",
+      "first": {
+        "kind": "center",
+        "previousHp": 600,
+        "hp": 580,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "center",
+        "previousHp": 580,
+        "hp": 560,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_building_attacked",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "musgum",
+      "kind": "center",
+      "first": {
+        "kind": "center",
+        "previousHp": 600,
+        "hp": 580,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "center",
+        "previousHp": 580,
+        "hp": 560,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_building_attacked",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "etiope",
+      "kind": "center",
+      "first": {
+        "kind": "center",
+        "previousHp": 600,
+        "hp": 580,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "center",
+        "previousHp": 580,
+        "hp": 560,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_building_attacked",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "beast_hit_structure",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": false,
+      "first": {
+        "kind": "wall",
+        "previousHp": 50,
+        "hp": 30,
+        "maxHp": 100,
+        "criticalThreshold": 40,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 30,
+        "hp": 10,
+        "maxHp": 100,
+        "criticalThreshold": 40,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": true,
+      "first": {
+        "kind": "wall",
+        "previousHp": 34,
+        "hp": 14,
+        "maxHp": 60,
+        "criticalThreshold": 24,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 14,
+        "hp": 0,
+        "maxHp": 60,
+        "criticalThreshold": 24,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "empalizada",
+      "gate": false,
+      "first": {
+        "kind": "wall",
+        "previousHp": 90,
+        "hp": 70,
+        "maxHp": 200,
+        "criticalThreshold": 80,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 70,
+        "hp": 50,
+        "maxHp": 200,
+        "criticalThreshold": 80,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_wood",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_wood",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "empalizada",
+      "gate": true,
+      "first": {
+        "kind": "wall",
+        "previousHp": 58,
+        "hp": 38,
+        "maxHp": 120,
+        "criticalThreshold": 48,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 38,
+        "hp": 18,
+        "maxHp": 120,
+        "criticalThreshold": 48,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_wood",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_wood",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "piedra",
+      "gate": false,
+      "first": {
+        "kind": "wall",
+        "previousHp": 210,
+        "hp": 190,
+        "maxHp": 500,
+        "criticalThreshold": 200,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 190,
+        "hp": 170,
+        "maxHp": 500,
+        "criticalThreshold": 200,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_stone",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_stone",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "piedra",
+      "gate": true,
+      "first": {
+        "kind": "wall",
+        "previousHp": 130,
+        "hp": 110,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 110,
+        "hp": 90,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_stone",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_stone",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "adobe",
+      "gate": false,
+      "first": {
+        "kind": "wall",
+        "previousHp": 130,
+        "hp": 110,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 110,
+        "hp": 90,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "adobe",
+      "gate": true,
+      "first": {
+        "kind": "wall",
+        "previousHp": 82,
+        "hp": 62,
+        "maxHp": 180,
+        "criticalThreshold": 72,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 62,
+        "hp": 42,
+        "maxHp": 180,
+        "criticalThreshold": 72,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "reforzado",
+      "gate": false,
+      "first": {
+        "kind": "wall",
+        "previousHp": 170,
+        "hp": 150,
+        "maxHp": 400,
+        "criticalThreshold": 160,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 150,
+        "hp": 130,
+        "maxHp": 400,
+        "criticalThreshold": 160,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_reinforced_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_reinforced_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "culture": "mapungubwe",
+      "kind": "wall",
+      "material": "reforzado",
+      "gate": true,
+      "first": {
+        "kind": "wall",
+        "previousHp": 106,
+        "hp": 86,
+        "maxHp": 240,
+        "criticalThreshold": 96,
+        "firstHitThisRaid": true
+      },
+      "second": {
+        "kind": "wall",
+        "previousHp": 86,
+        "hp": 66,
+        "maxHp": 240,
+        "criticalThreshold": 96,
+        "firstHitThisRaid": false
+      },
+      "sources": [
+        {
+          "id": "wall_hit_reinforced_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_reinforced_adobe",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    },
+    {
+      "kind": "wall-group",
+      "count": 3,
+      "sources": [
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "game_wall_critical",
+          "rate": 1,
+          "loop": false,
+          "bus": "ui",
+          "family": "structure-danger"
+        },
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        },
+        {
+          "id": "wall_hit_thorns",
+          "rate": 1,
+          "loop": false,
+          "bus": "world",
+          "family": "structure-contact"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "context": "closed",
+  "remainingVoices": 0
+}

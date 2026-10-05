@@ -4,7 +4,7 @@ import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {eventSound,eventExtraSound} from '../src/audio/audio.js';
-import {WALL_HIT_SOUNDS} from '../src/audio/structure-audio.js';
+import {WALL_HIT_SOUNDS,STRUCTURE_ALERT_SOUNDS} from '../src/audio/structure-audio.js';
 import {ANIMAL_SOUND_ROUTES} from '../src/audio/animal-audio.js';
 import {AMBIENT_SOUND_IDS} from '../src/audio/ambient-audio.js';
 import {MOVEMENT_SOUND_IDS} from '../src/audio/movement-audio.js';
@@ -21,7 +21,7 @@ const json=path=>JSON.parse(read(path).toString('utf8'));
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const bank=json('public/content/sfx.json'),declared=json('public/content/sfx-routing.json');
 const plan=json('docs/plan/sfx_mapeo_implementacion.json'),original=json('docs/plan/sfx_catalogo_extraido.json');
-const points=new Map(),sourceFiles=new Set(['src/app/main.js','src/rendering/scene.js']);
+const points=new Map(),sourceFiles=new Set(['src/app/main.js','src/rendering/scene.js','src/simulation/raids.js']);
 function add(id,file,selector,trigger){
  sourceFiles.add(file);const text=read(file).toString('utf8'),line=text.split(/\r?\n/).findIndex(s=>s.includes(selector))+1;
  assert.ok(line,`${file}: missing ${selector}`);
@@ -30,6 +30,7 @@ function add(id,file,selector,trigger){
 for(const [event,id] of Object.entries(eventSound))add(id,'src/audio/audio.js','export const eventSound=',event);
 for(const [event,id] of Object.entries(eventExtraSound))add(id,'src/audio/audio.js','export const eventExtraSound=',event+' (extra contact/completion)');
 for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))add(id,'src/audio/structure-audio.js','export const WALL_HIT_SOUNDS','StructureHit: '+material);
+for(const [trigger,id] of Object.entries(STRUCTURE_ALERT_SOUNDS))add(id,'src/audio/structure-audio.js','export const STRUCTURE_ALERT_SOUNDS',trigger);
 for(const [species,routes] of Object.entries(ANIMAL_SOUND_ROUTES))for(const [phase,id] of Object.entries(routes))add(id,'src/audio/animal-audio.js','export const ANIMAL_SOUND_ROUTES',species+': '+phase);
 for(const [file,selector,ids,trigger] of [
  ['ambient-audio','AMBIENT_SOUND_IDS',AMBIENT_SOUND_IDS,'AmbientAudio.update: local day/night/hydrology layer'],

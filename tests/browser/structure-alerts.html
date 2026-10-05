@@ -1,0 +1,39 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Avisos de estructuras</title>
+<p>Prueba dirigida de golpes de updateRaid y fuentes Web Audio originales. Centros/murallas pagados; terreno plano de prueba, estados de ataque preparados, salida silenciada. No acredita escena 3D ni escucha.</p>
+<button id="run">Probar avisos 121/122</button><output id="status">Lista</output><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {spawnRaid,updateRaid} from '../../src/simulation/raids.js';
+import {animalSpec,collapseThreshold} from '../../src/simulation/rules.js';
+import {rational} from '../../src/simulation/money.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {AudioSystem} from '../../src/audio/audio.js';
+import {WALL_HIT_SOUNDS,STRUCTURE_ALERT_SOUNDS} from '../../src/audio/structure-audio.js';
+import {clearNavigation} from '../clear-navigation.js';
+const errors=[],rows=[],nav=clearNavigation();let audio;
+const assert=(condition,message)=>{if(!condition)throw Error(message);};
+addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));addEventListener('pagehide',()=>audio?.dispose());
+const hit=(state,target,animalIndex=0)=>{Object.assign(state.raid.animals[animalIndex],{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:target.id,attackRemaining:.01,hitsRemaining:3,hitApplied:false,approachShieldId:null});updateRaid(state,.02,nav);return state.events.filter(e=>e.type==='StructureHit').at(-1);};
+document.querySelector('#run').onclick=async()=>{try{
+ document.querySelector('#run').disabled=true;audio=new AudioSystem({sfx:0,music:0});await audio.unlock();const bank=await audio.sfxBank(),decoded=new Map();
+ for(const id of ['beast_hit_structure',...Object.values(WALL_HIT_SOUNDS),...Object.values(STRUCTURE_ALERT_SOUNDS)])decoded.set(await audio.buffer(bank.items.find(item=>item.id===id).audio.url),id);
+ let sources=[];const start=audio.startBuffer.bind(audio);audio.startBuffer=(buffer,options)=>{const source=start(buffer,options);if(source)sources.push({id:decoded.get(buffer),rate:source.playbackRate.value,loop:source.loop,bus:options.bus,family:options.family});return source;};
+ for(const item of [...Game.CULTURES.map(culture=>({culture,kind:'center'})),...Object.keys(WALL_HIT_SOUNDS).flatMap(material=>[false,true].map(gate=>({culture:'mapungubwe',kind:'wall',material,gate})))]){
+  audio.stop();audio.remember([]);sources=[];let state=Game.newGame({seed:712,culture:item.culture,slotId:'browser-alert'});Game.resume(state,'intro');state.ledger.balance=rational(10000);state.day=3;state.initialPreparation=false;state.tutorial.step='done';
+  Game.placeStructure(state,'center',{x:4,z:0},nav);if(item.kind==='wall')Game.placeStructure(state,'wall',{kind:'wall',x:10,z:0,material:item.material,gate:item.gate},nav);
+  spawnRaid(state,{group:['warthog']},nav);let target=state.structures.at(-1);if(item.kind==='wall')target.hp=collapseThreshold(target)*2+animalSpec('warthog').structure_hit_damage/2;
+  const first=hit(state,target),before=serialize(state);audio.process([first],{state});audio.process([first],{state});await new Promise(done=>setTimeout(done,30));assert(serialize(state)===before,'Audio modifies the game');
+  if(item.kind==='center'){state=deserialize(before);target=state.structures[0];audio.remember(state.events);}
+  const second=hit(state,target);audio.process([second],{state});await new Promise(done=>setTimeout(done,30));
+  const expected=item.kind==='center'?'game_building_attacked':'game_wall_critical';assert(sources.filter(source=>source.id===expected).length===1,'Warning repeats or is missing');assert(sources.every(source=>source.rate===1&&!source.loop),'Sample clock changed');
+  rows.push({...item,first:first.structureHit,second:second.structureHit,sources:[...sources]});
+ }
+ audio.stop();audio.remember([]);sources=[];
+ const grouped=Game.newGame({seed:712,slotId:'grouped-alert'});Game.resume(grouped,'intro');grouped.ledger.balance=rational(10000);grouped.day=3;grouped.initialPreparation=false;grouped.tutorial.step='done';Game.placeStructure(grouped,'center',{x:4,z:0},nav);
+ const walls=[];for(let i=0;i<3;i++){Game.placeStructure(grouped,'wall-'+i,{kind:'wall',material:'zarzas',x:10+i*5,z:0},nav);walls.push(grouped.structures.at(-1));}
+ spawnRaid(grouped,{group:['warthog','warthog','warthog']},nav);const hits=[];for(const [index,wall] of walls.entries()){wall.hp=collapseThreshold(wall)*2+10;hits.push(hit(grouped,wall,index));}audio.process(hits,{state:grouped});await new Promise(done=>setTimeout(done,30));
+ assert(sources.filter(source=>source.id==='game_wall_critical').length===1,'Simultaneous warnings were not grouped');assert(sources.filter(source=>source.id==='wall_hit_thorns').length===3,'Material contacts were lost');rows.push({kind:'wall-group',count:3,sources:[...sources]});
+ audio.dispose();assert(audio.active.length===0&&audio.voices.size===0&&audio.context.state==='closed','Audio was not released');assert(errors.length===0,'Browser errors');
+ const report={rows,errors,muted:true,world3D:false,context:audio.context.state,remainingVoices:audio.voices.size};window.alertReport=report;document.querySelector('#report').textContent=JSON.stringify(report,null,2);document.querySelector('#status').textContent='Completada';
+}catch(error){errors.push(String(error.stack??error));audio?.dispose();document.querySelector('#status').textContent='Error';document.querySelector('#report').textContent=JSON.stringify({rows,errors},null,2);}};
+</script></html>

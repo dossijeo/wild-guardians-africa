@@ -1407,11 +1407,11 @@
       "id": "game_building_attacked",
       "filename": "121_game_building_attacked.mp3",
       "sha256": "e68e7475cd89041bd8887618c098251a2779ba48ecb16da494008c480a8468d3",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "StructureHit:first-center-hit"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Centro/edificio bajo ataque; limitar recurrencia por estructura."
     },
     {
@@ -1419,11 +1419,11 @@
       "id": "game_wall_critical",
       "filename": "122_game_wall_critical.mp3",
       "sha256": "95eacfa6b46e84fcdf72f8b26eebf34aff556d1d444b1a050263cff75ec6c5ca",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "StructureHit:wall-critical"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Muralla crítica; una transición/aviso agrupado, no cada fotograma."
     },
     {

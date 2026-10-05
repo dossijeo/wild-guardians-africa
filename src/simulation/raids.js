@@ -2,7 +2,7 @@ import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
-import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
+import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
@@ -243,7 +243,13 @@ export function updateRaid(s,dt,nav) {
               target.attackHits=(target.attackHits??0)+1;emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
               if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
             }
-            else {hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);emit(s,'StructureHit',{animalId:a.id,targetId:target.id});}
+            else {
+              const previousHp=target.hp;hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);
+              const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
+              if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
+              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,structureHit:{kind:target.kind,previousHp,hp:target.hp,maxHp:target.maxHp,
+                criticalThreshold:collapseThreshold(target)*2,firstHitThisRaid}});
+            }
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.

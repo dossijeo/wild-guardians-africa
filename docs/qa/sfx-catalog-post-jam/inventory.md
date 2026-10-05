@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **79**. Sin asignar en gameplay: **47**.
+Asignados: **81**. Sin asignar en gameplay: **45**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -126,8 +126,8 @@ Asignados: **79**. Sin asignar en gameplay: **47**.
 | 118 | eco_big_reward · Recompensa importante | Pendiente | Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 119 | game_attack_alert · Alerta de ataque | Asignado | Comienzo global de incursión; un aviso por grupo, no uno por animal. | src/audio/audio.js:18 → RaidSpawned |
 | 120 | game_enemy_detected · Enemigo detectado | Pendiente | Detección/localización de enemigo; variante local, sin repetir el aviso global. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 121 | game_building_attacked · Edificio bajo ataque | Pendiente | Centro/edificio bajo ataque; limitar recurrencia por estructura. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 122 | game_wall_critical · Muralla crítica | Pendiente | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 121 | game_building_attacked · Edificio bajo ataque | Asignado | Centro/edificio bajo ataque; limitar recurrencia por estructura. | src/audio/structure-audio.js:3 → StructureHit:first-center-hit |
+| 122 | game_wall_critical · Muralla crítica | Asignado | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | src/audio/structure-audio.js:3 → StructureHit:wall-critical |
 | 123 | game_farmer_hurt · Granjero herido | Pendiente | Trabajador lesionado; aviso agrupable y enlazable a posición. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 124 | game_attack_over · Ataque terminado | Asignado | Fin de incursión al retirarse el último animal. | src/audio/audio.js:18 → RaidEnded |
 | 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:18 → CampaignWon |

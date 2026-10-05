@@ -3,25 +3,26 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "4212464f5b0472035358a593d8d183515a39e0039914a334b955db9341787c12",
+    "public/content/sfx-routing.json": "38a73182d3efc8da93805292ec12f5195694f5745178d838060bcc3e3a23bdd6",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "0b8e10131699c5374a62887855c145fffba38e6438ba720d9e8e769a07d9b965",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "47199b048e88d6e875d9d7ad436ccf097430e47cd82ac0d3410bd70c01bcf4a3",
+    "src/audio/audio.js": "4f8be7ebdffeb7f92053f4f8953b8e62f5859ffa1272ad37d1883a0abb8c2725",
     "src/audio/farm-contact-audio.js": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7",
-    "src/audio/structure-audio.js": "be4396bcdffe5665ff3051e55c88beee706084affc8464e9b11960002691d228",
+    "src/audio/structure-audio.js": "9f586a24f3b3f7df14919e5edcde44cd7fe5c08e743c438e2390e8ca178ac418",
     "src/audio/ui-audio.js": "23c14ac33fa9d2bfa547ff440889ed89a87da41f68e52ea92f39f697806d46ca",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "54c0c3852c64ebf36c350baa8ef4bf56af356b1a2f79fc25478fa0f882975712",
     "src/audio/worker-audio.js": "5e2168f5f4065310012aefd117319fe4f544c3f01e8d6e7fae8bc91bf9e66634",
-    "src/rendering/scene.js": "d7ce96d9463e76b3b2e3c890cf2e3a628886aa5be6b91635c408cdf90f740851"
+    "src/rendering/scene.js": "d7ce96d9463e76b3b2e3c890cf2e3a628886aa5be6b91635c408cdf90f740851",
+    "src/simulation/raids.js": "bd9586312511da6fc8356374841987f86d6d3c8045b87e8b71ba5007a9e82ab4"
   },
   "total": 126,
-  "assigned": 79,
-  "unassigned": 47,
+  "assigned": 81,
+  "unassigned": 45,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -149,15 +150,15 @@
       "eco_spend",
       "eco_item_pickup",
       "game_enemy_detected",
-      "game_building_attacked",
-      "game_wall_critical",
       "game_farmer_hurt"
     ],
     "Alternativa / contextual / assigned": [
       "farm_seeds_drop",
       "beast_hit_structure",
       "npc_acknowledge",
-      "ui_buy"
+      "ui_buy",
+      "game_building_attacked",
+      "game_wall_critical"
     ]
   },
   "rows": [
@@ -2457,10 +2458,16 @@
       "sha256": "e68e7475cd89041bd8887618c098251a2779ba48ecb16da494008c480a8468d3",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Centro/edificio bajo ataque; limitar recurrencia por estructura.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 3,
+          "trigger": "StructureHit:first-center-hit"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 122,
@@ -2472,10 +2479,16 @@
       "sha256": "95eacfa6b46e84fcdf72f8b26eebf34aff556d1d444b1a050263cff75ec6c5ca",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Muralla crítica; una transición/aviso agrupado, no cada fotograma.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 3,
+          "trigger": "StructureHit:wall-critical"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 123,

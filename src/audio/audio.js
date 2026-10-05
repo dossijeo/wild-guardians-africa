@@ -3,7 +3,7 @@ import {GuardianAudio} from './guardian-audio.js';
 import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
 import {AnimalAudio,ANIMAL_SOUND_ROUTES} from './animal-audio.js';
-import {structureHitSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
+import {structureHitSound,structureAlertSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
 import {MovementAudio} from './movement-audio.js';
@@ -18,7 +18,7 @@ import {startWindowMusic} from './start-window-music.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
-export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
+export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','game_building_attacked','game_wall_critical','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
 export function eventAudioOptions(event,id,state,listener){
   const bus=soundBus(id);if(bus!=='world')return id==='ui_unlock'?{bus,emitter:'ui:unlock'}:{bus};
@@ -176,11 +176,18 @@ export class AudioSystem {
       if(events[this.eventCursor-1]===this.eventAnchor)start=this.eventCursor;
       else {const previous=events.lastIndexOf(this.eventAnchor);if(previous>=0)start=previous+1;}
     }
+    let alerts;
     for(let index=start;index<events.length;index++){
       const event=events[index];if(this.seen.has(event.id))continue;this.seen.add(event.id);
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
       const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];
       if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      const alert=event.type==='StructureHit'?structureAlertSound(event):null;
+      if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
+        this.sound(alert,{bus:'ui',family:'structure-danger',emitter:'ui:structure-danger',gain:1,
+          isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&(this.context.currentTime-requested)<=.5&&
+            !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
+      }
       const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});
     }
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);

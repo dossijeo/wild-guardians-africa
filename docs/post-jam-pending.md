@@ -8,7 +8,7 @@
 - Comprobar precarga, rutas relativas y liberación de recursos; mantener las optimizaciones de audio existentes.
 - Dejar una matriz de cobertura y pruebas reproducibles antes de marcar la tarea como terminada.
 
-Estado: inventario de los 126 efectos registrado en [la matriz de cobertura](qa/sfx-catalog-post-jam/inventory.md): 79 tienen asignaciones de código y 47 siguen sin asignar en gameplay. Los bytes originales de todos coinciden por hash. Pendientes: revisar contextos, completar usos compatibles y verificar reproducción/escucha; la matriz no acredita estos pasos.
+Estado: inventario de los 126 efectos registrado en [la matriz de cobertura](qa/sfx-catalog-post-jam/inventory.md): 81 tienen asignaciones de código y 45 siguen sin asignar en gameplay. Los bytes originales de todos coinciden por hash. [SFX 121/122 verificados](qa/sfx-structure-alerts/README.md): primer daño a un centro por incursión y transición de muralla a estado crítico, con avisos agrupados. Pendientes: revisar contextos, completar usos compatibles y verificar reproducción/escucha; la matriz no acredita estos pasos.
 
 Las ondas de pisadas en el agua del Gran Cañón son **VFX**. El usuario autorizó después vincular el SFX 012 (Pasos barro) a dichas pisadas y el SFX 006 (Agua de río) al ambiente del río; esta asignación concreta no sustituye el barrido completo pendiente.
 
