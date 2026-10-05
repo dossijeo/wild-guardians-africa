@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>Native save storage capacity</title>
 <style>body{font:16px system-ui;background:#172c26;color:#eee;padding:24px}button{padding:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
-<h1>Native save storage capacity</h1><p>Uses copies of the audited ten-night canyon snapshot. Only temporary QA slot keys are written and removed.</p>
+<h1>Native save storage capacity</h1><p>Uses recorded native campaign snapshots. Only temporary QA slot keys are written and removed.</p>
+<label>Recorded campaign <select id="snapshot"><option value="ten">Audited ten-night canyon</option><option value="hundred">Finished hundred-night savanna</option></select></label>
 <button id="run">Check native save capacity</button><p id="summary">Ready</p><details><summary>Full diagnostic</summary><pre id="result">Ready</pre></details>
 <script type="module">
 import {SaveRepository,deserialize,serialize} from '../../src/persistence/snapshots.js';
@@ -8,11 +9,15 @@ const button=document.querySelector('#run'),out=document.querySelector('#result'
 button.onclick=async()=>{
  button.disabled=true;
  const prefix='qa-storage-capacity-'+crypto.randomUUID(),repo=new SaveRepository(localStorage),slots=[];
- const report={origin:location.origin,status:'running',scope:'Native localStorage and production SaveRepository; clones of a legal ten-night state differ only in slot identity. No game balances, growth or damage overrides.',attempts:[]};
+ const hundred=document.querySelector('#snapshot').value==='hundred';
+ const report={origin:location.origin,status:'running',snapshot:hundred?'hundred-night-savanna':'ten-night-canyon',scope:'Native localStorage and production SaveRepository; clones of the recorded native state differ only in slot identity. No game balances, growth or damage overrides.',attempts:[]};
  try{
-  const response=await fetch('../../docs/qa/intensive-canyon-10/state.json');if(!response.ok)throw Error('Audited snapshot unavailable');
+  const path=hundred?'../../test-results/intensive-sabana-mapungubwe-712-state.json':'../../docs/qa/intensive-canyon-10/state.json';
+  const response=await fetch(path);if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Recorded snapshot unavailable');
   const original=await response.text();report.originalSnapshotCharacters=original.length;
-  for(let index=0;index<12;index++){
+  const recorded=deserialize(original);report.snapshotDay=recorded.day;report.completedNights=recorded.completedNights;report.result=recorded.result;report.plants=recorded.plants.length;report.crates=recorded.crates.length;
+  if(hundred&&(recorded.completedNights!==100||recorded.result!=='victory'))throw Error('Completed native hundred-night victory unavailable');
+  for(let index=0;index<(hundred?1:12);index++){
    const state=deserialize(original);state.slotId=prefix+'-'+index;slots.push(state.slotId);
    const row={index,snapshotCharacters:serialize(state).length,savesCompleted:0};report.attempts.push(row);
    try{
@@ -22,8 +27,8 @@ button.onclick=async()=>{
     if(!row.roundTrip)throw Error('Saved state differs');
    }catch(error){row.error={name:error.name,message:error.message};const key=repo.key(state.slotId);row.partialKeys={primary:localStorage.getItem(key)!==null,backup:localStorage.getItem(key+':backup')!==null,pending:localStorage.getItem(key+':pending')!==null};report.status=error.name==='QuotaExceededError'?'quota-reproduced':'failed';break;}
   }
-  if(report.status==='running')report.status='twelve-slots-saved';
-  report.previousPlayableSlots=report.attempts.filter(row=>row.savesCompleted===2).every(row=>repo.load(prefix+'-'+row.index).day===11);
+  if(report.status==='running')report.status=hundred?'hundred-night-slot-saved':'twelve-slots-saved';
+  report.previousPlayableSlots=report.attempts.filter(row=>row.savesCompleted===2).every(row=>repo.load(prefix+'-'+row.index).day===report.snapshotDay);
  }catch(error){report.status='failed';report.error={name:error.name,message:error.message};}
  finally{
   for(const slot of slots)repo.delete(slot);
