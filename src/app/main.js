@@ -53,7 +53,7 @@ const moneyLocale=()=>window.WildGuardiansLanguage?.locale()??'en-US';
 const localMoney=value=>formatMoney(value,moneyLocale());
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const commandId=()=>crypto.randomUUID();
-const button=(id,text,cls='')=>`<button id="${id}" class="${cls}">${text}</button>`;
+const button=(id,text,cls='primary')=>`<button id="${id}" class="${cls}">${text}</button>`;
 function error(message){if(String(message)===RESERVE_MESSAGE){if(reserveWarningShown)return;reserveWarningShown=true;budgetWarningUntil=performance.now()+18000;}uiAudio.error();if(state&&screen==='game'){commandFeedback=String(message);refreshCommandFeedback();return;}document.querySelector('.error-banner')?.remove();const el=document.createElement('div');el.className='error-banner';el.role='alert';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),6000);}
 function safe(action){if(leaving)return;commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
