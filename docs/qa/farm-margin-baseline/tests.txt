@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: reconciles the historical 100-night plantation, physical deliveries and recorded idle time without rewriting it
+ok 1 - reconciles the historical 100-night plantation, physical deliveries and recorded idle time without rewriting it
+  ---
+  duration_ms: 653.0839
+  ...
+# Subtest: computes an integer-price candidate from exact crate values but does not declare it a campaign victory
+ok 2 - computes an integer-price candidate from exact crate values but does not declare it a campaign victory
+  ---
+  duration_ms: 355.3872
+  ...
+# Subtest: reconciles independent historical olderMale campaign using its source balance
+ok 3 - reconciles independent historical olderMale campaign using its source balance
+  ---
+  duration_ms: 98.0327
+  ...
+# Subtest: reconciles independent historical olderFemale campaign using its source balance
+ok 4 - reconciles independent historical olderFemale campaign using its source balance
+  ---
+  duration_ms: 98.41
+  ...
+# Subtest: reconciles independent historical youngMale campaign using its source balance
+ok 5 - reconciles independent historical youngMale campaign using its source balance
+  ---
+  duration_ms: 82.9951
+  ...
+# Subtest: reconciles independent historical youngFemale campaign using its source balance
+ok 6 - reconciles independent historical youngFemale campaign using its source balance
+  ---
+  duration_ms: 109.2165
+  ...
+# Subtest: rejects a mismatched historical balance rather than silently analysing current prices
+ok 7 - rejects a mismatched historical balance rather than silently analysing current prices
+  ---
+  duration_ms: 537.8613
+  ...
+# Subtest: rejects a fabricated delivery credit even when the total ledger is reconciled
+ok 8 - rejects a fabricated delivery credit even when the total ledger is reconciled
+  ---
+  duration_ms: 324.8091
+  ...
+# Subtest: reprices the raw rational value and rounds once, instead of multiplying a rounded historical credit
+ok 9 - reprices the raw rational value and rounds once, instead of multiplying a rounded historical credit
+  ---
+  duration_ms: 1.5078
+  ...
+# Subtest: rejects a physically unwatered harvest and invalid analytical targets
+ok 10 - rejects a physically unwatered harvest and invalid analytical targets
+  ---
+  duration_ms: 386.1809
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3122.4843

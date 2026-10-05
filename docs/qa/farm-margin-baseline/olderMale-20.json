@@ -1,0 +1,364 @@
+{
+  "schema": "wg-fixed-output-margin-1",
+  "evidence": {
+    "balanceSha256": "a192c7f6ed2e1faa7d753765c09fd87ef8e6fe29e220ecb4130fe0b7712e7714",
+    "stateGzipSha256": "f89e948abf28f72fb029de37f59adfb9fcd9399cef3ad1ecdb3d23fee21b66cf",
+    "stateSha256": "0d3db36a9c9c39bc592a0814abaf011ce32b590eda50f6df7d26d441e35ed9e9"
+  },
+  "baseline": {
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "completedNights": 20,
+    "result": null,
+    "policy": {
+      "profile": "olderMale",
+      "mixed": true,
+      "middayHiring": true,
+      "reserveLabourGrowth": true,
+      "reserveMaintenance": true,
+      "burstPlanting": false,
+      "cameraEntry": true
+    },
+    "prices": {
+      "mijo": 9,
+      "girasol": 32,
+      "sorgo": 11,
+      "maiz": 15,
+      "batata": 20,
+      "algodon": 160,
+      "yuca": 28,
+      "platano": 240
+    },
+    "income": "30241",
+    "seeds": "18536",
+    "wages": "10613",
+    "repairs": "554",
+    "centres": "800",
+    "other": "0",
+    "operatingCosts": "29703",
+    "operatingProfit": "538",
+    "endingBalance": "1238",
+    "activity": {
+      "daylightSeconds": 6000,
+      "idleSecondsByReason": {
+        "budget": 2315,
+        "space": 0,
+        "shift-end": 1346
+      },
+      "unoccupiedFraction": 0.6101666666666666
+    },
+    "finalAttraction": "7409"
+  },
+  "bySpecies": {
+    "mijo": {
+      "planted": 2078,
+      "living": 191,
+      "picked": 1871,
+      "destroyed": 16,
+      "delivered": 1871,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 5,
+      "seedCosts": "10390",
+      "income": "24618",
+      "harvestMinusSeedCosts": "14228",
+      "seedOnlyBreakEvenHarvest": "4"
+    },
+    "girasol": {
+      "planted": 19,
+      "living": 9,
+      "picked": 10,
+      "destroyed": 0,
+      "delivered": 10,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "342",
+      "income": "656",
+      "harvestMinusSeedCosts": "314",
+      "seedOnlyBreakEvenHarvest": "17"
+    },
+    "sorgo": {
+      "planted": 23,
+      "living": 7,
+      "picked": 15,
+      "destroyed": 1,
+      "delivered": 15,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 1,
+      "seedCosts": "138",
+      "income": "275",
+      "harvestMinusSeedCosts": "137",
+      "seedOnlyBreakEvenHarvest": "6"
+    },
+    "maiz": {
+      "planted": 28,
+      "living": 11,
+      "picked": 16,
+      "destroyed": 1,
+      "delivered": 16,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 1,
+      "seedCosts": "224",
+      "income": "450",
+      "harvestMinusSeedCosts": "226",
+      "seedOnlyBreakEvenHarvest": "8"
+    },
+    "batata": {
+      "planted": 30,
+      "living": 12,
+      "picked": 16,
+      "destroyed": 2,
+      "delivered": 16,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "300",
+      "income": "480",
+      "harvestMinusSeedCosts": "180",
+      "seedOnlyBreakEvenHarvest": "13"
+    },
+    "algodon": {
+      "planted": 38,
+      "living": 17,
+      "picked": 12,
+      "destroyed": 9,
+      "delivered": 12,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "3800",
+      "income": "3456",
+      "harvestMinusSeedCosts": "-344",
+      "seedOnlyBreakEvenHarvest": "176"
+    },
+    "yuca": {
+      "planted": 16,
+      "living": 10,
+      "picked": 6,
+      "destroyed": 0,
+      "delivered": 6,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "192",
+      "income": "306",
+      "harvestMinusSeedCosts": "114",
+      "seedOnlyBreakEvenHarvest": "18"
+    },
+    "platano": {
+      "planted": 21,
+      "living": 8,
+      "picked": 0,
+      "destroyed": 13,
+      "delivered": 0,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 3,
+      "seedCosts": "3150",
+      "income": "0",
+      "harvestMinusSeedCosts": "-3150",
+      "seedOnlyBreakEvenHarvest": null
+    }
+  },
+  "target": {
+    "marginPercentOfOperatingCosts": 20,
+    "profit": "5941",
+    "income": "35644",
+    "minimumUniformIncrease": {
+      "factorPermille": 1112,
+      "prices": {
+        "mijo": 11,
+        "girasol": 36,
+        "sorgo": 13,
+        "maiz": 17,
+        "batata": 23,
+        "algodon": 178,
+        "yuca": 32,
+        "platano": 267
+      },
+      "income": "37302",
+      "operatingProfit": "7599",
+      "endingBalance": "8299",
+      "speciesIncome": {
+        "mijo": "30965",
+        "girasol": "741",
+        "sorgo": "320",
+        "maiz": "516",
+        "batata": "560",
+        "algodon": "3852",
+        "yuca": "348",
+        "platano": "0"
+      },
+      "finalAttraction": "8461",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "factorPermille": 1000,
+      "prices": {
+        "mijo": 9,
+        "girasol": 32,
+        "sorgo": 11,
+        "maiz": 15,
+        "batata": 20,
+        "algodon": 160,
+        "yuca": 28,
+        "platano": 240
+      },
+      "income": "30241",
+      "operatingProfit": "538",
+      "endingBalance": "1238",
+      "speciesIncome": {
+        "mijo": "24618",
+        "girasol": "656",
+        "sorgo": "275",
+        "maiz": "450",
+        "batata": "480",
+        "algodon": "3456",
+        "yuca": "306",
+        "platano": "0"
+      },
+      "finalAttraction": "7409",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    },
+    {
+      "factorPermille": 1100,
+      "prices": {
+        "mijo": 10,
+        "girasol": 36,
+        "sorgo": 13,
+        "maiz": 17,
+        "batata": 22,
+        "algodon": 176,
+        "yuca": 31,
+        "platano": 264
+      },
+      "income": "33118",
+      "operatingProfit": "3415",
+      "endingBalance": "4115",
+      "speciesIncome": {
+        "mijo": "26856",
+        "girasol": "741",
+        "sorgo": "320",
+        "maiz": "516",
+        "batata": "536",
+        "algodon": "3810",
+        "yuca": "339",
+        "platano": "0"
+      },
+      "finalAttraction": "8190",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    },
+    {
+      "factorPermille": 1250,
+      "prices": {
+        "mijo": 12,
+        "girasol": 40,
+        "sorgo": 14,
+        "maiz": 19,
+        "batata": 25,
+        "algodon": 200,
+        "yuca": 35,
+        "platano": 300
+      },
+      "income": "40232",
+      "operatingProfit": "10529",
+      "endingBalance": "11229",
+      "speciesIncome": {
+        "mijo": "33203",
+        "girasol": "816",
+        "sorgo": "340",
+        "maiz": "575",
+        "batata": "600",
+        "algodon": "4320",
+        "yuca": "378",
+        "platano": "0"
+      },
+      "finalAttraction": "9409",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    },
+    {
+      "factorPermille": 1500,
+      "prices": {
+        "mijo": 14,
+        "girasol": 48,
+        "sorgo": 17,
+        "maiz": 23,
+        "batata": 30,
+        "algodon": 240,
+        "yuca": 42,
+        "platano": 360
+      },
+      "income": "46507",
+      "operatingProfit": "16804",
+      "endingBalance": "17504",
+      "speciesIncome": {
+        "mijo": "38046",
+        "girasol": "986",
+        "sorgo": "415",
+        "maiz": "700",
+        "batata": "720",
+        "algodon": "5184",
+        "yuca": "456",
+        "platano": "0"
+      },
+      "finalAttraction": "11218",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    },
+    {
+      "factorPermille": 2000,
+      "prices": {
+        "mijo": 18,
+        "girasol": 64,
+        "sorgo": 22,
+        "maiz": 30,
+        "batata": 40,
+        "algodon": 320,
+        "yuca": 56,
+        "platano": 480
+      },
+      "income": "60461",
+      "operatingProfit": "30758",
+      "endingBalance": "31458",
+      "speciesIncome": {
+        "mijo": "49236",
+        "girasol": "1309",
+        "sorgo": "535",
+        "maiz": "900",
+        "batata": "960",
+        "algodon": "6912",
+        "yuca": "609",
+        "platano": "0"
+      },
+      "finalAttraction": "14818",
+      "finalThreatTier": {
+        "index": 4,
+        "attractionMin": 2000,
+        "threatMin": 10,
+        "threatMax": 14
+      }
+    }
+  ],
+  "scope": "Fixed recorded deliveries, labour, losses, bonuses and repair costs. No resimulation, no predicted idle reduction, campaign outcome or approval of prices. Higher yields change attraction, planting, wages and raid behaviour; responsible and poor-management native campaigns remain required. Species break-even covers recorded seeds only, not wages, repairs or future survival."
+}
