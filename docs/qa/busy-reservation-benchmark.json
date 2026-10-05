@@ -1,0 +1,54 @@
+{
+  "node": "v20.11.0",
+  "scope": "Synthetic CPU reservation benchmark: 14558 historical crops, 14095 crates, 100 pending tasks and 40 workers (idle/busy); no route-search cost, setup excluded, full state equivalence checked against original and shared-index reference. Not a frame, GPU or phone benchmark.",
+  "cases": [
+    {
+      "scenario": "idle",
+      "previous": {
+        "samples": 20,
+        "minMs": 35.80300000000034,
+        "medianMs": 47.38944999999967,
+        "p90Ms": 59.54639999999927,
+        "maxMs": 66.26469999999972
+      },
+      "indexed": {
+        "samples": 20,
+        "minMs": 1.2744999999995343,
+        "medianMs": 1.9664999999999964,
+        "p90Ms": 2.3726999999998952,
+        "maxMs": 4.246700000000146
+      },
+      "shared": {
+        "samples": 20,
+        "minMs": 1.2233000000001084,
+        "medianMs": 1.9305999999996857,
+        "p90Ms": 2.3296000000000276,
+        "maxMs": 4.415400000000318
+      }
+    },
+    {
+      "scenario": "busy",
+      "previous": {
+        "samples": 20,
+        "minMs": 38.45759999999973,
+        "medianMs": 43.7498999999998,
+        "p90Ms": 52.78600000000006,
+        "maxMs": 67.90610000000015
+      },
+      "indexed": {
+        "samples": 20,
+        "minMs": 0.8711999999995896,
+        "medianMs": 1.1048000000000684,
+        "p90Ms": 1.5218999999997322,
+        "maxMs": 1.6692000000002736
+      },
+      "shared": {
+        "samples": 20,
+        "minMs": 0.01840000000083819,
+        "medianMs": 0.03105000000050495,
+        "p90Ms": 0.042999999999665306,
+        "maxMs": 0.04870000000119035
+      }
+    }
+  ]
+}

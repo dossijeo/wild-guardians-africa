@@ -33,6 +33,17 @@ test('reachable nearest employee requires only one route query; blocked nearest 
  const blocked=state(),attempts=[];reserveTasks(blocked,w=>{attempts.push(w.id);return w.id==='worker-3';});assert.deepEqual(attempts,['worker-1','worker-2','worker-3']);assert.equal(blocked.tasks[0].workerId,'worker-3');
  const none=state();let queries=0;reserveTasks(none,()=>{queries++;return false;});assert.equal(queries,4);assert.equal(none.tasks[0].workerId,null);assert.equal(none.tasks[0].blocked,true);
 });
+
+test('no idle eligible employee preserves missing-target and reserved flags without querying routes',()=>{
+ const s=state();s.workers.forEach((w,i)=>{w.status=i%2?'acting':'walking';w.taskId='occupied-'+i;});
+ s.crates.push({id:'loose',x:2,z:0});s.structures.push({id:'wall',x:4,z:0});
+ s.tasks=[...['plot','loose','wall','missing'].map((id,i)=>({id:'task-'+i,created:i,targetId:id,centerId:'center',workerId:null,blocked:true})),{id:'reserved',created:4,targetId:'plot',centerId:'center',workerId:'worker-1',blocked:true}];
+ const expected=structuredClone(s);reference(expected,()=>{throw Error('No candidate should query a route');});
+ reserveTasks(s,()=>{throw Error('No candidate should query a route');});assert.deepEqual(s,expected);
+ assert.equal(s.tasks[3].blocked,true);assert.equal(s.tasks[4].blocked,true);
+ for(const w of s.workers){w.status='idle';w.taskId=null;w.contractDay=1;}
+ const expired=structuredClone(s);reference(expired,()=>{throw Error('Expired contract');});reserveTasks(s,()=>{throw Error('Expired contract');});assert.deepEqual(s,expired);
+});
 test('nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility',()=>{
  let seed=8192;const random=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return (seed>>>0)/4294967296;};
  for(let sample=0;sample<500;sample++){

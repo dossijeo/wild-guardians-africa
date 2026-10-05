@@ -1,0 +1,9 @@
+# Reserva mientras toda la plantilla está ocupada
+
+La reserva ahora comprueba si existe un trabajador libre con contrato vigente antes de resolver los objetivos de la cola. Si no hay ninguno, evita el índice y la ordenación de todas las tareas. Conserva la regla anterior de indicadores: una tarea pendiente con objetivo existente pierde el indicador blocked cuando no hay candidatos; un objetivo desaparecido y una tarea ya reservada conservan su indicador. No cambia la prioridad FIFO, alcance, rutas, sueldos ni tiempos de trabajo.
+
+Pasan nueve pruebas de reservas, primer destino e implementación intensiva. Incluyen objetivos de cultivo, caja y estructura, objetivos ausentes, tareas ya reservadas, contratos caducados, 500 escenarios de elegibilidad y una finca con mucho historial. Una campaña nativa responsable de tres noches sigue coincidiendo con la referencia anterior: serialización completa de 151.796 caracteres, hash `2e3a31cb41bb301079b641a135810973ea9715ca05ec0dd3c7272ee66716358d`, mismas filas diarias y contadores. El informe está en `busy-reservation-equivalence.json`.
+
+El benchmark actualizado compara algoritmo original, índice compartido previo y versión actual, con preparación fuera del intervalo, orden rotatorio, cinco calentamientos, veinte muestras y equivalencia completa por muestra. Usa 14.558 cultivos históricos, 14.095 cajas, cien tareas y cuarenta trabajadores. `busy-reservation-benchmark.json` conserva la salida: con plantilla ocupada, las medianas del índice previo y versión actual son 1,1048 y 0,03105 ms; con plantilla libre son 1,9665 y 1,9306 ms. No incluye coste de A*, renderizado, GPU ni teléfono, y no impone umbrales de duración a los tests.
+
+Las campañas largas ya activas conservan sus módulos anteriores; no se presentan como evidencia de esta revisión. La comprobación completa y CI de la revisión posterior siguen pendientes hasta sus resultados terminales.

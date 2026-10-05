@@ -7,6 +7,14 @@ export function enqueue(state,centerId,kind,targetId) {
   state.tasks.push(t);return t;
 }
 export function reserveTasks(state,canExecute=()=>true) {
+  if(!state.workers.some(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state))) {
+    // Busy workers cannot reserve. Preserve the existing missing-target rule,
+    // while clearing stale blocked flags exactly as an empty candidate list did.
+    for(const t of state.tasks)if(!t.workerId&&t.blocked&&(
+      state.plants.some(e=>e.id===t.targetId)||state.crates.some(e=>e.id===t.targetId)||state.structures.some(e=>e.id===t.targetId)
+    ))t.blocked=false;
+    return;
+  }
   // Resolve pending targets once. Historical crops/crates remain in the save,
   // but must not be copied and searched separately for every queued task.
   const needed=new Set(state.tasks.filter(t=>!t.workerId).map(t=>t.targetId)),targets=new Map();
