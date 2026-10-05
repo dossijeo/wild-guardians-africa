@@ -1,4 +1,6 @@
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
+import {ensureBoundaryGates} from '../world/boundary-gates.js';
+import {gatePortalPoints} from '../world/gate-passages.js';
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
@@ -70,6 +72,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   return candidates[0]??{valid:false,cost:800,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
@@ -78,11 +81,13 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?800:wallSpec(material).cost;
+  const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
+  if(kind==='wall'&&!gate)for(const update of planNewWallGates(s,[entity],nav,[],()=>false))Object.assign(entity,update);
+  const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
-    const maxHp=structureHealth(kind,material,gate);
-    s.structures.push({id:`structure-${s.nextId++}`,created:s.sequence++,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0});
-    s.suppressed.push(...(check.suppress??[]));nav.setState(s);emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+    s.nextId++;s.sequence++;s.structures.push(entity);
+    s.suppressed.push(...suppression);nav.setState(s);emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
@@ -98,16 +103,60 @@ export function wallRefund(target){
   const amount=multiply(rational(target.cost),Math.round(Math.min(target.hp,target.maxHp)*1e6),Math.round(target.maxHp*1e6));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
+function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
+  if(!newPieces.length)return [];
+  const newIds=new Set(newPieces.map(p=>p.created));
+  const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
+  const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
+  const suppressedForGates=new Set(nav.suppressed);
+  for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
+  const canHost=p=>{
+    const original=originals.get(p.id);if(!original)return false;
+    const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
+    if(!check.valid||cropOverlap(candidate))return false;
+    const points=gatePortalPoints(candidate);if(points.length!==2)return false;
+    const draft=nav.forBuildingPlacement(candidate);
+    draft.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...layout.pieces.filter(q=>originals.get(q.id)?.status!=='ruined').map(q=>({...originals.get(q.id),gate:q.id===p.id||q.kind==='gate'}))];
+    draft.suppressed=new Set([...suppressedForGates,...check.suppress??[]]);
+    return points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&draft.segmentClear(points[0],points[1],.28,null,true);
+  };
+  const interior=nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
+  interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;
+  const omitted=blockedPieces.map(piece=>{const h=piece.baseScaleX*2.18/2,dx=Math.cos(piece.yaw)*h,dz=-Math.sin(piece.yaw)*h;return [[piece.x-dx,piece.z-dz],[piece.x+dx,piece.z+dz]];});
+  const targets=s.structures.filter(operational).map(center=>{
+    const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
+    return target;
+  }),scores=new Map();let approachRoutes;
+  const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
+    const a=route[i],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
+    const t=length?Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length)):0;
+    return Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz);
+  }));
+  const rank=(p,face)=>{
+    if(face.ids.some(id=>id>0&&!newIds.has(id)))return -p.id;
+    // Reuse existing shortest navigation routes, including buildings and cliffs.
+    // Computed only for a fresh enclosure; incremental edits always prefer the
+    // last new module rather than relocating an older wall.
+    approachRoutes??=targets.flatMap(target=>s.villages.map(v=>{
+      const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
+      return {entry,target,path:path?[entry,...path]:null};
+    }));
+    if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
+    return scores.get(p.id);
+  };
+  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id));
+  const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
+  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
+  return updates;
+}
 export function previewWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,options);
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
-  const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>nav.wallPlacement(piece).valid&&!cropOverlap(piece));
+  const blockedPieces=[];
+  const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}return !cropOverlap(piece);});
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
-  const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
-  layout.ensureAutomaticGates();
-  const converted=layout.pieces.filter(p=>p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
-  const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
+  const updates=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
   const checks=[...newPieces,...updates.filter(p=>!newPieces.some(e=>e.id===p.id)).map(p=>({...s.structures.find(e=>e.id===p.id),...p}))],suppressed=new Set();
   for(const piece of checks){

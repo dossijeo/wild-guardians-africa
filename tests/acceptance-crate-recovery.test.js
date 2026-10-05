@@ -10,7 +10,10 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 // Funded campaign fixture, real task/clock/raid operations on clear paths.
 // These tests do not certify profitability or original terrain/rendering.
-const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},walkable:()=>true,terrainValid:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+const nav={placement:()=>({valid:true,suppress:[]}),wallPlacement:()=>({valid:true,suppress:[]}),
+  field:{canyon:false},obstacles:[],suppressed:new Set(),propsAt:()=>[],
+  forBuildingPlacement(){return {...this};},segmentClear:()=>true,
+  setState:()=>{},walkable:()=>true,terrainValid:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function tickUntil(s,predicate,limit=400){
   let time=0;while(!predicate()&&time<limit&&!s.result&&!s.pauses.length){Game.tick(s,.05,nav);time+=.05;}
   assert.ok(predicate(),`Not reached at day ${s.day}, time ${s.time}, after ${time}s`);
