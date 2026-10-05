@@ -1,0 +1,104 @@
+{
+  "balanceSha256": "a192c7f6ed2e1faa7d753765c09fd87ef8e6fe29e220ecb4130fe0b7712e7714",
+  "sourceProvenance": null,
+  "scope": "Observed seed charge histogram matches distinct current crop prices and planted counts. Crop cash contribution excludes labour, repairs, centre and unrealized live crops. Pending-water counts come from retained destroyed plant state; they do not identify the destruction timestamp or the cause of delayed watering.",
+  "priceHistogramMatches": true,
+  "rows": [
+    {
+      "species": "mijo",
+      "seedPrice": 5,
+      "planted": 12133,
+      "paidSeeds": 12133,
+      "seedCosts": 60665,
+      "deliveredIncome": "129817",
+      "cashBeforeLabourAndRepairs": "69152",
+      "destroyed": 152,
+      "lostBeforeFirstWater": 50,
+      "lostWithPendingWater": 111
+    },
+    {
+      "species": "girasol",
+      "seedPrice": 18,
+      "planted": 37,
+      "paidSeeds": 37,
+      "seedCosts": 666,
+      "deliveredIncome": "980",
+      "cashBeforeLabourAndRepairs": "314",
+      "destroyed": 19,
+      "lostBeforeFirstWater": 4,
+      "lostWithPendingWater": 15
+    },
+    {
+      "species": "sorgo",
+      "seedPrice": 6,
+      "planted": 39,
+      "paidSeeds": 39,
+      "seedCosts": 234,
+      "deliveredIncome": "533",
+      "cashBeforeLabourAndRepairs": "299",
+      "destroyed": 3,
+      "lostBeforeFirstWater": 0,
+      "lostWithPendingWater": 3
+    },
+    {
+      "species": "maiz",
+      "seedPrice": 8,
+      "planted": 58,
+      "paidSeeds": 58,
+      "seedCosts": 464,
+      "deliveredIncome": "1167",
+      "cashBeforeLabourAndRepairs": "703",
+      "destroyed": 10,
+      "lostBeforeFirstWater": 0,
+      "lostWithPendingWater": 5
+    },
+    {
+      "species": "batata",
+      "seedPrice": 10,
+      "planted": 77,
+      "paidSeeds": 77,
+      "seedCosts": 770,
+      "deliveredIncome": "1352",
+      "cashBeforeLabourAndRepairs": "582",
+      "destroyed": 32,
+      "lostBeforeFirstWater": 1,
+      "lostWithPendingWater": 16
+    },
+    {
+      "species": "algodon",
+      "seedPrice": 100,
+      "planted": 84,
+      "paidSeeds": 84,
+      "seedCosts": 8400,
+      "deliveredIncome": "320",
+      "cashBeforeLabourAndRepairs": "-8080",
+      "destroyed": 82,
+      "lostBeforeFirstWater": 38,
+      "lostWithPendingWater": 76
+    },
+    {
+      "species": "yuca",
+      "seedPrice": 12,
+      "planted": 26,
+      "paidSeeds": 26,
+      "seedCosts": 312,
+      "deliveredIncome": "516",
+      "cashBeforeLabourAndRepairs": "204",
+      "destroyed": 13,
+      "lostBeforeFirstWater": 2,
+      "lostWithPendingWater": 2
+    },
+    {
+      "species": "platano",
+      "seedPrice": 150,
+      "planted": 32,
+      "paidSeeds": 32,
+      "seedCosts": 4800,
+      "deliveredIncome": "0",
+      "cashBeforeLabourAndRepairs": "-4800",
+      "destroyed": 32,
+      "lostBeforeFirstWater": 25,
+      "lostWithPendingWater": 31
+    }
+  ]
+}

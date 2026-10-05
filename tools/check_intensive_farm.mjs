@@ -5,7 +5,7 @@ import {createOpeningWorld} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {cropSpec,permission,operational} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
-import {PROFILES} from '../src/simulation/workforce.js';
+import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
@@ -16,7 +16,7 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
+export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
@@ -28,8 +28,8 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  for(let z=Math.ceil(bounds[1]/grid)*grid;z<=bounds[3];z+=grid)for(let x=Math.ceil(bounds[0]/grid)*grid;x<=bounds[2];x+=grid)candidates.push({x,z});
  candidates.sort((a,b)=>distance(a,origin)-distance(b,origin)||a.z-b.z||a.x-b.x);
  const plots=[];let candidateIndex=0,nextWages=worker.wage,staff=1,plantedSequence=0;
- const daily=[],counts={},seen=new Set(),savedRaids=new Set();let maximumLiving=0,reloads=0;
- const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;}};
+ const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0;
+ const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
  const choosePlot=()=>{
   const occupied=new Set(s.plants.filter(p=>p.alive).map(p=>`${p.x},${p.z}`));
   const old=plots.find(p=>!occupied.has(`${p.x},${p.z}`));if(old)return old;
@@ -70,6 +70,18 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
    return {actions,reason:actions?'active':'incursion'};
   }
   if(!permission(s,'plant'))return {actions,reason:'night'};
+  // Optional comparison: ordinary proportional hiring during the workday.
+  // The original dawn-only strategy remains the default, including old runs.
+  if(middayHiring&&s.time<worker.end-20){
+   const desired=Math.max(1,Math.ceil(s.plants.filter(p=>p.alive).length/12)),extra=desired-staff;
+   if(extra>0){
+    const selection={[profile]:extra},cost=hiringCost(selection,{time:s.time});
+    const tomorrow=Math.max(labourReserve(),desired*worker.wage);
+    if(numberOf(s.ledger.balance)>=cost+tomorrow+maintenanceReserve()){
+     Game.hireAdditional(s,command('hire'),selection,center.id);staff+=extra;nextWages=staff*worker.wage;actions++;
+    }
+   }
+  }
   // Request repairs before reinvesting, preserving their real FIFO position.
   for(const c of s.structures.filter(operational))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){Game.requestRepair(s,command('repair'),c.id);actions++;}
   const live=s.plants.filter(p=>p.alive);
@@ -92,7 +104,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  };
  hire();collect();
  while(s.day<=days&&!s.result){
-  const day=s.day,start=s.elapsed,before=numberOf(s.ledger.balance),baseline={...counts},idle={budget:0,space:0,'shift-end':0,incursion:0,night:0},initialStaff=staff;
+  const day=s.day,start=s.elapsed,before=numberOf(s.ledger.balance),baseline={...counts},additionalBaseline={...additionalHiring},idle={budget:0,space:0,'shift-end':0,incursion:0,night:0},initialStaff=staff;
   let longestIdle=0,idleRun=0,actions=0;
   while(s.day===day&&!s.result){
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
@@ -104,12 +116,13 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
   const row={day,before,money:numberOf(s.ledger.balance),staff:initialStaff,wages:initialStaff*worker.wage,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result};
+  row.additionalStaff=additionalHiring.count-additionalBaseline.count;row.additionalWages=additionalHiring.cost-additionalBaseline.cost;
   daily.push(row);onDay?.(row);
   if(s.day<=days&&!s.result){hire();collect();}
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
 }
 export function auditIntensiveFarm(report,{victory=false}={}){
  const s=report.state,plants=new Map(s.plants.map(p=>[p.id,p]));let balance=1500n;
@@ -133,10 +146,10 @@ export function auditIntensiveFarm(report,{victory=false}={}){
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const provenance=intensiveRunProvenance(process.argv.slice(2));console.log(JSON.stringify({provenance}));
- const days=Number(process.argv[2]??100),profile=process.argv[6]??'olderFemale',result=simulateIntensiveFarm({days,biome:process.argv[3]??'sabana',culture:process.argv[4]??'mapungubwe',mixed:process.argv[5]==='mixed',profile,seed:712,onDay:r=>console.log(JSON.stringify(r))});
+ const days=Number(process.argv[2]??100),profile=process.argv[6]??'olderFemale',middayHiring=process.argv[7]==='midday',result=simulateIntensiveFarm({days,biome:process.argv[3]??'sabana',culture:process.argv[4]??'mapungubwe',mixed:process.argv[5]==='mixed',middayHiring,profile,seed:712,onDay:r=>console.log(JSON.stringify(r))});
  const {state,nav,daily,...report}=result;console.log(JSON.stringify(report));
  mkdirSync(new URL('../test-results/',import.meta.url),{recursive:true});
- const key=`intensive-${report.biome}-${report.culture}-${report.seed}${process.argv[5]==='mixed'?'-mixed':''}${profile==='olderFemale'?'':'-'+profile}`;
+ const key=`intensive-${report.biome}-${report.culture}-${report.seed}${process.argv[5]==='mixed'?'-mixed':''}${profile==='olderFemale'?'':'-'+profile}${middayHiring?'-midday-'+days:''}`;
  writeFileSync(new URL(`../test-results/${key}.json`,import.meta.url),JSON.stringify({...report,daily,provenance},null,2)+'\n');
  writeFileSync(new URL(`../test-results/${key}-state.json`,import.meta.url),serialize(state));
  auditIntensiveFarm(result,{victory:days===100});

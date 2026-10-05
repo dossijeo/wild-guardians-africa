@@ -7,12 +7,12 @@ import {auditIntensiveFarm} from './check_intensive_farm.mjs';
 export function summarizeIntensiveFarm(report){
   auditIntensiveFarm(report,{victory:report.result==='victory'});
   const state=report.state,bySpecies={},picked=new Set(state.crates.map(crate=>crate.sourcePlantId));
-  const species=id=>bySpecies[id]??=({planted:0,living:0,picked:0,destroyed:0,delivered:0,inTransit:0,income:'0'});
+  const species=id=>bySpecies[id]??=({planted:0,living:0,picked:0,destroyed:0,lostBeforeFirstWater:0,lostWithPendingWater:0,delivered:0,inTransit:0,income:'0'});
   for(const plant of state.plants){
     const row=species(plant.species);row.planted++;
     if(plant.alive)row.living++;
     else if(picked.has(plant.id))row.picked++;
-    else row.destroyed++;
+    else {row.destroyed++;if(plant.water[0].status==='due')row.lostBeforeFirstWater++;if(plant.water.some(w=>w.status==='due'))row.lostWithPendingWater++;}
   }
   for(const crate of state.crates){
     const row=species(crate.species);
@@ -37,6 +37,7 @@ export function summarizeIntensiveFarm(report){
     biome:report.biome,culture:report.culture,seed:report.seed,result:report.result,
     provenance:report.provenance??null,
     policy:report.policy,
+    additionalHiring:report.additionalHiring??null,
     campaign100:report.result==='victory'&&report.completedNights===100?'verified':'unverified',
     completedNights:report.completedNights,daysObserved:days,money:report.money,
     maximumLiving:report.maximumLiving,speciesObserved:Object.keys(bySpecies).length,bySpecies,

@@ -13,8 +13,9 @@ mkdirSync(output,{recursive:true});
 const provenance=intensiveRunProvenance(process.argv.slice(2)),row={biome,culture,days,status:'running',pid:process.pid,provenance};
 const save=()=>writeFileSync(new URL(key+'-status.json',output),JSON.stringify(row,null,2)+'\n');
 save();
+let lastState=null;
 try {
-  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onDay:day=>{row.lastDay=day;save();}});
+  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onTick:state=>{lastState=state;},onDay:day=>{row.lastDay=day;save();}});
   const {state,nav,...report}=result;
   writeFileSync(new URL(key+'-state.json',output),serialize(state));
   writeFileSync(new URL(key+'-report.json',output),JSON.stringify({...report,provenance},null,2)+'\n');
@@ -24,5 +25,9 @@ try {
   const summary=summarizeIntensiveFarm({...result,provenance});
   writeFileSync(new URL(key+'-summary.json',output),JSON.stringify(summary,null,2)+'\n');
   Object.assign(row,{status:'passed',result:result.result,completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction});
-}catch(error){row.status='failed';row.error={name:error.name,message:error.message};process.exitCode=1;}
+}catch(error){
+  row.status='failed';row.error={name:error.name,message:error.message};process.exitCode=1;
+  if(lastState)try{writeFileSync(new URL(key+'-failure-state.json',output),serialize(lastState));row.failureSnapshot='validated';}
+  catch(snapshotError){writeFileSync(new URL(key+'-failure-unvalidated.json',output),JSON.stringify(lastState));row.failureSnapshot={validationError:snapshotError.message};}
+}
 save();console.log(JSON.stringify({biome,culture,status:row.status,completedNights:row.completedNights,error:row.error}));

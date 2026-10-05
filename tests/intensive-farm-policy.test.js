@@ -29,3 +29,18 @@ test('reinvestment without growing labour or maintenance reserves can lose despi
  assert.ok(auditIntensiveFarm(report));
  assert.equal(summarizeIntensiveFarm(report).campaign100,'unverified');
 });
+test('optional midday hiring uses paid ordinary contracts while preserving next-day and repair reserves',()=>{
+ const report=simulateIntensiveFarm({days:3,seed:712,middayHiring:true});
+ assert.equal(report.completedNights,3);assert.equal(report.result,null);assert.ok(auditIntensiveFarm(report));
+ assert.equal(report.policy.middayHiring,true);assert.ok(report.additionalHiring.count>0);
+ assert.ok(Number.isSafeInteger(report.additionalHiring.cost)&&report.additionalHiring.cost>0);
+ assert.ok(report.additionalHiring.cost<report.additionalHiring.count*30,'part-day contracts must cost less than a whole working day');
+ assert.ok(report.counts.HiringConfirmed>3);
+ assert.equal(report.daily.reduce((sum,day)=>sum+day.additionalStaff,0),report.additionalHiring.count);
+ assert.equal(report.daily.reduce((sum,day)=>sum+day.additionalWages,0),report.additionalHiring.cost);
+ const summary=summarizeIntensiveFarm(report);
+ assert.equal(summary.cashflow.wageCosts,String(report.daily.reduce((sum,day)=>sum+day.wages+day.additionalWages,0)));
+ assert.deepEqual(summary.additionalHiring,report.additionalHiring);
+ assert.ok(report.daily.every(day=>day.delivered>0));
+ for(const row of Object.values(summary.bySpecies))assert.ok(row.lostBeforeFirstWater<=row.lostWithPendingWater&&row.lostWithPendingWater<=row.destroyed);
+});
