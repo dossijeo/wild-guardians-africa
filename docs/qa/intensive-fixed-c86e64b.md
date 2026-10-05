@@ -31,3 +31,12 @@ not a completed result. The two first cases were confirmed live with matching
 clean source provenance. No campaign acceptance is claimed until all thirty
 continuous runs and their independent audits finish. Later changes on main do
 not change this worktree; relevant simulation changes will require new runs.
+
+Sabana/Saheliana has now completed its continuous hundred-night case and passed
+the economic, physical-delivery, save and final-victory audits. Its full summary
+and checkpoint provenance are archived in
+`intensive-fixed-c86e64b-saheliana-summary.json` and
+`intensive-fixed-c86e64b-saheliana-checkpoint.json`. This proves one case on the
+fixed commit, not the matrix or subsequent main changes. Its recorded unoccupied
+daytime fraction is 0.6082667: survival does not satisfy the desired pacing.
+That poor pacing remains visible and requires policy/balance investigation.

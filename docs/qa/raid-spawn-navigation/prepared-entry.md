@@ -58,6 +58,12 @@ unchanged CPU contention, or cost of the subsequent first target routes.
 Those movement and mobile checks remain pending. If the player moves the
 camera immediately before spawning, the synchronous fallback can still stall.
 
+The subsequent native Game-tick check now confirms a seconds-long first target
+search in both the preceding reference and prepared route, with all five animals
+retreating without a reachable target in this desert context. See
+[first-routes.md](first-routes.md). The appearance-only result does not resolve
+that remaining navigation/entry problem.
+
 Build and relative web-package checks pass. The module worker is emitted as a
 separate 67 KiB asset with the normal relative Vite URL. The isolated hundred-
 night matrix remains on c86e64b; these comparisons establish targeted entry
