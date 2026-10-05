@@ -1,0 +1,512 @@
+TAP version 13
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 165.7043
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 31.237
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 2041.5417
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 5.1667
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 24.3493
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 1571.831
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 14.1769
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 11.3195
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 17.4507
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 36.7688
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 42.3869
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 14.6463
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 22.1318
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 13.2026
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 17.5954
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 11.353
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 11.9606
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 14.3362
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 6.9068
+  ...
+# Subtest: Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+ok 20 - Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+  ---
+  duration_ms: 2.9444
+  ...
+# Subtest: Every closed native leaf preserves total source surface area, bounds and regional pivots
+ok 21 - Every closed native leaf preserves total source surface area, bounds and regional pivots
+  ---
+  duration_ms: 1846.1333
+  ...
+# Subtest: Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+ok 22 - Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+  ---
+  duration_ms: 1110.917
+  ...
+# Subtest: Full original gate geometry leaves a swept controller corridor when the leaf is open
+ok 23 - Full original gate geometry leaves a swept controller corridor when the leaf is open
+  ---
+  duration_ms: 884.8023
+  ...
+# Subtest: Production mesh applies opening changes without changing health, opacity or the closed source bridge
+ok 24 - Production mesh applies opening changes without changing health, opacity or the closed source bridge
+  ---
+  duration_ms: 774.7575
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 25 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 1324.003
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 26 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 6.5549
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 27 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 0.7372
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 28 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 0.8515
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 29 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.4703
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 30 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 62.9946
+  ...
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 31 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 8.683
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 32 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 1.3543
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 33 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 3.2732
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 34 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.9488
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 35 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.9692
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 36 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 44.4385
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 37 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 1003.7817
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 38 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 34.7401
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 39 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 22.105
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 40 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.2018
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 41 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 534.2944
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 42 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 445.8529
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 43 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 344.121
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 44 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 294.9598
+  ...
+# Subtest: Dragging submits only the completed world-space stroke and preserves curved samples
+ok 45 - Dragging submits only the completed world-space stroke and preserves curved samples
+  ---
+  duration_ms: 5.5904
+  ...
+# Subtest: many input events produce one preview per frame while release retains every curve sample
+ok 46 - many input events produce one preview per frame while release retains every curve sample
+  ---
+  duration_ms: 1.8583
+  ...
+# Subtest: cancel and two-finger camera gestures cancel pending previews
+ok 47 - cancel and two-finger camera gestures cancel pending previews
+  ---
+  duration_ms: 2.0264
+  ...
+# Subtest: Pointer cancellation and disabling cannot submit a partial chain
+ok 48 - Pointer cancellation and disabling cannot submit a partial chain
+  ---
+  duration_ms: 1.2659
+  ...
+# Subtest: Two-finger pan and zoom cancel drawing and never build on finger release
+ok 49 - Two-finger pan and zoom cancel drawing and never build on finger release
+  ---
+  duration_ms: 0.778
+  ...
+# Subtest: Short tap stays a tap while alternate camera buttons and Shift pass through
+ok 50 - Short tap stays a tap while alternate camera buttons and Shift pass through
+  ---
+  duration_ms: 2.3186
+  ...
+# Subtest: Coalesced input keeps the native minimum spacing and disposal removes all handlers
+ok 51 - Coalesced input keeps the native minimum spacing and disposal removes all handlers
+  ---
+  duration_ms: 0.5473
+  ...
+# Subtest: a held wall stroke survives tool expiry; release starts the timeout from the new successful placement
+ok 52 - a held wall stroke survives tool expiry; release starts the timeout from the new successful placement
+  ---
+  duration_ms: 0.6759
+  ...
+# Subtest: cancelling a gesture releases timeout protection without extending the last successful placement
+ok 53 - cancelling a gesture releases timeout protection without extending the last successful placement
+  ---
+  duration_ms: 0.3841
+  ...
+# Subtest: screen-space gesture does no terrain work until release, and cancellation does none
+ok 54 - screen-space gesture does no terrain work until release, and cancellation does none
+  ---
+  duration_ms: 0.6919
+  ...
+# Subtest: screen-space misses end the stroke without bridging unavailable terrain; empty release is reported
+ok 55 - screen-space misses end the stroke without bridging unavailable terrain; empty release is reported
+  ---
+  duration_ms: 0.5137
+  ...
+# Subtest: zarzas: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 56 - zarzas: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 42.4857
+  ...
+# Subtest: empalizada: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 57 - empalizada: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 2.5928
+  ...
+# Subtest: adobe: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 58 - adobe: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 2.9303
+  ...
+# Subtest: reforzado: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 59 - reforzado: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 1.7568
+  ...
+# Subtest: piedra: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 60 - piedra: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 1.4742
+  ...
+# Subtest: real pointer release builds immediately without a confirmation step; pointer cancellation never spends
+ok 61 - real pointer release builds immediately without a confirmation step; pointer cancellation never spends
+  ---
+  duration_ms: 3.805
+  ...
+# Subtest: existing modules do not spend the new stroke budget twice
+ok 62 - existing modules do not spend the new stroke budget twice
+  ---
+  duration_ms: 4.0786
+  ...
+# Subtest: healthy, damaged, fractional-health gate and ruined pieces refund their remaining whole-coin value once
+ok 63 - healthy, damaged, fractional-health gate and ruined pieces refund their remaining whole-coin value once
+  ---
+  duration_ms: 5.5286
+  ...
+# Subtest: blocked modules do not consume the release budget; current funds determine the final count
+ok 64 - blocked modules do not consume the release budget; current funds determine the final count
+  ---
+  duration_ms: 2.2278
+  ...
+# Subtest: an entirely blocked stroke makes no payment and changes no saved state
+ok 65 - an entirely blocked stroke makes no payment and changes no saved state
+  ---
+  duration_ms: 0.9139
+  ...
+# Subtest: Native wall layout source and extracted module retain their hashes
+ok 66 - Native wall layout source and extracted module retain their hashes
+  ---
+  duration_ms: 5.9114
+  ...
+# Subtest: Module sampling preserves original straight, curved and closed paths
+ok 67 - Module sampling preserves original straight, curved and closed paths
+  ---
+  duration_ms: 3.8408
+  ...
+# Subtest: Enclosure graph and deterministic gates match source including crossings and T junctions
+ok 68 - Enclosure graph and deterministic gates match source including crossings and T junctions
+  ---
+  duration_ms: 51.1607
+  ...
+# Subtest: Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+ok 69 - Paid chain closes with one gate, no surcharge and exactly one idempotent debit
+  ---
+  duration_ms: 74.0788
+  ...
+# Subtest: Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+ok 70 - Preview never spends coins, reserves IDs or alters the enclosure and construction revalidates it
+  ---
+  duration_ms: 7.0973
+  ...
+# Subtest: unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+ok 71 - unbuildable pieces are silently omitted, crop intersections leave gaps and insufficient money does not charge
+  ---
+  duration_ms: 28.6497
+  ...
+# Subtest: Removing an automatic gate opens a persistent gap with its refund and without replacement
+ok 72 - Removing an automatic gate opens a persistent gap with its refund and without replacement
+  ---
+  duration_ms: 12.2685
+  ...
+# Subtest: No global 240-module cap; shortened modules affect both sampled and swept obstacles
+ok 73 - No global 240-module cap; shortened modules affect both sampled and swept obstacles
+  ---
+  duration_ms: 2.5697
+  ...
+# Subtest: Malformed persisted module scale and automatic gate flags are rejected
+ok 74 - Malformed persisted module scale and automatic gate flags are rejected
+  ---
+  duration_ms: 12.5818
+  ...
+# Subtest: No-center and raid restrictions reject chains and removal without mutating money or modules
+ok 75 - No-center and raid restrictions reject chains and removal without mutating money or modules
+  ---
+  duration_ms: 16.1181
+  ...
+# Subtest: Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+ok 76 - Night and live raids reject individual walls, gates, preview and stale chains without changing navigation or campaign
+  ---
+  duration_ms: 24.0462
+  ...
+# Subtest: Removing a reserved repair releases its worker and refunds the removed piece once
+ok 77 - Removing a reserved repair releases its worker and refunds the removed piece once
+  ---
+  duration_ms: 7.612
+  ...
+# Subtest: one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+ok 78 - one-pass wall sampling exactly preserves native lab output for dense, repeated, closed and capped paths
+  ---
+  duration_ms: 12266.281
+  ...
+# Subtest: QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+ok 79 - QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2797.7794
+  ...
+# Subtest: QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+ok 80 - QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1861.0646
+  ...
+# Subtest: QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+ok 81 - QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1708.6852
+  ...
+# Subtest: QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+ok 82 - QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1520.2326
+  ...
+# Subtest: QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+ok 83 - QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 807.2995
+  ...
+# Subtest: QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+ok 84 - QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 3668.4056
+  ...
+# Subtest: QA-085 gran-rio: native blocked terrain permits paid walls while preserving crop restrictions
+ok 85 - QA-085 gran-rio: native blocked terrain permits paid walls while preserving crop restrictions
+  ---
+  duration_ms: 335.6383
+  ...
+# Subtest: QA-085 manglares: native blocked terrain permits paid walls while preserving crop restrictions
+ok 86 - QA-085 manglares: native blocked terrain permits paid walls while preserving crop restrictions
+  ---
+  duration_ms: 304.1725
+  ...
+# Subtest: QA-085 volcanes: native blocked terrain permits paid walls while preserving crop restrictions
+ok 87 - QA-085 volcanes: native blocked terrain permits paid walls while preserving crop restrictions
+  ---
+  duration_ms: 337.2101
+  ...
+# Subtest: QA-085 gran-canon: native blocked terrain permits paid walls while preserving crop restrictions
+ok 88 - QA-085 gran-canon: native blocked terrain permits paid walls while preserving crop restrictions
+  ---
+  duration_ms: 621.4762
+  ...
+# (node:30860) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall guide retains ground heights, reprojects on camera movement and invalidates changed points/field
+ok 89 - wall guide retains ground heights, reprojects on camera movement and invalidates changed points/field
+  ---
+  duration_ms: 11.2192
+  ...
+# Subtest: wall picking touches only resident ground, while ordinary picks retain entity selection
+ok 90 - wall picking touches only resident ground, while ordinary picks retain entity selection
+  ---
+  duration_ms: 2.2201
+  ...
+# Subtest: screen-space guide follows the finger with no camera or terrain queries
+ok 91 - screen-space guide follows the finger with no camera or terrain queries
+  ---
+  duration_ms: 1.5551
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 92 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 4.2439
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 93 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 15.9601
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 94 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 1934.2285
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 95 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 342.2512
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 96 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 33.9762
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 97 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 47.1223
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 98 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 1958.5424
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 99 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 3498.5484
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 100 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 7653.0088
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 100
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19504.5083

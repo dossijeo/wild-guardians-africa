@@ -24,7 +24,7 @@ try{
  const points=fluid?[[focus.x-4,focus.z],[focus.x+4,focus.z]]:[[site.center.x-8,site.center.z+6],[site.center.x,site.center.z+10],[site.center.x+8,site.center.z+6]];
  world.limitWallStroke=p=>Game.affordableWallStroke(s,'zarzas',p).points;
  const paint=()=>{world.render(0);data.textContent=JSON.stringify({biome,fluid,money:s.ledger.balance,wallCount:s.structures.filter(p=>p.kind==='wall').length,guidePoints:world.strokePreview.points.length,walls:s.structures.filter(p=>p.kind==='wall').map(p=>{const mesh=world.objects.get(p.id),box=new Box3().setFromObject(mesh);return {id:p.id,x:p.x,z:p.z,ground:nav.field.surface(p.x,p.z),fluid:nav.field.waterInfo(p.x,p.z),anchor:mesh.position.y,top:box.max.y};}),errors:[]});};paint();
- document.querySelector('#hold').disabled=false;document.querySelector('#hold').onclick=()=>{world.showWallStroke(points);document.querySelector('#release').disabled=false;paint();};
+ document.querySelector('#hold').disabled=false;document.querySelector('#hold').onclick=()=>{world.strokePreview.show(points);document.querySelector('#release').disabled=false;paint();};
  document.querySelector('#release').onclick=()=>{Game.resume(s,'qa');Game.buildWallChain(s,'stroke','zarzas',points,nav,{maxPieces:Game.wallCapacity(s,'zarzas')});Game.pause(s,'qa');world.showWallStroke([]);world.syncResidentProps();paint();};
  const frame=()=>{world.render(0);requestAnimationFrame(frame);};frame();
 }catch(e){data.textContent=JSON.stringify({error:e.message});}

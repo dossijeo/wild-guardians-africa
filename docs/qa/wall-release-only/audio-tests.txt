@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: three hundred panel renders do not duplicate transition sounds; selection and closure each play once
+ok 1 - three hundred panel renders do not duplicate transition sounds; selection and closure each play once
+  ---
+  duration_ms: 7.5245
+  ...
+# Subtest: replacing a panel with a mandatory dialog creates one open cue, with no invented close or purchase
+ok 2 - replacing a panel with a mandatory dialog creates one open cue, with no invented close or purchase
+  ---
+  duration_ms: 0.4113
+  ...
+# Subtest: repeated errors within one real second are bounded while a later error remains audible
+ok 3 - repeated errors within one real second are bounded while a later error remains audible
+  ---
+  duration_ms: 0.722
+  ...
+# Subtest: only actual user menu-pause transitions cue; closing another pause never falsely announces resume
+ok 4 - only actual user menu-pause transitions cue; closing another pause never falsely announces resume
+  ---
+  duration_ms: 0.574
+  ...
+# Subtest: load/scene reset is silent, retains no previous surface, and permits an immediate new warning
+ok 5 - load/scene reset is silent, retains no previous surface, and permits an immediate new warning
+  ---
+  duration_ms: 0.3664
+  ...
+# Subtest: audio failure cannot throw into a successful interface or game action
+ok 6 - audio failure cannot throw into a successful interface or game action
+  ---
+  duration_ms: 18.6602
+  ...
+# Subtest: all transition cues retain original one-shot IDs from the supplied bank
+ok 7 - all transition cues retain original one-shot IDs from the supplied bank
+  ---
+  duration_ms: 16.5097
+  ...
+# Subtest: stale panel/close requests expire on the next transition before decoding can produce playback
+ok 8 - stale panel/close requests expire on the next transition before decoding can produce playback
+  ---
+  duration_ms: 0.5303
+  ...
+# Subtest: delayed error/pause requests cannot replay after their interaction window or scene reset
+ok 9 - delayed error/pause requests cannot replay after their interaction window or scene reset
+  ---
+  duration_ms: 0.5191
+  ...
+# Subtest: each completed failed wall gesture can cue error 107 even within the general warning debounce
+ok 10 - each completed failed wall gesture can cue error 107 even within the general warning debounce
+  ---
+  duration_ms: 1.8416
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 353.1927

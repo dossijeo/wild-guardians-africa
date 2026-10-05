@@ -1,7 +1,7 @@
 <!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QA · Wall drawing performance</title>
 <style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:absolute;top:0;left:0;z-index:4;background:#fffd;padding:8px;max-width:75vw}pre{max-height:140px;overflow:auto;white-space:pre-wrap}</style>
-<header>Controlled native world: paid centre and seeds, paused clock. Drag on the terrain to build a paid wall. Benchmark compares full entity picking with terrain-only picking on the same resident geometry; it does not measure GPU frame time.<br><button id="bench" disabled>Compare picking CPU</button><pre id="report">Loading…</pre></header><canvas id="world"></canvas>
+<header>Controlled native world: paid centre and seeds, paused clock. Drag on the terrain to build a paid wall. Benchmark compares full entity picking with terrain-only picking on the same resident geometry; it does not measure GPU frame time.<br><button id="bench" disabled>Compare picking CPU</button><button id="hold" disabled>Hold controlled screen stroke</button><button id="release" disabled>Release controlled stroke</button><pre id="report">Loading…</pre></header><canvas id="world"></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
@@ -34,7 +34,19 @@ try{
   run(true);run(false);const full=run(false),terrain=run(true);
   const sameGround=full.points.every((p,i)=>p===null?terrain.points[i]===null:terrain.points[i]&&Math.hypot(p.x-terrain.points[i].x,p.z-terrain.points[i].z)<1e-8);
   delete full.points;delete terrain.points;bench={full,terrain,sameGround,samples:positions.length};paint();
- };paint();
+ };
+ // Controlled pointer handlers, not a claim of physical phone input.
+ const event=(x,y)=>({pointerId:910,button:0,clientX:x,clientY:y,preventDefault(){},stopImmediatePropagation(){}});
+ let end=null;
+ document.querySelector('#hold').disabled=false;document.querySelector('#hold').onclick=()=>{
+  const r=world.canvas.getBoundingClientRect(),a={x:r.left+r.width*.3,y:r.top+r.height*.6},b={x:r.left+r.width*.7,y:a.y};
+  const nativeCanvas=world.wallDrawing.canvas;
+  // Prepared events have no OS pointer to capture; real gameplay retains native capture.
+  world.wallDrawing.canvas={setPointerCapture(){}};try{world.wallDrawing.down(event(a.x,a.y));}finally{world.wallDrawing.canvas=nativeCanvas;}for(let i=1;i<=100;i++)world.wallDrawing.move(event(a.x+(b.x-a.x)*i/100,a.y));end=b;
+  document.querySelector('#release').disabled=false;world.render(0);paint();
+ };
+ document.querySelector('#release').onclick=()=>{if(end)world.wallDrawing.up(event(end.x,end.y));end=null;document.querySelector('#release').disabled=true;paint();};
+ paint();
  const frame=()=>{world.render(0);requestAnimationFrame(frame);};frame();
  addEventListener('pagehide',()=>world.dispose(),{once:true});
 }catch(e){report.textContent=JSON.stringify({error:e.message,errors});}

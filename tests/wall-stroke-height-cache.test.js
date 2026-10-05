@@ -40,3 +40,17 @@ test('wall picking touches only resident ground, while ordinary picks retain ent
  assert.deepEqual(WorldScene.prototype.pick.call(scene,event),{entityId:'house',point:{x:2,z:3}});
  assert.deepEqual(intersections,[[entity],[ground]]);
 });
+
+test('screen-space guide follows the finger with no camera or terrain queries',t=>{
+ const previous={document:globalThis.document,ratio:globalThis.devicePixelRatio};
+ t.after(()=>{globalThis.document=previous.document;globalThis.devicePixelRatio=previous.ratio;});
+ let paints=0;const moves=[],context=new Proxy({clearRect:()=>paints++,moveTo:(x,y)=>moves.push([x,y])},{get:(o,k)=>o[k]??(()=>{})});
+ const overlay={style:{},setAttribute(){},getContext:()=>context,remove(){}};
+ globalThis.document={createElement:()=>overlay};globalThis.devicePixelRatio=2;
+ const preview=new WallStrokePreview({getBoundingClientRect:()=>({left:20,top:30,width:100,height:100}),parentElement:{append(){}}});
+ const forbidden=new Proxy({},{get(){throw new Error('Screen guide queried terrain/camera');}});
+ preview.showScreen([[30,45],[90,95]]);preview.render(forbidden,forbidden);
+ assert.deepEqual(moves,[[10,15]]);assert.equal(paints,1);
+ for(let i=0;i<60;i++)preview.render(forbidden,forbidden);assert.equal(paints,1);
+ preview.showScreen([[30,45],[95,97]]);preview.render(forbidden,forbidden);assert.equal(paints,2);preview.dispose();
+});

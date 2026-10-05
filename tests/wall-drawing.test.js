@@ -62,3 +62,17 @@ test('cancelling a gesture releases timeout protection without extending the las
  f.event('pointercancel',40,0);assert.equal(f.drawing.active,false);assert.equal(session.expired(12,f.drawing.active),true);
  assert.equal(f.strokes.length,0);
 });
+
+test('screen-space gesture does no terrain work until release, and cancellation does none',()=>{
+ let rays=0;
+ const f=fixture({screenSpace:true,point:e=>{rays++;return {x:e.clientX/10,z:e.clientY/10};}});
+ f.event('pointerdown',10,10);f.event('pointermove',40,50);f.event('pointermove',70,20);
+ assert.equal(rays,0);assert.deepEqual(f.previews.at(-1),[[10,10],[40,50],[70,20]]);
+ f.event('pointerup',70,20);assert.equal(rays,3);assert.deepEqual(f.strokes,[[[1,1],[4,5],[7,2]]]);
+ f.event('pointerdown',0,0);f.event('pointermove',80,0);f.event('pointercancel',80,0);assert.equal(rays,3);
+});
+test('screen-space misses end the stroke without bridging unavailable terrain; empty release is reported',()=>{
+ const f=fixture({screenSpace:true,point:e=>e.clientX===40?null:{x:e.clientX,z:e.clientY}});
+ f.event('pointerdown',10,10);f.event('pointermove',40,50);f.event('pointermove',70,20);f.event('pointerup',70,20);
+ assert.deepEqual(f.strokes,[[]]);
+});

@@ -29,3 +29,10 @@ test('stale panel/close requests expire on the next transition before decoding c
 test('delayed error/pause requests cannot replay after their interaction window or scene reset',()=>{
  const f=fixture();f.ui.error();f.ui.pause([],['menu']);assert.ok(f.calls.every(c=>c.options.isCurrent()));f.time(.501);assert.ok(f.calls.every(c=>!c.options.isCurrent()));f.ui.pause(['menu'],[]);assert.equal(f.calls.at(-1).options.isCurrent(),true);f.ui.reset();assert.equal(f.calls.at(-1).options.isCurrent(),false);
 });
+
+test('each completed failed wall gesture can cue error 107 even within the general warning debounce',()=>{
+ const f=fixture();f.ui.error({force:true});f.time(.2);f.ui.error({force:true});f.ui.error();
+ assert.deepEqual(f.calls.map(c=>c.id),['ui_error','ui_error']);
+ const bank=JSON.parse(readFileSync(new URL('../public/content/sfx-routing.json',import.meta.url),'utf8'));
+ const item=bank.items.find(i=>i.id==='ui_error');assert.equal(item.number,107);assert.equal(item.filename,'107_ui_error.mp3');
+});
