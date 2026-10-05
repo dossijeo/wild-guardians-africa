@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Let the active native build/smoke publish its artifacts while newer commits wait.
+  cancel-in-progress: false
 
 permissions:
   contents: read
