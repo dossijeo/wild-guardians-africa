@@ -1,3 +1,4 @@
+import {sampleFixedPose} from './fixed-pose.js';
 import {LoopOnce,LoopRepeat,Vector3,Matrix4} from 'three';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
@@ -32,12 +33,13 @@ export function animalPose(animal,elapsed){
 export function applyAnimalPose(data,animal,elapsed){
   const pose=animalPose(animal,elapsed),clip=data.clips.find(c=>c.name===pose.name);
   if(!clip)throw new Error(`Falta la acción original ${animal.species}/${pose.name}`);
-  if(data.key!==pose.key){
+  const restart=data.key!==pose.key;
+  if(restart){
     data.action?.stop();data.action=data.mixer.clipAction(clip);
     data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();
     data.action.paused=true;data.action.clampWhenFinished=true;data.key=pose.key;data.name=pose.name;
   }
-  data.action.time=pose.time;data.mixer.update(0);groundAnimal(data);return pose;
+  sampleFixedPose(data,pose.time,restart);groundAnimal(data);return pose;
 }
 export function animalGroundSamples(model){
   const samples=[];

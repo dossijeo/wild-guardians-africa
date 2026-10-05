@@ -1,0 +1,588 @@
+{
+  "scope": "Node CPU only: four native worker rigs and five native beast rigs, unchanged geometry/skins/tracks. Images omitted. Exact action changes, repeated samples and parent translation/yaw are compared against unconditional mixer evaluation. Grounding still evaluated. No GPU/FPS/mobile claim.",
+  "pattern": "ABBA, 40 warmup + 200 measured calls per group and rig, static and changing timestamps",
+  "sourceHashes": {
+    "src/rendering/fixed-pose.js": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+    "src/rendering/worker-actions.js": "b370b3d2908743ffa1a5f385449c592f60b62f3c4d7e960d52114c9aac1a00ca",
+    "src/rendering/animal-actions.js": "d18c1d27fb4c755daab41422e46cf20d85c446832c1c13acf69868cf3999ebe7",
+    "tools/benchmark_fixed_pose.mjs": "600aae546c5fbce66191f8fff7563621f7139028e98f6157df3354bcf0185a7e"
+  },
+  "records": [
+    {
+      "type": "worker",
+      "id": "youngMale",
+      "source": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.01837400000000059,
+              "p95": 0.0262000000000171
+            },
+            {
+              "optimized": true,
+              "mean": 0.0022344999999995706,
+              "p95": 0.00329999999996744
+            },
+            {
+              "optimized": true,
+              "mean": 0.00118450000000081,
+              "p95": 0.0012000000000398359
+            },
+            {
+              "optimized": false,
+              "mean": 0.010004000000000986,
+              "p95": 0.013800000000003365
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.03710549999999955,
+              "p95": 0.065400000000011
+            },
+            {
+              "optimized": true,
+              "mean": 0.042704499999997834,
+              "p95": 0.04990000000003647
+            },
+            {
+              "optimized": true,
+              "mean": 0.015285499999999104,
+              "p95": 0.021700000000009823
+            },
+            {
+              "optimized": false,
+              "mean": 0.011553500000001406,
+              "p95": 0.01650000000000773
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "worker",
+      "id": "olderMale",
+      "source": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "sourceSha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.009797000000004346,
+              "p95": 0.013199999999983447
+            },
+            {
+              "optimized": true,
+              "mean": 0.0018794999999954599,
+              "p95": 0.002399999999965985
+            },
+            {
+              "optimized": true,
+              "mean": 0.001807499999998754,
+              "p95": 0.002200000000016189
+            },
+            {
+              "optimized": false,
+              "mean": 0.029677499999996824,
+              "p95": 0.02580000000000382
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.019276000000004387,
+              "p95": 0.03499999999996817
+            },
+            {
+              "optimized": true,
+              "mean": 0.022418999999997594,
+              "p95": 0.02689999999995507
+            },
+            {
+              "optimized": true,
+              "mean": 0.02689400000000262,
+              "p95": 0.06719999999995707
+            },
+            {
+              "optimized": false,
+              "mean": 0.0204059999999987,
+              "p95": 0.02689999999995507
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "worker",
+      "id": "olderFemale",
+      "source": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "sourceSha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.01503099999999904,
+              "p95": 0.015700000000038017
+            },
+            {
+              "optimized": true,
+              "mean": 0.0016449999999986176,
+              "p95": 0.0015000000000782165
+            },
+            {
+              "optimized": true,
+              "mean": 0.0014045000000004393,
+              "p95": 0.0014999999999645297
+            },
+            {
+              "optimized": false,
+              "mean": 0.014702999999996677,
+              "p95": 0.017299999999977445
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.025678999999998384,
+              "p95": 0.028599999999983083
+            },
+            {
+              "optimized": true,
+              "mean": 0.014923000000002844,
+              "p95": 0.021100000000046748
+            },
+            {
+              "optimized": true,
+              "mean": 0.01106850000000236,
+              "p95": 0.013299999999958345
+            },
+            {
+              "optimized": false,
+              "mean": 0.011228999999996745,
+              "p95": 0.01599999999996271
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "worker",
+      "id": "youngFemale",
+      "source": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "sourceSha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.01593749999999602,
+              "p95": 0.019900000000006912
+            },
+            {
+              "optimized": true,
+              "mean": 0.0012939999999974816,
+              "p95": 0.0014999999999645297
+            },
+            {
+              "optimized": true,
+              "mean": 0.001321999999999548,
+              "p95": 0.0014999999999645297
+            },
+            {
+              "optimized": false,
+              "mean": 0.01410099999999943,
+              "p95": 0.015599999999949432
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.014025999999994952,
+              "p95": 0.01969999999994343
+            },
+            {
+              "optimized": true,
+              "mean": 0.026807000000000015,
+              "p95": 0.019199999999955253
+            },
+            {
+              "optimized": true,
+              "mean": 0.016018499999997857,
+              "p95": 0.016600000000039472
+            },
+            {
+              "optimized": false,
+              "mean": 0.010450499999993212,
+              "p95": 0.01370000000008531
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "animal",
+      "id": "warthog",
+      "source": "/assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "sourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.13274500000000103,
+              "p95": 0.15010000000006585
+            },
+            {
+              "optimized": true,
+              "mean": 0.12724200000000338,
+              "p95": 0.21309999999994034
+            },
+            {
+              "optimized": true,
+              "mean": 0.1268929999999989,
+              "p95": 0.19630000000006476
+            },
+            {
+              "optimized": false,
+              "mean": 0.10523199999999179,
+              "p95": 0.13979999999992287
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.11076050000000237,
+              "p95": 0.177599999999984
+            },
+            {
+              "optimized": true,
+              "mean": 0.09764349999999354,
+              "p95": 0.13730000000009568
+            },
+            {
+              "optimized": true,
+              "mean": 0.11171900000000846,
+              "p95": 0.1591000000000804
+            },
+            {
+              "optimized": false,
+              "mean": 0.10013199999999983,
+              "p95": 0.16240000000016153
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "animal",
+      "id": "hyena",
+      "source": "/assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "sourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.25523449999999914,
+              "p95": 0.31369999999992615
+            },
+            {
+              "optimized": true,
+              "mean": 0.3208874999999921,
+              "p95": 0.4800000000000182
+            },
+            {
+              "optimized": true,
+              "mean": 0.34491449999999874,
+              "p95": 0.49700000000007094
+            },
+            {
+              "optimized": false,
+              "mean": 0.3701560000000029,
+              "p95": 0.5578999999997905
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.277171500000004,
+              "p95": 0.4596000000001368
+            },
+            {
+              "optimized": true,
+              "mean": 0.2807424999999967,
+              "p95": 0.4757999999999356
+            },
+            {
+              "optimized": true,
+              "mean": 0.25513549999997165,
+              "p95": 0.34209999999984575
+            },
+            {
+              "optimized": false,
+              "mean": 0.33563250000000605,
+              "p95": 0.46749999999974534
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "animal",
+      "id": "buffalo",
+      "source": "/assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "sourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.3020150000000058,
+              "p95": 0.4131999999999607
+            },
+            {
+              "optimized": true,
+              "mean": 0.4539035000000035,
+              "p95": 0.6201000000000931
+            },
+            {
+              "optimized": true,
+              "mean": 0.3591015000000084,
+              "p95": 0.6052999999997155
+            },
+            {
+              "optimized": false,
+              "mean": 0.3841494999999918,
+              "p95": 0.5822999999995773
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.38286200000000464,
+              "p95": 0.6053000000001703
+            },
+            {
+              "optimized": true,
+              "mean": 0.3562255000000073,
+              "p95": 0.6053999999999178
+            },
+            {
+              "optimized": true,
+              "mean": 0.3353579999999806,
+              "p95": 0.555699999999888
+            },
+            {
+              "optimized": false,
+              "mean": 0.4249774999999886,
+              "p95": 0.720600000000104
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "animal",
+      "id": "lion",
+      "source": "/assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "sourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.5879144999999926,
+              "p95": 0.7327000000000226
+            },
+            {
+              "optimized": true,
+              "mean": 0.5722875000000113,
+              "p95": 0.7093999999997322
+            },
+            {
+              "optimized": true,
+              "mean": 0.49567550000000665,
+              "p95": 0.7076999999999316
+            },
+            {
+              "optimized": false,
+              "mean": 0.5235945000000015,
+              "p95": 0.6097999999997228
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.4953944999999726,
+              "p95": 0.7820999999999003
+            },
+            {
+              "optimized": true,
+              "mean": 0.47566449999999805,
+              "p95": 0.6851999999998952
+            },
+            {
+              "optimized": true,
+              "mean": 0.4759514999999419,
+              "p95": 0.6166000000002896
+            },
+            {
+              "optimized": false,
+              "mean": 0.4058504999999695,
+              "p95": 0.6401999999998225
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "animal",
+      "id": "rhino",
+      "source": "/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "sourceSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82",
+      "verification": {
+        "maximumMatrixError": 0,
+        "referenceEvaluations": 60,
+        "candidateEvaluations": 5,
+        "samples": 60
+      },
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.47968899999998027,
+              "p95": 0.6298999999999069
+            },
+            {
+              "optimized": true,
+              "mean": 0.42803350000002865,
+              "p95": 0.5814000000000306
+            },
+            {
+              "optimized": true,
+              "mean": 0.36601599999996326,
+              "p95": 0.5679000000000087
+            },
+            {
+              "optimized": false,
+              "mean": 0.4636084999999821,
+              "p95": 0.612699999999677
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.4699499999999807,
+              "p95": 0.6031999999995605
+            },
+            {
+              "optimized": true,
+              "mean": 0.3728799999999319,
+              "p95": 0.6268999999992957
+            },
+            {
+              "optimized": true,
+              "mean": 0.42022499999998675,
+              "p95": 0.5742999999993117
+            },
+            {
+              "optimized": false,
+              "mean": 0.4429214999999795,
+              "p95": 0.6078999999999724
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
