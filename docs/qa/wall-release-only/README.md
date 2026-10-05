@@ -15,4 +15,4 @@ The guide can exceed the budget. At release, blocked modules are filtered before
 
 Scope: structural removal of work during drawing, not a measured mobile FPS guarantee. Final projection, collision checks, automatic gate selection and asset updates still incur their normal cost once on release. Missing resident terrain ends a contiguous stroke instead of bridging an unavailable interval.
 
-Production build passed (14.82 s). Web package validation passed: 586 files, 407007413 bytes, 839 relative links and 20 runtime GLBs. A separate full `npm test` run is still pending; focused checks above are complete.
+Production build passed (14.82 s). Web package validation passed: 586 files, 407007413 bytes, 839 relative links and 20 runtime GLBs. The separate full npm test run completed: 1926 passed, zero failed, in 830.312 s (full-tests.txt). The three subsequently added application feedback tests passed separately; they are not counted in that full run. Runtime source remained unchanged through the run.

@@ -11,8 +11,12 @@ import {json} from '../../src/rendering/assets.js';
 import {AudioSystem,SFX_LIMITS} from '../../src/audio/audio.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 const status=document.querySelector('#status'),output=document.querySelector('#report');
+const requestedDays=Number(new URLSearchParams(location.search).get('days')??1);
+if(!Number.isSafeInteger(requestedDays)||requestedDays<1||requestedDays>4)throw Error('QA days must be 1–4');
+document.querySelector('#run').textContent=requestedDays===1?'Recorrer jornada y amanecer A → B':`Recorrer ${requestedDays} jornadas y alternancia A ↔ B`;
+document.querySelector('header p').textContent=`Sabana/Mapungubwe, semilla 712. Centro, un mijo por jornada y trabajadora pagados con las 1500 monedas iniciales. ${requestedDays} jornadas e incursiones nativas; pasos de 0,1 s real solicitados. Audio silenciado: no escucha ni medida de FPS.`;
 const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[],seen=new Set();
-const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0};
+const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,requestedDays,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0};
 let state,nav,world,lastTransport,lastPack,phase='setup';
 const assert=(v,message)=>{if(!v)throw Error(message);},flush=()=>new Promise(done=>setTimeout(done,0));
 const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
@@ -50,31 +54,43 @@ document.querySelector('#run').onclick=async()=>{
   phase='music-a';status.textContent='Cargando ventanas A…';await audio.unlock();audio.remember(state.events);observe();await loaded('a');observe();history.push(capture());
   assert(history[0].transport==='MusicWindowTransport','A did not select validated windows');assert(new Set(history[0].stems.map(s=>s.id)).size===8,'A audible group absent');
   const start=performance.now();while(!audio.ambient.entries.get('wind')?.source){if(performance.now()-start>15000)throw Error('Native wind absent');await flush();observe();}
-  const wind=audio.ambient.entries.get('wind').source,oldUrls=[...audio.musicBuffers],oldPool=audio.musicWindowPool;
-  Game.resume(state,'qa');phase='first-day';status.textContent='Jornada, cosecha e incursión nativas';
-  while(state.day===1&&!state.result){
-   assert(!errors.length,'Prior browser error');assert(!state.pauses.length,'Unexpected gameplay pause');world.render(0);
-   if(!world.actorsReady()){result.heldSteps++;await flush();continue;}
-   Game.advanceReal(state,.1,nav);observe();world.render(.1);assert(world.renderer.getContext().getError()===0,'WebGL error');await flush();
-   if(++result.steps%100===0)paint();if(result.steps>10000)throw Error('Native first day did not finish');
+  const wind=audio.ambient.entries.get('wind').source;
+  Game.resume(state,'qa');
+  for(let day=1;day<=requestedDays;day++){
+   const oldUrls=[...audio.musicBuffers],oldPool=audio.musicWindowPool;
+   phase=`day-${day}`;status.textContent=`Jornada ${day}, cosecha e incursión nativas`;
+   while(state.day===day&&!state.result){
+    assert(!errors.length,'Prior browser error');assert(!state.pauses.length,'Unexpected gameplay pause');world.render(0);
+    if(!world.actorsReady()){result.heldSteps++;await flush();continue;}
+    Game.advanceReal(state,.1,nav);observe();world.render(.1);assert(world.renderer.getContext().getError()===0,'WebGL error');await flush();
+    if(++result.steps%100===0)paint();if(result.steps>requestedDays*10000)throw Error('Native days did not finish');
+   }
+   assert(state.day===day+1&&!state.result&&state.completedNights===day&&!state.raid,'Native night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
+   assert(result.events.CrateDelivered>=day,'Paid crop delivery absent');assert(result.events.RaidSpawned===day&&result.events.RaidEnded===day,'Native incursion absent');
+   const pack=state.day%2?'a':'b';phase='music-'+pack;status.textContent=`Amanecer ${state.day}: cargando ventanas ${pack.toUpperCase()}…`;const dawn=serialize(state);observe();await loaded(pack);observe();history.push(capture());
+   assert(serialize(state)===dawn,'Music changes paused dawn');assert(history.at(-1).transport==='MusicWindowTransport','Dawn did not select validated windows');assert(new Set(history.at(-1).stems.map(s=>s.id)).size===8,'Dawn audible group absent');
+   assert(audio.voices.has(wind)&&audio.ambient.entries.get('wind').source===wind,'Daily music replaced native wind');
+   assert(oldUrls.every(url=>!audio.buffers.has(url))&&oldPool.disposed&&oldPool.pcmBytes()===0,'Old music pack retained');result.windPreserved=true;result.oldPackEvicted=true;
+   if(day<requestedDays){Game.hire(state,'hire-day-'+state.day,{youngFemale:1});assert(plantReachableSeed('seed-day-'+state.day),'Reachable paid daily seed absent');}
+   paint();
   }
-  assert(state.day===2&&!state.result&&state.completedNights===1&&!state.raid,'First night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
-  assert(result.events.CrateDelivered===1,'Paid crop delivery absent or repeated');assert(result.events.RaidSpawned===1&&result.events.RaidEnded===1,'Native incursion absent');
-  phase='music-b';status.textContent='Amanecer: cargando ventanas B…';const dawn=serialize(state);observe();await loaded('b');observe();history.push(capture());
-  assert(serialize(state)===dawn,'Music changes paused dawn');assert(history[1].transport==='MusicWindowTransport','B did not select validated windows');assert(new Set(history[1].stems.map(s=>s.id)).size===8,'B audible group absent');
-  assert(audio.voices.has(wind)&&audio.ambient.entries.get('wind').source===wind,'Daily music replaced native wind');
-  assert(oldUrls.every(url=>!audio.buffers.has(url))&&oldPool.disposed&&oldPool.pcmBytes()===0,'Old music pack retained');result.windPreserved=true;result.oldPackEvicted=true;
   audio.stop();result.voicesAfterStop=audio.active.length;assert(!audio.active.length&&!audio.musicBuffers.size,'Audio resources retained');audio.dispose();await flush();result.context=audio.context.state;assert(result.context==='closed','Context not closed');
-  phase='complete';status.textContent='Completada · amanecer nativo A → B';paint();
+  phase='complete';status.textContent=`Completada · ${requestedDays} jornadas nativas y alternancia A ↔ B`;paint();
  }catch(e){fail(e);}
 };
+function plantReachableSeed(id){
+ const center=state.structures[0],origin=centerServicePoint(center,state,.8);
+ for(let dz=-6;dz<=6;dz+=1.5)for(let dx=5;dx<=12;dx+=1.5){
+  const p={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
+  if(nav.placement(p.x,p.z,.4).valid&&!state.plants.some(q=>q.alive&&Math.hypot(q.x-p.x,q.z-p.z)<1.1)&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true)){Game.plant(state,id,'mijo',p.x,p.z,nav);return true;}
+ }
+ return false;
+}
 try{
  const profile=(await json('/content/biome-savanna.json')).profile,payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
  state=Game.newGame({seed:712,slotId:'qa-music-world-dawn'});nav=new Navigation(712,'sabana',profile);const site=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'center',site.center,nav);
- const origin=centerServicePoint(state.structures[0],state,.8);let planted=false;
- for(let dz=-6;dz<=6&&!planted;dz+=1.5)for(let dx=5;dx<=12&&!planted;dx+=1.5){const p={x:Math.round((site.center.x+dx)/1.5)*1.5,z:Math.round((site.center.z+dz)/1.5)*1.5};if(nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true)){Game.plant(state,'seed','mijo',p.x,p.z,nav);planted=true;}}
- assert(planted,'Reachable native seed absent');Game.openInitialHiring(state);Game.hire(state,'hire',{youngFemale:1});state.tutorial.step='done';Game.pause(state,'qa');
+ assert(plantReachableSeed('seed'),'Reachable native seed absent');Game.openInitialHiring(state);Game.hire(state,'hire',{youngFemale:1});state.tutorial.step='done';Game.pause(state,'qa');
  world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('muy_baja');await world.load(state,nav,payload);world.focus(state.structures[0]);await world.whenChunksReady();world.render(0);
  phase='ready';status.textContent='Preparada · partida pagada';document.querySelector('#run').disabled=false;paint();
 }catch(e){fail(e);}
