@@ -1,0 +1,7 @@
+# Savanna/Etiope: recorded 100-night survival with crop failures
+
+The [complete archive](intensive-etiope-rejoin-100/snapshot.json) preserves a fresh campaign started from clean commit `8bb44200d7d6cf801f426b6c613bbc667e561cfa`, using normal paid older women, dawn staffing and twelve plants per worker. It reached victory after 100 nights, with 801 coins, 12135 plants placed, 11624 physical crate deliveries and a peak of 288 living crops. It does not verify the current HEAD or the newer staffing/defense policies.
+
+Reanalysis checks the integer ledger, unique plant/crate association, mandatory watering before pickup, payment on delivery and full serialization roundtrip. All 100 observed days have paid staff and delivered crops. Spawned and ended raid counts reconcile. The original 7068594-byte state is preserved as a 505944-byte lossless gzip; its SHA-256 is `5f61ab8156bb28f97a574b7a1c1f25ede1165a1bb424f0bf9a7285595891b149`.
+
+This survival result fails the crop-economy and activity goals. Cotton had 66 purchases, zero deliveries and 66 destroyed plants; 49 died before the first watering. Banana had 30 purchases, zero deliveries and 30 destroyed plants; 27 died before the first watering. All eight species were planted, but only six were delivered. The millet income keeps the campaign solvent while expensive crop investments fail. Daylight without player actions was 58.36%, with a longest interval of 128 seconds. These findings remain unresolved; the test outcome must not be relabeled as satisfactory balance.

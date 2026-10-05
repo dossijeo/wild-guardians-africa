@@ -1,6 +1,6 @@
 # Grand River: three additional full campaigns
 
-The bounded parallel matrix completed Grand River/Suajili, Grand River/Musgum and Grand River/Etiope through all 100 nights, with paid workers, physical crop deliveries and all eight species. The original policy uses older women, staffing at dawn and twelve plants per worker; these runs do not use the newer eight-plant staffing policy or optional wall defense.
+The bounded parallel matrix completed Grand River/Suajili, Grand River/Musgum and Grand River/Etiope through all 100 nights, with paid workers and physical crop deliveries. All eight species were planted, but only six were delivered: cotton and banana had zero deliveries in every one of these runs. The original policy uses older women, staffing at dawn and twelve plants per worker; these runs do not use the newer eight-plant staffing policy or optional wall defense.
 
 | Culture | Loaded commit | Final coins | Peak living crops | Daylight without player actions |
 | --- | --- | ---: | ---: | ---: |
@@ -13,3 +13,5 @@ The [archive](intensive-river-cultures-100/snapshots.json) records exact startin
 Independent reanalysis of all three finished snapshots passed the full integer-money ledger audit, unique crop-to-crate association, all mandatory waters before actual pickup, delivered crate payment, full serialization roundtrip and victory on day 101. Every day had paid staff and physical deliveries; all spawned incursions ended. The recomputed summaries include crop investment, losses by species and player inactivity.
 
 Survival is demonstrated for these recorded scenarios. The substantial time without player actions remains a pacing issue; these successes do not satisfy the requested balance and activity goals, mobile performance, visual fidelity or all-biome acceptance. Separate fresh campaigns cover earlier failed Mapungubwe and Musgum traffic cases; those failures remain archived.
+
+The species counters distinguish planting from successful harvest: `speciesObserved: 8` counts species present in plant records, not species delivered. Cotton planted/delivered was 81/0 for Suajili, 55/0 for Musgum and 70/0 for Etiope; banana was 26/0, 26/0 and 37/0 respectively. These are crop-economy failures requiring further diagnosis even though the campaign victory condition was reached. They must not be presented as successful cultivation of all eight species.
