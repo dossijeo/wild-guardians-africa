@@ -71,17 +71,8 @@ export function cameraRaidEntry(s,specs,bounds,nav){
   }
   return null;
 }
-export function spawnRaid(s,plan,nav,daytime=false) {
-  if(s.raid||s.postgame)return;
-  let group=plan.group;
-  if(daytime) {
-    const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
-    const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];
-  }
-  if(!group?.length)return;
-  const focus=s.structures.find(operational)??s.villages[0],preferredSide=randomInt(s,0,3);
-  const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
-  const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
+export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
+  const focus=s.structures.find(operational)??s.villages[0];
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
@@ -89,7 +80,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   let entries=nearby?.entries??null,exits=nearby?.exits??null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;
-    const spread=(group.length-1)*2+2,lo=(side<2?minZ:minX)+inset+spread,hi=(side<2?maxZ:maxX)-inset-spread;
+    const spread=(specs.length-1)*2+2,lo=(side<2?minZ:minX)+inset+spread,hi=(side<2?maxZ:maxX)-inset-spread;
     if(lo>hi)continue;
     const preferred=clamp(side<2?focus.z:focus.x,lo,hi),anchors=[preferred];
     // Cover the entire edge, nearest to the farm first, without repeatedly
@@ -102,7 +93,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
       for(let i=0;i<specs.length;i++){
         const {radius}=specs[i];let spawn=null;
         for(const adjustment of [0,1,-1,2,-2]){
-          const offset=(i-(group.length-1)/2)*4+adjustment;
+          const offset=(i-(specs.length-1)/2)*4+adjustment;
           const exit=side<2?
             {x:side?maxX-inset:minX+inset,z:along+offset}:
             {x:along+offset,z:side===3?maxZ-inset:minZ+inset};
@@ -117,6 +108,23 @@ export function spawnRaid(s,plan,nav,daytime=false) {
       if(points.length===specs.length){entries=points;exits=retreats;}
     }
   }
+  return entries?{entries,exits}:null;
+}
+export function spawnRaid(s,plan,nav,daytime=false) {
+  if(s.raid||s.postgame)return;
+  let group=plan.group;
+  if(daytime) {
+    const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
+    const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];
+  }
+  if(!group?.length)return;
+  const focus=s.structures.find(operational)??s.villages[0];
+  const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
+  const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
+  const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
+  const preferredSide=randomInt(s,0,3);
+  const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
+  const entries=entry?.entries,exits=entry?.exits;
   if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
     hitsRemaining:plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));

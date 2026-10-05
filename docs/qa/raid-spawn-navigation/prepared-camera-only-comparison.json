@@ -1,0 +1,136 @@
+{
+  "input": "docs/qa/raid-spawn-navigation/desierto-profile.json",
+  "repeats": 8,
+  "sourceHashes": {
+    "src/world/raid-entry-data.js": "9bebc3fd2cac530ba1d3da5769db4cf6317dfe13864bdaffae51384c4cfd693e",
+    "src/world/compute-raid-entry.js": "a004acc3e4335b4cfe68b1ece28b523d72b4e9aab48e414cabf109d04c4e5da7",
+    "src/world/raid-entry-preparer.js": "353671a85857a64b398473781b0496bbdc76781482e3d5c03620a353a15c0156",
+    "src/world/navigation.js": "54a24c330edcd70d3af0d8bcc8566fdf968dc2dbbf8736e718a7ff1c4f34a356",
+    "src/simulation/raids.js": "57641f9e54caedb6ac66c450e25fd73351f91ef0ccc9f76a7a3a1e8a01cc4e9e",
+    "tools/benchmark_prepared_raid_entry.mjs": "959ed0b405923c488402178eb0aed7fd180a84002de279c1823c5f52a7b2c3ff"
+  },
+  "stateSha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff",
+  "summary": {
+    "reference": {
+      "medianSpawnMs": 290.02135
+    },
+    "prepared": {
+      "medianSpawnMs": 49.90805
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "spawnMs": 501.0565,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 0,
+      "mode": "prepared",
+      "spawnMs": 58.63069999999993,
+      "preparationMs": 380.7827,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "prepared",
+      "spawnMs": 50.01150000000007,
+      "preparationMs": 334.1648,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "spawnMs": 341.4957999999999,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "spawnMs": 302.3272999999999,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 2,
+      "mode": "prepared",
+      "spawnMs": 50.1579999999999,
+      "preparationMs": 278.4486999999999,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "prepared",
+      "spawnMs": 49.80459999999994,
+      "preparationMs": 294.4553000000001,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "spawnMs": 252.85779999999977,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "reference",
+      "spawnMs": 313.60440000000017,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 4,
+      "mode": "prepared",
+      "spawnMs": 47.32289999999921,
+      "preparationMs": 265.5329999999999,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "prepared",
+      "spawnMs": 49.06810000000041,
+      "preparationMs": 256.78510000000006,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 5,
+      "mode": "reference",
+      "spawnMs": 246.83410000000003,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "reference",
+      "spawnMs": 269.8675999999996,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 6,
+      "mode": "prepared",
+      "spawnMs": 49.11200000000008,
+      "preparationMs": 252.33050000000003,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "prepared",
+      "spawnMs": 50.64559999999983,
+      "preparationMs": 247.48329999999987,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    },
+    {
+      "iteration": 7,
+      "mode": "reference",
+      "spawnMs": 277.71540000000005,
+      "preparationMs": null,
+      "sha256": "1a4a13bf882b2431f170d5e48db674916d4f1f2ed667392e7e5f164e289aeaff"
+    }
+  ],
+  "scope": "Alternating identical native spawn replays. Preparation is measured separately and excluded from spawn CPU. Browser worker/frame timing and physical phone acceptance are separate."
+}

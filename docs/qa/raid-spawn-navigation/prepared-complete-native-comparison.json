@@ -1,0 +1,136 @@
+{
+  "input": "docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json",
+  "repeats": 8,
+  "sourceHashes": {
+    "src/world/raid-entry-data.js": "342dc79510a788d608e466392fe3c4162d7776b4c886b419bf69be9143d16e05",
+    "src/world/compute-raid-entry.js": "dcb9a8b75cd6cc56ee7a83984908b50f479e1bc66ed5af175fc32bbfe463e12d",
+    "src/world/raid-entry-preparer.js": "353671a85857a64b398473781b0496bbdc76781482e3d5c03620a353a15c0156",
+    "src/world/navigation.js": "54a24c330edcd70d3af0d8bcc8566fdf968dc2dbbf8736e718a7ff1c4f34a356",
+    "src/simulation/raids.js": "6698b21bed84b71c4d79e26a008c45ca5d5ba741e6288bf0c9243b8e52d1a693",
+    "tools/benchmark_prepared_raid_entry.mjs": "959ed0b405923c488402178eb0aed7fd180a84002de279c1823c5f52a7b2c3ff"
+  },
+  "stateSha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87",
+  "summary": {
+    "reference": {
+      "medianSpawnMs": 217.1413
+    },
+    "prepared": {
+      "medianSpawnMs": 0.1522500000000946
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "spawnMs": 352.54929999999996,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 0,
+      "mode": "prepared",
+      "spawnMs": 0.3835000000000264,
+      "preparationMs": 332.2653,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 1,
+      "mode": "prepared",
+      "spawnMs": 0.12990000000013424,
+      "preparationMs": 314.64869999999996,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "spawnMs": 227.10159999999996,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "spawnMs": 203.6778999999999,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 2,
+      "mode": "prepared",
+      "spawnMs": 0.19509999999991123,
+      "preparationMs": 235.70829999999978,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 3,
+      "mode": "prepared",
+      "spawnMs": 0.14589999999998327,
+      "preparationMs": 260.1729,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "spawnMs": 225.8409999999999,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 4,
+      "mode": "reference",
+      "spawnMs": 206.10639999999967,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 4,
+      "mode": "prepared",
+      "spawnMs": 0.1893000000000029,
+      "preparationMs": 224.3831,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 5,
+      "mode": "prepared",
+      "spawnMs": 0.12590000000000146,
+      "preparationMs": 243.26230000000032,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 5,
+      "mode": "reference",
+      "spawnMs": 190.42439999999988,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 6,
+      "mode": "reference",
+      "spawnMs": 208.4416000000001,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 6,
+      "mode": "prepared",
+      "spawnMs": 0.15560000000004948,
+      "preparationMs": 243.35680000000002,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 7,
+      "mode": "prepared",
+      "spawnMs": 0.1489000000001397,
+      "preparationMs": 275.21529999999984,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    },
+    {
+      "iteration": 7,
+      "mode": "reference",
+      "spawnMs": 238.8797999999997,
+      "preparationMs": null,
+      "sha256": "1dff23d7d448d66249be6f33998000894d5e34d6f806b6f0f0bd56ba0b314d87"
+    }
+  ],
+  "scope": "Alternating identical native spawn replays. Preparation is measured separately and excluded from spawn CPU. Browser worker/frame timing and physical phone acceptance are separate."
+}
