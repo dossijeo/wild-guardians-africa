@@ -32,3 +32,13 @@ Estado: pendiente; no se han convertido audios por esta anotación.
 - Comparar imágenes y tamaños antes/después; documentar cualquier caso que requiera WebP sin pérdida para preservar el resultado del juego.
 
 Estado: pendiente; no se han enviado imágenes a Tinify por esta anotación.
+
+## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
+
+- Seguir los 25 puntos de [Wild Guardians — Far Vegetation Impostor System](far-vegetation-impostor-system.md).
+- Objetivo principal: poblar el horizonte y reducir el popping más allá de los chunks, con datos procedurales deterministas ligeros y sin cargar GLB/chunks completos para árboles lejanos.
+- Primera prueba aislada: un árbol de Sabana, atlas precalculado de ocho vistas, billboard cilíndrico, orientación procedural conservada, transición con dithering, iluminación día-noche y fog.
+- Validar rotación, aproximación bidireccional, desplazamiento lateral, cuatro fases de luz y horizonte con cientos/miles de instancias; medir CPU/GPU/RAM y tamaño distribuido.
+- Integrar los demás biomas y estudiar una segunda fase solo después de superar los criterios visuales y de coste. Distancias, densidad y resolución configurables; los ejemplos no son valores definitivos.
+
+Estado: pendiente de prototipo aislado; esta anotación no genera atlas ni activa el sistema en gameplay.
