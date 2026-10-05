@@ -35,6 +35,18 @@ All 398 directed navigation, gate, encounter and raid tests pass. Build and web
 package verification also pass. The three-day intensive opening remains byte
 identical to the preceding reference, recorded in `opening-equivalence.json`.
 
-These are domain reproductions, not rendered or physical mobile checks. They
-do not prove completion of either 100-night campaign or the full biome/culture
-matrix. Those campaigns require fresh continuous runs with the corrected code.
+The browser fixture `tests/browser/raid-traffic-corners.html` also loads each
+exact lossless state and verifies its digest before starting the production
+WorldScene and Game tick. It handles both server-decoded gzip and raw gzip.
+Both pairs have their original rigs loaded at the starting positions. With the
+normal variable animation-frame delta capped at 0.05 seconds, Musgum ends after
+27.931 simulated seconds and Gran Río after 41.8659, at days 79 and 66 with the
+hiring pause and no recorded errors. All original exits are reached and their
+meshes are removed only after departure. Before/after JSON and PNG files are
+preserved alongside the domain evidence. Quality is media; viewport 1280×720.
+
+The browser check includes original terrain and models but no audio or gameplay
+HUD, and it is not a physical mobile or FPS check. Neither the domain nor browser
+reproductions prove completion of either 100-night campaign or the full biome/
+culture matrix. Those campaigns require fresh continuous runs with the corrected
+code. The original failed campaigns remain archived as failures.

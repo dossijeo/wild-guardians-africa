@@ -1,0 +1,55 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Cruce de animales junto al terreno</title>
+<style>body{margin:0;font:13px system-ui;background:#efe8d4}canvas{width:100vw;height:100vh;display:block}header{position:absolute;z-index:2;background:#fff9eded;padding:8px;max-width:60vw}pre{max-height:150px;overflow:auto;font-size:10px}button{padding:8px}</style>
+<header><strong id="case">Cargando guardado real…</strong><div id="status">Cargando terreno y modelos originales…</div><button id="run" disabled>Resolver incursión</button><details><summary>Datos de comprobación</summary><pre id="data"></pre></details></header><canvas id="world"></canvas>
+<script type="module">
+import {deserialize} from '../../src/persistence/snapshots.js';
+import {tick} from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const status=document.querySelector('#status'),data=document.querySelector('#data'),button=document.querySelector('#run'),errors=[];
+let loadStage='records';
+const fail=error=>{errors.push(String(error.message??error));status.textContent='ERROR ('+loadStage+'): '+errors.join(' · ');data.textContent=JSON.stringify({loadStage,errors,stack:error.stack},null,2);};
+addEventListener('error',event=>fail(event.error??event));addEventListener('unhandledrejection',event=>fail(event.reason));
+let world;
+addEventListener('pagehide',()=>world?.dispose());
+try{
+ const key=new URL(location.href).searchParams.get('case')??'sabana-musgum';
+ const records=await (await fetch('../../docs/qa/raid-traffic-corners/snapshots.json')).json(),record=records.find(r=>r.key===key);
+ if(!record)throw Error('Unknown recorded case');
+ loadStage='gzip fetch';
+ const response=await fetch('../../docs/qa/raid-traffic-corners/'+key+'-state.json.gz');if(!response.ok)throw Error('Missing recorded snapshot');
+ loadStage='decompression';
+ // Static servers may already decode gzip through Content-Encoding. Only
+ // explicitly decompress responses that still contain the gzip signature.
+ const bytes=new Uint8Array(await response.arrayBuffer());
+ const raw=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer():bytes.buffer;
+ const sha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',raw))].map(b=>b.toString(16).padStart(2,'0')).join('');
+ if(sha256!==record.sha256)throw Error('Recorded snapshot digest mismatch');
+ loadStage='state validation';
+ const state=deserialize(new TextDecoder().decode(raw)),originalDay=state.day,culture=key.endsWith('musgum')?'musgum':'mapungubwe';
+ const pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
+ const nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);
+ loadStage='world models';
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('media');await world.load(state,nav,payload);
+ const actors=state.raid.animals,starts=actors.map(actor=>({id:actor.id,x:actor.x,z:actor.z})),present=actors.filter(a=>a.status!=='gone');
+ world.focus({x:present.reduce((sum,a)=>sum+a.x,0)/present.length,z:present.reduce((sum,a)=>sum+a.z,0)/present.length});
+ world.sync(0);await Promise.all([...world.assets.cache.values()]);world.render(0);await world.whenChunksReady();
+ loadStage='simulation';
+ let playing=false,elapsed=0,last=performance.now(),finished=false;
+ document.querySelector('#case').textContent='Guardado real: '+key+', noche '+originalDay;
+ button.disabled=false;button.onclick=()=>{playing=true;button.disabled=true;};
+ const update=()=>{
+  status.textContent=finished?'Incursión terminada: contratación del día '+state.day:playing?'Animales siguiendo sus rutas y salidas originales':'Dos animales listos en las posiciones del atasco';
+  data.textContent=JSON.stringify({key,sha256,finished,simulatedSeconds:elapsed,day:state.day,pauses:state.pauses,errors,animals:actors.map(actor=>({id:actor.id,species:actor.species,status:actor.status,x:actor.x,z:actor.z,moved:Math.hypot(actor.x-starts.find(a=>a.id===actor.id).x,actor.z-starts.find(a=>a.id===actor.id).z),meshPresent:world.objects.has(actor.id),rigLoaded:world.objects.get(actor.id)?.children.length>0})),scope:'Exact recorded state. Original models, terrain, collision, damage and timing. Camera placement only; no audio, HUD or physical phone acceptance.'},null,2);
+ };
+ update();
+ requestAnimationFrame(function frame(now){
+  try{
+   const dt=Math.min(.05,(now-last)/1000);last=now;
+   if(playing&&!finished){tick(state,dt,nav);elapsed+=dt;finished=!state.raid;}
+   world.render(dt);update();requestAnimationFrame(frame);
+  }catch(error){fail(error);}
+ });
+}catch(error){fail(error);}
+</script></html>
