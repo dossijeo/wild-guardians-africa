@@ -1,0 +1,9 @@
+- heading "Bloqueo de pantalla con permiso nativo denegado" [level=1]
+- paragraph: Simula el permiso ausente en el iframe de itch.io. Autoplay permanece habilitado.
+- iframe [active]:
+  - heading "Pantalla encendida durante la partida" [level=1]
+  - paragraph: Prueba del controlador de producción y la API real del navegador. No cambia las partidas guardadas.
+  - button "Entrar en partida" [active]
+  - button "Liberar bloqueo del sistema"
+  - button "Volver al menú"
+  - status: "{ \"supported\": true, \"secureContext\": true, \"requests\": 1, \"grants\": 0, \"releases\": 0, \"errors\": [ \"NotAllowedError: Failed to execute 'request' on 'WakeLock': Access to Screen Wake Lock features is disallowed by permissions policy\" ], \"active\": true, \"held\": true, \"mode\": \"video\", \"lastError\": null, \"fallback\": { \"mounted\": true, \"paused\": false, \"currentTime\": 1.555727, \"readyState\": 4, \"muted\": false } }"
