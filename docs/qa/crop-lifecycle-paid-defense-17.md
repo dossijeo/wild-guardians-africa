@@ -30,7 +30,7 @@ Evidence: [failed status](crop-lifecycle-paid-defense-17/status.json),
 [manifest](crop-lifecycle-paid-defense-17/snapshot.json),
 [access reconstruction](crop-lifecycle-paid-defense-17/access-diagnostic.json).
 
-Pending: reproduce the access loss at construction time, compare automatic-gate
-selection and remaining passages with native terrain and building obstacles,
-correct access while retaining ordinary paid commands, then rerun the defended
-campaign with fresh provenance. Preserve this failure as the baseline.
+Follow-up: automatic-door selection was corrected and the same paid policy
+[completed twenty nights on clean `2022bad`](crop-lifecycle-paid-defense-20.md).
+This failed recording remains the baseline. Longer campaign and pacing
+validation are still pending.
