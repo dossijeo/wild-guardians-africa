@@ -190,3 +190,11 @@ y dinámicas. La resolución sigue siendo un ajuste explícito de nitidez.
 ## Materiales del lab V4.1.10.3
 
 La integración del nuevo lab sustituye la receta del suelo y la iluminación de props/poblados. Los ensayos anteriores de ruido fino y GPU no cuantifican esta versión. Se conservan los mapas nativos y el parallax cercano para mantener su apariencia; cualquier variante más barata necesita una nueva comparación visual y GPU. El paquete elimina únicamente los seis recursos del poblado demostrativo que no usa el juego (21.075.266 bytes), sin alterar los assets de las cinco culturas.
+
+## Revisión posterior a la Jam
+
+El trazo de murallas ahora es puramente visual en pantalla: la proyección sobre el terreno, los módulos, las colisiones y el presupuesto se calculan al soltar. Las piezas bloqueadas no consumen el límite pagable. [Pruebas y captura](qa/wall-release-only/README.md), con 100 pruebas dirigidas de murallas/puertas y 13 de feedback/audio; batería general de 1926 pruebas aprobada y tres pruebas de aplicación añadidas después comprobadas por separado. Esta corrección elimina trabajo durante el gesto sin atribuir un porcentaje de FPS al móvil.
+
+La [caché de alturas de cultivos](qa/crop-terrain-cache/README.md) conserva los datos mientras no cambia la identidad del terreno ni la posición de la planta. El [ensayo de ruido fino en volumen](qa/noise-volume/README.md) queda solo en QA: la ganancia GPU pequeña observada no justifica adoptar su patrón cuantizado periódico en producción.
+
+La [auditoría de poblados y murallas](qa/structure-face-sides/README.md) comprueba 46 unidades en sus draw ranges reales y 20 modelos de extremos de muralla. Ninguno supera el criterio conservador de superficie cerrada orientada hacia fuera. No autoriza FrontSide global, no modifica los materiales y no sustituye la comparación visual/GPU pendiente. La lectura HDR en los extremos ya estaba implementada y se conserva; no es trabajo nuevo.
