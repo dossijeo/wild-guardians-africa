@@ -10,6 +10,44 @@ function fixture(resources){
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 const bank=name=>({duration:10,tracks:[{data:{url:name}}]});
 
+const tenStems=name=>({duration:10,tracks:Array.from({length:10},(_,i)=>({data:{url:name+i}}))});
+test('switching while music fetches discards eight queued old stems and skips obsolete decoding',async()=>{
+ const oldFetches=[],fetched=[],decoded=[];
+ const {audio,sources}=fixture({json:async url=>tenStems(url.includes('music-a')?'A':'B'),bytes:async url=>{
+  fetched.push(url);if(url.startsWith('A')){const wait=deferred();oldFetches.push({url,wait});return wait.promise;}return {url};
+ }});audio.sfx={items:[]};let active=0,peak=0;
+ audio.context.decodeAudioData=async data=>{decoded.push(data.url);peak=Math.max(peak,++active);await settle();active--;return data;};
+ const a=audio.gameplay(1);await settle();assert.equal(oldFetches.length,2);
+ const b=audio.gameplay(2);await settle();assert.equal(fetched.length,2);
+ for(const {url,wait} of oldFetches)wait.resolve({url});await Promise.all([a,b]);
+ assert.equal(fetched.filter(url=>url.startsWith('A')).length,2);assert.equal(decoded.filter(url=>url.startsWith('A')).length,0);
+ assert.equal(decoded.length,10);assert.equal(peak,2);assert.equal(sources.length,10);assert.ok(sources.every(s=>s.buffer.url.startsWith('B')));
+ assert.ok([...audio.buffers.keys()].every(url=>url.startsWith('B')));audio.stop();
+});
+
+test('already running music decodes share the two-job limit with the replacement pack',async()=>{
+ const oldDecodes=[],fetched=[],decoded=[];
+ const {audio,sources}=fixture({json:async url=>tenStems(url.includes('music-a')?'A':'B'),bytes:async url=>{fetched.push(url);return {url};}});audio.sfx={items:[]};let active=0,peak=0;
+ audio.context.decodeAudioData=async data=>{
+  decoded.push(data.url);peak=Math.max(peak,++active);
+  if(data.url.startsWith('A')){const wait=deferred();oldDecodes.push(wait);await wait.promise;}else await settle();active--;return data;
+ };
+ const a=audio.gameplay(1);await settle();assert.equal(oldDecodes.length,2);
+ const b=audio.gameplay(2);await settle();assert.equal(fetched.length,2);
+ oldDecodes.forEach(wait=>wait.resolve());await Promise.all([a,b]);
+ assert.equal(decoded.filter(url=>url.startsWith('A')).length,2);assert.equal(decoded.filter(url=>url.startsWith('B')).length,10);
+ assert.equal(peak,2);assert.equal(sources.length,10);assert.ok(sources.every(s=>s.buffer.url.startsWith('B')));audio.stop();
+});
+
+test('a cancelled music fetch is evicted without poisoning a later request for the same URL',async()=>{
+ const data=deferred();let current=true,attempts=0,decoded=0;
+ const {audio}=fixture({bytes:async()=>++attempts===1?data.promise:{new:true}});
+ audio.context.decodeAudioData=async bytes=>{decoded++;return bytes;};
+ const first=audio.buffer('same',{current:()=>current});await settle();current=false;data.resolve({old:true});
+ assert.equal(await first,null);assert.equal(decoded,0);assert.equal(audio.buffers.has('same'),false);
+ assert.deepEqual(await audio.buffer('same'),{new:true});assert.equal(decoded,1);
+});
+
 test('leaving during menu JSON cannot start or decode stale music',async()=>{
  const data=deferred();let decoded=0;const {audio,sources}=fixture({json:()=>data.promise,bytes:async()=>{decoded++;return {};}});
  const pending=audio.menu();await settle();audio.stop();data.resolve({music:'menu.mp3'});await pending;assert.equal(decoded,0);assert.equal(sources.length,0);

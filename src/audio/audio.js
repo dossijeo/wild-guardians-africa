@@ -11,6 +11,9 @@ import {json,bytes} from '../rendering/assets.js';
 import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';
+import {MusicLoadQueue} from './music-load-queue.js';
+import {MusicStream} from './music-stream.js';
+import {prepareMusicDiskCache} from './music-disk-cache.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
@@ -33,11 +36,16 @@ export class AudioSystem {
     this.volume();
   }
   volume(){if(this.sfxGain)this.sfxGain.gain.value=this.settings.sfx;if(this.musicGain)this.musicGain.gain.value=this.settings.music;}
-  async buffer(url){
+  async buffer(url,{current=()=>true}={}){
     if(!this.buffers.has(url)){
-      const pending=Promise.resolve().then(()=>this.resources.bytes(url)).then(data=>this.context.decodeAudioData(data));
+      const pending=Promise.resolve().then(async()=>{
+        if(!current())return null;
+        const data=await this.resources.bytes(url);
+        return current()?this.context.decodeAudioData(data):null;
+      });
       this.buffers.set(url,pending);
       pending.catch(()=>{if(this.buffers.get(url)===pending)this.buffers.delete(url);});
+      pending.then(result=>{if(result===null&&this.buffers.get(url)===pending)this.buffers.delete(url);},()=>{});
     }
     return this.buffers.get(url);
   }
@@ -88,10 +96,20 @@ export class AudioSystem {
     try{
       const data=await this.resources.json('/content/menu.json');
       if(generation!==this.generation||musicGeneration!==this.musicGeneration)return;
-      if(data.music){const source=await this.play(data.music,{loop:true,music:true,gain:.7});if(!source&&musicGeneration===this.musicGeneration)this.stopMusic();}
+      if(data.music){
+        if(this.resources.createMedia||typeof Audio!=='undefined'){
+          await prepareMusicDiskCache();if(generation!==this.generation||musicGeneration!==this.musicGeneration)return;
+          const stream=new MusicStream(this.context,this.musicGain,data.music,{createMedia:this.resources.createMedia});this.menuStream=stream;
+          await stream.play();
+          if(generation!==this.generation||musicGeneration!==this.musicGeneration)stream.dispose();
+        }else{
+          const source=await this.play(data.music,{loop:true,music:true,gain:.7});if(!source&&musicGeneration===this.musicGeneration)this.stopMusic();
+        }
+      }
     }catch(error){if(musicGeneration===this.musicGeneration){this.stopMusic();this.musicError=error;}throw error;}
   }
   stopMusic({preserveEvent=false}={}){
+    this.menuStream?.dispose();this.menuStream=null;
     this.musicGeneration++;this.transport?.dispose();this.transport=null;this.mixer=null;if(!preserveEvent)this.musicEvent=null;
     for(const [source,voice] of [...this.voices])if(voice.music)this.stopVoice(source);
     for(const url of this.musicBuffers)this.buffers.delete(url);this.musicBuffers.clear();this.pack=null;this.menuActive=false;
@@ -105,7 +123,12 @@ export class AudioSystem {
       const bank=await this.resources.json(`/content/music-${pack}.json`);
       if(this.pack!==pack||generation!==this.musicGeneration)return;
       // Keep only the current original pack decoded; the transport owns its decks.
-      const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(async t=>{this.musicBuffers.add(t.data.url);return {track:t,buffer:await this.buffer(t.data.url)};}));
+      const current=()=>this.pack===pack&&generation===this.musicGeneration;
+      this.musicLoads??=new MusicLoadQueue();
+      const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(t=>{
+        this.musicBuffers.add(t.data.url);
+        return this.musicLoads.run(current,async()=>({track:t,buffer:await this.buffer(t.data.url,{current})}));
+      }));
       if(this.pack!==pack||generation!==this.musicGeneration)return;
       if(this.context.state!=='running'){this.stopMusic({preserveEvent:true});return;}
       this.musicRetryAt=0;
@@ -196,5 +219,7 @@ export class AudioSystem {
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
   stop(){this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
-  suspend(){this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}resume(){this.context?.resume().catch(()=>{});}dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
+  suspend(){this.menuStream?.pause();this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}
+  resume(){this.context?.resume().then(()=>this.menuStream?.play()).catch(error=>{this.musicError=error;});}
+  dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
 }

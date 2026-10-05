@@ -1,0 +1,55 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA música en streaming</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px;margin:4px}pre{white-space:pre-wrap}</style>
+<h1>Streaming nativo · MP3 originales</h1><p>Salida silenciada. La prueba de diez pistas es experimental y no sustituye el transporte de partida.</p>
+<button id="menu">Probar menú</button><button id="menu-cached">Menú solo desde caché</button><button data-pack="a">Probar diez pistas A</button><button data-pack="b">Probar diez pistas B</button><button id="stems-cached">Diez pistas A solo desde caché</button><button id="seek">Saltar a sección A</button><button id="stop">Parar y descargar</button>
+<p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '/src/audio/audio.js';
+import {MusicStream} from '/src/audio/music-stream.js';
+import {json,bytes} from '/src/rendering/assets.js';
+import {prepareMusicDiskCache} from '/src/audio/music-disk-cache.js';
+let audio,streams=[],timer,bank,generation=0,result={},phase='start';
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+function paint(){
+ const clocks=streams.map(s=>s.media.currentTime),spread=clocks.length?Math.max(...clocks)-Math.min(...clocks):0;
+ result.maxSpreadSeconds=Math.max(result.maxSpreadSeconds??0,spread);
+ result.samples=(result.samples??0)+1;
+ report.textContent=JSON.stringify({...result,phase,clocks,spreadSeconds:spread,bufferCount:audio?.buffers.size??0,streams:streams.length,readyStates:streams.map(s=>s.media.readyState),paused:streams.map(s=>s.media.paused),rates:streams.map(s=>s.media.playbackRate),diskCacheControlled:!!navigator.serviceWorker?.controller},null,2);
+}
+function stop(){generation++;clearInterval(timer);for(const stream of streams)stream.dispose();audio?.dispose();streams=[];audio=null;phase='stopped';paint();}
+async function prepare(media){
+ if(media.readyState>=3)return;
+ await new Promise((resolve,reject)=>{
+  const timeout=setTimeout(()=>finish(Error('media readiness timeout')),15000);
+  const done=()=>finish(),error=()=>finish(Error('media load failed'));
+  function finish(error){clearTimeout(timeout);media.removeEventListener('canplay',done);media.removeEventListener('error',error);error?reject(error):resolve();}
+  media.addEventListener('canplay',done,{once:true});media.addEventListener('error',error,{once:true});media.load();
+ });
+}
+async function load(pack,cacheOnly=false){
+ stop();const own=generation;result={pack,errors:[],maxSpreadSeconds:0};status.textContent='Cargando';phase='loading';
+ try{
+  const read=async url=>{const data=await json(url);if(cacheOnly&&data.music){const music=new URL(data.music);music.searchParams.set('music-cache-only','1');data.music=music.href;}return data;};
+  audio=new AudioSystem({music:0,sfx:0},{json:read,bytes});await audio.unlock();await prepareMusicDiskCache();if(own!==generation)return;result.cacheOnly=cacheOnly;
+  if(!pack){await audio.menu();if(own!==generation)return;streams=[audio.menuStream];}
+  else{
+   bank=await json(`/content/music-${pack}.json`);if(own!==generation)return;
+   streams=bank.tracks.filter(t=>!t.silent).map(t=>{const url=new URL(t.data.url);if(cacheOnly)url.searchParams.set('music-cache-only','1');return new MusicStream(audio.context,audio.musicGain,url.href,{gain:.05,loop:false});});
+   await Promise.all(streams.map(s=>prepare(s.media)));if(own!==generation)return;
+   await Promise.all(streams.map(s=>s.play()));
+  }
+  if(own!==generation)return;status.textContent='Reproduciendo';phase='playing';timer=setInterval(paint,50);paint();
+ }catch(error){if(own===generation){result.errors.push(error.message);status.textContent='Error';paint();}}
+}
+document.querySelector('#menu').onclick=()=>load(null);
+document.querySelector('#menu-cached').onclick=()=>load(null,true);
+document.querySelector('#stems-cached').onclick=()=>load('a',true);
+for(const button of document.querySelectorAll('[data-pack]'))button.onclick=()=>load(button.dataset.pack);
+document.querySelector('#seek').onclick=async()=>{
+ if(!bank||streams.length!==10)return;phase='seeking';const target=bank.navigation.sections.find(s=>s.id==='A').start;
+ try{for(const stream of streams){stream.pause();stream.media.currentTime=target;}await Promise.all(streams.map(s=>new Promise(resolve=>{if(!s.media.seeking)resolve();else s.media.addEventListener('seeked',resolve,{once:true});})));await Promise.all(streams.map(s=>s.play()));phase='after-seek';result.seekTarget=target;result.maxSpreadSeconds=0;paint();}
+ catch(error){result.errors.push(error.message);paint();}
+};
+document.querySelector('#stop').onclick=()=>{stop();status.textContent='Descargado';};
+window.addEventListener('pagehide',stop);
+</script></html>
