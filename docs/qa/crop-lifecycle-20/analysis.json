@@ -1,0 +1,4953 @@
+{
+  "summaries": {
+    "algodon": {
+      "planted": 38,
+      "outcomes": {
+        "living": 17,
+        "destroyed": 9,
+        "picked": 0,
+        "delivered": 12
+      },
+      "lostSameNight": 5,
+      "lostBeforeWater": 0,
+      "lostBirthTimes": [
+        43.00000000000018,
+        51.00000000000029,
+        47.000000000000234,
+        212.9999999999917,
+        26.0000000000001,
+        36.00000000000008,
+        44.00000000000019,
+        50.00000000000028,
+        28.000000000000128
+      ],
+      "lostDaysAlive": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        2,
+        0,
+        0,
+        0
+      ],
+      "lostGrowth": [
+        116.99999999998784,
+        100.29999999998877,
+        278.43750000000205,
+        160.09999999998539,
+        278.43750000000205,
+        405,
+        130.89999999998645,
+        102.89999999998864,
+        144.19999999998535
+      ],
+      "firstWaterWaits": [
+        140.0000000005084,
+        140.0000000005084,
+        149.00000000054115,
+        124.0000000004502,
+        527.0000000018363,
+        142.00000000051386,
+        141.00000000051114,
+        147.00000000053296,
+        145.0000000005275,
+        141.00000000051296,
+        528.0000000018426,
+        149.00000000054206,
+        143.00000000052023,
+        148.00000000053842,
+        535.0000000018663,
+        524.0000000018263,
+        537.0000000018736,
+        132.0000000004802,
+        133.00000000048385,
+        138.00000000050204,
+        154.00000000056025,
+        154.00000000056025,
+        153.0000000005566,
+        510.00000000177533,
+        515.0000000017935,
+        134.0000000004875,
+        125.00000000045475,
+        125.00000000045475,
+        518.0000000018044,
+        531.0000000018517,
+        536.0000000018699,
+        149.00000000054206,
+        143.00000000052023,
+        144.00000000052387,
+        142.0000000005166,
+        143.00000000052023,
+        160.00000000058208,
+        183.00000000066575
+      ]
+    },
+    "platano": {
+      "planted": 21,
+      "outcomes": {
+        "living": 8,
+        "destroyed": 13,
+        "picked": 0,
+        "delivered": 0
+      },
+      "lostSameNight": 8,
+      "lostBeforeWater": 3,
+      "lostBirthTimes": [
+        39.00000000000012,
+        47.000000000000234,
+        222.99999999999113,
+        28.000000000000128,
+        227.99999999999085,
+        220.99999999999125,
+        49.00000000000026,
+        40.000000000000135,
+        198.99999999999264,
+        206.99999999999218,
+        28.000000000000128,
+        36.00000000000008,
+        44.00000000000019
+      ],
+      "lostDaysAlive": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lostGrowth": [
+        111.9999999999881,
+        113.09999999998804,
+        118.7499999999973,
+        118.7499999999963,
+        0,
+        0,
+        113.799999999988,
+        116.19999999998787,
+        0,
+        118.7499999999973,
+        213.7499999999959,
+        213.74999999999062,
+        213.74999999999176
+      ],
+      "firstWaterWaits": [
+        149.00000000054024,
+        140.0000000005075,
+        532.0000000018536,
+        141.00000000051023,
+        138.00000000050204,
+        144.00000000052387,
+        515.0000000017935,
+        128.00000000046566,
+        126.00000000045839,
+        130.00000000047294,
+        150.0000000005457,
+        147.00000000053478,
+        151.00000000054933,
+        145.0000000005275,
+        156.00000000056752,
+        173.00000000062937,
+        181.00000000065847
+      ]
+    }
+  },
+  "rows": [
+    {
+      "id": "plant-9101",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 11,
+        "time": 35.000000000000064,
+        "elapsed": 6035.000000003634
+      },
+      "firstWater": {
+        "day": 11,
+        "time": 174.99999999999403,
+        "elapsed": 6175.000000004143
+      },
+      "firstWaterElapsedWait": 140.0000000005084,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 14,
+        "time": 17.999999999999986,
+        "elapsed": 7818.000000009875
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 14,
+        "time": 16.99999999999997,
+        "elapsed": 7817.000000009872,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-9127",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 11,
+        "time": 43.00000000000018,
+        "elapsed": 6043.000000003663
+      },
+      "firstWater": {
+        "day": 11,
+        "time": 182.99999999999358,
+        "elapsed": 6183.000000004172
+      },
+      "firstWaterElapsedWait": 140.0000000005084,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 11,
+        "time": 476.00000000003996,
+        "elapsed": 6476.000000005226
+      },
+      "growth": 116.99999999998784,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 11,
+        "time": 475.00000000003973,
+        "elapsed": 6475.000000005222,
+        "growth": 116.99999999998784,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 15.74999999998869
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-9156",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 11,
+        "time": 51.00000000000029,
+        "elapsed": 6051.000000003693
+      },
+      "firstWater": {
+        "day": 11,
+        "time": 199.9999999999926,
+        "elapsed": 6200.000000004234
+      },
+      "firstWaterElapsedWait": 149.00000000054115,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 11,
+        "time": 468.00000000003814,
+        "elapsed": 6468.000000005197
+      },
+      "growth": 100.29999999998877,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 11,
+        "time": 467.0000000000379,
+        "elapsed": 6467.000000005193,
+        "growth": 100.29999999998877,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-10309",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 12,
+        "time": 39.00000000000012,
+        "elapsed": 6639.00000000575
+      },
+      "firstWater": {
+        "day": 12,
+        "time": 187.99999999999326,
+        "elapsed": 6788.00000000629
+      },
+      "firstWaterElapsedWait": 149.00000000054024,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 12,
+        "time": 400.0000000000227,
+        "elapsed": 7000.0000000070495
+      },
+      "growth": 111.9999999999881,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 12,
+        "time": 399.00000000002245,
+        "elapsed": 6999.000000007046,
+        "growth": 111.9999999999881,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 16.99999999999033
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-10332",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 12,
+        "time": 47.000000000000234,
+        "elapsed": 6647.000000005779
+      },
+      "firstWater": {
+        "day": 12,
+        "time": 186.99999999999332,
+        "elapsed": 6787.000000006286
+      },
+      "firstWaterElapsedWait": 140.0000000005075,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 12,
+        "time": 408.0000000000245,
+        "elapsed": 7008.000000007079
+      },
+      "growth": 113.09999999998804,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 12,
+        "time": 407.0000000000243,
+        "elapsed": 7007.000000007075,
+        "growth": 113.09999999998804,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 18.099999999990345
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-11648",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 13,
+        "time": 47.000000000000234,
+        "elapsed": 7247.000000007879
+      },
+      "firstWater": {
+        "day": 13,
+        "time": 170.99999999999423,
+        "elapsed": 7371.000000008329
+      },
+      "firstWaterElapsedWait": 124.0000000004502,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 14,
+        "time": 414.00000000002586,
+        "elapsed": 8214.000000011301
+      },
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 14,
+        "time": 413.00000000002564,
+        "elapsed": 8213.000000011298,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-12074",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 13,
+        "time": 212.9999999999917,
+        "elapsed": 7413.000000008481
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 139.999999999996,
+        "elapsed": 7940.000000010317
+      },
+      "firstWaterElapsedWait": 527.0000000018363,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 14,
+        "time": 427.0000000000288,
+        "elapsed": 8227.000000011349
+      },
+      "growth": 160.09999999998539,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 14,
+        "time": 426.0000000000286,
+        "elapsed": 8226.000000011345,
+        "growth": 160.09999999998539,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 58.84999999998929
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-12114",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 13,
+        "time": 222.99999999999113,
+        "elapsed": 7423.000000008517
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 154.99999999999514,
+        "elapsed": 7955.000000010371
+      },
+      "firstWaterElapsedWait": 532.0000000018536,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 14,
+        "time": 413.00000000002564,
+        "elapsed": 8213.000000011298
+      },
+      "growth": 118.7499999999973,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 14,
+        "time": 412.0000000000254,
+        "elapsed": 8212.000000011294,
+        "growth": 118.7499999999973,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 23.75
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-12944",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 14,
+        "time": 26.0000000000001,
+        "elapsed": 7826.000000009904
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 167.9999999999944,
+        "elapsed": 7968.000000010418
+      },
+      "firstWaterElapsedWait": 142.00000000051386,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 15,
+        "time": 482.0000000000413,
+        "elapsed": 8882.000000013653
+      },
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 15,
+        "time": 481.0000000000411,
+        "elapsed": 8881.00000001365,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-12951",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 14,
+        "time": 28.000000000000128,
+        "elapsed": 7828.000000009912
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 168.99999999999434,
+        "elapsed": 7969.000000010422
+      },
+      "firstWaterElapsedWait": 141.00000000051023,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 14,
+        "time": 404.0000000000236,
+        "elapsed": 8204.000000011265
+      },
+      "growth": 118.7499999999963,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 14,
+        "time": 403.00000000002336,
+        "elapsed": 8203.000000011261,
+        "growth": 118.7499999999963,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 23.75
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-12966",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 14,
+        "time": 34.00000000000005,
+        "elapsed": 7834.000000009933
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 174.999999999994,
+        "elapsed": 7975.000000010444
+      },
+      "firstWaterElapsedWait": 141.00000000051114,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 16,
+        "time": 196.99999999999275,
+        "elapsed": 9197.00000001473
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 16,
+        "time": 195.9999999999928,
+        "elapsed": 9196.000000014727,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-13001",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 14,
+        "time": 42.00000000000016,
+        "elapsed": 7842.000000009962
+      },
+      "firstWater": {
+        "day": 14,
+        "time": 188.9999999999932,
+        "elapsed": 7989.000000010495
+      },
+      "firstWaterElapsedWait": 147.00000000053296,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 16,
+        "time": 214.9999999999916,
+        "elapsed": 9215.000000014796
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 16,
+        "time": 213.99999999999164,
+        "elapsed": 9214.000000014792,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-14348",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 15,
+        "time": 36.00000000000008,
+        "elapsed": 8436.00000001204
+      },
+      "firstWater": {
+        "day": 15,
+        "time": 180.99999999999366,
+        "elapsed": 8581.000000012567
+      },
+      "firstWaterElapsedWait": 145.0000000005275,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 17,
+        "time": 468.0000000000382,
+        "elapsed": 10068.000000017808
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 17,
+        "time": 467.00000000003797,
+        "elapsed": 10067.000000017804,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-14383",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 15,
+        "time": 44.00000000000019,
+        "elapsed": 8444.000000012069
+      },
+      "firstWater": {
+        "day": 15,
+        "time": 184.99999999999343,
+        "elapsed": 8585.000000012582
+      },
+      "firstWaterElapsedWait": 141.00000000051296,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 15,
+        "time": 471.0000000000388,
+        "elapsed": 8871.000000013613
+      },
+      "growth": 130.89999999998645,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 15,
+        "time": 470.0000000000386,
+        "elapsed": 8870.00000001361,
+        "growth": 130.89999999998645,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-14788",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 15,
+        "time": 217.99999999999142,
+        "elapsed": 8618.000000012702
+      },
+      "firstWater": {
+        "day": 16,
+        "time": 145.99999999999565,
+        "elapsed": 9146.000000014545
+      },
+      "firstWaterElapsedWait": 528.0000000018426,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 19,
+        "time": 21.00000000000003,
+        "elapsed": 10821.000000020398
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 19,
+        "time": 20.000000000000014,
+        "elapsed": 10820.000000020395,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-14828",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 15,
+        "time": 227.99999999999085,
+        "elapsed": 8628.000000012738
+      },
+      "firstWater": null,
+      "firstWaterElapsedWait": null,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 15,
+        "time": 471.0000000000388,
+        "elapsed": 8871.000000013613
+      },
+      "growth": 0,
+      "watersDone": 0,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 15,
+        "time": 470.0000000000386,
+        "elapsed": 8870.00000001361,
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-15729",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 16,
+        "time": 34.00000000000005,
+        "elapsed": 9034.000000014137
+      },
+      "firstWater": {
+        "day": 16,
+        "time": 182.99999999999355,
+        "elapsed": 9183.00000001468
+      },
+      "firstWaterElapsedWait": 149.00000000054206,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 18,
+        "time": 193.99999999999292,
+        "elapsed": 10394.000000018925
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 18,
+        "time": 192.99999999999298,
+        "elapsed": 10393.000000018921,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-15756",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 16,
+        "time": 42.00000000000016,
+        "elapsed": 9042.000000014166
+      },
+      "firstWater": {
+        "day": 16,
+        "time": 184.99999999999343,
+        "elapsed": 9185.000000014687
+      },
+      "firstWaterElapsedWait": 143.00000000052023,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 19,
+        "time": 15.99999999999996,
+        "elapsed": 10816.00000002038
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 19,
+        "time": 14.999999999999963,
+        "elapsed": 10815.000000020376,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-15787",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 16,
+        "time": 50.00000000000028,
+        "elapsed": 9050.000000014195
+      },
+      "firstWater": {
+        "day": 16,
+        "time": 197.9999999999927,
+        "elapsed": 9198.000000014734
+      },
+      "firstWaterElapsedWait": 148.00000000053842,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 16,
+        "time": 403.0000000000234,
+        "elapsed": 9403.000000015469
+      },
+      "growth": 102.89999999998864,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 16,
+        "time": 402.0000000000232,
+        "elapsed": 9402.000000015465,
+        "growth": 102.89999999998864,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 1.6499999999887283
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-16088",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 16,
+        "time": 202.9999999999924,
+        "elapsed": 9203.000000014752
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 137.9999999999961,
+        "elapsed": 9738.000000016618
+      },
+      "firstWaterElapsedWait": 535.0000000018663,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 20,
+        "time": 19,
+        "elapsed": 11419.000000022494
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 20,
+        "time": 17.999999999999986,
+        "elapsed": 11418.00000002249,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-16121",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 16,
+        "time": 210.99999999999181,
+        "elapsed": 9211.000000014781
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 134.99999999999628,
+        "elapsed": 9735.000000016607
+      },
+      "firstWaterElapsedWait": 524.0000000018263,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 20,
+        "time": 13.999999999999966,
+        "elapsed": 11414.000000022475
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 20,
+        "time": 12.99999999999997,
+        "elapsed": 11413.000000022472,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-16150",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 16,
+        "time": 218.99999999999136,
+        "elapsed": 9219.00000001481
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 155.99999999999508,
+        "elapsed": 9756.000000016684
+      },
+      "firstWaterElapsedWait": 537.0000000018736,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 20,
+        "time": 13.999999999999966,
+        "elapsed": 11414.000000022475
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 20,
+        "time": 12.99999999999997,
+        "elapsed": 11413.000000022472,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-16160",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 16,
+        "time": 220.99999999999125,
+        "elapsed": 9221.000000014817
+      },
+      "firstWater": null,
+      "firstWaterElapsedWait": null,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 16,
+        "time": 422.0000000000277,
+        "elapsed": 9422.000000015538
+      },
+      "growth": 0,
+      "watersDone": 0,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 16,
+        "time": 421.00000000002746,
+        "elapsed": 9421.000000015534,
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-17102",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 17,
+        "time": 39.00000000000012,
+        "elapsed": 9639.000000016258
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 170.99999999999423,
+        "elapsed": 9771.000000016738
+      },
+      "firstWaterElapsedWait": 132.0000000004802,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 20,
+        "time": 17.999999999999986,
+        "elapsed": 11418.00000002249
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 20,
+        "time": 16.99999999999997,
+        "elapsed": 11417.000000022486,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-17136",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 17,
+        "time": 47.000000000000234,
+        "elapsed": 9647.000000016287
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 179.99999999999372,
+        "elapsed": 9780.000000016771
+      },
+      "firstWaterElapsedWait": 133.00000000048385,
+      "frozenIntervals": 3,
+      "terminal": {
+        "day": 20,
+        "time": 19,
+        "elapsed": 11419.000000022494
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 20,
+        "time": 17.999999999999986,
+        "elapsed": 11418.00000002249,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-17148",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 17,
+        "time": 49.00000000000026,
+        "elapsed": 9649.000000016295
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 186.99999999999332,
+        "elapsed": 9787.000000016797
+      },
+      "firstWaterElapsedWait": 138.00000000050204,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 17,
+        "time": 472.00000000003905,
+        "elapsed": 10072.000000017822
+      },
+      "growth": 113.799999999988,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 17,
+        "time": 471.0000000000388,
+        "elapsed": 10071.000000017819,
+        "growth": 113.799999999988,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 18.799999999990355
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-17171",
+      "species": "algodon",
+      "outcome": "delivered",
+      "born": {
+        "day": 17,
+        "time": 55.00000000000035,
+        "elapsed": 9655.000000016316
+      },
+      "firstWater": {
+        "day": 17,
+        "time": 192.99999999999298,
+        "elapsed": 9793.000000016818
+      },
+      "firstWaterElapsedWait": 138.00000000050204,
+      "frozenIntervals": 2,
+      "terminal": {
+        "day": 19,
+        "time": 222.99999999999113,
+        "elapsed": 11023.000000021133
+      },
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 19,
+        "time": 221.9999999999912,
+        "elapsed": 11022.00000002113,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18479",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 18,
+        "time": 38.00000000000011,
+        "elapsed": 10238.000000018357
+      },
+      "firstWater": {
+        "day": 18,
+        "time": 191.99999999999304,
+        "elapsed": 10392.000000018917
+      },
+      "firstWaterElapsedWait": 154.00000000056025,
+      "frozenIntervals": 3,
+      "terminal": null,
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18484",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 18,
+        "time": 40.000000000000135,
+        "elapsed": 10240.000000018365
+      },
+      "firstWater": {
+        "day": 18,
+        "time": 183.9999999999935,
+        "elapsed": 10384.000000018888
+      },
+      "firstWaterElapsedWait": 144.00000000052387,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 18,
+        "time": 404.00000000002365,
+        "elapsed": 10604.000000019678
+      },
+      "growth": 116.19999999998787,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 18,
+        "time": 403.0000000000234,
+        "elapsed": 10603.000000019674,
+        "growth": 116.19999999998787,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 21.19999999999039
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18511",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 18,
+        "time": 46.00000000000022,
+        "elapsed": 10246.000000018386
+      },
+      "firstWater": {
+        "day": 18,
+        "time": 199.99999999999258,
+        "elapsed": 10400.000000018947
+      },
+      "firstWaterElapsedWait": 154.00000000056025,
+      "frozenIntervals": 3,
+      "terminal": null,
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18544",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 18,
+        "time": 54.000000000000334,
+        "elapsed": 10254.000000018415
+      },
+      "firstWater": {
+        "day": 18,
+        "time": 206.99999999999218,
+        "elapsed": 10407.000000018972
+      },
+      "firstWaterElapsedWait": 153.0000000005566,
+      "frozenIntervals": 3,
+      "terminal": null,
+      "growth": 405,
+      "watersDone": 4,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 405,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "manual",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18789",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 18,
+        "time": 198.99999999999264,
+        "elapsed": 10399.000000018943
+      },
+      "firstWater": null,
+      "firstWaterElapsedWait": null,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 18,
+        "time": 416.0000000000263,
+        "elapsed": 10616.000000019721
+      },
+      "growth": 0,
+      "watersDone": 0,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 18,
+        "time": 415.0000000000261,
+        "elapsed": 10615.000000019718,
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18818",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 18,
+        "time": 204.9999999999923,
+        "elapsed": 10405.000000018965
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 114.99999999999757,
+        "elapsed": 10915.00000002074
+      },
+      "firstWaterElapsedWait": 510.00000000177533,
+      "frozenIntervals": 2,
+      "terminal": null,
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18824",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 18,
+        "time": 206.99999999999218,
+        "elapsed": 10407.000000018972
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 121.99999999999702,
+        "elapsed": 10922.000000020766
+      },
+      "firstWaterElapsedWait": 515.0000000017935,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 19,
+        "time": 511.0000000000479,
+        "elapsed": 11311.00000002217
+      },
+      "growth": 118.7499999999973,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 19,
+        "time": 510.0000000000477,
+        "elapsed": 11310.000000022166,
+        "growth": 118.7499999999973,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 23.75
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-18913",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 18,
+        "time": 228.9999999999908,
+        "elapsed": 10429.000000019052
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 143.99999999999577,
+        "elapsed": 10944.000000020846
+      },
+      "firstWaterElapsedWait": 515.0000000017935,
+      "frozenIntervals": 2,
+      "terminal": null,
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19767",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 26.0000000000001,
+        "elapsed": 10826.000000020416
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 159.99999999999486,
+        "elapsed": 10960.000000020904
+      },
+      "firstWaterElapsedWait": 134.0000000004875,
+      "frozenIntervals": 2,
+      "terminal": null,
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19776",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 19,
+        "time": 28.000000000000128,
+        "elapsed": 10828.000000020424
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 155.99999999999508,
+        "elapsed": 10956.00000002089
+      },
+      "firstWaterElapsedWait": 128.00000000046566,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 20,
+        "time": 554.0000000000578,
+        "elapsed": 11954.000000024429
+      },
+      "growth": 213.7499999999959,
+      "watersDone": 2,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 20,
+        "time": 553.0000000000575,
+        "elapsed": 11953.000000024425,
+        "growth": 213.7499999999959,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "due",
+            "wait": 23.749999999997332
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19800",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 34.00000000000005,
+        "elapsed": 10834.000000020445
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 158.9999999999949,
+        "elapsed": 10959.0000000209
+      },
+      "firstWaterElapsedWait": 125.00000000045475,
+      "frozenIntervals": 2,
+      "terminal": null,
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19806",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 19,
+        "time": 36.00000000000008,
+        "elapsed": 10836.000000020453
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 161.99999999999474,
+        "elapsed": 10962.000000020911
+      },
+      "firstWaterElapsedWait": 126.00000000045839,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 20,
+        "time": 554.0000000000578,
+        "elapsed": 11954.000000024429
+      },
+      "growth": 213.74999999999062,
+      "watersDone": 2,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 20,
+        "time": 553.0000000000575,
+        "elapsed": 11953.000000024425,
+        "growth": 213.74999999999062,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "due",
+            "wait": 23.749999999992045
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19835",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 42.00000000000016,
+        "elapsed": 10842.000000020475
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 166.99999999999446,
+        "elapsed": 10967.00000002093
+      },
+      "firstWaterElapsedWait": 125.00000000045475,
+      "frozenIntervals": 2,
+      "terminal": null,
+      "growth": 278.43750000000205,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 278.43750000000205,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "due",
+            "wait": 75.9375
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-19842",
+      "species": "platano",
+      "outcome": "destroyed",
+      "born": {
+        "day": 19,
+        "time": 44.00000000000019,
+        "elapsed": 10844.000000020482
+      },
+      "firstWater": {
+        "day": 19,
+        "time": 173.99999999999406,
+        "elapsed": 10974.000000020955
+      },
+      "firstWaterElapsedWait": 130.00000000047294,
+      "frozenIntervals": 1,
+      "terminal": {
+        "day": 20,
+        "time": 541.0000000000548,
+        "elapsed": 11941.000000024382
+      },
+      "growth": 213.74999999999176,
+      "watersDone": 2,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 20,
+        "time": 540.0000000000546,
+        "elapsed": 11940.000000024378,
+        "growth": 213.74999999999176,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "due",
+            "wait": 23.749999999993182
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-20256",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 214.9999999999916,
+        "elapsed": 11015.000000021104
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 132.9999999999964,
+        "elapsed": 11533.000000022908
+      },
+      "firstWaterElapsedWait": 518.0000000018044,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 166.999999999985,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 166.999999999985,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 65.74999999998927
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-20286",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 222.99999999999113,
+        "elapsed": 11023.000000021133
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 153.9999999999952,
+        "elapsed": 11554.000000022985
+      },
+      "firstWaterElapsedWait": 531.0000000018517,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 146.59999999998615,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 146.59999999998615,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 45.3499999999891
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-20309",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 19,
+        "time": 230.99999999999068,
+        "elapsed": 11031.000000021162
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 166.99999999999446,
+        "elapsed": 11567.000000023032
+      },
+      "firstWaterElapsedWait": 536.0000000018699,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 133.09999999998692,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 133.09999999998692,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 31.849999999988913
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21170",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 20.000000000000014,
+        "elapsed": 11420.000000022497
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 168.99999999999434,
+        "elapsed": 11569.00000002304
+      },
+      "firstWaterElapsedWait": 149.00000000054206,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 146.0999999999852,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 146.0999999999852,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 44.8499999999881
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21178",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 22.000000000000043,
+        "elapsed": 11422.000000022505
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 171.99999999999417,
+        "elapsed": 11572.00000002305
+      },
+      "firstWaterElapsedWait": 150.0000000005457,
+      "frozenIntervals": 1,
+      "terminal": null,
+      "growth": 118.74999999999639,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 118.74999999999639,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 23.75
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21202",
+      "species": "algodon",
+      "outcome": "destroyed",
+      "born": {
+        "day": 20,
+        "time": 28.000000000000128,
+        "elapsed": 11428.000000022526
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 170.99999999999423,
+        "elapsed": 11571.000000023047
+      },
+      "firstWaterElapsedWait": 143.00000000052023,
+      "frozenIntervals": 0,
+      "terminal": {
+        "day": 20,
+        "time": 554.0000000000578,
+        "elapsed": 11954.000000024429
+      },
+      "growth": 144.19999999998535,
+      "watersDone": 1,
+      "dueAtLoss": 1,
+      "lastAlive": {
+        "day": 20,
+        "time": 553.0000000000575,
+        "elapsed": 11953.000000024425,
+        "growth": 144.19999999998535,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 42.94999999998813
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21209",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 29.999999999999996,
+        "elapsed": 11430.000000022534
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 176.9999999999939,
+        "elapsed": 11577.000000023068
+      },
+      "firstWaterElapsedWait": 147.00000000053478,
+      "frozenIntervals": 1,
+      "terminal": null,
+      "growth": 118.7499999999973,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 118.7499999999973,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 23.75
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 1
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21232",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 36.00000000000008,
+        "elapsed": 11436.000000022555
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 179.99999999999372,
+        "elapsed": 11580.00000002308
+      },
+      "firstWaterElapsedWait": 144.00000000052387,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 134.99999999998622,
+      "watersDone": 2,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 134.99999999998622,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "magic",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21240",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 38.00000000000011,
+        "elapsed": 11438.000000022563
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 188.9999999999932,
+        "elapsed": 11589.000000023112
+      },
+      "firstWaterElapsedWait": 151.00000000054933,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 111.89999999998811,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 111.89999999998811,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 16.899999999990328
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21262",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 44.00000000000019,
+        "elapsed": 11444.000000022585
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 185.99999999999338,
+        "elapsed": 11586.000000023101
+      },
+      "firstWaterElapsedWait": 142.0000000005166,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 114.69999999998795,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 114.69999999998795,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 13.449999999988684
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21271",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 46.00000000000022,
+        "elapsed": 11446.000000022592
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 190.9999999999931,
+        "elapsed": 11591.00000002312
+      },
+      "firstWaterElapsedWait": 145.0000000005275,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 109.69999999998824,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 109.69999999998824,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "due",
+            "wait": 14.699999999990323
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21298",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 52.000000000000306,
+        "elapsed": 11452.000000022614
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 194.99999999999287,
+        "elapsed": 11595.000000023134
+      },
+      "firstWaterElapsedWait": 143.00000000052023,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 105.69999999998848,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 105.69999999998848,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "due",
+            "wait": 4.449999999988729
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21306",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 54.000000000000334,
+        "elapsed": 11454.000000022621
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 209.99999999999187,
+        "elapsed": 11610.000000023188
+      },
+      "firstWaterElapsedWait": 156.00000000056752,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 90.89999999998932,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 90.89999999998932,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21330",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 60.00000000000042,
+        "elapsed": 11460.000000022643
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 219.9999999999913,
+        "elapsed": 11620.000000023225
+      },
+      "firstWaterElapsedWait": 160.00000000058208,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 80.49999999999007,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 80.49999999999007,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21342",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 62.00000000000045,
+        "elapsed": 11462.00000002265
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 234.99999999999045,
+        "elapsed": 11635.00000002328
+      },
+      "firstWaterElapsedWait": 173.00000000062937,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 65.7999999999909,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 65.7999999999909,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21368",
+      "species": "algodon",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 68.00000000000024,
+        "elapsed": 11468.000000022672
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 250.99999999999994,
+        "elapsed": 11651.000000023338
+      },
+      "firstWaterElapsedWait": 183.00000000066575,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 49.59999999999079,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 49.59999999999079,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 101.25,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 202.5,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 303.75,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21376",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 70.00000000000013,
+        "elapsed": 11470.00000002268
+      },
+      "firstWater": {
+        "day": 20,
+        "time": 250.99999999999994,
+        "elapsed": 11651.000000023338
+      },
+      "firstWaterElapsedWait": 181.00000000065847,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 49.59999999999079,
+      "watersDone": 1,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 49.59999999999079,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "id": "plant-21676",
+      "species": "platano",
+      "outcome": "living",
+      "born": {
+        "day": 20,
+        "time": 225.99999999999096,
+        "elapsed": 11626.000000023247
+      },
+      "firstWater": null,
+      "firstWaterElapsedWait": null,
+      "frozenIntervals": 0,
+      "terminal": null,
+      "growth": 0,
+      "watersDone": 0,
+      "dueAtLoss": 0,
+      "lastAlive": {
+        "day": 21,
+        "time": 0,
+        "elapsed": 12000.000000024527,
+        "growth": 0,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 95,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 190,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 285,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 380,
+            "status": "future",
+            "wait": 0
+          },
+          {
+            "at": 475,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "attackHits": 0
+      },
+      "initialState": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ]
+    }
+  ]
+}

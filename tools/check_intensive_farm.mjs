@@ -16,7 +16,8 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
+export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
+ if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
@@ -40,7 +41,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   return null;
  };
  const nextSpecies=()=>mixed&&s.day>=10&&numberOf(s.ledger.balance)>1000?['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'][plantedSequence%8]:'mijo';
- const labourReserve=(additional=0)=>reserveLabourGrowth?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/12)*worker.wage):nextWages;
+ const labourReserve=(additional=0)=>reserveLabourGrowth?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
  const maintenanceReserve=()=>reserveMaintenance?Math.max(100,...s.structures.filter(operational).map(c=>numberOf(Game.repairCost(c)))):0;
  const plant=()=>{
   const species=nextSpecies();if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+cropSpec(species).plant_cost)return false;
@@ -73,7 +74,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   // Optional comparison: ordinary proportional hiring during the workday.
   // The original dawn-only strategy remains the default, including old runs.
   if(middayHiring&&s.time<worker.end-20){
-   const desired=Math.max(1,Math.ceil(s.plants.filter(p=>p.alive).length/12)),extra=desired-staff;
+   const desired=Math.max(1,Math.ceil(s.plants.filter(p=>p.alive).length/plantsPerWorker)),extra=desired-staff;
    if(extra>0){
     const selection={[profile]:extra},cost=hiringCost(selection,{time:s.time});
     const tomorrow=Math.max(labourReserve(),desired*worker.wage);
@@ -97,7 +98,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  plant();Game.openInitialHiring(s);
  const hire=()=>{
   const money=numberOf(s.ledger.balance),living=s.plants.filter(p=>p.alive).length;
-  const desired=Math.max(1,Math.ceil((living+(s.day===1?money/10:0))/12));
+  const desired=Math.max(1,Math.ceil((living+(s.day===1?money/10:0))/plantsPerWorker));
   const affordable=reserveLabourGrowth?Math.floor(money/worker.wage):Math.floor((money-5)/(2*worker.wage));
   staff=Math.max(1,Math.min(desired,affordable));
   Game.hire(s,command('hire'),{[profile]:staff});nextWages=staff*worker.wage;
@@ -122,7 +123,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
 }
 export function auditIntensiveFarm(report,{victory=false}={}){
  const s=report.state,plants=new Map(s.plants.map(p=>[p.id,p]));let balance=1500n;

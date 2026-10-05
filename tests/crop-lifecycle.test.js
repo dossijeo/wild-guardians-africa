@@ -5,6 +5,8 @@ import {simulateIntensiveFarm} from '../tools/check_intensive_farm.mjs';
 import {createPlant,waterPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {createHash} from 'node:crypto';
+import {auditIntensiveFarm} from '../tools/check_intensive_farm.mjs';
 
 test('lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads',()=>{
  const plant=createPlant('plant-1','platano',4,5,'center-1');
@@ -26,6 +28,20 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
  const snapshot=JSON.parse(JSON.stringify(s));observer.observe(snapshot);
  assert.equal(observer.report().crops[0].timeline.filter(e=>e.type==='delivered').length,1);
  row.timeline.length=0;assert.ok(observer.report().crops[0].timeline.length>0,'reports must not expose mutable observer state');
+});
+
+test('optional higher staffing pays normal wages while the original twelve-plant strategy retains its recorded complete-state hash',()=>{
+ const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
+ const baseline=simulateIntensiveFarm(options);
+ // Native one-night CLI state captured before adding the staffing option.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'acc0e8e9699de4bce79b2297ad71db4cf743fe09d68f47e3f2876b5b07ecca9f');
+ const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
+ assert.ok(auditIntensiveFarm(staffed));assert.equal(staffed.completedNights,1);
+ assert.equal(staffed.policy.plantsPerWorker,8);assert.equal(baseline.policy.plantsPerWorker,12);
+ assert.ok(staffed.daily[0].staff>baseline.daily[0].staff);
+ assert.equal(staffed.daily[0].wages,staffed.daily[0].staff*30);
+ assert.ok(staffed.counts.CrateDelivered>0);
+ for(const invalid of [0,-1,1.5,NaN])assert.throws(()=>simulateIntensiveFarm({...options,plantsPerWorker:invalid}),/positive integer/);
 });
 
 test('a crop with pending watering is recorded as destroyed only after actual hit-state changes',()=>{
