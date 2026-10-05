@@ -20,11 +20,20 @@ Pointer samples and native curve processing remain intact. Preview/budget work
 is scheduled once per animation frame; cancellation, multitouch and release
 cancel queued work. Release still submits the complete sampled curve for final
 native validation and payment. Terrain guide heights are cached by point and
-field identity; camera movement still reprojects the line each frame.
+field identity. The overlay retains its already drawn pixels while stroke,
+camera matrices, viewport size, pixel ratio and field identity are unchanged.
+Camera movement and zoom still reproject the line; new pointer samples redraw it.
+Regression checks show sixty stationary render calls reuse one drawing, and
+verify invalidation on resize, DPR change, zoom, camera movement and reopening.
 
 Regression checks cover curve retention, cancellation, budget/enclosure rules,
 normal entity selection, terrain-only picking, changing camera, point and terrain.
 Evidence: savanna.json, savanna-drag.png, and the public controlled fixture
-tests/browser/wall-drawing-performance.html. Remaining: additional biomes,
+tests/browser/wall-drawing-performance.html. The retained-guide fixture also
+renders the curved line over the canyon river and shore, and submits eight
+paid native wall pieces on release (700 -> 620), including two in water. The
+guide then disappears. Evidence: canyon-retained-guide.png/json and
+canyon-built.png. This prepared gesture checks presentation and final native
+construction, not physical touch or frame time on a phone. Remaining: other biomes,
 physical touch and large resident farms; analytical terrain picking may further
 reduce the remaining mesh-raycast cost if measurements justify it.
