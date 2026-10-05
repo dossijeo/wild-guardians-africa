@@ -1,0 +1,50 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Reconstrucción mixta y puerta existente</title>
+<style>body{margin:0;font:14px system-ui}header{position:absolute;z-index:2;padding:10px;background:#fff9ed;max-width:700px}button{padding:8px;margin:4px}canvas{width:100vw;height:100vh;display:block}pre{max-height:140px;overflow:auto;font-size:11px}</style>
+<header>Sabana nativa, seed 712. Centro, cultivo, perímetro y reconstrucción pagados con las 1500 monedas iniciales. Sin modificar partidas guardadas.<br>
+<button id="approach" disabled>Avanzar hasta la puerta</button><button id="deliver" disabled>Completar la entrega</button><button id="overview" disabled>Ver perímetro</button><button id="closeup" disabled>Ver puerta</button><span id="status">Cargando…</span><details><summary>Informe lógico y visual</summary><pre id="report"></pre></details></header>
+<canvas id="world" aria-label="Puerta original entre tramos de muralla reconstruidos con adobe y piedra"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {numberOf} from '../../src/simulation/money.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {gatePortalPoints} from '../../src/world/gate-passages.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {json} from '../../src/rendering/assets.js';
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason?.message??e.reason)));
+const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+const state=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
+Game.placeStructure(state,'center',{x:location.center.x,z:location.center.z},nav);
+Game.plant(state,'seed','mijo',90,0,nav);
+Game.buildWallChain(state,'perimeter','zarzas',[[73,-15.5],[102.5,-15.5],[102.5,15.5],[73,15.5],[73,-15.5]],nav,{smooth:false,snap:false});
+const gate=state.structures.find(p=>p.autoGate),original=JSON.stringify(gate);
+if(!gate)throw Error('Missing automatic door');
+const neighbors=state.structures.filter(p=>p.kind==='wall'&&!p.gate&&Math.abs(p.x-gate.x)<.1).sort((a,b)=>Math.abs(a.z-gate.z)-Math.abs(b.z-gate.z)).slice(0,2);
+if(neighbors.length!==2)throw Error('Missing reconstruction neighbors');
+for(const p of neighbors)Game.removeWall(state,'remove-'+p.id,p.id,nav);
+const stages=[{stage:'removed',doors:state.structures.filter(p=>p.gate).length}];
+for(const [i,p] of neighbors.entries()){
+ Game.placeStructure(state,'replace-'+p.id,{kind:'wall',material:['adobe','piedra'][i],x:p.x,z:p.z,yaw:p.yaw},nav);
+ stages.push({stage:'rebuilt-'+i,doors:state.structures.filter(p=>p.gate).length});
+}
+const preserved=JSON.stringify(gate)===original,portals=gatePortalPoints(gate);
+if(!preserved||stages.some(p=>p.doors!==1)||!nav.path(portals[0],portals[1],.28,null,true))throw Error('Reconstruction violated door preservation or access');
+const reloaded=deserialize(serialize(state)),reloadPreserved=JSON.stringify(reloaded.structures.find(p=>p.id===gate.id))===original;
+Game.openInitialHiring(state);Game.hire(state,'hire',{olderMale:1});state.tutorial.step='done';Game.pause(state,'qa');
+const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('media');await world.load(state,nav,payload);
+function focus(close){world.focus(gate);const y=nav.field.surface(gate.x,gate.z);world.controls.target.set(close?gate.x:87,y+1,close?gate.z:0);world.camera.position.set(close?gate.x-12:60,y+(close?9:35),close?gate.z+12:42);world.controls.update();}
+function report(){
+ const replacements=state.structures.slice(-2),worker=state.workers[0];
+ const result={scope:'Native WorldScene and paid commands. Controlled QA pause; no income or crop growth override.',seed:712,initialCoins:1500,balance:numberOf(state.ledger.balance),stages,preserved,reloadPreserved,gate:{id:gate.id,material:gate.material,hp:gate.hp,maxHp:gate.maxHp,open:gate.gateOpen??0},replacements:replacements.map(p=>({id:p.id,material:p.material,gate:p.gate})),renderedGate:world.objects.has(gate.id),renderedReplacements:replacements.every(p=>world.objects.has(p.id)),worker:{x:worker.x,z:worker.z,status:worker.status,gateWaiting:worker.gateWaiting??null},crates:state.crates.map(c=>({id:c.id,delivered:c.delivered})),errors};
+ document.querySelector('#report').textContent=JSON.stringify(result,null,2);document.querySelector('#status').textContent=`Una puerta · adobe + piedra · saldo ${result.balance} · ${worker.gateWaiting?'espera ante puerta':worker.status} · ${state.crates.some(c=>c.delivered)?'entrega física completada':'sin entrega todavía'}`;
+}
+function advance(until,limit){Game.resume(state,'qa');try{for(let i=0;i<limit&&state.time<249&&!state.result&&!state.pauses.length;i++){Game.tick(state,.1,nav);if(until())break;}}finally{Game.pause(state,'qa');}world.render(0);report();}
+document.querySelector('#approach').onclick=()=>advance(()=>state.workers[0].gateWaiting,1200);
+document.querySelector('#deliver').onclick=()=>advance(()=>state.crates.some(c=>c.delivered),2400);
+document.querySelector('#overview').onclick=()=>focus(false);document.querySelector('#closeup').onclick=()=>focus(true);
+focus(true);document.querySelectorAll('button').forEach(b=>b.disabled=false);
+let frameId;function frame(){world.render(0);report();frameId=requestAnimationFrame(frame);}frame();
+addEventListener('pagehide',()=>{cancelAnimationFrame(frameId);world.dispose();},{once:true});
+</script></html>

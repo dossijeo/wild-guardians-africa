@@ -1,0 +1,56 @@
+{
+  "scope": "Native WorldScene and paid commands. Controlled QA pause; no income or crop growth override.",
+  "seed": 712,
+  "initialCoins": 1500,
+  "balance": 81,
+  "stages": [
+    {
+      "stage": "removed",
+      "doors": 1
+    },
+    {
+      "stage": "rebuilt-0",
+      "doors": 1
+    },
+    {
+      "stage": "rebuilt-1",
+      "doors": 1
+    }
+  ],
+  "preserved": true,
+  "reloadPreserved": true,
+  "gate": {
+    "id": "structure-44",
+    "material": "zarzas",
+    "hp": 60,
+    "maxHp": 60,
+    "open": 0
+  },
+  "replacements": [
+    {
+      "id": "structure-55",
+      "material": "adobe",
+      "gate": false
+    },
+    {
+      "id": "structure-56",
+      "material": "piedra",
+      "gate": false
+    }
+  ],
+  "renderedGate": true,
+  "renderedReplacements": true,
+  "worker": {
+    "x": 87.75344284408503,
+    "z": 0.0027739281349172824,
+    "status": "idle",
+    "gateWaiting": false
+  },
+  "crates": [
+    {
+      "id": "crate-62",
+      "delivered": true
+    }
+  ],
+  "errors": []
+}
