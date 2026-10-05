@@ -20,7 +20,7 @@ Las ondas de pisadas en el agua del Gran Cañón son **VFX**. El usuario autoriz
 - Probar decodificación y reproducción en la versión web de itch.io, Chrome móvil y Windows/Tauri antes de sustituir los recursos distribuidos.
 - Registrar ahorro total y por archivo, parámetros de conversión y pruebas de regresión; conservar los originales fuera del paquete de distribución.
 
-Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/README.md): 25,13 % menos de bytes y 294 comparaciones de descodificación Web Audio correctas. Los candidatos están fuera del runtime. Pendientes: escucha, bucles, adaptación de ventanas/caché, pruebas móvil/itch.io/Tauri e integración distribuida.
+Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/README.md): 25,13 % menos de bytes y 294 comparaciones de descodificación Web Audio correctas. Los candidatos están fuera del runtime. [Ventanas Opus experimentales](qa/opus-music-windows/README.md): 1.100 comparaciones de señal correctas a 44,1/48 kHz y caché en disco verificada; todavía fuera del runtime. Pendientes: escucha, bucles/transporte renderizado, coste de descodificación, fallback, pruebas móvil/itch.io/Tauri e integración distribuida sin duplicados.
 
 ## Imágenes WebP y Tinify (pedido el 5 de octubre de 2026)
 

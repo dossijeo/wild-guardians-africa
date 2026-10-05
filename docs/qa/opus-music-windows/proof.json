@@ -1,0 +1,40 @@
+{
+  "scope": "Experimental prebuilt Ogg Opus byte-window pack. Not runtime activation or full gameplay transport validation.",
+  "observedBrowserFixtureSha256": "1b2b03b6ae04c6c135d2cf3d23fcacf2d2d6091360dad4c58684b6ff86ff6524",
+  "fixtureNormalization": "Only CRLF-to-LF normalization after browser observation; source logic unchanged.",
+  "sourceHashes": {
+    "tools/ogg-opus-windows.mjs": "acb43b759cfb3d49ddee365a6fb5dda718b8e608a4f2dc59b4ff66ce142eb822",
+    "tools/prepare_music_opus_windows.mjs": "ae54d17884a61b3b476776bb6a5bb545c51b17ba6e8e1b8157c9fd3799aa55a8",
+    "tests/opus-music-windows.test.js": "8013cd76d0d5b78f9fa944f335063c7fd840e5be21612c55a245c663f1afa518",
+    "tests/browser/opus-music-windows.html": "74f88a02f684d9ca9f60370a15ee9b9c76d39bb55adb92cd7f5230815d12ff33",
+    "tests/fixtures/opus-window-source.opus": "c4f1291617d3561a7c3f48081c206de77d5c56cbe5fd19c7522acf79af2f32b2",
+    "src/audio/music-window-pool.js": "781038b5a08e0697b16c9e2165d36fcfec8640dd066439a02988246a7715a20a",
+    "src/audio/music-range-reader.js": "7be7b2d77b2d9a060da4d975625cbbc4cc043793ef6c6ff0f5b4a20764551a6c",
+    "src/rendering/asset-url.js": "f49fc9e9426625d8540604f29f2f57175659911279a8f96ed73cb2c2323eb576"
+  },
+  "bytes": {
+    "mp3Stems": 50535784,
+    "fullOpusStems": 38258002,
+    "opusWindows": 42799366
+  },
+  "parameters": {
+    "windowSeconds": 6,
+    "packetMs": 20,
+    "codecPrerollPackets": 30,
+    "pcmPrerollPackets": 2,
+    "tailPackets": 2
+  },
+  "browser": {
+    "cases": 1100,
+    "errors": 0,
+    "maximumPcmError": 1.1920928955078125e-07,
+    "sampleRates": [
+      48000,
+      44100
+    ],
+    "windowCounts": {
+      "a": 250,
+      "b": 300
+    }
+  }
+}
