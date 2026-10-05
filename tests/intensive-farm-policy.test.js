@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {simulateIntensiveFarm,auditIntensiveFarm} from '../tools/check_intensive_farm.mjs';
 import {summarizeIntensiveFarm} from '../tools/summarize_intensive_farm.mjs';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize} from '../src/persistence/snapshots.js';
 
 test('intensive native opening hires daily, expands beyond 16 crops and reinvests physical deliveries without manual harvest',()=>{
  const report=simulateIntensiveFarm({days:3,seed:712});assert.equal(report.result,null);assert.equal(report.completedNights,3);
@@ -21,6 +24,27 @@ test('intensive native opening hires daily, expands beyond 16 crops and reinvest
  const cash=summary.cashflow;
  assert.equal(BigInt(cash.openingBalance)+BigInt(cash.harvestIncome)-BigInt(cash.seedCosts)-BigInt(cash.wageCosts)-BigInt(cash.repairCosts)-BigInt(cash.centreCosts)+BigInt(cash.otherNet),BigInt(report.state.ledger.balance.n));
  assert.equal(cash.harvestIncome,totals.reduce((n,row)=>n+BigInt(row.income),0n).toString());
+});
+test('recorded mixed farm attributes seed investment to live, physically picked and destroyed crops and reconciles the ledger',()=>{
+ const root=new URL('../docs/qa/intensive-profile-comparison-20/',import.meta.url);
+ const report=JSON.parse(readFileSync(new URL('olderMale-report.json',root),'utf8'));
+ report.state=deserialize(gunzipSync(readFileSync(new URL('olderMale-state.json.gz',root))).toString('utf8'));
+ const summary=summarizeIntensiveFarm(report),rows=Object.values(summary.bySpecies);
+ assert.equal(rows.length,8);
+ for(const row of rows){
+  assert.equal(BigInt(row.seedCosts),BigInt(row.livingSeedCosts)+BigInt(row.pickedSeedCosts)+BigInt(row.destroyedSeedCosts));
+  assert.equal(BigInt(row.harvestMinusSeedCosts),BigInt(row.income)-BigInt(row.seedCosts));
+ }
+ assert.equal(rows.reduce((sum,row)=>sum+BigInt(row.seedCosts),0n),BigInt(summary.cashflow.seedCosts));
+ const banana=summary.bySpecies.platano;
+ assert.equal(banana.planted,21);assert.equal(banana.delivered,0);
+ assert.equal(banana.seedCosts,'3150');assert.equal(banana.livingSeedCosts,'1200');assert.equal(banana.destroyedSeedCosts,'1950');
+ assert.equal(banana.harvestMinusSeedCosts,'-3150');
+ // Changing a recorded debit must be rejected instead of assigning current
+ // prices to historical purchases and publishing a misleading breakdown.
+ const debit=Object.values(report.state.ledger.entries).find(entry=>entry.n==='-150');
+ debit.n='-151';report.state.ledger.balance.n=String(BigInt(report.state.ledger.balance.n)-1n);
+ assert.throws(()=>summarizeIntensiveFarm(report),/Species seed prices do not reconcile/);
 });
 test('reinvestment without growing labour or maintenance reserves can lose despite a large plantation',()=>{
  const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false});

@@ -3,16 +3,19 @@ import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {auditIntensiveFarm} from './check_intensive_farm.mjs';
+import {cropSpec} from '../src/simulation/rules.js';
+import assert from 'node:assert/strict';
 
 export function summarizeIntensiveFarm(report){
   auditIntensiveFarm(report,{victory:report.result==='victory'});
   const state=report.state,bySpecies={},picked=new Set(state.crates.map(crate=>crate.sourcePlantId));
-  const species=id=>bySpecies[id]??=({planted:0,living:0,picked:0,destroyed:0,lostBeforeFirstWater:0,lostWithPendingWater:0,delivered:0,inTransit:0,income:'0'});
+  const species=id=>bySpecies[id]??=({planted:0,living:0,picked:0,destroyed:0,lostBeforeFirstWater:0,lostWithPendingWater:0,delivered:0,inTransit:0,income:'0',seedCosts:'0',livingSeedCosts:'0',pickedSeedCosts:'0',destroyedSeedCosts:'0'});
   for(const plant of state.plants){
-    const row=species(plant.species);row.planted++;
-    if(plant.alive)row.living++;
-    else if(picked.has(plant.id))row.picked++;
-    else {row.destroyed++;if(plant.water[0].status==='due')row.lostBeforeFirstWater++;if(plant.water.some(w=>w.status==='due'))row.lostWithPendingWater++;}
+    const row=species(plant.species),cost=BigInt(cropSpec(plant.species).plant_cost);row.planted++;
+    row.seedCosts=String(BigInt(row.seedCosts)+cost);
+    const allocation=plant.alive?'living':picked.has(plant.id)?'picked':'destroyed';
+    row[allocation]++;row[allocation+'SeedCosts']=String(BigInt(row[allocation+'SeedCosts'])+cost);
+    if(allocation==='destroyed'){if(plant.water[0].status==='due')row.lostBeforeFirstWater++;if(plant.water.some(w=>w.status==='due'))row.lostWithPendingWater++;}
   }
   for(const crate of state.crates){
     const row=species(crate.species);
@@ -32,6 +35,12 @@ export function summarizeIntensiveFarm(report){
     else if(id==='center')cash.centreCosts-=amount;
     else cash.otherNet+=amount;
   }
+  // Historical snapshots do not retain the purchase command ID on each plant.
+  // Only attribute current species prices after reconciling their total with
+  // the actual recorded seed debits. A balance change must not silently rewrite
+  // the economics of an older campaign.
+  assert.equal(Object.values(bySpecies).reduce((total,row)=>total+BigInt(row.seedCosts),0n),cash.seedCosts,'Species seed prices do not reconcile with recorded purchase debits');
+  for(const row of Object.values(bySpecies))row.harvestMinusSeedCosts=String(BigInt(row.income)-BigInt(row.seedCosts));
   const operatingCashFlow=cash.harvestIncome-cash.seedCosts-cash.wageCosts-cash.repairCosts+cash.otherNet;
   return {
     biome:report.biome,culture:report.culture,seed:report.seed,result:report.result,
