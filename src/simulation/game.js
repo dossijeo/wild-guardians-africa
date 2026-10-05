@@ -424,7 +424,7 @@ function updateWorkers(s,dt,nav) {
       else updateIdle(w,idleFarmAnchor(s,w,center),dt,nav,s.seed,s.structures);
       continue;
     }
-    const target=[...s.plants,...s.crates,...s.structures].find(e=>e.id===t.targetId);
+    const target=s.plants.find(e=>e.id===t.targetId)??s.crates.find(e=>e.id===t.targetId)??s.structures.find(e=>e.id===t.targetId);
     if(!target || ('alive' in target&&!target.alive)) {s.tasks=s.tasks.filter(q=>q.id!==t.id);w.taskId=null;w.status='idle';w.path=null;continue;}
     if(w.status==='walking') {
       let destination=target;
@@ -524,6 +524,7 @@ export function tick(s,seconds,nav) {
     }
     if(previousTime<300) {
       for(const p of s.plants) {
+        if(!p.alive)continue;
         const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
         if(!p.harvestRequested)queueMatureHarvest(s,p);
