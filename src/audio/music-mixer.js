@@ -5,7 +5,7 @@ import {MUSIC_POLICIES,musicEventLevels} from './music-policy.js';
 export class MusicMixer {
   constructor(pack,bank,voices,start,scene='day',{automatic=false,random=Math.random}={}) {
     this.pack=pack;this.automatic=automatic;this.random=random;this.lastAutoId=null;this.event=null;
-    this.policy=MUSIC_POLICIES[pack];this.bank=bank;this.voices=new Map([...voices].map(([id,gain])=>[id,new Set([gain])]));this.start=start;
+    this.policy=MUSIC_POLICIES[pack];this.bank=bank;this.voices=new Map(bank.tracks.map(track=>[track.id,new Set(voices.has(track.id)?[voices.get(track.id)]:[])]));this.start=start;
     this.scale=(bank.safetyGain??.5)*.45;this.scene=scene;this.pending=[];
     this.curves=new Map(bank.tracks.map((track,i)=>{const value=this.policy.levels[scene][i];return [track.id,{from:value,to:value,start:0,end:0}];}));
     this.levels=new Map(bank.tracks.map((track,i)=>[track.id,this.policy.levels[scene][i]]));
@@ -17,6 +17,11 @@ export class MusicMixer {
     const curve=this.curves.get(id);
     if(time<=curve.start)return curve.from;if(time>=curve.end)return curve.to;
     return curve.from+(curve.to-curve.from)*(time-curve.start)/(curve.end-curve.start);
+  }
+  audibleDuring(id,from,to){
+    // Pending entrances must be prefetched before their gain begins to rise.
+    // Quiet logical tracks still follow the same clock and gain curves.
+    return Math.max(this.value(id,from),this.value(id,to))>0||this.pending.some(task=>task.id===id&&task.to>0&&task.when<=to);
   }
   addVoices(voices,when) {
     for(const [id,gain] of voices){

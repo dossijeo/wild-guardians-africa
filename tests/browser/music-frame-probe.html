@@ -1,0 +1,67 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA ventanas MP3 originales</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Frames MP3 · comparación con decodificación completa</h1><p>Diagnóstico sin reproducción: compara ventanas de los archivos originales, sin recomprimir.</p>
+<button id="run">Comparar veinte pistas</button><button id="windows">Comparar todas las ventanas desde disco</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {bytes} from '/src/rendering/assets.js';
+import {json} from '/src/rendering/assets.js';
+import {MusicWindowPool} from '/src/audio/music-window-pool.js';
+import {musicRangeReader} from '/src/audio/music-range-reader.js';
+let running=false;const status=document.querySelector('#status'),report=document.querySelector('#report');
+document.querySelector('#run').onclick=async()=>{
+ if(running)return;running=true;const results=[],context=new AudioContext({sampleRate:48000});
+ try{
+  const index=await fetch('./music-frame-probe.json').then(r=>r.json());
+  for(const track of index.tracks){
+   status.textContent=`Comparando ${track.pack}/${track.id}`;
+   const encoded=await bytes(track.url),full=await context.decodeAudioData(encoded.slice(0)),windows=[];
+   for(const window of track.windows){
+    const part=await context.decodeAudioData(encoded.slice(window.startByte,window.endByte));
+    const global=Math.round(window.compareSeconds*48000),local=global-window.firstFrame*1152;
+    let maximumError=0,sum=0,count=0;
+    for(let channel=0;channel<2;channel++){
+     const original=full.getChannelData(channel),decoded=part.getChannelData(channel);
+     for(let sample=0;sample<Math.min(48000,original.length-global,decoded.length-local);sample++){
+      const difference=Math.abs(original[global+sample]-decoded[local+sample]);maximumError=Math.max(maximumError,difference);sum+=difference*difference;count++;
+     }
+    }
+    windows.push({...window,decodedSamples:part.length,expectedSamples:window.frames*1152,maximumError,rmsError:Math.sqrt(sum/count),comparedSamples:count});
+   }
+   results.push({pack:track.pack,id:track.id,fullSamples:full.length,packetSamples:track.packetSamples,windows});report.textContent=JSON.stringify({status:'running',results},null,2);
+  }
+  status.textContent='Comparación terminada';report.textContent=JSON.stringify({status:'completed',sampleRate:context.sampleRate,results},null,2);
+ }catch(error){status.textContent='Error';report.textContent=JSON.stringify({status:'failed',error:error.message,results},null,2);}
+ finally{await context.close();running=false;}
+};
+document.querySelector('#windows').onclick=async()=>{
+ if(running)return;running=true;const results=[],context=new AudioContext({sampleRate:48000});
+ const reader=musicRangeReader({fetch:async()=>{throw Error('No network allowed for candidate windows');}});
+ let pool,peakWindowPcmBytes=0,totalComparedSamples=0,maximumError=0;
+ try{
+  for(const pack of ['a','b']){
+   const index=await json(`/content/music-windows-${pack}.json`);
+   pool=new MusicWindowPool(index,{sampleRate:context.sampleRate,readRange:reader.readRange,decode:data=>context.decodeAudioData(data)});
+   for(const track of index.tracks){
+    status.textContent=`Ventanas desde disco ${pack}/${track.id}`;
+    const full=await context.decodeAudioData(await bytes(track.url)),windows=[];
+    for(let number=0;number<track.windows.length;number++){
+     const part=await pool.load(track.id,number);peakWindowPcmBytes=Math.max(peakWindowPcmBytes,pool.pcmBytes());
+     let max=0,count=0;const local=part.startSample-part.firstSample;
+     for(let channel=0;channel<2;channel++){
+      const original=full.getChannelData(channel),decoded=part.buffer.getChannelData(channel);
+      for(let sample=0;sample<part.endSample-part.startSample;sample++){
+       max=Math.max(max,Math.abs(original[part.startSample+sample]-decoded[local+sample]));count++;
+      }
+     }
+     windows.push({number,maximumError:max,comparedSamples:count,decodedSamples:part.buffer.length});maximumError=Math.max(maximumError,max);totalComparedSamples+=count;pool.retain([]);
+    }
+    results.push({pack,id:track.id,fullSamples:full.length,windows});
+    report.textContent=JSON.stringify({status:'running',maximumError,totalComparedSamples,peakWindowPcmBytes,reader:reader.stats,results},null,2);
+   }
+   pool.dispose();pool=null;
+  }
+  status.textContent='Todas las ventanas comparadas';report.textContent=JSON.stringify({status:'completed',sampleRate:context.sampleRate,maximumError,totalComparedSamples,peakWindowPcmBytes,reader:reader.stats,results},null,2);
+ }catch(error){status.textContent='Error';report.textContent=JSON.stringify({status:'failed',error:error.message,results},null,2);}
+ finally{pool?.dispose();await context.close();running=false;}
+};
+</script></html>
