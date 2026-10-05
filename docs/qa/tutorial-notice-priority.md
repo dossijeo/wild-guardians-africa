@@ -21,3 +21,15 @@ reveals the unrelated weather card, without resurrecting the duplicate raid
 alert. Both events remain in history and no browser errors were captured.
 Screenshots and DOM reports are in `docs/qa/tutorial-notice-priority/`.
 This is a controlled UI presentation check, not a complete campaign test.
+
+The same fixture now checks the original farewell/exit animation. During the
+farewell phase the unrelated weather notice remains hidden; it becomes visible
+only after the guardian reaches `closed`. The duplicate raid card stays removed
+and both history entries survive. Reports are `during-exit.json` and
+`after-exit.json/png`. Eighteen focused lifecycle, notice and player-UI checks
+pass, including the full readable notice lifetime after animated dismissal.
+
+Production also consumes matching command feedback when its explanation is
+actually shown by the tutorial. This removes the duplicate placement-error
+banner for the reserve warning; errors remain available inside a modal when
+the tutorial is hidden. No new text or translation keys are introduced.

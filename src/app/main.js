@@ -1,4 +1,4 @@
-import {NoticeLifetime} from './notices.js';
+import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
 const noticeLifetime=new NoticeLifetime();
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
@@ -221,7 +221,8 @@ function updateUI(force=false) {
   document.querySelector('#center-action').disabled=!permission(state,'center');document.querySelector('#plant-action').disabled=!permission(state,'plant');document.querySelector('#wall-action').disabled=!permission(state,'wall');document.querySelector('#spell-action').disabled=!permission(state,'shield');
   if(surfaces.active==='panel'&&!document.querySelector('#panel').children.length)surfaces.active=null;
   contextPanel();const activeTutorial=narrator();
-  document.querySelector('#notices').innerHTML=noticeLifetime.visible(state,now/1000,activeTutorial).map(m=>`<div class="notice-card"><button data-notice="${m.id}">${esc(m.text)}</button><button data-dismiss-notice="${m.id}" aria-label="Cerrar">×</button></div>`).join('');
+  if(commandFeedback&&tutorialCoversNotice(state,{text:commandFeedback},activeTutorial))commandFeedback='';
+  document.querySelector('#notices').innerHTML=noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'}).map(m=>`<div class="notice-card"><button data-notice="${m.id}">${esc(m.text)}</button><button data-dismiss-notice="${m.id}" aria-label="Cerrar">×</button></div>`).join('');
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');

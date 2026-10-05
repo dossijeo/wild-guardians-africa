@@ -15,7 +15,7 @@ export class NoticeLifetime {
  constructor(seconds=15){this.seconds=seconds;this.entries=new Map();}
  reset(){this.entries.clear();}
  dismiss(id){const entry=this.entries.get(id);if(entry)entry.dismissed=true;}
- visible(state,now,presentation=null){
+ visible(state,now,presentation=null,{tutorialVisible=Boolean(presentation)}={}){
   const live=new Set(state.messages.map(m=>m.id));
   for(const id of this.entries.keys())if(!live.has(id))this.entries.delete(id);
   for(const message of state.messages){
@@ -24,7 +24,7 @@ export class NoticeLifetime {
   }
   // Unrelated notices wait behind the tutorial, without spending their readable
   // lifetime in an invisible stack. Duplicate explanations never reappear.
-  if(presentation)return [];
+  if(presentation||tutorialVisible)return [];
   return visibleNotices(state).filter(m=>{const entry=this.entries.get(m.id);if(entry.dismissed)return false;entry.until??=now+this.seconds;return now<entry.until;});
  }
 }

@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {RAID_NOTICE_TEXT} from '../src/simulation/raid-notice.js';
-import {visibleNotices,NoticeLifetime} from '../src/app/notices.js';
+import {visibleNotices,NoticeLifetime,tutorialCoversNotice} from '../src/app/notices.js';
+import {RESERVE_MESSAGE} from '../src/simulation/budget.js';
 const warning={id:'warning',text:RAID_NOTICE_TEXT,target:'animal-1'};
 test('finished raids do not leave a live attack warning on the HUD or change saved history',()=>{
  const state={messages:[warning,{id:'funds',text:'Fondos insuficientes',target:null}],raid:null},before=JSON.stringify(state);
@@ -25,6 +26,22 @@ test('the defeat explanation suppresses its identical event; unrelated errors re
  const state={messages:[{id:'defeat',text:'Sin recursos'},{id:'repair',text:'Reparación cancelada'}],raid:null},notices=new NoticeLifetime();
  assert.deepEqual(notices.visible(state,0,{id:'result.defeat',text:'Sin recursos'}),[]);
  assert.deepEqual(notices.visible(state,10),[state.messages[1]]);
+});
+
+test('closing guardian animation keeps unrelated notices waiting without consuming readable time',()=>{
+ const state={messages:[{id:'weather',text:'Noche húmeda'}]},notices=new NoticeLifetime();
+ notices.visible(state,0,{id:'basic.work',text:'Aprende a regar'});
+ assert.deepEqual(notices.visible(state,10,null,{tutorialVisible:true}),[]);
+ assert.deepEqual(notices.visible(state,11,null,{tutorialVisible:false}),state.messages);
+ assert.deepEqual(notices.visible(state,25.99),state.messages);
+ assert.deepEqual(notices.visible(state,26),[]);
+});
+
+test('reserve explanation covers the matching command error only when actually presented',()=>{
+ const state={messages:[]},message={text:RESERVE_MESSAGE},presentation={id:'budget.reserve',text:RESERVE_MESSAGE};
+ assert.equal(tutorialCoversNotice(state,message,presentation),true);
+ assert.equal(tutorialCoversNotice(state,message,null),false,'a hidden tutorial cannot replace feedback in a modal');
+ assert.equal(tutorialCoversNotice(state,{text:'Terreno inclinado'},presentation),false);
 });
 test('the current raid warning persists until the whole raid ends, including after its first animal exits',()=>{
  const state={messages:[warning],raid:{animals:[{id:'animal-1',status:'gone'},{id:'animal-2',status:'attacking'}]}};
