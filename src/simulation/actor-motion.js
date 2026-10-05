@@ -77,6 +77,20 @@ export function prepareActorMotion(state,actor,nav,worker){
       if(cost<costs[j]&&clear(nodes[index],nodes[j])&&staticClear(nodes[index],nodes[j])){costs[j]=cost;previous[j]=index;}
     }
   }
+  // Opposing traffic beside a solid corner may have no room to pass directly.
+  // One actor yields into verified free space while retaining its full route.
+  // Stable identity chooses only one side; stationary bodies never cause this.
+  const opposing=nearby.find(other=>other.path?.length&&String(actor.id)>String(other.id)&&
+    (next.x-actor.x)*(other.path[0].x-other.x)+(next.z-actor.z)*(other.path[0].z-other.z)<0);
+  if(opposing){
+    const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),r=radius(actor)+radius(opposing)+.5;
+    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
+      const point={x:actor.x+Math.sin(angle+offset)*r,z:actor.z+Math.cos(angle+offset)*r};
+      if(clear(actor,point)&&staticClear(actor,point)){
+        actor.path=[point,...actor.path];return clear;
+      }
+    }
+  }
   // A narrow occupied passage waits; neither teleport nor discard the route.
   return clear;
 }
