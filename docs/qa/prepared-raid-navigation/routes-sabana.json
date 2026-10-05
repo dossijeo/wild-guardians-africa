@@ -1,0 +1,2491 @@
+{
+  "input": "docs/qa/populated-raids/sabana.json",
+  "group": [
+    "warthog"
+  ],
+  "repeats": 4,
+  "dt": 0.016666666666666666,
+  "steps": 20,
+  "sourceHashes": {
+    "src/world/navigation.js": "ae4664735509144c91d9f365e5201903e4469f12fb19724d79e82941fe6d1e12",
+    "src/world/raid-navigation-warmth.js": "d7ec9874ad7971a46d05ce71cb7adceaa3f6052133bc9fe810fdfef6a534ea88",
+    "src/simulation/raids.js": "98fd82dd1710acc56ad39bcfe1e717e644385779f25c697fb118fe75610b1b2d",
+    "src/simulation/game.js": "06e69ef158116b48673d47ce8eb6317d168fd358ec3a38de875f9abc8e68145c",
+    "src/world/compute-raid-entry.js": "aa13a37c5bee05faf90f974ef619f9fde4dc230ca42f4abd414d6055c09c79dc",
+    "src/world/raid-entry-data.js": "d7795c5e73ea47deea54e37bb8ded1eeebee4624029a22d98ff192427e960760",
+    "tools/benchmark_raid_first_routes.mjs": "46bee24e5dec25ea7e5eddfe8b02bfa029cf43907ceb9df8bba197ca06f8629a"
+  },
+  "summary": {
+    "reference": {
+      "medianSpawnMs": 23.187750000000108,
+      "medianFirstUpdateMs": 73.59505000000001,
+      "maximumUpdateMs": 109.73330000000001,
+      "medianSpawnAndUpdatesMs": 93.16085000000032
+    },
+    "prepared": {
+      "medianSpawnMs": 0.6411999999999694,
+      "medianFirstUpdateMs": 1.0442499999999768,
+      "maximumUpdateMs": 1.7405999999999722,
+      "medianSpawnAndUpdatesMs": 3.367849999999976
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "spawnMs": 30.384299999999996,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 109.73330000000001,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.169399999999996,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.19110000000000582,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.18989999999996598,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.17660000000000764,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.4134999999999991,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.20779999999996335,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.4954999999999927,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.3521000000000072,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.24919999999997344,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.20299999999997453,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.45889999999997144,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.24739999999997053,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.36829999999997654,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.25979999999998427,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.10630000000003292,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.30150000000003274,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.09710000000001173,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.09489999999999554,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.10890000000000555,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 0,
+      "mode": "prepared",
+      "spawnMs": 1.067199999999957,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 1.7405999999999722,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.25739999999996144,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.11039999999991323,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.09519999999997708,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.06610000000000582,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.41449999999997544,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.092899999999986,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.41620000000000346,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.06309999999996307,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.04870000000005348,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.09309999999993579,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.0969000000000051,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.09019999999998163,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.06610000000000582,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.09420000000000073,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.06730000000004566,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.04980000000000473,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.06410000000005311,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.0785000000000764,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.08399999999994634,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "mode": "prepared",
+      "spawnMs": 0.5113000000000056,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.976099999999974,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.09119999999995798,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.04640000000006239,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.05199999999990723,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.033699999999953434,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.035499999999956344,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.03350000000000364,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.029799999999909232,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.03170000000000073,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.06389999999998963,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.13379999999995107,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.07320000000004256,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.21339999999997872,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.06970000000001164,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.04760000000010223,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.032500000000027285,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.0362999999999829,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.0283999999999196,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.030200000000036198,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.0301000000000613,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "spawnMs": 28.13250000000005,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 55.225400000000036,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.129099999999994,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.8214000000000397,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.0746000000000322,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.04270000000008167,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.07820000000003802,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.0867999999999256,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.1450000000000955,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.12770000000000437,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.09449999999992542,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.094600000000014,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.13659999999993033,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.11549999999999727,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.10569999999995616,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.24289999999996326,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.08709999999996398,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.10339999999996508,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.08349999999995816,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.06920000000002346,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.09480000000007749,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "spawnMs": 17.31460000000004,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 67.9973,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.25149999999996453,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.13400000000001455,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.18100000000004002,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.2055000000000291,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.1227000000001226,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.11779999999998836,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.11349999999993088,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.09500000000002728,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.11050000000000182,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.11339999999995598,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.1069999999999709,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.056599999999889405,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.07739999999989777,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.04539999999997235,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.044100000000071304,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.03870000000006257,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.03770000000008622,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.06709999999998217,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.04800000000000182,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "mode": "prepared",
+      "spawnMs": 0.7710999999999331,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 1.1123999999999796,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.10989999999992506,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.08560000000011314,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.07530000000019754,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.05300000000011096,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.08929999999986649,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.10259999999993852,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.1533999999999196,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.12980000000015934,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.08210000000008222,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.09760000000005675,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.10459999999989122,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.06829999999990832,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.04629999999997381,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.038499999999885404,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.03700000000003456,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.08480000000008658,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.08449999999993452,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.10269999999991342,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.11280000000010659,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "mode": "prepared",
+      "spawnMs": 0.4859000000001288,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.7197000000001026,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.11130000000002838,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.12489999999979773,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.12799999999992906,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.07240000000001601,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.06140000000004875,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.061100000000124055,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.05290000000013606,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.05660000000011678,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.04670000000010077,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.31179999999994834,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.09019999999986794,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.0747999999998683,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.09019999999986794,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.0808999999999287,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.12910000000010768,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.13249999999993634,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.10739999999987049,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.1313000000000102,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.125,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "spawnMs": 18.243000000000166,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 79.19280000000003,
+          "sha256": "83e3722f762733165e32b36cdca386c8eb673fbfa5ff9f6849ab149e0e1a4742",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 104.03177244170296,
+              "z": 31.677321498744586,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.16300000000001091,
+          "sha256": "328af2ba016f964d37be66bbc02dfbbed3311ffb9ccf5c0411ab92bbb5cbb823",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.97882793925199,
+              "z": 31.64256533711345,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.10110000000008768,
+          "sha256": "1584fa193b0977dfd2a5350917e81f694cd3c5f884af8537e0d4144cd278bd2f",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.92588343680102,
+              "z": 31.607809175482313,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.09270000000014988,
+          "sha256": "03ad7d91fe99fddd36ff0ec450d7605c6daf04586432c8a1aeb85a2812e59cd0",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.87293893435005,
+              "z": 31.573053013851176,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.10630000000014661,
+          "sha256": "ea45c0290df0afae804b2373213201da1b09bdd3313b856e38419759bac63a35",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.81999443189908,
+              "z": 31.53829685222004,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.0908999999999196,
+          "sha256": "ad8b05d1e9cbeccfa9fa4e380a56a9b327ddc95fb23eccd539c180daf4c7598b",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.7670499294481,
+              "z": 31.503540690588903,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.05120000000010805,
+          "sha256": "7a5bf8f399a373ea2cb8721912615c2fc97f9de2ed95fee4c336be006f90ce90",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.71410542699714,
+              "z": 31.468784528957766,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.04809999999997672,
+          "sha256": "986d16d7633ca3004d13bae60b0da299b24eb9149e380a91e85e8cb1dcc20391",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.66116092454617,
+              "z": 31.43402836732663,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.12579999999979918,
+          "sha256": "4d00cbf50b7ec94faf540a84d900848348510ac609a3ef3d01773925a4c3b54c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.6082164220952,
+              "z": 31.399272205695492,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.1065000000000964,
+          "sha256": "f33c0dc9819ea6255403e7a490810ad489c98697cb9b197220cd2e30fd9cfbc4",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.55527191964423,
+              "z": 31.364516044064356,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.07339999999999236,
+          "sha256": "84ab1a407b9987230754bb484b7dc401ee5b4232f884b828a88eb7fed124cd16",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.50232741719326,
+              "z": 31.32975988243322,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.06700000000000728,
+          "sha256": "5b4ee9bb299477dca1d71e668f7f79aec465e9f508bcc8fa5ee23e7eef32b7c8",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.44938291474227,
+              "z": 31.295003720802082,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.07629999999994652,
+          "sha256": "3c5335cb1f76f96de8c15c83a57d58a93cc317a13e623b777ffd6782b6ce8edf",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.39643841229129,
+              "z": 31.260247559170946,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.06780000000003383,
+          "sha256": "7aabbd64ce0a4279e395cd852f07cd1765c53cb4ece33fc776e3605a1cf1c03c",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.34349390984032,
+              "z": 31.22549139753981,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.06909999999993488,
+          "sha256": "48800cbf9bb0a2bc2071af22aab0e4adfdb8b117babad3cc384de7d61649f15a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.29054940738934,
+              "z": 31.190735235908672,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.04860000000007858,
+          "sha256": "a7426388c14748efbf2dfdd2d6b2f23e5448888b0d26df63373c8f2c3dc8a33a",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.23760490493837,
+              "z": 31.155979074277536,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.06520000000000437,
+          "sha256": "1926e44167646cb1bcec46e8c03d72149a428160a601b752be5972282d9be76d",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.18466040248738,
+              "z": 31.121222912646402,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.07130000000006476,
+          "sha256": "5e234591b8b5b187ffaa5729f2c432c3899e110b3624f386d3c4fb34289ae223",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.13171590003641,
+              "z": 31.086466751015266,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.10620000000017171,
+          "sha256": "94ef6f5b306ee6cbcfcce8e8d0b7b28c0bec7004a27b0b5845923f972e0c8c22",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.07877139758543,
+              "z": 31.051710589384133,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.07659999999987122,
+          "sha256": "89e6d3594a22edda41249cbaf6f9553d2a270e9d6d8c6eee370cc16c0f18a661",
+          "animals": [
+            {
+              "id": "animal-391",
+              "status": "entering",
+              "x": 103.02582689513446,
+              "z": 31.016954427752996,
+              "pathPoints": 24,
+              "targetId": "plant-342"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "Recorded native spawn and first twenty Game ticks on identical terrain and game state. Complete state equivalence at every step; excludes preparation, rendering and physical phone."
+}

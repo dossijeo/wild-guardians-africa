@@ -1,4 +1,5 @@
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
+import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure} from './rules.js';
@@ -137,6 +138,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
   const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
+  if(prepared)warmRaidNavigation(nav,prepared.warmth);
   const preferredSide=randomInt(s,0,3);
   const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
   const entries=entry?.entries,exits=entry?.exits;
@@ -198,6 +200,20 @@ function targetFor(s,a,nav) {
     if(approach)return {target:structure,reservation:group.id,approach,shieldId:shield?.id??null};
   }
   return null;
+}
+export function warmRaidApproaches(state,specs,entry,nav){
+  if(!entry)return;
+  // Preview chooses only which static queries to warm. No preview choice,
+  // reservation, motion or damage is copied back into the real simulation.
+  const preview={...state,raid:{reservations:{},animals:specs.map(({radius},i)=>({id:`preview-${i}`,...entry.entries[i],radius,status:'entering',hitsRemaining:1}))}};
+  const originalState=nav.state;
+  try{
+    nav.state=preview;
+    for(const animal of preview.raid.animals){
+      const selected=targetFor(preview,animal,nav);
+      if(selected)preview.raid.reservations[selected.reservation]=animal.id;
+    }
+  }finally{nav.state=originalState;}
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;

@@ -31,6 +31,7 @@ document.querySelector('#run').onclick=async()=>{
   worker=new Worker(new URL('../../src/world/raid-entry-worker.js',import.meta.url),{type:'module'});
   const reply=await new Promise((resolve,reject)=>{const deadline=setTimeout(()=>reject(Error('Worker deadline')),30000);worker.onmessage=({data})=>{clearTimeout(deadline);data.error?reject(Error(data.error)):resolve(data);};worker.onerror=()=>{clearTimeout(deadline);reject(Error('Worker failed'));};worker.postMessage(request);});
   result.preparationMs=performance.now()-started;worker.terminate();worker=null;
+  result.warmthCounts=Object.fromEntries(['chunks','walk','segments','paths'].map(kind=>[kind,reply.warmth?.[kind]?.length??0]));
   if(serialize(state)!==before||reply.key!==raidEntryKey(state,nav,source.group))throw Error('Preparation changed or outlived its inputs');
   let used=0;nav.preparedRaidEntry=(s,g,b)=>{if(reply.key!==raidEntryKey(s,nav,g,b))return;used++;return reply;};
   const spawnStart=performance.now();spawnRaid(state,source.plan,nav);result.spawnMs=performance.now()-spawnStart;delete nav.preparedRaidEntry;result.preparedUsed=used;
@@ -41,7 +42,7 @@ document.querySelector('#run').onclick=async()=>{
    const started=performance.now();tick(state,.05,nav);updates.push(performance.now()-started);world.render(.05);steps++;await new Promise(requestAnimationFrame);
   }
   result.firstHit=state.events.filter(e=>['CropHit','StructureHit'].includes(e.type)).at(-1)??null;
-  result.steps=steps;result.simulatedSeconds=steps*.05;result.maximumGameTickMs=Math.max(...updates);
+  result.steps=steps;result.simulatedSeconds=steps*.05;result.firstGameTickMs=updates[0];result.maximumGameTickMs=Math.max(...updates);
   result.after={day:state.day,time:state.time,elapsed:state.elapsed,money:state.ledger.balance};result.ok=!!result.firstHit&&!errors.length;
   result.scope='Naturally reached paid first-night snapshot, loaded into native WorldScene. Camera and active bounds come from this diagnostic view. Native worker and physical first hit; very-low quality, no audio/HUD, no physical-phone or FPS acceptance.';
   status.textContent=result.ok?'Ataque físico confirmado':'FAIL: sin ataque';paint();

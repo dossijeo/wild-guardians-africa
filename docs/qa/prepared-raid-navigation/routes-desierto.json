@@ -1,0 +1,2491 @@
+{
+  "input": "docs/qa/populated-raids/desierto.json",
+  "group": [
+    "warthog"
+  ],
+  "repeats": 4,
+  "dt": 0.016666666666666666,
+  "steps": 20,
+  "sourceHashes": {
+    "src/world/navigation.js": "ae4664735509144c91d9f365e5201903e4469f12fb19724d79e82941fe6d1e12",
+    "src/world/raid-navigation-warmth.js": "d7ec9874ad7971a46d05ce71cb7adceaa3f6052133bc9fe810fdfef6a534ea88",
+    "src/simulation/raids.js": "98fd82dd1710acc56ad39bcfe1e717e644385779f25c697fb118fe75610b1b2d",
+    "src/simulation/game.js": "06e69ef158116b48673d47ce8eb6317d168fd358ec3a38de875f9abc8e68145c",
+    "src/world/compute-raid-entry.js": "aa13a37c5bee05faf90f974ef619f9fde4dc230ca42f4abd414d6055c09c79dc",
+    "src/world/raid-entry-data.js": "d7795c5e73ea47deea54e37bb8ded1eeebee4624029a22d98ff192427e960760",
+    "tools/benchmark_raid_first_routes.mjs": "46bee24e5dec25ea7e5eddfe8b02bfa029cf43907ceb9df8bba197ca06f8629a"
+  },
+  "summary": {
+    "reference": {
+      "medianSpawnMs": 143.65314999999998,
+      "medianFirstUpdateMs": 0.8660999999999603,
+      "maximumUpdateMs": 8.66980000000001,
+      "medianSpawnAndUpdatesMs": 145.9309499999996
+    },
+    "prepared": {
+      "medianSpawnMs": 0.731450000000109,
+      "medianFirstUpdateMs": 0.8340499999999906,
+      "maximumUpdateMs": 1.2440000000001419,
+      "medianSpawnAndUpdatesMs": 3.28945000000067
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "spawnMs": 180.168,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 8.66980000000001,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.2813000000000443,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.25380000000001246,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.22329999999999472,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.16200000000003456,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.24689999999998236,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.09379999999998745,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.4590999999999781,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.3336999999999648,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.13259999999996808,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.06979999999998654,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.27600000000001046,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.12740000000002283,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.4954999999999927,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.30869999999998754,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.134900000000016,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.18070000000000164,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.12229999999999563,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.08020000000004757,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.04769999999996344,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 0,
+      "mode": "prepared",
+      "spawnMs": 1.0736000000000558,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 1.217999999999961,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.16790000000003147,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.12429999999994834,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.07119999999997617,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.1292999999999438,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.18270000000006803,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.1027000000000271,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.314899999999966,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.057900000000017826,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.04650000000003729,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.045500000000060936,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.03719999999998436,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.031000000000062755,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.039499999999975444,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.039800000000013824,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.07090000000005148,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.06929999999999836,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.06169999999997344,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.05769999999995434,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.0969000000000051,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "mode": "prepared",
+      "spawnMs": 0.9121999999999844,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 1.2440000000001419,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.10490000000004329,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.09510000000000218,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.06420000000002801,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.06909999999993488,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.06899999999995998,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.10079999999993561,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.10100000000011278,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.2663000000000011,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.08290000000010878,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.07209999999986394,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.10509999999999309,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.22969999999986612,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.10329999999999018,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.09369999999989886,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.07380000000011933,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.16409999999996217,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.06970000000001164,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.05330000000003565,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.0544999999999618,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "spawnMs": 145.135,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.8708999999998923,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.12329999999997199,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.07930000000010295,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.07409999999981665,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.04489999999987049,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.09249999999997272,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.09740000000010696,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.09829999999988104,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.07459999999991851,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.06190000000015061,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.05420000000003711,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.03029999999989741,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.0386999999998352,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.024700000000166256,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.026500000000169166,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.030700000000024374,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.02500000000009095,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.026000000000067303,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.029199999999946158,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.2358999999999014,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "spawnMs": 125.83960000000002,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.805699999999888,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.09410000000002583,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.08200000000010732,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.0884000000000924,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.09310000000004948,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.05780000000004293,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.04490000000009786,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.06960000000003674,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.06400000000007822,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.08670000000006439,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.07230000000004111,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.06109999999989668,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.053599999999960346,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.03850000000011278,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.05850000000009459,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.05960000000004584,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.06190000000015061,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.11980000000016844,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.09080000000017208,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.07609999999999673,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "mode": "prepared",
+      "spawnMs": 0.5451999999997952,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.4255000000000564,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.05420000000003711,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.027399999999943248,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.03840000000013788,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.023500000000012733,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.021700000000009823,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.03309999999987667,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.08029999999985193,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.06150000000002365,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.0683000000001357,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.06190000000015061,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.03569999999990614,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.03260000000000218,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.06899999999995998,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.10729999999989559,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.07739999999989777,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.0543999999999869,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.06639999999993051,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.057900000000017826,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.08549999999991087,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "mode": "prepared",
+      "spawnMs": 0.5507000000002336,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.4501000000000204,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.06330000000025393,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.04530000000022483,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.08170000000018263,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.05959999999959109,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.08820000000014261,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.269800000000032,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.2640000000001237,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.10539999999991778,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.08690000000024156,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.050900000000183354,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.04959999999982756,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.049100000000180444,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.07489999999961583,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.03600000000005821,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.030099999999947613,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.030499999999847205,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.05580000000009022,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.04640000000017608,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.05210000000033688,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "spawnMs": 142.17129999999997,
+      "updates": [
+        {
+          "step": 0,
+          "cpuMs": 0.8613000000000284,
+          "sha256": "544dde365491470006cd34b09e731128390ba8fc3c10b8c0fe928b65a8d7ac40",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.57008737966864,
+              "z": 6.651705255822605,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "cpuMs": 0.11329999999998108,
+          "sha256": "e1a031e46493ea38e6fe0bf3b6c4cc5e1829036301818328b74d90385a5689ea",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.55632107242025,
+              "z": 6.672573623864762,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "cpuMs": 0.07780000000002474,
+          "sha256": "44530a8780706f6856187217e3e9e4ba2645e8182f11430fff801c8b5c762d90",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.54255476517186,
+              "z": 6.69344199190692,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "cpuMs": 0.06960000000026412,
+          "sha256": "5b878a6a4ba713c18b3e7cfa588c3d983ab121d90be1e54a71038f365a548200",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.52878845792347,
+              "z": 6.714310359949078,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "cpuMs": 0.05960000000004584,
+          "sha256": "7f3cec6e250f77687203eb1ea2d62ba76f097ebd626a3e7745b86ede48b3b6ca",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.51502215067508,
+              "z": 6.735178727991236,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 5,
+          "cpuMs": 0.059099999999943975,
+          "sha256": "b5d1513ccb09274b02e47dbc8c3d6c0eaaf06380b266281fbb2c06b90902d53e",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.50125584342669,
+              "z": 6.756047096033393,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "cpuMs": 0.057299999999941065,
+          "sha256": "16b17d977b8724f265bf205b63364d6795b041d9b218b8c7525d3aad71e6c13f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.4874895361783,
+              "z": 6.776915464075551,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "cpuMs": 0.08770000000004075,
+          "sha256": "1366841491edaa58aa2d6ed84e02c5c6032ca270374e695f08b759641a6472aa",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.47372322892991,
+              "z": 6.797783832117709,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "cpuMs": 0.07310000000006767,
+          "sha256": "5d50cfe468a4bb47a0660f27dc1c868c528acb689438ea9a725b7808dbbc862f",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.45995692168152,
+              "z": 6.818652200159867,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 9,
+          "cpuMs": 0.06629999999995562,
+          "sha256": "7d2e5685c70f3f066b248b56ff9587feeb0a597f008029381122c0423d88736b",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.44619061443314,
+              "z": 6.839520568202024,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 10,
+          "cpuMs": 0.07229999999981374,
+          "sha256": "de0b6e8efa2b6836ed83cacf01ce370646dd400613e43e48b109b08f67e9d6d1",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.43242430718475,
+              "z": 6.860388936244183,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 11,
+          "cpuMs": 0.14699999999993452,
+          "sha256": "f7ab5bd99866c2625c1cc6db15956a52ce18d2ad625319fec018af0f56345863",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.41865799993636,
+              "z": 6.881257304286341,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 12,
+          "cpuMs": 0.0884000000000924,
+          "sha256": "b92ed0653851ddc92afb3041585562c4355a2c74c4701fef8292803dea8539df",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.40489169268797,
+              "z": 6.902125672328499,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 13,
+          "cpuMs": 0.07189999999991414,
+          "sha256": "ec04f43ba26122dd8966153d5ccddd9f70ef5c68ed2c126a46206035a8828266",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.39112538543958,
+              "z": 6.922994040370658,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "cpuMs": 0.08149999999977808,
+          "sha256": "0bd39553a5a8c0376c0b5abb48c823f3e27b6c4a064c72b6fa18ec2afa2aa461",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.37735907819119,
+              "z": 6.943862408412817,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 15,
+          "cpuMs": 0.06329999999979918,
+          "sha256": "c2c74574d68f6e25ab34033c67ad5455516101c81174ef530f48fb8f9133cfb2",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.3635927709428,
+              "z": 6.964730776454975,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 16,
+          "cpuMs": 0.05999999999994543,
+          "sha256": "9f3579d8ab27437ebfaa532f746375f90deaf6577070127708db6a3c70a78184",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.34982646369441,
+              "z": 6.985599144497134,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 17,
+          "cpuMs": 0.05519999999978609,
+          "sha256": "a682babc8fb41a65fbb821ba03b66918ff6a6b0a8d23c7c856def15d13f382ee",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.33606015644602,
+              "z": 7.006467512539293,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 18,
+          "cpuMs": 0.18899999999985084,
+          "sha256": "4d7ce1d1195817de097b47b94c0190d290f508356320a6cd2ebe320bf6aee116",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.32229384919764,
+              "z": 7.027335880581451,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        },
+        {
+          "step": 19,
+          "cpuMs": 0.06350000000020373,
+          "sha256": "0eb01bac90cd9c3e929b933cfe2dec26c5c99a9e66ba7a3bf887a523d2e1fd56",
+          "animals": [
+            {
+              "id": "animal-268",
+              "status": "walking",
+              "x": 98.30852754194925,
+              "z": 7.04820424862361,
+              "pathPoints": 1,
+              "targetId": "plant-70"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "Recorded native spawn and first twenty Game ticks on identical terrain and game state. Complete state equivalence at every step; excludes preparation, rendering and physical phone."
+}

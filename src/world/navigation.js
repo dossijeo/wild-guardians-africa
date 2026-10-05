@@ -1,4 +1,5 @@
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
+import {navigationPathKey} from './raid-navigation-warmth.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
@@ -60,6 +61,7 @@ export class Navigation {
     state.navigationVersion=this.version;
     this.state=state;
     this.portalGraphs=new Map();
+    this.preparedPaths=null;
     this.walkCache.clear();
     this.segmentCache.clear();
     this.failedPaths.clear();
@@ -84,7 +86,7 @@ export class Navigation {
     // Route the proposed footprint without polluting live paths or caches.
     return Object.assign(Object.create(this),{
       obstacles:[...this.obstacles,building],suppressed:new Set([...(this.suppressed??[]),...suppress]),
-      walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),searchNeighborCache:new Map(),
+      preparedPaths:null,walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],portalGraphs:new Map(),searchNeighborCache:new Map(),
     });
   }
   workerSurface(x,z){
@@ -169,8 +171,10 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
-    const key=`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}:${margin}`;
+    const key=navigationPathKey(start,end,radius,ignore,worker,margin);
     if(this.failedPaths.has(key))return null;
+    const prepared=this.preparedPaths&&this.preparedPaths.version===this.version&&this.preparedPaths.entries.get(key);
+    if(prepared)return prepared.map(p=>({...p}));
     const found=this.findPath(start,end,radius,ignore,worker,margin);
     const result=found&&worker?this.smoothPath(start,found,radius,ignore,worker):found;
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
