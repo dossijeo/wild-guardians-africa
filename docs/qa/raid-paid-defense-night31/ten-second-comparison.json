@@ -1,0 +1,429 @@
+{
+  "scope": "Single CPU diagnostic of 100 steps of 0.1 simulated seconds, on native recorded failure. Not GPU/phone frametime proof. Cold first step includes native route reconstruction after loading. Before is actor-motion from 506878d; after is bounded incremental implementation with hashes in verified-sources.json.",
+  "samples": {
+    "before": {
+      "initial": [
+        {
+          "id": "animal-63429",
+          "x": 104,
+          "z": 3.2031812368194563,
+          "hits": 1,
+          "status": "walking",
+          "next": {
+            "x": 105,
+            "z": 2
+          },
+          "pathLength": 43,
+          "blockers": [
+            {
+              "id": "animal-63431",
+              "x": 104,
+              "z": 5.2484271247462075,
+              "r": 0.9
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        },
+        {
+          "id": "animal-63431",
+          "x": 104,
+          "z": 5.2484271247462075,
+          "hits": 3,
+          "status": "walking",
+          "next": {
+            "x": 104,
+            "z": 4
+          },
+          "pathLength": 57,
+          "blockers": [
+            {
+              "id": "animal-63429",
+              "x": 104,
+              "z": 3.2031812368194563,
+              "r": 1.1
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        }
+      ],
+      "timings": [
+        {
+          "step": 0,
+          "ms": 477.4602
+        },
+        {
+          "step": 1,
+          "ms": 8.550100000000043
+        },
+        {
+          "step": 25,
+          "ms": 8.14930000000004
+        },
+        {
+          "step": 29,
+          "ms": 8.002900000000068
+        },
+        {
+          "step": 49,
+          "ms": 7.834600000000023
+        },
+        {
+          "step": 7,
+          "ms": 7.342299999999909
+        },
+        {
+          "step": 39,
+          "ms": 7.138500000000022
+        },
+        {
+          "step": 10,
+          "ms": 7.031399999999962
+        }
+      ],
+      "after10s": [
+        {
+          "id": "animal-63429",
+          "x": 104,
+          "z": 3.2031812368194563,
+          "hits": 1,
+          "status": "walking",
+          "next": {
+            "x": 105,
+            "z": 2
+          },
+          "pathLength": 43,
+          "blockers": [
+            {
+              "id": "animal-63431",
+              "x": 104,
+              "z": 5.2484271247462075,
+              "r": 0.9
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        },
+        {
+          "id": "animal-63431",
+          "x": 104,
+          "z": 5.2484271247462075,
+          "hits": 3,
+          "status": "walking",
+          "next": {
+            "x": 104,
+            "z": 4
+          },
+          "pathLength": 57,
+          "blockers": [
+            {
+              "id": "animal-63429",
+              "x": 104,
+              "z": 3.2031812368194563,
+              "r": 1.1
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        }
+      ]
+    },
+    "after": {
+      "initial": [
+        {
+          "id": "animal-63429",
+          "x": 104,
+          "z": 3.2031812368194563,
+          "hits": 1,
+          "status": "walking",
+          "next": {
+            "x": 105,
+            "z": 2
+          },
+          "pathLength": 43,
+          "blockers": [
+            {
+              "id": "animal-63431",
+              "x": 104,
+              "z": 5.2484271247462075,
+              "r": 0.9
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        },
+        {
+          "id": "animal-63431",
+          "x": 104,
+          "z": 5.2484271247462075,
+          "hits": 3,
+          "status": "walking",
+          "next": {
+            "x": 104,
+            "z": 4
+          },
+          "pathLength": 57,
+          "blockers": [
+            {
+              "id": "animal-63429",
+              "x": 104,
+              "z": 3.2031812368194563,
+              "r": 1.1
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        }
+      ],
+      "timings": [
+        {
+          "step": 0,
+          "ms": 501.4663
+        },
+        {
+          "step": 20,
+          "ms": 23.140700000000038
+        },
+        {
+          "step": 15,
+          "ms": 18.639999999999986
+        },
+        {
+          "step": 1,
+          "ms": 10.034099999999967
+        },
+        {
+          "step": 4,
+          "ms": 9.44900000000007
+        },
+        {
+          "step": 21,
+          "ms": 9.354700000000093
+        },
+        {
+          "step": 3,
+          "ms": 8.121800000000007
+        },
+        {
+          "step": 8,
+          "ms": 7.862500000000068
+        }
+      ],
+      "after10s": [
+        {
+          "id": "animal-63429",
+          "x": 104,
+          "z": 3.2031812368194563,
+          "hits": 1,
+          "status": "walking",
+          "next": {
+            "x": 105,
+            "z": 2
+          },
+          "pathLength": 43,
+          "blockers": [
+            {
+              "id": "animal-63431",
+              "x": 104,
+              "z": 5.2484271247462075,
+              "r": 0.9
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        },
+        {
+          "id": "animal-63431",
+          "x": 104,
+          "z": 5.2484271247462075,
+          "hits": 3,
+          "status": "walking",
+          "next": {
+            "x": 104,
+            "z": 4
+          },
+          "pathLength": 57,
+          "blockers": [
+            {
+              "id": "animal-63429",
+              "x": 104,
+              "z": 3.2031812368194563,
+              "r": 1.1
+            },
+            {
+              "id": "worker-31689",
+              "x": 106.17231695295943,
+              "z": 1.4528249378970106,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-38318",
+              "x": 104.34080459482847,
+              "z": 0.44277393573141527,
+              "r": 0.28,
+              "incapacitated": true
+            },
+            {
+              "id": "worker-49380",
+              "x": 105.07981851732474,
+              "z": 2.258811051209512,
+              "r": 0.28,
+              "incapacitated": true
+            }
+          ],
+          "staticClear": true,
+          "dynamicClear": false
+        }
+      ]
+    }
+  }
+}

@@ -239,6 +239,10 @@ export class Navigation {
     return neighbors;
   }
   findPath(start,end,radius=.3,ignore=null,worker=true,margin=16) {
+    const search=this.findPathSteps(start,end,radius,ignore,worker,margin);let step;
+    do{step=search.next();}while(!step.done);return step.value;
+  }
+  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
@@ -276,6 +280,7 @@ export class Navigation {
     }
     let visited=0,touchesBoundary=false;
     while(open.length&&visited++<maxVisited) {
+      if(visited%8===0)yield null;
       const cur=open.pop(),ck=key(cur.x,cur.z);
       // A cheaper entry for this cell has already been processed. Keep the
       // original pop budget, but avoid repeating its collision/neighbor work.

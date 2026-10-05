@@ -1,0 +1,79 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion} from '../src/simulation/actor-motion.js';
+import * as Game from '../src/simulation/game.js';
+
+test('recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload',()=>{
+ let s=deserialize(gunzipSync(readFileSync(new URL('../docs/qa/raid-paid-defense-night31/failure-state.json.gz',import.meta.url))).toString());
+ const profile=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile;
+ const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
+ assert.equal(s.completedNights,30);assert.equal(s.day,31);assert.equal(s.time,600);
+ const bodies=s.raid.animals,exits=new Map(bodies.map(a=>[a.id,{...a.exit}])),ledger=structuredClone(s.ledger.balance);
+ const fallen=s.workers.filter(w=>w.incapacitated).map(w=>({...w}));assert.equal(fallen.length,3);
+ const walls=s.structures.filter(t=>t.kind==='wall').map(t=>({id:t.id,hp:t.hp,status:t.status}));
+ let moved=false,reloaded=false,steps=0,finalAnimals=bodies;
+ for(;steps<4000&&s.raid;steps++){
+  const before=new Map(s.raid.animals.map(a=>[a.id,{x:a.x,z:a.z,status:a.status}]));
+  finalAnimals=s.raid.animals;Game.tick(s,.1,nav);
+  const animals=s.raid?.animals??finalAnimals;
+  for(const a of animals){
+   const start=before.get(a.id);if(start.status==='gone')continue;
+   const distance=Math.hypot(a.x-start.x,a.z-start.z);moved||=distance>1e-8;
+   assert.ok(distance<=.38+1e-8,'Keep the original speed bound');
+   assert.ok(nav.segmentClear(start,a,a.radius,null,false),'Every swept segment respects native walls, props and terrain');
+   assert.ok(actorSegmentClear(start,a,a,fallen),'No segment traverses an incapacitated worker');
+  }
+  for(let i=0;i<animals.length;i++)for(let j=i+1;j<animals.length;j++)if(animals[i].status!=='gone'&&animals[j].status!=='gone')
+   assert.ok(Math.hypot(animals[i].x-animals[j].x,animals[i].z-animals[j].z)>=animals[i].radius+animals[j].radius-1e-8);
+  if(steps===50&&s.raid){s=deserialize(serialize(s));nav.setState(s);reloaded=true;}
+ }
+ assert.ok(moved);assert.ok(reloaded);assert.equal(s.raid,null,'The recorded incursion must actually finish');
+ assert.equal(s.completedNights,31);assert.equal(s.day,32);assert.ok(s.pauses.includes('hiring'));
+ assert.deepEqual(s.ledger.balance,ledger);
+ assert.deepEqual(s.structures.filter(t=>t.kind==='wall').map(t=>({id:t.id,hp:t.hp,status:t.status})),walls);
+ const departures=s.events.filter(e=>e.type==='RaidEnded');assert.ok(departures.length);
+ // Every original actor exits at its own recorded location, without deleting it.
+ assert.ok(finalAnimals.every(a=>a.status==='gone'));
+ for(const a of finalAnimals)assert.deepEqual({x:a.x,z:a.z},exits.get(a.id));
+});
+
+test('an impossible dynamic detour is cached until bodies move or terrain changes',()=>{
+ let searches=0;
+ const nav={version:1,walkable:()=>true,segmentClear:()=>false,*findPathSteps(){searches++;return null;}};
+ const actor={id:'actor',x:0,z:0,radius:.5,path:[{x:3,z:0}]},blocker={id:'fallen',x:1,z:0,radius:.5,incapacitated:true,status:'fleeing'};
+ const state={workers:[blocker],raid:{animals:[actor]}};
+ for(let i=0;i<20;i++)prepareActorMotion(state,actor,nav,false);
+ assert.equal(searches,1);
+ blocker.x+=.1;prepareActorMotion(state,actor,nav,false);assert.equal(searches,2);
+ blocker.x+=.2;prepareActorMotion(state,actor,nav,false);assert.equal(searches,3);
+ nav.version++;prepareActorMotion(state,actor,nav,false);assert.equal(searches,4);
+ assert.deepEqual(actor.path,[{x:3,z:0}]);
+});
+
+test('a sliced search does not cache a failure from bodies that moved within a quarter metre',()=>{
+ let searches=0;
+ const nav={version:1,walkable:()=>true,segmentClear:()=>false,*findPathSteps(){searches++;yield null;yield null;return null;}};
+ const actor={id:'actor',x:0,z:0,radius:.5,path:[{x:3,z:0}]},blocker={id:'fallen',x:1,z:0,radius:.5,incapacitated:true,status:'fleeing'};
+ const state={workers:[blocker],raid:{animals:[actor]}};
+ prepareActorMotion(state,actor,nav,false);blocker.x+=.1;
+ prepareActorMotion(state,actor,nav,false);prepareActorMotion(state,actor,nav,false);
+ assert.equal(searches,1,'Keep the in-progress bounded search');
+ prepareActorMotion(state,actor,nav,false);assert.equal(searches,2,'A stale failure must permit a fresh search');
+});
+
+test('native incremental A* preserves the synchronous route and expands at most eight cells per slice',()=>{
+ const nav=new Navigation(712,'sabana',{}),s=Game.newGame({seed:712,slotId:'incremental-route'});nav.setState(s);
+ nav.field={waterInfo:()=>({inside:false}),blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];
+ nav.obstacles=[{id:'solid',kind:'house',footprint:[{x:1,z:-2},{x:3,z:-2},{x:3,z:2},{x:1,z:2}]}];
+ const start={x:0,z:0},end={x:4,z:0},expected=nav.findPath(start,end,.3,null,false);
+ assert.ok(expected);let expanded=0,slices=0,step;
+ const original=nav.searchNeighbors.bind(nav);nav.searchNeighbors=(...args)=>{expanded++;return original(...args);};
+ const search=nav.findPathSteps(start,end,.3,null,false);
+ do{const before=expanded;step=search.next();assert.ok(expanded-before<=8);slices++;}while(!step.done);
+ assert.ok(slices>1);assert.deepEqual(step.value,expected);
+ let before=start;for(const point of step.value){assert.ok(nav.segmentClear(before,point,.3,null,false));before=point;}
+});

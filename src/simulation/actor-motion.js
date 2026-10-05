@@ -2,6 +2,39 @@ import {edgeDistance} from '../world/footprints.js';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const radius=a=>a.radius??.28;
+const blockedDetours=new WeakMap();
+const pendingDetours=new WeakMap();
+const detourKey=(actor,goal,blockers,nav,worker)=>JSON.stringify([nav.version,worker,actor.x,actor.z,goal.x,goal.z,blockers.map(b=>[b.id,Math.floor(b.x*4),Math.floor(b.z*4),radius(b)])]);
+const exactDetourKey=(key,blockers)=>JSON.stringify([key,blockers.map(b=>[b.x,b.z])]);
+// The small disc graph cannot route around a solid corner next to a fallen
+// worker. Use the native terrain search only after that graph fails. Dynamic
+// caches belong to this attempt, never to the shared static navigation graph.
+function terrainDetour(actor,goal,blockers,nav,worker,clear){
+  if(!nav.findPathSteps)return null;
+  const key=detourKey(actor,goal,blockers,nav,worker);
+  const exactKey=exactDetourKey(key,blockers);
+  if(blockedDetours.get(actor)===exactKey)return null;
+  let pending=pendingDetours.get(actor);
+  if(!pending||pending.key!==key){
+  const origin={x:actor.x,z:actor.z,radius:radius(actor)},snapshot=blockers.map(b=>({x:b.x,z:b.z,radius:radius(b)}));
+  const snapshotClear=(a,b)=>actorSegmentClear(a,b,origin,snapshot);
+  const search=Object.assign(Object.create(Object.getPrototypeOf(nav)),nav,{
+    preparedPaths:null,walkCache:new Map(),segmentCache:new Map(),failedPaths:new Set(),closedRegions:new Map(),searchedRegions:[],searchNeighborCache:new Map(),portalGraphs:new Map(),
+    testWalkable:(x,z,r,ignore,w)=>nav.walkable(x,z,r,ignore,w)&&snapshotClear({x,z},{x,z}),
+    testSegmentClear:(a,b,r,ignore,w)=>nav.segmentClear(a,b,r,ignore,w)&&snapshotClear(a,b)
+  });
+  pending={key,exactKey,iterator:search.findPathSteps(origin,{...goal},radius(actor),null,worker,32)};
+  pendingDetours.set(actor,pending);
+  }
+  // One bounded search slice per blocked simulation step. No long synchronous
+  // A* on the rendering thread; stationary failures are not retried each frame.
+  const step=pending.iterator.next();if(!step.done)return null;
+  pendingDetours.delete(actor);
+  let path=step.value;
+  if(path){let before=actor;for(const point of path){if(!clear(before,point)){path=null;break;}before=point;}}
+  if(!path&&pending.exactKey===exactKey)blockedDetours.set(actor,exactKey);else blockedDetours.delete(actor);
+  return path;
+}
 // Active worker encounters keep their approved hit/knockback rules. Exhausted
 // animals and incapacitated people need physical clearance without another hit.
 export function actorBlockers(state,actor,worker){
@@ -67,6 +100,15 @@ export function prepareActorMotion(state,actor,nav,worker){
     // returning here first made both bodies wait forever at the saved route.
     if(!clear(goal,goal)){yieldToOpposing();return clear;}
   }
+  const key=detourKey(actor,goal,blockers,nav,worker);
+  if(pendingDetours.get(actor)?.key===key||blockedDetours.get(actor)===exactDetourKey(key,blockers)){
+    // The same disc graph already failed. Resume its bounded terrain search,
+    // rather than rebuilding every local edge while the actor waits.
+    const detour=terrainDetour(actor,goal,blockers,nav,worker,clear);
+    if(detour)actor.path=[...detour,...actor.path.slice(rejoin+(look===length?1:0))];
+    else yieldToOpposing();
+    return clear;
+  }
   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
   const nodes=[{x:actor.x,z:actor.z},goal];
   for(const other of nearby){
@@ -97,6 +139,8 @@ export function prepareActorMotion(state,actor,nav,worker){
   // Opposing traffic beside a solid corner may have no room to pass directly.
   // One actor yields into verified free space while retaining its full route.
   // Stable identity chooses only one side; stationary bodies never cause this.
+  const detour=terrainDetour(actor,goal,blockers,nav,worker,clear);
+  if(detour){actor.path=[...detour,...actor.path.slice(rejoin+(look===length?1:0))];return clear;}
   yieldToOpposing();
   // A narrow occupied passage waits; neither teleport nor discard the route.
   return clear;
