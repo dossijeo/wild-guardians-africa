@@ -11,3 +11,24 @@
 Estado: pendiente; esta anotación no acredita una auditoría de los 126 efectos.
 
 Las ondas de pisadas en el agua del Gran Cañón son **VFX**. El usuario autorizó después vincular el SFX 012 (Pasos barro) a dichas pisadas y el SFX 006 (Agua de río) al ambiente del río; esta asignación concreta no sustituye el barrido completo pendiente.
+
+## Recompresión de audio a Opus (pedido el 5 de octubre de 2026)
+
+- Abordar junto con el barrido SFX la conversión de los 126 efectos y de toda la banda sonora a `.opus`, a partir de los originales disponibles para evitar pérdidas acumuladas.
+- Comparar tamaño y calidad; preservar duración, canales, volumen, transitorios, puntos de bucle y sincronización de contactos/animaciones.
+- Adaptar catálogos, rutas relativas, precarga, caché en disco y streaming de ventanas musicales; verificar búsqueda temporal y transiciones sin cargar o descodificar pistas inactivas.
+- Probar decodificación y reproducción en la versión web de itch.io, Chrome móvil y Windows/Tauri antes de sustituir los recursos distribuidos.
+- Registrar ahorro total y por archivo, parámetros de conversión y pruebas de regresión; conservar los originales fuera del paquete de distribución.
+
+Estado: pendiente; no se han convertido audios por esta anotación.
+
+## Imágenes WebP y Tinify (pedido el 5 de octubre de 2026)
+
+- Inventariar todas las imágenes del juego, incluidas HUD, menús, retratos, texturas y referencias internas de modelos; convertirlas a WebP y optimizarlas mediante la API de Tinify.
+- Seguir la [referencia HTTP oficial](https://tinify.com/developers/reference/http): subida por HTTPS a `/shrink` y conversión con `convert.type: image/webp`. Controlar cuota, errores y reintentos; reutilizar resultados por hash para evitar conversiones repetidas.
+- Usar la credencial facilitada por el usuario mediante configuración privada o variable `TINIFY_API_KEY`; nunca incluirla en Git, assets del navegador, capturas, informes ni logs.
+- Conservar dimensiones, transparencia y orientación. Revisar específicamente mapas de datos del shader, normales y máscaras para evitar artefactos de compresión o cambios de espacio de color.
+- Actualizar todas las referencias y verificar carga completa de HUD/contratación, culturas, biomas y modelos, además del paquete de itch.io y Windows.
+- Comparar imágenes y tamaños antes/después; documentar cualquier caso que requiera WebP sin pérdida para preservar el resultado del juego.
+
+Estado: pendiente; no se han enviado imágenes a Tinify por esta anotación.
