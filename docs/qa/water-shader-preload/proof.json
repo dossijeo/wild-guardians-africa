@@ -1,0 +1,260 @@
+{
+  "base": "4df84093df66dc3000d0785f1346ddd2afaeecd1",
+  "scope": "Controlled native desktop IAB, seed 712, Mapungubwe, medium; inclusive CPU/GL calls, not GPU time/FPS/RAM or phone/night natural",
+  "comparisons": {
+    "warm-savanna": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    },
+    "repeat-savanna": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    },
+    "thin-savanna": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    },
+    "canyon-group": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    }
+  },
+  "diagnosticFluidKeysPreparedBeforeMotion": [
+    "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+    "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+  ],
+  "requiredKeysArePrepared": true,
+  "verification": {
+    "tests": 78,
+    "failures": 0,
+    "durationMs": 4021.7003,
+    "buildModules": 207,
+    "buildSeconds": 9.63
+  },
+  "runs": {
+    "diagnostic": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 5896,
+      "steps": 523,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 254.60000002384186,
+      "peakStep": 77,
+      "step77CpuMs": 254.60000002384186,
+      "compileCalls": 4,
+      "linkCalls": 2,
+      "logCalls": 6,
+      "programsAfterLoad": 40,
+      "remainingFluidPrimers": null
+    },
+    "warm-savanna": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 6012.699999988079,
+      "steps": 523,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 55.19999998807907,
+      "peakStep": 213,
+      "step77CpuMs": 25.099999964237213,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "programsAfterLoad": 45,
+      "remainingFluidPrimers": null
+    },
+    "repeat-savanna": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 6876.699999988079,
+      "steps": 523,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 171.0999999642372,
+      "peakStep": 29,
+      "step77CpuMs": 18.100000023841858,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "programsAfterLoad": 45,
+      "remainingFluidPrimers": 0
+    },
+    "thin-savanna": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 6053.800000011921,
+      "steps": 523,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 27.299999952316284,
+      "peakStep": 15,
+      "step77CpuMs": 21.69999998807907,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "programsAfterLoad": 45,
+      "remainingFluidPrimers": 0
+    },
+    "warm-lava": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 5813.800000011921,
+      "steps": 522,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 31.599999964237213,
+      "peakStep": 253,
+      "step77CpuMs": 16,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "programsAfterLoad": 45,
+      "remainingFluidPrimers": null
+    },
+    "warm-canyon-group": {
+      "ok": true,
+      "errors": [],
+      "loadingMs": 5616.399999976158,
+      "steps": 364,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        580
+      ],
+      "maxCpuMs": 44.69999998807907,
+      "peakStep": 4,
+      "step77CpuMs": 15.199999988079071,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "programsAfterLoad": 44,
+      "remainingFluidPrimers": 0
+    }
+  },
+  "sha256": {
+    "cpu-observer.txt": {
+      "file": "6b54abaecff82e8961b73dba229e8bf9106f19ef98a2e5f621c34dd438483704"
+    },
+    "diagnostic.json.gz": {
+      "file": "740d351485cb5e1626e38a250d135a6788ec50c2f3013f91bc09a066278d8b32",
+      "raw": "fa540362f98f44fb33ac4e6f11d8e9497050c4520aad2d97c6e6870085fd2e4e"
+    },
+    "diagnostic.png": {
+      "file": "f894e446ef0f4ec763664f81f42d427b927c11927f0d9c573c1a9c7c9129f2b3"
+    },
+    "fixture-before-owner-counter.txt": {
+      "file": "d486a044af74789d823b08d5a75c8fad7c293f8cbea1cafc1628e7ecd8d9b3f6"
+    },
+    "fixture-final.txt": {
+      "file": "f1d33514eed5b22064102d598e7985d4740cc26295d013a38e21e21644739180"
+    },
+    "fluid-preload.txt": {
+      "file": "aae24fef19edf75416fb1d4b61560a5446cc504965a471859a8a21d03886c060"
+    },
+    "gl-observer-final.txt": {
+      "file": "de02ca74b926a8372a0b420d7e9c07d94f3d079c2d32117081072f5ed590b1a3"
+    },
+    "repeat-savanna.json.gz": {
+      "file": "928ff12ac78ce2af5a125075fc92d8e80aeded6802d90e73e0a742fd73a24e8e",
+      "raw": "d7ca7d13e46268133cc1f9437b250dd7f5b13ba97a870a44cbb22f911083b52d"
+    },
+    "repeat-savanna.png": {
+      "file": "6c8780de33948a8f73523df2dcff40cc9a49c632394e1707cba1eb744c24aa02"
+    },
+    "scene-final.txt": {
+      "file": "753c5b81fb6166ad9130e6f721d7b093f25eaf7b65fbab697877bcaff8597ab8"
+    },
+    "thin-savanna.json.gz": {
+      "file": "428d2a0fbc83e3529acba4c0ad0a18a33b16003089c0d6be835d30473f1ca1a4",
+      "raw": "04348faed30decee1fbf02e0d5fce65a4032a4df7f049b8811225dbafe89dd34"
+    },
+    "thin-savanna.png": {
+      "file": "c043b904125f7e46cac1b100e87de99ee579cce5cc6683fca1661990fdff7d85"
+    },
+    "warm-canyon-group.json.gz": {
+      "file": "6ef763c200dfd6ec17845e83355d2ba6101f799844d8eff90bcce5d6e96b1109",
+      "raw": "fffc262eb151be1dc7d68670ab67fba5ae078f8ece2eaa64300152393716a243"
+    },
+    "warm-canyon-group.png": {
+      "file": "54d765f5cb0f40dfbbea5fac87e249d55f5c6455a131afa69691c087dda0b15f"
+    },
+    "warm-lava.json.gz": {
+      "file": "54d2e6e526e8d60dd53317a91d7953e035d2d014d38871be4cb531be8f8b4612",
+      "raw": "bf68e25ca143a94579011c7834b4e871c4c1069faf5d2117ae205e99477cf3eb"
+    },
+    "warm-lava.png": {
+      "file": "a1055f851f32c7e05dedc33fa6ccaa968dce78aeaea0412e03120d566d1bb9ba"
+    },
+    "warm-savanna.json.gz": {
+      "file": "52ae542253c82a056c67fcd3624af7b8219316b66132b82f05e1030c77fe5bb3",
+      "raw": "5676e2b072bd17ea3b21a980d860c93283911b2d69b902b84e9588eabd35fd82"
+    },
+    "warm-savanna.png": {
+      "file": "1c9fb62789a62d5f7c5dc9ebed0b93ebc6dd36f21cb0293d72a15de160c35cdc"
+    }
+  },
+  "referenceHashes": {
+    "docs\\qa\\first-dust-cpu\\bindings-group.json.gz": "ba73b3bc28790e1768c928f0cf2262f99f0b20b154de8ddacbe2a9b4298759f5",
+    "docs\\qa\\first-dust-cpu\\bindings-savanna.json.gz": "38ca068197a33bf08d323b9db3e9711583786e469accac4b00389d7d0523f864"
+  }
+}

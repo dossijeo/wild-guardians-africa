@@ -168,3 +168,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Diagnósticos de shader adelantados a la carga](qa/first-dust-cpu/README.md): 74 pruebas y build; Gran Cañón conserva contacto de cultivo y daño al centro sin nuevas compilaciones/consultas de logs. Pico CPU del recorrido del facóquero 145,3→24,1 ms máximo en las muestras, sin acreditar FPS/GPU/móvil general. Sabana sigue alcanzando 234,5 ms al compilar dos variantes de agua paintUniforms en profundidad/color. Pendientes localizar su disparador, nuevos residentes/calidades/luz y coste de carga/memoria/aceptación amplia.
+
+
+[Agua y lava preparadas desde vistas secas](qa/water-shader-preload/README.md): 78 pruebas/build y cinco recorridos preparados. Sabana deja de compilar las dos variantes chunk de agua del paso 77 (254,6→18,1–25,1 ms en muestras); contactos y daño al centro conservados. La repetición registra otro pico de 171,1 ms sin compilaciones: no se declara ausencia general de tirones. Pendientes su causa, RAM/carga, otros estados/calidades/biomas/móvil y coste sostenido de dibujo/profundidad.

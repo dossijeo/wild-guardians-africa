@@ -30,3 +30,11 @@ test('draw attribution observes the actual temporary material and preserves rend
  const frame=probe.end();assert.equal(frame.linkProgram,1);assert.deepEqual(frame.drawCompiles,[{links:1,object:'test',material:'MeshDepthMaterial',uniforms:['uCut'],metadata:['worldDepthCompatible'],colorWrite:false,camera:'PerspectiveCamera'}]);
  assert.equal(args[0][3],material);probe.dispose();assert.equal(renderer.renderBufferDirect,original);
 });
+
+
+test('optional program diagnostics record pre/post cache state and the original draw geometry without changing calls',()=>{
+ const prior={id:1,cacheKey:'old'},next={id:2,cacheKey:'new'},programs=new Map([['old',prior]]),material={type:'MeshStandardMaterial',userData:{paintUniforms:{}},colorWrite:true},geometry={type:'BufferGeometry'},object={isInstancedMesh:true,receiveShadow:true,userData:{nativeFluid:'asset'},parent:{name:'chunk'}};
+ const gl={linkProgram(){}},renderer={properties:{get:m=>{assert.equal(m,material);return {programs};}},renderBufferDirect(camera,scene,g,m,o){assert.equal(g,geometry);assert.equal(o,object);programs.set('new',next);gl.linkProgram();return 8;}};
+ const probe=new RenderGlCalls(gl,renderer,{programDetails:true});probe.begin();assert.equal(renderer.renderBufferDirect({type:'PerspectiveCamera'},null,geometry,material,object),8);const row=probe.end().drawCompiles[0];
+ assert.deepEqual(row.beforePrograms,[{id:1,key:'old'}]);assert.deepEqual(row.afterPrograms,[{id:1,key:'old'},{id:2,key:'new'}]);assert.equal(row.instanced,true);assert.equal(row.fluidKind,'asset');assert.equal(row.geometry,'BufferGeometry');probe.dispose();
+});
