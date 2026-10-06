@@ -14,6 +14,7 @@ import {nativeAssetSurface} from '../../src/rendering/asset-surface.js';
 import {nativeAssetClipRequired} from '../../src/rendering/asset-clip.js';
 import {updateObstructions} from '../../src/rendering/obstruction.js';
 import {json} from '../../src/rendering/assets.js';
+import imageRuntime from '../../content/manifests/image-runtime.json';
 import {waterTime} from '../../src/rendering/world-atmosphere.js';
 const cultures=['mapungubwe','suajili','musgum','saheliana','etiope'],biomes=Object.keys(BIOME_IDS),payloads=await json('/content/villages.json');
 let unitBounds=true,boundsCache=new WeakMap();
@@ -25,7 +26,7 @@ const status=document.querySelector('#status');
 const error=e=>{errors.push(String(e.message??e)+(e.details?' '+JSON.stringify(e.details):''));status.textContent=errors.join(' · ');};
 addEventListener('error',error);addEventListener('unhandledrejection',e=>error(e.reason));
 const originalError=console.error;console.error=(...args)=>{errors.push(args.join(' '));originalError(...args);};
-async function load(){unitBounds=true;boundsCache=new WeakMap();ready=false;contactTarget=null;qualityStats=null;document.querySelectorAll('button').forEach(b=>b.disabled=true);releaseQaGround();world?.dispose();
+async function load(){tinifyGroundMaps=null;tinifyGroundEnabled=true;document.querySelector('#tinifyReport').textContent='';unitBounds=true;boundsCache=new WeakMap();ready=false;contactTarget=null;qualityStats=null;document.querySelectorAll('button').forEach(b=>b.disabled=true);releaseQaGround();world?.dispose();
  const biome=biomes[Math.floor(index/5)],culture=cultures[index%5],payload=payloads.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));if(!payload)throw new Error('Cultura no encontrada '+culture);
  const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),state=Game.newGame({biome,culture,seed:712}),nav=new Navigation(712,biome,pack.profile),location=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
@@ -45,16 +46,21 @@ function camera(){for(const g of world.chunks.values())g.traverse(o=>{if(o.isIns
 document.querySelector('#mudClose').onclick=()=>{const candidates=[...world.chunks.values()].flatMap(g=>g.children.filter(o=>o.userData.mudPatches).flatMap(o=>o.geometry.userData.mudCenters));candidates.sort((a,b)=>Math.hypot(a.x-world.controls.target.x,a.z-world.controls.target.z)-Math.hypot(b.x-world.controls.target.x,b.z-world.controls.target.z));const p=candidates[0];if(!p)return;const y=world.nav.field.surface(p.x,p.z);world.controls.target.set(p.x,y,p.z);world.camera.position.set(p.x+8,y+6,p.z+8);world.controls.update();draw();};
 let tinifyGroundMaps=null,tinifyGroundEnabled=true;
 document.querySelector('#tinifyGround').onclick=async()=>{
- if(!['desert','canyons'].includes(world.nav.field.c.biome))throw Error('Ground comparison requires Desert or Canyons');
+ const response=await fetch('/content/ground-materials.json');if(!response.ok)throw Error('Original ground catalog unavailable');
+ const groundCatalog=await response.json(),groundPath=groundCatalog[world.nav.field.c.biome].base.replace(/^\//,'');
+ const record=imageRuntime.records.find(r=>r.kind==='color-image'&&(r.source===groundPath||r.runtime===groundPath));
+ if(!record)throw Error('Ground comparison requires an integrated color variant');
+ const source='/'+record.source;
  if(!tinifyGroundMaps){
   const candidate=world.terrainMeshes[0].material.userData.biomeGround.uGroundDetailMap.value;
-  const groundCatalog=await json('/content/ground-materials.json');
-  const original=await new THREE.TextureLoader().loadAsync(groundCatalog[world.nav.field.c.biome].base);
-  for(const key of ['wrapS','wrapT','minFilter','magFilter','anisotropy','generateMipmaps','colorSpace','flipY'])original[key]=candidate[key];original.needsUpdate=true;qaGroundTextures.push(original);tinifyGroundMaps={candidate,original};
+  const original=await new THREE.TextureLoader().loadAsync(source);
+  const originalUrl=original.image.currentSrc||original.image.src,candidateUrl=candidate.image.currentSrc||candidate.image.src;
+  if(!originalUrl||!candidateUrl||new URL(originalUrl,document.URL).pathname!==source||new URL(candidateUrl,document.URL).pathname!=='/'+record.runtime||originalUrl===candidateUrl)throw Error('QA requires distinct original and candidate images');
+  for(const key of ['wrapS','wrapT','minFilter','magFilter','anisotropy','generateMipmaps','colorSpace','flipY'])original[key]=candidate[key];original.needsUpdate=true;qaGroundTextures.push(original);tinifyGroundMaps={candidate,original,source,record,originalUrl,candidateUrl};
  }
  tinifyGroundEnabled=!tinifyGroundEnabled;
  for(const mesh of world.terrainMeshes){const u=mesh.material.userData.biomeGround;if(u)u.uGroundDetailMap.value=tinifyGroundMaps[tinifyGroundEnabled?'candidate':'original'];}
- document.querySelector('#tinifyReport').textContent=tinifyGroundEnabled?'Tinify candidate':'Original source';draw();
+ document.querySelector('#tinifyReport').textContent=(tinifyGroundEnabled?'Tinify candidate: '+record.runtime:'Original source: '+record.source)+' | '+JSON.stringify({originalUrl:tinifyGroundMaps.originalUrl,candidateUrl:tinifyGroundMaps.candidateUrl});draw();
 };
 document.querySelector('#groundRebase').onclick=()=>{if(world.renderOrigin.update({x:192,z:96}))world.releaseNativeShadow.cache.invalidate();draw();};
 async function prepareOrganicMaps(){if(world.nav.field.c.biome!=='mangrove')throw new Error('La comparación de suelo requiere manglar');if(!originalMaps)originalMaps=await Promise.all(['/assets/9eeff640e233a5d0b976917ed8b60bd21d26a8e521c9170531a5fff603966f5d.jpg','/assets/d44f3636755ac1db32aa1b54fa02616ebce395f38908f16b321b6671b093c502.jpg','/assets/dab0179e8aac60ed966a1e42e2a9cc2d670474f49974ecfc836116e162441776.webp'].map(async url=>{const t=(await world.assets.texture(url,false)).clone();t.wrapS=t.wrapT=THREE.RepeatWrapping;t.minFilter=THREE.LinearMipmapLinearFilter;t.magFilter=THREE.LinearFilter;t.generateMipmaps=true;t.anisotropy=8;t.needsUpdate=true;qaGroundTextures.push(t);return t;}));}
