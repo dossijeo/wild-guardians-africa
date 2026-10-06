@@ -186,3 +186,8 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Cancelación de carga del cielo corregida](qa/sky-load-cancel/README.md): AbortSignal propio y guardas antes de decodificar/crear panoramas, cierre idempotente y referencias vacías. 16 pruebas/build; dos cargas reales de WorldScene abortadas en catálogo/HDR sin recursos tardíos y cielo normal con contadores a cero al cerrar. Gran Cañón conserva nueve campos lógicos y limpieza de buffers/cachés. Siguen pendientes otras fases de cancelación/ciclos, cuatro texturas/tres programas del mundo completo y RAM/móvil; campaña congelada de margen viva al día 78, todavía sin resultado terminal.
+
+
+[Cancelación de fases del mundo protegida](qa/world-phase-cancel/README.md): barreras tras esperas, JSON privado abortable, clones de suelo/barro protegidos y cachés de plantillas/poblados sin resultados tardíos. Cuatro checkpoints nativos y carga normal Manglares; 38 pruebas/build. Pendientes GPU/chunks, ciclos, contadores residuales y RAM/móvil.
+
+[Campaña con defensa pagada fallida](qa/paid-defense-failure-ee25c8c/README.md): sesión 7678/PID 36076 terminó con exit 1, incursión sin finalizar noche 39 en revisión congelada ee25c8c. Estado y procedencia preservados; reproducir sobre main antes de atribuir/afirmar corrección. El informe de victoria inicialmente localizado era histórico dba3b69/PID 39712 y no pertenece a esta ejecución. La campaña de margen PID 20608 sigue viva; último estado observado día 79.

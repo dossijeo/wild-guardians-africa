@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><title>World phase cancellation QA</title><style>body{margin:0;background:#142019;color:white;font:13px system-ui}canvas{position:fixed;inset:0;width:100vw;height:100vh}pre{position:fixed;inset:0;overflow:auto;white-space:pre-wrap}</style><canvas></canvas><pre id="report">Loading native world to the cancellation checkpoint…</pre>
+<script type="module">
+import {WorldScene} from '/src/rendering/scene.js';
+import {newGame} from '/src/simulation/game.js';
+import {Navigation} from '/src/world/navigation.js';
+import {json} from '/src/rendering/assets.js';
+const errors=[],stage=new URLSearchParams(location.search).get('stage')??'ground';
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+ if(!['ground','mud','building','vfx'].includes(stage))throw Error('Unknown checkpoint');
+ const pack=await json('/content/biome-mangrove.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe'),state=newGame({seed:712,biome:'manglares',culture:'mapungubwe'}),nav=new Navigation(712,'manglares',pack.profile);nav.setState(state);
+ const world=new WorldScene(document.querySelector('canvas'),()=>{});let checkpoint=false;const pendingRequests=[];
+ const stop=()=>{if(!checkpoint){checkpoint=true;queueMicrotask(()=>world.dispose());}};
+ const texture=world.assets.texture.bind(world.assets);world.assets.texture=(...args)=>{const pending=texture(...args);pendingRequests.push(pending);if(stage==='ground'&&world.biomeGround&&!world.mudPatches||stage==='mud'&&world.mudPatches||stage==='vfx'&&world.wallPrototypes&&!world.vfxLibrary)stop();return pending;};
+ const building=world.assets.building.bind(world.assets);world.assets.building=(...args)=>{const pending=building(...args);pendingRequests.push(pending);if(stage==='building')stop();return pending;};
+ let rejection;try{await world.load(state,nav,payload);throw Error('Cancelled load completed');}catch(error){rejection={name:error.name,message:error.message};if(!checkpoint)throw error;}
+ // Wait for intercepted requests to actually settle before checking ownership.
+ await Promise.allSettled(pendingRequests);await new Promise(requestAnimationFrame);
+ const result={checkpoint,disposed:world.disposed,contextLost:world.renderer.getContext().isContextLost(),stateCleared:world.state===null,worldSignalAborted:world.loading.signal.aborted,assets:{cache:world.assets.cache.size,sources:world.assets.modelSources.size,resources:world.assets.ownedResources.size},groundTextures:world.biomeGround?.textures.length??0,mudTextures:world.mudPatches?.textures.length??0,programs:world.renderer.info.programs.length,geometries:world.renderer.info.memory.geometries,loadedVfx:!!world.vfxLibrary,rejection,errors};
+ const ok=checkpoint&&result.disposed&&result.contextLost&&result.stateCleared&&result.worldSignalAborted&&!Object.values(result.assets).some(Boolean)&&!result.groundTextures&&!result.mudTextures&&!errors.length;
+ document.querySelector('#report').textContent=JSON.stringify({ok,stage,result,scope:'Controlled WorldScene.load interruption at a real asset request in Manglares/Mapungubwe. Waits for intercepted texture/building requests; no full gameplay, physical RAM or all cancellation phases acceptance.'},null,2);
+}catch(error){document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,errors},null,2);}
+</script>

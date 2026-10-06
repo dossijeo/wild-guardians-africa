@@ -70,18 +70,23 @@ export function residentMudSurface(chunks,x,z){
   return mudContainsPoint(group?.userData.mudSurface,x,z)?'mud':null;
 }
 export class MudPatches {
+  constructor(){this.textures=[];this.disposed=false;}
+  assertOpen(){if(this.disposed)throw new Error('Mud load cancelled');}
   async load(assets,tile){
-    this.textures=[];this.scale=tile.scale??.115;
+    this.assertOpen();this.scale=tile.scale??.115;
+    try{
     for(const role of ['base','normal','arh']){
-      const texture=(await assets.texture(tile[role],role==='base')).clone();texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.magFilter=THREE.LinearFilter;texture.anisotropy=8;texture.needsUpdate=true;this.textures.push(texture);
+      const source=await assets.texture(tile[role],role==='base');this.assertOpen();const texture=source.clone();texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.magFilter=THREE.LinearFilter;texture.anisotropy=8;texture.needsUpdate=true;this.textures.push(texture);
     }
+    }catch(error){this.dispose();throw error;}
   }
   chunk(field,cx,cz){
+    this.assertOpen();
     const geometry=mudPatchGeometry(field,cx,cz,this.scale);if(!geometry)return null;
     const [map,normalMap,packed]=this.textures;
     const material=new THREE.MeshStandardMaterial({map,normalMap,roughnessMap:packed,aoMap:packed,color:new THREE.Color().setRGB(.58,.61,.64),roughness:.52,metalness:0,side:THREE.FrontSide});
     material.userData.artSurface=0;
     const mesh=new THREE.Mesh(geometry,material);mesh.name='mangrove-mud-patches';mesh.userData.mudPatches=geometry.userData.mudPatches;mesh.castShadow=false;mesh.receiveShadow=true;return mesh;
   }
-  dispose(){for(const texture of this.textures??[])texture.dispose();this.textures=[];}
+  dispose(){if(this.disposed)return;this.disposed=true;for(const texture of this.textures??[])texture.dispose();this.textures=[];}
 }
