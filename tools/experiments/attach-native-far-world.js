@@ -42,12 +42,10 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   Promise.resolve().then(async()=>{
    if(closed)return;
    const snapshot=prepared.capture(),cancelled=()=>closed||world.disposed||snapshot.signature!==signature();
-   const meshes=[];world.assetGroups.root.traverse(o=>{if(o.isMesh){meshes.push([o,o.frustumCulled]);o.frustumCulled=false;}});
    try{
     const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled});
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
    }catch(error){if(!closed){if(cancelled())stats.stalePreparations++;else errors.push(String(error));}}
-   finally{for(const [mesh,culled] of meshes)mesh.frustumCulled=culled;}
   }).finally(()=>busy=false);
  }
  const adapter={layer,stats,enabled:true,update(dt){

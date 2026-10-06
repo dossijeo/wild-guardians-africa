@@ -2,7 +2,7 @@ import {nativeFarRenderSignature} from '../tools/experiments/native-far-render-s
 import {NativePreparedTreeCoverage} from '../tools/experiments/native-prepared-tree-coverage.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Texture,Scene,Group,Vector4} from 'three';
+import {Texture,Scene,Group,Vector4,Mesh} from 'three';
 import {prepareNativeFarGpu,releaseNativeFarGpuCache} from '../tools/experiments/prepare-native-far-gpu.js';
 
 function fixture({renderError=false}={}){
@@ -20,6 +20,22 @@ test('GPU preparation compiles, uploads through zero-pixel draw and yields until
 test('failed zero-pixel draw restores renderer and parent before rejecting',async()=>{
  const f=fixture({renderError:true});await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[]),/Draw failed/);
  assert.equal(f.root.parent,f.parent);assert.equal(f.current(),f.original);f.restored();assert.deepEqual(f.calls,['compile','render','restore']);
+});
+
+test('overlapping species compilation leaves culling unchanged until each synchronous upload draw',async()=>{
+ const f=fixture(),a=new Mesh(),b=new Mesh();b.frustumCulled=false;f.root.add(a,b);const pending=[];
+ f.renderer.compileAsync=()=>new Promise(resolve=>pending.push(resolve));const draw=f.renderer.render;
+ f.renderer.render=()=>{assert.equal(a.frustumCulled,false);assert.equal(b.frustumCulled,false);draw();};
+ const options={nextFrame:async()=>{}},first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options),second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);
+ assert.equal(pending.length,2);assert.equal(a.frustumCulled,true);assert.equal(b.frustumCulled,false);
+ pending[1]();await second;assert.equal(a.frustumCulled,true);assert.equal(b.frustumCulled,false);
+ pending[0]();await first;assert.equal(a.frustumCulled,true);assert.equal(b.frustumCulled,false);f.restored();
+});
+
+test('failed upload draw restores native mesh culling without changing intentionally unculled meshes',async()=>{
+ const f=fixture({renderError:true}),a=new Mesh(),b=new Mesh();b.frustumCulled=false;f.root.add(a,b);
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}}),/Draw failed/);
+ assert.equal(a.frustumCulled,true);assert.equal(b.frustumCulled,false);f.restored();
 });
 test('cancelled preparation never compiles or draws',async()=>{
  const f=fixture();await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cancelled:()=>true}),/cancelled/);assert.deepEqual(f.calls,[]);
