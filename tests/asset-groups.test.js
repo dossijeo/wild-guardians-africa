@@ -97,3 +97,10 @@ test('optional far color compaction removes only fully hidden instances and pres
  attribute.setX(0,0);attribute.needsUpdate=true;groups.update(chunks,camera);assert.equal(color.count,5);
  groups.omitZeroColor=false;groups.update(chunks,camera);assert.equal(color.count,6);assert.equal(color.geometry.attributes.nativeVisibility.getX(0),0);groups.dispose();
 });
+
+test('shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths',()=>{
+ const {groups,chunks,camera}=fixture(),front=chunks.get('front'),batch=front.userData.lodBatches[0],ids=batch.instances.map(p=>p.id),matrices=batch.meshes[0].instanceMatrix.array.slice();
+ front.userData.farPropsVisible=false;groups.update(chunks,camera);assert.equal(front.visible,true);assert.equal(groups.colors.get('0:0').mesh.count,3);assert.equal(groups.shadows.get('0').mesh.count,6);assert.deepEqual(batch.instances.map(p=>p.id),ids);assert.deepEqual(batch.meshes[0].instanceMatrix.array,matrices);
+ groups.enabled=false;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,((1<<31)>>>0));assert.equal(chunks.get('other').userData.lodBatches[0].meshes[0].layers.mask,1);
+ front.userData.farPropsVisible=true;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,1);groups.dispose();
+});

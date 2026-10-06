@@ -27,3 +27,11 @@ The earlier failed attempt produced no measured lots: the preceding webview stop
 After the measurement, the world loader gained an explicit fourth argument `{farVegetation: options}`. It defaults to false; the normal game requests no far textures/worker. Optional `residentRange` ownership restores the preceding radius on disable/dispose. Logical raid-entry bounds retain normal quality radius, independently of the visual resident radius. Four directed world-sync tests verify this and preserve navigation route/suppression objects.
 
 **Activation blocker:** the compact-residency experiment also shrinks `terrainMeshes` used for picking. A player could see approximate distant ground that cannot be clicked. A visual-only reduction with exact picking coverage, or an exact terrain fallback, must be validated before activation. Compact radius must not be presented as a completed gameplay optimization.
+
+## Visual-only residency experiment (before exact-ground split)
+
+`savanna-visual-abba.json` keeps 25 CPU chunks and 25 exact picking meshes but renders nine complete chunks. GPU p50 A1/B1/B2/A2: 21.369/18.555/18.079/19.744 ms; CPU p50: 5.5/5.2/6.1/6.3 ms. All 480 GPU queries are valid and game state unchanged. A1/A2 drift is significant (about 8%); both B lots are below both A lots in this single view. Calls and triangles are identical to the compact-residency case above.
+
+This experiment still replaces visible distant ground with a coarse surface while allowing exact picking. Crops or buildings in that region can therefore disagree with its height. It is not accepted for gameplay.
+
+The next candidate, `compact=trees`, keeps the original exact terrain rendered and pickable and shortens only native prop rendering. Clip/water batches remain intact, including their shadows. Logical IDs, transforms, hazards, and routes remain resident; hidden props regain rendering as the camera moves. The default optional-controller setting is `preserveTerrain: true`; `compact=visual` explicitly disables it for comparison. Twenty-two targeted tests pass, including original raid bounds, ownership restoration, merged and fallback prop selection. No performance result from the whole-chunk experiments is attributed to this new candidate.

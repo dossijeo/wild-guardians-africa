@@ -74,7 +74,7 @@ export class NativeAssetGroups{
     }
     const stats={colorGroups:0,shadowGroups:0,visibleChunks:0,uploads:0,bytes:0,rawColorSlices:0,shadowChunks:0,culledShadowChunks:0};
     this.stats=stats;this.shadowRoot.userData.lodBatches=[];this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    if(!this.enabled){this.clear();for(const group of chunks.values())for(const b of group.userData.lodBatches??[])for(const m of b.meshes)m.layers.set(0);return stats;}
+    if(!this.enabled){this.clear();for(const group of chunks.values())for(const b of group.userData.lodBatches??[])for(const m of b.meshes)m.layers.set(group.userData.farPropsVisible===false&&!b.clip?31:0);return stats;}
     camera.updateMatrixWorld(true);this.vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);this.frustum.setFromProjectionMatrix(this.vp);
     let lightVolume=null;
     if(this.shadowCulling!==false&&light?.isDirectionalLight&&light.castShadow){
@@ -90,7 +90,7 @@ export class NativeAssetGroups{
       for(const batch of group.userData.lodBatches??[]){
         if(batch.clip){if(casts)raw.push(batch);continue;}
         for(const [level,mesh] of batch.meshes.entries()){
-          mesh.layers.set(31);if(!group.visible||!mesh.visible||!mesh.material.visible||!mesh.count)continue;
+          mesh.layers.set(31);if(group.userData.farPropsVisible===false||!group.visible||!mesh.visible||!mesh.material.visible||!mesh.count)continue;
           const entry={group,batch,level,mesh};
           if(visible){add(colorEntries,batch.slot+':'+level,entry);stats.rawColorSlices++;}
           if(casts&&batch.group!==2)add(shadowEntries,String(batch.slot),entry);

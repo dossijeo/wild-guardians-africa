@@ -199,16 +199,22 @@ export class WorldScene {
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.
-    const region=this.horizon.update(this.nav.config,this.pack.profile,requested,this.quality,force)??requested,{cx,cz,range}=region;
+    const horizonRequested=this.farVisualRange==null||this.farPreserveTerrain?requested:nativeNearRegion(this.camera.position,this.quality,Math.min(this.farVisualRange,requested.range));
+    const visibleRegion=this.horizon.update(this.nav.config,this.pack.profile,horizonRequested,this.quality,force)??horizonRequested,{cx,cz}=visibleRegion,range=requested.range;
+    const region=this.farVisualRange==null?visibleRegion:nativeNearRegion({x:cx*48,z:cz*48},this.quality,range);
     // A smaller visual radius must not move the gameplay raid-entry border.
     const logicalBounds=this.farResidentRange==null?region.bounds:nativeNearRegion({x:cx*48,z:cz*48},this.quality).bounds;
-    this.nearBounds=region.bounds;this.nav.setActiveBounds?.(logicalBounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
+    this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(logicalBounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){disposeAssetShadows(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;}
     if(this.chunkStream){const key=cx+','+cz+':'+range;if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
     else for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;}
+    // Retain the original exact terrain for picking even beyond the visual radius.
+    // Three raycasting tests the terrain meshes independently of parent visibility.
+    let visibilityChanged=false;if(this.farVisualRange!=null||this.farVisibilityOwned){for(const group of this.chunks.values()){const origin=group.userData.nativeChunkOrigin,visible=Math.abs(origin[0]/48-cx)<=visibleRegion.range&&Math.abs(origin[1]/48-cz)<=visibleRegion.range;const propsVisible=this.farVisualRange==null||Math.abs(origin[0]/48-cx)<=this.farVisualRange&&Math.abs(origin[1]/48-cz)<=this.farVisualRange,terrainVisible=this.farPreserveTerrain?true:visible;if(group.visible!==terrainVisible||group.userData.farPropsVisible!==propsVisible){group.visible=terrainVisible;group.userData.farPropsVisible=propsVisible;visibilityChanged=true;}}this.farVisibilityOwned=this.farVisualRange!=null;}
+    if(visibilityChanged)this.releaseNativeShadow?.cache.invalidate();
     this.syncResidentProps();
-    this.contacts.update(this.chunks,this.contactPrototypes,region.bounds,this.chunkRevision,this.nav.config.layers);
+    this.contacts.update(this.chunks,this.contactPrototypes,visibleRegion.bounds,this.chunkRevision,this.nav.config.layers);
   }
   villageMesh(village) {
     const group=new THREE.Group();
