@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Transición nativa de acacia</title>
 <style>body{margin:0;overflow:hidden;font:14px system-ui}header{position:absolute;z-index:1;background:#fff9de;padding:12px;max-width:370px;max-height:90vh;overflow:auto}button{padding:9px}pre{font-size:11px;white-space:pre-wrap}canvas{display:block}</style>
-<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="hide" disabled>Ocultar/restaurar árbol</button><button id="rebase">Recentrar origen</button><p><label>Distancia <select id="distance"><option>25</option><option>40</option><option>50</option><option>60</option><option>100</option></select></label></p><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
+<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="hide" disabled>Ocultar/restaurar árbol</button><label><input id="decode" type="checkbox">Decodificar imágenes antes (QA)</label><button id="rebase">Recentrar origen</button><p><label>Distancia <select id="distance"><option>25</option><option>40</option><option>50</option><option>60</option><option>100</option></select></label></p><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
 import {Assets,json} from '../../src/rendering/assets.js';
@@ -34,7 +34,7 @@ try{
   document.querySelector('#prepare').disabled=true;gpuReady=false;controller.setCoverage(prepared,false);const snapshot=prepared.capture(),begin=performance.now();status.textContent='Preparando recursos GPU…';
   try{
    const textures=new Set([texture,prelit.day,prelit.night]);for(const source of levels)for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);preparedTextures=textures.size;
-   preparation=await prepareNativeFarGpu(renderer,groups.root,scene,camera,textures,{cancelled:()=>dead});if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;prepared.complete(snapshot);scene.add(groups.root);gpuReady=true;controller.setCoverage(prepared,true);
+   preparation=await prepareNativeFarGpu(renderer,groups.root,scene,camera,textures,{cancelled:()=>dead,decodeImages:document.querySelector("#decode").checked});if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;prepared.complete(snapshot);scene.add(groups.root);gpuReady=true;controller.setCoverage(prepared,true);
   }catch(error){errors.push(String(error));status.textContent='Error de preparación';}finally{if(!dead)document.querySelector('#prepare').disabled=false;}
  };
  function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.width!==innerWidth||canvas.height!==innerHeight){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}

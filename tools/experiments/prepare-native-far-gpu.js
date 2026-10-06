@@ -2,14 +2,18 @@ import {Vector4} from 'three';
 
 // Prepare only the currently packed native color root. Keep it detached from
 // normal rendering until this completes; unloaded levels need their own pass.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false}={}){
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
- const unique=[...new Set(textures)],gl=renderer.getContext(),begin=performance.now();let sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
+ const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
  try{
   for(let first=0;first<unique.length;first+=texturesPerFrame){
    check();const start=performance.now(),end=Math.min(unique.length,first+texturesPerFrame);
-   for(let i=first;i<end;i++){check();renderer.initTexture(unique[i]);}
+   for(let i=first;i<end;i++){
+    check();const texture=unique[i],image=texture.image,decodeStart=performance.now();
+    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);
+    textureUploads.push({index:i,width:image?.width??null,height:image?.height??null,imageType:image?.constructor?.name??null,mipmaps:!!texture.generateMipmaps,colorSpace:texture.colorSpace??null,decodeMs,cpuMs:performance.now()-before});
+   }
    textureBatches++;maxTextureBatchCount=Math.max(maxTextureBatchCount,end-first);maxTextureBatchMs=Math.max(maxTextureBatchMs,performance.now()-start);
    if(end<unique.length)await nextFrame();
   }
@@ -24,6 +28,6 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
   if(gl.getError()!==gl.NO_ERROR)throw Error('Native GPU preparation error');
-  return {elapsedMs:performance.now()-begin,textures:unique.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs};
+  return {elapsedMs:performance.now()-begin,textures:unique.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
  }finally{if(sync)gl.deleteSync(sync);}
 }

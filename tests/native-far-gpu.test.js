@@ -39,3 +39,9 @@ test('cancelling between texture batches prevents remaining uploads and compilat
  assert.deepEqual(f.calls,['texture']);f.restored();
  for(const texturesPerFrame of [0,-1,1.5,Infinity])await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{texturesPerFrame}),/budget/);
 });
+test('optional image decoding finishes before upload and cancellation prevents upload',async()=>{
+ const f=fixture(),texture={image:{decode:async()=>f.calls.push('decode')}};
+ const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{decodeImages:true,nextFrame:async()=>{}});
+ assert.deepEqual(f.calls.slice(0,3),['decode','texture','compile']);assert.ok(result.textureUploads[0].decodeMs>=0);
+ let cancelled=false;const g=fixture();await assert.rejects(prepareNativeFarGpu(g.renderer,g.root,g.scene,{},[{image:{decode:async()=>{cancelled=true;}}}],{decodeImages:true,cancelled:()=>cancelled}),/cancelled/);assert.deepEqual(g.calls,[]);
+});
