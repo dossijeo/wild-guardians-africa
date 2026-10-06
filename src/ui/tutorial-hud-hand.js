@@ -14,7 +14,7 @@ export function tutorialHudHandTarget(state,message,toolKind=null){
 export class TutorialHudHand{
   constructor(stage){
     this.stage=stage;this.image=document.createElement('img');this.image.className='tutorial-hud-hand';this.image.src=assetUrl(HAND_ASSETS.point);this.image.alt='';this.image.setAttribute('aria-hidden','true');this.image.hidden=true;
-    const info=HAND_INFO.point;this.image.style.setProperty('--hand-pivot-x',-info.pivot[0]*100+'%');this.image.style.setProperty('--hand-pivot-y',-info.pivot[1]*100+'%');this.image.width=92;
+    const info=HAND_INFO.point;this.image.style.setProperty('--hand-pivot-x',-info.pivot[0]*100+'%');this.image.style.setProperty('--hand-pivot-y',-info.pivot[1]*100+'%');this.image.width=116;
     stage.append(this.image);this.observer=new ResizeObserver(()=>this.place());this.observer.observe(stage);
   }
   show(selector){this.selector=selector;this.place();}
@@ -22,7 +22,9 @@ export class TutorialHudHand{
     const target=this.selector&&this.stage.querySelector(this.selector),rect=target?.getBoundingClientRect();
     this.image.hidden=!rect||!rect.width||!rect.height||target.disabled||document.hidden;
     if(this.image.hidden)return;
-    const x=rect.left+rect.width*.5,y=rect.top-5;
+    // Point into the icon from the world side. A downward hand sat on the
+    // preceding HUD action and visually became part of its wooden frame.
+    const x=rect.left+rect.width*.12,y=rect.top+rect.height*.5;
     const position=x+'px:'+y+'px';
     if(position===this.position)return;this.position=position;
     this.image.style.left=x+'px';this.image.style.top=y+'px';

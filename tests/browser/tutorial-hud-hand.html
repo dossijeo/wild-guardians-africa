@@ -1,0 +1,20 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Mano sobre HUD original</title>
+<link rel="stylesheet" href="../../src/ui/styles.css"><link rel="stylesheet" href="../../public/content/hud.css"><link rel="stylesheet" href="../../src/ui/tutorial.css">
+<style>#stage{background:linear-gradient(150deg,#75827b,#374c43)}#qa{position:absolute;bottom:12px;left:12px;z-index:25;max-width:calc(100vw - 190px);background:#fff8e5;padding:10px;border-radius:8px;font:13px system-ui}#qa button{padding:6px}#report{margin:4px 0;max-height:80px;overflow:auto;font-size:10px}</style>
+<main id="stage"><aside id="events" hidden style="display:none"></aside><aside id="placementBanner" hidden style="display:none"></aside><aside id="qa" style="color:#203629"><strong>Guía 2D · HUD original</strong><p>Sin mundo 3D, simulación ni audio. Comparación visual de la colocación de la misma mano.</p><button id="above">Desde arriba</button><button id="left">Desde la izquierda</button><button id="hide">Ocultar guía</button><pre id="report"></pre></aside></main>
+<script type="module">
+import {hudMarkup,ASSETS,layoutHud} from '../../src/ui/native-hud.js';
+import {TutorialHudHand} from '../../src/ui/tutorial-hud-hand.js';
+import {assetUrl} from '../../src/rendering/asset-url.js';
+const stage=document.querySelector('#stage');stage.insertAdjacentHTML('afterbegin',hudMarkup);
+for(const image of document.querySelectorAll('[data-sprite]'))image.src=assetUrl(ASSETS[image.dataset.sprite].src);
+document.querySelector('#clockValue').textContent='07:18';document.querySelector('#moneyValue').textContent='1,5K';document.querySelector('#dayValue').textContent='Día 1';
+const hand=new TutorialHudHand(stage);let mode='left',target='[data-menu="build"]';
+function show(){layoutHud(stage);hand.position=null;hand.image.width=116;hand.image.style.removeProperty('transform');hand.image.style.removeProperty('animation');hand.show(target);if(target&&mode==='above'){const rect=stage.querySelector(target).getBoundingClientRect();
+ hand.image.width=92;hand.image.style.left=rect.left+rect.width*.5+'px';hand.image.style.top=rect.top-5+'px';hand.image.style.transform='translate(var(--hand-pivot-x),var(--hand-pivot-y)) rotate(90deg)';hand.image.style.animation='none';}
+ document.querySelector('#report').textContent=JSON.stringify({mode,target,hidden:hand.image.hidden,loaded:hand.image.complete&&hand.image.naturalWidth>0,rect:hand.image.getBoundingClientRect().toJSON(),viewport:[innerWidth,innerHeight]},null,2);
+}
+document.querySelector('#above').onclick=()=>{mode='above';show();};document.querySelector('#left').onclick=()=>{mode='left';show();};document.querySelector('#hide').onclick=()=>{target=null;show();};
+for(const name of ['build','grow'])stage.querySelector(`[data-menu="${name}"]`).onclick=()=>{target=`[data-menu="${name}"]`;show();};
+new ResizeObserver(show).observe(stage);hand.image.onload=show;show();
+</script></html>

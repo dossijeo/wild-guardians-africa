@@ -12,7 +12,7 @@
 /* Stack above the spirit so short portrait screens retain every HUD action. */
 #stage.portrait #guardian-root .bubble{left:max(12px,var(--safe-left));right:calc(var(--action-w) + 28px + var(--safe-right));bottom:calc(var(--avatar) + 12px + var(--safe-bottom));padding-top:34px;max-height:calc(100dvh - var(--header) - var(--avatar) - 36px - var(--safe-bottom))}
 
-.tutorial-hud-hand{position:fixed;z-index:19;pointer-events:none;object-fit:contain;transform-origin:98.2% 25%;transform:translate(var(--hand-pivot-x),var(--hand-pivot-y)) rotate(90deg);filter:drop-shadow(0 2px 2px #20362933);animation:tutorial-hud-point 1.6s ease-in-out infinite}
+.tutorial-hud-hand{position:fixed;z-index:19;pointer-events:none;object-fit:contain;transform-origin:98.2% 25%;transform:translate(var(--hand-pivot-x),var(--hand-pivot-y));filter:drop-shadow(0 2px 2px #20362933);animation:tutorial-hud-point 1.6s ease-in-out infinite}
 .tutorial-hud-hand[hidden]{display:none}
-@keyframes tutorial-hud-point{50%{transform:translate(var(--hand-pivot-x),var(--hand-pivot-y)) translateY(-5px) rotate(90deg)}}
+@keyframes tutorial-hud-point{50%{transform:translate(var(--hand-pivot-x),var(--hand-pivot-y)) translateX(-5px)}}
 @media(prefers-reduced-motion:reduce){.tutorial-hud-hand{animation:none}}
