@@ -16,5 +16,8 @@ test('independent tree readiness preserves neighbours and follows packed slots a
  const replacementTrees=[trees[2],trees[1],{...trees[0],id:'new'}],replacement=createFarImpostorPrototype(source,new THREE.Texture(),metadata,replacementTrees);replacement.restoreTreeState(p.snapshotTreeState());
  assert.deepEqual(replacement.treeState('c'),{ready:.75,enabled:false});assert.equal(replacement.impostors.geometry.attributes.aTreeReady.getX(0),-1);assert.deepEqual(replacement.treeState('new'),{ready:1,enabled:true});
  assert.equal(replacement.setTreeEnabled('c',true),true);assert.equal(replacement.impostors.geometry.attributes.aTreeReady.getX(0),.75);assert.equal(replacement.treeState('missing'),null);assert.throws(()=>replacement.setTreeEnabled('c',0),/Invalid/);replacement.dispose();
+ const beforeOrigin={stats:p.stats(),matrices:[...p.models.instanceMatrix.array],bases:[...p.impostors.geometry.attributes.aTreeBase.array],states:p.snapshotTreeState()};
+ p.update(camera,{x:192,z:144});assert.deepEqual(p.uniforms.uFarOrigin.value.toArray(),[192,144]);assert.deepEqual(p.stats(),beforeOrigin.stats);assert.deepEqual([...p.models.instanceMatrix.array],beforeOrigin.matrices);assert.deepEqual([...p.impostors.geometry.attributes.aTreeBase.array],beforeOrigin.bases);assert.deepEqual(p.snapshotTreeState(),beforeOrigin.states);
+ p.update(camera);assert.deepEqual(p.uniforms.uFarOrigin.value.toArray(),[0,0]);assert.deepEqual(p.stats(),beforeOrigin.stats);
  p.dispose();source.geometry.dispose();source.material.dispose();
 });
