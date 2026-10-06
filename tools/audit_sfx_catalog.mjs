@@ -72,7 +72,7 @@ const report={scope:'Complete 126-row catalogue/code/byte audit. No claim of pla
  sourceHashes:Object.fromEntries(sources.map(path=>[path,sha(read(path))])),total:126,assigned:points.size,unassigned:126-points.size,groups,rows};
 const output=JSON.stringify(report,null,2)+'\n',folder=resolve(root,'docs/qa/sfx-catalog-post-jam');mkdirSync(folder,{recursive:true});
 const target=resolve(folder,'inventory.json');
-if(process.argv.includes('--check'))assert.equal(readFileSync(target,'utf8'),output,'Catalogue audit is stale; regenerate and review it.');
+if(process.argv.includes('--check'))assert.equal(sha(readFileSync(target)),sha(Buffer.from(output)),'Catalogue audit is stale; regenerate and review it.');
 else{
  writeFileSync(target,output);
  const escape=s=>String(s??'').replaceAll('|','\\|').replaceAll('\n',' ');

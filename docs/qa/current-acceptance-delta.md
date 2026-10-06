@@ -14,7 +14,7 @@ Esta página reúne evidencia incremental, incluida la revisión `d3dac6d`; el i
 - [Política del iframe y respaldo de pantalla](wake-policy/README.md), d3dac6d: 16 pruebas, build, reproducción real de vídeo con permiso nativo denegado y concesión/liberación nativas en página principal. La consola de la prueba de iframe contiene un error de MutationObserver sin causa acreditada; el controlador registra cero errores. La aceptación física Pixel/Chrome/itch.io permanece pendiente y no se ha actualizado la publicación.
 - Los impostores de acacia día/noche conservan ocho vistas por ocho orientaciones mundiales y ahora representan LOD2. [Correspondencia de atlas](far-prelit-lod2-elevation8/README.md), [rutas de cámara](far-lod2-motion-night/README.md) y [desaparición lejana por píxeles](far-fade-pixels/README.md) son experimentos aislados. Permanecen fuera del gameplay normal; no acreditan horizonte completo, todos los biomas, móvil, reducción de distancia 3D ni ahorro global de GPU/RAM.
 
-CI de d3dac6d seguía ejecutándose al contrastar la evidencia. Las ejecuciones anteriores canceladas por revisiones posteriores no se cuentan como exitosas. El resultado final debe verificarse por SHA.
+[CI de 7779a8e](ci-audio-task-frame/README.md) verificada: Validate Game terminó correctamente con 2.533 pruebas, verificaciones, build y paquete web. Windows aún no tiene resultado acreditado en esta comprobación. Los ensayos de índices compartidos conservan sus límites: el ahorro aislado con cien trabajadores no demuestra mejora de frametime en la finca renderizada de dieciocho trabajadores ([evidencia nativa](audio-task-frame-native/README.md)). Las ejecuciones canceladas no se cuentan como exitosas.
 
 ## Reglas actuales y alcance comprobado
 
