@@ -1,0 +1,34 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Atlas offline de vegetación lejana</title>
+<style>body{font:15px system-ui;color:#392d21;background:#efe3cb;margin:20px}button{padding:12px}img{max-width:100%;background:repeating-conic-gradient(#fff 0% 25%,#d7d7d7 0% 50%) 0/20px 20px}pre{white-space:pre-wrap;max-height:280px;overflow:auto}</style>
+<h1>Atlas offline · Acacia paraguas de Sabana</h1><p>Herramienta de precálculo, fuera del gameplay. Ocho vistas de 256 × 256, encuadre idéntico, base fija, color neutro y alpha. No carga chunks.</p>
+<button id="bake" disabled>Precalcular ocho vistas</button> <a id="download" download="savanna-acacia-8views.png" hidden>Guardar atlas PNG</a><p id="status" role="status">Cargando geometría original…</p><img id="atlas" alt="Atlas precalculado de ocho vistas de acacia" hidden><h2>Atlas precalculado guardado (WebP)</h2><img id="stored" src="../../docs/qa/far-vegetation-atlas/savanna-acacia-8views.webp" alt="Ocho vistas del atlas WebP guardado"><pre id="report"></pre>
+<script type="module">
+import * as THREE from 'three';
+import {Assets,json} from '../../src/rendering/assets.js';
+const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
+let renderer,mesh,material,scene,metadata,prototypes=[];
+try{
+ const pack=await json('/content/biome-savanna.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(0,1)}),source=levels[0][0],geometry=source.geometry,position=geometry.getAttribute('position'),box=geometry.boundingBox,height=box.max.y-box.min.y;
+ prototypes=levels;
+ const low=[];for(let i=0;i<position.count;i++)if(position.getY(i)<=box.min.y+height*.015)low.push([position.getX(i),position.getZ(i)]);
+ const base=[(Math.min(...low.map(p=>p[0]))+Math.max(...low.map(p=>p[0])))/2,box.min.y,(Math.min(...low.map(p=>p[1]))+Math.max(...low.map(p=>p[1])))/2];
+ let halfWidth=0;for(let view=0;view<8;view++){const angle=view*Math.PI/4,c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<position.count;i++)halfWidth=Math.max(halfWidth,Math.abs((position.getX(i)-base[0])*c-(position.getZ(i)-base[2])*s));}
+ const width=halfWidth*2*1.08,frameHeight=height*1.04;
+ metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:8,viewResolution:256,atlasWidth:2048,atlasHeight:256,anglesDegrees:[0,45,90,135,180,225,270,315],localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},sourceVertices:position.count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
+ renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(256,256);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
+ material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
+ mesh=new THREE.Mesh(geometry,material);mesh.position.fromArray(base).multiplyScalar(-1);scene=new THREE.Scene();scene.add(mesh);
+ button.disabled=false;status.textContent='Geometría lista. El atlas solo se genera al pulsar precalcular.';report.textContent=JSON.stringify(metadata,null,2);
+ button.onclick=()=>{
+ try{
+ const atlas=document.createElement('canvas');atlas.width=2048;atlas.height=256;const ctx=atlas.getContext('2d'),camera=new THREE.OrthographicCamera(-width/2,width/2,frameHeight/2,-frameHeight/2,.01,100),distance=Math.max(width,frameHeight)*3,center=new THREE.Vector3(0,frameHeight/2,0);
+ for(let view=0;view<8;view++){const angle=view*Math.PI/4;camera.position.set(Math.sin(angle)*distance,center.y,Math.cos(angle)*distance);camera.lookAt(center);camera.updateMatrixWorld();renderer.render(scene,camera);ctx.drawImage(renderer.domElement,view*256,0);}
+ const pixels=ctx.getImageData(0,0,2048,256).data,cells=[];
+ for(let view=0;view<8;view++){let minX=256,minY=256,maxX=-1,maxY=-1,opaquePixels=0;for(let y=0;y<256;y++)for(let x=0;x<256;x++)if(pixels[(y*2048+view*256+x)*4+3]>0){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);opaquePixels++;}cells.push({view,angleDegrees:view*45,minX,minY,maxX,maxY,opaquePixels});}
+ metadata.cells=cells;metadata.webglError=renderer.getContext().getError();metadata.drawCallsPerView=renderer.info.render.calls;
+ const data=atlas.toDataURL('image/png'),image=document.querySelector('#atlas');image.src=data;image.hidden=false;const link=document.querySelector('#download');link.href=data;link.hidden=false;status.textContent='Atlas de ocho vistas listo; transparente, base común, sin luz horneada.';report.textContent=JSON.stringify(metadata,null,2);
+ }catch(error){errors.push(String(error));status.textContent='ERROR al precalcular';report.textContent=JSON.stringify({...metadata,errors},null,2);}
+ };
+}catch(error){errors.push(String(error.stack??error));status.textContent='ERROR de carga';report.textContent=JSON.stringify({errors},null,2);}
+addEventListener('pagehide',()=>{const resources=new Set();for(const levels of prototypes)for(const source of levels){resources.add(source.geometry);resources.add(source.material);for(const value of Object.values(source.material))if(value?.isTexture)resources.add(value);}for(const resource of resources)resource.dispose();material?.dispose();assets.disposeModels();renderer?.dispose();renderer?.forceContextLoss();},{once:true});
+</script></html>
