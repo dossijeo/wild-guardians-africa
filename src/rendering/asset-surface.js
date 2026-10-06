@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {SLOTS} from '../world/terrain.js';
 import {describeSurface} from './surface-source.js';
 import {recordNativeDepthHook} from './depth-recipes.js';
+import {surfaceMapBias,surfaceMapFragment} from './surface-alpha.js';
 
 export function nativeAssetSurface(pack,asset,index){
   return {...asset,group:pack.profile.assetGroups?.[index]??SLOTS[index].g};
@@ -17,7 +18,7 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
   material.userData.nativeVolcanicGlow=uniforms.uNativeVolcanicGlow;
   const previous=material.onBeforeCompile;material.onBeforeCompile=shader=>{
     Object.assign(shader.uniforms,uniforms);
-    if(surface.params[2]>.5)shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',THREE.ShaderChunk.map_fragment.replace('texture2D( map, vMapUv )','texture2D( map, vMapUv, .65 )'));
+    if(surfaceMapBias(surface))shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',surfaceMapFragment(surface));
     shader.vertexShader='varying float vNativeHeight;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvNativeHeight=position.y;');
     shader.fragmentShader='varying float vNativeHeight;uniform vec4 uNativeSurface;uniform float uNativeMinY,uNativeSizeY,uNativeVolcanicGlow;\n'+shader.fragmentShader;
@@ -34,5 +35,5 @@ export function nativeAssetMaterial(pack,asset,index,textures,bounds){
       roughnessFactor=mix(roughnessFactor,.38,nativeWet*.68);
       diffuseColor.rgb*=pow(mix(vec3(1.),vec3(.63,.66,.54),nativeWet*(1.-nativeLeaf*.5)),vec3(2.2));`);
   };
-  recordNativeDepthHook(material,previous,'surface');material.customProgramCacheKey=()=> 'native-asset-surface-v4';return material;
+  recordNativeDepthHook(material,previous,'surface');material.customProgramCacheKey=()=> 'native-asset-surface-v4|map-bias='+surfaceMapBias(surface);return material;
 }

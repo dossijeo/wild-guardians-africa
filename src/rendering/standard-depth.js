@@ -2,13 +2,16 @@ import * as THREE from 'three';
 import {nativeDepthRecipe} from './depth-recipes.js';
 import {nativeAssetClipFragment} from './asset-clip.js';
 import {coverageThreshold} from './obstruction-source.js';
+import {surfaceMapBias,surfaceMapFragment} from './surface-alpha.js';
 
 const cache=new WeakMap();
 const properties=['side','depthFunc','depthTest','depthWrite','opacity','alphaTest','alphaToCoverage','alphaMap','map','displacementMap','displacementScale','displacementBias','vertexColors','wireframe','wireframeLinewidth'];
 export function standardDepthMaterial(source){
   if(!(source.isMeshStandardMaterial||source.isMeshBasicMaterial)||source.transparent||source.alphaHash||source.polygonOffset||source.clippingPlanes?.length)return null;
   const recipe=nativeDepthRecipe(source);if(!recipe)return null;
-  const signature=[...recipe.features].sort().join('|');let entry=cache.get(source);
+  const surface=recipe.features.has('surface')?source.userData.nativeSurface:null;
+  const bias=surfaceMapBias(surface);
+  const signature=[...recipe.features].sort().join('|')+(recipe.features.has('surface')?'|surface-map-bias='+bias:'');let entry=cache.get(source);
   if(!entry||entry.signature!==signature){
     if(entry){source.removeEventListener('dispose',entry.dispose);entry.material.dispose();}
     const material=new THREE.MeshDepthMaterial({depthPacking:THREE.BasicDepthPacking});
@@ -20,6 +23,7 @@ export function standardDepthMaterial(source){
       shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n#include <color_vertex>');
       shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n#include <color_pars_fragment>');
       shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n#include <color_fragment>');
+      if(bias)shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',surfaceMapFragment(surface));
       if(recipe.features.has('clip')){
         shader.uniforms.uNativeClip=source.userData.nativeChunkClip;
         shader.vertexShader='attribute vec4 nativeClipBounds;varying vec4 vNativeClipBounds;varying vec3 vNativeClipWorld;\n'+shader.vertexShader;

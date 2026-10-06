@@ -34,10 +34,10 @@ const digest=()=>{
 };
 const versions=()=>scene.children.map(mesh=>[mesh.instanceMatrix.version,(mesh.geometry.attributes.iGrowth??mesh.geometry.attributes.iBridge).version]);
 try{
- for(const mode of ['mature','paused-morph','growing','mixed-growing']){
+ for(const mode of ['mature','paused-morph','paused-mixed','growing','mixed-growing']){
   const changing=mode==='growing'||mode==='mixed-growing';
   const plants=Array.from({length:count},(_,i)=>{
-   const spec=BALANCE.crops[i%8];return {id:`plant-${i+1}`,species:spec.id,x:(i%30)*1.5,z:Math.floor(i/30)*1.5,rotation:i*.037,growth:(mode==='mature'?1:mode==='mixed-growing'?.1+(i%300)/400:.065+(.27-.065)*.81)*spec.growth_seconds};
+   const spec=BALANCE.crops[i%8];return {id:`plant-${i+1}`,species:spec.id,x:(i%30)*1.5,z:Math.floor(i/30)*1.5,rotation:i*.037,growth:(mode==='mature'?1:(mode==='mixed-growing'||mode==='paused-mixed')?.1+(i%300)/400:.065+(.27-.065)*.81)*spec.growth_seconds};
   });
   const update=frame=>{if(changing)for(let i=0;i<plants.length;i++)plants[i].growth+=BALANCE.crops[i%8].growth_seconds*.0001;batch.update(plants,frame/60,ground,undefined,groundMode==='terrain-cached'?field:null);};
   for(let frame=0;frame<60;frame++)update(frame);
