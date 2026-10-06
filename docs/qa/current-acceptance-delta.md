@@ -4,6 +4,8 @@ Esta página reúne evidencia incremental, incluida la revisión `d3dac6d`; el i
 
 ## Evidencia posterior contrastada el 6 de octubre
 
+- [Control negativo de gestión](bad-management-native-27c6a62/README.md): seis biomas, Mapungubwe/seed 712, hasta diez noches sin ampliar reservas salariales/mantenimiento. Cuatro derrotas económicas naturales y dos supervivientes conservados, con estados completos, contabilidad y causas comprobadas. No valida dificultad equilibrada ni supervivencia responsable de 100 noches.
+
 - [Apertura guiada en tres semillas](guided-opening-three-seeds/README.md): 90 casos correctos sobre dominio d3dac6d, semillas 712/1/42 y las 30 combinaciones bioma/cultura. Riego físicamente apartado, cosecha automática, entrega única y cobros reales durante el primer día. No demuestra supervivencia nocturna, balance intensivo, todas las semillas ni render/móvil.
 
 - [Campaña intensiva c04c069](intensive-margin-100-c04c069/README.md): victoria de 100 noches, 21.892 entregas físicas, ocho especies y contabilidad reconciliada con snapshot final y hashes de 256 fuentes. Su 20,15 % de tiempo diurno sin acción es una métrica de la estrategia simulada. Treinta fuentes históricas cambian respecto a 02d252e: no demuestra supervivencia de la revisión actual, dificultad adecuada, todas las combinaciones ni malas decisiones. La misma política permanece ejecutándose sobre fuentes congeladas de 02d252e; el proceso fue consultado directamente y seguía activo, con jornada 35 registrada. La campaña de defensas pagadas a28c843 también seguía activa, con jornada 36. Ninguna tiene resultado final acreditado.
