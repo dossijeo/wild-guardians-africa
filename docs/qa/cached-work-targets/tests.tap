@@ -1,0 +1,215 @@
+TAP version 13
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 1 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 363.8921
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 2 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 308.1385
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 3 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 121.7036
+  ...
+# Subtest: QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+ok 4 - QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+  ---
+  duration_ms: 162.1626
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 5 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 196.6177
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 6 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 3.8286
+  ...
+# Subtest: farm contact calibration regenerates exactly from all four original source scripts and GLB hashes
+ok 7 - farm contact calibration regenerates exactly from all four original source scripts and GLB hashes
+  ---
+  duration_ms: 286.4571
+  ...
+# Subtest: youngMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 8 - youngMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 281.0872
+  ...
+# Subtest: olderMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 9 - olderMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 185.1289
+  ...
+# Subtest: olderFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 10 - olderFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 149.8515
+  ...
+# Subtest: youngFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 11 - youngFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 178.6279
+  ...
+# Subtest: the threshold inverse is finite and monotonic at both endpoints and the authored water gate
+ok 12 - the threshold inverse is finite and monotonic at both endpoints and the authored water gate
+  ---
+  duration_ms: 0.4998
+  ...
+# Subtest: target index preserves last-wins Map semantics, live fields and every membership/ID edit
+ok 13 - target index preserves last-wins Map semantics, live fields and every membership/ID edit
+  ---
+  duration_ms: 4.8582
+  ...
+# Subtest: cached plans track task, profile, growth phase and replaced targets without mutating gameplay
+ok 14 - cached plans track task, profile, growth phase and replaced targets without mutating gameplay
+  ---
+  duration_ms: 3.6923
+  ...
+# Subtest: same-ID replacements reuse unique indexes while aliased duplicate IDs preserve last occurrence
+ok 15 - same-ID replacements reuse unique indexes while aliased duplicate IDs preserve last occurrence
+  ---
+  duration_ms: 0.3369
+  ...
+# Subtest: disposing the actual manager releases cached state and rebuilding its presentation creates a fresh index
+ok 16 - disposing the actual manager releases cached state and rebuilding its presentation creates a fresh index
+  ---
+  duration_ms: 2.2415
+  ...
+# Subtest: non-acting workers and repair dust do not index historical tasks or crops
+ok 17 - non-acting workers and repair dust do not index historical tasks or crops
+  ---
+  duration_ms: 3.1644
+  ...
+# Subtest: missing tasks skip target history; active plans see same-length target replacements immediately
+ok 18 - missing tasks skip target history; active plans see same-length target replacements immediately
+  ---
+  duration_ms: 3.6717
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 19 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 1.0894
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 20 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 313.7087
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 21 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 47.4993
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 22 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 1.1492
+  ...
+# Subtest: Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+ok 23 - Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+  ---
+  duration_ms: 134.4903
+  ...
+# Subtest: Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+ok 24 - Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+  ---
+  duration_ms: 0.7129
+  ...
+# Subtest: Work manager attaches the worker emitter to the actual native water effect
+ok 25 - Work manager attaches the worker emitter to the actual native water effect
+  ---
+  duration_ms: 17.867
+  ...
+# Subtest: youngMale: Three loads and applies every native action to its real rig
+ok 26 - youngMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 341.4126
+  ...
+# Subtest: olderMale: Three loads and applies every native action to its real rig
+ok 27 - olderMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 229.6906
+  ...
+# Subtest: olderFemale: Three loads and applies every native action to its real rig
+ok 28 - olderFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 160.955
+  ...
+# Subtest: youngFemale: Three loads and applies every native action to its real rig
+ok 29 - youngFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 240.3748
+  ...
+# Subtest: youngMale: native action tracks are finite and preserve their last key
+ok 30 - youngMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 66.5375
+  ...
+# Subtest: olderMale: native action tracks are finite and preserve their last key
+ok 31 - olderMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 52.8843
+  ...
+# Subtest: olderFemale: native action tracks are finite and preserve their last key
+ok 32 - olderFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 40.6245
+  ...
+# Subtest: youngFemale: native action tracks are finite and preserve their last key
+ok 33 - youngFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 26.9835
+  ...
+# Subtest: Combined initial work shows planting followed by first watering for both age speeds
+ok 34 - Combined initial work shows planting followed by first watering for both age speeds
+  ---
+  duration_ms: 0.5648
+  ...
+# Subtest: Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+ok 35 - Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+  ---
+  duration_ms: 0.2985
+  ...
+# Subtest: Carrying uses the original crate and idle uses the supplied resting pose
+ok 36 - Carrying uses the original crate and idle uses the supplied resting pose
+  ---
+  duration_ms: 0.1931
+  ...
+# Subtest: youngMale: cached water emitter follows the actual animated nozzle holes
+ok 37 - youngMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 196.9491
+  ...
+# Subtest: olderMale: cached water emitter follows the actual animated nozzle holes
+ok 38 - olderMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 147.9668
+  ...
+# Subtest: olderFemale: cached water emitter follows the actual animated nozzle holes
+ok 39 - olderFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 138.6265
+  ...
+# Subtest: youngFemale: cached water emitter follows the actual animated nozzle holes
+ok 40 - youngFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 152.8878
+  ...
+# Subtest: Prepared nozzle paths reject missing, malformed and non-finite samples
+ok 41 - Prepared nozzle paths reject missing, malformed and non-finite samples
+  ---
+  duration_ms: 1.1038
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2207.3197

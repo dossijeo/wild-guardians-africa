@@ -1,19 +1,18 @@
-import {PROFILES} from '../simulation/workforce.js';
-import {vfxDefinitions,vfxEnvironment} from './vfx-native.js';
-import {WorkTargetIndex} from './work-target-index.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
+import {vfxDefinitions,vfxEnvironment} from '../../src/rendering/vfx-native.js';
 const definitions=new Map(vfxDefinitions.map(d=>[d.id,d]));
 const durations={water:3.4,harvest:3.6,repair:3.8};
 
 // Presentation reads committed tasks. It never completes work or emits gameplay.
-export function workVfxPlans(state,targetIndex=null){
+export function workVfxPlans(state){
   const plans=[];let tasks,targets;
   for(const worker of state.workers){
     if(worker.status!=='acting'||worker.incapacitated||worker.fallRemaining>0)continue;
     // No historical crop/task index is needed while workers travel, carry,
-    // flee or idle. Tasks are local; the optional target cache verifies live edits.
+    // flee or idle. Keep these local to this call so live edits stay visible.
     tasks??=new Map(state.tasks.map(t=>[t.id,t]));
     const task=tasks.get(worker.taskId);if(!task)continue;
-    targets??=targetIndex?targetIndex.forState(state):new Map([...state.plants,...state.structures].map(e=>[e.id,e]));
+    targets??=new Map([...state.plants,...state.structures].map(e=>[e.id,e]));
     const target=targets.get(task.targetId);if(!target)continue;
     let kind=task.kind,id,elapsed,duration;
     const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
@@ -42,10 +41,10 @@ export function workVfxPlans(state,targetIndex=null){
 }
 
 export class WorkVfx {
-  constructor(library,pipeline,scene,surface,waterSource=null){this.targetIndex=new WorkTargetIndex();this.waterSource=waterSource;this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();}
+  constructor(library,pipeline,scene,surface,waterSource=null){this.waterSource=waterSource;this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();}
   update(state){
     const desired=new Set(),environment=vfxEnvironment(state.time>=300?1:0);
-    for(const plan of workVfxPlans(state,this.targetIndex)){
+    for(const plan of workVfxPlans(state)){
       desired.add(plan.key);let effect=this.effects.get(plan.key);
       if(!effect){effect=this.library.create(plan.id,this.pipeline,{worldSurface:this.surface,...(plan.id==='water'&&this.waterSource?{waterSource:time=>this.waterSource(plan.workerId,time,effect)}:{}),...(plan.stepMode?{stepMode:true}:{})});this.effects.set(plan.key,effect);this.scene.add(effect);}
       effect.position.set(plan.x,this.surface(plan.x,plan.z),plan.z);effect.rotation.y=plan.yaw;effect.environment=environment;
@@ -54,5 +53,5 @@ export class WorkVfx {
     for(const [key,effect] of this.effects)if(!desired.has(key)){effect.dispose();this.effects.delete(key);}
   }
   prepare(camera){let depth=false;for(const effect of this.effects.values())depth=effect.prepare(camera,this.scene)||depth;return depth;}
-  dispose(){for(const effect of this.effects.values())effect.dispose();this.effects.clear();this.targetIndex.reset();}
+  dispose(){for(const effect of this.effects.values())effect.dispose();this.effects.clear();}
 }

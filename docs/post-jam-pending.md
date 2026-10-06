@@ -94,3 +94,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Índices diferidos medidos dentro del render real](qa/late-farm-work-indexes/README.md): cuatro lotes, 800 muestras CPU/GPU y mismo estado final/rutas/entregas. Todos los frames mantienen dos a nueve trabajadores actuando; no se acredita mejora estable de frametime. Siguiente paso: reutilizar el índice durante actividad con invalidación comprobada, además del coste GPU sostenido. La campaña de margen congelada sigue viva y alcanzó el día 57, sin resultado terminal todavía.
+
+
+[Destinos de VFX reutilizados durante actividad](qa/cached-work-targets/README.md): referencias/IDs verificados en cada llamada, actualización directa de reemplazos únicos y reconstrucción para cambios de pertenencia/IDs. 41 pruebas, build, 400 entradas equivalentes y cuatro lotes renderizados con estado/rutas/entregas idénticos. Menor CPU aislada y reducción modesta en pares nativos, sin FPS estable/general acreditado. Se conserva un candidato rechazado por penalizar reemplazos. La comprobación sigue siendo O(N), con metadatos residentes; pendiente GPU sostenida y aceptación amplia.

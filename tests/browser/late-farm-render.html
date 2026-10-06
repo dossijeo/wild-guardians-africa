@@ -11,7 +11,7 @@ import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {GpuTimer} from './gpu-timer.js';
-import {WorkVfx as ReferenceWorkVfx} from './work-vfx-reference.js';
+import {WorkVfx as ReferenceWorkVfx} from './work-vfx-lazy-reference.js';
 import {captureRenderSubmissions} from './render-submission-breakdown.js';
 const button=document.querySelector('#run'),status=document.querySelector('#status'),report=document.querySelector('#report');
 const output={scope:'Four A/B/B/A controlled late-farm continuations with current WorldScene and native navigation, quality media and shadows. Reference simulation 1bfd85a versus current simulation. Real archived snapshot; ordinary postgame and paid hiring. Fifteen simulated seconds warmup, twenty measured; advanceReal(0.1) per RAF, not production variable frame pacing. No audio, HUD, autosave, raid, mobile, memory bytes or current 100-night balance acceptance.',lots:[],errors:[]};
@@ -28,7 +28,7 @@ async function run(mode='simulation'){
  output.lots=[];output.errors=[];output.diagnostic=diagnostic;
  output.toolComparison=toolComparison;output.workComparison=workComparison;
  output.scope=diagnostic?'Actual render submissions observed at five points in an ordinary paid late-farm continuation. Extra static instrumented renders preserve logical state and reconcile submitted calls/triangles. Timings in this diagnostic are perturbed and must not be used as a performance comparison. No audio, HUD, autosave, raid, mobile or 100-night balance acceptance.':comparisonScope;
- if(workComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations, current simulation/navigation/world. Only WorkVfx planner reference 067e91a versus current lazy indexes changes. Authored hidden-tool culling enabled in every lot. Same snapshot, camera, quality and shadows, fixed advanceReal(0.1) per RAF; no audio/HUD/autosave, raid, mobile or RAM bytes acceptance.';
+ if(workComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations, current simulation/navigation/world. Only WorkVfx planner reference a8f3e37 versus current verified cached targets changes. Authored hidden-tool culling enabled in every lot. Same snapshot, camera, quality and shadows, fixed advanceReal(0.1) per RAF; no audio/HUD/autosave, raid, mobile or RAM bytes acceptance.';
  if(toolComparison)output.scope='Four A/B/B/A controlled rendered paid late-farm continuations with current simulation/navigation. Only authored-hidden worker-tool culling changes, false/true/true/false. Same snapshot, camera, quality, shadows and advanceReal(0.1) per RAF. No audio/HUD/autosave, raid, mobile, RAM bytes or current 100-night balance proof.';
  try{
   // Vite assigns application/json to state.json.gz; native browser sniffing can

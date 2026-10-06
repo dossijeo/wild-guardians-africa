@@ -1,0 +1,33 @@
+{
+  "baseCommit": "a8f3e37",
+  "referenceOriginalSha256": "85b8809ab4dd0b5a22a923b645423de4fcb88bd332737424c9dcd81137c2c6e7",
+  "sourceSha256": {
+    "src/rendering/work-vfx.js": "63b37240a14fdea400715597138b62d75b51e31daa5210bfa1510f8b637dbe43",
+    "src/rendering/work-target-index.js": "ba471df2ac8bb30d0c284ba66cab543c65846889e6f76e311f0c888b72cc9f8b",
+    "tests/work-target-index.test.js": "588ccd7fb52eb8ef993333824f85b52ff170dd0e2bc854cb9c7ab4d5da982bd0",
+    "tests/browser/late-farm-render.html": "fe112fc3babc0d30322a98da1de372c0c75a39b04c1fca5f5acf086df6fdd66d",
+    "tests/browser/work-vfx-lazy-reference.js": "0d35fd4ae8982a8277cda34bca9eba5b69751a84f2d237306bf72825b6ebc277",
+    "tools/benchmark_cached_work_targets.mjs": "f8c4c2eeef4504dfd776256e679eef7bbcdae1a38190a63ee774126633aa987b"
+  },
+  "evidenceSha256": {
+    "benchmark.json": "2c571ee47d4ca9c7a0de570b73f86546f01d257bf2a6d89781ba6ce4fee76587",
+    "build.log.gz": "5a4b62d5df7157b5998919338954664dc176cbba670d87282de93c0f1bc351be",
+    "farm.png": "b109ecf66c910fcff046f40ea7bcec3baebb589c095231cdf48268a40c106a86",
+    "native.json": "1ab69698d0d568b57ec13c9a35c1e1953940c9c7c2dc7ace4e4c80f8f3d1d255",
+    "README.md": "55305f1b86367884acd57360f8ce5f50e46da066bf335f5cf71d49b9b55da2e8",
+    "rejected-rebuild-benchmark.json": "62200f96aad64f8ae6c2d1ba6f9e3a808d23b570a71a073762a3f6a63bb8df29",
+    "rejected-rebuild-native.json": "71cefcec4115a97af51f0e582fb774ecd3af2d6ead8f4088f8e31c5410eb6af5",
+    "rejected-rebuild-source.txt": "36f6e6abfe8912d518b3c3b8cacf05ac4a9aa6f358895d2bbf0a9c1630675781",
+    "tests.tap": "c81d060c7e69609ad2192170176c550146fa0b823bea14b8edec84327677347e"
+  },
+  "tests": {
+    "command": "node --test tests/work-target-index.test.js tests/work-vfx.test.js tests/worker-actions.test.js tests/farm-action-markers.test.js tests/acceptance-worker-chains.test.js",
+    "exit": 0,
+    "passed": 41,
+    "failed": 0
+  },
+  "buildExit": 0,
+  "equivalentControlledInputs": 400,
+  "finalEndSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "scope": "Verified membership/IDs scan remains linear; additional persistent Map/snapshots. No stable/general FPS or RAM/mobile acceptance. Rebuild-on-replacement candidate rejected and retained."
+}
