@@ -5,6 +5,7 @@
 <script type="module">
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
+import {atlasElevationFrame} from '../../tools/experiments/atlas-elevation-frame.js';
 import {Assets,json} from '../../src/rendering/assets.js';
 const params=new URLSearchParams(location.search),bakeMode=params.get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
 const bakedLod=Number(params.get('lod')??0);if(!Number.isInteger(bakedLod)||bakedLod<0||bakedLod>2)throw Error('Invalid atlas LOD');
@@ -16,8 +17,8 @@ try{
  const low=[];for(let i=0;i<position.count;i++)if(position.getY(i)<=box.min.y+height*.015)low.push([position.getX(i),position.getZ(i)]);
  const base=[(Math.min(...low.map(p=>p[0]))+Math.max(...low.map(p=>p[0])))/2,box.min.y,(Math.min(...low.map(p=>p[1]))+Math.max(...low.map(p=>p[1])))/2];
  let halfWidth=0;for(let view=0;view<8;view++){const angle=view*Math.PI/4,c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<position.count;i++)halfWidth=Math.max(halfWidth,Math.abs((position.getX(i)-base[0])*c-(position.getZ(i)-base[2])*s));}
- const width=halfWidth*2*1.08,frameHeight=height*1.04;
- metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},bakedLod,framingLod:0,sourceVertices:geometry.getAttribute('position').count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
+ const width=halfWidth*2*1.08,elevation=atlasElevationFrame(position,base,height,Number(params.get('elevation')??0),cameraViews),frameHeight=elevation.impostorHeight;
+ metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:elevation.baseV,elevation,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},bakedLod,framingLod:0,sourceVertices:geometry.getAttribute('position').count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(viewResolution,viewResolution);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
  material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
  if(normalBake||prelitBake){
@@ -38,10 +39,10 @@ try{
  button.textContent='Precalcular '+cameraViews+' vistas × '+rotationViews+' orientaciones';document.querySelector('h1+p').textContent='Precálculo offline: '+cameraViews+' vistas de '+viewResolution+' × '+viewResolution+' por orientación. Encuadre común y base fija; sin chunks.';button.disabled=false;status.textContent='Geometría lista. El atlas solo se genera al pulsar precalcular.';report.textContent=JSON.stringify(metadata,null,2);
  button.onclick=()=>{
  try{
- const atlas=document.createElement('canvas');atlas.width=atlasWidth;atlas.height=atlasHeight;const ctx=atlas.getContext('2d'),camera=new THREE.OrthographicCamera(-width/2,width/2,frameHeight/2,-frameHeight/2,.01,100),distance=Math.max(width,frameHeight)*3,center=new THREE.Vector3(0,frameHeight/2,0);
+ const atlas=document.createElement('canvas');atlas.width=atlasWidth;atlas.height=atlasHeight;const ctx=atlas.getContext('2d'),camera=new THREE.OrthographicCamera(-width/2,width/2,elevation.elevationDegrees?elevation.projectedTop:frameHeight/2,elevation.elevationDegrees?elevation.projectedBottom:-frameHeight/2,.01,100),distance=Math.max(width,frameHeight)*3,center=new THREE.Vector3(0,elevation.elevationDegrees?0:frameHeight/2,0),pitch=elevation.elevationDegrees*Math.PI/180;
  for(let row=0;row<rotationViews;row++){
  const yaw=row*Math.PI*2/rotationViews,c=Math.cos(yaw),s=Math.sin(yaw);mesh.rotation.y=yaw;mesh.position.set(-base[0]*c-base[2]*s,-base[1],base[0]*s-base[2]*c);
- for(let view=0;view<cameraViews;view++){const angle=view*Math.PI*2/cameraViews+yaw;camera.position.set(Math.sin(angle)*distance,center.y,Math.cos(angle)*distance);camera.lookAt(center);camera.updateMatrixWorld();renderer.render(scene,camera);ctx.drawImage(renderer.domElement,view*viewResolution,row*viewResolution);}}
+ for(let view=0;view<cameraViews;view++){const angle=view*Math.PI*2/cameraViews+yaw;camera.position.set(Math.sin(angle)*distance*Math.cos(pitch),center.y+distance*Math.sin(pitch),Math.cos(angle)*distance*Math.cos(pitch));camera.lookAt(center);camera.updateMatrixWorld();renderer.render(scene,camera);ctx.drawImage(renderer.domElement,view*viewResolution,row*viewResolution);}}
 
  const pixels=ctx.getImageData(0,0,atlasWidth,atlasHeight).data,cells=[];
  for(let row=0;row<rotationViews;row++)for(let view=0;view<cameraViews;view++){let minX=viewResolution,minY=viewResolution,maxX=-1,maxY=-1,opaquePixels=0;for(let y=0;y<viewResolution;y++)for(let x=0;x<viewResolution;x++)if(pixels[((row*viewResolution+y)*atlasWidth+view*viewResolution+x)*4+3]>0){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);opaquePixels++;}cells.push({row,treeYawDegrees:row*360/rotationViews,view,angleDegrees:view*360/cameraViews,minX,minY,maxX,maxY,opaquePixels});}

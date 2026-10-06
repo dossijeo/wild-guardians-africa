@@ -1,0 +1,53 @@
+{
+  "atlasLod": 1,
+  "nativeLod": 1,
+  "camera": [
+    0,
+    10,
+    50
+  ],
+  "pixelMasks": [
+    {
+      "rgbDifferenceThreshold": 0,
+      "nativePixels": 14054,
+      "impostorPixels": 14409,
+      "intersectionPixels": 13782,
+      "unionPixels": 14681,
+      "intersectionOverUnion": 0.9387643893467748,
+      "nativeBounds": [
+        559,
+        271,
+        720,
+        423
+      ],
+      "impostorBounds": [
+        559,
+        271,
+        720,
+        416
+      ]
+    },
+    {
+      "rgbDifferenceThreshold": 8,
+      "nativePixels": 9030,
+      "impostorPixels": 9436,
+      "intersectionPixels": 8532,
+      "unionPixels": 9934,
+      "intersectionOverUnion": 0.8588685323132675,
+      "nativeBounds": [
+        560,
+        272,
+        719,
+        417
+      ],
+      "impostorBounds": [
+        560,
+        272,
+        719,
+        415
+      ]
+    }
+  ],
+  "scope": "Single stationary daytime view, masks from RGB difference against separately rendered background; includes leaf holes, antialias and shading, not geometry-only silhouette or perceived quality",
+  "errors": []
+}
