@@ -1,0 +1,15 @@
+# Orientaciones frente al sol fijo — atlas precocinado
+
+El sol no orbita en Wild Guardians: conserva dirección [-30,55,25] relativa al objetivo. Solo cambia día/noche. La advertencia sobre movimiento solar de la documentación inicial no aplicaba al juego.
+
+El atlas anterior contenía ocho vistas de cámara de un árbol con yaw 0. Este candidato separa ocho orientaciones mundiales del árbol (filas 0–315°) de ocho vistas de cámara relativas al árbol (columnas 0–315°): 64 imágenes por fase, 128 en total. Al hornear cada fila se rota el modelo alrededor de su base y se conserva el sol; cámara mundial = yaw del árbol + vista relativa. Mismo framing/base/escala, normales originales y shader nativo, sin iluminación calculada en el impostor.
+
+Baker: `tests/browser/far-vegetation-atlas.html?bake=day&rotations=8` y fase night. Soporta también `resolution=128` para futura comparación, todavía sin aceptación visual. Grid 2048×2048, cada celda 256×256. Día WebP 2009222 bytes; noche 1659570; par 3668792 (3.50 MiB). Verificación de conversión lossless en alpha/píxeles visibles; alpha/decode no garantiza igualdad visual con perspectiva 3D. Texturas RGBA+mips del par ≈42.67 MiB en GPU. No medida de RAM física.
+
+Visor: `tests/browser/far-vegetation-transition.html?lighting=real&population=single&prelit=rotations&yaw=45&haze=1`. Sampler invierte el índice vertical para las filas del PNG; mezcla vecinos de vista y de orientación, y ambas fases cuando 0<uNight<1. Cuatro lecturas por fase con las dos mezclas angulares; hasta ocho en crepúsculo. Variante anterior de una sola orientación disponible con prelit=1. Continúa fuera del gameplay.
+
+Capturas y reportes modelo/impostor a yaw45, cámara [0,14,50], mediodía; órbita nocturna y amanecer 0.5 con vista angular intermedia. GL0, sin normales cargadas, consola vacía. Mejora la correspondencia de luz para orientaciones representadas; no prueba precisión de cualquier ángulo/elevación/escala ni ausencia de doble silueta en mezcla. Pendientes GPU crepúsculo, resolución 128, selección discreta versus mezcla de orientaciones, móvil, chunks, coste total y aceptación de transición.
+
+Ocho lotes GPU nativos alternan iluminación calculada y precocinada con 1008 árboles, mediodía, cámara fija, 1280×720 DPR1, 45 warmup + 180 muestras. Mismo shader A/B y mismas texturas cargadas en ambos brazos; no compara memoria con atlas anterior. `summary.json` conserva medianas/p95, bruto adjunto; todas las queries resueltas, cero disjoint/GL0. No edits/builds/tests durante los lotes. No extrapolar FPS al juego ni atribuir una reducción de tamaño a este candidato.
+
+También se corrige la vista del atlas para escala anisotrópica: ángulo de cámara transformado a espacio local (inversa de matriz del modelo), ancho derivado de proyección horizontal. El origen alternativo respeta sx/sy/sz. 12 pruebas pasan, incluidas 256 comparaciones contra matrices de Three y 16 anclajes no uniformes; la evidencia nativa separada está en `../far-anisotropic-angle`. No cambia la distribución procedural de árboles.

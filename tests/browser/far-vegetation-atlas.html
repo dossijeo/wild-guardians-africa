@@ -6,7 +6,8 @@
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {Assets,json} from '../../src/rendering/assets.js';
-const bakeMode=new URLSearchParams(location.search).get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
+const params=new URLSearchParams(location.search),bakeMode=params.get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
+const rotationViews=prelitBake&&params.get('rotations')==='8'?8:1,viewResolution=params.get('resolution')==='128'?128:256,atlasWidth=8*viewResolution,atlasHeight=rotationViews*viewResolution;
 let renderer,mesh,material,scene,metadata,prototypes=[];
 try{
  const pack=await json('/content/biome-savanna.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(0,1)}),source=levels[0][0],geometry=source.geometry,position=geometry.getAttribute('position'),box=geometry.boundingBox,height=box.max.y-box.min.y;
@@ -15,8 +16,8 @@ try{
  const base=[(Math.min(...low.map(p=>p[0]))+Math.max(...low.map(p=>p[0])))/2,box.min.y,(Math.min(...low.map(p=>p[1]))+Math.max(...low.map(p=>p[1])))/2];
  let halfWidth=0;for(let view=0;view<8;view++){const angle=view*Math.PI/4,c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<position.count;i++)halfWidth=Math.max(halfWidth,Math.abs((position.getX(i)-base[0])*c-(position.getZ(i)-base[2])*s));}
  const width=halfWidth*2*1.08,frameHeight=height*1.04;
- metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:8,viewResolution:256,atlasWidth:2048,atlasHeight:256,anglesDegrees:[0,45,90,135,180,225,270,315],localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},sourceVertices:position.count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
- renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(256,256);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
+ metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:8,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:[0,45,90,135,180,225,270,315],localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},sourceVertices:position.count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
+ renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(viewResolution,viewResolution);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
  material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
  if(normalBake||prelitBake){
   material.dispose();material=source.material.clone();material.userData={...source.material.userData};material.onBeforeCompile=source.material.onBeforeCompile;material.customProgramCacheKey=()=>source.material.customProgramCacheKey()+'|offline-atlas-'+bakeMode;
@@ -27,8 +28,8 @@ try{
   metadata.lighting='Encoded local light normal from native normal map + art canopy; no baked illumination';metadata.normalEncoding='RGB = normal * 0.5 + 0.5; linear data, no sRGB conversion; source orientation';metadata.normalExperimental=true;
   document.querySelector('h1').textContent='Atlas offline de normales · Acacia de Sabana';document.querySelector('#download').download='savanna-acacia-normals-8views.png';
   }else{
-   metadata.lighting='Native AfricanToon and source material, baked '+bakeMode;metadata.bakedPhase=bakeMode;metadata.nightAmount=bakeMode==='night'?1:0;metadata.sunPosition=[-30,55,25];metadata.sourceYaw=0;metadata.colorEncoding='sRGB display color, native shader grading; no runtime normal atlas';
-   renderer.debug.onShaderError=()=>errors.push('Prelit atlas shader failed');document.querySelector('h1').textContent='Atlas offline precocinado · '+bakeMode;document.querySelector('#download').download='savanna-acacia-'+bakeMode+'-8views.png';
+   metadata.lighting='Native AfricanToon and source material, baked '+bakeMode;metadata.bakedPhase=bakeMode;metadata.nightAmount=bakeMode==='night'?1:0;metadata.sunPosition=[-30,55,25];metadata.sourceYaw=rotationViews===1?0:null;metadata.rowMeaning='Tree world yaw relative to fixed sun; columns are camera angles relative to that tree';metadata.colorEncoding='sRGB display color, native shader grading; no runtime normal atlas';
+   renderer.debug.onShaderError=()=>errors.push('Prelit atlas shader failed');document.querySelector('h1').textContent='Atlas offline precocinado · '+bakeMode;document.querySelector('#download').download='savanna-acacia-'+bakeMode+'-8views'+(rotationViews>1?'-rotations8':'')+'.png';
   }
  }
 
@@ -36,12 +37,15 @@ try{
  button.disabled=false;status.textContent='Geometría lista. El atlas solo se genera al pulsar precalcular.';report.textContent=JSON.stringify(metadata,null,2);
  button.onclick=()=>{
  try{
- const atlas=document.createElement('canvas');atlas.width=2048;atlas.height=256;const ctx=atlas.getContext('2d'),camera=new THREE.OrthographicCamera(-width/2,width/2,frameHeight/2,-frameHeight/2,.01,100),distance=Math.max(width,frameHeight)*3,center=new THREE.Vector3(0,frameHeight/2,0);
- for(let view=0;view<8;view++){const angle=view*Math.PI/4;camera.position.set(Math.sin(angle)*distance,center.y,Math.cos(angle)*distance);camera.lookAt(center);camera.updateMatrixWorld();renderer.render(scene,camera);ctx.drawImage(renderer.domElement,view*256,0);}
- const pixels=ctx.getImageData(0,0,2048,256).data,cells=[];
- for(let view=0;view<8;view++){let minX=256,minY=256,maxX=-1,maxY=-1,opaquePixels=0;for(let y=0;y<256;y++)for(let x=0;x<256;x++)if(pixels[(y*2048+view*256+x)*4+3]>0){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);opaquePixels++;}cells.push({view,angleDegrees:view*45,minX,minY,maxX,maxY,opaquePixels});}
+ const atlas=document.createElement('canvas');atlas.width=atlasWidth;atlas.height=atlasHeight;const ctx=atlas.getContext('2d'),camera=new THREE.OrthographicCamera(-width/2,width/2,frameHeight/2,-frameHeight/2,.01,100),distance=Math.max(width,frameHeight)*3,center=new THREE.Vector3(0,frameHeight/2,0);
+ for(let row=0;row<rotationViews;row++){
+ const yaw=row*Math.PI*2/rotationViews,c=Math.cos(yaw),s=Math.sin(yaw);mesh.rotation.y=yaw;mesh.position.set(-base[0]*c-base[2]*s,-base[1],base[0]*s-base[2]*c);
+ for(let view=0;view<8;view++){const angle=view*Math.PI/4+yaw;camera.position.set(Math.sin(angle)*distance,center.y,Math.cos(angle)*distance);camera.lookAt(center);camera.updateMatrixWorld();renderer.render(scene,camera);ctx.drawImage(renderer.domElement,view*viewResolution,row*viewResolution);}}
+
+ const pixels=ctx.getImageData(0,0,atlasWidth,atlasHeight).data,cells=[];
+ for(let row=0;row<rotationViews;row++)for(let view=0;view<8;view++){let minX=viewResolution,minY=viewResolution,maxX=-1,maxY=-1,opaquePixels=0;for(let y=0;y<viewResolution;y++)for(let x=0;x<viewResolution;x++)if(pixels[((row*viewResolution+y)*atlasWidth+view*viewResolution+x)*4+3]>0){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);opaquePixels++;}cells.push({row,treeYawDegrees:row*360/rotationViews,view,angleDegrees:view*45,minX,minY,maxX,maxY,opaquePixels});}
  metadata.cells=cells;metadata.webglError=renderer.getContext().getError();metadata.drawCallsPerView=renderer.info.render.calls;
- const data=atlas.toDataURL('image/png'),image=document.querySelector('#atlas');image.src=data;image.hidden=false;const link=document.querySelector('#download');link.href=data;link.hidden=false;status.textContent=prelitBake?'Atlas precocinado listo · '+bakeMode:normalBake?'Atlas de normales listo; datos lineales, sin iluminación horneada.':'Atlas de ocho vistas listo; transparente, base común, sin luz horneada.';report.textContent=JSON.stringify(metadata,null,2);
+ const data=atlas.toDataURL('image/png'),image=document.querySelector('#atlas');image.src=data;image.hidden=false;const link=document.querySelector('#download');link.href=data;link.hidden=false;status.textContent=prelitBake?'Atlas precocinado listo · '+bakeMode+' · '+rotationViews+' orientaciones del árbol':normalBake?'Atlas de normales listo; datos lineales, sin iluminación horneada.':'Atlas de ocho vistas listo; transparente, base común, sin luz horneada.';report.textContent=JSON.stringify(metadata,null,2);
  }catch(error){errors.push(String(error));status.textContent='ERROR al precalcular';report.textContent=JSON.stringify({...metadata,errors},null,2);}
  };
 }catch(error){errors.push(String(error.stack??error));status.textContent='ERROR de carga';report.textContent=JSON.stringify({errors},null,2);}

@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import test from 'node:test';import assert from 'node:assert/strict';import {atlasViews,lodMix,modelOrigin,billboardRight,NearTreeSelection,treeDensityRank,farDensityFade} from '../tools/experiments/far-impostor-math.js';
 test('far density preserves all faithful objects and converges smoothly and deterministically on approach',()=>{
  const ranks=Array.from({length:10000},(_,i)=>treeDensityRank('tree-'+i,712));
@@ -28,4 +29,27 @@ test('near selection reuses quiet-camera results, excludes the far field, and in
  assert.equal(selection.update(5,0,60,false),true);assert.deepEqual(selection.indices,[]);
  assert.equal(selection.update(5,0,60,true),true);trees[0].x=100;assert.equal(selection.update(5,0,60,true,1),true);assert.deepEqual(selection.indices,[1]);
  trees[1].x=10;assert.equal(selection.update(5,0,60,true,2),true);assert.deepEqual(selection.indices,[1]);assert.equal(selection.update(5,0,60,true,2),false);
+});
+
+test('anisotropic atlas angle agrees with inverse native model transform and screen projection',()=>{
+ const base={x:7,z:-9,sx:.8,sy:1.15,sz:1.25},camera={x:0,z:0};
+ for(let i=0;i<64;i++)for(const yaw of [0,.3,Math.PI/2,Math.PI]){
+  const azimuth=i*Math.PI/32;camera.x=base.x+Math.sin(azimuth)*70;camera.z=base.z+Math.cos(azimuth)*70;
+  const native=new THREE.Matrix4().compose(new THREE.Vector3(),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw),new THREE.Vector3(base.sx,base.sy,base.sz));
+  const local=new THREE.Vector3(camera.x-base.x,0,camera.z-base.z).applyMatrix4(native.clone().invert());
+  const expected=((Math.atan2(local.x,local.z)%(2*Math.PI))+2*Math.PI)%(2*Math.PI),actual=atlasViews(camera,base,yaw);
+  const angle=(actual.first+actual.blend)*2*Math.PI/8;
+  assert.ok(Math.abs(Math.atan2(Math.sin(angle-expected),Math.cos(angle-expected)))<1e-12);
+  const point=new THREE.Vector3(2,0,-3),world=point.clone().applyMatrix4(native),screenRight=new THREE.Vector3(Math.cos(azimuth),0,-Math.sin(azimuth));
+  const r=azimuth-yaw,width=Math.hypot(Math.cos(r)*base.sx,Math.sin(r)*base.sz);
+  assert.ok(Math.abs(world.dot(screenRight)-width*(Math.cos(angle)*point.x-Math.sin(angle)*point.z))<1e-12);
+ }
+ assert.notDeepEqual(atlasViews({x:50,z:50},base,0),atlasViews({x:50,z:50},{...base,sx:1,sz:1},0));
+});
+test('fallback model origin preserves the exact native base under anisotropic scales',()=>{
+ const base={x:35,y:7,z:-91,sx:.8,sy:1.15,sz:1.25},local=[.0515078306,.12,1.27623853];
+ for(let i=0;i<16;i++){
+  const yaw=i*Math.PI/8,o=modelOrigin(base,local,yaw,1),matrix=new THREE.Matrix4().compose(new THREE.Vector3(o.x,o.y,o.z),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw),new THREE.Vector3(base.sx,base.sy,base.sz)),anchor=new THREE.Vector3(...local).applyMatrix4(matrix);
+  assert.ok(anchor.distanceTo(new THREE.Vector3(base.x,base.y,base.z))<1e-12);
+ }
 });

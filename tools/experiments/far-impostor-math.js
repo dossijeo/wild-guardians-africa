@@ -12,7 +12,9 @@ export function farDensityFade(distance,rank,{start=100,end=240,minimum=.15,band
  return Math.max(0,Math.min(1,(density+band-rank)/band));
 }
 export function atlasViews(camera,base,yaw,views=8){
- const angle=((Math.atan2(camera.x-base.x,camera.z-base.z)-yaw)%TAU+TAU)%TAU,index=angle/TAU*views,first=Math.floor(index)%views;
+ const relative=Math.atan2(camera.x-base.x,camera.z-base.z)-yaw,sx=base.sx??base.scale??1,sz=base.sz??base.scale??1;
+ // Inverse-transform the horizontal viewing direction; anisotropic scales change its local angle.
+ const angle=((Math.atan2(Math.sin(relative)*sz,Math.cos(relative)*sx))%TAU+TAU)%TAU,index=angle/TAU*views,first=Math.floor(index)%views;
  return {first,second:(first+1)%views,blend:index-Math.floor(index),nearest:Math.round(index)%views};
 }
 export function lodMix(distance,start,end,ready=1){
@@ -21,8 +23,8 @@ export function lodMix(distance,start,end,ready=1){
  return 1-Math.max(0,Math.min(1,ready))*(1-t*t*(3-2*t));
 }
 export function modelOrigin(base,localBase,yaw,scale){
- const c=Math.cos(yaw),s=Math.sin(yaw);
- return {x:base.x-(localBase[0]*c+localBase[2]*s)*scale,y:base.y-localBase[1]*scale,z:base.z-(-localBase[0]*s+localBase[2]*c)*scale};
+ const c=Math.cos(yaw),s=Math.sin(yaw),sx=base.sx??scale,sy=base.sy??scale,sz=base.sz??scale;
+ return {x:base.x-localBase[0]*sx*c-localBase[2]*sz*s,y:base.y-localBase[1]*sy,z:base.z+localBase[0]*sx*s-localBase[2]*sz*c};
 }
 export function billboardRight(camera,base){
  const dx=camera.x-base.x,dz=camera.z-base.z,length=Math.hypot(dx,dz);

@@ -1,0 +1,3 @@
+# Vista anisotrópica experimental
+
+Yaw45, escala .8/1.15/1.25, cámara [0,14,50], atlas anterior de una orientación con iluminación horneada. Correcta selección angular local entre vistas 6 y 7 con mezcla .724872, en vez de selección 7 exacta basada únicamente en yaw. Anclaje alternativo corregido para escala no uniforme. Modelo/impostor y reportes nativos adjuntos, GL0/consola vacía. Persisten diferencias de perspectiva y luz horneada: no equivalencia pixel a pixel. Prueba matemática independiente contra matrices nativas en tests/far-impostor-math.test.js. Fuentes de esta versión junto al ensayo far-prelit-rotations.
