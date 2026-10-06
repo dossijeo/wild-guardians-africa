@@ -33,3 +33,12 @@ test('worker error, decode error and post failures reject and terminate once',as
   await assert.rejects(promise,/failed/);assert.equal(worker.terminated,1);
  }
 });
+
+test('overlapping regional scenes keep identical native tree IDs and transforms',async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
+ const config={seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)};
+ const region=x=>buildFarSceneData({config,profile:pack.profile,treeBounds:{minX:x-180,maxX:x+180,minZ:-230,maxZ:48},groundBounds:{minX:x-240,maxX:x+240,minZ:-300,maxZ:180}});
+ const a=region(0),b=region(96),byId=new Map(b.trees.map(t=>[t.id,t]));let shared=0;
+ for(const tree of a.trees)if(byId.has(tree.id)){assert.deepEqual(byId.get(tree.id),tree);shared++;}
+ assert.ok(shared>40);assert.equal(new Set(b.trees.map(t=>t.id)).size,b.trees.length);
+});

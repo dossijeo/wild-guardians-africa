@@ -42,6 +42,6 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
   if(!toon)modelMaterial.color.copy(originalColor).multiply(uniforms.uLighting.value);
  }
  function stats(){return {selectionScans:selection.scans,matrixUploads};}
- function dispose(){geometry.dispose();material.dispose();modelGeometry.dispose();modelMaterial.dispose();models.dispose();texture.dispose();}
+ function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry.dispose();modelMaterial.dispose();models.dispose();if(disposeTexture)texture.dispose();}
  return {impostors,models,uniforms,update,stats,dispose};
 }

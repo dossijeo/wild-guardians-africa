@@ -203,3 +203,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Generación experimental de paisaje en worker](qa/far-scene-worker/README.md): árboles/relieve originales idénticos, buffers transferidos y loader cancelable; nueve pruebas y build. Dos cargas nativas mantienen callbacks RAF durante el cálculo. Pendientes streaming regional, epochs, chunks reales y aceptación móvil/visual; sigue fuera de gameplay.
+
+
+[Peticiones regionales del horizonte experimental](qa/far-scene-regions/README.md): única carga activa con epoch/cancelación, residente anterior retenido y reutilización al volver; quince pruebas y cambios regionales nativos sin errores. Árboles de solapamiento idénticos. Pendientes conexión automática a cámara/chunks, preparación GPU, crossfade y aceptación de relieve/móvil; sigue fuera de gameplay.
