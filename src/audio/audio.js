@@ -233,6 +233,16 @@ export class AudioSystem {
     if(this.context?.state!=='running'){this.workers?.dispose();return;}
     this.workers??=new WorkerAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.workers.update(state,options);
   }
+  updateFarmActors(state,options={}){
+    if(this.context?.state!=='running'||state.pauses?.length||state.result||!state.workers.some(worker=>worker.status==='acting')){
+      this.updateWorkers(state,options);this.updateWork(state,options);this.updateFarm(state,options);return;
+    }
+    // These presentation updates are synchronous and do not mutate gameplay.
+    // Share one lazy lookup only within this call, never by elapsed time: UI
+    // commands may replace tasks without advancing the simulation clock.
+    let tasks;const frameOptions={...options,tasksForFrame:()=>tasks??=new Map(state.tasks.map(task=>[task.id,task]))};
+    this.updateWorkers(state,frameOptions);this.updateWork(state,frameOptions);this.updateFarm(state,frameOptions);
+  }
   updateWork(state,options={}){
     if(this.context?.state!=='running'){this.work?.dispose();return;}
     this.work??=new WorkAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source));this.work.update(state,options);

@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Índice de audio compartido durante actividad](qa/audio-task-frame/README.md): tres sistemas agrícolas reutilizan una FIFO local a la llamada, con validación viva de descargas tardías. 431 pruebas y build; cuatro perfiles pagan y entregan sobre terreno nativo con cues/liberaciones idénticos. CPU aislada menor durante actividad, pequeño coste del coordinador en reposo; efecto en frametime/móvil pendiente.
+
 [Respaldo de pantalla según política del iframe](qa/wake-policy/README.md): evita solicitudes nativas destinadas al rechazo e inicia directamente el vídeo desde el gesto. 16 pruebas, build y rutas nativa/iframe reales correctas; aceptación física Pixel/Chrome/itch.io todavía pendiente.
 
 [Índices de audio agrícola diferidos](qa/farm-audio-idle-index/README.md): regadera/contactos omiten la FIFO sin trabajadores actuando, manteniendo limpieza de voces y transporte de cajas. 423 pruebas de audio y build correctos; cuatro lotes CPU por caso muestran ahorro aislado en reposo/caminata/transporte/huida y pequeñas diferencias desfavorables durante actividad. No acredita FPS, reproducción móvil ni cierre del barrido SFX.

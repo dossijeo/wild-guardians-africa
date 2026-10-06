@@ -18,12 +18,12 @@ export class WorkerAudio {
     entry.validActor=validActor;let pending;try{pending=this.play(id,{bus:'world',family:'worker-voice',emitter:worker.id,gain:(reaction?.45:.25)/(1+(distance/24)**2),isCurrent});}catch{return;}
     Promise.resolve(pending).then(source=>{if(!source)return;if(!isCurrent()){this.stopVoice(source);return;}entry.voice=source;entry.validActor=validActor;const ended=source.onended;source.onended=()=>{ended?.();if(entry.voice===source){entry.voice=null;entry.validActor=null;}};}).catch(()=>{});
   }
-  update(state,{listener}={}){
+  update(state,{listener,tasksForFrame}={}){
     if(this.stateRef&&this.stateRef!==state||this.elapsed!==null&&state.elapsed<this.elapsed)this.dispose();
     if(state.pauses?.length||state.result){this.dispose();return;}
     const dt=this.elapsed===null?0:state.elapsed-this.elapsed,continuous=dt>0&&dt<=.25,seen=new Set();this.stateRef=state;
     // Do not build a task index unless a worker currently owns a task.
-    const tasks=state.workers.some(w=>eligible(w)&&w.taskId)?new Map(state.tasks.map(t=>[t.id,t])):null;
+    const tasks=state.workers.some(w=>eligible(w)&&w.taskId)?tasksForFrame?.()??new Map(state.tasks.map(t=>[t.id,t])):null;
     for(const worker of state.workers){
       if(!eligible(worker))continue;seen.add(worker.id);
       const previous=this.entries.get(worker.id),entry=previous??{ticket:0,voice:null,effortDone:true,fleeDone:true,nextEffort:0};this.entries.set(worker.id,entry);

@@ -1,0 +1,50 @@
+{
+  "node": "v20.11.0",
+  "scope": "same production modules, isolated CPU, 100 workers and 1000 tasks",
+  "warmup": 100,
+  "samples": 500,
+  "cases": [
+    {
+      "status": "idle",
+      "separate": {
+        "medianMs": 0.035699999999962984,
+        "p95Ms": 0.09249999999997272
+      },
+      "shared": {
+        "medianMs": 0.04410000000001446,
+        "p95Ms": 0.09260000000000446
+      }
+    },
+    {
+      "status": "walking",
+      "separate": {
+        "medianMs": 0.15059999999994034,
+        "p95Ms": 0.2758000000000038
+      },
+      "shared": {
+        "medianMs": 0.15070000000002892,
+        "p95Ms": 0.2777000000000953
+      }
+    },
+    {
+      "status": "acting",
+      "separate": {
+        "medianMs": 0.394800000000032,
+        "p95Ms": 0.786200000000008
+      },
+      "shared": {
+        "medianMs": 0.21749999999997272,
+        "p95Ms": 0.3285000000000764
+      }
+    }
+  ],
+  "sourceHashes": {
+    "src/app/main.js": "5ebbe6b0bfe12117f8819f82abd48051aa489a26eca6d87feed99c6e7c934cb1",
+    "src/audio/audio.js": "8ef4b834baf7b0485635f73b1baff9bec6f9fb43f793a91a2e3a8b4406340fdd",
+    "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
+    "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
+    "src/audio/farm-contact-audio.js": "15de7934842caaeb0c4b5bee6a2e4f4d84d621a98b384d668addf460b444ba12",
+    "tests/audio-task-frame.test.js": "aa3ccfca8beb0509bba0af591fb9c16cbce686a7392b09c3d320cb48349260f3",
+    "tools/bench_audio_task_frame.mjs": "63225f2727529ff69ab96653bc1543d23a25942f59904a8658c961ea508c34a3"
+  }
+}
