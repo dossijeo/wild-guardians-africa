@@ -1,4 +1,4 @@
-import {nativeFarRenderSignature} from './native-far-render-signature.js';
+import {nativeFarRenderSignature,nativeFarPackingSignature} from './native-far-render-signature.js';
 import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
@@ -19,7 +19,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
  // Those versions must not invalidate the preparation that enabled that fade.
  const errors=[],coverage=new NativeTreeCoverage(slot),signature=()=>nativeFarRenderSignature(world,slot);
  const frustum=new Frustum(),vp=new Matrix4();
- const prepared=new NativePreparedTreeCoverage(coverage,signature),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
+ const prepared=new NativePreparedTreeCoverage(coverage,signature,record=>nativeFarPackingSignature(world,record)),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
  const stats={regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,errors};
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
@@ -48,7 +48,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
    }catch(error){if(!closed){if(cancelled())stats.stalePreparations++;else errors.push(String(error));}}
   }).finally(()=>busy=false);
  }
- const adapter={layer,stats,enabled:true,update(dt){
+ const adapter={layer,stats,enabled:true,readinessDiagnosis(id){return {coverage:coverage.has(id),prepared:prepared.has(id),nativeRevision:coverage.revision,preparedRevision:prepared.revision,renderSignature:signature(),proofSignature:prepared.renderSignature,batches:[...coverage.batches].filter(([,record])=>record.ids.has(id)).map(([batch,record])=>({stamp:record.stamp,accepted:prepared.prepared.get(batch)===record,level:record.level,resourceSignature:nativeFarPackingSignature(world,record),levels:record.batch.meshes.map(m=>({count:m.count,visible:m.visible,matrixVersion:m.instanceMatrix.version}))}))};},update(dt){
   if(closed)return;fog.color.copy(fogDay).lerp(fogNight,skyNight(world.state));world.scene.fog=fog;layer.current?.prototype.updateGroundBounds?.();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&group.userData.farPropsVisible!==false&&frustum.intersectsBox(nativeChunkBounds(group))));

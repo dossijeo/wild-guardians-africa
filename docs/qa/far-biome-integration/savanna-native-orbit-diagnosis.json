@@ -1,0 +1,405 @@
+{
+  "revision": "d4bde94 + bounded QA trace",
+  "report": {
+    "loaded": true,
+    "benchmark": null,
+    "motion": {
+      "mode": "orbit",
+      "age": 11.610600000000012,
+      "hold": 0,
+      "done": false,
+      "tree": "0:9:2",
+      "treePosition": [
+        129.92206394326368,
+        29.92956575309914
+      ],
+      "minimumDistance": 39.99999999999997,
+      "nearFrames": 191,
+      "nearReadyFrames": 109,
+      "nearSeconds": 7.619500000000011,
+      "nearReadySeconds": 4.308099999999995,
+      "nearReadinessDrops": 4,
+      "transitionFrames": 301,
+      "transitionReadyFrames": 177,
+      "transitionReadinessDrops": [
+        {
+          "age": 3.460200000000005,
+          "distance": 39.99999999999999,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "coverage": true,
+            "prepared": false,
+            "nativeRevision": 12,
+            "preparedRevision": 23,
+            "renderSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:a09dc218-ddce-4c03-be21-2bbc21429aca:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "proofSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:a09dc218-ddce-4c03-be21-2bbc21429aca:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "batches": [
+              {
+                "stamp": "1|1:true:true:1|1:true:true:2|0:true:true:0",
+                "accepted": false,
+                "levels": [
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "age": 3.726200000000005,
+          "distance": 40,
+          "from": 0.11649999767541885,
+          "to": 0,
+          "diagnosis": {
+            "coverage": true,
+            "prepared": false,
+            "nativeRevision": 13,
+            "preparedRevision": 25,
+            "renderSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:d3dac4b5-f371-47e0-a1c3-78c0a254a6e5:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "proofSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:a09dc218-ddce-4c03-be21-2bbc21429aca:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "batches": [
+              {
+                "stamp": "1|0:true:true:2|2:true:true:3|0:true:true:0",
+                "accepted": false,
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 3
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "age": 4.009200000000009,
+          "distance": 40,
+          "from": 0.14990000426769257,
+          "to": 0,
+          "diagnosis": {
+            "coverage": true,
+            "prepared": false,
+            "nativeRevision": 14,
+            "preparedRevision": 29,
+            "renderSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:d3dac4b5-f371-47e0-a1c3-78c0a254a6e5:e4297739-5a89-475f-9773-967871ff3d6b:3|0:2:e32b0d86-e8b9-4c37-aab5-3ea0f86ac773:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "proofSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:d3dac4b5-f371-47e0-a1c3-78c0a254a6e5:e4297739-5a89-475f-9773-967871ff3d6b:3|0:2:e32b0d86-e8b9-4c37-aab5-3ea0f86ac773:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "batches": [
+              {
+                "stamp": "1|0:true:true:2|2:true:true:3|0:true:true:0",
+                "accepted": false,
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 3
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "age": 6.088900000000003,
+          "distance": 40,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "coverage": true,
+            "prepared": false,
+            "nativeRevision": 22,
+            "preparedRevision": 43,
+            "renderSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:5f02065e-8b01-44a0-a450-5e521e88ea87:e4297739-5a89-475f-9773-967871ff3d6b:3|0:2:bd8a4d7b-90be-4d27-9d86-bf0cbc80379c:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "proofSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:5f02065e-8b01-44a0-a450-5e521e88ea87:e4297739-5a89-475f-9773-967871ff3d6b:3|0:2:bd8a4d7b-90be-4d27-9d86-bf0cbc80379c:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "batches": [
+              {
+                "stamp": "1|0:true:true:2|2:true:true:3|0:true:true:0",
+                "accepted": false,
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 3
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "age": 10.87880000000001,
+          "distance": 39.99999999999999,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "coverage": true,
+            "prepared": false,
+            "nativeRevision": 31,
+            "preparedRevision": 60,
+            "renderSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:5f02065e-8b01-44a0-a450-5e521e88ea87:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "proofSignature": "0:0|0:0:b35fb965-79f0-48e0-9621-0da5942e1fc1:e4297739-5a89-475f-9773-967871ff3d6b:3|0:1:5f02065e-8b01-44a0-a450-5e521e88ea87:e4297739-5a89-475f-9773-967871ff3d6b:3",
+            "batches": [
+              {
+                "stamp": "1|0:true:true:2|2:true:true:3|0:true:true:0",
+                "accepted": false,
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 3
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "firstReadyAt": 1.1811000000000058,
+      "initial": [
+        {
+          "regions": 1,
+          "nativePreparations": 1,
+          "stalePreparations": 1,
+          "preparationAttempts": 2,
+          "fencedPreparations": 1,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 5,
+          "textureUploads": 0,
+          "errors": [],
+          "coverage": 7,
+          "prepared": 7
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 1,
+          "stalePreparations": 1,
+          "preparationAttempts": 2,
+          "fencedPreparations": 1,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 5,
+          "textureUploads": 0,
+          "errors": [],
+          "coverage": 4,
+          "prepared": 4
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 1,
+          "stalePreparations": 1,
+          "preparationAttempts": 2,
+          "fencedPreparations": 1,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 5,
+          "textureUploads": 0,
+          "errors": [],
+          "coverage": 1,
+          "prepared": 1
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 1,
+          "stalePreparations": 1,
+          "preparationAttempts": 2,
+          "fencedPreparations": 1,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 5,
+          "textureUploads": 0,
+          "errors": [],
+          "coverage": 1,
+          "prepared": 1
+        }
+      ],
+      "ready": {
+        "ready": 0.6151999831199646,
+        "enabled": true
+      }
+    },
+    "biome": "sabana",
+    "quality": "media",
+    "culture": "mapungubwe",
+    "enabled": true,
+    "camera": [
+      110.53529690102309,
+      25.669755593985997,
+      -5.058335922335679
+    ],
+    "chunks": 25,
+    "night": 0,
+    "render": {
+      "calls": 55,
+      "triangles": 856322
+    },
+    "gpuMemory": {
+      "geometries": 106,
+      "textures": 61
+    },
+    "reportedJSHeapOnly": {
+      "used": 287813587,
+      "total": 367991647,
+      "limit": 4395630592
+    },
+    "programs": 55,
+    "resources": {
+      "species": 4,
+      "estimatedAtlasTextureBytes": 44739242.666666664,
+      "estimatedBackdropTextureBytes": 5592405.333333333,
+      "errors": []
+    },
+    "residentRange": null,
+    "visualRange": 1,
+    "visibleChunks": 25,
+    "propChunks": 9,
+    "pickMeshes": 25,
+    "logicalBounds": [
+      -24,
+      -120,
+      216,
+      120
+    ],
+    "visibleBounds": [
+      -24,
+      -120,
+      216,
+      120
+    ],
+    "removed": null,
+    "layers": [
+      {
+        "slot": 0,
+        "key": "96:0",
+        "trees": 635,
+        "ready": 0,
+        "preparations": 24,
+        "coverage": 9,
+        "prepared": 9,
+        "stale": 3,
+        "attempts": 28,
+        "fenced": 25,
+        "rejectedPacking": 1,
+        "signatureChanges": 9,
+        "packingChanges": 33,
+        "textureUploads": 0,
+        "cachedTextures": 125,
+        "errors": []
+      },
+      {
+        "slot": 1,
+        "key": "96:0",
+        "trees": 370,
+        "ready": 4,
+        "preparations": 10,
+        "coverage": 4,
+        "prepared": 4,
+        "stale": 2,
+        "attempts": 12,
+        "fenced": 10,
+        "rejectedPacking": 0,
+        "signatureChanges": 8,
+        "packingChanges": 14,
+        "textureUploads": 0,
+        "cachedTextures": 50,
+        "errors": []
+      },
+      {
+        "slot": 2,
+        "key": "96:0",
+        "trees": 129,
+        "ready": 2,
+        "preparations": 10,
+        "coverage": 2,
+        "prepared": 2,
+        "stale": 1,
+        "attempts": 11,
+        "fenced": 10,
+        "rejectedPacking": 0,
+        "signatureChanges": 9,
+        "packingChanges": 12,
+        "textureUploads": 0,
+        "cachedTextures": 50,
+        "errors": []
+      },
+      {
+        "slot": 3,
+        "key": "96:0",
+        "trees": 207,
+        "ready": 0,
+        "preparations": 10,
+        "coverage": 2,
+        "prepared": 2,
+        "stale": 2,
+        "attempts": 12,
+        "fenced": 10,
+        "rejectedPacking": 0,
+        "signatureChanges": 11,
+        "packingChanges": 12,
+        "textureUploads": 0,
+        "cachedTextures": 50,
+        "errors": []
+      }
+    ],
+    "errors": [],
+    "webglError": 0
+  }
+}
