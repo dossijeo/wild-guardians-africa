@@ -1,0 +1,119 @@
+{
+  "scope": "Six native populated farm raid fixtures at 600 steps each, plus six paid first-day farms at 2000 steps each, full serialized state checked every step against an explicit frozen reference. No rendering, audio, frame timing or full campaign acceptance.",
+  "rows": [
+    {
+      "phase": "night-populated-raid",
+      "biome": "sabana",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "sabana",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 8,
+      "referenceQueries": 23,
+      "candidateQueries": 21,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "night-populated-raid",
+      "biome": "gran-rio",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "gran-rio",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 8,
+      "referenceQueries": 23,
+      "candidateQueries": 21,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "night-populated-raid",
+      "biome": "manglares",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "manglares",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 8,
+      "referenceQueries": 27,
+      "candidateQueries": 25,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "night-populated-raid",
+      "biome": "volcanes",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "volcanes",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 8,
+      "referenceQueries": 23,
+      "candidateQueries": 21,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "night-populated-raid",
+      "biome": "gran-canon",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "gran-canon",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 2,
+      "referenceQueries": 120,
+      "candidateQueries": 118,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "night-populated-raid",
+      "biome": "desierto",
+      "steps": 600,
+      "referenceQueries": 3,
+      "candidateQueries": 3,
+      "fullStateEqual": true
+    },
+    {
+      "phase": "paid-daytime-work",
+      "biome": "desierto",
+      "steps": 2000,
+      "plants": 8,
+      "workers": 2,
+      "irrigated": 8,
+      "referenceQueries": 25,
+      "candidateQueries": 23,
+      "fullStateEqual": true
+    }
+  ]
+}

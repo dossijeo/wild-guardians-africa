@@ -1,6 +1,7 @@
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
 import {navigationPathKey} from './raid-navigation-warmth.js';
+import {navigationQueryResult,rememberNavigationQuery} from './navigation-query-scope.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
@@ -186,9 +187,11 @@ export class Navigation {
     if(this.failedPaths.has(key))return null;
     const prepared=this.preparedPaths&&this.preparedPaths.version===this.version&&this.preparedPaths.entries.get(key);
     if(prepared)return prepared.map(p=>({...p}));
+    const reused=navigationQueryResult(this,key);if(reused)return reused;
     const found=this.findPath(start,end,radius,ignore,worker,margin);
     const result=found&&worker?this.smoothPath(start,found,radius,ignore,worker):found;
     if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
+    if(result)rememberNavigationQuery(this,key,result);
     return result;
   }
   smoothPath(start,path,radius,ignore,worker){

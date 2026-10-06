@@ -1,0 +1,23 @@
+{
+  "node": "v20.11.0",
+  "scope": "Isolated repeated exact native-terrain route queries from the integrated stress trace, twice per scope. Ten timed samples after three warmups, alternating order, setup excluded, complete returned paths compared. This repetition pattern is a diagnostic, not a frame/GPU/mobile benchmark.",
+  "inputs": 11,
+  "searches": {
+    "reference": 286,
+    "reused": 143
+  },
+  "timing": {
+    "reference": {
+      "samples": 10,
+      "minMs": 79.34339999999975,
+      "medianMs": 88.5498,
+      "maxMs": 106.29410000000007
+    },
+    "reused": {
+      "samples": 10,
+      "minMs": 40.23729999999978,
+      "medianMs": 45.47420000000011,
+      "maxMs": 60.463900000000194
+    }
+  }
+}

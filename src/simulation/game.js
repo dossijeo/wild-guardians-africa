@@ -5,6 +5,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
+import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
@@ -554,6 +555,9 @@ function prepareClockEvents(s,nav){
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
 }
 export function tick(s,seconds,nav) {
+  return withNavigationQueries(nav,()=>tickScoped(s,seconds,nav));
+}
+function tickScoped(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {

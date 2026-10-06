@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+ok 1 - paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+  ---
+  duration_ms: 853.6762
+  ...
+# Subtest: real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+ok 2 - real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+  ---
+  duration_ms: 508.8248
+  ...
+# Subtest: a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+ok 3 - a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+  ---
+  duration_ms: 480.8678
+  ...
+# Subtest: crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+ok 4 - crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+  ---
+  duration_ms: 401.996
+  ...
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 5 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 11.0048
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 6 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 11.2954
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 7 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 264.6473
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 8 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 2.9401
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 9 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 46.5015
+  ...
+# Subtest: successful exact queries are shared only inside the synchronous scope, with independent waypoints
+ok 10 - successful exact queries are shared only inside the synchronous scope, with independent waypoints
+  ---
+  duration_ms: 4.7591
+  ...
+# Subtest: geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+ok 11 - geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+  ---
+  duration_ms: 5.4807
+  ...
+# Subtest: failed query rules still prevail and throwing work always releases scope
+ok 12 - failed query rules still prevail and throwing work always releases scope
+  ---
+  duration_ms: 1.0192
+  ...
+# Subtest: temporary memory is bounded by route count and waypoint count
+ok 13 - temporary memory is bounded by route count and waypoint count
+  ---
+  duration_ms: 24.9091
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 14 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 10.6258
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 15 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 2.2483
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 16 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.8634
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 17 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 6.8032
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 18 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 83.3449
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 19 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 1240.0782
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 20 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.5214
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 21 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 1.092
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 22 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 1.2775
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 23 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 5.5164
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 24 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.5944
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 25 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 137.408
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task
+ok 26 - new paid contract walks directly towards the first FIFO task
+  ---
+  duration_ms: 47.0797
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task after reload
+ok 27 - new paid contract walks directly towards the first FIFO task after reload
+  ---
+  duration_ms: 7.2289
+  ...
+# Subtest: raid survivors keep their deliberate return to the centre and do not become new contracts
+ok 28 - raid survivors keep their deliberate return to the centre and do not become new contracts
+  ---
+  duration_ms: 3.7862
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2585.7496
