@@ -1,6 +1,11 @@
 import {containsPoint} from './footprints.js';
 export const FLUID_PLACEMENT_REASON='No se puede construir sobre agua o lava';
-export function fluidAt(field,x,z){return field?.waterInfo?field.waterInfo(x,z).inside:field?.blocked?.(x,z,0)??false;}
+export function fluidAt(field,x,z){
+ // Mangrove occupancy is dominated by its mask; retain the original query
+ // there because the boolean variant did not improve the measured cost.
+ if(field?.wetland&&field.waterInfo)return field.waterInfo(x,z).inside;
+ return field?.fluidInside?field.fluidInside(x,z):field?.waterInfo?field.waterInfo(x,z).inside:field?.blocked?.(x,z,0)??false;
+}
 export function footprintFluidSample(field,polygon){
  for(const p of polygon)if(fluidAt(field,p.x,p.z))return p;
  const xs=polygon.map(p=>p.x),zs=polygon.map(p=>p.z),step=.25;

@@ -1,0 +1,318 @@
+{
+  "scope": "Native CPU fluid probes through the actual old and new fluidAt functions, original full-query occupancy verified at each point before measurement; three warmups and ten alternating samples. Mangrove retains the full query. No GPU, mobile, FPS or image claim.",
+  "referenceRoot": ".cache/fluid-inside-513317c-reference",
+  "rows": [
+    {
+      "biome": "sabana",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 0,
+      "medianMs": {
+        "complete": 15.132900000000006,
+        "boolean": 5.259849999999972
+      },
+      "samples": [
+        {
+          "complete": 15.963899999999967,
+          "boolean": 5.515800000000013
+        },
+        {
+          "boolean": 6.232299999999896,
+          "complete": 16.707799999999907
+        },
+        {
+          "complete": 16.539800000000014,
+          "boolean": 5.102499999999964
+        },
+        {
+          "boolean": 3.5289999999999964,
+          "complete": 14.264800000000037
+        },
+        {
+          "complete": 15.013500000000022,
+          "boolean": 3.2564000000000988
+        },
+        {
+          "boolean": 6.338499999999954,
+          "complete": 14.89160000000004
+        },
+        {
+          "complete": 13.606499999999983,
+          "boolean": 4.580400000000054
+        },
+        {
+          "boolean": 5.41719999999998,
+          "complete": 15.252299999999991
+        },
+        {
+          "complete": 15.952699999999936,
+          "boolean": 4.169399999999996
+        },
+        {
+          "boolean": 6.439100000000053,
+          "complete": 13.658600000000092
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 0,
+      "medianMs": {
+        "complete": 14.817499999999995,
+        "boolean": 5.50529999999992
+      },
+      "samples": [
+        {
+          "complete": 14.037800000000061,
+          "boolean": 5.003999999999905
+        },
+        {
+          "boolean": 5.48739999999998,
+          "complete": 14.460599999999886
+        },
+        {
+          "complete": 15.536299999999983,
+          "boolean": 6.071799999999939
+        },
+        {
+          "boolean": 6.156600000000026,
+          "complete": 16.33499999999981
+        },
+        {
+          "complete": 16.22739999999999,
+          "boolean": 5.523199999999861
+        },
+        {
+          "boolean": 5.987300000000005,
+          "complete": 14.542599999999993
+        },
+        {
+          "complete": 12.505100000000084,
+          "boolean": 5.442299999999932
+        },
+        {
+          "boolean": 5.531799999999976,
+          "complete": 15.958499999999958
+        },
+        {
+          "complete": 13.727300000000014,
+          "boolean": 5.044200000000046
+        },
+        {
+          "boolean": 5.03430000000003,
+          "complete": 15.092399999999998
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 35100,
+      "medianMs": {
+        "complete": 8.187750000000051,
+        "boolean": 8.234750000000076
+      },
+      "samples": [
+        {
+          "complete": 7.8215999999999894,
+          "boolean": 7.8960000000001855
+        },
+        {
+          "boolean": 7.941299999999956,
+          "complete": 9.714399999999841
+        },
+        {
+          "complete": 7.746200000000044,
+          "boolean": 8.477600000000166
+        },
+        {
+          "boolean": 7.914899999999761,
+          "complete": 7.545399999999972
+        },
+        {
+          "complete": 8.662699999999859,
+          "boolean": 8.64489999999978
+        },
+        {
+          "boolean": 8.246100000000297,
+          "complete": 8.302999999999884
+        },
+        {
+          "complete": 8.944100000000162,
+          "boolean": 8.223399999999856
+        },
+        {
+          "boolean": 8.498399999999947,
+          "complete": 8.713400000000092
+        },
+        {
+          "complete": 7.7391999999999825,
+          "boolean": 8.017499999999927
+        },
+        {
+          "boolean": 8.581499999999778,
+          "complete": 8.072500000000218
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 0,
+      "medianMs": {
+        "complete": 14.63429999999994,
+        "boolean": 4.150750000000016
+      },
+      "samples": [
+        {
+          "complete": 15.183700000000044,
+          "boolean": 3.0833000000002357
+        },
+        {
+          "boolean": 4.87059999999974,
+          "complete": 11.58159999999998
+        },
+        {
+          "complete": 14.864900000000034,
+          "boolean": 5.329299999999876
+        },
+        {
+          "boolean": 4.766299999999774,
+          "complete": 12.529599999999846
+        },
+        {
+          "complete": 15.697500000000218,
+          "boolean": 3.899699999999939
+        },
+        {
+          "boolean": 3.7008999999998196,
+          "complete": 10.749899999999798
+        },
+        {
+          "complete": 16.421600000000126,
+          "boolean": 3.5860999999999876
+        },
+        {
+          "boolean": 3.451300000000174,
+          "complete": 13.544300000000021
+        },
+        {
+          "complete": 15.368799999999737,
+          "boolean": 4.940100000000257
+        },
+        {
+          "boolean": 4.401800000000094,
+          "complete": 14.403699999999844
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 65260,
+      "medianMs": {
+        "complete": 7.9105500000000575,
+        "boolean": 5.7396000000001095
+      },
+      "samples": [
+        {
+          "complete": 9.040500000000065,
+          "boolean": 5.788100000000213
+        },
+        {
+          "boolean": 5.343800000000101,
+          "complete": 7.181600000000344
+        },
+        {
+          "complete": 6.535499999999956,
+          "boolean": 4.187799999999697
+        },
+        {
+          "boolean": 5.691100000000006,
+          "complete": 7.669300000000021
+        },
+        {
+          "complete": 5.921699999999873,
+          "boolean": 6.310199999999895
+        },
+        {
+          "boolean": 6.396099999999933,
+          "complete": 9.935399999999845
+        },
+        {
+          "complete": 6.883600000000115,
+          "boolean": 4.373900000000049
+        },
+        {
+          "boolean": 6.397200000000339,
+          "complete": 9.161399999999958
+        },
+        {
+          "complete": 8.151800000000094,
+          "boolean": 5.435199999999895
+        },
+        {
+          "boolean": 5.931700000000092,
+          "complete": 8.866399999999885
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "points": 1089,
+      "repeats": 10,
+      "checksum": 0,
+      "medianMs": {
+        "complete": 0.9914000000003398,
+        "boolean": 0.6145000000001346
+      },
+      "samples": [
+        {
+          "complete": 1.035899999999856,
+          "boolean": 0.6315000000004147
+        },
+        {
+          "boolean": 0.7025000000003274,
+          "complete": 2.027900000000045
+        },
+        {
+          "complete": 0.9945000000006985,
+          "boolean": 0.5779999999995198
+        },
+        {
+          "boolean": 0.5515000000004875,
+          "complete": 0.9551999999994223
+        },
+        {
+          "complete": 0.9479999999994106,
+          "boolean": 0.6383999999998196
+        },
+        {
+          "boolean": 0.5942999999997483,
+          "complete": 1.043399999999565
+        },
+        {
+          "complete": 0.9882999999999811,
+          "boolean": 0.6221999999997934
+        },
+        {
+          "boolean": 0.6068000000004758,
+          "complete": 0.9812000000001717
+        },
+        {
+          "complete": 1.0182999999997264,
+          "boolean": 0.5689000000002125
+        },
+        {
+          "boolean": 0.8042999999997846,
+          "complete": 0.45499999999992724
+        }
+      ]
+    }
+  ]
+}
