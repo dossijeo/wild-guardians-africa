@@ -16,7 +16,6 @@ try{
  world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting('media');await world.load(state,nav,payload);world.render(0);
  const metadata=await json('/docs/qa/far-prelit-lod2-elevation8/day.json'),loader=new THREE.TextureLoader(),texture=await loader.loadAsync('../../docs/qa/far-vegetation-atlas/savanna-acacia-8views.webp'),prelitAtlas={day:await loader.loadAsync('../../docs/qa/far-prelit-lod2-elevation8/day.webp'),night:await loader.loadAsync('../../docs/qa/far-prelit-lod2-elevation8/night.webp'),views:8,rotations:8,resolution:128};
  adapter=await attachNativeFarWorld(world,{metadata,texture,prelitAtlas});
- const enable=()=>{const p=adapter.layer.current?.prototype;if(p){p.uniforms.uDensityEnabled.value=1;p.uniforms.uDensityRange.value.set(180,400);}};enable();
  document.querySelectorAll('button').forEach(b=>b.disabled=false);
  document.querySelector('#phase').onchange=event=>{if(profiling)return;state.time=event.target.value==='day'?180:event.target.value==='dusk'?300+Math.log(2)/2.4:305;};
  document.querySelector('#move').onclick=()=>{world.controls.target.x+=96;world.camera.position.x+=96;world.controls.update();};
@@ -39,9 +38,9 @@ try{
   finally{gpu.dispose();world.renderer.info.autoReset=previousAutoReset;adapter.enabled=true;world.controls.enabled=true;profiling=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}
  };
  document.querySelector('#detach').onclick=()=>{adapter.dispose();document.querySelector('#detach').disabled=true;};
- function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;enable();if(!profiling)world.render(dt);
+ function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;if(!profiling)world.render(dt);
   if(now-lastReport>500){lastReport=now;const current=adapter.layer.current,trees=current?.trees??[],near=trees.filter(t=>Math.hypot(t.x-world.camera.position.x,t.z-world.camera.position.z)<140),ready=near.filter(t=>current.prototype.treeState(t.id).ready===1).length;
-   document.querySelector('#report').textContent=JSON.stringify({loaded:true,benchmark,night:world.toon.uniforms.uNight.value,fogColor:world.scene.fog?.color.getHexString(),camera:world.camera.position.toArray(),chunks:world.chunks.size,regions:adapter.stats.regions,regionKey:current?.key,trees:trees.length,nearTrees:near.length,readyNearTrees:ready,nativePreparations:adapter.stats.nativePreparations,stalePreparations:adapter.stats.stalePreparations,removed,removedState:removed?current?.prototype.treeState(removed):null,prototype:current?.prototype.stats(),detached:!world.farVegetation,errors:[...errors,...adapter.stats.errors],webglError:world.renderer.getContext().getError()},null,2);
+   document.querySelector('#report').textContent=JSON.stringify({loaded:true,benchmark,night:world.toon.uniforms.uNight.value,fogColor:world.scene.fog?.color.getHexString(),camera:world.camera.position.toArray(),chunks:world.chunks.size,regions:adapter.stats.regions,regionKey:current?.key,trees:trees.length,nearTrees:near.length,readyNearTrees:ready,nativePreparations:adapter.stats.nativePreparations,stalePreparations:adapter.stats.stalePreparations,removed,removedState:removed?current?.prototype.treeState(removed):null,landscape:current?{density:current.prototype.uniforms.uDensityRange.value.toArray(),minimum:current.prototype.uniforms.uDensityMinimum.value,fade:current.prototype.uniforms.uDistanceFadeRange.value.toArray()}:null,prototype:current?.prototype.stats(),detached:!world.farVegetation,errors:[...errors,...adapter.stats.errors],webglError:world.renderer.getContext().getError()},null,2);
   }requestAnimationFrame(frame);
  }requestAnimationFrame(frame);
  addEventListener('pagehide',()=>{dead=true;world.dispose();texture.dispose();prelitAtlas.day.dispose();prelitAtlas.night.dispose();},{once:true});
