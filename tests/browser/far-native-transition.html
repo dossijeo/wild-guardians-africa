@@ -35,7 +35,7 @@ try{
  async function prepare(){
   document.querySelector('#prepare').disabled=true;gpuReady=false;controller.setCoverage(prepared,false);const snapshot=prepared.capture(),begin=performance.now();status.textContent='Preparando recursos GPU…';
   try{
-   if(document.querySelector("#bitmap").checked&&!bitmapResources.length){const nativeTextures=new Set(levels.flatMap(source=>Object.values(source.material).filter(value=>value?.isTexture)));for(const t of nativeTextures){const conversion=await textureImageBitmap(t,{cancelled:()=>dead,createBitmap:document.querySelector("#bitmapWorker").checked?(image,options)=>loadTextureBitmap(image.currentSrc||image.src,options,{signal:bitmapLoading.signal}):undefined});bitmapResources.push(conversion);bitmapConversions.push({elapsedMs:conversion.elapsedMs,width:conversion.width,height:conversion.height});await new Promise(resolve=>requestAnimationFrame(resolve));}}
+   if(document.querySelector("#bitmap").checked&&!bitmapResources.length){const nativeTextures=new Set(levels.flatMap(source=>Object.values(source.material).filter(value=>value?.isTexture)));for(const t of nativeTextures){let workerTiming;const conversion=await textureImageBitmap(t,{cancelled:()=>dead,createBitmap:document.querySelector("#bitmapWorker").checked?(image,options)=>loadTextureBitmap(image.currentSrc||image.src,options,{signal:bitmapLoading.signal,onTiming:timing=>workerTiming=timing}):undefined});bitmapResources.push(conversion);bitmapConversions.push({elapsedMs:conversion.elapsedMs,width:conversion.width,height:conversion.height,...(workerTiming?{workerTiming}:{})});await new Promise(resolve=>requestAnimationFrame(resolve));}}
    const textures=new Set([texture,prelit.day,prelit.night]);for(const source of levels)for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);preparedTextures=textures.size;
    preparation=await prepareNativeFarGpu(renderer,groups.root,scene,camera,textures,{cancelled:()=>dead,decodeImages:document.querySelector("#decode").checked});if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;prepared.complete(snapshot);scene.add(groups.root);gpuReady=true;controller.setCoverage(prepared,true);
   }catch(error){errors.push(String(error));status.textContent='Error de preparación';}finally{if(!dead)document.querySelector('#prepare').disabled=profiling;}
@@ -52,7 +52,7 @@ try{
     for(const t of nativeTextures)t.dispose();
     document.querySelector('#bitmap').checked=mode==='Bitmap';document.querySelector('#decode').checked=false;
     lotFrameIntervals=[];await prepare();if(errors.length)throw Error('Preparation lot failed');
-    comparison.lots.push({mode,totalMs:prepareMs,conversionMs:bitmapConversions.reduce((sum,value)=>sum+value.elapsedMs,0),preparation,frameIntervals:lotFrameIntervals,programs:renderer.info.programs.length,webglError:renderer.getContext().getError()});lotFrameIntervals=null;
+    comparison.lots.push({mode,totalMs:prepareMs,conversionMs:bitmapConversions.reduce((sum,value)=>sum+value.elapsedMs,0),preparation,bitmapConversions:[...bitmapConversions],frameIntervals:lotFrameIntervals,programs:renderer.info.programs.length,webglError:renderer.getContext().getError()});lotFrameIntervals=null;
     await new Promise(resolve=>requestAnimationFrame(resolve));
    }
    comparison.done=true;

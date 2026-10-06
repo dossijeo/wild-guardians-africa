@@ -19,3 +19,13 @@ test('an already aborted request never starts a worker',async()=>{
 test('a transfer failure rejects and releases the worker',async()=>{
  const w=worker(),pending=loadTextureBitmap('/image.webp',{}, {workerFactory:()=>w});w.onmessageerror();await assert.rejects(pending,/message failed/);assert.equal(w.terminated,1);assert.equal(w.onmessageerror,null);
 });
+test('worker phase timings are reported without changing bitmap ownership',async()=>{
+ const w=worker(),bitmap={close(){throw Error('Must retain bitmap');}};let timing;
+ const pending=loadTextureBitmap('/image.webp',{}, {workerFactory:()=>w,onTiming:value=>timing=value});
+ const epoch=performance.timeOrigin+performance.now();w.onmessage({data:{bitmap,timing:{receivedEpochMs:epoch,postEpochMs:epoch,fetchHeadersMs:2,fetchBodyMs:3,bitmapMs:4,workerTotalMs:9}}});
+ assert.equal(await pending,bitmap);assert.equal(timing.bitmapMs,4);assert.ok(timing.startupAndDispatchMs>=0);assert.ok(timing.transferAndDeliveryMs>=0);assert.ok(timing.totalMs>=0);
+});
+test('a failed timing observer releases the transferred bitmap and worker',async()=>{
+ const w=worker();let closed=0;const pending=loadTextureBitmap('/image.webp',{}, {workerFactory:()=>w,onTiming:()=>{throw Error('observer failed');}});
+ w.onmessage({data:{bitmap:{close(){closed++;}},timing:{}}});await assert.rejects(pending,/observer failed/);assert.equal(closed,1);assert.equal(w.terminated,1);
+});
