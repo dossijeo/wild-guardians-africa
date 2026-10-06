@@ -1,0 +1,56 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Reservas durante jornadas naturales</title>
+<style>body{margin:0;font:12px system-ui}canvas{display:block;width:100vw;height:100vh}pre{position:fixed;top:0;left:0;max-width:460px;max-height:35vh;overflow:auto;background:#fffdeae8;padding:12px;white-space:pre-wrap}</style>
+<canvas></canvas><pre id="report">Preparando una finca pagada…</pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+const report=document.querySelector('#report'),errors=[],events=[],takes=[],creations=[],plans=[],seen=new Set();let world,closed=false,frame=0;
+addEventListener('error',event=>errors.push(event.message));addEventListener('unhandledrejection',event=>errors.push(String(event.reason)));
+addEventListener('pagehide',()=>{closed=true;world?.dispose();},{once:true});
+try{
+ const biome=new URLSearchParams(location.search).get('biome')??'sabana',pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,biome,slotId:'qa-natural-animal-reserves'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
+ let plantingSequence=0;
+ function plantForDay(){
+  if(state.plants.some(p=>p.alive))return;
+  for(let dz=-6;dz<=6;dz+=1.5)for(let dx=6;dx<=15;dx+=1.5){
+   try{Game.plant(state,'paid-seed-'+(++plantingSequence),'mijo',site.center.x+dx,site.center.z+dz,nav);return;}catch{}
+  }
+  throw Error('No legal seed placement for the paid farm');
+ }
+ plantForDay();Game.openInitialHiring(state);Game.hire(state,'paid-hiring-1',{olderMale:1});
+ world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=error=>errors.push(error.message);world.qualitySetting('media');
+ let downloads=0;const loadModel=world.assets.loader.loadAsync.bind(world.assets.loader);world.assets.loader.loadAsync=(...args)=>{downloads++;return loadModel(...args);};
+ await world.load(state,nav,payload);world.render(0);const initialDownloads=downloads;
+ const create=world.animalPreload.create.bind(world.animalPreload);world.animalPreload.create=(species,entry)=>{const start=performance.now();try{return create(species,entry);}finally{creations.push({day:state.day,time:state.time,frame,species,duringRaid:!!state.raid,cpuMs:performance.now()-start});}};
+ const take=world.animalPreload.take.bind(world.animalPreload);world.animalPreload.take=async species=>{
+  const entry=await world.animalPreload.warm(species),available=new Set([entry.spare,...entry.additional].filter(Boolean).map(r=>r.model.uuid));
+  const rig=await take(species);takes.push({day:state.day,time:state.time,species,fromReserve:available.has(rig?.model.uuid),modelId:rig?.model.uuid});return rig;
+ };
+ let planKey=null;
+ const paint=done=>report.textContent=JSON.stringify({done,day:state.day,time:state.time,completedNights:state.completedNights,frames:frame,result:state.result,plans,takes,creations,events,downloads,initialDownloads,errors},null,2);
+ const started=performance.now();
+ while(!closed&&state.completedNights<2&&!state.result&&frame<3000){
+  if(performance.now()-started>180000)throw Error('Natural two-night QA observation budget exhausted');
+  if(errors.length)throw Error(errors.join('; '));
+  if(state.pauses.includes('hiring')){Game.hire(state,'paid-hiring-'+state.day,{olderMale:1});plantForDay();}
+  if(state.pauses.length)throw Error('Unexpected pause: '+state.pauses.join(','));
+  // Accelerated observation, using normal simulation clock boundaries and
+  // naturally generated plans. Actor readiness follows the production gate.
+  if(world.actorsReady())Game.tick(state,state.raid?.animals.some(a=>a.status!=='gone') ? .25 : 5,nav);
+  world.render(.016);
+  if(state.nightPlan){const key=state.day+':'+state.nightPlan.group.join(',');if(key!==planKey){planKey=key;plans.push({day:state.day,at:state.nightPlan.at,group:[...state.nightPlan.group]});}}
+  for(const event of state.events)if(!seen.has(event.id)){seen.add(event.id);if(['NightStarted','RaidSpawned','AnimalLogicalHit','RaidEnded','Dawn','HiringConfirmed','GameOver'].includes(event.type))events.push({day:state.day,time:state.time,...event});}
+  frame++;if(frame%10===0)paint(false);await new Promise(requestAnimationFrame);
+ }
+ if(closed)throw Error('QA closed');await world.animalReservePreparation;
+ const spareCount=(await world.animalPreload.spares()).length;
+ if(plans.length!==2||spareCount!==5||events.filter(e=>e.type==='RaidEnded').length!==2||events.filter(e=>e.type==='Dawn').length!==2||takes.some(t=>!events.some(e=>e.type==='AnimalLogicalHit'&&e.species===t.species)))throw Error('Missing natural raid or renewal evidence');
+ if(state.result||state.completedNights!==2||takes.length!==2||takes.some(t=>!t.fromReserve)||creations.some(c=>c.duringRaid)||downloads!==initialDownloads||errors.length)throw Error('Natural reserve lifecycle failed');
+ paint(true);const value=JSON.parse(report.textContent);Object.assign(value,{ok:true,spareCount,scope:'Two natural simulation nights, paid center/seeds/daily older male; accelerated tick observation with native WorldScene and actor-readiness gate. Seed 712, Mapungubwe, medium quality, desktop. No manually assigned raid plans or day counters; not a responsible mass-cultivation balance test or phone FPS.'});report.textContent=JSON.stringify(value,null,2);
+}catch(error){if(!closed)report.textContent=JSON.stringify({ok:false,error:error.stack,errors,plans,takes,creations,events},null,2);}
+</script></html>

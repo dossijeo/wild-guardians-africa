@@ -1,0 +1,241 @@
+{
+  "done": true,
+  "day": 3,
+  "time": 0,
+  "completedNights": 2,
+  "frames": 499,
+  "result": null,
+  "plans": [
+    {
+      "day": 1,
+      "at": 370.5022702361457,
+      "group": [
+        "warthog"
+      ]
+    },
+    {
+      "day": 2,
+      "at": 422.6082024590578,
+      "group": [
+        "hyena"
+      ]
+    }
+  ],
+  "takes": [
+    {
+      "day": 1,
+      "time": 375.00000000001705,
+      "species": "warthog",
+      "fromReserve": true,
+      "modelId": "584c900e-ebc0-476c-bbd7-750a3d099924"
+    },
+    {
+      "day": 2,
+      "time": 425.0000000000284,
+      "species": "hyena",
+      "fromReserve": true,
+      "modelId": "7ab6860c-eedb-4f8e-aa64-27695c13bdd2"
+    }
+  ],
+  "creations": [
+    {
+      "day": 1,
+      "time": 412.00000000002547,
+      "frame": 204,
+      "species": "warthog",
+      "duringRaid": false,
+      "cpuMs": 12.099999964237213
+    },
+    {
+      "day": 2,
+      "time": 465.7500000000377,
+      "frame": 472,
+      "species": "hyena",
+      "duringRaid": false,
+      "cpuMs": 15.5
+    }
+  ],
+  "events": [
+    {
+      "day": 1,
+      "time": 4.999999999999998,
+      "id": "event-6",
+      "type": "HiringConfirmed",
+      "count": 1
+    },
+    {
+      "day": 1,
+      "time": 300,
+      "id": "event-15",
+      "type": "NightStarted"
+    },
+    {
+      "day": 1,
+      "time": 392.50000000002103,
+      "id": "event-20",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-18",
+      "targetId": "structure-2",
+      "species": "warthog",
+      "presentation": {
+        "elapsed": 392.4500000000111,
+        "animal": {
+          "x": 85.29751066060587,
+          "z": 3.4555283188127137,
+          "heading": -2.554828195599456
+        },
+        "target": {
+          "x": 83,
+          "z": 0,
+          "kind": "center",
+          "culture": "mapungubwe",
+          "yaw": 0
+        },
+        "shield": null
+      }
+    },
+    {
+      "day": 1,
+      "time": 397.2500000000221,
+      "id": "event-23",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-21",
+      "targetId": "structure-2",
+      "species": "warthog",
+      "presentation": {
+        "elapsed": 397.10000000001213,
+        "animal": {
+          "x": 85.29751066060587,
+          "z": 3.4555283188127137,
+          "heading": -2.554828195599456
+        },
+        "target": {
+          "x": 83,
+          "z": 0,
+          "kind": "center",
+          "culture": "mapungubwe",
+          "yaw": 0
+        },
+        "shield": null
+      }
+    },
+    {
+      "day": 1,
+      "time": 407.00000000002433,
+      "id": "event-25",
+      "type": "RaidEnded"
+    },
+    {
+      "day": 2,
+      "time": 0,
+      "id": "event-26",
+      "type": "Dawn"
+    },
+    {
+      "day": 2,
+      "time": 0,
+      "id": "event-27",
+      "type": "HiringConfirmed",
+      "count": 1
+    },
+    {
+      "day": 2,
+      "time": 300,
+      "id": "event-38",
+      "type": "NightStarted"
+    },
+    {
+      "day": 2,
+      "time": 444.00000000003274,
+      "id": "event-43",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-41",
+      "targetId": "structure-2",
+      "species": "hyena",
+      "presentation": {
+        "elapsed": 1044.0000000000584,
+        "animal": {
+          "x": 84.86539860203997,
+          "z": 3.3459724878259847,
+          "heading": -2.6330052083765705
+        },
+        "target": {
+          "x": 83,
+          "z": 0,
+          "kind": "center",
+          "culture": "mapungubwe",
+          "yaw": 0
+        },
+        "shield": null
+      }
+    },
+    {
+      "day": 2,
+      "time": 447.50000000003354,
+      "id": "event-46",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-44",
+      "targetId": "structure-2",
+      "species": "hyena",
+      "presentation": {
+        "elapsed": 1047.3500000000554,
+        "animal": {
+          "x": 84.86539860203997,
+          "z": 3.3459724878259847,
+          "heading": -2.6330052083765705
+        },
+        "target": {
+          "x": 83,
+          "z": 0,
+          "kind": "center",
+          "culture": "mapungubwe",
+          "yaw": 0
+        },
+        "shield": null
+      }
+    },
+    {
+      "day": 2,
+      "time": 449.0000000000339,
+      "id": "event-49",
+      "type": "AnimalLogicalHit",
+      "attackId": "attack-47",
+      "targetId": "structure-2",
+      "species": "hyena",
+      "presentation": {
+        "elapsed": 1049.000000000054,
+        "animal": {
+          "x": 84.86539860203997,
+          "z": 3.3459724878259847,
+          "heading": -2.6330052083765705
+        },
+        "target": {
+          "x": 83,
+          "z": 0,
+          "kind": "center",
+          "culture": "mapungubwe",
+          "yaw": 0
+        },
+        "shield": null
+      }
+    },
+    {
+      "day": 2,
+      "time": 460.75000000003655,
+      "id": "event-51",
+      "type": "RaidEnded"
+    },
+    {
+      "day": 3,
+      "time": 0,
+      "id": "event-52",
+      "type": "Dawn"
+    }
+  ],
+  "downloads": 8,
+  "initialDownloads": 8,
+  "errors": [],
+  "ok": true,
+  "spareCount": 5,
+  "scope": "Two natural simulation nights, paid center/seeds/daily older male; accelerated tick observation with native WorldScene and actor-readiness gate. Seed 712, Mapungubwe, medium quality, desktop. No manually assigned raid plans or day counters; not a responsible mass-cultivation balance test or phone FPS."
+}
