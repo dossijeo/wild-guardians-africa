@@ -1,0 +1,20 @@
+{
+  "base": "60f21f1",
+  "sourceSha256": {
+    "tests/browser/depth-capture.html": "40be9b7bb3ddd23408e907944411c9a2743054c39df4b5d93688bbfb0baa423c",
+    "tests/browser/noise-volume.js": "e7598e53088cada0cbe13568eee56a990f0e173551a60127456a6ad88e991d21",
+    "src/rendering/depth-recipes.js": "8a4fff986eef87f820ce33852ae475e758315169d64897d2b863ecefef27426a",
+    "src/rendering/standard-depth.js": "7e3bf8084eb74d52e47bab8b670a6e21689f9c79185e5cb3e7d0c565bbcc0e6c",
+    "src/rendering/depth-capture.js": "68ba7b06c02b000eb13f40d189442ffb7b5dff94bb31620de06e1b2058057900",
+    "src/rendering/buildings.js": "1223b88afefaa4dd5a21e6ac150da56f4c208ad8afb2521a0d195e49093fccd0"
+  },
+  "evidenceSha256": {
+    "depth-canyon-collapse.json": "4d268f394e80876197f0ee244501dc47d0c903c933c1bf79ab2e2d263cd2acc4",
+    "depth-canyon-intact.json": "e0d4e38affa02a37d7bb04584885dc9d0980c320c76d6e0407deb9d6fc51c350",
+    "depth-mangrove-collapse.json": "32f04cd43f3217b9dbd19590a62e2255f57966da2fb0ebfc7a9b1b3db3f8cd9f",
+    "depth-mangrove-intact.json": "3bec519433d850a9b96167639976c9cacd8dd48676feee286fef00b1996fa925",
+    "DEPTH.md": "0a8c4a9f6787b0bea44088ff76e59eeabf6ef564bb13e31cc032c7ca4c6ac995",
+    "depth-canyon-collapse.png": "27cec146b3503c3e12f78db3ab9b29d71236dc5675e49ce1e6cfb2b14bdc1647"
+  },
+  "scope": "Four controlled paused pairs; unchanged nonconstant depth and logical state. Not all stages/poses, shadow/color, mobile, or performance acceptance."
+}

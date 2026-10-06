@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Profundidad especializada</title>
 <style>body{margin:0;font:13px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:absolute;background:#fff9edee;padding:10px;z-index:2;max-width:360px}pre{max-height:160px;overflow:auto}</style>
 <header>Comparación de profundidad con reloj pausado y assets originales. La receta experimental de interior y ceniza requiere auxiliary=1. El daño es una entrada controlada de QA.
-<button id="compare" disabled>Comparar profundidad</button><button id="visible" disabled>Comparar recorrido visible</button><button id="repeat" disabled>Repetir ruta original</button><button id="damage" disabled>Añadir 40 de daño</button><button id="grow" disabled>Cambiar crecimiento</button><button id="work" disabled>Buscar VFX de trabajo</button><button id="focus-worker" disabled>Enfocar trabajador</button><button id="gpu" disabled>Medir GPU del pase</button><label>Ruta especializada<select id="scope"><option value="all">Todo</option><option value="auxiliary">Solo interior y ceniza</option><option value="without-props">Sin props recortados</option><option value="only-props">Solo props recortados</option><option value="alpha">Solo alpha test</option><option value="opaque">Sin alpha test</option><option value="without-stock-alpha">Sin alpha stock</option></select></label><label><input id="order" type="checkbox">Conservar orden original</label><label>Daño visual preparado<select id="visual-damage"><option value="0">0 %</option><option value="0.2">20 %</option><option value="0.6">60 %</option><option value="0.85">85 % colapso</option><option value="0.98">98 % colapso</option><option value="1">100 % ruina</option></select></label><button id="rotate" disabled>Girar vista</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas>
+<button id="compare" disabled>Comparar profundidad</button><button id="noise-volume-depth" disabled>Comparar profundidad con textura de ruido</button><button id="visible" disabled>Comparar recorrido visible</button><button id="repeat" disabled>Repetir ruta original</button><button id="damage" disabled>Añadir 40 de daño</button><button id="grow" disabled>Cambiar crecimiento</button><button id="work" disabled>Buscar VFX de trabajo</button><button id="focus-worker" disabled>Enfocar trabajador</button><button id="gpu" disabled>Medir GPU del pase</button><label>Ruta especializada<select id="scope"><option value="all">Todo</option><option value="auxiliary">Solo interior y ceniza</option><option value="without-props">Sin props recortados</option><option value="only-props">Solo props recortados</option><option value="alpha">Solo alpha test</option><option value="opaque">Sin alpha test</option><option value="without-stock-alpha">Sin alpha stock</option></select></label><label><input id="order" type="checkbox">Conservar orden original</label><label>Daño visual preparado<select id="visual-damage"><option value="0">0 %</option><option value="0.2">20 %</option><option value="0.6">60 %</option><option value="0.85">85 % colapso</option><option value="0.98">98 % colapso</option><option value="1">100 % ruina</option></select></label><button id="rotate" disabled>Girar vista</button><output id="status">Cargando…</output><pre id="data"></pre></header><canvas id="world"></canvas>
 <script type="module">
 import * as THREE from 'three';
 import * as Game from '../../src/simulation/game.js';
@@ -10,6 +10,7 @@ import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
+import {FineNoiseVolume} from './noise-volume.js';
 import {GpuTimer} from './gpu-timer.js';
 import {nativeDepthRecipe} from '../../src/rendering/depth-recipes.js';
 import {serialize} from '../../src/persistence/snapshots.js';
@@ -44,6 +45,21 @@ async function measure(optimized){
 }
 document.querySelector('#gpu').onclick=async()=>{benchRunning=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);try{const size=world.renderer.getDrawingBufferSize(new THREE.Vector2());benchmark={width:size.x,height:size.y,baseline:await measure(false),specialized:await measure(true)};}catch(e){showError(e);}finally{world.destructionPass.optimizedDepth=true;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}};
 function compare(optimizedMode=true){world.destructionPass.optimizedDepth=false;world.render(0);const baseline=readDepth();world.destructionPass.optimizedDepth=optimizedMode;world.render(0);const optimized=readDepth();world.destructionPass.optimizedDepth=true;let differentBytes=0,differentPixels=0,nonUniformPixels=0,maxDepthDelta=0;const differences=[];const unpack=(a,i)=>a[i]/256+a[i+1]/65536+a[i+2]/16777216+a[i+3]/(255*16777216);for(let i=0;i<baseline.length;i+=4){let different=false;for(let j=0;j<4;j++)if(baseline[i+j]!==optimized[i+j]){differentBytes++;different=true;}if(different){if(differences.length<20)differences.push({x:(i/4)%world.destructionPass.smokeDepth.width,y:Math.floor(i/4/world.destructionPass.smokeDepth.width),baseline:unpack(baseline,i),optimized:unpack(optimized,i)});differentPixels++;maxDepthDelta=Math.max(maxDepthDelta,Math.abs(unpack(baseline,i)-unpack(optimized,i)));}if([0,1,2,3].some(j=>baseline[i+j]!==baseline[j]))nonUniformPixels++;}if(!nonUniformPixels)throw new Error("Constant depth readback cannot prove equivalence");result={mode:optimizedMode?"original-vs-specialized":"original-vs-original",differentPixels,differentBytes,maxDepthDelta,differences,nonUniformPixels,pixels:baseline.length/4};status();}
+let noiseVolume=null;
+document.querySelector('#noise-volume-depth').onclick=()=>{
+ const before=serialize(state),oldOptimized=world.destructionPass.optimizedDepth;
+ try{
+  world.destructionPass.optimizedDepth=true;
+  if(noiseVolume)noiseVolume.uniforms.uFineNoiseVolumeEnabled.value=0;
+  world.render(0);const baseline=readDepth(),baselineStats={...world.destructionPass.depthCaptureStats};
+  noiseVolume??=new FineNoiseVolume();noiseVolume.apply(world.scene);noiseVolume.uniforms.uFineNoiseVolumeEnabled.value=1;
+  world.render(0);const candidate=readDepth(),candidateStats={...world.destructionPass.depthCaptureStats};
+  let differentBytes=0,differentPixels=0,nonUniformPixels=0;
+  for(let i=0;i<baseline.length;i+=4){let different=false;for(let j=0;j<4;j++)if(baseline[i+j]!==candidate[i+j]){differentBytes++;different=true;}if(different)differentPixels++;if([0,1,2,3].some(j=>baseline[i+j]!==baseline[j]))nonUniformPixels++;}
+  if(!nonUniformPixels)throw Error('Constant depth readback');if(serialize(state)!==before)throw Error('Noise adapter changed logical state');
+  result={mode:'analytic-vs-noise-volume-depth',differentBytes,differentPixels,nonUniformPixels,pixels:baseline.length/4,baselineStats,candidateStats,logicalStateUnchanged:true,patchedPrograms:noiseVolume.patched};status();
+ }catch(e){showError(e);}finally{if(noiseVolume)noiseVolume.uniforms.uFineNoiseVolumeEnabled.value=0;world.destructionPass.optimizedDepth=oldOptimized;}
+};
 document.querySelector('#compare').onclick=()=>compare();document.querySelector('#repeat').onclick=()=>compare(false);
 document.querySelector('#visible').onclick=()=>{
  const before=serialize(state),old=world.destructionPass.visibleDepthOnly,oldOptimized=world.destructionPass.optimizedDepth;
@@ -65,5 +81,5 @@ document.querySelector('#visual-damage').onchange=()=>{const d=Number(document.q
 document.querySelector('#rotate').onclick=()=>{const t=world.controls.target,offset=world.camera.position.clone().sub(t);offset.applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);world.camera.position.copy(t).add(offset);world.controls.update();world.render(0);status();};
 document.querySelector('#grow').onclick=()=>{const p=state.plants[0],total=cropSpec(p.species).growth_seconds;p.growth=p.growth<total*.3?total*.52:p.growth<total*.9?total:0;world.render(0);status();};
 await world.whenChunksReady();world.render(0);await Promise.all([...world.assets.cache.values()]);document.querySelectorAll('button').forEach(b=>b.disabled=false);status();
-requestAnimationFrame(function frame(){if(!benchRunning)world.render(0);status();requestAnimationFrame(frame);});addEventListener('pagehide',()=>world.dispose());
+requestAnimationFrame(function frame(){if(!benchRunning)world.render(0);status();requestAnimationFrame(frame);});addEventListener('pagehide',()=>{noiseVolume?.dispose();world.dispose();});
 </script></html>

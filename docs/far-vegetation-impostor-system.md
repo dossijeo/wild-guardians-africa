@@ -148,3 +148,22 @@ Avance experimental: [horizonte de mil acacias adicionales medido](qa/far-vegeta
 
 
 Avance experimental de iluminación: [modelo con material real y atlas con grading artístico compartido](qa/far-vegetation-lighting/README.md), cuatro fases del reloj, comparación a cámara fija y ocho lotes GPU. Persisten diferencias de contraste/detalle y el coste requiere más evaluación; no se activa en gameplay ni acredita la transición final.
+
+
+## Referencia visual adicional — paisaje por capas (6 de octubre de 2026)
+
+![Concept art aportado por el usuario](qa/far-vegetation-concept/reference.jpg)
+
+Referencia para la continuación del experimento, no captura del juego ni prueba de implementación. Original recibido: `12289.jpg`. El encuadre, masas vegetales, pérdida progresiva de contraste y profundidad atmosférica son el objetivo visual. El HUD, texto y precios presentes en la ilustración no sustituyen las reglas actuales del juego.
+
+- **Primer plano:** mantener los modelos y terreno en 3D; experimentar con una distancia cercana ligeramente menor que la actual, solo si el cambio visual queda oculto y las medidas lo justifican.
+- **Planos medios/lejanos:** vegetación y, después de validar árboles, otros assets 2D situados según la misma semilla, altura, especie, escala y orientación lógica que su representación cercana. No distribuirlos como decoración aleatoria de pantalla.
+- **Bruma procedural por distancia:** aumentar progresivamente la bruma hacia el horizonte. Mantener algo de ella durante la sustitución 2D/3D y reducirla hasta cero cerca de cámara. Compartir color e iluminación con el bioma y el reloj. Mantener el crossfade/dithering, anclaje inferior y retención del impostor hasta que el modelo esté listo.
+- **Suelo lejano:** representación 2D/simplificada del color del suelo 3D, con detalles y contraste lavados. Anclarla al mundo y conservar la coherencia del relieve/altura procedural, especialmente ríos, cañones y volcanes. Comprobar que no flota ni cruza terrenos cercanos y que su sustitución no produce una costura visible. La textura no debe generarse continuamente en gameplay.
+- **Último fondo:** montañas 2D en capas con parallax antes del skymap. Reaccionar de forma coherente a la traslación y rotación de cámara; comprobar órbita, cambios de altura, desplazamiento lateral, alineación con el horizonte y ausencia de intersecciones con el relieve real. Compartir bruma y grading día/noche.
+
+### Coste y secuencia
+
+Preferir bruma integrada en los materiales/instancias y muestras de ruido baratas o precalculadas. Evitar introducir una pasada volumétrica costosa sin evidencia de que sea necesaria y cumpla el presupuesto. Medir overdraw, draw calls, frametime CPU/GPU, RAM y tamaño de atlas/texturas; no asumir que 2D o parallax son gratuitos.
+
+Mantener la primera validación aislada de una especie de Sabana. Después integrar sus datos procedurales, suelo lejano, bruma compartida y finalmente montañas por capas; ampliar a otros assets/biomas cuando las pruebas lo permitan. Añadir comparación con distancia 3D actual y ligeramente reducida, aproximación/alejamiento con bruma residual, órbita/lateral/altura y cuatro fases de luz. Validar también en móvil físico antes de adoptar el conjunto. La imagen es una referencia de dirección artística, no una exigencia de equivalencia exacta píxel a píxel.

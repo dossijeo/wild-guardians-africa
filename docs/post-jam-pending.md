@@ -44,6 +44,7 @@ Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-wo
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 
 - Seguir los 25 puntos de [Wild Guardians — Far Vegetation Impostor System](far-vegetation-impostor-system.md).
+- Incorporar la [referencia visual de paisaje por capas](far-vegetation-impostor-system.md#referencia-visual-adicional--paisaje-por-capas-6-de-octubre-de-2026): primer plano 3D, distancia cercana ajustable, impostores deterministas, bruma residual durante transición, suelo lejano lavado y montañas 2D con parallax delante del skymap; validar coste y coherencia del relieve.
 - Objetivo principal: poblar el horizonte y reducir el popping más allá de los chunks, con datos procedurales deterministas ligeros y sin cargar GLB/chunks completos para árboles lejanos.
 - Primera prueba aislada: un árbol de Sabana, atlas precalculado de ocho vistas, billboard cilíndrico, orientación procedural conservada, transición con dithering, iluminación día-noche y fog.
 - Validar rotación, aproximación bidireccional, desplazamiento lateral, cuatro fases de luz y horizonte con cientos/miles de instancias; medir CPU/GPU/RAM y tamaño distribuido.
@@ -103,3 +104,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Textura de ruido fino medida en finca real](qa/late-farm-noise-volume/README.md): nueve pruebas dirigidas y cuatro lotes nativos con mismos estados/rutas/entregas. Ahorro GPU de ~1,4 y ~2,4 ms en los pares, con diferencias visuales pequeñas en la captura; sin FPS general, móvil ni RAM en bytes acreditados. Adaptador QA corregido para conservar hooks auditados de profundidad. No se activa en gameplay: pendientes periodicidad/distancias, biomas/culturas/luz/destrucción y coste GPU restante. Campaña de margen viva al día 60, sin resultado terminal.
+
+
+[Profundidad de la textura de ruido comprobada](qa/late-farm-noise-volume/DEPTH.md): cuatro pares Manglares/Gran Cañón intactos/colapso, sin diferencias en 1,44 millones de píxeles por par ni cambios de estado/materiales preparados. Sigue fuera de gameplay; pendientes otras etapas/poses, biomas/culturas/luz, móvil y coste GPU restante.
