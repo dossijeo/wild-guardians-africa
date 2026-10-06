@@ -236,3 +236,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Contraejemplo alpha de Volcanes](qa/alpha-volcano-counterexample/README.md): tres secuencias nativas reproducen tres píxeles de profundidad distintos en B2 frente a B1/nativo. Candidato desactivado; corregido resumen QA para considerar todos los pares (22 pruebas). Pendiente atribuir causa, no se declara equivalencia ni mejora de rendimiento.
+
+
+[Primera rotura de mampostería](qa/sfx-first-masonry-crack/README.md): SFX 042 conectado al primer daño real de piedra/adobe/reforzado, con prioridad crítica, posición y guardas de ciclo de vida. 139 pruebas dirigidas y build/verificadores correctos. Catálogo 90 asignados/36 pendientes; escucha y mezcla móvil pendientes.
