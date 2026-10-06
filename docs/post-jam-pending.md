@@ -248,3 +248,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Caché experimental de recetas de cultivo](qa/crop-stage-sample-cache/README.md): buffers equivalentes, pero coste CPU mixto en ABBA sintético; candidato archivado y producción sin modificar. Pendiente reducir coste activo y comprobar memoria/frametime antes de adoptarlo.
+
+
+[Tuplas temporales de cultivos reutilizadas](qa/crop-instance-scratch/README.md): 32 pruebas y build correctos; cinco casos CPU aislados con buffers idénticos. Maduras: mediana aproximada 0,55 a 0,26 ms para 1.200 plantas, sin mejora amplia de FPS acreditada. Pendientes GC/RAM y coste integrado/móvil.

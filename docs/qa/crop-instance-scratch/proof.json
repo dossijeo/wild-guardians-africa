@@ -1,0 +1,35 @@
+{
+  "baselineCommit": "7f9812bba7fbdbd8f1d9002536e66a29a7597d26",
+  "sourceSha256": {
+    "src/rendering/crop-batch.js": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+    "tests/crop-upload.test.js": "3cb6bcb3c7e73b2f263e970f96ea893eade928f7c867e433f186749bd346e447",
+    "tests/crop-sample-cache.test.js": "1911c306354ee078523e31e44ed4c73c724c0a01887b5fd9086abed4b4f239ef",
+    "tests/crop-native-reload.test.js": "ee3c794df06db8a104e6dfef29c6e8c92fa7a658bf8070ea10d4b7ebe7f0270e",
+    "tests/crop-lifecycle.test.js": "08829dd1eebae8a72887089e0929e433468255df664e1a08f7ae0bd23adb0f3e",
+    "tests/crop-task-queue.test.js": "9eaed51e8ee69b7bf5b8bfdcfcea3d1296beaeb7f2b467f077eb0e687125e61c",
+    "tests/crop-navigation-cache.test.js": "97222057f38f0ae0de205885767fc2346cf1cd7024f8e963ebd9e1fb6765f6c3",
+    "tools/benchmark_crop_uploads.mjs": "085c8da816e1a2855b60672bbedd12a3a23cad87096fa1fe56847d0acad06bb1"
+  },
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2"
+  ],
+  "benchmarkScope": "Synthetic CPU, separate Node processes; background campaigns active; no GPU/RAM/GC measurement",
+  "bufferHashesEqual": true,
+  "tests": {
+    "command": "node --test --test-concurrency=1 tests/crop-upload.test.js tests/crop-sample-cache.test.js tests/crop-native-reload.test.js tests/crop-lifecycle.test.js tests/crop-task-queue.test.js tests/crop-navigation-cache.test.js",
+    "pass": 32,
+    "fail": 0,
+    "durationMs": 32561.821,
+    "exitCode": 0
+  },
+  "build": {
+    "command": "npm run build",
+    "modules": 211,
+    "seconds": 14.95,
+    "exitCode": 0,
+    "warning": "bundle exceeds 500 kB"
+  }
+}
