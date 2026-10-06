@@ -64,3 +64,14 @@ Runtime atlas storage is bounded by active biome (eight 1024² atlases for four 
 The fixture now has 20-second native-camera paths for approach/retreat, orbit and lateral movement; it selects an unsuppressed slot-0 tree and reports completion and unchanged game state. Only approach has been run so far. `savanna-slow-approach-mid.png` shows selected tree `0:9:2` during approach/retreat with readiness zero; `savanna-slow-approach.json` records final state and preparation counters. The final view is far again, so readiness zero there alone is expected and does not prove a failed near handoff.
 
 The same report contains approximately 100 cancelled preparations per species over the movement versus 10–12 useful completions. This repeated cancellation is an acceptance blocker to investigate, not a successful motion test. One candidate cause is texture preparation re-yielding between already initialized textures on each native packing generation; that hypothesis still needs a repeated native path after correction. No FPS/cost claim is made for this path.
+
+
+## Warm-texture preparation isolation (5965323 + temporary alias)
+
+A temporary Vite alias replaced only the GPU preparation helper, leaving the source revision under the serial full-test suite unchanged. The candidate remembers initialized texture wrapper/source versions per renderer, invalidates on disposal/context restoration and keeps compile, zero-pixel draw and fence for every new native packing. Fourteen isolated tests pass, including late cancellation, failed upload, context loss/restoration and listener ownership.
+
+`savanna-cache-approach.json` repeats exactly the same slot-0 tree `0:9:2`, 20-second 140→25→140 m path. The selected tree reaches readiness 1 first at 10.216 s; only 28 of 164 near frames (≤40 m) have readiness 1. Useful preparations at completion: 21/20/19/17; cancelled: 95/89/93/91. No game-state or WebGL errors. These counts show increased useful completions but **do not resolve the continuous-motion transition**.
+
+`savanna-cache-hold.json` adds a three-second stationary hold at 25 m. Readiness 1 occurs first at 10.203 s, with 115 of 261 near frames fully ready. Useful preparations: 32/28/28/23; cancelled: 76/73/74/75. This verifies that the handoff can settle when stationary; renewed motion still invalidates it. Counters are not a performance benchmark, and the duration/near-frame counts differ between these two paths.
+
+Next isolated check: scope render-generation invalidation to the tree species whose proof is being prepared. Currently replacement of any merged prop geometry invalidates all tree species; CPU batch records also reset when LOD packing changes. Neither cache-only result is accepted for gameplay activation.
