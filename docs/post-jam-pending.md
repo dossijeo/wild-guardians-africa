@@ -44,6 +44,7 @@ Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-wo
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 
 - Seguir los 25 puntos de [Wild Guardians — Far Vegetation Impostor System](far-vegetation-impostor-system.md).
+- Aplicar el [criterio prioritario de exactitud y composición](far-vegetation-impostor-system.md#criterio-prioritario--exactitud-y-composici%C3%B3n-del-horizonte-6-de-octubre-de-2026): 3D real, zona media fiel, selección muy lejana con densidad decreciente y hash estable, recuperación mediante fade atmosférico antes de la zona fiel, categorías pequeñas retiradas antes y backdrop 2D inaccesible independiente. Evitar una pared de árboles; no visualizar todo el procedural a densidad constante.
 - Incorporar la [referencia visual de paisaje por capas](far-vegetation-impostor-system.md#referencia-visual-adicional--paisaje-por-capas-6-de-octubre-de-2026): primer plano 3D, distancia cercana ajustable, impostores deterministas, bruma residual durante transición, suelo lejano lavado y montañas 2D con parallax delante del skymap; validar coste y coherencia del relieve.
 - Objetivo principal: poblar el horizonte y reducir el popping más allá de los chunks, con datos procedurales deterministas ligeros y sin cargar GLB/chunks completos para árboles lejanos.
 - Primera prueba aislada: un árbol de Sabana, atlas precalculado de ocho vistas, billboard cilíndrico, orientación procedural conservada, transición con dithering, iluminación día-noche y fog.

@@ -167,3 +167,31 @@ Referencia para la continuación del experimento, no captura del juego ni prueba
 Preferir bruma integrada en los materiales/instancias y muestras de ruido baratas o precalculadas. Evitar introducir una pasada volumétrica costosa sin evidencia de que sea necesaria y cumpla el presupuesto. Medir overdraw, draw calls, frametime CPU/GPU, RAM y tamaño de atlas/texturas; no asumir que 2D o parallax son gratuitos.
 
 Mantener la primera validación aislada de una especie de Sabana. Después integrar sus datos procedurales, suelo lejano, bruma compartida y finalmente montañas por capas; ampliar a otros assets/biomas cuando las pruebas lo permitan. Añadir comparación con distancia 3D actual y ligeramente reducida, aproximación/alejamiento con bruma residual, órbita/lateral/altura y cuatro fases de luz. Validar también en móvil físico antes de adoptar el conjunto. La imagen es una referencia de dirección artística, no una exigencia de equivalencia exacta píxel a píxel.
+
+
+## Criterio prioritario — exactitud y composición del horizonte (6 de octubre de 2026)
+
+Indicaciones adicionales del usuario, a recuperar al continuar esta fase. Amplían los apartados 17, 18 y 25: **no dibujar mediante billboards todo el procedural lejano ni extrapolar una densidad constante hasta el horizonte**. El propósito es conservar el paisaje abierto y espaciado del concept art, evitando la compresión en perspectiva de cientos de árboles en una pared vegetal. Queda registrado; no se activa ni se implementa por esta actualización documental.
+
+La cadena de representación será:
+
+**3D real → impostores proceduralmente exactos → impostores seleccionados con densidad decreciente → backdrop 2D → skybox.**
+
+1. **Zona cercana, representación exacta.** Mundo procedural real en 3D. Posición, tipo, escala, rotación y demás parámetros corresponden exactamente al generador. Mantener gameplay y accesibilidad reales.
+2. **Zona media, impostores fieles.** Los objetos importantes, especialmente árboles grandes, conservan exactamente esos parámetros y el mismo ID que el modelo 3D. Crossfade/dither bidireccional sin desplazamientos, cambios de altura o escala; mantener el impostor hasta que su modelo esté listo. La exactitud espacial no exige representar hierba ni todos los objetos pequeños mediante impostores.
+3. **Zona muy lejana, representación paisajística simplificada.** Reducir progresivamente la densidad con la distancia. Seleccionar únicamente elementos visualmente importantes mediante seed/hash estable de objeto o posición; no sortear cada frame ni crear otra distribución espacial arbitraria. Priorizar árboles grandes, masas vegetales significativas, estructuras y elementos que definen la silueta. Hierba, vegetación pequeña, residuos y piedras menores desaparecen mucho antes, con rangos propios.
+
+Al acercarse, la selección simplificada debe converger progresivamente hacia la distribución procedural real. Los objetos omitidos recuperan su representación mediante fade dentro de la perspectiva atmosférica **antes de entrar en la zona fiel**. No sustituir elementos por otros ni moverlos para rellenar huecos. La reducción de densidad debe ser configurable por distancia, importancia/categoría y bioma, conservando la selección determinista; el multiplicador fijo del apartado 17 por sí solo no cumple este requisito.
+
+Después de la vegetación procedural simplificada, usar un **backdrop inaccesible del bioma**: montañas, mesetas, volcanes u otras formaciones 2D por capas con parallax, antes del skybox. Estos elementos son composición del horizonte y no tienen que corresponder a geometría procedural real. Deben distinguirse de los objetos de la zona fiel que sí pueden alcanzarse; no introducir colisiones, rutas o promesas de gameplay a partir del backdrop decorativo. Conservar coherencia de cámara, relieve próximo, bioma, luz y cielo.
+
+La perspectiva atmosférica reduce contraste/saturación e integra los colores con el cielo; puede incluir un ligero blur si procede y su coste se valida. Mantener bruma residual durante el cambio 2D/3D y reducirla a cero cerca. No introducir una pasada costosa o penalizar frametime para ocultar transiciones. Priorizar composición paisajística controlada donde el jugador no puede contrastar el detalle y exactitud donde sí puede hacerlo.
+
+### Validación adicional obligatoria
+
+- Comparar la densidad lejana constante con la curva reducida usando la misma seed/cámara; comprobar masas, silueta y espacios abiertos frente al concept art. No usar «más árboles» como criterio de éxito.
+- Revisar varias posiciones, ángulos, alturas y niveles de zoom: que la perspectiva no forme una pared vegetal ni revele franjas o anillos de densidad.
+- Acercar/alejar repetidamente: los objetos omitidos aparecen/desaparecen con fade atmosférico y llegan a la zona fiel con el mismo ID/posición/parámetros, sin popping.
+- Repetir cámara y seed: misma selección, sin cambios aleatorios entre frames ni parpadeo al variar ligeramente la distancia.
+- Verificar categorías: elementos pequeños retirados antes, siluetas importantes presentes, backdrop inaccesible separado del mundo fiel.
+- Registrar imágenes y CPU/GPU/RAM/tamaño en cada nivel, incluida la bruma/blur y el overdraw, antes de adoptar la composición.
