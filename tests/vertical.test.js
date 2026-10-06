@@ -44,5 +44,5 @@ for(const biome of Game.BIOMES)for(const culture of Game.CULTURES)test(`${biome}
   const loaded=deserialize(serialize(s));nav.setState(loaded);
   while(loaded.time<299&&!loaded.crates[0].delivered)physicalTick(loaded,.5);
   assert.ok(loaded.crates[0].delivered,'A carried crate must reach the real center after reloading');
-  assert.equal(numberOf(loaded.ledger.balance),676);Game.tick(loaded,1,nav);assert.equal(numberOf(loaded.ledger.balance),676);
+  assert.equal(numberOf(loaded.ledger.balance),679);Game.tick(loaded,1,nav);assert.equal(numberOf(loaded.ledger.balance),679);
 });

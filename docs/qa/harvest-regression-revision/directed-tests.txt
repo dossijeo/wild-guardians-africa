@@ -1,0 +1,648 @@
+TAP version 13
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 1 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 485.0968
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 2 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 482.9979
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 3 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 164.554
+  ...
+# Subtest: QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+ok 4 - QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+  ---
+  duration_ms: 287.8662
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 5 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 178.2069
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 6 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 2.6978
+  ...
+# (node:40708) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: worker contact and vocal response share one committed fact with independent emitter budgets
+ok 7 - worker contact and vocal response share one committed fact with independent emitter budgets
+  ---
+  duration_ms: 25.8274
+  ...
+# Subtest: late decoding cannot play either half of an old aggression after leaving the scene
+ok 8 - late decoding cannot play either half of an old aggression after leaving the scene
+  ---
+  duration_ms: 2.3423
+  ...
+# Subtest: native portrait disappearance uses the complete original UI source beyond visual closure
+ok 9 - native portrait disappearance uses the complete original UI source beyond visual closure
+  ---
+  duration_ms: 5.084
+  ...
+# Subtest: context suspension invalidates pending portrait audio and resumes its phase silently
+ok 10 - context suspension invalidates pending portrait audio and resumes its phase silently
+  ---
+  duration_ms: 3.2835
+  ...
+# Subtest: four original NPC reactions share one voice family, pitch and world bus
+ok 11 - four original NPC reactions share one voice family, pitch and world bus
+  ---
+  duration_ms: 1.4847
+  ...
+# Subtest: context suspension invalidates a pending NPC reaction before another frame
+ok 12 - context suspension invalidates a pending NPC reaction before another frame
+  ---
+  duration_ms: 8.0409
+  ...
+# Subtest: four buses preserve public music/SFX controls, remain reusable on stop and release on disposal
+ok 13 - four buses preserve public music/SFX controls, remain reusable on stop and release on disposal
+  ---
+  duration_ms: 1.2529
+  ...
+# Subtest: a repeated emitter across different sound families is bounded after concurrent decode
+ok 14 - a repeated emitter across different sound families is bounded after concurrent decode
+  ---
+  duration_ms: 2.7563
+  ...
+# Subtest: rejecting a cue under two independent saturated limits does not partially evict voices
+ok 15 - rejecting a cue under two independent saturated limits does not partially evict voices
+  ---
+  duration_ms: 1.6288
+  ...
+# Subtest: native worker/animal metadata chooses positional world cues while UI and results stay unattenuated
+ok 16 - native worker/animal metadata chooses positional world cues while UI and results stay unattenuated
+  ---
+  duration_ms: 0.5459
+  ...
+# Subtest: a foot contact invalidated or expired during decode never creates a voice
+ok 17 - a foot contact invalidated or expired during decode never creates a voice
+  ---
+  duration_ms: 0.8813
+  ...
+# Subtest: context suspension cancels a pending foot contact even when no simulation frame runs
+ok 18 - context suspension cancels a pending foot contact even when no simulation frame runs
+  ---
+  duration_ms: 10.4223
+  ...
+# Subtest: native ambient loops use the ambient child bus and share SFX budgets without changing simulation
+ok 19 - native ambient loops use the ambient child bus and share SFX budgets without changing simulation
+  ---
+  duration_ms: 3.1051
+  ...
+# Subtest: leaving while original ambient MP3s decode prevents every late loop from starting
+ok 20 - leaving while original ambient MP3s decode prevents every late loop from starting
+  ---
+  duration_ms: 23.781
+  ...
+# Subtest: native work audio uses one unpitched world source and completion events do not replay it
+ok 21 - native work audio uses one unpitched world source and completion events do not replay it
+  ---
+  duration_ms: 3.272
+  ...
+# Subtest: suspending during work decode invalidates its request even before the next frame
+ok 22 - suspending during work decode invalidates its request even before the next frame
+  ---
+  duration_ms: 1.2039
+  ...
+# Subtest: native UI transition decodes into the UI child bus while stale panel-open requests stay silent
+ok 23 - native UI transition decodes into the UI child bus while stale panel-open requests stay silent
+  ---
+  duration_ms: 6.0021
+  ...
+# Subtest: leaving the production UI cancels pending one-shots without affecting the next scene
+ok 24 - leaving the production UI cancels pending one-shots without affecting the next scene
+  ---
+  duration_ms: 2.8965
+  ...
+# Subtest: native animal activity uses original unpitched world audio and preserves its family/emitter
+ok 25 - native animal activity uses original unpitched world audio and preserves its family/emitter
+  ---
+  duration_ms: 3.2233
+  ...
+# Subtest: context suspension invalidates pending native animal activity even before the next frame
+ok 26 - context suspension invalidates pending native animal activity even before the next frame
+  ---
+  duration_ms: 1.6912
+  ...
+# Subtest: seed purchase and crop-to-crate facts select receipts instead of replaying physical sow/pick contacts
+ok 27 - seed purchase and crop-to-crate facts select receipts instead of replaying physical sow/pick contacts
+  ---
+  duration_ms: 1.4589
+  ...
+# Subtest: original can and soil contact coexist only during the authored pour without changing pitch
+ok 28 - original can and soil contact coexist only during the authored pour without changing pitch
+  ---
+  duration_ms: 3.251
+  ...
+# Subtest: sowing and seed layers share four family slots and two slots per worker after concurrent decode
+ok 29 - sowing and seed layers share four family slots and two slots per worker after concurrent decode
+  ---
+  duration_ms: 6.7123
+  ...
+# (node:36144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: upcoming raid sounds decode once per species before first contact, without starting any voice
+ok 30 - upcoming raid sounds decode once per species before first contact, without starting any voice
+  ---
+  duration_ms: 38.9126
+  ...
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 31 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 27.3455
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 32 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.8012
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 33 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 2.0919
+  ...
+# Subtest: A new center chooses a reachable village by complete path distance rather than straight-line proximity
+ok 34 - A new center chooses a reachable village by complete path distance rather than straight-line proximity
+  ---
+  duration_ms: 7.6897
+  ...
+# Subtest: No valid village route rejects a new center before debit, ID allocation, suppression or events
+ok 35 - No valid village route rejects a new center before debit, ID allocation, suppression or events
+  ---
+  duration_ms: 2.3813
+  ...
+# Subtest: Preview checks the selected culture hull and remains identical to committed native geometry
+ok 36 - Preview checks the selected culture hull and remains identical to committed native geometry
+  ---
+  duration_ms: 8.0059
+  ...
+# Subtest: Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+ok 37 - Unbuildable culture hull or overlapping crops cannot be selected as a valid destination
+  ---
+  duration_ms: 37.787
+  ...
+# Subtest: Real Navigation validates the proposed building and preserves live collision caches during preview
+ok 38 - Real Navigation validates the proposed building and preserves live collision caches during preview
+  ---
+  duration_ms: 130.549
+  ...
+# Subtest: A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+ok 39 - A worker from the selected village reaches, cares for a crop and returns along real collision-safe routes
+  ---
+  duration_ms: 334.882
+  ...
+# Subtest: The unreachable-center command explains its failure in English and Spanish
+ok 40 - The unreachable-center command explains its failure in English and Spanish
+  ---
+  duration_ms: 0.6116
+  ...
+# Subtest: suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 41 - suajili: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1990.2829
+  ...
+# Subtest: etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 42 - etiope: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 1224.4278
+  ...
+# Subtest: mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 43 - mapungubwe: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 854.0724
+  ...
+# Subtest: saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 44 - saheliana: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 990.0741
+  ...
+# Subtest: musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+ok 45 - musgum: native GLB scale, rotated collision, service routes and paid delivery agree
+  ---
+  duration_ms: 791.0167
+  ...
+# Subtest: mapungubwe: rotated authored hull has the closest safe delivery edge in every direction
+ok 46 - mapungubwe: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 116.9393
+  ...
+# Subtest: saheliana: rotated authored hull has the closest safe delivery edge in every direction
+ok 47 - saheliana: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 11.4401
+  ...
+# Subtest: suajili: rotated authored hull has the closest safe delivery edge in every direction
+ok 48 - suajili: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 11.5434
+  ...
+# Subtest: musgum: rotated authored hull has the closest safe delivery edge in every direction
+ok 49 - musgum: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 67.6993
+  ...
+# Subtest: etiope: rotated authored hull has the closest safe delivery edge in every direction
+ok 50 - etiope: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 10.5143
+  ...
+# Subtest: a western crop delivers on the near western edge, survives reload, and credits only after physical arrival
+ok 51 - a western crop delivers on the near western edge, survives reload, and credits only after physical arrival
+  ---
+  duration_ms: 219.7893
+  ...
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 52 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 7.253
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 53 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.817
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 54 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 1.3427
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 55 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.5219
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 56 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 2.1245
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 57 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 174.7945
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 58 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 926.8979
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 59 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 6.8031
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 60 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 26.8594
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 61 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.4062
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 62 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 481.8234
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 63 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 344.0147
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 64 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 264.2771
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 65 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 293.8582
+  ...
+# (node:24008) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completing placement immediately advances the visible text and hand without acknowledging the old instruction
+ok 66 - completing placement immediately advances the visible text and hand without acknowledging the old instruction
+  ---
+  duration_ms: 12.2461
+  ...
+# Subtest: actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+ok 67 - actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+  ---
+  duration_ms: 112.3766
+  ...
+# Subtest: reload preserves unfinished instructions but advances instructions whose actions already completed
+ok 68 - reload preserves unfinished instructions but advances instructions whose actions already completed
+  ---
+  duration_ms: 69.1059
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 69 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 66.903
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 70 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 1141.4856
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 71 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 1025.6674
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 72 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 1.7947
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 73 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.9398
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 74 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.6463
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 75 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 2.3096
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 76 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 13.5379
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 77 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.9479
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 78 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.9295
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 79 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.5444
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 80 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3288
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 81 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 6.8329
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 82 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 734.1645
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 83 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 1.1142
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 84 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.4519
+  ...
+# (node:30860) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared calendar predicate preserves the approved exact boundaries
+ok 85 - shared calendar predicate preserves the approved exact boundaries
+  ---
+  duration_ms: 3.5555
+  ...
+# Subtest: live milestones play once, tolerate a dropped frame and never mutate the simulation
+ok 86 - live milestones play once, tolerate a dropped frame and never mutate the simulation
+  ---
+  duration_ms: 69.4323
+  ...
+# Subtest: saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+ok 87 - saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+  ---
+  duration_ms: 0.5185
+  ...
+# Subtest: simultaneous new milestones coalesce and hiring defers only the live cue
+ok 88 - simultaneous new milestones coalesce and hiring defers only the live cue
+  ---
+  duration_ms: 2.0113
+  ...
+# Subtest: pending decode is cancelled on pause
+ok 89 - pending decode is cancelled on pause
+  ---
+  duration_ms: 1.2593
+  ...
+# Subtest: pending decode is cancelled on result
+ok 90 - pending decode is cancelled on result
+  ---
+  duration_ms: 0.74
+  ...
+# Subtest: pending decode is cancelled on replacement
+ok 91 - pending decode is cancelled on replacement
+  ---
+  duration_ms: 0.8515
+  ...
+# Subtest: pending decode is cancelled on dispose
+ok 92 - pending decode is cancelled on dispose
+  ---
+  duration_ms: 0.9645
+  ...
+# Subtest: pending decode is cancelled on expiry
+ok 93 - pending decode is cancelled on expiry
+  ---
+  duration_ms: 0.9727
+  ...
+# Subtest: defeat discards deferred milestones and playback failures do not retry every frame
+ok 94 - defeat discards deferred milestones and playback failures do not retry every frame
+  ---
+  duration_ms: 0.8754
+  ...
+# Subtest: actual paid calendar through day five produces three unlocks without changing money or RNG
+ok 95 - actual paid calendar through day five produces three unlocks without changing money or RNG
+  ---
+  duration_ms: 1148.7015
+  ...
+# Subtest: postgame unlock dispatches once and loading its saved event is silent
+ok 96 - postgame unlock dispatches once and loading its saved event is silent
+  ---
+  duration_ms: 1.4944
+  ...
+# Subtest: sabana/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 97 - sabana/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1580.7425
+  ...
+# Subtest: sabana/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 98 - sabana/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1348.4553
+  ...
+# Subtest: sabana/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 99 - sabana/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 825.8633
+  ...
+# Subtest: sabana/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 100 - sabana/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 734.3502
+  ...
+# Subtest: sabana/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 101 - sabana/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 920.9298
+  ...
+# Subtest: gran-rio/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 102 - gran-rio/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 667.3094
+  ...
+# Subtest: gran-rio/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 103 - gran-rio/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 834.951
+  ...
+# Subtest: gran-rio/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 104 - gran-rio/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 622.8154
+  ...
+# Subtest: gran-rio/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 105 - gran-rio/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 649.6887
+  ...
+# Subtest: gran-rio/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 106 - gran-rio/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 794.059
+  ...
+# Subtest: manglares/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 107 - manglares/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 536.2073
+  ...
+# Subtest: manglares/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 108 - manglares/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 711.4738
+  ...
+# Subtest: manglares/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 109 - manglares/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 564.0397
+  ...
+# Subtest: manglares/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 110 - manglares/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 500.386
+  ...
+# Subtest: manglares/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 111 - manglares/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 658.349
+  ...
+# Subtest: volcanes/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 112 - volcanes/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 582.7896
+  ...
+# Subtest: volcanes/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 113 - volcanes/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 817.6756
+  ...
+# Subtest: volcanes/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 114 - volcanes/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 676.8402
+  ...
+# Subtest: volcanes/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 115 - volcanes/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 619.8261
+  ...
+# Subtest: volcanes/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 116 - volcanes/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 903.0354
+  ...
+# Subtest: gran-canon/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 117 - gran-canon/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 952.5103
+  ...
+# Subtest: gran-canon/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 118 - gran-canon/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 3176.9562
+  ...
+# Subtest: gran-canon/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 119 - gran-canon/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 700.4081
+  ...
+# Subtest: gran-canon/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 120 - gran-canon/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1065.0161
+  ...
+# Subtest: gran-canon/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 121 - gran-canon/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 1082.3988
+  ...
+# Subtest: desierto/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+ok 122 - desierto/mapungubwe: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 3211.1147
+  ...
+# Subtest: desierto/saheliana: real terrain sowing, watering, maturity, crate and settlement
+ok 123 - desierto/saheliana: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 663.0167
+  ...
+# Subtest: desierto/suajili: real terrain sowing, watering, maturity, crate and settlement
+ok 124 - desierto/suajili: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 786.6708
+  ...
+# Subtest: desierto/musgum: real terrain sowing, watering, maturity, crate and settlement
+ok 125 - desierto/musgum: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 587.0849
+  ...
+# Subtest: desierto/etiope: real terrain sowing, watering, maturity, crate and settlement
+ok 126 - desierto/etiope: real terrain sowing, watering, maturity, crate and settlement
+  ---
+  duration_ms: 753.2378
+  ...
+1..126
+# tests 126
+# suites 0
+# pass 126
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29894.1581

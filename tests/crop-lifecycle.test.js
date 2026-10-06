@@ -30,11 +30,12 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
  row.timeline.length=0;assert.ok(observer.report().crops[0].timeline.length>0,'reports must not expose mutable observer state');
 });
 
-test('optional higher staffing pays normal wages while the original twelve-plant strategy retains its recorded complete-state hash',()=>{
+test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and revised-income state hash',()=>{
  const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
  const baseline=simulateIntensiveFarm(options);
- // Native one-night CLI state captured before adding the staffing option.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'acc0e8e9699de4bce79b2297ad71db4cf743fe09d68f47e3f2876b5b07ecca9f');
+ // Revised-price native baseline and legacy state are archived in docs/qa/harvest-regression-revision.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'17744d1aa8e1ebe5880a4c70c4aaf741efab669df76139f6408b5d711a08e2aa');
+ assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
  assert.ok(auditIntensiveFarm(staffed));assert.equal(staffed.completedNights,1);
  assert.equal(staffed.policy.plantsPerWorker,8);assert.equal(baseline.policy.plantsPerWorker,12);
