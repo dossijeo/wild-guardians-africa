@@ -114,3 +114,17 @@ A further candidate retains a previously prepared native tree representation in 
 This is one successful approach repetition only. Orbital/lateral repetition, other biomes/phases, visible silhouette matching, ownership/disposal and fresh combined CPU/GPU cost remain acceptance work. Normal gameplay remains OFF; earlier ABBA results do not apply to this new bank recipe.
 
 After that recording, additional ownership guards invalidate retained proofs on context restoration and rebuild inactive banks when source geometry/material identities change. Focused tests cover both; they have not been exercised through deliberate native context loss. The current revision passes 112 directed far/native-resource tests and 42 world/registry/shadow checks. Build and web package passed before those last two guards (694 files / 405579650 bytes / 859 relative links / 20 runtime GLBs); they will be repeated for the final source.
+
+## Native retained-bank orbital/lateral repetition (c78e535, main a6b251b)
+
+The real-source repetition completes all paths with unchanged logical state, zero reported errors and zero transition-readiness descents:
+
+| Path | Fully ready transition frames | Initial readiness | Evidence |
+| --- | --- | --- | --- |
+| Day orbit, 40 m | 486/511 | 1.150 s | `savanna-standby-orbit.json/png` |
+| Day lateral, 40–44.7 m | 467/494 | 1.282 s | `savanna-standby-lateral.json/png` |
+| Warm night orbit, 40 m | 514/514 | First frame | `savanna-standby-night-orbit.json/png` |
+
+Initial unready frames retain the impostor while preparation/fade completes; this is not instant native readiness. Floating-point rounding makes the orbital ≤40 m counter include only part of the path and the lateral ≤40 m counter zero, so the whole-path comparison uses ≤60 m transition frames. This repetition resolves the prior measured descents for these three Sabana paths; it does not establish all-biome acceptance or a combined cost improvement. The captured flat/cyan backdrop is still a visual counterexample.
+
+A subsequent offline-only backdrop candidate replaces Sabana's parallel waves with independently composed broad ridges/mesa caps, warm muted colors and a 145 m decorative cylinder height instead of 80 m. It retains one 2048×512 RGBA atlas and the same shader/draw/vertex recipe; transfer increases by 2,218 bytes (14,246→16,464). Three generator tests verify deterministic seamless profiles, independent relief, and byte-for-byte regeneration of all six deployed alpha backdrops. Other biome assets remain byte-identical. Native composition acceptance of this candidate is still pending.

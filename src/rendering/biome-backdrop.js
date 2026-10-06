@@ -3,7 +3,7 @@ import * as THREE from 'three';
 // They sit beyond faithful vegetation and move with a small, bounded parallax.
 export function createBiomeBackdrop(world,texture,{radius=430,height=null,parallax=.03}={}){
  if(![radius,parallax].every(Number.isFinite)||radius<=0||parallax<0||parallax>1)throw Error('Invalid biome backdrop settings');
- height??={savanna:80,grand_river:85,mangrove:60,volcanoes:160,canyons:130,desert:115}[world.nav.config.biome];
+ height??={savanna:145,grand_river:85,mangrove:60,volcanoes:160,canyons:130,desert:115}[world.nav.config.biome];
  if(!Number.isFinite(height)||height<=0)throw Error('Invalid biome backdrop height');
  texture.colorSpace=THREE.SRGBColorSpace;texture.generateMipmaps=true;
  const root=new THREE.Group(),anchor=world.camera.position.clone(),geometries=[],uniforms={uBackdropAtlas:{value:texture},uBackdropNight:world.toon.uniforms.uNight,uBackdropFog:{value:new THREE.Color('#b5d9e8')}};
