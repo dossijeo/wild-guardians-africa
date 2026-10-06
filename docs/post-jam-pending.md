@@ -100,3 +100,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Coste de ruido fino medido en finca real](qa/late-farm-fine-noise/README.md): cuatro lotes, 800 muestras CPU/GPU y mismos estados/rutas/entregas. Desactivarlo solo en QA reduce GPU ~61–62→58–59 ms, pero modifica imagen; producción conserva el shader original. Pendiente alternativa barata que conserve detalle, coste GPU restante y aceptación amplia.
+
+
+[Textura de ruido fino medida en finca real](qa/late-farm-noise-volume/README.md): nueve pruebas dirigidas y cuatro lotes nativos con mismos estados/rutas/entregas. Ahorro GPU de ~1,4 y ~2,4 ms en los pares, con diferencias visuales pequeñas en la captura; sin FPS general, móvil ni RAM en bytes acreditados. Adaptador QA corregido para conservar hooks auditados de profundidad. No se activa en gameplay: pendientes periodicidad/distancias, biomas/culturas/luz/destrucción y coste GPU restante. Campaña de margen viva al día 60, sin resultado terminal.

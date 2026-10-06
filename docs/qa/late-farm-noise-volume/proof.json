@@ -1,0 +1,32 @@
+{
+  "base": "758638c6df1113dcae93ea524b03931bcd941641",
+  "sourceSha256": {
+    "tests/browser/late-farm-render.html": "b7d0e360a310d0e49695199bc230d4247bf02c61533bbfbc02abcf90b16f82fb",
+    "tests/browser/noise-volume.js": "e7598e53088cada0cbe13568eee56a990f0e173551a60127456a6ad88e991d21",
+    "tests/noise-volume-experiment.test.js": "efab0fdaab3ef0a3f047cb883b6862834f567c654c9a15a6457b619a52f1c7d5",
+    "src/rendering/depth-recipes.js": "8a4fff986eef87f820ce33852ae475e758315169d64897d2b863ecefef27426a",
+    "src/rendering/standard-depth.js": "7e3bf8084eb74d52e47bab8b670a6e21689f9c79185e5cb3e7d0c565bbcc0e6c",
+    "src/rendering/african-toon.js": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4",
+    "src/rendering/african-toon-source.js": "38f19f485e448fcf381732ae2e4267012a3fee19cfbec17925bd06f86221bff4",
+    "src/rendering/fine-noise.js": "fedb902cb8431f52edf06fb01be28a6c23b011b2dae05b945b0cdbde6d3c3fa8",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887"
+  },
+  "evidenceSha256": {
+    "analytic.png": "ca5a5e1f8afb007c92157dd3cb948b2cdc7588255610d8207299c63fce8228d9",
+    "image-difference.json": "59e23b4e3f9ec1d7df4c5ee7535f60f82b03125d4d0bd2e25c512454125512ee",
+    "native.json": "27eca00d23f740d200c30caeef5a30eceb8478a5ed09d36b999e5e5a3dac8f0c",
+    "README.md": "eaf66702a364ade0302c975aeb94f4a81978c9101d72d11bd3fb901cb211e628",
+    "volume.png": "69f96652e471f5b0a42471a95211779df75f7881f335e24aa2d4dbb59b87c734"
+  },
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "cpuSamples": 800,
+  "gpuSamples": 800,
+  "productionChanged": false,
+  "tests": {
+    "command": "node --test tests/noise-volume-experiment.test.js tests/standard-depth.test.js",
+    "passed": 9,
+    "failed": 0
+  },
+  "decision": "Expand QA before adoption: modest GPU benefit in this scenario, non-identical periodic texture. Production remains analytic."
+}

@@ -25,3 +25,24 @@ test('QA adapter only replaces fine evaluations and leaves coarse ground and ana
  assert.equal(volumeNoiseSource('void main(){}'),'void main(){}');
  assert.throws(()=>volumeNoiseSource('materialNoise(worldP*.85)'),/authored color helper/);
 });
+
+
+import * as THREE from 'three';
+import {AfricanToon} from '../src/rendering/african-toon.js';
+import {nativeDepthRecipe} from '../src/rendering/depth-recipes.js';
+import {standardDepthMaterial} from '../src/rendering/standard-depth.js';
+import {assetClipMaterial} from '../src/rendering/asset-clip.js';
+import {obstructionMaterial} from '../src/rendering/obstruction.js';
+
+test('RGB-only QA volume preserves audited depth hooks without granting unknown hooks authority',()=>{
+ const volume=new FineNoiseVolume(),root=new THREE.Group(),source=new THREE.MeshStandardMaterial();
+ assetClipMaterial(source);obstructionMaterial(source);new AfricanToon().material(source);
+ const features=[...nativeDepthRecipe(source).features].sort(),depth=standardDepthMaterial(source);
+ const unknown=new THREE.MeshStandardMaterial();unknown.onBeforeCompile=shader=>{shader.vertexShader+='\n// unknown displacement';};
+ root.add(new THREE.Mesh(new THREE.BoxGeometry(),source),new THREE.Mesh(new THREE.BoxGeometry(),unknown));
+ volume.apply(root);assert.deepEqual([...nativeDepthRecipe(source).features].sort(),features);
+ assert.equal(standardDepthMaterial(source),depth);assert.equal(nativeDepthRecipe(unknown),null);
+ assert.equal(standardDepthMaterial(unknown),null);
+ const hook=source.onBeforeCompile;volume.apply(root);assert.equal(source.onBeforeCompile,hook);
+ root.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});volume.dispose();
+});

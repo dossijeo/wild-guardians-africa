@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {recordNativeDepthHook} from '../../src/rendering/depth-recipes.js';
 
 // Experimental QA adapter only. Does not enter the production import graph.
 // Eight corners are sampled by hardware trilinear interpolation, with the same
@@ -48,6 +49,9 @@ export class FineNoiseVolume{
     original.call(material,shader,renderer);const adapted=volumeNoiseSource(shader.fragmentShader);
     if(adapted!==shader.fragmentShader){shader.fragmentShader=adapted;Object.assign(shader.uniforms,this.uniforms);this.patched++;}
    };
+   // This wrapper changes only RGB fine noise, preserving vertex/discard rules.
+   // Keep previously audited depth recipes valid; unknown hooks remain unknown.
+   recordNativeDepthHook(material,original);
    material.customProgramCacheKey=()=>key()+'|qa-fine-volume-64-r8';material.needsUpdate=true;
   }});
  }
