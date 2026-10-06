@@ -12,3 +12,6 @@ El observador se conecta al seguimiento existente de magias. Cargar/reemplazar u
 - Catálogo auditado: 89 asignados y 37 pendientes/reservados. Regenerados los metadatos de rutas Opus; los 126 audios conservan hashes y exportaciones correctas. No se recomprime ni modifica ningún audio en esta asignación.
 
 La prueba nativa se silencia deliberadamente: no acredita escucha, móvil físico ni percepción junto a música/VFX/HUD durante toda una partida. Una conexión que no entregue el audio a tiempo omite el aviso obsoleto; sigue pendiente medir ese inicio en red fría. El barrido completo del catálogo permanece abierto.
+
+
+[Precarga durante el cooldown](cold-preparation/README.md): comprobada con una descarga retrasada de 1,5 s y Web Audio real en ambas frecuencias. No se presupone que una caché precalentada demuestre red móvil fría.

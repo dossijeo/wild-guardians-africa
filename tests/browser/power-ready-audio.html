@@ -13,10 +13,13 @@ document.querySelector('#run').onclick=async()=>{
   for(const rate of [44100,48000]){
    audio=new AudioSystem({sfx:0,music:0});audio.context=new AudioContext({sampleRate:rate});await audio.unlock();
    const bank=await audio.sfxBank(),item=bank.items.find(i=>i.id==='spirit_power_charge');check(item,'Missing catalogue sound');
-   const buffer=await audio.buffer(item.audio.url),play=audio.sound.bind(audio),accepted=[];
+   const originalBytes=audio.resources.bytes;let downloads=0;
+   audio.resources={...audio.resources,bytes:async url=>{if(url===item.audio.url){downloads++;await new Promise(resolve=>setTimeout(resolve,1500));}return originalBytes(url);}};
+   let buffer;const play=audio.sound.bind(audio),accepted=[];
    audio.sound=async(id,options)=>{const source=await play(id,options);if(source){accepted.push({id,bus:audio.voices.get(source).bus,sameBuffer:source.buffer===buffer,rate:source.playbackRate.value,loop:source.loop});}return source;};
    const s={day:5,time:100,elapsed:100,result:null,pauses:[],cooldowns:{shield:2,growth:2,multiply:2}};
-   audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===0,'Snapshot availability played');
+   const preparingAt=performance.now();audio.updateUnlocks(s);await audio.powerReadyPreparation;buffer=await audio.buffer(item.audio.url);
+   const preparationMs=performance.now()-preparingAt;check(preparationMs>=1500&&downloads===1,'Cold preparation did not share the delayed download');check(accepted.length===0,'Snapshot availability played');
    const before=JSON.stringify(s);audio.updateUnlocks(s);check(JSON.stringify(s)===before,'Observer mutated state');
    s.elapsed+=2;s.cooldowns={shield:0,growth:0,multiply:0};audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,50));
    check(accepted.length===1,'Simultaneous readiness was not grouped');check(accepted[0].id==='spirit_power_charge'&&accepted[0].bus==='ui'&&accepted[0].sameBuffer&&accepted[0].rate===1&&!accepted[0].loop,'Native voice policy changed');
@@ -24,7 +27,7 @@ document.querySelector('#run').onclick=async()=>{
    audio.updateUnlocks({...s,cooldowns:{...s.cooldowns}});await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===1,'Loaded snapshot replayed');
    audio.stop();audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===1,'Restart replayed history');
    audio.dispose();await new Promise(resolve=>setTimeout(resolve,40));check(audio.context.state==='closed'&&audio.active.length===0&&audio.voices.size===0,'Voice/context retained');
-   rows.push({rate,accepted,codec:bank.runtimeCodec,url:item.audio.url,channels:buffer.numberOfChannels,samples:buffer.length,duration:buffer.duration,closed:true,active:audio.active.length});audio=null;paint();
+   rows.push({rate,accepted,downloads,preparationMs,codec:bank.runtimeCodec,url:item.audio.url,channels:buffer.numberOfChannels,samples:buffer.length,duration:buffer.duration,closed:true,active:audio.active.length});audio=null;paint();
   }
   status.textContent='Correcto · dos frecuencias, una voz agrupada y cierre completo';
  }catch(e){errors.push(String(e));audio?.dispose();status.textContent='ERROR: '+e.message;paint();}

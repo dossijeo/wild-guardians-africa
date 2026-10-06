@@ -36,3 +36,36 @@ test('AudioSystem stop/suspend and a suspended context release the observer',()=
   audio[method](state());assert.equal(disposed,1);
  }
 });
+test('cooldown preparation shares one cold download/decode without playing or mutating gameplay',async()=>{
+ let requests=0,decodes=0,resolveBytes;const bytes=new Promise(resolve=>resolveBytes=resolve),decoded={};
+ const audio=new AudioSystem({sfx:0,music:0},{json:async()=>({items:[{id:'spirit_power_charge',audio:{url:'ready.opus'}}]}),bytes:()=>{requests++;return bytes;}});
+ audio.context={state:'running',currentTime:0,decodeAudioData:async()=>{decodes++;return decoded;}};
+ const s=state(),before=JSON.stringify(s);audio.updateUnlocks(s);await flush();
+ for(let i=0;i<100;i++)audio.updateUnlocks(s);
+ assert.equal(requests,1);assert.equal(decodes,0);assert.equal(audio.active.length,0);assert.equal(JSON.stringify(s),before);
+ // A slow first fetch is completed during the cooldown, not at its edge.
+ audio.context.currentTime=3;resolveBytes(new ArrayBuffer(1));await audio.powerReadyPreparation;
+ assert.equal(decodes,1);assert.equal(await audio.buffer('ready.opus'),decoded);
+ const ready=[];audio.sound=async(id,options)=>{ready.push({id,options,buffer:await audio.buffer('ready.opus')});return null;};
+ s.elapsed+=2;s.cooldowns={shield:0,growth:0,multiply:0};audio.updateUnlocks(s);await flush();
+ assert.equal(ready.length,1);assert.ok(ready[0].options.isCurrent());assert.equal(ready[0].buffer,decoded);assert.equal(requests,1);assert.equal(decodes,1);
+});
+test('preparation is lazy, cancels stale bank requests and throttles failed downloads',async()=>{
+ let requests=0,resolveBank;const bank=new Promise(resolve=>resolveBank=resolve);
+ const audio=new AudioSystem({sfx:0,music:0},{json:()=>bank,bytes:async()=>{requests++;throw Error('offline');}});
+ audio.context={state:'running',currentTime:0,decodeAudioData:async()=>assert.fail('Unexpected decode')};
+ const s=state();for(const blocked of [{...s,result:'defeat'},{...s,pauses:['hiring']},{...s,cooldowns:{}}])audio.preparePowerReadySound(blocked);
+ assert.equal(audio.powerReadyPreparation,undefined);
+ audio.preparePowerReadySound(s);const pending=audio.powerReadyPreparation;audio.stop();resolveBank({items:[{id:'spirit_power_charge',audio:{url:'ready.opus'}}]});await pending;assert.equal(requests,0);
+ audio.preparePowerReadySound(s);await flush();assert.equal(requests,1);
+ for(let i=0;i<100;i++)audio.preparePowerReadySound(s);await flush();assert.equal(requests,1);
+ audio.context.currentTime=5;audio.preparePowerReadySound(s);await flush();assert.equal(requests,2);
+ audio.context.state='suspended';audio.context.currentTime=10;audio.preparePowerReadySound(s);await flush();assert.equal(requests,2);
+});
+test('leaving during the cold download prevents decoding and clears its cache entry',async()=>{
+ let resolveBytes,decodes=0;const bytes=new Promise(resolve=>resolveBytes=resolve);
+ const audio=new AudioSystem({sfx:0,music:0},{json:async()=>({items:[{id:'spirit_power_charge',audio:{url:'ready.opus'}}]}),bytes:()=>bytes});
+ audio.context={state:'running',currentTime:0,decodeAudioData:async()=>{decodes++;return {};}};
+ audio.preparePowerReadySound(state());const pending=audio.powerReadyPreparation;await flush();assert.equal(audio.buffers.size,1);
+ audio.stop();resolveBytes(new ArrayBuffer(1));await pending;await flush();assert.equal(decodes,0);assert.equal(audio.buffers.size,0);assert.equal(audio.powerReadyPreparation,null);assert.equal(audio.active.length,0);
+});

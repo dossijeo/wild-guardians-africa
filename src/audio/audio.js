@@ -204,8 +204,24 @@ export class AudioSystem {
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
     if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));
   }
+  preparePowerReadySound(state){
+    if(this.context?.state!=='running'||state.result||state.pauses?.length||!Object.values(state.cooldowns??{}).some(value=>value>0))return;
+    if(this.powerReadyPreparation||this.context.currentTime<(this.powerReadyRetryAt??0))return;
+    const generation=this.generation,current=()=>generation===this.generation&&this.context?.state==='running';
+    // Fetch and decode during the cooldown, before the short freshness window
+    // of the ready cue. Preparation never creates an audible source.
+    const pending=this.sfxBank().then(bank=>{
+      if(!current())return null;
+      const item=bank.items.find(item=>item.id==='spirit_power_charge');
+      return item?this.buffer(item.audio.url,{current}):null;
+    });
+    this.powerReadyPreparation=pending;
+    const retry=()=>{if(this.powerReadyPreparation===pending){this.powerReadyPreparation=null;this.powerReadyRetryAt=(this.context?.currentTime??0)+5;}};
+    pending.then(buffer=>{if(!buffer)retry();},retry);
+  }
   updateUnlocks(state){
     if(this.context?.state!=='running'){this.unlocks?.dispose();this.powerReady?.dispose();return;}
+    this.preparePowerReadySound(state);
     this.unlocks??=new UnlockAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.unlocks.update(state);
     this.powerReady??=new PowerReadyAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.powerReady.update(state);
   }
@@ -245,7 +261,7 @@ export class AudioSystem {
     this.movement??=new MovementAudio((id,opts)=>this.sound(id,opts),source=>this.stopVoice(source),()=>this.context.currentTime);this.movement.update(state,options);
   }
   remember(events){this.seen=new Set(events.map(event=>event.id));this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);}
-  stop(){this.powerReady?.dispose();this.raidArrival?.dispose();this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
+  stop(){this.powerReadyPreparation=null;this.powerReadyRetryAt=0;this.powerReady?.dispose();this.raidArrival?.dispose();this.unlocks?.dispose();this.guardianAudio?.dispose();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.ambient?.dispose();this.movement?.dispose();this.stopMusic();this.musicRetryAt=0;this.generation++;for(const source of [...this.active])this.stopVoice(source);this.active=[];this.pack=null;}
   suspend(){this.powerReady?.dispose();this.raidArrival?.dispose();this.menuStream?.pause();this.unlocks?.dispose();this.guardianAudio?.suspend();this.workers?.dispose();this.farm?.dispose();this.animals?.dispose();this.work?.dispose();this.movement?.dispose();this.context?.suspend();}
   resume(){this.context?.resume().then(()=>this.menuStream?.play()).catch(error=>{this.musicError=error;});}
   dispose(){this.stop();for(const node of Object.values(this.sfxBuses??{}))node.disconnect();this.sfxGain?.disconnect?.();this.musicGain?.disconnect?.();this.context?.close();}
