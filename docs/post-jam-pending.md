@@ -230,3 +230,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Atlas con orientaciones respecto al sol fijo](qa/far-prelit-rotations/README.md): ocho orientaciones × ocho vistas × dos fases horneadas con el shader real, mezcla de ambas dimensiones, 30 pruebas y comparación nativa. Par WebP 3.50 MiB; memoria RGBA+mips estimada 42.67 MiB. Pendientes resolución 128, GPU crepúsculo, comparación de interpolación/discreto y aceptación integrada. Corregida también vista/anclaje anisotrópicos del prototipo. El sol del juego no orbita: advertencia anterior sobre sol variable no aplicaba.
+
+
+[Límites de origen desde materiales únicos](qa/origin-material-registry/README.md): eliminado un recorrido completo de escena por frame, con metadatos vivos y fallback. Doce pruebas/build y dos escenas nativas Manglares/Gran Cañón conservan referencias y restauración. Sin medición de frametime/GPU ni aceptación móvil; sigue pendiente el coste integrado de render.
