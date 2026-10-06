@@ -40,7 +40,9 @@ Comparar experimentalmente ocho vistas discretas frente a interpoladas si el cos
 
 ## 7. Iluminación global
 
-No hornear variantes mañana/mediodía/tarde/noche. El atlas neutro debe recibir como mínimo `finalColor = impostorColor × globalLighting`, incluyendo color/intensidad día-noche, tinte ambiental, fog/perspectiva atmosférica y filtros globales relevantes del bioma.
+Actualización del usuario (6 de octubre): comparar primero atlas de **día y noche precocinados desde el modelo con shader real**, sin normales ni iluminación compleja en el impostor. Esta indicación sustituye la preferencia inicial de no hornear fases. Mantener mezcla suave, fog y dithering. La luz horneada no garantiza coincidencia con giros procedurales o sol variable; verificarla visualmente antes de integración. [Prototipo y resultados](qa/far-prelit-atlas/README.md).
+
+Referencia de la alternativa inicial: El atlas neutro debe recibir como mínimo `finalColor = impostorColor × globalLighting`, incluyendo color/intensidad día-noche, tinte ambiental, fog/perspectiva atmosférica y filtros globales relevantes del bioma.
 
 Debe seguir aproximadamente el oscurecimiento/azulado nocturno de los modelos. Se prioriza coherencia perceptual sobre equivalencia física exacta.
 
@@ -201,3 +203,5 @@ La perspectiva atmosférica reduce contraste/saturación e integra los colores c
 
 
 [Primera consulta de árboles procedurales exactos](qa/far-vegetation-procedural/README.md): Sabana/acacia, mismos IDs/alturas/giros/escalas de los chunks, sin generar geometría ni vegetación pequeña; anclaje y escala anisotrópica en visor. Igualdad completa de generación normal en seis biomas, 73+15 pruebas, build/paquete y render nativo. Pendiente terreno, bruma, streaming/chunks tardíos y móvil; sigue fuera de gameplay.
+
+Comparación opcional de normales: [evidencia y límites](qa/far-normal-lighting/README.md). No acreditó coste nulo; se conserva únicamente como referencia experimental.
