@@ -137,3 +137,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Preparación de lotes vacíos evaluada](qa/empty-depth-batches/README.md): 22 pruebas y build; cuatro lotes de finca con mismo estado/eventos/envíos y 575 lotes no preparados. CPU integrada/aislada sin ahorro consistente: flag experimental apagado por defecto. Dos estados Manglares/Mapungubwe conservan profundidad idéntica en diez pares; color presenta variación también entre originales. No acredita FPS/móvil ni justifica seguir con ese filtro sin otra hipótesis. Siguiente prioridad: integrar el candidato alpha sin recorrer dos veces y estudiar dibujo final.
+
+
+[Profundidad alpha integrada en un recorrido](qa/single-pass-alpha-depth/README.md): 26 pruebas y build; cuatro lotes reales con estados/rutas/eventos/envíos idénticos. GPU ~2,86/~2,30 ms menor y RAF ~1,80/~2,35 ms menor en los pares, CPU integrada variable y preparación aislada ~0,41–0,48 ms más costosa por captura. Diez pares Manglares/Mapungubwe intacto/colapso conservan profundidad idéntica; color varía también entre controles. Flag QA apagado por defecto hasta ampliar estados/biomas/efectos/móvil y explicar diferencias históricas. Campaña congelada de margen verificada viva al día 67, sin resultado terminal.

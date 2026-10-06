@@ -82,3 +82,25 @@ test('empty-batch experiment is disabled by default after its measured CPU trade
  const {world,mesh,source,depth}=fixture();mesh.geometry.setDrawRange(0,0);
  const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,depth));assert.equal(stats.emptySkipped,0);assert.equal(stats.specialized,1);assert.equal(mesh.material,source);
 });
+
+test('single-traversal alpha opt-in keeps shared native alpha silhouettes and restores every owner after failure',()=>{
+ const world=new THREE.Scene(),map=new THREE.Texture(),source=new THREE.MeshStandardMaterial({alphaTest:.35,map,side:THREE.DoubleSide}),a=new THREE.Mesh(new THREE.BoxGeometry(),source),b=new THREE.Mesh(a.geometry,source);world.add(a,b);
+ let depth;
+ assert.throws(()=>withDepthCaptureMaterials(world,stats=>{depth=a.material;assert.equal(a.material,b.material);assert.ok(depth.isMeshDepthMaterial);assert.equal(depth.alphaTest,source.alphaTest);assert.equal(depth.map,map);assert.equal(depth.side,source.side);assert.equal(depth.colorWrite,false);assert.equal(stats.stockAlphaSpecialized,2);throw Error('GPU failure');},{stockAlpha:true}),/GPU failure/);
+ assert.equal(a.material,source);assert.equal(b.material,source);assert.equal(source.colorWrite,true);assert.equal(depth.colorWrite,true);assert.equal(a.customDepthMaterial,undefined);
+ const stats=withDepthCaptureMaterials(world,()=>assert.equal(a.material,source));assert.equal(stats.stockAlphaSpecialized,0);assert.equal(stats.fallback,2);
+ source.dispose();map.dispose();a.geometry.dispose();
+});
+
+test('alpha opt-in retains unknown/rasterization exceptions and authored-depth precedence',()=>{
+ for(const kind of ['hook','offset','hash','clip','authored','disabled','override']){
+  const {world,mesh,source,depth}=fixture();source.alphaTest=.35;
+  if(kind==='hook')source.onBeforeCompile=()=>{};
+  if(kind==='offset')source.polygonOffset=true;
+  if(kind==='hash')source.alphaHash=true;
+  if(kind==='clip')source.clippingPlanes=[new THREE.Plane()];
+  if(kind!=='authored')delete mesh.customDepthMaterial;else depth.alphaTest=.35;
+  if(kind==='override')world.overrideMaterial=new THREE.MeshBasicMaterial();
+  const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,kind==='authored'?depth:source),{stockAlpha:true,optimized:kind!=='disabled'});assert.equal(stats.stockAlphaSpecialized,0);
+ }
+});

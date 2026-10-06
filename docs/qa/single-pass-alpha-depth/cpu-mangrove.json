@@ -1,0 +1,441 @@
+{
+  "depthStateAnomalies": [
+    {
+      "name": "",
+      "type": "RawShaderMaterial",
+      "depthTest": true,
+      "depthFunc": 2,
+      "features": []
+    }
+  ],
+  "preserveOrder": false,
+  "biome": "manglares",
+  "culture": "mapungubwe",
+  "scope": "all",
+  "elapsed": 0,
+  "growth": 0,
+  "damage": 0,
+  "stats": {
+    "specialized": 61,
+    "fallback": 867,
+    "excluded": 0,
+    "emptySkipped": 0,
+    "stockAlphaSpecialized": 0
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "arriving",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [],
+  "result": {
+    "kind": "alpha-single",
+    "mode": "isolated-native-scene-depth-preparation-CPU",
+    "scope": "Same paused native scene; depth material selection/toggling/restoration with a no-op draw callback. 20 warmup calls and 20 samples of 25 calls per lot A/B/B/A. Excludes renderer/GPU/actual VFX and is not a FPS benchmark.",
+    "differentPixels": null,
+    "logicalStateUnchanged": true,
+    "materialStateUnchanged": true,
+    "lots": [
+      {
+        "label": "A1",
+        "enabled": false,
+        "stats": {
+          "specialized": 61,
+          "fallback": 867,
+          "excluded": 0,
+          "emptySkipped": 0,
+          "stockAlphaSpecialized": 0
+        },
+        "samples": [
+          {
+            "sample": 0,
+            "msFor25": 9.300000011920929
+          },
+          {
+            "sample": 1,
+            "msFor25": 9
+          },
+          {
+            "sample": 2,
+            "msFor25": 10
+          },
+          {
+            "sample": 3,
+            "msFor25": 9.399999976158142
+          },
+          {
+            "sample": 4,
+            "msFor25": 10.199999988079071
+          },
+          {
+            "sample": 5,
+            "msFor25": 9.5
+          },
+          {
+            "sample": 6,
+            "msFor25": 10.900000035762787
+          },
+          {
+            "sample": 7,
+            "msFor25": 7.300000011920929
+          },
+          {
+            "sample": 8,
+            "msFor25": 9
+          },
+          {
+            "sample": 9,
+            "msFor25": 11
+          },
+          {
+            "sample": 10,
+            "msFor25": 9.400000035762787
+          },
+          {
+            "sample": 11,
+            "msFor25": 9.699999988079071
+          },
+          {
+            "sample": 12,
+            "msFor25": 9.399999976158142
+          },
+          {
+            "sample": 13,
+            "msFor25": 9.400000035762787
+          },
+          {
+            "sample": 14,
+            "msFor25": 10.100000023841858
+          },
+          {
+            "sample": 15,
+            "msFor25": 9.100000023841858
+          },
+          {
+            "sample": 16,
+            "msFor25": 10.899999976158142
+          },
+          {
+            "sample": 17,
+            "msFor25": 8.699999988079071
+          },
+          {
+            "sample": 18,
+            "msFor25": 8.199999988079071
+          },
+          {
+            "sample": 19,
+            "msFor25": 9
+          }
+        ],
+        "summary": {
+          "samples": 20,
+          "median": 9.400000005960464,
+          "mean": 9.475000002980233,
+          "p95": 10.900000035762787
+        }
+      },
+      {
+        "label": "B1",
+        "enabled": true,
+        "stats": {
+          "specialized": 903,
+          "fallback": 25,
+          "excluded": 0,
+          "emptySkipped": 0,
+          "stockAlphaSpecialized": 842
+        },
+        "samples": [
+          {
+            "sample": 0,
+            "msFor25": 21.599999964237213
+          },
+          {
+            "sample": 1,
+            "msFor25": 21.100000023841858
+          },
+          {
+            "sample": 2,
+            "msFor25": 21.099999964237213
+          },
+          {
+            "sample": 3,
+            "msFor25": 22.100000023841858
+          },
+          {
+            "sample": 4,
+            "msFor25": 23.100000023841858
+          },
+          {
+            "sample": 5,
+            "msFor25": 22.19999998807907
+          },
+          {
+            "sample": 6,
+            "msFor25": 21.30000001192093
+          },
+          {
+            "sample": 7,
+            "msFor25": 20.19999998807907
+          },
+          {
+            "sample": 8,
+            "msFor25": 21.899999976158142
+          },
+          {
+            "sample": 9,
+            "msFor25": 22.69999998807907
+          },
+          {
+            "sample": 10,
+            "msFor25": 22.400000035762787
+          },
+          {
+            "sample": 11,
+            "msFor25": 19.899999976158142
+          },
+          {
+            "sample": 12,
+            "msFor25": 22.100000023841858
+          },
+          {
+            "sample": 13,
+            "msFor25": 22.900000035762787
+          },
+          {
+            "sample": 14,
+            "msFor25": 22.399999976158142
+          },
+          {
+            "sample": 15,
+            "msFor25": 19.899999976158142
+          },
+          {
+            "sample": 16,
+            "msFor25": 20.599999964237213
+          },
+          {
+            "sample": 17,
+            "msFor25": 18.19999998807907
+          },
+          {
+            "sample": 18,
+            "msFor25": 20.600000023841858
+          },
+          {
+            "sample": 19,
+            "msFor25": 21.30000001192093
+          }
+        ],
+        "summary": {
+          "samples": 20,
+          "median": 21.44999998807907,
+          "mean": 21.37999999821186,
+          "p95": 22.900000035762787
+        }
+      },
+      {
+        "label": "B2",
+        "enabled": true,
+        "stats": {
+          "specialized": 903,
+          "fallback": 25,
+          "excluded": 0,
+          "emptySkipped": 0,
+          "stockAlphaSpecialized": 842
+        },
+        "samples": [
+          {
+            "sample": 0,
+            "msFor25": 20
+          },
+          {
+            "sample": 1,
+            "msFor25": 22.100000023841858
+          },
+          {
+            "sample": 2,
+            "msFor25": 22.399999976158142
+          },
+          {
+            "sample": 3,
+            "msFor25": 21.700000047683716
+          },
+          {
+            "sample": 4,
+            "msFor25": 23.399999976158142
+          },
+          {
+            "sample": 5,
+            "msFor25": 21.099999964237213
+          },
+          {
+            "sample": 6,
+            "msFor25": 20.19999998807907
+          },
+          {
+            "sample": 7,
+            "msFor25": 20.100000023841858
+          },
+          {
+            "sample": 8,
+            "msFor25": 18.099999964237213
+          },
+          {
+            "sample": 9,
+            "msFor25": 18.600000023841858
+          },
+          {
+            "sample": 10,
+            "msFor25": 16.200000047683716
+          },
+          {
+            "sample": 11,
+            "msFor25": 18.900000035762787
+          },
+          {
+            "sample": 12,
+            "msFor25": 19.400000035762787
+          },
+          {
+            "sample": 13,
+            "msFor25": 19.19999998807907
+          },
+          {
+            "sample": 14,
+            "msFor25": 20.69999998807907
+          },
+          {
+            "sample": 15,
+            "msFor25": 17.400000035762787
+          },
+          {
+            "sample": 16,
+            "msFor25": 18.299999952316284
+          },
+          {
+            "sample": 17,
+            "msFor25": 20.899999976158142
+          },
+          {
+            "sample": 18,
+            "msFor25": 15.5
+          },
+          {
+            "sample": 19,
+            "msFor25": 15.100000023841858
+          }
+        ],
+        "summary": {
+          "samples": 20,
+          "median": 19.700000017881393,
+          "mean": 19.46500000357628,
+          "p95": 22.399999976158142
+        }
+      },
+      {
+        "label": "A2",
+        "enabled": false,
+        "stats": {
+          "specialized": 61,
+          "fallback": 867,
+          "excluded": 0,
+          "emptySkipped": 0,
+          "stockAlphaSpecialized": 0
+        },
+        "samples": [
+          {
+            "sample": 0,
+            "msFor25": 9.299999952316284
+          },
+          {
+            "sample": 1,
+            "msFor25": 5.700000047683716
+          },
+          {
+            "sample": 2,
+            "msFor25": 10.399999976158142
+          },
+          {
+            "sample": 3,
+            "msFor25": 9.399999976158142
+          },
+          {
+            "sample": 4,
+            "msFor25": 10.599999964237213
+          },
+          {
+            "sample": 5,
+            "msFor25": 9.399999976158142
+          },
+          {
+            "sample": 6,
+            "msFor25": 10.400000035762787
+          },
+          {
+            "sample": 7,
+            "msFor25": 10.099999964237213
+          },
+          {
+            "sample": 8,
+            "msFor25": 7.5
+          },
+          {
+            "sample": 9,
+            "msFor25": 8.300000011920929
+          },
+          {
+            "sample": 10,
+            "msFor25": 9
+          },
+          {
+            "sample": 11,
+            "msFor25": 8.5
+          },
+          {
+            "sample": 12,
+            "msFor25": 9.399999976158142
+          },
+          {
+            "sample": 13,
+            "msFor25": 11.099999964237213
+          },
+          {
+            "sample": 14,
+            "msFor25": 7.5
+          },
+          {
+            "sample": 15,
+            "msFor25": 9.300000011920929
+          },
+          {
+            "sample": 16,
+            "msFor25": 9.699999988079071
+          },
+          {
+            "sample": 17,
+            "msFor25": 9.900000035762787
+          },
+          {
+            "sample": 18,
+            "msFor25": 8.5
+          },
+          {
+            "sample": 19,
+            "msFor25": 8.5
+          }
+        ],
+        "summary": {
+          "samples": 20,
+          "median": 9.349999994039536,
+          "mean": 9.124999994039536,
+          "p95": 10.599999964237213
+        }
+      }
+    ]
+  },
+  "benchmark": null,
+  "errors": []
+}

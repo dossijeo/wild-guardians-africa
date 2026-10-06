@@ -13,8 +13,8 @@ function emptyRenderable(object){
   return sources.every(m=>m?.onBeforeRender===THREE.Material.prototype.onBeforeRender&&nativeDepthRecipe(m))&&
     (!object.customDepthMaterial||object.customDepthMaterial.onBeforeRender===THREE.Material.prototype.onBeforeRender&&nativeDepthRecipe(object.customDepthMaterial));
 }
-export function withDepthCaptureMaterials(world, render, {optimized=true,visibleOnly=true,nonEmptyOnly=false}={}) {
-  const materials=new Map(),standards=new Map(),objects=[],stats={specialized:0,fallback:0,excluded:0,emptySkipped:0};
+export function withDepthCaptureMaterials(world, render, {optimized=true,visibleOnly=true,nonEmptyOnly=false,stockAlpha=false}={}) {
+  const materials=new Map(),standards=new Map(),objects=[],stats={specialized:0,fallback:0,excluded:0,emptySkipped:0,stockAlphaSpecialized:0};
   const skipEmpty=nonEmptyOnly&&!world.overrideMaterial&&world.onBeforeRender===THREE.Object3D.prototype.onBeforeRender&&world.onAfterRender===THREE.Object3D.prototype.onAfterRender;
   const remember=material=>{if(material&&!materials.has(material))materials.set(material,{visible:material.visible,colorWrite:material.colorWrite});};
   const compatible=(source,depth)=>depth?.userData.worldDepthCompatible&&
@@ -41,11 +41,12 @@ export function withDepthCaptureMaterials(world, render, {optimized=true,visible
         if(object.customDepthMaterial)candidate=object.customDepthMaterial;
         // Keep textured alpha silhouettes on their native recipe until combined
         // biome readbacks prove equivalence; authored crop depths remain eligible.
-        else if(!source.alphaTest){if(!standards.has(source))standards.set(source,standardDepthMaterial(source));candidate=standards.get(source);}
+        else if(!source.alphaTest||stockAlpha){if(!standards.has(source))standards.set(source,standardDepthMaterial(source));candidate=standards.get(source);}
       }
       if(candidate&&compatible(source,candidate)){
         const depth=candidate;remember(depth);depth.visible=source.visible;
         objects.push([object,source]);object.material=depth;stats.specialized++;
+        if(stockAlpha&&source.alphaTest&&!object.customDepthMaterial)stats.stockAlphaSpecialized++;
       } else if(list.some(m=>!m.transparent&&m.depthWrite))stats.fallback++;
       else stats.excluded++;
     });

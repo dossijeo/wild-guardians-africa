@@ -1,0 +1,66 @@
+{
+  "base": "230aac199fdf3839671ea8f2002ec21b426e84bb",
+  "executedSources": {
+    "src/rendering/depth-capture.js": "6ab80a3cae96a898809538dd7e4f1e837f01daa677232560ef9df59f1d128d58",
+    "src/rendering/buildings.js": "81643d827f178167e46c4df0642b7d92abd73ad8d801bb018f899a96fb3f89e6",
+    "tests/browser/single-pass-alpha-depth.js": "6b5de715325f94c11ede16381c61ea2b2b65cca49786772570005e605c2fef4e",
+    "tests/browser/late-farm-render.html": "b7891d94a34fc40033b0d2f1ef4a0bcaa3d161ec283e6cb781ff4c1ff25be101",
+    "tests/browser/depth-capture.html": "f813181f86ef88e27fab40ce6c29a0663d067c1e66d34f16da90087d6ab4f7c5",
+    "tests/depth-capture.test.js": "5d6317c0f69cfce9d04545f642911a5df32081bb320df75fdc0f4ea00c86b5d8",
+    "tests/single-pass-alpha-depth.test.js": "fd0e9fb90cb4416016a60707e1a86cf3eb0665f4fa210392a8f93c682c4f2fdd"
+  },
+  "evidence": {
+    "cpu-mangrove.json": {
+      "bytes": 9992,
+      "sha256": "997572c32e3ac2c7b7db415640becb6ad13cdc7b60231fe539a54d26e90710bb"
+    },
+    "farm.png": {
+      "bytes": 202120,
+      "sha256": "d7e096d8748d47813d11f1948b520cf112cb7140a9f30dd3b74c8b4d0268aa68"
+    },
+    "mangrove-collapse.json": {
+      "bytes": 4685,
+      "sha256": "d73e82d8b3742dd3395f5112fcca7799e9c768c2d98edad6f186b89b41caa629"
+    },
+    "mangrove-collapse.png": {
+      "bytes": 252495,
+      "sha256": "4ab070ca7709b89f9eb6b28441c4b7ec2382f947ab4a105d7567eef511411da7"
+    },
+    "mangrove-intact.json": {
+      "bytes": 4680,
+      "sha256": "17cb5c7535eb46eb293c470657258be4e5aa3325f32ba4955b577c0475f3d2db"
+    },
+    "native.json.gz": {
+      "bytes": 28528,
+      "sha256": "c37910837a442f92d355e57f00cccae0c086e1ed993de08cd5d8e5a72d4e7171",
+      "originalSha256": "1932961e497d772dc26649c8a265df1f8a9daf06af87c76bbc424aec6810519f"
+    },
+    "pixels.json.gz": {
+      "bytes": 28999,
+      "sha256": "b4109177369e86bdb3ce4b46ae2da5af06b11823b1e26efa536993e8df44458d",
+      "originalSha256": "3632f3b636812c5e78a276d6982fe4b9dda6887fb6dbbba89bb44cc2424e8cfe"
+    }
+  },
+  "gzipMtime": 0,
+  "scope": "QA opt-in stockAlpha=false/true/true/false inside existing traversal; default false, empty filter false. No edits during native measurements. Two independent frozen simulations remained running; no concurrent own build/tests.",
+  "invariants": {
+    "setupSha256": true,
+    "endSha256": true,
+    "events": true,
+    "pathSearches": true,
+    "submissions": true
+  },
+  "tests": {
+    "command": "node --test tests/depth-capture.test.js tests/standard-depth.test.js tests/native-shadow.test.js tests/single-pass-alpha-depth.test.js",
+    "passed": 26,
+    "durationMs": 415.4948,
+    "exitCode": 0
+  },
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "modules": 204,
+    "durationSeconds": 9.11,
+    "warning": "main chunk exceeds 500 kB"
+  }
+}
