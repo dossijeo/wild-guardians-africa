@@ -409,7 +409,13 @@ class TerrainField{
   return h
  }
  lattice(x,z){const k=x+','+z;let h=this.heightCache.get(k);if(h===undefined){h=this.height(x,z);if(this.heightCache.size>=12000)evictOldest(this.heightCache);this.heightCache.set(k,h)}return h}
- surface(x,z){const step=1,x0=Math.floor(x/step)*step,z0=Math.floor(z/step)*step,fx=(x-x0)/step,fz=(z-z0)/step,a=this.lattice(x0,z0),b=this.lattice(x0+step,z0),d=this.lattice(x0,z0+step),c=this.lattice(x0+step,z0+step);return fx+fz<=1?a+(b-a)*fx+(d-a)*fz:c+(d-c)*(1-fx)+(b-c)*(1-fz)}
+ surface(x,z){
+  const step=1,x0=Math.floor(x/step)*step,z0=Math.floor(z/step)*step,fx=(x-x0)/step,fz=(z-z0)/step;
+  // Each native cell triangle uses three corners. Preserve the interpolation
+  // arithmetic, but do not query the unused fourth height/cache entry.
+  if(fx+fz<=1){const a=this.lattice(x0,z0),b=this.lattice(x0+step,z0),d=this.lattice(x0,z0+step);return a+(b-a)*fx+(d-a)*fz;}
+  const b=this.lattice(x0+step,z0),d=this.lattice(x0,z0+step),c=this.lattice(x0+step,z0+step);return c+(d-c)*(1-fx)+(b-c)*(1-fz);
+ }
  slope(x,z){return Math.hypot(this.surface(x+.8,z)-this.surface(x-.8,z),this.surface(x,z+.8)-this.surface(x,z-.8))/1.6}
  fluidInside(x,z){
   // Preserve adapters that explicitly replace the full query or pond metric.
