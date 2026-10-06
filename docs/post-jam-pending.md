@@ -206,3 +206,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Peticiones regionales del horizonte experimental](qa/far-scene-regions/README.md): única carga activa con epoch/cancelación, residente anterior retenido y reutilización al volver; quince pruebas y cambios regionales nativos sin errores. Árboles de solapamiento idénticos. Pendientes conexión automática a cámara/chunks, preparación GPU, crossfade y aceptación de relieve/móvil; sigue fuera de gameplay.
+
+
+[Seguimiento regional del foco experimental](qa/far-camera-regions/README.md): regiones simétricas X/Z con histéresis/settling, sin muestreo por frame; veinte pruebas y secuencia nativa órbita/desplazamiento/acercamiento sin errores. Pendientes tiles de anticipación, chunks reales, iluminación/bruma/crossfade y móvil; sigue fuera de gameplay.

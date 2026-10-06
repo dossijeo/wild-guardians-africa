@@ -1,0 +1,101 @@
+{
+  "procedural": true,
+  "region": {
+    "epoch": 4,
+    "requested": {
+      "x": 288,
+      "z": 288
+    },
+    "focus": [
+      288,
+      13.285759971673762,
+      288
+    ],
+    "resident": "288:288",
+    "pending": null
+  },
+  "workerLoad": {
+    "elapsedMs": 482.80000001192093,
+    "buildMs": 438,
+    "frames": 30,
+    "maxFrameGapMs": 16.80000000000001
+  },
+  "ground": {
+    "proxy": true,
+    "step": 4,
+    "vertices": 14641,
+    "triangles": 28800,
+    "buildMs": 700.3999999761581,
+    "maxTreeHeightError": 0.13440795810733164,
+    "meanTreeHeightError": 0.020615278675352563
+  },
+  "populationSize": 148,
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": false,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "mediodía",
+  "nightAmount": 0,
+  "materialType": "MeshStandardMaterial",
+  "night": false,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    288,
+    20.285759971673762,
+    313
+  ],
+  "firstTree": {
+    "id": "0:10:22",
+    "slot": 0,
+    "x": 142.5375165017847,
+    "z": 308.44793865279206,
+    "y": 8.085910608971792,
+    "yaw": 0.8151770444016574,
+    "scale": 0.9870162892946974,
+    "sx": 0.9769663356884057,
+    "sy": 0.950859782569563,
+    "sz": 1.0232975381381821,
+    "tint": 1.042623854931444,
+    "radius": 3.888530644925092,
+    "priority": 0.6344057202804834,
+    "origin": {
+      "x": 141.5524614773132,
+      "y": 8.085910608971792,
+      "z": 307.5890084769577
+    },
+    "distance": 145.53369152185107,
+    "atlas": {
+      "first": 0,
+      "second": 1,
+      "blend": 0.9222529558761591,
+      "nearest": 1
+    },
+    "right": {
+      "x": 0.03127840226965226,
+      "y": 0,
+      "z": -0.9995107110739023
+    },
+    "impostorVisibility": 1
+  },
+  "drawCalls": 3,
+  "triangles": 125906,
+  "modelCount": 10,
+  "impostorCount": 148,
+  "selection": {
+    "selectionScans": 2,
+    "matrixUploads": 2
+  },
+  "webglError": 0,
+  "errors": []
+}

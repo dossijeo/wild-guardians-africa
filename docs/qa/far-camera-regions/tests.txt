@@ -1,0 +1,110 @@
+TAP version 13
+# Subtest: far ground samples native surface once per indexed vertex and preserves triangle orientation and anchors
+ok 1 - far ground samples native surface once per indexed vertex and preserves triangle orientation and anchors
+  ---
+  duration_ms: 3.9376
+  ...
+# Subtest: height proxy retains deterministic real terrain relief and uses far fewer triangles than metre grid
+ok 2 - height proxy retains deterministic real terrain relief and uses far fewer triangles than metre grid
+  ---
+  duration_ms: 214.7718
+  ...
+# Subtest: proxy samples source colours per vertex and washes detail without shifting terrain
+ok 3 - proxy samples source colours per vertex and washes detail without shifting terrain
+  ---
+  duration_ms: 0.6986
+  ...
+# Subtest: stationary, orbit and grid-edge jitter never trigger regional sampling
+ok 4 - stationary, orbit and grid-edge jitter never trigger regional sampling
+  ---
+  duration_ms: 16.2607
+  ...
+# Subtest: settled travel updates both coordinates once; reverse travel must cross the hysteresis margin
+ok 5 - settled travel updates both coordinates once; reverse travel must cross the hysteresis margin
+  ---
+  duration_ms: 2.1062
+  ...
+# Subtest: rapid travel waits for latest region to settle and invalid focus produces no request
+ok 6 - rapid travel waits for latest region to settle and invalid focus produces no request
+  ---
+  duration_ms: 0.4594
+  ...
+# Subtest: regional request covers every direction with fixed, grid-aligned bounds and terrain margin
+ok 7 - regional request covers every direction with fixed, grid-aligned bounds and terrain margin
+  ---
+  duration_ms: 2.0842
+  ...
+# Subtest: failed region can reset to retained centre and retry after settling again
+ok 8 - failed region can reset to retained centre and retry after settling again
+  ---
+  duration_ms: 0.3612
+  ...
+# Subtest: native worker returns identical scene arrays and detaches all transferred buffers
+ok 9 - native worker returns identical scene arrays and detaches all transferred buffers
+  ---
+  duration_ms: 1223.4944
+  ...
+# Subtest: loader resolves once and releases worker handlers on success
+ok 10 - loader resolves once and releases worker handlers on success
+  ---
+  duration_ms: 0.9165
+  ...
+# Subtest: loader cancellation prevents construction or cancels an active request and ignores late data
+ok 11 - loader cancellation prevents construction or cancels an active request and ignores late data
+  ---
+  duration_ms: 2.0728
+  ...
+# Subtest: worker error, decode error and post failures reject and terminate once
+ok 12 - worker error, decode error and post failures reject and terminate once
+  ---
+  duration_ms: 0.6933
+  ...
+# Subtest: overlapping regional scenes keep identical native tree IDs and transforms
+ok 13 - overlapping regional scenes keep identical native tree IDs and transforms
+  ---
+  duration_ms: 851.3303
+  ...
+# Subtest: stream retains complete region during a replacement and ignores stale completion
+ok 14 - stream retains complete region during a replacement and ignores stale completion
+  ---
+  duration_ms: 6.9948
+  ...
+# Subtest: duplicate requests share a worker and completed keys reuse the resident result
+ok 15 - duplicate requests share a worker and completed keys reuse the resident result
+  ---
+  duration_ms: 3.2214
+  ...
+# Subtest: failure preserves old region and can be retried; obsolete errors do not replace current errors
+ok 16 - failure preserves old region and can be retried; obsolete errors do not replace current errors
+  ---
+  duration_ms: 1.8075
+  ...
+# Subtest: dispose aborts once and late arrays cannot become resident; queued obsolete loads never start
+ok 17 - dispose aborts once and late arrays cannot become resident; queued obsolete loads never start
+  ---
+  duration_ms: 1.4005
+  ...
+# Subtest: returning to the resident region cancels an intermediate load without regeneration
+ok 18 - returning to the resident region cancels an intermediate load without regeneration
+  ---
+  duration_ms: 0.6635
+  ...
+# Subtest: tree-only queries equal complete native populations across seeds and chunk boundaries
+ok 19 - tree-only queries equal complete native populations across seeds and chunk boundaries
+  ---
+  duration_ms: 379.9388
+  ...
+# Subtest: atlas anchor preserves the original anisotropic native model transform
+ok 20 - atlas anchor preserves the original anisotropic native model transform
+  ---
+  duration_ms: 2.1798
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2396.199

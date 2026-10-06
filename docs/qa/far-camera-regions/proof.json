@@ -1,0 +1,129 @@
+{
+  "sourceHashes": {
+    "tools/experiments/far-region-tracker.js": "36e41213e0798438a994a43b026b292821b9019b0491ac4915b4e48323ad8ce5",
+    "tests/far-region-tracker.test.js": "e05753e17b1b99da0fd5f7681db9010514f5906e96ba1cb8d43c0736f7bd5790",
+    "tests/browser/far-vegetation-transition.html": "1532b59b069e619766e1fb1c60276c388c6df9759e5553d4bc2da5a4838d5fc6"
+  },
+  "observations": {
+    "initial": {
+      "region": {
+        "epoch": 1,
+        "requested": {
+          "x": 0,
+          "z": 0
+        },
+        "focus": [
+          0,
+          7.485351025518218,
+          0
+        ],
+        "resident": "0:0",
+        "pending": null
+      },
+      "camera": [
+        0,
+        22.485351025518217,
+        70
+      ],
+      "populationSize": 131,
+      "webglError": 0,
+      "errors": []
+    },
+    "orbit": {
+      "region": {
+        "epoch": 1,
+        "requested": {
+          "x": 0,
+          "z": 0
+        },
+        "focus": [
+          0,
+          7.485351025518218,
+          0
+        ],
+        "resident": "0:0",
+        "pending": null
+      },
+      "camera": [
+        49.49747468305832,
+        22.485351025518217,
+        49.49747468305833
+      ],
+      "populationSize": 131,
+      "webglError": 0,
+      "errors": []
+    },
+    "pending": {
+      "region": {
+        "epoch": 3,
+        "requested": {
+          "x": 192,
+          "z": 192
+        },
+        "focus": [
+          288,
+          13.285759971673762,
+          288
+        ],
+        "resident": "0:0",
+        "pending": "192:192"
+      },
+      "camera": [
+        337.4974746830583,
+        28.285759971673762,
+        337.4974746830583
+      ],
+      "populationSize": 131,
+      "webglError": 0,
+      "errors": []
+    },
+    "final": {
+      "region": {
+        "epoch": 4,
+        "requested": {
+          "x": 288,
+          "z": 288
+        },
+        "focus": [
+          288,
+          13.285759971673762,
+          288
+        ],
+        "resident": "288:288",
+        "pending": null
+      },
+      "camera": [
+        337.4974746830583,
+        28.285759971673762,
+        337.4974746830583
+      ],
+      "populationSize": 148,
+      "webglError": 0,
+      "errors": []
+    },
+    "near": {
+      "region": {
+        "epoch": 4,
+        "requested": {
+          "x": 288,
+          "z": 288
+        },
+        "focus": [
+          288,
+          13.285759971673762,
+          288
+        ],
+        "resident": "288:288",
+        "pending": null
+      },
+      "camera": [
+        288,
+        20.285759971673762,
+        313
+      ],
+      "populationSize": 148,
+      "webglError": 0,
+      "errors": []
+    }
+  }
+}

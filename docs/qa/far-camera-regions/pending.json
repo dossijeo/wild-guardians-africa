@@ -1,0 +1,101 @@
+{
+  "procedural": true,
+  "region": {
+    "epoch": 3,
+    "requested": {
+      "x": 192,
+      "z": 192
+    },
+    "focus": [
+      288,
+      13.285759971673762,
+      288
+    ],
+    "resident": "0:0",
+    "pending": "192:192"
+  },
+  "workerLoad": {
+    "elapsedMs": 482.80000001192093,
+    "buildMs": 438,
+    "frames": 30,
+    "maxFrameGapMs": 16.80000000000001
+  },
+  "ground": {
+    "proxy": true,
+    "step": 4,
+    "vertices": 14641,
+    "triangles": 28800,
+    "buildMs": 6.199999988079071,
+    "maxTreeHeightError": 0.08809883215716674,
+    "meanTreeHeightError": 0.014338283892241297
+  },
+  "populationSize": 131,
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": false,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "mediodía",
+  "nightAmount": 0,
+  "materialType": "MeshStandardMaterial",
+  "night": false,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    337.4974746830583,
+    28.285759971673762,
+    337.4974746830583
+  ],
+  "firstTree": {
+    "id": "0:-10:-10",
+    "slot": 0,
+    "x": -125.06641101329687,
+    "z": -131.23078768546281,
+    "y": 11.737313984149235,
+    "yaw": 3.832559550060221,
+    "scale": 1.1023588601103984,
+    "sx": 1.146420220244541,
+    "sy": 1.114179830405689,
+    "sz": 1.038035494534225,
+    "tint": 0.989136151727289,
+    "radius": 4.356396836929256,
+    "priority": 0.9216813880484551,
+    "origin": {
+      "x": -124.1766457822267,
+      "y": 11.737313984149235,
+      "z": -130.24750282868743
+    },
+    "distance": 658.537419053408,
+    "atlas": {
+      "first": 4,
+      "second": 5,
+      "blend": 0.11180596337562765,
+      "nearest": 4
+    },
+    "right": {
+      "x": 0.7117716454780632,
+      "y": 0,
+      "z": -0.7024109371966315
+    },
+    "impostorVisibility": 1
+  },
+  "drawCalls": 2,
+  "triangles": 29062,
+  "modelCount": 0,
+  "impostorCount": 131,
+  "selection": {
+    "selectionScans": 6,
+    "matrixUploads": 5
+  },
+  "webglError": 0,
+  "errors": []
+}
