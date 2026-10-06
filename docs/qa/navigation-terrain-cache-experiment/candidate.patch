@@ -1,0 +1,63 @@
+diff --git a/src/world/navigation.js b/src/world/navigation.js
+index 4a156b2..88ea472 100644
+--- a/src/world/navigation.js
++++ b/src/world/navigation.js
+@@ -13,7 +13,7 @@ export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+ export class Navigation {
+   constructor(seed,biome,profile) {
+     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
+-    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();
++    this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();this.terrainCache=new Map();this.terrainCacheField=this.field;
+   }
+   setActiveBounds(bounds){
+     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
+@@ -99,6 +99,20 @@ export class Navigation {
+     return water?.inside?Math.max(ground,water.level-.10):ground;
+   }
+   terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
++    // Exact static terrain samples only. No coordinate quantization and no
++    // obstacle/permission results: buildings, gates, props and shields still
++    // use their current collision checks. A changed field drops all samples.
++    const native=this.field instanceof TerrainField&&this.field.surface===TerrainField.prototype.surface&&this.field.slope===TerrainField.prototype.slope&&this.field.waterInfo===TerrainField.prototype.waterInfo&&this.workerSurface===Navigation.prototype.workerSurface;
++    const cache=native?this.terrainCache:null;
++    if(!cache)return this.testTerrainValid(x,z,radius,worker,allowFluid);
++    if(this.terrainCacheField!==this.field){cache.clear();this.terrainCacheField=this.field;}
++    const key=`${x},${z}:${radius}:${worker}:${allowFluid}`;
++    if(cache.has(key))return cache.get(key);
++    const result=this.testTerrainValid(x,z,radius,worker,allowFluid);
++    if(cache.size>=8192)cache.delete(cache.keys().next().value);
++    cache.set(key,result);return result;
++  }
++  testTerrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
+     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
+       if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
+       if(this.field.canyon){
+diff --git a/tools/check_integrated_load.mjs b/tools/check_integrated_load.mjs
+index 2de9aa3..0dec519 100644
+--- a/tools/check_integrated_load.mjs
++++ b/tools/check_integrated_load.mjs
+@@ -13,7 +13,9 @@ import {activeChunkRegion} from '../src/world/active-region.js';
+ // credit and prepared damage are stress-fixture conditions, not player rules.
+ // No audio, GPU or perceptual acceptance is claimed by this CPU diagnostic.
+ const noNeighbors=process.argv.includes('--no-neighbors'),noBounds=process.argv.includes('--no-bounds'),trace=process.argv.includes('--trace')?createHash('sha256'):null;
++const noTerrainCache=process.argv.includes('--no-terrain-cache');
+ const {s,nav}=createOpeningWorld({slotId:'integrated-load'}),center=s.structures[0];
++if(noTerrainCache)nav.terrainCache=null;
+ if(noBounds){const setState=nav.setState;nav.setState=function(...args){const value=setState.apply(this,args);this.obstacleBounds=undefined;return value;};nav.obstacleBounds=undefined;}
+ if(noNeighbors){const setState=nav.setState;nav.setState=function(...args){const value=setState.apply(this,args);this.searchNeighborCache=undefined;return value;};nav.searchNeighborCache=undefined;}
+ transact(s.ledger,'qa-credit',rational(10000));
+@@ -23,7 +25,13 @@ for(let z=-12;z<=12&&s.plants.length<32;z+=1.5)for(let x=5;x<=24&&s.plants.lengt
+ assert.equal(s.plants.length,32);Game.openInitialHiring(s);Game.hire(s,'qa-hire',{olderFemale:4,olderMale:4});s.tutorial.step='done';s.dayPlan={done:true};s.nightPlan={done:true};
+ const eye={x:center.x+18,z:center.z+25};nav.setRaidView(eye,center);nav.setActiveBounds(activeChunkRegion(eye,'baja').bounds);
+ const warmNavigation=process.argv.includes('--warm-navigation');
+-const report={noNeighbors,noBounds,warmNavigation,seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
++const report={noNeighbors,noBounds,noTerrainCache,warmNavigation,seed:712,qaCredit:10000,paidPlants:32,paidWorkers:8,phase:'work',steps:0,searches:0,maxTickMs:0,slowTicks:[],slowSearches:[],events:{}};const seen=new Set(),find=nav.findPath;
++if(process.argv.includes('--terrain-metrics')){
++  report.terrainQueries=0;report.terrainEvaluations=0;
++  const query=nav.terrainValid,evaluate=nav.testTerrainValid;
++  nav.terrainValid=function(...args){report.terrainQueries++;return query.apply(this,args);};
++  nav.testTerrainValid=function(...args){report.terrainEvaluations++;return evaluate.apply(this,args);};
++}
+ nav.findPath=function(...args){report.searches++;const start=performance.now(),result=find.apply(this,args),ms=performance.now()-start;if(ms>20&&report.slowSearches.length<20){const [from,to,radius,ignore,worker,margin]=args;report.slowSearches.push({elapsed:s.elapsed,phase:report.phase,from:{x:from.x,z:from.z},to:{x:to.x,z:to.z},radius,worker,margin,ms,found:!!result});}return result;};
+ function step(){
+   const before=performance.now();Game.tick(s,.1,nav);const ms=performance.now()-before;report.steps++;report.maxTickMs=Math.max(ms,report.maxTickMs);if(trace)trace.update(serialize(s));

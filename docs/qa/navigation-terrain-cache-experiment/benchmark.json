@@ -1,0 +1,60 @@
+{
+  "node": "v20.11.0",
+  "scope": "Sequential alternating child-process native terrain simulation, includes setup and serialized trace. Query counters add overhead. Three trials each, no GPU/mobile/frame-rate claim. All states match the frozen pre-cache trace.",
+  "rows": [
+    {
+      "trial": 0,
+      "mode": "uncached",
+      "wallMs": 3889.7148,
+      "maxTickMs": 510.0042000000003,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 33638,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    },
+    {
+      "trial": 0,
+      "mode": "cached",
+      "wallMs": 3619.5544999999997,
+      "maxTickMs": 515.8761,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 20827,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    },
+    {
+      "trial": 1,
+      "mode": "cached",
+      "wallMs": 3662.384899999999,
+      "maxTickMs": 540.1639999999998,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 20827,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    },
+    {
+      "trial": 1,
+      "mode": "uncached",
+      "wallMs": 3723.1245,
+      "maxTickMs": 494.69169999999986,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 33638,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    },
+    {
+      "trial": 2,
+      "mode": "uncached",
+      "wallMs": 5339.3937000000005,
+      "maxTickMs": 1091.9674,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 33638,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    },
+    {
+      "trial": 2,
+      "mode": "cached",
+      "wallMs": 9526.608800000002,
+      "maxTickMs": 924.9474,
+      "terrainQueries": 33638,
+      "terrainEvaluations": 20827,
+      "trajectorySha256": "9ea59d5816db79085aafff2ec796d4322ab680afde6209555befa8d0baf0fd54"
+    }
+  ]
+}
