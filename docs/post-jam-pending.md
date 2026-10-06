@@ -171,3 +171,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Agua y lava preparadas desde vistas secas](qa/water-shader-preload/README.md): 78 pruebas/build y cinco recorridos preparados. Sabana deja de compilar las dos variantes chunk de agua del paso 77 (254,6→18,1–25,1 ms en muestras); contactos y daño al centro conservados. La repetición registra otro pico de 171,1 ms sin compilaciones: no se declara ausencia general de tirones. Pendientes su causa, RAM/carga, otros estados/calidades/biomas/móvil y coste sostenido de dibujo/profundidad.
+
+
+[Precarga comprobada en los biomas restantes](qa/preload-biome-coverage/README.md): contactos de búfalo/Gran Río, rinoceronte/Manglares y león/Desierto sin compilar/enlazar durante movimiento. Finca histórica de Manglares con 66 cultivos vivos alcanza daño físico. Nueve pruebas QA correctas; runtime sin cambios. El pico de 171 ms no se reproduce ni queda explicado. Gran Río/Sabana generan un programa de vegetación alpha instanciada durante aparición, fuera de la medición de movimiento; siguiente prioridad preparar esa variante y medir aparición/carga/memoria. Campaña congelada de margen viva al día 73, sin resultado terminal.

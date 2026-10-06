@@ -18,3 +18,10 @@ test('a failing constructor rolls back inherited methods and existing hooks',()=
  const original=()=>{},world=Object.create({syncChunks:original});Object.defineProperty(world,'sync',{value:()=>{},writable:false});
  assert.throws(()=>new RenderCpuCalls(world),TypeError);assert.equal(Object.hasOwn(world,'syncChunks'),false);assert.equal(world.syncChunks,original);
 });
+
+
+test('optional framebuffer scopes retain target arguments, nested timings and ownership; default leaves them untouched',()=>{
+ let time=0,target=null;const depth={setSize(w,h){assert.equal(this,depth);assert.deepEqual([w,h],[20,10]);time+=1;}},gl={bindFramebuffer(value){assert.equal(this,gl);assert.equal(value,depth);time+=2;}},renderer={getContext:()=>gl,getRenderTarget:()=>target,setRenderTarget(value){assert.equal(this,renderer);target=value;gl.bindFramebuffer(value);time+=3;}},world={renderer,destructionPass:{smokeDepth:depth}};
+ const original=renderer.setRenderTarget,plain=new RenderCpuCalls(world,()=>time);assert.equal(renderer.setRenderTarget,original);plain.dispose();
+ const probe=new RenderCpuCalls(world,()=>time,{submission:true});probe.begin();renderer.setRenderTarget(depth);depth.setSize(20,10);const rows=probe.end();assert.equal(rows['renderer.target.depth'].totalMs,5);assert.equal(rows['gl.bindFramebuffer'].totalMs,2);assert.equal(rows['depthTarget.setSize'].totalMs,1);probe.dispose();assert.equal(renderer.setRenderTarget,original);
+});

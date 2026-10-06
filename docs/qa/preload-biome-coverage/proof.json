@@ -1,0 +1,292 @@
+{
+  "runtime": "95cb9d2f0467df9642328786f06d1205aca08978 (no production edits)",
+  "scope": "Native desktop IAB, seed 712, Mapungubwe, medium, paid center/one paid seed/zero workers, controlled spawn; CPU inclusive/GL calls, not GPU/FPS/physical-phone/full-night acceptance",
+  "sabanaDomainComparison": {
+    "steps": true,
+    "heldFrames": true,
+    "spawnSpecies": true,
+    "simulatedSeconds": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "logicalHits": true,
+    "actors": true,
+    "attackEffects": true,
+    "contactRequirement": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "renderedActors": true
+  },
+  "verification": {
+    "tests": 9,
+    "failures": 0,
+    "durationMs": 209.966
+  },
+  "runs": {
+    "sabana-submission": {
+      "biome": "sabana",
+      "ok": true,
+      "steps": 523,
+      "heldFrames": 0,
+      "contact": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "hyena",
+        "presentation": {
+          "elapsed": 26.150000000000237,
+          "animal": {
+            "x": 89.50733046366794,
+            "z": -7.588399560557424,
+            "heading": -2.7965675419255382
+          },
+          "target": {
+            "x": 89,
+            "z": -9
+          },
+          "shield": null
+        }
+      },
+      "loadingMs": 5273.5,
+      "maxWorldRenderCpuMs": 30.700000047683716,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "downloads": [
+        7,
+        7
+      ],
+      "newAppearancePrograms": [
+        {
+          "id": 45,
+          "name": ""
+        }
+      ],
+      "newAnimalPrograms": []
+    },
+    "gran-rio-buffalo": {
+      "biome": "gran-rio",
+      "ok": true,
+      "steps": 523,
+      "heldFrames": 0,
+      "contact": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "buffalo",
+        "presentation": {
+          "elapsed": 26.150000000000237,
+          "animal": {
+            "x": 89.53608809134022,
+            "z": -7.5243613049519205,
+            "heading": -2.793125614980626
+          },
+          "target": {
+            "x": 89,
+            "z": -9
+          },
+          "shield": null
+        }
+      },
+      "loadingMs": 5563,
+      "maxWorldRenderCpuMs": 33,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "downloads": [
+        7,
+        7
+      ],
+      "newAppearancePrograms": [
+        {
+          "id": 45,
+          "name": ""
+        }
+      ],
+      "newAnimalPrograms": []
+    },
+    "manglares-rhino": {
+      "biome": "manglares",
+      "ok": true,
+      "steps": 228,
+      "heldFrames": 0,
+      "contact": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "rhino",
+        "presentation": {
+          "elapsed": 11.400000000000027,
+          "animal": {
+            "x": 88.70972492966014,
+            "z": -6.869685379212923,
+            "heading": 3.0061674227583612
+          },
+          "target": {
+            "x": 89,
+            "z": -9
+          },
+          "shield": null
+        }
+      },
+      "loadingMs": 5779.799999952316,
+      "maxWorldRenderCpuMs": 23.80000001192093,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "downloads": [
+        7,
+        7
+      ],
+      "newAppearancePrograms": [],
+      "newAnimalPrograms": []
+    },
+    "desierto-lion": {
+      "biome": "desierto",
+      "ok": true,
+      "steps": 416,
+      "heldFrames": 0,
+      "contact": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "lion",
+        "presentation": {
+          "elapsed": 20.80000000000016,
+          "animal": {
+            "x": 100.49132259899403,
+            "z": -7.642153432192795,
+            "heading": 2.7831545816050594
+          },
+          "target": {
+            "x": 101,
+            "z": -9
+          },
+          "shield": null
+        }
+      },
+      "loadingMs": 5324.699999988079,
+      "maxWorldRenderCpuMs": 25.399999976158142,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "downloads": [
+        7,
+        7
+      ],
+      "newAppearancePrograms": [],
+      "newAnimalPrograms": []
+    },
+    "gran-rio-appearance": {
+      "biome": "gran-rio",
+      "ok": true,
+      "steps": 523,
+      "heldFrames": 0,
+      "contact": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "buffalo",
+        "presentation": {
+          "elapsed": 26.150000000000237,
+          "animal": {
+            "x": 89.53608809134022,
+            "z": -7.5243613049519205,
+            "heading": -2.793125614980626
+          },
+          "target": {
+            "x": 89,
+            "z": -9
+          },
+          "shield": null
+        }
+      },
+      "loadingMs": 5484,
+      "maxWorldRenderCpuMs": 28.100000023841858,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "logCalls": 0,
+      "downloads": [
+        7,
+        7
+      ],
+      "newAppearancePrograms": [
+        {
+          "id": 45,
+          "name": ""
+        }
+      ],
+      "newAnimalPrograms": []
+    }
+  },
+  "sha256": {
+    "cpu-observer.txt": {
+      "file": "2a0fa4edcfd5195a7dd195cd333ca864840617f738f86847d05f0d59269a6abd"
+    },
+    "desierto-lion.json.gz": {
+      "file": "2066372d2a408e43f3acadcf607c2663c2b62d51d02f9f9730abb9e5b8b44cdf",
+      "raw": "488513637bf53f276602ae454b4ac0a76f076ce4cf99d73c6e6e71e6e5966bc5"
+    },
+    "desierto-lion.png": {
+      "file": "9167c57b1a3ff8e620c4de7a92d45b9dcf4eb5adad220b266555cf24dd813d2b"
+    },
+    "fixture.txt": {
+      "file": "4f4ea99d87eec90b60449b15db44c14234ab6392d7b5c050b9094f20f9af57dd"
+    },
+    "gran-rio-appearance.json.gz": {
+      "file": "c57fdaa5d2955790ae9923b44356c2b14b5141daf67258c1c2cc4fa481612ae5",
+      "raw": "1c226741b4bcf5a404f974648c996f1d595b2350ed3463837fe02933c8555266"
+    },
+    "gran-rio-appearance.png": {
+      "file": "b309b387a81a3f4b9acac5daed772387c4292efeb325e3e94cea6137c4e451f7"
+    },
+    "gran-rio-buffalo.json.gz": {
+      "file": "8d71847cd278363180cdc80220db240ea68a47dd7b010cdd56776beee93b2f5f",
+      "raw": "a7dd882a90a2842678ad800142713ba380cd15ca27eb9bb1dcff109af5b1b81a"
+    },
+    "gran-rio-buffalo.png": {
+      "file": "e53d7695448b52690ebba99cea7f019c547bfcc1a2a90f619785437758371cb6"
+    },
+    "manglares-rhino.json.gz": {
+      "file": "cc352cd16a2303682be11e9b881698582e3653543ce111bd395376401ac198b9",
+      "raw": "980215491500b82376038a0e0a6f87c49b813167939c0a3c871343a7a309d46f"
+    },
+    "manglares-rhino.png": {
+      "file": "ab5f6ebd57a89f5d4b7e19d72b32a2c664a25af85ac35bf3f14ffc5b0264cd81"
+    },
+    "paid-fixture.txt": {
+      "file": "bb6bd161ca50dae43dd1d41ddae68196bf6275bfd74f21206d06a54d5593c7a5"
+    },
+    "paid-manglares.json": {
+      "file": "c0d68b002a6b27e7b974d146fc773e87267e04c7881e64bc617d9af40a766141"
+    },
+    "paid-manglares.png": {
+      "file": "f22b6bd356383ac1c5adb910c35295b960107eafab6528b3cce962b3fc138c7c"
+    },
+    "sabana-submission.json.gz": {
+      "file": "d34a16bbb274066014bd4922dc4a8a796c1e2e1f36fab6e0f15238640819306c",
+      "raw": "aec7833cdd2c9d3d0beaa098a844c7207df0cc9cb54f1abc2555b1c10fbe00ec"
+    },
+    "sabana-submission.png": {
+      "file": "44404ceb3ac9d9dd42b3df6dc5b0b7ed84f7928298f2cc210bd4159d1a0b433e"
+    },
+    "scene.txt": {
+      "file": "753c5b81fb6166ad9130e6f721d7b093f25eaf7b65fbab697877bcaff8597ab8"
+    }
+  },
+  "sourceFiles": {
+    "scene.txt": "src/rendering/scene.js",
+    "cpu-observer.txt": "tests/browser/render-cpu-calls.js",
+    "fixture.txt": "tests/browser/animal-preload.html",
+    "paid-fixture.txt": "tests/browser/populated-raid.html"
+  },
+  "references": {
+    "docs\\qa\\water-shader-preload\\thin-savanna.json.gz": "428d2a0fbc83e3529acba4c0ad0a18a33b16003089c0d6be835d30473f1ca1a4",
+    "docs\\qa\\water-shader-preload\\scene-final.txt": "753c5b81fb6166ad9130e6f721d7b093f25eaf7b65fbab697877bcaff8597ab8",
+    "docs\\qa\\populated-raids\\manglares.json": "15ebf8523a7f650a16dfa3cf8f7b0ee8acafabfd5f49b247b6be5da173e44f24"
+  }
+}
