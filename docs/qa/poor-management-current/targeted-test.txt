@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: intensive native opening hires daily, expands beyond 16 crops and reinvests physical deliveries without manual harvest
+ok 1 - intensive native opening hires daily, expands beyond 16 crops and reinvests physical deliveries without manual harvest # SKIP test name does not match pattern
+  ---
+  duration_ms: 2.2894
+  ...
+# Subtest: recorded mixed farm attributes seed investment to live, physically picked and destroyed crops and reconciles the ledger
+ok 2 - recorded mixed farm attributes seed investment to live, physically picked and destroyed crops and reconciles the ledger # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3888
+  ...
+# Subtest: reinvestment without growing labour or maintenance reserves can lose despite a large plantation
+ok 3 - reinvestment without growing labour or maintenance reserves can lose despite a large plantation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1561
+  ...
+# Subtest: optional midday hiring uses paid ordinary contracts while preserving next-day and repair reserves
+ok 4 - optional midday hiring uses paid ordinary contracts while preserving next-day and repair reserves # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1301
+  ...
+# Subtest: poor reinvestment can lose with the current near-camera raid policy despite physical harvest income
+ok 5 - poor reinvestment can lose with the current near-camera raid policy despite physical harvest income
+  ---
+  duration_ms: 7332.044
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 4
+# todo 0
+# duration_ms 7800.1889

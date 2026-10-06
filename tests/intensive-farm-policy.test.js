@@ -68,3 +68,16 @@ test('optional midday hiring uses paid ordinary contracts while preserving next-
  assert.ok(report.daily.every(day=>day.delivered>0));
  for(const row of Object.values(summary.bySpecies))assert.ok(row.lostBeforeFirstWater<=row.lostWithPendingWater&&row.lostWithPendingWater<=row.destroyed);
 });
+
+test('poor reinvestment can lose with the current near-camera raid policy despite physical harvest income',()=>{
+ const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true});
+ assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);
+ assert.ok(report.maximumLiving>100);assert.ok(report.counts.CrateDelivered>50);
+ assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
+ assert.equal(report.counts.RaidSpawned,report.counts.RaidEnded,'No unfinished raid can stand in for economic defeat');
+ assert.ok(auditIntensiveFarm(report));
+ const summary=summarizeIntensiveFarm(report);
+ assert.equal(summary.campaign100,'unverified');
+ assert.ok(summary.activity.unoccupiedSeconds>summary.activity.daylightSeconds*.5,'Record actual idle strategy time instead of hiding it');
+ assert.ok(BigInt(summary.cashflow.harvestIncome)>0n);
+});
