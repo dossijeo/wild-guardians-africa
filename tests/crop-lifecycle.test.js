@@ -33,8 +33,8 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
 test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and revised-income state hash',()=>{
  const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
  const baseline=simulateIntensiveFarm(options);
- // Revised-price native baseline and legacy state are archived in docs/qa/harvest-regression-revision.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'17744d1aa8e1ebe5880a4c70c4aaf741efab669df76139f6408b5d711a08e2aa');
+ // Historical price baseline: docs/qa/harvest-regression-revision; audio-only sequence diff: docs/qa/tutorial-audio-snapshot-regression.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'f55025303b01f7305e4d3b459c39bede2f81e0084994ddcb143abd75293432b6');
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
  assert.ok(auditIntensiveFarm(staffed));assert.equal(staffed.completedNights,1);
