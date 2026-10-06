@@ -1,3 +1,4 @@
+import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
 import {RaidEntryPreparer} from '../world/raid-entry-preparer.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
@@ -138,7 +139,7 @@ export class WorldScene {
   focusFarm(){this.focus(farmHomeFocus(this.state));}
   focusTutorialPlacement(kind){
     const target=tutorialHandTarget(this.state,this.nav,kind);
-    if(target)this.focus({x:target.position[0],z:target.position[2]});
+    focusNewTutorialPlacement(this,target,true);
     return target;
   }
   terrain(cx,cz,payload=null) {
@@ -378,7 +379,7 @@ export class WorldScene {
   }
   updateHands(dt){
     if(!this.hands)return;
-    const config=this.tutorialGuideTarget();
+    const config=this.tutorialGuideTarget();focusNewTutorialPlacement(this,config);
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera);
   }
   render(dt) {if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();this.updateCamera();this.raidCamera?.update(this.state,dt);this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:renderOriginBounds(this.scene),minSize:[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
