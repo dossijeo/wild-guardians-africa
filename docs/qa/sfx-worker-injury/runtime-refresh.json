@@ -1,0 +1,14 @@
+{
+  "failedRun": 37399150468,
+  "failedCommit": "6e93787",
+  "cause": "Original routing updated for SFX 123 but compressed routing and metadata hashes were not regenerated. verify:audio-runtime rejected the stale source hash.",
+  "fixedBy": "node tools/prepare_sfx_runtime.mjs",
+  "unchangedEncodedSfx": 126,
+  "semanticRoutingValidation": true,
+  "sourceHashes": {
+    "public/content/sfx-routing.json": "73366bf17cc9c47ac0940560b9bf00429fb01c998da743f09102ea5dbe2fd67c",
+    "public/content/sfx-routing-opus.json": "2d8825b2b53fdffc0fa3e3e42dc125e35040586442f501a02e4d35ffe1f98891",
+    "content/manifests/sfx-runtime.json": "d02413319a8538e532c8a4745e6e529909c4af82a50b375435d7d0693ff86776",
+    "tools/verify_sfx_runtime.mjs": "9bb1d19fc236e63240f4f3654c92ae3fc600ce920b475357cb8b851f7734e540"
+  }
+}

@@ -12,6 +12,12 @@ for(const r of manifest.records){
  if(r.kind==='sfx'){const ogg=readOggOpus(runtime);assert.equal(ogg.decodedSamples,r.samples48000);}
 }
 const source=json('public/content/sfx.json'),game=json('public/content/sfx-opus.json'),lab=json('public/library/sfx/bankData-opus.json'),routing=json('public/content/sfx-routing-opus.json');
+const originalRouting=json('public/content/sfx-routing.json');
+// Compressed copies must preserve live integration decisions, not just audio IDs.
+assert.deepEqual(routing,{...originalRouting,items:originalRouting.items.map(item=>{
+ const variant=game.items.find(sound=>sound.id===item.id);assert.ok(variant,item.id);
+ return {...item,filename:variant.filename,sha256:variant.sha256,normalized_source:{filename:item.filename,sha256:item.sha256}};
+})},'Opus routing is stale; regenerate with node tools/prepare_sfx_runtime.mjs');
 assert.equal(game.items.length,126);assert.equal(lab.items.length,126);assert.equal(lab.manifest.items.length,126);assert.equal(routing.items.length,126);
 for(const item of game.items){
  const original=source.items.find(o=>o.id===item.id),preview=lab.items.find(o=>o.id===item.id),meta=lab.manifest.items.find(o=>o.id===item.id),route=routing.items.find(o=>o.id===item.id),bytes=read('public'+item.audio.url),ogg=readOggOpus(bytes);
