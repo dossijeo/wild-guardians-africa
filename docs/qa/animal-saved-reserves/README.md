@@ -16,4 +16,4 @@ Gran Cañón, seed 712, Mapungubwe, calidad media, escritorio:
 - Ninguna descarga adicional de modelos ni programa nuevo de materiales de animales.
 - Resultado ok y consola de avisos/errores vacía.
 
-Los informes y la captura están junto al README. Veinticinco tests focalizados de reservas/programación, cancelación de carga y preparación GPU pasan. No se afirma ausencia de cualquier tirón, presupuesto de RAM ni aceptación de móvil físico. Quedan pendientes recarga desde el menú real, guardados con incursión ya activa y comparación en todos los biomas/calidades.
+Los informes y la captura están junto al README. Veinticinco tests focalizados de reservas/programación, cancelación de carga y preparación GPU pasan. No se afirma ausencia de cualquier tirón, presupuesto de RAM ni aceptación de móvil físico. La recarga desde el menú real se verifica posteriormente en [animal-continue-menu](../animal-continue-menu/README.md). Quedan pendientes guardados con incursión ya activa y comparación en todos los biomas/calidades.

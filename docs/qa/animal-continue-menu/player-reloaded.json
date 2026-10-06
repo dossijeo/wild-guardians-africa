@@ -1,0 +1,409 @@
+{
+  "hiringRoutes": null,
+  "loading": [
+    {
+      "stamp": 1819.2999999523163,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 30882.69999998808,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 36591.59999996424,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    },
+    {
+      "stamp": 169981.5,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 192630.5,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 198070.29999995232,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "campaignEvents": [
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-2",
+      "type": "PlacementCommitted",
+      "kind": "center",
+      "targetId": "structure-2",
+      "presentation": {
+        "x": -30.684595436780327,
+        "z": 30.572305649518967
+      }
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-4",
+      "type": "CropPlaced",
+      "targetId": "plant-3"
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-6",
+      "type": "CropPlaced",
+      "targetId": "plant-5"
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-8",
+      "type": "CropPlaced",
+      "targetId": "plant-7"
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-10",
+      "type": "CropPlaced",
+      "targetId": "plant-9"
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-11",
+      "type": "NightStarted"
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "id": "event-12",
+      "type": "TutorialMessageStarted",
+      "messageId": "mechanic.defenses"
+    }
+  ],
+  "campaignPhases": [
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [
+        "qa-camera"
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "status": "intact",
+          "hp": 600,
+          "maxHp": 600
+        }
+      ],
+      "notices": []
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [
+        "qa-camera",
+        "menu"
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "status": "intact",
+          "hp": 600,
+          "maxHp": 600
+        }
+      ],
+      "notices": []
+    },
+    {
+      "day": 1,
+      "time": 399.9000000000227,
+      "elapsed": 399.90000000001277,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [
+        "qa-camera"
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "status": "intact",
+          "hp": 600,
+          "maxHp": 600
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "raid": null,
+  "raidView": {
+    "eye": {
+      "x": -30.684595436780327,
+      "z": 62.008910071391654
+    },
+    "target": {
+      "x": -30.684595436780327,
+      "z": 30.572305649518967
+    }
+  },
+  "completedNights": 0,
+  "result": null,
+  "nightPlan": {
+    "at": 400,
+    "group": [
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino"
+    ],
+    "done": false
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "day": 1,
+  "time": 399.9000000000227,
+  "elapsed": 399.90000000001277,
+  "balance": {
+    "n": "680",
+    "d": "1"
+  },
+  "pauses": [
+    "qa-camera"
+  ],
+  "tutorial": {
+    "step": "done",
+    "seen": [
+      "mechanic.defenses"
+    ],
+    "pending": [],
+    "guideAfterAuto": [],
+    "reading": null,
+    "basicSkipped": false,
+    "dismissed": [
+      "mechanic.defenses:"
+    ]
+  },
+  "hands": {
+    "hudVisible": false,
+    "worldVisible": false,
+    "toolKind": null,
+    "worldScreen": null
+  },
+  "structures": [
+    {
+      "id": "structure-2",
+      "x": -30.684595436780327,
+      "z": 30.572305649518967,
+      "screen": {
+        "x": 640,
+        "y": 364,
+        "depth": 0.9945267498123629,
+        "inFrustum": true
+      }
+    }
+  ],
+  "proposedCenter": {
+    "kind": "center",
+    "x": -30.684595436780327,
+    "z": 30.572305649518967,
+    "culture": "mapungubwe",
+    "screen": {
+      "x": 640,
+      "y": 364,
+      "depth": 0.9945267498123629,
+      "inFrustum": true
+    }
+  },
+  "plantSpots": [
+    {
+      "x": -25.5,
+      "z": 27,
+      "screen": {
+        "x": 770,
+        "y": 329,
+        "depth": 0.9950458723710444,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 28.5,
+      "screen": {
+        "x": 775,
+        "y": 343,
+        "depth": 0.9948394915053785,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 30,
+      "screen": {
+        "x": 781,
+        "y": 358,
+        "depth": 0.9946165246780203,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 31.5,
+      "screen": {
+        "x": 786,
+        "y": 374,
+        "depth": 0.9943749278608706,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 33,
+      "screen": {
+        "x": 793,
+        "y": 391,
+        "depth": 0.9941122705225759,
+        "inFrustum": true
+      }
+    }
+  ],
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 764,
+        "y": 325,
+        "depth": 0.9951010115827122,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 771,
+        "y": 344,
+        "depth": 0.9948291671851162,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 778,
+        "y": 364,
+        "depth": 0.994526697822,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-9",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 786,
+        "y": 386,
+        "depth": 0.9941894979716266,
+        "inFrustum": true
+      }
+    }
+  ],
+  "workers": [],
+  "delivered": 0
+}
