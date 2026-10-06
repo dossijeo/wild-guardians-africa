@@ -20,7 +20,9 @@ export function tutorialHandTarget(state,nav,toolKind=null){
   }
   if(!center||state.plants.some(p=>p.alive))return null;
   const departure=centerServicePoint(center,state,.8),seen=new Set();
-  for(let ring=1;ring<=8;ring++)for(let i=0;i<16;i++){
+  // Reach beyond the authored footprint even for the wider Sahel centre.
+  const searchRings=Math.max(8,Math.ceil(centerGeometry(center,state).radius+3.6+1.5));
+  for(let ring=1;ring<=searchRings;ring++)for(let i=0;i<16;i++){
     const angle=i*Math.PI/8,p={x:Math.round((center.x+Math.sin(angle)*(ring+.5))/1.5)*1.5,z:Math.round((center.z+Math.cos(angle)*(ring+.5))/1.5)*1.5},key=p.x+','+p.z;
     if(seen.has(key))continue;seen.add(key);
     // Keep the native billboard clear of nearby buildings/props. A legal crop
