@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **83**. Sin asignar en gameplay: **43**.
+Asignados: **84**. Sin asignar en gameplay: **42**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -114,7 +114,7 @@ Asignados: **83**. Sin asignar en gameplay: **43**.
 | 106 | ui_sell · Vender | Pendiente | Venta/ingreso al entregar caja; alternativa a eco_crop_sold, no comercio adicional. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 107 | ui_error · Error | Asignado | Error, fondos insuficientes o comando no permitido; aviso no invasivo. | src/audio/ui-audio.js:1 → ui-command-error |
 | 108 | ui_confirm · Confirmación | Asignado | Confirmación válida de modal, distinta de una simulación de compra. | src/audio/audio.js:19 → HiringConfirmed |
-| 109 | ui_objective_complete · Objetivo completado | Pendiente | Paso/tutorial u objetivo realmente completado; no crea misiones nuevas. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 109 | ui_objective_complete · Objetivo completado | Asignado | Paso/tutorial u objetivo realmente completado; no crea misiones nuevas. | src/audio/audio.js:21 → TutorialCompleted (grouped gameplay warning) |
 | 110 | ui_reward · Recompensa | Pendiente | Feedback de recompensa narrativa ya existente; reserva si no hay evento que lo justifique. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 111 | ui_unlock · Desbloqueo | Asignado | Desbloqueo de magia o postgame. | src/audio/audio.js:19 → PostgameStarted; src/audio/unlock-audio.js:3 → UnlockAudio.update: newly reached permanent magic milestone |
 | 112 | ui_pause · Pausa | Asignado | Pausa solicitada por el jugador. | src/audio/ui-audio.js:1 → ui-user-pause-transition |

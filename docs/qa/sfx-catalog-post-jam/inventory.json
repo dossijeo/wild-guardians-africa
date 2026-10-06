@@ -3,12 +3,12 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "73366bf17cc9c47ac0940560b9bf00429fb01c998da743f09102ea5dbe2fd67c",
+    "public/content/sfx-routing.json": "59be35e894414e5cb807cee1204a4a0fc20643ca927442271bbcd8e27dab47e9",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "4579ce78657f68fc359f43013f5f5a17692af48baba84ce04eb6755970b513dc",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "0b1e894d1b4024938c6fb5c9fcc0e179793a2d78d7243b9d8d07f723dce9238f",
+    "src/audio/audio.js": "bbf7666b6ec95b6bf4020aafc7cd112ce0b31735d50236eb7f70694ebb155542",
     "src/audio/farm-contact-audio.js": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7",
@@ -22,8 +22,8 @@
     "src/simulation/raids.js": "bd9586312511da6fc8356374841987f86d6d3c8045b87e8b71ba5007a9e82ab4"
   },
   "total": 126,
-  "assigned": 83,
-  "unassigned": 43,
+  "assigned": 84,
+  "unassigned": 42,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -146,7 +146,6 @@
       "spirit_invalid",
       "spirit_power_charge",
       "ui_sell",
-      "ui_objective_complete",
       "eco_gain",
       "eco_spend",
       "eco_item_pickup"
@@ -156,6 +155,7 @@
       "beast_hit_structure",
       "npc_acknowledge",
       "ui_buy",
+      "ui_objective_complete",
       "game_enemy_detected",
       "game_building_attacked",
       "game_wall_critical",
@@ -2244,10 +2244,16 @@
       "sha256": "ff2579d2d6dbcd12859812b4a7a95b409186788ee05c2a18c8ee1a78251f936c",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Paso/tutorial u objetivo realmente completado; no crea misiones nuevas.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21,
+          "trigger": "TutorialCompleted (grouped gameplay warning)"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 110,

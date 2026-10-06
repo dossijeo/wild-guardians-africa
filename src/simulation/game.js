@@ -467,7 +467,7 @@ function updateWorkers(s,dt,nav) {
       crate.x=w.x;crate.z=w.z;
       if(delivered) {
         transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
-        if(s.tutorial.step==='observe'||s.tutorial.step==='harvest')s.tutorial.step='done';
+        if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
       }
       continue;
     }

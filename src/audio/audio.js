@@ -18,7 +18,7 @@ import {prepareMusicDiskCache} from './music-disk-cache.js';
 import {startWindowMusic} from './start-window-music.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
-export const eventAlertSound=Object.freeze({WorkerIncapacitated:'game_farmer_hurt'});
+export const eventAlertSound=Object.freeze({WorkerIncapacitated:'game_farmer_hurt',TutorialCompleted:'ui_objective_complete'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
 export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','game_enemy_detected','game_building_attacked','game_wall_critical','game_farmer_hurt','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
@@ -186,7 +186,7 @@ export class AudioSystem {
       if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
       const alert=event.type==='StructureHit'?structureAlertSound(event):eventAlertSound[event.type];
       if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
-        this.sound(alert,{bus:'ui',family:alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
+        this.sound(alert,{bus:'ui',family:alert==='ui_objective_complete'?'tutorial-complete':alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='ui_objective_complete'?'ui:tutorial':alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
           isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&(this.context.currentTime-requested)<=.5&&
             !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
       }

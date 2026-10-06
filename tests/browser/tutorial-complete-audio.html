@@ -1,0 +1,20 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Finalización del tutorial y SFX 109</title>
+<p>Cinco culturas, centro/semilla/trabajador pagados desde 1500. Simulación real con navegación plana sin obstáculos, salida silenciada y sin mundo 3D. El trabajador riega, recoge y entrega. Dos casos adicionales comprueban tutorial omitido/ya completado. Audio Opus mediante alias de runtime; no acredita escucha ni terreno nativo.</p><button id="run">Probar finalización</button><output id="status">Lista</output><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';import {AudioSystem} from '../../src/audio/audio.js';import {serialize,deserialize} from '../../src/persistence/snapshots.js';import {clearNavigation} from '../clear-navigation.js';
+const rows=[],errors=[],status=document.querySelector('#status'),report=document.querySelector('#report'),assert=(v,m)=>{if(!v)throw Error(m);};let live;
+addEventListener('pagehide',()=>live?.dispose());addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{
+ for(const [culture,mode] of [...Game.CULTURES.map(c=>[c,'guided']),['mapungubwe','skipped'],['mapungubwe','done']]){
+  const audio=live=new AudioSystem({sfx:0,music:0});await audio.unlock();audio.sfx=await audio.sfxBank();const item=audio.sfx.items.find(i=>i.id==='ui_objective_complete'),buffer=await audio.buffer(item.audio.url),accepted=[],play=audio.sound.bind(audio);
+  audio.sound=async(id,options)=>{if(id!=='ui_objective_complete')return null;const source=await play(id,options);if(source)accepted.push({id,bus:options.bus,family:options.family,emitter:options.emitter,events:s.events.filter(e=>e.type==='TutorialCompleted').length,delivered:s.crates.filter(c=>c.delivered).length});return source;};
+  const s=Game.newGame({seed:712,culture}),nav=clearNavigation();s.villages[0].center={x:10,z:0};Game.resume(s,'intro');s.tutorial.step='center';Game.placeStructure(s,'center',{x:10,z:0},nav);Game.plant(s,'seed','mijo',18,0,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});if(mode!=='guided'){s.tutorial.step='done';s.tutorial.basicSkipped=mode==='skipped';}
+  let steps=0;for(;steps<3000&&!s.crates.some(c=>c.delivered);steps++){
+   Game.tick(s,.1,nav);if(!s.crates.some(c=>c.delivered))assert(!s.events.some(e=>e.type==='TutorialCompleted'),'Finalización antes de entrega');const before=serialize(s);audio.process(s.events,{state:s});assert(serialize(s)===before,'Audio modifica dominio');if(steps%50===0)await new Promise(done=>setTimeout(done,0));
+  }
+  await new Promise(done=>setTimeout(done,0));assert(s.plants[0].water[0].status==='manual'&&s.crates.some(c=>c.delivered),'Falta riego y entrega físicos');assert(accepted.length===(mode==='guided'?1:0),'Cue duplicado/ausente');const saved=deserialize(serialize(s));audio.remember(saved.events);audio.process(saved.events,{state:saved});await new Promise(done=>setTimeout(done,0));assert(accepted.length===(mode==='guided'?1:0),'Reproduce historial');audio.stop();assert(audio.active.length===0,'Fuente retenida');await audio.dispose();assert(audio.context.state==='closed','Contexto abierto');live=null;
+  rows.push({culture,mode,steps,simulatedSeconds:s.elapsed,completionEvents:s.events.filter(e=>e.type==='TutorialCompleted').length,deliveries:s.crates.filter(c=>c.delivered).length,accepted,decoded:{channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,duration:buffer.duration},voices:audio.active.length,context:audio.context.state});status.textContent=culture+' '+mode;
+ }
+ assert(errors.length===0,'Errores globales');report.textContent=JSON.stringify({rows,errors,muted:true,world3D:false,navigation:'flat test double',paid:true},null,2);status.textContent='Completada: 7 casos';
+ }catch(e){errors.push(String(e));status.textContent='FAIL: '+e.message;report.textContent=JSON.stringify({rows,errors},null,2);live?.dispose();}};
+</script></html>
