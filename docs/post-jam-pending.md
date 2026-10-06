@@ -194,3 +194,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Densidad lejana decreciente experimental](qa/far-vegetation-density/README.md): selección determinista por ID/semilla, fade progresivo antes de zona fiel y comparación nativa de ocho lotes. Fondo más abierto y menores medianas GPU en este visor; pendiente integración procedural, movimiento, bruma y móvil. Sigue fuera de gameplay.
+
+
+[Primera consulta de árboles procedurales exactos](qa/far-vegetation-procedural/README.md): Sabana/acacia, mismos IDs/alturas/giros/escalas de los chunks, sin generar geometría ni vegetación pequeña; anclaje y escala anisotrópica en visor. Igualdad completa de generación normal en seis biomas, 73+15 pruebas, build/paquete y render nativo. Pendiente terreno, bruma, streaming/chunks tardíos y móvil; sigue fuera de gameplay.

@@ -1,0 +1,15 @@
+# Acacias del procedural real en el visor de impostores
+
+Visor aislado: tests/browser/far-vegetation-transition.html?lighting=real&population=procedural. Sigue fuera del gameplay. La nueva consulta selecciona únicamente los candidatos de árboles mediante scatterWorld, conservando su competencia/separación con elementos especiales. No carga GLB, colliders, navegación, geometría de suelo, agua ni ground masks; tampoco genera vegetación pequeña. Primera especie de Sabana (slot 0) únicamente; rechaza otros biomas expresamente.
+
+Los datos son los originales: ID, posición, altura superficial con sesgo original, yaw, sx/sy/sz, tint y demás parámetros. El anclaje del atlas se obtiene de la base local transformada por escala no uniforme y giro; el modelo conserva exactamente su origen native. El billboard usa sy para altura y una aproximación proyectada de sx/sz para anchura según el ángulo de cámara. Esto conserva transformaciones y escala, pero no promete una silueta pixel-perfect de un árbol anisotrópico entre ocho vistas.
+
+## Evidencia
+
+- 73 pruebas de mundo/bioma/muestreo/LOD correctas, más 15 de muestreo y streaming, incluyendo comparación real de workers de chunks. Dos semillas y nueve chunks: las consultas acotadas y regionales producen los mismos árboles completos, sin duplicados de borde; supresiones por ID correctas. Transformaciones anisotrópicas y bounds inválidos verificados.
+- Comparación contra el módulo original de main 033257a, aislado con su único import relativo ajustado: igualdad profunda de TODA la generación normal en dos chunks por cada uno de los seis biomas. Las opciones por defecto conservan el mundo. Original hash y hashes de resultados en proof.json; fuentes de ambas rutas archivadas.
+- Tres pares locales alternados, región 360×278, semilla 712 y campos nuevos: 112 acacias idénticas por hash. Generación lógica completa, 8.061 objetos: 517,525 / 489,556 / 500,005 ms. Solo árboles: 22,881 / 22,248 / 24,237 ms. No es frametime, FPS, memoria ni GPU; los procesos de campañas largas permanecían activos. El muestreo no se ejecuta por frame en gameplay.
+- Navegador nativo: 112 impostores y dos modelos cercanos iniciales, shader compilado, error GL cero y consola sin errores/avisos. Registro native.json; densidad activada y cámara lejana en far.json/far.png. Se carga el modelo de referencia solo para comprobar la representación cercana; la función lógica no depende de ese modelo.
+- Build correcto en 10,27 s, paquete 587 archivos / 382.112.442 bytes / 859 enlaces relativos / 20 GLB runtime. Auditoría SFX vigente, 89 asignados y 37 reservas. Persiste el aviso de bundle superior a 500 kB.
+
+El visor conserva suelo PLANO de diagnóstico mientras los árboles tienen su altura procedural real: las discrepancias visuales entre suelo y bases no acreditan contacto con terreno ni un paisaje terminado. Pendientes: terreno lejano coherente y bruma compartida, supresiones/cambios en vivo, cargar/retener modelos por chunk preparado, importancia por categoría, streaming acotado de datos lejos, pruebas de movimiento/iluminación/móvil y otros biomas. No se activa hasta completar esas verificaciones.
