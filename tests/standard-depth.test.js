@@ -44,3 +44,37 @@ test('capture keeps stock alpha-tested silhouettes native while retaining author
  const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,source));assert.equal(stats.specialized,0);assert.equal(stats.fallback,1);
  const depth=standardDepthMaterial(source);mesh.customDepthMaterial=depth;withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,depth));assert.equal(mesh.material,source);
 });
+
+test('native foliage alpha samples share the authored mip bias and separate depth programs from solid surfaces',async()=>{
+ const {nativeAssetMaterial}=await import('../src/rendering/asset-surface.js');
+ const {surfaceMapFragment}=await import('../src/rendering/surface-alpha.js');
+ const pack=JSON.parse((await import('node:fs')).readFileSync('public/content/biome-volcanoes.json','utf8'));
+ const bounds=new THREE.Box3(new THREE.Vector3(-1,0,-1),new THREE.Vector3(1,8,1)),textures={baseColor:new THREE.Texture(),normal:null,metallicRoughness:null};
+ const foliage=nativeAssetMaterial(pack,pack.assets[0],0,textures,bounds);assert.ok(foliage.userData.nativeSurface.params[2]>.5);
+ const native={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};foliage.onBeforeCompile(native);
+ const rock=nativeAssetMaterial(pack,pack.assets[10],10,textures,bounds);assert.equal(rock.userData.nativeSurface.params[2],0);assert.notEqual(foliage.customProgramCacheKey(),rock.customProgramCacheKey());rock.dispose();
+ const depth=standardDepthMaterial(foliage),shader=compile(depth);
+ assert.ok(native.fragmentShader.includes(surfaceMapFragment(foliage.userData.nativeSurface)));assert.ok(shader.fragmentShader.includes(surfaceMapFragment(foliage.userData.nativeSurface)));assert.match(shader.fragmentShader,/texture2D\( map, vMapUv, \.65 \)/);
+ assert.equal(depth.map,foliage.map);assert.equal(depth.alphaTest,foliage.alphaTest);assert.equal(depth.opacity,foliage.opacity);
+ const firstKey=depth.customProgramCacheKey();let disposed=0;depth.addEventListener('dispose',()=>disposed++);
+ foliage.userData.nativeSurface.params[2]=0;const solid=standardDepthMaterial(foliage);
+ assert.notEqual(solid,depth);assert.equal(disposed,1);assert.notEqual(solid.customProgramCacheKey(),firstKey);assert.doesNotMatch(compile(solid).fragmentShader,/vMapUv, \.65/);
+ foliage.dispose();
+});
+
+test('all 120 biome materials keep native and depth alpha mip recipes in distinct cache variants',async()=>{
+ const {readFileSync}=await import('node:fs'),{nativeAssetMaterial}=await import('../src/rendering/asset-surface.js'),{surfaceMapBias,surfaceMapFragment}=await import('../src/rendering/surface-alpha.js');
+ const bounds=new THREE.Box3(new THREE.Vector3(-1,0,-1),new THREE.Vector3(1,8,1)),textures={baseColor:new THREE.Texture(),normal:null,metallicRoughness:null},toon=new AfricanToon();let count=0;
+ for(const biome of ['savanna','grand_river','mangrove','volcanoes','canyons','desert']){
+  const pack=JSON.parse(readFileSync('public/content/biome-'+biome+'.json','utf8')),keys=new Map();
+  for(const [index,asset] of pack.assets.entries()){
+   const source=nativeAssetMaterial(pack,asset,index,textures,bounds);toon.material(source);const bias=surfaceMapBias(source.userData.nativeSurface),key=source.customProgramCacheKey();
+   if(keys.has(key))assert.equal(keys.get(key),bias,'A shared native key cannot mix mip recipes');keys.set(key,bias);
+   const shader=compile(standardDepthMaterial(source));
+   if(bias)assert.ok(shader.fragmentShader.includes(surfaceMapFragment(source.userData.nativeSurface)));else assert.doesNotMatch(shader.fragmentShader,/vMapUv, \.65/);
+   source.dispose();count++;
+  }
+  assert.equal(new Set(keys.values()).size,2,biome);
+ }
+ assert.equal(count,120);
+});

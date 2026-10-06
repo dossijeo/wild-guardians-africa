@@ -242,3 +242,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Traza nativa del contraejemplo alpha](qa/alpha-depth-submission-probe/native/README.md): dos secuencias 1600×900 conservan tres píxeles distintos respecto al shader nativo; B1/B2 presenta los mismos 67 envíos y profundidad. A 1280×720 coincide. El filtro de props no modifica dibujos visibles y no identifica la causa. Se documenta también un timeout de precarga; no hay equivalencia ni mejora de rendimiento acreditadas y el candidato sigue desactivado.
+
+
+[Recetas alpha y localización de píxeles](qa/surface-alpha-mip-recipe/README.md): compartido sesgo mip nativo del follaje y separadas claves de shader para superficies sólidas/follaje. 41 pruebas/build y candidatos nativos de la misma cara/instancia. La discrepancia de tres píxeles persiste: no se atribuye a estos defectos ni se activa alpha especializado. Pendientes cobertura efectiva y aceptación visual amplia de variantes.
