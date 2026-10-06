@@ -5,6 +5,7 @@ import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
 import {RaidEntryPreparer} from '../world/raid-entry-preparer.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
+import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 import {farmHomeFocus} from './farm-focus.js';
 import {createWateringEmitter} from './watering-emitter.js';
 import {MudPatches,residentMudSurface} from './mud-patches.js';
@@ -216,7 +217,7 @@ export class WorldScene {
   }
   async warmAnimalGpu(){
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
-    const staging=new THREE.Group(),target=new THREE.WebGLRenderTarget(16,16),oldTarget=this.renderer.getRenderTarget(),oldAutoClear=this.renderer.autoClear;
+    const staging=new THREE.Group();
     const originals=[];
     for(const rig of rigs){staging.add(rig.model);rig.model.traverse(mesh=>{if(mesh.isMesh){originals.push([mesh,mesh.frustumCulled]);mesh.frustumCulled=false;}});}
     this.scene.add(staging);let vfxPrimer=null,fluidPrimer=null,prepared=false;
@@ -235,22 +236,21 @@ export class WorldScene {
       await this.renderer.compileAsync(this.scene,this.camera,this.scene);if(this.disposed)return;
       await this.destructionPass.prepareDepth(this.camera,this.scene);if(this.disposed)return;
       this.programBindings=initializeProgramBindings(this.renderer);
-      this.renderer.setRenderTarget(target);this.renderer.autoClear=true;
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
-      this.renderer.render(this.scene,this.camera);
+      renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
       // Warm that actual pass while the loading screen still covers the world,
       // including the staged animal skinning variants. Cached depth materials
       // retain their programs until their source material is disposed.
       this.destructionPass.captureDepth(this.camera,this.scene);
+      await waitForGpuPreload(this.renderer,{cancelled:()=>this.disposed});if(this.disposed)return;
       prepared=true;this.animalGpuReady=true;
     }finally{
       fluidPrimer?.dispose();
       vfxPrimer?.dispose({retainPrograms:prepared&&!this.disposed});
-      this.renderer.setRenderTarget(oldTarget);this.renderer.autoClear=oldAutoClear;
       for(const [mesh,culled] of originals)mesh.frustumCulled=culled;
-      staging.clear();this.scene.remove(staging);target.dispose();this.releaseNativeShadow?.cache.invalidate();
+      staging.clear();this.scene.remove(staging);this.releaseNativeShadow?.cache.invalidate();
     }
   }
   raidReady(){return (this.state?.raid?.animals??[]).every(a=>a.status==='gone'||this.mixers.has(a.id));}
