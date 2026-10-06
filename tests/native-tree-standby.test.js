@@ -1,9 +1,16 @@
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
-import {NativeTreeStandby,standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
+import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady} from '../tools/experiments/native-tree-standby.js';
 function fixture(prepare=async()=>{}){const geometry=new THREE.BoxGeometry(2,4,2),material=new THREE.MeshStandardMaterial(),scene=new THREE.Scene(),sources=[{geometry,material},{geometry,material}],owner=new NativeTreeStandby({scene,sources,prepare});return {owner,scene,sources,close(){owner.dispose();geometry.dispose();material.dispose();}};}
 function tree(id='a',x=0){return {id,x,y:0,z:0,yaw:0,sx:1,sy:1,sz:1};}
 function descriptor(t=tree(),level=0){const matrix=new THREE.Matrix4().makeTranslation(t.x,t.y,t.z).toArray();return {id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,level,matrix};}
 async function settled(owner){for(let i=0;i<30&&owner.busy;i++)await new Promise(resolve=>setImmediate(resolve));assert.equal(owner.busy,false);}
+test('retained proof requires current physical selection and matching native and procedural identities',async()=>{
+ const f=fixture(),t=tree();f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
+ let selected=true;const args={coverage:{has:(id,s)=>selected&&id===t.id&&!s?.has(id)},standby:f.owner,nativeTree:t,logicalTree:{...t}};
+ assert.equal(standbyCoverageReady(t.id,args),true);selected=false;assert.equal(standbyCoverageReady(t.id,args),false);selected=true;
+ for(const field of ['nativeTree','logicalTree']){const previous=args[field];args[field]=tree(t.id,2);assert.equal(standbyCoverageReady(t.id,args),false);args[field]=undefined;assert.equal(standbyCoverageReady(t.id,args),false);args[field]=previous;}
+ args.suppressed=new Set([t.id]);assert.equal(standbyCoverageReady(t.id,args),false);f.close();
+});
 test('standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees',async()=>{
  let finish;const f=fixture(()=>new Promise(resolve=>finish=resolve)),t=tree(),d=descriptor(t);f.owner.request([d],{x:0,z:0});assert.equal(f.owner.has(t.id,t),false);assert.equal(f.scene.children.length,0);d.matrix[12]=500;finish();await settled(f.owner);
  assert.equal(f.owner.has(t.id,t),true);assert.equal(f.owner.active.meshes[0].instanceMatrix.array[12],0);assert.equal(f.owner.has(t.id,tree('a',2)),false);assert.equal(f.owner.has(t.id,t,new Set(['a'])),false);assert.equal(f.owner.has('new',tree('new')),false);f.close();
@@ -32,4 +39,13 @@ test('world close during replacement removes visible bank and releases late buff
 test('standby prunes distant identities and refuses to exceed its explicit population budget',async()=>{
  const f=fixture();f.owner.request([descriptor(tree())],{x:0,z:0});await settled(f.owner);f.owner.request([descriptor(tree('b',200))],{x:200,z:0});await settled(f.owner);assert.equal(f.owner.has('a',tree()),false);assert.equal(f.owner.has('b',tree('b',200)),true);
  f.owner.maxTrees=1;f.owner.request([descriptor(tree('c',201))],{x:200,z:0});await settled(f.owner);assert.match(f.owner.stats.errors.at(-1),/budget/);assert.equal(f.owner.has('b',tree('b',200)),true);assert.equal(f.owner.has('c',tree('c',201)),false);f.close();
+});
+test('context restoration revokes retained GPU proof until a fresh owned-bank upload completes',async()=>{
+ const f=fixture(),t=tree();let revision=0;f.owner.resourceRevision=()=>revision;f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.has(t.id,t),true);
+ revision++;assert.equal(f.owner.has(t.id,t),false);let finish;f.owner.prepare=()=>new Promise(resolve=>finish=resolve);f.owner.request([descriptor(t)],{x:0,z:0});assert.equal(f.owner.has(t.id,t),false);finish();await settled(f.owner);assert.equal(f.owner.has(t.id,t),true);assert.equal(f.owner.stats.preparations,2);f.close();
+});
+test('replacement source geometry cannot borrow the old bank buffers or its uploaded proof',async()=>{
+ const f=fixture(),t=tree();f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);const old=f.owner.active.meshes[0].geometry.attributes.position.array,replacement=new THREE.SphereGeometry(2,8,4);
+ f.sources[0]={geometry:replacement,material:f.sources[0].material};assert.equal(f.owner.has(t.id,t),false);f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
+ assert.equal(f.owner.has(t.id,t),true);assert.notEqual(f.owner.active.meshes[0].geometry.attributes.position.array,old);assert.equal(f.owner.active.meshes[0].geometry.attributes.position.array,replacement.attributes.position.array);f.close();replacement.dispose();
 });

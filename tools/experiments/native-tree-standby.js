@@ -4,6 +4,11 @@ import {lodMix} from './far-impostor-math.js';
 // Immutable logical identity survives changes of native instance order/LOD.
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
 export function standbyTreeKey(tree){const p=tree.origin??tree;return [tree.id,p.x,p.y,p.z,tree.yaw,tree.sx,tree.sy,tree.sz].join(':');}
+// A retained bank cannot extend current native selection or authorize a changed
+// logical tree. Both the physical batch and current procedural region must match.
+export function standbyCoverageReady(id,{coverage,standby,nativeTree,logicalTree,suppressed}){
+ return coverage.has(id,suppressed)&&standby.has(id,nativeTree,suppressed)&&standby.has(id,logicalTree,suppressed);
+}
 function sourceKey(source){return [source.geometry.uuid,source.material.uuid,source.material.version].join(':');}
 function geometryView(source,capacity){
  const g=new THREE.BufferGeometry();if(source.index)g.setIndex(new THREE.BufferAttribute(source.index.array,source.index.itemSize,source.index.normalized));
@@ -14,11 +19,12 @@ function geometryView(source,capacity){
 // Two owned banks: one prepared/immutable while its replacement uploads.
 // They render only IDs whose normal native representation is awaiting proof.
 export class NativeTreeStandby {
- constructor({scene,sources,prepare,start=40,end=60,keepDistance=end+48,maxTrees=1024,onError=()=>{}}){
+ constructor({scene,sources,prepare,start=40,end=60,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<end||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={preparations:0,rendered:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
+  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={preparations:0,rendered:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
  }
- has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===sourceKey(this.sources[d.level]);}
+ sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
+ has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
  request(entries,camera){
   if(this.closed)return;this.pending={entries:entries.map(d=>({...d,matrix:new Float32Array(d.matrix)})),camera:{x:camera.x,z:camera.z}};if(!this.busy)void this.run();
  }
@@ -26,14 +32,14 @@ export class NativeTreeStandby {
   this.busy=true;
   try{while(!this.closed&&this.pending){
    const {entries,camera}=this.pending;this.pending=null;const wanted=new Map();
-   for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===sourceKey(this.sources[d.level]))wanted.set(id,d);
-   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key)wanted.set(d.id,{...d,matrix:new Float32Array(d.matrix),resource:sourceKey(this.sources[d.level])});}
+   for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
+   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key)wanted.set(d.id,{...d,matrix:new Float32Array(d.matrix),resource:this.sourceKey(d.level)});}
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
    if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}
-   const index=this.active===this.banks[0]?1:0;let bank=this.banks[index];const capacity=2**Math.ceil(Math.log2(Math.max(8,wanted.size)));
-   if(bank&&bank.capacity<capacity){this.release(bank);bank=null;}
-   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
+   const index=this.active===this.banks[0]?1:0;let bank=this.banks[index];const capacity=2**Math.ceil(Math.log2(Math.max(8,wanted.size))),layout=this.sources.map(source=>source.geometry.uuid+':'+source.material.uuid).join('|');
+   if(bank&&(bank.capacity<capacity||bank.layout!==layout)){this.release(bank);bank=null;}
+   if(!bank){const root=new THREE.Group();root.name='native-tree-standby';bank={root,capacity,layout,meshes:this.sources.map(source=>{const mesh=new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=true;mesh.frustumCulled=false;root.add(mesh);return mesh;}),entries:null,rows:[]};this.banks[index]=bank;}
    bank.entries=wanted;bank.rows=this.sources.map(()=>[]);for(const d of wanted.values())bank.rows[d.level].push(d);
    for(const [level,mesh] of bank.meshes.entries()){const rows=bank.rows[level];mesh.count=rows.length;mesh.visible=rows.length>0;for(const [i,d] of rows.entries())mesh.instanceMatrix.array.set(d.matrix,i*16);mesh.instanceMatrix.needsUpdate=true;mesh.geometry.attributes.nativeVisibility.array.fill(0);mesh.geometry.attributes.nativeVisibility.needsUpdate=true;}
    await this.prepare(bank.root,()=>this.closed);if(this.closed)break;
