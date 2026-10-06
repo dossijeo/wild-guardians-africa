@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Transición nativa de acacia</title>
 <style>body{margin:0;overflow:hidden;font:14px system-ui}header{position:absolute;z-index:1;background:#fff9de;padding:12px;max-width:370px;max-height:90vh;overflow:auto}button{padding:9px}pre{font-size:11px;white-space:pre-wrap}canvas{display:block}</style>
-<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="hide" disabled>Ocultar/restaurar árbol</button><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
+<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="hide" disabled>Ocultar/restaurar árbol</button><p><label>Distancia <select id="distance"><option>25</option><option>40</option><option>50</option><option>60</option><option>100</option></select></label></p><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
 import {Assets,json} from '../../src/rendering/assets.js';
@@ -25,6 +25,7 @@ try{
  ground=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshBasicMaterial({color:'#979b61'}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;scene.add(ground);
  document.querySelector('#prepare').disabled=false;document.querySelector('#hide').disabled=false;
  document.querySelector('#hide').onclick=()=>{hidden=!hidden;controller.setSuppressions(new Set(hidden?[tree.id]:[]));};
+ document.querySelector('#distance').onchange=event=>{camera.position.z=Number(event.target.value);camera.lookAt(0,3,0);};
  document.querySelector('#prepare').onclick=async()=>{
   document.querySelector('#prepare').disabled=true;gpuReady=false;controller.setCoverage(coverage,false);const begin=performance.now();status.textContent='Preparando recursos GPU…';
   try{
@@ -34,7 +35,7 @@ try{
  };
  function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.width!==innerWidth||canvas.height!==innerHeight){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
   updateAssetLods(chunks,camera,'media');coverage.update(chunks);controller.setCoverage(coverage,gpuReady);controller.advance(dt);prototype.update(camera);fade.update(chunks,camera,id=>prototype.treeState(id),prototype.stats().readinessRevision);groups.update(chunks,camera,{x:0,z:0});renderer.render(scene,camera);
-  if(now-lastReport>200){lastReport=now;const state=prototype.treeState(tree.id);status.textContent=gpuReady?'GPU preparada':'GPU retenida';report.textContent=JSON.stringify({gpuReady,prepareMs,preparedTextures,state,activeTransitions:controller.active.size,nativePacked:coverage.has(tree.id),nativeColorCoverage:group.userData.lodBatches[0].meshes.map(m=>({count:m.count,coverage:m.geometry.attributes.nativeVisibility?.getX(0)})),mergedColorGroups:groups.colors.size,prototype:prototype.stats(),nativeFadeScans:fade.scans,programs:renderer.info.programs.length,drawCalls:renderer.info.render.calls,webglError:renderer.getContext().getError(),errors},null,2);}requestAnimationFrame(frame);
+  if(now-lastReport>200){lastReport=now;const state=prototype.treeState(tree.id);status.textContent=gpuReady?'GPU preparada':'GPU retenida';report.textContent=JSON.stringify({camera:camera.position.toArray(),gpuReady,prepareMs,preparedTextures,state,activeTransitions:controller.active.size,nativePacked:coverage.has(tree.id),nativeColorCoverage:group.userData.lodBatches[0].meshes.map(m=>({count:m.count,coverage:m.geometry.attributes.nativeVisibility?.getX(0)})),mergedColorGroups:groups.colors.size,prototype:prototype.stats(),nativeFadeScans:fade.scans,programs:renderer.info.programs.length,drawCalls:renderer.info.render.calls,webglError:renderer.getContext().getError(),errors},null,2);}requestAnimationFrame(frame);
  }requestAnimationFrame(frame);
 }catch(error){errors.push(String(error));status.textContent='ERROR';report.textContent=JSON.stringify({errors});}
 addEventListener('pagehide',()=>{dead=true;controller?.clear();coverage?.clear();groups?.dispose();for(const b of group?.userData.lodBatches??[]){b.shadow.dispose();for(const mesh of b.meshes){mesh.dispose();if(mesh.geometry!==b.levels[0].geometry)mesh.geometry.dispose();}}prototype?.dispose();ground?.geometry.dispose();ground?.material.dispose();assets.disposeModels();toon.shadowUniforms.fallback.dispose();renderer.dispose();renderer.forceContextLoss();},{once:true});
