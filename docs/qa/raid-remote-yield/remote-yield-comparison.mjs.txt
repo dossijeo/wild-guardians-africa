@@ -1,0 +1,11 @@
+import {prepareActorMotion as old} from './actor-motion-before.mjs';
+import {prepareActorMotion as current} from '../src/simulation/actor-motion.js';
+import {edgeDistance} from '../src/world/footprints.js';
+import {movePath} from '../src/simulation/locomotion.js';
+for(const [name,prepare] of [['8754b27',old],['current',current]]){
+ const animal={id:'z-animal',x:0,z:0,radius:1.1,status:'retreating',hitsRemaining:0,path:[{x:100,z:0},{x:100,z:1}]};
+ const worker={id:'a-worker',x:100,z:0,status:'fleeing',incapacitated:true,path:[{x:0,z:-10}]};
+ const state={workers:[worker],raid:{animals:[animal]}},nav={version:1,walkable:()=>true,segmentClear:(a,b)=>edgeDistance(a,b,50,.5)>.2};
+ for(let i=0;i<10;i++)movePath(animal,.38,prepare(state,animal,nav,false));
+ console.log(JSON.stringify({source:name,x:animal.x,z:animal.z,path:animal.path}));
+}

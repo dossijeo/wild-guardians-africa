@@ -1,0 +1,135 @@
+TAP version 13
+# Subtest: opposed animals route around each other when both short lookahead goals are occupied
+ok 1 - opposed animals route around each other when both short lookahead goals are occupied
+  ---
+  duration_ms: 13.1894
+  ...
+# Subtest: recorded five-animal Musgum traffic clears without overlapping bodies or changing destination
+ok 2 - recorded five-animal Musgum traffic clears without overlapping bodies or changing destination
+  ---
+  duration_ms: 43.5606
+  ...
+# Subtest: rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+ok 3 - rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+  ---
+  duration_ms: 20.7877
+  ...
+# Subtest: warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 4 - warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 4.1917
+  ...
+# Subtest: hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 5 - hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.7944
+  ...
+# Subtest: buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 6 - buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 2.0307
+  ...
+# Subtest: lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 7 - lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.4641
+  ...
+# Subtest: rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 8 - rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 2.2081
+  ...
+# Subtest: An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+ok 9 - An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+  ---
+  duration_ms: 17.951
+  ...
+# Subtest: Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+ok 10 - Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+  ---
+  duration_ms: 2.9795
+  ...
+# Subtest: A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+ok 11 - A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+  ---
+  duration_ms: 1.9354
+  ...
+# Subtest: Two native animals crossing opposite ways maintain separation and both finish
+ok 12 - Two native animals crossing opposite ways maintain separation and both finish
+  ---
+  duration_ms: 3.6848
+  ...
+# Subtest: Saving midway through a detour preserves its route and deterministic motion
+ok 13 - Saving midway through a detour preserves its route and deterministic motion
+  ---
+  duration_ms: 3.3519
+  ...
+# Subtest: Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+ok 14 - Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+  ---
+  duration_ms: 0.8268
+  ...
+# Subtest: Legacy overlaps may escape continuously but cannot move deeper or across the other body
+ok 15 - Legacy overlaps may escape continuously but cannot move deeper or across the other body
+  ---
+  duration_ms: 0.3499
+  ...
+# Subtest: Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+ok 16 - Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+  ---
+  duration_ms: 14.5442
+  ...
+# Subtest: Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping
+ok 17 - Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping
+  ---
+  duration_ms: 663.6595
+  ...
+# Subtest: An occupied distant bend cannot make an animal yield away from its route
+ok 18 - An occupied distant bend cannot make an animal yield away from its route
+  ---
+  duration_ms: 1.2314
+  ...
+# Subtest: Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+ok 19 - Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+  ---
+  duration_ms: 619.8172
+  ...
+# Subtest: recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+ok 20 - recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+  ---
+  duration_ms: 12351.0727
+  ...
+# Subtest: an impossible dynamic detour is cached until bodies move or terrain changes
+ok 21 - an impossible dynamic detour is cached until bodies move or terrain changes
+  ---
+  duration_ms: 0.877
+  ...
+# Subtest: a sliced search does not cache a failure from bodies that moved within a quarter metre
+ok 22 - a sliced search does not cache a failure from bodies that moved within a quarter metre
+  ---
+  duration_ms: 0.3739
+  ...
+# Subtest: native incremental A* preserves the synchronous route and expands at most eight cells per slice
+ok 23 - native incremental A* preserves the synchronous route and expands at most eight cells per slice
+  ---
+  duration_ms: 5.3964
+  ...
+# Subtest: Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+ok 24 - Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+  ---
+  duration_ms: 403.1426
+  ...
+# Subtest: Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+ok 25 - Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+  ---
+  duration_ms: 1234.3833
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13183.7113
