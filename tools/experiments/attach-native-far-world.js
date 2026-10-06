@@ -53,7 +53,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   if(closed)return;fog.color.copy(fogDay).lerp(fogNight,skyNight(world.state));world.scene.fog=fog;layer.current?.prototype.updateGroundBounds?.();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&frustum.intersectsBox(nativeChunkBounds(group))));
-  coverage.update(visible);prepared.update();schedulePreparation();
+  coverage.update(visible);prepared.update();stats.coverage=coverage.counts.size;stats.prepared=prepared.counts.size;stats.signature=signature();schedulePreparation();
   if(layer.current)layer.current.prototype.impostors.visible=this.enabled;
   if(this.enabled)layer.update(world.chunks,world.camera,prepared,true,dt,world.renderOrigin,world.nav.suppressed);
   else layer.fade.update(world.chunks,world.camera,()=>null,'disabled');
