@@ -151,7 +151,7 @@ export class BuildingDestructionPass {
     if(this.smokeDepth.width!==size.x||this.smokeDepth.height!==size.y)this.smokeDepth.setSize(size.x,size.y);
     try{
       renderer.shadowMap.enabled=false;renderer.autoClear=true;renderer.setRenderTarget(this.smokeDepth);
-      this.depthCaptureStats=withDepthCaptureMaterials(world,()=>renderer.render(world,camera),{optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false});
+      this.depthCaptureStats=withDepthCaptureMaterials(world,()=>renderer.render(world,camera),{optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true});
     }finally{renderer.setRenderTarget(target);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   renderSmoke(camera,world,{depthPrepared=false}={}){

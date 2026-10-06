@@ -38,5 +38,47 @@ test('hidden ancestors skip depth preparation while shared visible materials and
  hidden.visible=false;const reference=withDepthCaptureMaterials(world,()=>assert.equal(child.material,depth),{visibleOnly:false});assert.equal(reference.specialized,3);
  assert.throws(()=>withDepthCaptureMaterials(world,()=>{assert.equal(child.material,source);throw Error('render failure');}),/render failure/);
  assert.equal(mesh.material,source);assert.equal(depth.colorWrite,true);assert.equal(source.colorWrite,true);
- mesh.geometry.dispose();source.dispose();depth.dispose();hiddenSource.dispose();
+mesh.geometry.dispose();source.dispose();depth.dispose();hiddenSource.dispose();
+});
+
+test('empty batches keep children and shared nonempty owners prepared; revealing them restores normal eligibility',()=>{
+ const {world,mesh,source,depth}=fixture(),empty=new THREE.InstancedMesh(mesh.geometry,source,4);empty.count=0;empty.customDepthMaterial=depth;world.add(empty);
+ const child=new THREE.Mesh(mesh.geometry,source);child.customDepthMaterial=depth;empty.add(child);
+ const solo=new THREE.MeshBasicMaterial(),zero=new THREE.Mesh(new THREE.InstancedBufferGeometry(),solo);zero.geometry.instanceCount=0;world.add(zero);
+ const stats=withDepthCaptureMaterials(world,()=>{assert.equal(empty.material,source);assert.equal(mesh.material,depth);assert.equal(child.material,depth);assert.equal(depth.colorWrite,false);assert.equal(solo.colorWrite,true);},{nonEmptyOnly:true});
+ assert.equal(stats.emptySkipped,2);assert.equal(stats.specialized,2);assert.equal(source.colorWrite,true);
+ empty.count=1;zero.geometry.instanceCount=1;const revealed=withDepthCaptureMaterials(world,()=>assert.equal(empty.material,depth),{nonEmptyOnly:true});assert.equal(revealed.emptySkipped,0);assert.equal(revealed.specialized,4);
+ empty.count=0;zero.geometry.instanceCount=0;const reference=withDepthCaptureMaterials(world,()=>assert.equal(empty.material,depth),{nonEmptyOnly:false});assert.equal(reference.emptySkipped,0);assert.equal(reference.specialized,4);
+ assert.throws(()=>withDepthCaptureMaterials(world,()=>{throw Error('draw failed');},{nonEmptyOnly:true}),/draw failed/);assert.equal(empty.material,source);assert.equal(mesh.material,source);assert.equal(child.material,source);assert.equal(source.colorWrite,true);assert.equal(depth.colorWrite,true);
+});
+
+test('zero draw ranges do not override InstancedMesh precedence or guess unknown render hooks',()=>{
+ for(const hook of ['object-before','object-after','source-before','source-compile','depth-before','depth-compile']){
+  const {world,mesh,source,depth}=fixture();mesh.geometry.setDrawRange(0,0);
+  if(hook==='object-before')mesh.onBeforeRender=()=>{};
+  if(hook==='object-after')mesh.onAfterRender=()=>{};
+  if(hook==='source-before')source.onBeforeRender=()=>{};
+  if(hook==='source-compile')source.onBeforeCompile=()=>{};
+  if(hook==='depth-before')depth.onBeforeRender=()=>{};
+  if(hook==='depth-compile')depth.onBeforeCompile=()=>{};
+  const stats=withDepthCaptureMaterials(world,()=>{assert.equal(mesh.material,depth);assert.equal(depth.colorWrite,false);},{nonEmptyOnly:true});assert.equal(stats.emptySkipped,0);
+ }
+ const {world,mesh,source,depth}=fixture();mesh.geometry.setDrawRange(0,0);assert.equal(withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,source),{nonEmptyOnly:true}).emptySkipped,1);
+ const geometry=new THREE.InstancedBufferGeometry();geometry.instanceCount=0;const instanced=new THREE.InstancedMesh(geometry,source,1);instanced.customDepthMaterial=depth;world.add(instanced);
+ const stats=withDepthCaptureMaterials(world,()=>assert.equal(instanced.material,depth),{nonEmptyOnly:true});assert.equal(stats.emptySkipped,1);assert.equal(stats.specialized,1);
+});
+
+test('scene callbacks and override materials retain original empty-owner preparation',()=>{
+ for(const mode of ['before','after','override']){
+  const {world,mesh,source,depth}=fixture();mesh.geometry.setDrawRange(0,0);
+  if(mode==='before')world.onBeforeRender=()=>{};
+  if(mode==='after')world.onAfterRender=()=>{};
+  if(mode==='override')world.overrideMaterial=new THREE.MeshBasicMaterial();
+  const stats=withDepthCaptureMaterials(world,()=>{assert.equal(mesh.material,mode==='override'?source:depth);assert.equal((world.overrideMaterial??depth).colorWrite,false);},{nonEmptyOnly:true});assert.equal(stats.emptySkipped,0);assert.equal(source.colorWrite,true);
+ }
+});
+
+test('empty-batch experiment is disabled by default after its measured CPU tradeoff',()=>{
+ const {world,mesh,source,depth}=fixture();mesh.geometry.setDrawRange(0,0);
+ const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,depth));assert.equal(stats.emptySkipped,0);assert.equal(stats.specialized,1);assert.equal(mesh.material,source);
 });

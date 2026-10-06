@@ -134,3 +134,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Profundidad alpha reevaluada en finca real](qa/late-farm-alpha-depth/README.md): 13 pruebas, cuatro lotes nativos y 800 queries; mismo estado/rutas/eventos/envíos. GPU ~2,82/~1,14 ms menor pero CPU mayor y RAF sin mejora: solo QA, no se adopta. Cuatro escenas actuales de Manglares/Sabana intactas/colapso conservan profundidad idéntica; color presenta diferencias pequeñas también entre originales. Pendientes integración sin recorrido duplicado, repetibilidad, más estados/biomas/móvil y coste total.
+
+
+[Preparación de lotes vacíos evaluada](qa/empty-depth-batches/README.md): 22 pruebas y build; cuatro lotes de finca con mismo estado/eventos/envíos y 575 lotes no preparados. CPU integrada/aislada sin ahorro consistente: flag experimental apagado por defecto. Dos estados Manglares/Mapungubwe conservan profundidad idéntica en diez pares; color presenta variación también entre originales. No acredita FPS/móvil ni justifica seguir con ese filtro sin otra hipótesis. Siguiente prioridad: integrar el candidato alpha sin recorrer dos veces y estudiar dibujo final.

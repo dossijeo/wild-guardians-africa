@@ -1,0 +1,193 @@
+{
+  "depthStateAnomalies": [
+    {
+      "name": "",
+      "type": "RawShaderMaterial",
+      "depthTest": true,
+      "depthFunc": 2,
+      "features": []
+    }
+  ],
+  "preserveOrder": false,
+  "biome": "manglares",
+  "culture": "mapungubwe",
+  "scope": "all",
+  "elapsed": 0,
+  "growth": 0,
+  "damage": 0.85,
+  "stats": {
+    "specialized": 61,
+    "fallback": 287,
+    "excluded": 0,
+    "emptySkipped": 583
+  },
+  "workers": [
+    {
+      "id": "worker-6",
+      "status": "arriving",
+      "meshPresent": true
+    }
+  ],
+  "workVfx": [],
+  "result": {
+    "kind": "empty",
+    "frames": [
+      {
+        "label": "A1",
+        "enabled": false,
+        "preparation": {
+          "specialized": 61,
+          "fallback": 870,
+          "excluded": 0,
+          "emptySkipped": 0
+        }
+      },
+      {
+        "label": "A2",
+        "enabled": false,
+        "preparation": {
+          "specialized": 61,
+          "fallback": 870,
+          "excluded": 0,
+          "emptySkipped": 0
+        }
+      },
+      {
+        "label": "B1",
+        "enabled": true,
+        "preparation": {
+          "specialized": 61,
+          "fallback": 287,
+          "excluded": 0,
+          "emptySkipped": 583
+        }
+      },
+      {
+        "label": "B2",
+        "enabled": true,
+        "preparation": {
+          "specialized": 61,
+          "fallback": 287,
+          "excluded": 0,
+          "emptySkipped": 583
+        }
+      },
+      {
+        "label": "A3",
+        "enabled": false,
+        "preparation": {
+          "specialized": 61,
+          "fallback": 870,
+          "excluded": 0,
+          "emptySkipped": 0
+        }
+      }
+    ],
+    "mode": "prepare-all-vs-known-empty-skipped",
+    "scope": "Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.",
+    "differentPixels": 0,
+    "comparisons": [
+      {
+        "pair": "A1/A2",
+        "color": {
+          "differentPixels": 23,
+          "differentBytes": 67,
+          "maxError": 40,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439974,
+          "pixels": 1440000
+        },
+        "depth": {
+          "differentPixels": 0,
+          "differentBytes": 0,
+          "maxError": 0,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439624,
+          "pixels": 1440000
+        }
+      },
+      {
+        "pair": "A2/B1",
+        "color": {
+          "differentPixels": 16,
+          "differentBytes": 46,
+          "maxError": 40,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439974,
+          "pixels": 1440000
+        },
+        "depth": {
+          "differentPixels": 0,
+          "differentBytes": 0,
+          "maxError": 0,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439624,
+          "pixels": 1440000
+        }
+      },
+      {
+        "pair": "B1/B2",
+        "color": {
+          "differentPixels": 2,
+          "differentBytes": 5,
+          "maxError": 10,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439974,
+          "pixels": 1440000
+        },
+        "depth": {
+          "differentPixels": 0,
+          "differentBytes": 0,
+          "maxError": 0,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439624,
+          "pixels": 1440000
+        }
+      },
+      {
+        "pair": "B2/A3",
+        "color": {
+          "differentPixels": 20,
+          "differentBytes": 57,
+          "maxError": 22,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439974,
+          "pixels": 1440000
+        },
+        "depth": {
+          "differentPixels": 0,
+          "differentBytes": 0,
+          "maxError": 0,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439624,
+          "pixels": 1440000
+        }
+      },
+      {
+        "pair": "A2/A3",
+        "color": {
+          "differentPixels": 34,
+          "differentBytes": 98,
+          "maxError": 40,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439974,
+          "pixels": 1440000
+        },
+        "depth": {
+          "differentPixels": 0,
+          "differentBytes": 0,
+          "maxError": 0,
+          "maxDepthDelta": 0,
+          "nonUniformPixels": 1439624,
+          "pixels": 1440000
+        }
+      }
+    ],
+    "alphaApplications": 0,
+    "logicalStateUnchanged": true,
+    "width": 1600,
+    "height": 900
+  },
+  "benchmark": null,
+  "errors": []
+}

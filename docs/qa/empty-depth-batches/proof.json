@@ -1,0 +1,58 @@
+{
+  "base": "a92cad955dc3eaad53c267d96650699c825c0b16",
+  "executedSources": {
+    "src/rendering/depth-capture.js": "fb202d94852c36123d9a8c10869794105aa7333933707dcce86ef010b5863c85",
+    "src/rendering/buildings.js": "841b726d6aa4a124fd685cbb2ea2909dc837b9a634ea4adbf62e00525c15a0f4",
+    "tests/depth-capture.test.js": "9196e717ba5d9000b17b613bbc54801f2a72f5aed7fe0886222888403c96d244",
+    "tests/browser/late-farm-render.html": "fdbec82a27b15930c086592ed32a1b00fb17c83c059d615b82f6068d45f03519",
+    "tests/browser/depth-capture.html": "119605097f531cafd64d702f2a1ec1c7fae0a9efff32a86fca5b23c8624c001f"
+  },
+  "finalSources": {
+    "src/rendering/depth-capture.js": "450113356d20b7eaefb2bfa3562ae91cdb9a910f70cc1bd367e19108153ce036",
+    "src/rendering/buildings.js": "a577b8d36a4372a54a47d05e0dbd206601fe165e12ab6c6106b85e8c9f7565d2",
+    "tests/depth-capture.test.js": "f19173c8814803ddcd32800f2e363dce40d299e1575b8c96e0ccef8b2a3fc847",
+    "tests/browser/late-farm-render.html": "fdbec82a27b15930c086592ed32a1b00fb17c83c059d615b82f6068d45f03519",
+    "tests/browser/depth-capture.html": "119605097f531cafd64d702f2a1ec1c7fae0a9efff32a86fca5b23c8624c001f"
+  },
+  "finalDifference": "Experimental route disabled by default after native/isolated timing did not show consistent savings; explicit QA true/false paths retain the executed algorithm. Added default-off regression test. Executed runtime patch retained relative to base.",
+  "compressedSha256": "5f802e6c42e8bff91909066a66323742f4b8e025850146089e7a444466aa2227",
+  "originalJsonSha256": "a5431138bbd5dcb7b4eefc9a62a82740916fb8aa3cd1645067ca5c3d1c37b020",
+  "gzipMtime": 0,
+  "evidence": {
+    "cpu-mangrove-mapungubwe.json": "3297d13a66291f57af40f92dadd5b48dd695d81c55b183319e5d0a18e482d912",
+    "executed-runtime.patch": "805e710581c290606685decdf523fe8a1f2da2c31aeebfd18590fd7b3b927fab",
+    "executed-source-hashes.json": "3243da9bf3d2cb1e8f99612bcb169f5b12b052bf1d27c12deff1d31f4c8c1b40",
+    "farm.png": "6f4a5f04b2aab8bbcf75933f60b8239fef9e13e4a0d5d463d2a20ec0ae99650b",
+    "mangrove-collapse.png": "8890e00a00eb356cafb591737201c7bca2b5d17aee20595a51ed9e888ff33b93",
+    "mangrove-mapungubwe-collapse.json": "dada20cfbed427bb621b2a996ba4c4cb2ec1c0fb6d353c00f0de077a2dcd9195",
+    "mangrove-mapungubwe-intact.json": "0bc67b9a3e46d1be0a060ff7362b13d5f498a26aaed327f54d51b5811c9c029b",
+    "native.json.gz": "5f802e6c42e8bff91909066a66323742f4b8e025850146089e7a444466aa2227"
+  },
+  "perStepSubmissionCountsEqual": true,
+  "summaries": [
+    {
+      "label": "A1",
+      "gpuMedianMs": 61.3835405,
+      "renderCpuMedianMs": 40.45000001788139,
+      "frameIntervalMedianMs": 66.65000000596046
+    },
+    {
+      "label": "B1",
+      "gpuMedianMs": 60.737525500000004,
+      "renderCpuMedianMs": 42.5,
+      "frameIntervalMedianMs": 65.85000002384186
+    },
+    {
+      "label": "B2",
+      "gpuMedianMs": 60.78677,
+      "renderCpuMedianMs": 42.900000005960464,
+      "frameIntervalMedianMs": 65.34999999403954
+    },
+    {
+      "label": "A2",
+      "gpuMedianMs": 60.6763535,
+      "renderCpuMedianMs": 46.90000003576279,
+      "frameIntervalMedianMs": 75.0499999821186
+    }
+  ]
+}

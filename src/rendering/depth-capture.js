@@ -1,8 +1,21 @@
 // Only authored depth shaders with matching silhouettes opt into this pass.
 // Unknown vertex/discard recipes keep their color shader until audited.
 import {standardDepthMaterial} from './standard-depth.js';
-export function withDepthCaptureMaterials(world, render, {optimized=true,visibleOnly=true}={}) {
-  const materials=new Map(),standards=new Map(),objects=[],stats={specialized:0,fallback:0,excluded:0};
+import * as THREE from 'three';
+import {nativeDepthRecipe} from './depth-recipes.js';
+function emptyRenderable(object){
+  const geometry=object.geometry;
+  if(!geometry||!(geometry.drawRange.count===0||(object.isInstancedMesh?object.count===0:geometry.isInstancedBufferGeometry&&geometry.instanceCount===0)))return false;
+  // An unknown render/compile hook can populate a nominally empty batch during
+  // the draw. Keep its original preparation and callbacks conservatively.
+  if(object.onBeforeRender!==THREE.Object3D.prototype.onBeforeRender||object.onAfterRender!==THREE.Object3D.prototype.onAfterRender)return false;
+  const sources=Array.isArray(object.material)?object.material:[object.material];
+  return sources.every(m=>m?.onBeforeRender===THREE.Material.prototype.onBeforeRender&&nativeDepthRecipe(m))&&
+    (!object.customDepthMaterial||object.customDepthMaterial.onBeforeRender===THREE.Material.prototype.onBeforeRender&&nativeDepthRecipe(object.customDepthMaterial));
+}
+export function withDepthCaptureMaterials(world, render, {optimized=true,visibleOnly=true,nonEmptyOnly=false}={}) {
+  const materials=new Map(),standards=new Map(),objects=[],stats={specialized:0,fallback:0,excluded:0,emptySkipped:0};
+  const skipEmpty=nonEmptyOnly&&!world.overrideMaterial&&world.onBeforeRender===THREE.Object3D.prototype.onBeforeRender&&world.onAfterRender===THREE.Object3D.prototype.onAfterRender;
   const remember=material=>{if(material&&!materials.has(material))materials.set(material,{visible:material.visible,colorWrite:material.colorWrite});};
   const compatible=(source,depth)=>depth?.userData.worldDepthCompatible&&
     source.side===depth.side&&source.depthFunc===depth.depthFunc&&source.depthTest===depth.depthTest&&
@@ -18,6 +31,9 @@ export function withDepthCaptureMaterials(world, render, {optimized=true,visible
     // participate through their visible owners and are restored below.
     world[visibleOnly?'traverseVisible':'traverse'](object=>{
       if(!object.material)return;
+      // Return only from this visitor: children still participate. Shared
+      // materials are prepared through every nonempty owner as before.
+      if(skipEmpty&&emptyRenderable(object)){stats.emptySkipped++;return;}
       const source=object.material,list=Array.isArray(source)?source:[source];
       list.forEach(remember);
       let candidate=null;
