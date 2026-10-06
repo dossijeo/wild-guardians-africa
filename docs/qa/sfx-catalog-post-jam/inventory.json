@@ -3,27 +3,27 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "59be35e894414e5cb807cee1204a4a0fc20643ca927442271bbcd8e27dab47e9",
+    "public/content/sfx-routing.json": "c4da8e97823aa599b0d8ae619201025bbb0bdd6530a4d0dc1e3977893c802471",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "4579ce78657f68fc359f43013f5f5a17692af48baba84ce04eb6755970b513dc",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "bbf7666b6ec95b6bf4020aafc7cd112ce0b31735d50236eb7f70694ebb155542",
+    "src/audio/audio.js": "6bf445b8ab3e8c28a66c9b4f5a97389580fc17184272a9f1b2144c315296dc21",
     "src/audio/farm-contact-audio.js": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7",
     "src/audio/raid-arrival-audio.js": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
-    "src/audio/structure-audio.js": "9f586a24f3b3f7df14919e5edcde44cd7fe5c08e743c438e2390e8ca178ac418",
+    "src/audio/structure-audio.js": "8b73d19e5c6ebe3bdcfff580d5cb744177b827d63541f0be0b3f70df51cb0f75",
     "src/audio/ui-audio.js": "23c14ac33fa9d2bfa547ff440889ed89a87da41f68e52ea92f39f697806d46ca",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "54c0c3852c64ebf36c350baa8ef4bf56af356b1a2f79fc25478fa0f882975712",
     "src/audio/worker-audio.js": "5e2168f5f4065310012aefd117319fe4f544c3f01e8d6e7fae8bc91bf9e66634",
     "src/rendering/scene.js": "bbaa6e822d0a569f3c014f53760ebb8c630bd819b39262113adbacc7db1115c4",
-    "src/simulation/raids.js": "bd9586312511da6fc8356374841987f86d6d3c8045b87e8b71ba5007a9e82ab4"
+    "src/simulation/raids.js": "929efaba2a5a3d13ccb6837bb32b9d968f5165b6a826052f75427568139d1362"
   },
   "total": 126,
-  "assigned": 84,
-  "unassigned": 42,
+  "assigned": 85,
+  "unassigned": 41,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -130,7 +130,6 @@
       "build_adobe",
       "wall_crack_small",
       "wall_debris_small",
-      "wall_structural_creak",
       "wall_debris_ground",
       "beast_charge",
       "beast_attack",
@@ -152,6 +151,7 @@
     ],
     "Alternativa / contextual / assigned": [
       "farm_seeds_drop",
+      "wall_structural_creak",
       "beast_hit_structure",
       "npc_acknowledge",
       "ui_buy",
@@ -1012,10 +1012,16 @@
       "sha256": "64cc4f0b748b990bb12fab9c17f967789198aaa3fb2d1c1b00f858a187ac1bbf",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Crujido al alcanzar daño estructural alto; disparador de estado, no continuo.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 11,
+          "trigger": "StructureHit:wall-critical (world detail)"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 45,

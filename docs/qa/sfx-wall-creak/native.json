@@ -1,0 +1,419 @@
+{
+  "rows": [
+    {
+      "material": "zarzas",
+      "gate": false,
+      "threshold": 40,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 50,
+        "hp": 30,
+        "maxHp": 100,
+        "criticalThreshold": 40,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 30,
+        "hp": 10,
+        "maxHp": 100,
+        "criticalThreshold": 40,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "zarzas",
+      "gate": true,
+      "threshold": 24,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 34,
+        "hp": 14,
+        "maxHp": 60,
+        "criticalThreshold": 24,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 14,
+        "hp": 0,
+        "maxHp": 60,
+        "criticalThreshold": 24,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "empalizada",
+      "gate": false,
+      "threshold": 80,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 90,
+        "hp": 70,
+        "maxHp": 200,
+        "criticalThreshold": 80,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 70,
+        "hp": 50,
+        "maxHp": 200,
+        "criticalThreshold": 80,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "empalizada",
+      "gate": true,
+      "threshold": 48,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 58,
+        "hp": 38,
+        "maxHp": 120,
+        "criticalThreshold": 48,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 38,
+        "hp": 18,
+        "maxHp": 120,
+        "criticalThreshold": 48,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "piedra",
+      "gate": false,
+      "threshold": 200,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 210,
+        "hp": 190,
+        "maxHp": 500,
+        "criticalThreshold": 200,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 190,
+        "hp": 170,
+        "maxHp": 500,
+        "criticalThreshold": 200,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "piedra",
+      "gate": true,
+      "threshold": 120,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 130,
+        "hp": 110,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 110,
+        "hp": 90,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "adobe",
+      "gate": false,
+      "threshold": 120,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 130,
+        "hp": 110,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 110,
+        "hp": 90,
+        "maxHp": 300,
+        "criticalThreshold": 120,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "adobe",
+      "gate": true,
+      "threshold": 72,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 82,
+        "hp": 62,
+        "maxHp": 180,
+        "criticalThreshold": 72,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 62,
+        "hp": 42,
+        "maxHp": 180,
+        "criticalThreshold": 72,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "reforzado",
+      "gate": false,
+      "threshold": 160,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 170,
+        "hp": 150,
+        "maxHp": 400,
+        "criticalThreshold": 160,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 150,
+        "hp": 130,
+        "maxHp": 400,
+        "criticalThreshold": 160,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    },
+    {
+      "material": "reforzado",
+      "gate": true,
+      "threshold": 96,
+      "hit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 106,
+        "hp": 86,
+        "maxHp": 240,
+        "criticalThreshold": 96,
+        "firstHitThisRaid": true
+      },
+      "subsequentHit": {
+        "kind": "wall",
+        "x": 10,
+        "z": 0,
+        "previousHp": 86,
+        "hp": 66,
+        "maxHp": 240,
+        "criticalThreshold": 96,
+        "firstHitThisRaid": false
+      },
+      "accepted": [
+        {
+          "id": "wall_structural_creak",
+          "bus": "world",
+          "family": "structure-detail",
+          "emitter": "structure-3",
+          "gain": 0.2
+        }
+      ],
+      "decoded": {
+        "channels": 2,
+        "sampleRate": 48000,
+        "duration": 2.2
+      },
+      "voices": 0,
+      "context": "closed"
+    }
+  ],
+  "errors": [],
+  "muted": true,
+  "world3D": false,
+  "navigation": "flat test double",
+  "preparedAttackBoundary": true
+}

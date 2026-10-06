@@ -16,3 +16,5 @@ AudioSystem vincula ese evento al original 109 `ui_objective_complete`, mediante
 `node --test tests/tutorial-complete-audio.test.js`; abrir tests/browser/tutorial-complete-audio.html y pulsar Probar finalización; `node tools/audit_sfx_catalog.mjs --check`; `npm run build`; `npm run test:web-package`.
 
 La navegación de estas pruebas de dominio/audio es plana y sin obstáculos; hay tareas y recorrido completos, pero no demuestra terreno nativo ni animaciones/render 3D. La salida del navegador está silenciada: acredita conexión/descodificación/reproducción técnica, no escucha ni móvil físico. La aceptación de cien noches, todo el catálogo SFX y el plan completo sigue pendiente.
+
+CI posterior: Validate game 37409146771 detectó el derivado Opus desactualizado tras conectar 109. [Regeneración y verificación local documentadas](../sfx-wall-creak/README.md); los resultados dirigidos/nativos anteriores no acreditaban este gate de metadatos.

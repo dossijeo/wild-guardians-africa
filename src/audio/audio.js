@@ -4,7 +4,7 @@ import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
 import {RaidArrivalAudio} from './raid-arrival-audio.js';
 import {AnimalAudio,ANIMAL_SOUND_ROUTES} from './animal-audio.js';
-import {structureHitSound,structureAlertSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
+import {structureHitSound,structureAlertSound,structureDetailSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
 import {MovementAudio} from './movement-audio.js';
@@ -188,6 +188,12 @@ export class AudioSystem {
       if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
         this.sound(alert,{bus:'ui',family:alert==='ui_objective_complete'?'tutorial-complete':alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='ui_objective_complete'?'ui:tutorial':alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
           isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&(this.context.currentTime-requested)<=.5&&
+            !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
+      }
+      const detail=event.type==='StructureHit'&&structureDetailSound(event);
+      if(detail){const requested=this.context?.currentTime??0,generation=this.generation;
+        this.sound(detail,{...eventAudioOptions({...event,animalId:undefined,presentation:Number.isFinite(event.structureHit.x)&&Number.isFinite(event.structureHit.z)?event.structureHit:event.presentation},detail,state,listener),family:'structure-detail',emitter:event.targetId,
+          isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&
             !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
       }
       const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});

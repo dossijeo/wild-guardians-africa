@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **84**. Sin asignar en gameplay: **42**.
+Asignados: **85**. Sin asignar en gameplay: **41**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -49,7 +49,7 @@ Asignados: **84**. Sin asignar en gameplay: **42**.
 | 041 | wall_hit_reinforced_adobe · Impacto · adobe reforzado | Asignado | Impacto lógico en adobe reforzado. | src/audio/structure-audio.js:1 → StructureHit: reforzado |
 | 042 | wall_crack_small · Pequeñas grietas | Pendiente | Pequeña rotura en contacto válido; no se reproduce como daño autónomo. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 043 | wall_debris_small · Desprendimiento de fragmentos | Pendiente | Caída de fragmentos decorativos; limitar voces simultáneas. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 044 | wall_structural_creak · Crujido estructural | Pendiente | Crujido al alcanzar daño estructural alto; disparador de estado, no continuo. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 044 | wall_structural_creak · Crujido estructural | Asignado | Crujido al alcanzar daño estructural alto; disparador de estado, no continuo. | src/audio/structure-audio.js:11 → StructureHit:wall-critical (world detail) |
 | 045 | wall_collapse_full · Colapso completo | Asignado | Colapso estructural iniciado por el motor de destrucción; una vez por colapso. | src/audio/audio.js:19 → StructureRuined |
 | 046 | wall_debris_ground · Fragmentos cayendo al suelo | Pendiente | Contacto final de restos con el suelo; presentación del colapso. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 047 | beast_step_light · Pasos ligeros | Asignado | Apoyos de bestia ligera; marcadores de animación. | src/audio/movement-audio.js:6 → MovementAudio.update: observed moving native foot contact |

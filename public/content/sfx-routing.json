@@ -504,11 +504,10 @@
       "id": "wall_structural_creak",
       "filename": "044_wall_structural_creak.mp3",
       "sha256": "64cc4f0b748b990bb12fab9c17f967789198aaa3fb2d1c1b00f858a187ac1bbf",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "StructureHit:wall-critical"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Crujido al alcanzar daño estructural alto; disparador de estado, no continuo."
     },
     {

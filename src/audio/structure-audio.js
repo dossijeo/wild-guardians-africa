@@ -8,6 +8,11 @@ export function structureAlertSound(event){
     return STRUCTURE_ALERT_SOUNDS['StructureHit:wall-critical'];
   return null;
 }
+export const STRUCTURE_DETAIL_SOUNDS=Object.freeze({'StructureHit:wall-critical':'wall_structural_creak'});
+export function structureDetailSound(event){
+  const hit=event?.structureHit;
+  return hit?.kind==='wall'&&hit.previousHp>hit.hp&&hit.previousHp>hit.criticalThreshold&&hit.hp<=hit.criticalThreshold?STRUCTURE_DETAIL_SOUNDS['StructureHit:wall-critical']:null;
+}
 export function structureHitSound(event,state){
   const target=state?.structures?.find(structure=>structure.id===event.targetId);
   return target?.kind==='wall' ? WALL_HIT_SOUNDS[target.material]??'beast_hit_structure' : 'beast_hit_structure';
