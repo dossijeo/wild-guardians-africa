@@ -5,9 +5,9 @@ const result={done:false,ok:false,images:[],errors:[]};
 const sha=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),n=>n.toString(16).padStart(2,'0')).join('');
 try{
  const canvas=document.createElement('canvas'),gl=canvas.getContext('webgl2');if(!gl)throw Error('WebGL2 unavailable');
- async function read(url,r){
+ async function read(url,r,conversion){
   const response=await fetch(url);if(!response.ok)throw Error('HTTP '+response.status);const bytes=await response.arrayBuffer();
-  const bitmap=await createImageBitmap(new Blob([bytes]),{premultiplyAlpha:'none',colorSpaceConversion:'none',imageOrientation:'none'});
+  const bitmap=await createImageBitmap(new Blob([bytes]),{premultiplyAlpha:'none',colorSpaceConversion:conversion,imageOrientation:'none'});
   if(bitmap.width!==r.width||bitmap.height!==r.height)throw Error('Decode dimension mismatch');
   const texture=gl.createTexture(),framebuffer=gl.createFramebuffer();gl.bindTexture(gl.TEXTURE_2D,texture);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
@@ -17,13 +17,13 @@ try{
   const pixels=new Uint8Array(r.width*r.height*4);gl.readPixels(0,0,r.width,r.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);if(gl.getError()!==gl.NO_ERROR)throw Error('WebGL data readback failed');
   gl.deleteFramebuffer(framebuffer);gl.deleteTexture(texture);bitmap.close();return {bytesHash:await sha(bytes),pixels,pixelHash:await sha(pixels)};
  }
- for(const r of manifest.records.filter(r=>r.kind==='data-image')){
+ for(const r of manifest.records.filter(r=>r.kind==='data-image'))for(const conversion of ['none','default']){
   const originalUrl=import.meta.env.DEV?'/'+r.source:new URL('../original-images/'+r.source,import.meta.url).href;
-  const a=await read(originalUrl,r),b=await read(assetUrl('/'+r.source),r);
+  const a=await read(originalUrl,r,conversion),b=await read(assetUrl('/'+r.source),r,conversion);
   if(a.bytesHash!==r.sourceSha256||b.bytesHash!==r.runtimeSha256)throw Error('Encoded byte hash mismatch');
   let differences=0;for(let i=0;i<a.pixels.length;i++)if(a.pixels[i]!==b.pixels[i])differences++;
   if(differences||a.pixelHash!==r.sourcePixelSha256||b.pixelHash!==r.runtimePixelSha256)throw Error('Native shader data mismatch');
-  result.images.push({source:r.source,runtime:r.runtime,width:r.width,height:r.height,channelsCompared:a.pixels.length,differences,sourcePixelSha256:a.pixelHash,runtimePixelSha256:b.pixelHash});
+  result.images.push({conversion,source:r.source,runtime:r.runtime,width:r.width,height:r.height,channelsCompared:a.pixels.length,differences,sourcePixelSha256:a.pixelHash,runtimePixelSha256:b.pixelHash});
  }
  if(!result.images.length)throw Error('No data image variants tested');result.ok=true;
 }catch(error){result.errors.push(error.message);}

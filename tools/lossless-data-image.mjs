@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import {createHash} from 'node:crypto';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 export function requireDataImage(metadata){
- if(!['png','jpeg','webp'].includes(metadata.format)||metadata.space!=='srgb'||metadata.depth!=='uchar'||![3,4].includes(metadata.channels)||metadata.icc||metadata.hasProfile||(metadata.orientation??1)!==1||(metadata.pages??1)!==1||(metadata.bitsPerSample??8)!==8)throw Error('Data image needs separate format/profile/depth/orientation review');
+ if(!['png','jpeg','webp'].includes(metadata.format)||!((metadata.space==='srgb'&&[3,4].includes(metadata.channels))||(metadata.space==='b-w'&&[1,2].includes(metadata.channels)))||metadata.depth!=='uchar'||metadata.icc||metadata.hasProfile||(metadata.orientation??1)!==1||(metadata.pages??1)!==1||(metadata.bitsPerSample??8)!==8)throw Error('Data image needs separate format/profile/depth/orientation review');
 }
 export async function dataPixels(bytes){
  const metadata=await sharp(bytes).metadata();requireDataImage(metadata);

@@ -17,7 +17,14 @@ test('16-bit PNG is rejected instead of silently truncating data',async()=>{
  const input=await sharp({create:{width:2,height:2,channels:3,background:'#abcdef'}}).toColourspace('rgb16').png().toBuffer();
  assert.equal((await sharp(input).metadata()).bitsPerSample,16);await assert.rejects(losslessDataWebp(input),/depth/);
 });
-test('profiles, orientation, animation and grayscale need explicit review',()=>{
+test('profiles, orientation, animation and unsupported channel layouts need review',()=>{
  const m={format:'png',space:'srgb',depth:'uchar',channels:3};requireDataImage(m);
- for(const change of [{hasProfile:true},{icc:Buffer.from('profile')},{orientation:6},{pages:2},{channels:1},{space:'b-w'}])assert.throws(()=>requireDataImage({...m,...change}),/review/);
+ for(const change of [{hasProfile:true},{icc:Buffer.from('profile')},{orientation:6},{pages:2},{channels:5},{space:'cmyk'}])assert.throws(()=>requireDataImage({...m,...change}),/review/);
+});
+
+test('grayscale mask conversion replicates each exact scalar into RGB and keeps opaque alpha',async()=>{
+ const raw=Buffer.from([0,1,42,100,127,128,200,255]);
+ const input=await sharp(raw,{raw:{width:8,height:1,channels:1}}).toColourspace('b-w').png().toBuffer();
+ assert.equal((await sharp(input).metadata()).space,'b-w');const r=await losslessDataWebp(input),decoded=await dataPixels(r.output);assert(r.comparison.rawPixelsEqual);
+ for(let i=0;i<8;i++){for(let c=0;c<3;c++)assert.equal(decoded.data[i*4+c],raw[i]);assert.equal(decoded.data[i*4+3],255);}
 });

@@ -55,6 +55,24 @@ export function biomeTextureReferences(payload,catalog){
   return [{path:source.replace(/^\//,''),reference:{catalog,field:'textures['+index+']',declaredRole:texture.role,role:['baseColor','emissive'].includes(texture.role)?'color':texture.role==='normal'?'normal':'data'}}];
  });
 }
+export function nativeCatalogImageReferences({villages=[],walls={},vfx={},menuHtml=''}={}){
+ const refs=[];
+ const add=(source,catalog,field,role)=>{if(typeof source==='string'&&/^\/?assets\//.test(source)&&imageExtension.test(source))refs.push({path:source.replace(/^\//,''),reference:{catalog,field,role}});};
+ for(const [i,village] of villages.entries()){
+  for(const [key,url] of Object.entries(village.textures??{}))add(url,'content/villages.json','['+i+'].textures.'+key,({color:'color',normal:'normal',rough:'data'})[key]??'unclassified');
+  add(village.photo,'content/villages.json','['+i+'].photo','color');
+ }
+ add(walls.texture,'content/walls.json','texture','color');
+ for(const [key,url] of Object.entries(walls.icons??{}))add(url,'content/walls.json','icons.'+key,'color');
+ // Sprite-atlas channels remain conservative data until a separate visual policy.
+ add(vfx.atlas,'content/vfx.json','atlas','data');
+ for(const [i,item] of (vfx.resources??[]).entries())add(item.thumb,'content/vfx.json','resources['+i+'].thumb','color');
+ for(const [id,role] of Object.entries({backgrounddata:'color',skydata:'color',cleandata:'color',terrainmaskdata:'data'})){
+  const match=menuHtml.match(new RegExp('<script[^>]*id=[\"\']'+id+'[\"\'][^>]*>([\\s\\S]*?)</script>','i'));
+  if(match)add(match[1].trim(),'menu/index.html','#'+id,role);
+ }
+ return refs;
+}
 export async function auditImageAssets(){
  const publicFiles=await walk(resolve(root,'public')),ground=JSON.parse(await readFile(resolve(root,'public/content/ground-materials.json'),'utf8'));
  const knownRoles=groundImageReferences(ground);
@@ -80,6 +98,10 @@ export async function auditImageAssets(){
   };
   visit(JSON.parse(await readFile(resolve(root,'public/content/'+catalog+'.json'),'utf8')),'');
  }
+ const nativeCatalogs={};
+ for(const name of ['villages','walls','vfx'])nativeCatalogs[name]=JSON.parse(await readFile(resolve(root,'public/content/'+name+'.json'),'utf8'));
+ nativeCatalogs.menuHtml=await readFile(resolve(root,'public/menu/index.html'),'utf8');
+ for(const {path,reference} of nativeCatalogImageReferences(nativeCatalogs)){const refs=knownRoles.get(path)??[];refs.push(reference);knownRoles.set(path,refs);}
  const imageVariants=JSON.parse(await readFile(resolve(root,'content/manifests/image-runtime.json'),'utf8'));
  for(const record of imageVariants.records){const refs=knownRoles.get(record.source);if(!refs?.length||refs.some(r=>r.role==='unclassified')||refs.some(r=>r.role!=='color')&&!(record.kind==='data-image'&&record.encoding==='lossless-webp'&&record.rawPixelsEqual===true))throw Error('Image runtime alias requires reviewed color or exact data source');knownRoles.set(record.runtime,refs.map(r=>({...r,source:record.source})));}
  const standalone=[],embedded=[],inline=[],unparsedInline=[],errors=[];

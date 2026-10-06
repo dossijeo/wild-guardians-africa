@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {gltfImageRoles,groundImageReferences,biomeTextureReferences} from '../tools/audit_image_assets.mjs';
+import {gltfImageRoles,groundImageReferences,biomeTextureReferences,nativeCatalogImageReferences} from '../tools/audit_image_assets.mjs';
 
 test('legacy and WebP texture references preserve normal, packed data and color roles',()=>{
  const json={textures:[{source:0},{extensions:{EXT_texture_webp:{source:1}}},{source:2}],materials:[{pbrMetallicRoughness:{baseColorTexture:{index:0},metallicRoughnessTexture:{index:2}},normalTexture:{index:1},occlusionTexture:{index:2}}]};
@@ -30,4 +30,18 @@ test('native biome atlas descriptors distinguish base color from normal and meta
  const refs=biomeTextureReferences({textures:[{role:'baseColor',base64:{url:'/assets/color.webp'}},{role:'normal',base64:{url:'/assets/n.png'}},{role:'metallicRoughness',base64:{url:'/assets/orm.webp'}}]},'biome-mangrove');
  assert.deepEqual(refs.map(r=>r.reference.role),['color','normal','data']);
  assert.deepEqual(refs.map(r=>r.path),['assets/color.webp','assets/n.png','assets/orm.webp']);
+});
+
+test('native village texture slots and photos retain their explicit semantic roles',()=>{
+ const refs=nativeCatalogImageReferences({villages:[{textures:{color:'/assets/shared.webp',normal:'/assets/shared.webp',rough:'/assets/rough.webp',unknown:'/assets/new.png'},photo:'/assets/photo.webp'}]});
+ assert.deepEqual(refs.map(r=>r.reference.role),['color','normal','data','unclassified','color']);
+ assert.equal(refs.filter(r=>r.path==='assets/shared.webp').length,2);
+});
+test('wall art and VFX thumbnails are color, but sprite atlas stays conservative data',()=>{
+ const refs=nativeCatalogImageReferences({walls:{texture:'/assets/wall.jpg',icons:{adobe:'/assets/icon.webp'}},vfx:{atlas:'/assets/atlas.webp',resources:[{thumb:'/assets/thumb.webp'}]}});
+ assert.deepEqual(refs.map(r=>r.reference.role),['color','color','data','color']);
+});
+test('menu ground alpha mask cannot be mistaken for display-color art',()=>{
+ const menuHtml='<script id="skydata">/assets/sky.webp</script><script type="x" id="terrainmaskdata">/assets/mask.png</script><script id="cleandata">/assets/clean.webp</script>';
+ const refs=nativeCatalogImageReferences({menuHtml});assert.equal(refs.find(r=>r.path==='assets/mask.png').reference.role,'data');assert.equal(refs.find(r=>r.path==='assets/clean.webp').reference.role,'color');
 });
