@@ -35,8 +35,14 @@ export class GameScreenWakeLock {
     this.frameDocuments.add(document);
     for(const event of ['pointerdown','pointerup','click','keydown'])document.addEventListener(event,this.interaction,{signal:this.frameAbort.signal});
   }
+  policyBlocked(){
+    // A host iframe can deny this capability even when navigator exposes it.
+    // Query again on retry: a host may subsequently change its delegation.
+    try{const policy=this.document?.permissionsPolicy??this.document?.featurePolicy;return policy?.allowsFeature?.('screen-wake-lock')===false;}catch{return false;}
+  }
   retry(){
     if(!this.active||this.document?.hidden)return;
+    if(this.policyBlocked()){this.nativeUnavailable=true;this.requestVideo();return;}
     // A policy/power/visibility rejection need not be permanent. Start an
     // existing fallback synchronously in the gesture before retrying native.
     if(this.nativeUnavailable)this.requestVideo();
@@ -45,6 +51,9 @@ export class GameScreenWakeLock {
   }
   request(){
     if(!this.active||this.document?.hidden)return;
+    // Start fallback directly in the input handler when denial is already
+    // knowable; do not wait for a rejected native promise and lose the gesture.
+    if(this.policyBlocked()){this.nativeUnavailable=true;this.requestVideo();return;}
     if(this.nativeUnavailable){this.requestVideo();return;}
     if(this.sentinel&&!this.sentinel.released||this.pending)return;
     const generation=this.generation;

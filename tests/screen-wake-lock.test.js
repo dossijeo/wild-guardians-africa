@@ -2,6 +2,23 @@ import test from 'node:test';import assert from 'node:assert/strict';import {Gam
 const flush=()=>new Promise(done=>setImmediate(done));
 test('same-origin menu gestures retry a denied fallback and are detached on dispose',async()=>{const f=fallbackFixture(),menu=new EventTarget();let allowed=false;f.video.play=function(){this.plays++;if(!allowed)return Promise.reject(Error('Gesture required'));this.paused=false;return Promise.resolve();};f.controller.bindFrame({contentDocument:menu});f.controller.bindFrame({contentDocument:menu});f.controller.bindFrame({get contentDocument(){throw Error('cross origin');}});f.controller.setActive(true);await flush();assert.equal(f.video.plays,1);allowed=true;menu.dispatchEvent(new Event('click'));await flush();assert.equal(f.video.plays,2);assert.equal(f.video.paused,false);f.controller.dispose();menu.dispatchEvent(new Event('click'));assert.equal(f.video.plays,2);});
 function fallbackFixture(api=null){const document=new EventTarget();document.hidden=false;const video={paused:true,plays:0,pauses:0,play(){this.plays++;this.paused=false;return Promise.resolve();},pause(){this.pauses++;this.paused=true;},removeAttribute(){},load(){}};return {document,video,controller:new GameScreenWakeLock({document,wakeLock:api,createVideo:()=>video})};}
+for(const key of ['permissionsPolicy','featurePolicy'])test(key+' denial starts fallback synchronously and skips native requests across gestures',async()=>{
+ let requests=0;const f=fallbackFixture({request(){requests++;throw Error('must not request a denied feature');}});
+ f.document[key]={allowsFeature(feature){assert.equal(feature,'screen-wake-lock');return false;}};
+ f.controller.setActive(true);assert.equal(f.video.plays,1);assert.equal(requests,0);await flush();
+ for(let i=0;i<20;i++)f.document.dispatchEvent(new Event('click'));
+ assert.equal(requests,0);assert.equal(f.video.plays,1);f.controller.dispose();
+});
+test('a changed iframe policy can grant the native lock and stop fallback',async()=>{
+ const f=fixture();let allowed=false;f.document.permissionsPolicy={allowsFeature:()=>allowed};
+ const video={paused:true,play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;},removeAttribute(){}};f.controller.createVideo=()=>video;
+ f.controller.setActive(true);await flush();assert.equal(f.requests.length,0);assert.equal(video.paused,false);
+ allowed=true;f.document.dispatchEvent(new Event('click'));await flush();assert.equal(f.requests.length,1);assert.ok(f.controller.sentinel);assert.equal(video.paused,true);f.controller.dispose();
+});
+test('unavailable policy inspection preserves the native request path',async()=>{
+ const f=fixture();f.document.permissionsPolicy={allowsFeature(){throw Error('not available');}};
+ f.controller.setActive(true);await flush();assert.equal(f.requests.length,1);assert.ok(f.controller.sentinel);f.controller.dispose();
+});
 test('unsupported browser uses one silent video and resumes it after visibility changes',async()=>{const f=fallbackFixture();f.controller.setActive(true);await flush();assert.equal(f.video.plays,1);for(let i=0;i<20;i++)f.document.dispatchEvent(new Event('pointerdown'));assert.equal(f.video.plays,1);f.document.hidden=true;f.document.dispatchEvent(new Event('visibilitychange'));assert.equal(f.video.paused,true);f.document.hidden=false;f.document.dispatchEvent(new Event('visibilitychange'));await flush();assert.equal(f.video.plays,2);f.controller.dispose();assert.equal(f.video.paused,true);f.document.dispatchEvent(new Event('pointerdown'));assert.equal(f.video.plays,2);});
 test('native permission rejection falls back; rejected video retries on the next gesture',async()=>{const f=fallbackFixture({request:()=>Promise.reject(Error('Policy'))});f.video.play=function(){this.plays++;return Promise.reject(Error('Gesture required'));};f.controller.setActive(true);await flush();assert.equal(f.video.plays,1);assert.equal(f.controller.pending,null);f.video.play=function(){this.plays++;this.paused=false;return Promise.resolve();};f.document.dispatchEvent(new Event('pointerdown'));await flush();assert.equal(f.video.plays,2);assert.equal(f.video.paused,false);assert.equal(f.controller.lastError,null);f.controller.dispose();});
 test('native grants never create a fallback video',async()=>{const f=fixture();f.controller.createVideo=()=>{throw Error('unnecessary video');};f.controller.setActive(true);await flush();assert.equal(f.controller.video,null);f.controller.dispose();});

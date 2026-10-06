@@ -1,0 +1,9 @@
+# Respaldo directo cuando el iframe deniega Screen Wake Lock
+
+El controlador de producción consulta `document.permissionsPolicy` o su variante compatible `featurePolicy`, cuando están disponibles. Si `screen-wake-lock` está denegado, inicia el respaldo existente de vídeo directamente desde el gesto, sin esperar una promesa nativa destinada al rechazo. Evita repetir esas peticiones en cada click. Si la política cambia, un nuevo gesto puede solicitar el bloqueo nativo y pausar el respaldo. Una API de inspección ausente o que lanza un error conserva la ruta nativa anterior; denegaciones de energía/permisos siguen usando su manejo existente.
+
+La política del anfitrión no se modifica. Según la [especificación W3C](https://www.w3.org/TR/screen-wake-lock/#policy-control), el permiso por defecto es `self` y un iframe de otro origen necesita delegación explícita. El juego no puede concedérsela por sí mismo.
+
+Verificación: 16 pruebas correctas y compilación correcta. Prueba real de navegador de escritorio usando `screen-wake-lock-embedded.html`, con `allow="autoplay; screen-wake-lock 'none'"`: cuatro pulsaciones de entrar, cero solicitudes nativas, cero errores, vídeo montado/reproduciéndose, `readyState: 4` y reloj avanzando. Al salir, vídeo pausado y controlador inactivo. El reporte del controlador contiene cero errores; la consola capturada registra un TypeError de MutationObserver sin URL, cuya causa no queda acreditada. No se presenta como una consola limpia. Prueba independiente en página principal: una petición y concesión nativas, ningún vídeo, una liberación al salir. JSON y captura adjuntos; pestaña temporal cerrada.
+
+Estas pruebas acreditan detección de la política, reproducción y ciclo del controlador. No prueban que el respaldo inhiba el temporizador físico de Chrome en Pixel 10a, ni que la versión publicada en itch.io contenga este cambio. La aceptación física sigue pendiente. No se publica en itch.io durante el trabajo postjam.

@@ -1,0 +1,92 @@
+TAP version 13
+# (node:37528) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: same-origin menu gestures retry a denied fallback and are detached on dispose
+ok 1 - same-origin menu gestures retry a denied fallback and are detached on dispose
+  ---
+  duration_ms: 14.6937
+  ...
+# Subtest: permissionsPolicy denial starts fallback synchronously and skips native requests across gestures
+ok 2 - permissionsPolicy denial starts fallback synchronously and skips native requests across gestures
+  ---
+  duration_ms: 4.4154
+  ...
+# Subtest: featurePolicy denial starts fallback synchronously and skips native requests across gestures
+ok 3 - featurePolicy denial starts fallback synchronously and skips native requests across gestures
+  ---
+  duration_ms: 1.2574
+  ...
+# Subtest: a changed iframe policy can grant the native lock and stop fallback
+ok 4 - a changed iframe policy can grant the native lock and stop fallback
+  ---
+  duration_ms: 2.9665
+  ...
+# Subtest: unavailable policy inspection preserves the native request path
+ok 5 - unavailable policy inspection preserves the native request path
+  ---
+  duration_ms: 1.0656
+  ...
+# Subtest: unsupported browser uses one silent video and resumes it after visibility changes
+ok 6 - unsupported browser uses one silent video and resumes it after visibility changes
+  ---
+  duration_ms: 2.9055
+  ...
+# Subtest: native permission rejection falls back; rejected video retries on the next gesture
+ok 7 - native permission rejection falls back; rejected video retries on the next gesture
+  ---
+  duration_ms: 1.9475
+  ...
+# Subtest: native grants never create a fallback video
+ok 8 - native grants never create a fallback video
+  ---
+  duration_ms: 3.9135
+  ...
+# Subtest: fallback is mounted inline inside the viewport and removed on dispose
+ok 9 - fallback is mounted inline inside the viewport and removed on dispose
+  ---
+  duration_ms: 1.6148
+  ...
+# Subtest: a temporary native denial can recover after returning visible and stops fallback
+ok 10 - a temporary native denial can recover after returning visible and stops fallback
+  ---
+  duration_ms: 2.9124
+  ...
+# Subtest: one screen lock survives gameplay pauses and repeated input, and releases on scene exit
+ok 11 - one screen lock survives gameplay pauses and repeated input, and releases on scene exit
+  ---
+  duration_ms: 2.7366
+  ...
+# Subtest: hidden documents release; returning while playing reacquires a fresh sentinel
+ok 12 - hidden documents release; returning while playing reacquires a fresh sentinel
+  ---
+  duration_ms: 4.2866
+  ...
+# Subtest: late platform grant after leaving the game is immediately released
+ok 13 - late platform grant after leaving the game is immediately released
+  ---
+  duration_ms: 1.4058
+  ...
+# Subtest: denial and unsupported platforms do not form per-frame retry loops; system release reacquires without input
+ok 14 - denial and unsupported platforms do not form per-frame retry loops; system release reacquires without input
+  ---
+  duration_ms: 3.8285
+  ...
+# Subtest: dispose removes lifecycle listeners and cancels pending grants
+ok 15 - dispose removes lifecycle listeners and cancels pending grants
+  ---
+  duration_ms: 1.1104
+  ...
+# Subtest: a hidden-to-visible transition cannot let an old pending grant replace the new lock
+ok 16 - a hidden-to-visible transition cannot let an old pending grant replace the new lock
+  ---
+  duration_ms: 1.1452
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 361.079

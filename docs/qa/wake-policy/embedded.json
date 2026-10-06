@@ -1,0 +1,66 @@
+{
+  "active": {
+    "supported": true,
+    "secureContext": true,
+    "requests": 0,
+    "grants": 0,
+    "releases": 0,
+    "errors": [],
+    "active": true,
+    "held": true,
+    "mode": "video",
+    "lastError": null,
+    "fallback": {
+      "mounted": true,
+      "paused": false,
+      "currentTime": 1.534562,
+      "readyState": 4,
+      "muted": false
+    }
+  },
+  "repeated": {
+    "supported": true,
+    "secureContext": true,
+    "requests": 0,
+    "grants": 0,
+    "releases": 0,
+    "errors": [],
+    "active": true,
+    "held": true,
+    "mode": "video",
+    "lastError": null,
+    "fallback": {
+      "mounted": true,
+      "paused": false,
+      "currentTime": 0.459531,
+      "readyState": 4,
+      "muted": false
+    }
+  },
+  "exited": {
+    "supported": true,
+    "secureContext": true,
+    "requests": 0,
+    "grants": 0,
+    "releases": 0,
+    "errors": [],
+    "active": false,
+    "held": false,
+    "mode": "video",
+    "lastError": null,
+    "fallback": {
+      "mounted": true,
+      "paused": true,
+      "currentTime": 1.930706,
+      "readyState": 4,
+      "muted": false
+    }
+  },
+  "logs": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-06T20:17:14.465Z"
+    }
+  ]
+}
