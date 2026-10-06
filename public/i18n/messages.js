@@ -1601,5 +1601,14 @@ export const messages = {
   "No quedan recursos suficientes para continuar.": "There are not enough resources left to continue.",
   "Has sobrevivido a cien noches. La tierra queda libre: puedes seguir cultivando y fundar nuevos poblados en paz.": "You have survived one hundred nights. The land is free: you can keep farming and found new villages in peace.",
   "La maldición ha terminado": "The curse is over",
-  "El poblado necesita un nuevo comienzo": "The village needs a new beginning"
+  "El poblado necesita un nuevo comienzo": "The village needs a new beginning",
+  "Incursión": "Raid",
+  "Reparación cancelada": "Repair cancelled",
+  "El poblado necesita ayuda": "The village needs help",
+  "Estrés nocturno": "Night stress",
+  "Plaga": "Plague",
+  "Noche favorable": "Favourable night",
+  "Suelo fértil": "Fertile soil",
+  "Buena temporada": "Good season",
+  "Aviso del poblado": "Village notice"
 };

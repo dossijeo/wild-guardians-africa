@@ -4,6 +4,12 @@ import {RAID_NOTICE_TEXT} from '../src/simulation/raid-notice.js';
 import {visibleNotices,NoticeLifetime,tutorialCoversNotice} from '../src/app/notices.js';
 import {RESERVE_MESSAGE} from '../src/simulation/budget.js';
 const warning={id:'warning',text:RAID_NOTICE_TEXT,target:'animal-1'};
+test('a returning tutorial freezes the already visible bar and manual dismissal survives it',()=>{
+ const state={messages:[{id:'notice',text:'Noche húmeda'}]},notices=new NoticeLifetime(15);
+ notices.visible(state,0);assert.equal(notices.remaining('notice',5),2/3);
+ notices.visible(state,5,{id:'basic.work'});notices.visible(state,25,{id:'basic.work'});notices.visible(state,30);
+ assert.equal(notices.remaining('notice',30),2/3);notices.dismiss('notice');assert.deepEqual(notices.visible(state,31),[]);
+});
 test('finished raids do not leave a live attack warning on the HUD or change saved history',()=>{
  const state={messages:[warning,{id:'funds',text:'Fondos insuficientes',target:null}],raid:null},before=JSON.stringify(state);
  assert.deepEqual(visibleNotices(state),[state.messages[1]]);assert.equal(JSON.stringify(state),before);
