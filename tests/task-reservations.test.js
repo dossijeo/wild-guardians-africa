@@ -53,3 +53,22 @@ test('nearest-first reachability preserves full reservation state across varied 
   const prior=structuredClone(s),reachable=(w,t)=>!w.blocked.includes(t.targetId);reference(prior,reachable);reserveTasks(s,reachable);assert.deepEqual(s,prior,'scenario '+sample);
  }
 });
+
+
+test('busy historical farms clear only existing unreserved targets in one collection pass',()=>{
+ const s=state();s.workers.forEach(w=>{w.status='acting';w.taskId='occupied';});
+ s.plants=Array.from({length:14558},(_,i)=>({id:'plot-'+i,alive:i>=14300}));
+ s.crates=Array.from({length:14095},(_,i)=>({id:'crate-'+i,delivered:i<14090}));s.structures=[{id:'wall'}];
+ s.tasks=Array.from({length:1200},(_,i)=>({id:'task-'+i,created:i,centerId:'center',targetId:i%4===0?'missing-'+i:i%4===1?'plot-'+(14300+i%258):i%4===2?'crate-'+(14090+i%5):'wall',workerId:i%7===0?'reserved':null,blocked:i%5!==0}));
+ const expected=structuredClone(s);reference(expected,()=>{throw Error('Busy worker');});
+ let reads=0;for(const group of [s.plants,s.crates,s.structures])for(const entity of group){const id=entity.id;Object.defineProperty(entity,'id',{enumerable:true,get(){reads++;return id;}});}
+ reserveTasks(s,()=>{throw Error('No reachability call');});const lookupReads=reads;
+ assert.deepEqual(s,expected);assert.ok(lookupReads<=s.plants.length+s.crates.length+s.structures.length);
+ s.plants.push({id:'missing-4'});const next=structuredClone(expected);next.plants.push({id:'missing-4'});reference(next,()=>false);reserveTasks(s,()=>false);assert.deepEqual(s,next);
+});
+
+test('busy farms with no blocked task avoid all historical entity collections',()=>{
+ const s=state();s.workers.forEach(w=>w.status='acting');
+ for(const name of ['plants','crates','structures'])Object.defineProperty(s,name,{get(){throw Error('Unused history');}});
+ reserveTasks(s,()=>{throw Error('No route');});assert.equal(s.tasks[0].blocked,false);
+});

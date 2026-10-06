@@ -62,3 +62,8 @@ Avance experimental: [horizonte de mil acacias adicionales medido](qa/far-vegeta
 
 
 Avance experimental de iluminación: [modelo con material real y atlas con grading artístico compartido](qa/far-vegetation-lighting/README.md), cuatro fases del reloj, comparación a cámara fija y ocho lotes GPU. Persisten diferencias de contraste/detalle y el coste requiere más evaluación; no se activa en gameplay ni acredita la transición final.
+
+
+## Coste de colas con historial grande
+
+[Mantenimiento de tareas bloqueadas optimizado](qa/busy-task-targets/README.md): 65 pruebas dirigidas y 15.600 pasos nativos equivalentes en seis biomas. Mediana aislada sintética de 130,88 a 2,59 ms; no acredita FPS ni resuelve los picos de A* pendientes. Las campañas largas ya iniciadas conservan sus fuentes congeladas.

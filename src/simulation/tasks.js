@@ -31,9 +31,14 @@ export function reserveTasks(state,canExecute=()=>true) {
   if(!state.workers.some(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state))) {
     // Busy workers cannot reserve. Preserve the existing missing-target rule,
     // while clearing stale blocked flags exactly as an empty candidate list did.
-    for(const t of state.tasks)if(!t.workerId&&t.blocked&&(
-      state.plants.some(e=>e.id===t.targetId)||state.crates.some(e=>e.id===t.targetId)||state.structures.some(e=>e.id===t.targetId)
-    ))t.blocked=false;
+    const blocked=state.tasks.filter(t=>!t.workerId&&t.blocked);
+    if(!blocked.length)return;
+    const missing=new Set(blocked.map(t=>t.targetId));
+    for(const group of [state.plants,state.crates,state.structures]){
+      if(!missing.size)break;
+      for(const entity of group){missing.delete(entity.id);if(!missing.size)break;}
+    }
+    for(const t of blocked)if(!missing.has(t.targetId))t.blocked=false;
     return;
   }
   // Resolve pending targets once. Historical crops/crates remain in the save,
