@@ -1,0 +1,173 @@
+{
+  "scope": "Isolated historical fallback stress test derived from archived snapshots: every plant marked not alive only in the in-memory diagnostic copy. Not a legitimate played/restorable game state. One hundred diagnostic worker positions from originally live crops, ten warmup and ten timed alternating pairs. Complete returned anchors equal and diagnostic input unchanged. No gameplay, render, FPS, phone or economic campaign claim.",
+  "cases": [
+    {
+      "source": "intensive-mangrove-shield-100",
+      "mode": "all-harvested-diagnostic",
+      "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+      "diagnosticStateSha256": "76f6f9ec0b35b9cbdfdf4974a1e831bed3d6afe311e0224d942a1f9d4e7ebd77",
+      "history": 12201,
+      "live": 0,
+      "queriesPerPair": 100,
+      "rows": [
+        {
+          "referenceMs": 165.1237999999994,
+          "candidateMs": 222.45880000000034
+        },
+        {
+          "referenceMs": 158.48000000000047,
+          "candidateMs": 200.84510000000046
+        },
+        {
+          "referenceMs": 172.44410000000062,
+          "candidateMs": 212.88660000000073
+        },
+        {
+          "referenceMs": 170.97249999999985,
+          "candidateMs": 203.86389999999938
+        },
+        {
+          "referenceMs": 127.21300000000065,
+          "candidateMs": 178.23540000000048
+        },
+        {
+          "referenceMs": 143.10850000000028,
+          "candidateMs": 173.39399999999932
+        },
+        {
+          "referenceMs": 132.38990000000013,
+          "candidateMs": 170.53629999999976
+        },
+        {
+          "referenceMs": 128.14800000000014,
+          "candidateMs": 159.1900999999998
+        },
+        {
+          "referenceMs": 135.59240000000045,
+          "candidateMs": 162.14109999999982
+        },
+        {
+          "referenceMs": 146.29809999999998,
+          "candidateMs": 182.3786
+        }
+      ],
+      "medianMs": {
+        "reference": 144.70330000000013,
+        "candidate": 180.30700000000024
+      },
+      "candidateWins": 0
+    },
+    {
+      "source": "intensive-river-rejoin-100",
+      "mode": "all-harvested-diagnostic",
+      "inputSha256": "3c1831ea8c59ebbb7f6a669465e50b211c6022e470cd070ce04ac1d489547bc4",
+      "diagnosticStateSha256": "924fb04dc50aa1317ce9673c4b385eb809312acdba48328d0d1161e6841ee411",
+      "history": 13541,
+      "live": 0,
+      "queriesPerPair": 100,
+      "rows": [
+        {
+          "referenceMs": 178.7520000000004,
+          "candidateMs": 217.33359999999993
+        },
+        {
+          "referenceMs": 178.97279999999955,
+          "candidateMs": 233.2453999999998
+        },
+        {
+          "referenceMs": 196.70720000000074,
+          "candidateMs": 250.4928
+        },
+        {
+          "referenceMs": 193.02939999999944,
+          "candidateMs": 232.27819999999883
+        },
+        {
+          "referenceMs": 193.27299999999923,
+          "candidateMs": 230.66339999999946
+        },
+        {
+          "referenceMs": 171.03640000000087,
+          "candidateMs": 220.40529999999853
+        },
+        {
+          "referenceMs": 199.84289999999964,
+          "candidateMs": 224.1332999999995
+        },
+        {
+          "referenceMs": 182.00790000000052,
+          "candidateMs": 260.70070000000123
+        },
+        {
+          "referenceMs": 174.87109999999848,
+          "candidateMs": 227.76209999999992
+        },
+        {
+          "referenceMs": 181.09699999999793,
+          "candidateMs": 187.05909999999858
+        }
+      ],
+      "medianMs": {
+        "reference": 181.55244999999923,
+        "candidate": 229.2127499999997
+      },
+      "candidateWins": 0
+    },
+    {
+      "source": "crop-lifecycle-eight-100",
+      "mode": "all-harvested-diagnostic",
+      "inputSha256": "6da1de9d51b41b829ce4a9a7180dbb8ed5b86481e01d6575954b1a4437569ea0",
+      "diagnosticStateSha256": "d3517436f9812b4274606908e27fc16ee4708b80f3e9dd5c14dc56fc150ff2f1",
+      "history": 20443,
+      "live": 0,
+      "queriesPerPair": 100,
+      "rows": [
+        {
+          "referenceMs": 222.11579999999958,
+          "candidateMs": 307.9817000000003
+        },
+        {
+          "referenceMs": 228.54130000000077,
+          "candidateMs": 300.42689999999857
+        },
+        {
+          "referenceMs": 242.3702000000012,
+          "candidateMs": 337.94840000000113
+        },
+        {
+          "referenceMs": 239.1792000000023,
+          "candidateMs": 321.9959999999992
+        },
+        {
+          "referenceMs": 266.40380000000005,
+          "candidateMs": 317.84600000000137
+        },
+        {
+          "referenceMs": 225.58630000000267,
+          "candidateMs": 305.8796000000002
+        },
+        {
+          "referenceMs": 244.81750000000102,
+          "candidateMs": 300.7410999999993
+        },
+        {
+          "referenceMs": 226.96399999999994,
+          "candidateMs": 280.84070000000065
+        },
+        {
+          "referenceMs": 268.0001999999986,
+          "candidateMs": 310.96949999999924
+        },
+        {
+          "referenceMs": 261.60579999999754,
+          "candidateMs": 298.1879000000008
+        }
+      ],
+      "medianMs": {
+        "reference": 240.77470000000176,
+        "candidate": 306.93065000000024
+      },
+      "candidateWins": 0
+    }
+  ]
+}

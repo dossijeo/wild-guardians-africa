@@ -76,3 +76,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Destino de paseo optimizado](qa/idle-anchor-history/README.md): las plantas vivas evitan calcular distancias a cultivos históricos; respuestas iguales en tres fincas archivadas y 15.600 pasos nativos completos equivalentes. Medianas aisladas de cien consultas: 165→53 / 197→70 / 258→70 ms. Sin evidencia de FPS o ahorro cuando no hay plantas vivas.
+
+
+[Corrección del paseo tras cosecha completa](qa/idle-anchor-shared/README.md): el selector de dos pasadas se sustituye por un subconjunto vivo compartido por actualización, con fallback histórico original. Incluye diagnósticos rechazados, coste de preparación y cambios de vida durante el paso. La medición de cien consultas con vivos baja a 3–8 ms; sin vivos no se acredita ahorro (−2,3 % a +6,1 %).

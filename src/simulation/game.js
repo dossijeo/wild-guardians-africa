@@ -411,19 +411,19 @@ function completeTask(s,w,t,target,nav) {
   }
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
-export function idleFarmAnchor(s,worker,center){
-  let plant=null,distance=Infinity;
-  // Living crops always win, even when a harvested crop is nearer. Defer the
-  // historical fallback so growing farms do not measure every old crop per idle
-  // worker. Both passes retain the same distance/ID ordering; no persistent cache.
-  for(let phase=0;phase<2;phase++){
-    for(const candidate of s.plants){
-      if(candidate.centerId!==worker.centerId||phase===0&&!candidate.alive)continue;
-      const next=dist(candidate,worker);
-      if(next<distance||next===distance&&candidate.id.localeCompare(plant.id)<0){plant=candidate;distance=next;}
-    }
-    if(plant)break;
+export function idleFarmAnchor(s,worker,center,livingCandidates=null){
+  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
+  // The worker pass supplies one shared living subset. Recheck object life as
+  // earlier workers can harvest during that same pass. Fall back to the exact
+  // original historical scan when this center no longer has living crops.
+  const candidates=livingCandidates?.some(p=>p.centerId===worker.centerId&&p.alive)?livingCandidates:s.plants;
+  for(const plant of candidates){
+    if(plant.centerId!==worker.centerId)continue;
+    const distance=dist(plant,worker);
+    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
+    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
   }
+  const plant=live??planted;
   // Keep the cultivated area as the idle anchor after its last harvest too.
   if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
@@ -436,6 +436,7 @@ function reserveAvailableTasks(s,nav){
 }
 function updateWorkers(s,dt,nav) {
   const findPlant=workerEntityLookup(()=>s.plants),findCrate=workerEntityLookup(()=>s.crates),findTask=workerEntityLookup(()=>s.tasks);
+  let idlePlants;
   const newArrivals=[];
   if(!s.raid&&s.time<300)for(const w of s.workers){
     if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
@@ -481,7 +482,7 @@ function updateWorkers(s,dt,nav) {
     if(!t) {
       if(w.status!=='idle')w.status='idle';
       if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-      else updateIdle(w,idleFarmAnchor(s,w,center),dt,nav,s.seed,s.structures);
+      else {idlePlants??=s.plants.filter(p=>p.alive);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
       continue;
     }
     const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);

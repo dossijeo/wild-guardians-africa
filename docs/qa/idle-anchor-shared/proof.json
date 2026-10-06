@@ -1,0 +1,30 @@
+{
+  "referenceHead": "726157f",
+  "testedParent": "8f94ef4",
+  "referenceGameSha256": "620e1b5e10b84827fb8c361710e174193b389f244f43024599550692665d2e61",
+  "sourceHashes": {
+    "src/simulation/game.js": "a59b1cdc52d0b0721516d4540c50938c514a38521b583b2a9b2c5d8e95534ddc",
+    "tools/benchmark_idle_farm_anchor.mjs": "36f7dcc9038511d59a9893396b7f0d1be0845f38d245501cfaec96fa89f07f92",
+    "tests/idle-anchor-history.test.js": "6c1b7994bcd80b7d2ebca6a275b5a1a1b7865b6f343ad8e0976b6a373af2a91a",
+    "tools/check_navigation_query_reuse.mjs": "41664ffbcb3a5f602f9e62b9cad5ba0deb2e788001cd5711ffc85c4a5c2acfa2"
+  },
+  "checks": {
+    "tests": 85,
+    "nativeFullStateSteps": 15600,
+    "equalPaths": true,
+    "buildExitCode": 0,
+    "livingBenchmarkExitCode": 0,
+    "historicalBenchmarkExitCode": 0
+  },
+  "resultHashes": {
+    "build.log.gz": "674906c2f337e15031b191c52eb8585939a2bb4ce2376249d00486241bb0b928",
+    "historical-fallback.json": "f015afb8846356c1c5461004016060a4bc9e7a2f5392b02209d8dbfb71da1ffc",
+    "living-farm.json": "e553aab77069282f22125538c026ddc5952f27907ea794b7b402e4251e8b7a05",
+    "native-equivalence.json": "210b26aa0d137b164ca798d252748c9ccf1f5d3dec356525edaf3bc6a03de486",
+    "README.md": "aede56eed699ac2af4a975c33d34952e207d162680b46c2b8d6828fa7abff658",
+    "rejected-precheck.json": "b2fea828da6c0d3f2adbf2c0cd6f39f817526c8e2a66a71e3b8b8b7ca172debb",
+    "rejected-two-pass.json": "6c05fd1f722786442b0bb0a701bf0be95e72ac20062e989fd8cb97ccc6032fd9",
+    "tests.tap": "c760bf8031e75b1d0fd9b5c91520d0d7ccd7759d7d80342cdb61da2a728d60b6"
+  },
+  "limits": "Shared-subset preparation included once per diagnostic batch of 100 positions. All-harvested inputs deliberately synthetic, not played snapshots. No renderer, RAM, phone, FPS or current 100-night balance claim."
+}
