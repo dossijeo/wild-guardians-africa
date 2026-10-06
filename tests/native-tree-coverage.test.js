@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import {createAssetLod,updateAssetLods} from '../src/rendering/asset-lod.js';
 import {refreshResidentProps} from '../src/rendering/resident-props.js';
 import {createFarImpostorPrototype} from '../tools/experiments/far-impostor-prototype.js';
+import {NativeFarCoverage} from '../tools/experiments/native-far-coverage.js';
+import {NativeAssetGroups} from '../src/rendering/asset-groups.js';
 import {FarTreeTransitions} from '../tools/experiments/far-tree-transitions.js';
 import {NativeTreeCoverage} from '../tools/experiments/native-tree-coverage.js';
 function fixture(){
@@ -62,4 +64,24 @@ test('native LOD coverage drives actual prototype readiness buffers and hides bo
  controller.setSuppressions(new Set([f.tree.id]));p.update(f.camera);assert.equal(p.impostors.geometry.attributes.aTreeReady.getX(0),-1);assert.equal(p.models.geometry.attributes.aTreeReady.getX(0),-1);
  const revision=p.stats().readinessRevision;assert.equal(controller.setSuppressions(new Set([f.tree.id])),false);assert.equal(p.stats().readinessRevision,revision);
  controller.setSuppressions(new Set());controller.advance(1);p.update(f.camera);assert.deepEqual(p.treeState(f.tree.id),{ready:1,enabled:true});p.dispose();controller.clear();f.close();
+});
+
+test('far coverage composes obstruction, preserves native logical coverage and reaches merged color groups',()=>{
+ const f=fixture(),batch=f.group.userData.lodBatches[0],coverage=new NativeFarCoverage([0,0,0]),scene=new THREE.Scene(),groups=new NativeAssetGroups(scene),state={ready:.5,enabled:true};scene.add(f.group);updateAssetLods(f.chunks,f.camera,'media');
+ batch.fade.attribute.setX(0,.8);batch.fade.attribute.needsUpdate=true;const baseVersion=batch.fade.attribute.version;
+ assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),1);assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);assert.equal(batch.fade.attribute.version,baseVersion);assert.ok(Math.abs(batch.fade.attribute.getX(0)-.8)<1e-6);
+ f.camera.aspect=1;f.camera.lookAt(0,2,0);f.camera.updateMatrixWorld();groups.update(f.chunks,f.camera,{x:0,z:0});assert.equal(groups.colors.size,1);assert.ok(Math.abs([...groups.colors.values()][0].mesh.geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
+ const scans=coverage.scans;for(let i=0;i<180;i++)assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),0);assert.equal(coverage.scans,scans);
+ state.enabled=false;coverage.update(f.chunks,f.camera,()=>state,2);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),0);groups.update(f.chunks,f.camera,{x:0,z:0});assert.equal([...groups.colors.values()][0].mesh.geometry.attributes.nativeVisibility.getX(0),0);
+ coverage.update(f.chunks,f.camera,()=>null,3);assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.8)<1e-6);groups.dispose();f.close();
+});
+
+test('native far distance uses the authored bottom pivot with anisotropic scale and world yaw',()=>{
+ const f=fixture(),batch=f.group.userData.lodBatches[0],base=[10,2,5],coverage=new NativeFarCoverage(base,{start:1,end:3});
+ const x=f.tree.x+base[0]*f.tree.sx*Math.cos(f.tree.yaw)+base[2]*f.tree.sz*Math.sin(f.tree.yaw);
+ const z=f.tree.z-base[0]*f.tree.sx*Math.sin(f.tree.yaw)+base[2]*f.tree.sz*Math.cos(f.tree.yaw);
+ f.camera.position.set(x,5,z+2);updateAssetLods(f.chunks,f.camera,'media');coverage.update(f.chunks,f.camera,()=>({ready:1,enabled:true}),1);
+ assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.5)<1e-6);
+ f.camera.position.z=z+4;coverage.update(f.chunks,f.camera,()=>({ready:1,enabled:true}),1);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),0);
+ f.close();
 });
