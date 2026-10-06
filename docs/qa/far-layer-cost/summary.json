@@ -1,0 +1,33 @@
+[
+  {
+    "run": "first",
+    "baselineGpuMs": 20.90463716666666,
+    "enabledGpuMs": 21.774442488888894,
+    "addedGpuMs": 0.8698053222222342,
+    "addedGpuPercent": 4.160824774367167,
+    "device": null,
+    "samples": 360
+  },
+  {
+    "run": "second",
+    "baselineGpuMs": 23.406920455555554,
+    "enabledGpuMs": 25.40428821111111,
+    "addedGpuMs": 1.9973677555555547,
+    "addedGpuPercent": 8.533235969029352,
+    "device": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (Intel)",
+      "viewport": [
+        1280,
+        720
+      ],
+      "canvas": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1
+    },
+    "samples": 360
+  }
+]

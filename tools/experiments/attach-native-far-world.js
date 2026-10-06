@@ -45,11 +45,14 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
    finally{for(const [mesh,culled] of meshes)mesh.frustumCulled=culled;}
   }).finally(()=>busy=false);
  }
- const adapter={layer,stats,update(dt){
+ const adapter={layer,stats,enabled:true,update(dt){
   if(closed)return;world.scene.fog=fog;layer.current?.prototype.updateGroundBounds();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&frustum.intersectsBox(nativeChunkBounds(group))));
-  coverage.update(visible);prepared.update();schedulePreparation();layer.update(world.chunks,world.camera,prepared,true,dt,world.renderOrigin,world.nav.suppressed);
+  coverage.update(visible);prepared.update();schedulePreparation();
+  if(layer.current)layer.current.prototype.impostors.visible=this.enabled;
+  if(this.enabled)layer.update(world.chunks,world.camera,prepared,true,dt,world.renderOrigin,world.nav.suppressed);
+  else layer.fade.update(world.chunks,world.camera,()=>null,'disabled');
  },dispose(){if(closed)return;closed=true;layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(world.farVegetation===adapter)world.farVegetation=null;}};
  world.farVegetation=adapter;
  await region(tracker.center);
