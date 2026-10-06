@@ -7,3 +7,5 @@ Se ejecutó de nuevo la misma estrategia: un día, seed 712, olderMale, mixed y 
 `comparison.json` conserva ambas huellas y todos los cambios. `current-state.json.gz` guarda los bytes exactos de la nueva referencia, con gzip mtime cero. La referencia histórica no se modifica. El test mantiene una huella exacta del estado completo, igualdad entre política predeterminada y explícita de doce plantas, contratación adicional pagada y entregas físicas. No se ajustan parámetros de balance ni se relaja la estrategia responsable.
 
 Validación local: 69 pruebas dirigidas correctas (crop-lifecycle, intensive-farm-policy, tutorial-complete-audio y structure-detail-audio); verify:audio-runtime correcto para 21 pistas/550 ventanas y 126 SFX. La CI completa del siguiente push todavía debe confirmar el conjunto.
+
+CI 37411005017 del commit a1db5d7: success, pruebas completas, verificadores, build y paquete correctos. Metadatos y log completo comprimido conservados; confirma la referencia de secuencia y los cuatro retratos del commit anterior.

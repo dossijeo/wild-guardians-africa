@@ -104,7 +104,9 @@ export class Navigation {
     return water?.inside?Math.max(ground,water.level-.10):ground;
   }
   terrainValid(x,z,radius=.3,worker=false,allowFluid=false) {
-    for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]) {
+    // Keep all five samples and their order without six temporary arrays.
+    for(let sample=0;sample<5;sample++) {
+      const dx=sample===1?radius:sample===2?-radius:0,dz=sample===3?radius:sample===4?-radius:0;
       if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
       if(this.field.canyon){
         const surface=(px,pz)=>this.workerSurface(px,pz);

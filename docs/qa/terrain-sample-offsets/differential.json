@@ -1,0 +1,43 @@
+{
+  "scope": "Six real procedural terrain fields, same seed, 60 fractional positions per biome, three radii, worker/animal and allowFluid states. Exact booleans and ordered terrain-method arguments/results compared.",
+  "queries": 4320,
+  "observedTerrainCalls": 107272,
+  "rows": [
+    {
+      "biome": "sabana",
+      "queries": 720,
+      "accepted": 672,
+      "observedTerrainCalls": 20164
+    },
+    {
+      "biome": "gran-rio",
+      "queries": 720,
+      "accepted": 672,
+      "observedTerrainCalls": 20164
+    },
+    {
+      "biome": "manglares",
+      "queries": 720,
+      "accepted": 608,
+      "observedTerrainCalls": 16684
+    },
+    {
+      "biome": "volcanes",
+      "queries": 720,
+      "accepted": 672,
+      "observedTerrainCalls": 20164
+    },
+    {
+      "biome": "gran-canon",
+      "queries": 720,
+      "accepted": 592,
+      "observedTerrainCalls": 12480
+    },
+    {
+      "biome": "desierto",
+      "queries": 720,
+      "accepted": 544,
+      "observedTerrainCalls": 17616
+    }
+  ]
+}
