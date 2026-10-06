@@ -91,3 +91,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Índices de VFX de trabajo diferidos](qa/lazy-work-vfx/README.md): se omite el historial mientras no hay trabajo activo válido, manteniendo polvo de reparación y datos frescos. 37 pruebas, build y 400 entradas de presentación equivalentes. En una medición aislada de diez llamadas sin actividad pasa de ~23–26 ms a <0,03 ms; riego activo sin ganancia. Pendiente efecto en frametime y aceptación amplia. QA-014 sigue pendiente: dos pestañas IAB no producían ocultación real.
+
+
+[Índices diferidos medidos dentro del render real](qa/late-farm-work-indexes/README.md): cuatro lotes, 800 muestras CPU/GPU y mismo estado final/rutas/entregas. Todos los frames mantienen dos a nueve trabajadores actuando; no se acredita mejora estable de frametime. Siguiente paso: reutilizar el índice durante actividad con invalidación comprobada, además del coste GPU sostenido. La campaña de margen congelada sigue viva y alcanzó el día 57, sin resultado terminal todavía.

@@ -1,0 +1,23 @@
+{
+  "baseCommit": "4f98a3d",
+  "referenceCommit": "067e91a",
+  "referenceOriginalSha256": "383d4b59ea5762a50a5be08e6576975bc0d39f4dc31d977590c6d01aa23122c2",
+  "adaptation": "Only two relative import paths changed. Workforce/vfx-native bytes match reference.",
+  "sourceSha256": {
+    "tests/browser/late-farm-render.html": "d1eea01e874b25223226d156288edffc24ceef283e6cee3f0dd74712d515ea09",
+    "tests/browser/work-vfx-reference.js": "858bd3370fb1794958dc539942b2245070619002fd4092f5c82bea1f3d4b8919",
+    "src/rendering/work-vfx.js": "85b8809ab4dd0b5a22a923b645423de4fcb88bd332737424c9dcd81137c2c6e7",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "src/rendering/depth-capture.js": "68ba7b06c02b000eb13f40d189442ffb7b5dff94bb31620de06e1b2058057900",
+    "src/simulation/workforce.js": "acebcf4d0ad4d1b55db513e1ac59a9cc755b5b98b9ff046fad72b7617fdb62f9",
+    "src/rendering/vfx-native.js": "abf38e604a91454343fe4f2f1d0afe36a366d4b9cbcdfaeb97c0764ef069b61a"
+  },
+  "evidenceSha256": {
+    "farm.png": "5791fa55715705362fa6ab8266b955585f0ab9c4b46c32b75cc1cdfb1dcd6a6a",
+    "native.json": "552ab7bf0207dc686ddc867951fcd0714664d49e50f697421bf1d119c5d7ac5d",
+    "README.md": "29c92c89a7fa61e61715e42585376ac60cd3d0cb723b53e4edd733bd5ba8cd7c"
+  },
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "samples": 800,
+  "conclusion": "No stable frame-time improvement demonstrated with 2-9 active workers on every measured frame. No mobile/RAM/general FPS acceptance."
+}

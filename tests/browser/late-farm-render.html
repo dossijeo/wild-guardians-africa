@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA render de finca avanzada real</title>
 <style>body{margin:0;font:14px system-ui;background:#233126}canvas{display:block;width:100vw;height:100vh}header{position:absolute;z-index:2;top:8px;left:8px;background:#ffffedee;padding:12px;max-width:480px}button{padding:9px}pre{max-height:160px;overflow:auto;font-size:11px}</style>
-<header><strong>Finca avanzada real · Manglares/Saheliana</strong><p>Guardado histórico intacto; continuación y contratación pagadas. Mundo 3D, cámara/medio/sombras iguales. Comparación de simulación, herramientas ocultas o envíos por categoría según el botón. Sin audio, HUD, guardado ni incursión. Paso controlado de 100 ms por frame mediante advanceReal; no ritmo variable de producción.</p><button id="run">Comparar cuatro lotes A/B/B/A</button><button id="diagnose">Diagnosticar envíos por categoría</button><button id="tools">Comparar herramientas ocultas A/B/B/A</button><label><input id="toolToggle" type="checkbox" checked>Ocultar herramientas inactivas en vista estática</label><p id="status">Lista para cargar</p><pre id="report"></pre></header><canvas id="world" aria-label="Finca avanzada en Manglares"></canvas>
+<header><strong>Finca avanzada real · Manglares/Saheliana</strong><p>Guardado histórico intacto; continuación y contratación pagadas. Mundo 3D, cámara/medio/sombras iguales. Comparación de simulación, herramientas ocultas o envíos por categoría según el botón. Sin audio, HUD, guardado ni incursión. Paso controlado de 100 ms por frame mediante advanceReal; no ritmo variable de producción.</p><button id="run">Comparar cuatro lotes A/B/B/A</button><button id="diagnose">Diagnosticar envíos por categoría</button><button id="tools">Comparar herramientas ocultas A/B/B/A</button><button id="work-indexes">Comparar índices de VFX A/B/B/A</button><label><input id="toolToggle" type="checkbox" checked>Ocultar herramientas inactivas en vista estática</label><p id="status">Lista para cargar</p><pre id="report"></pre></header><canvas id="world" aria-label="Finca avanzada en Manglares"></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import * as Reference from '../../.cache/worker-lookups-1bfd-reference/src/simulation/game.js';
@@ -11,6 +11,7 @@ import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {GpuTimer} from './gpu-timer.js';
+import {WorkVfx as ReferenceWorkVfx} from './work-vfx-reference.js';
 import {captureRenderSubmissions} from './render-submission-breakdown.js';
 const button=document.querySelector('#run'),status=document.querySelector('#status'),report=document.querySelector('#report');
 const output={scope:'Four A/B/B/A controlled late-farm continuations with current WorldScene and native navigation, quality media and shadows. Reference simulation 1bfd85a versus current simulation. Real archived snapshot; ordinary postgame and paid hiring. Fifteen simulated seconds warmup, twenty measured; advanceReal(0.1) per RAF, not production variable frame pacing. No audio, HUD, autosave, raid, mobile, memory bytes or current 100-night balance acceptance.',lots:[],errors:[]};
@@ -22,11 +23,12 @@ const hash=async text=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA
 const summary=a=>{const s=[...a].sort((x,y)=>x-y);return {samples:s.length,median:(s[(s.length-1)>>1]+s[s.length>>1])/2,p95:s[Math.ceil(s.length*.95)-1],max:s.at(-1),mean:s.reduce((a,b)=>a+b,0)/s.length};};
 const publish=()=>{report.textContent=JSON.stringify(output,null,2);};
 async function run(mode='simulation'){
- const diagnostic=mode==='diagnostic',toolComparison=mode==='tools';
+ const diagnostic=mode==='diagnostic',toolComparison=mode==='tools',workComparison=mode==='work-indexes';
  if(busy)return;busy=true;for(const b of document.querySelectorAll('button,input'))b.disabled=true;
  output.lots=[];output.errors=[];output.diagnostic=diagnostic;
- output.toolComparison=toolComparison;
+ output.toolComparison=toolComparison;output.workComparison=workComparison;
  output.scope=diagnostic?'Actual render submissions observed at five points in an ordinary paid late-farm continuation. Extra static instrumented renders preserve logical state and reconcile submitted calls/triangles. Timings in this diagnostic are perturbed and must not be used as a performance comparison. No audio, HUD, autosave, raid, mobile or 100-night balance acceptance.':comparisonScope;
+ if(workComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations, current simulation/navigation/world. Only WorkVfx planner reference 067e91a versus current lazy indexes changes. Authored hidden-tool culling enabled in every lot. Same snapshot, camera, quality and shadows, fixed advanceReal(0.1) per RAF; no audio/HUD/autosave, raid, mobile or RAM bytes acceptance.';
  if(toolComparison)output.scope='Four A/B/B/A controlled rendered paid late-farm continuations with current simulation/navigation. Only authored-hidden worker-tool culling changes, false/true/true/false. Same snapshot, camera, quality, shadows and advanceReal(0.1) per RAF. No audio/HUD/autosave, raid, mobile, RAM bytes or current 100-night balance proof.';
  try{
   // Vite assigns application/json to state.json.gz; native browser sniffing can
@@ -38,8 +40,8 @@ async function run(mode='simulation'){
   const live=saved.plants.filter(p=>p.alive).length,staff=Math.min(Math.ceil(live/12),Math.floor(numberOf(saved.ledger.balance)/30));
   output.input={biome:saved.biome,culture:saved.culture,history:saved.plants.length,live,crates:saved.crates.length,staff,wages:staff*30};
   let expectedSetup=null,expectedEnd=null,expectedQueries=null,expectedEvents=null;
-  const sequence=diagnostic?[['Diagnostic',Game,true]]:toolComparison?[['A1',Game,false],['B1',Game,true],['B2',Game,true],['A2',Game,false]]:[['A1',Reference,true],['B1',Game,true],['B2',Game,true],['A2',Reference,true]];
-  for(const [label,module,cullTools] of sequence){
+  const sequence=workComparison?[['A1',Game,true,false],['B1',Game,true,true],['B2',Game,true,true],['A2',Game,true,false]]:diagnostic?[['Diagnostic',Game,true]]:toolComparison?[['A1',Game,false],['B1',Game,true],['B2',Game,true],['A2',Game,false]]:[['A1',Reference,true],['B1',Game,true],['B2',Game,true],['A2',Reference,true]];
+  for(const [label,module,cullTools,optimizedWork=true] of sequence){
    status.textContent='Cargando '+label;
    if(world){world.dispose();world=null;const old=document.querySelector('#world');old.replaceWith(old.cloneNode(false));}
    const NavigationClass=module===Reference?ReferenceNavigation:Navigation;
@@ -48,11 +50,12 @@ async function run(mode='simulation'){
    assert(numberOf(state.ledger.balance)===numberOf(saved.ledger.balance)-staff*30,'Incorrect paid hiring');
    const setup=serialize(state);expectedSetup??=setup;assert(setup===expectedSetup,'Different setup');
    const loading=performance.now();world=new WorldScene(document.querySelector('#world'),()=>{});world.workerToolCulling=cullTools;world.onError=e=>{output.errors.push(String(e));};world.qualitySetting('media');await world.load(state,nav,payload);world.focusFarm();
+   if(workComparison&&!optimizedWork){const current=world.workVfx;current.dispose();world.workVfx=new ReferenceWorkVfx(current.library,current.pipeline,current.scene,current.surface,current.waterSource);}
    world.render(0);await world.whenChunksReady();
    for(let ready=0;!world.actorsReady();ready++){assert(ready<1200,'Workers not ready');await raf();world.render(0);}
    const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info'),timer=new GpuTimer(gl,32);
    const lot={label,loadingMs:performance.now()-loading,setupSha256:await hash(setup),viewport:{css:[innerWidth,innerHeight],buffer:[world.canvas.width,world.canvas.height],dpr:devicePixelRatio},quality:world.quality,shadows:world.renderer.shadowMap.enabled,renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),samples:[],events:{},pathSearches:0,submissions:[]};
-   lot.toolCulling=cullTools;
+   lot.toolCulling=cullTools;if(workComparison)lot.optimizedWork=optimizedWork;
    const find=nav.findPath;nav.findPath=function(...args){lot.pathSearches++;return find.apply(this,args);};
    const seen=new Set(state.events.map(e=>e.id)),previousAutoReset=world.renderer.info.autoReset;
    let previous=null;
@@ -65,7 +68,7 @@ async function run(mode='simulation'){
      assert(!state.result&&!state.pauses.length,'Unexpected terminal/pause');
      if(step>=150)timer.begin(step);world.renderer.info.reset();
      const renderStart=performance.now();world.render(.1);const renderMs=performance.now()-renderStart;
-     if(step>=150){timer.end();lot.samples.push({step:step+1,simulationMs:simulated,renderCpuMs:renderMs,frameIntervalMs:interval,calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles});}
+     if(step>=150){timer.end();lot.samples.push({step:step+1,simulationMs:simulated,renderCpuMs:renderMs,frameIntervalMs:interval,calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,...(workComparison?{actingWorkers:state.workers.filter(w=>w.status==='acting'&&!w.incapacitated&&!w.fallRemaining).length}:{} )});}
      for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);if(step>=150)lot.events[e.type]=(lot.events[e.type]??0)+1;}
      if(diagnostic&&[150,200,250,300,349].includes(step)){
       const before=serialize(state),read=()=>{const pixels=new Uint8Array(world.canvas.width*world.canvas.height*4);gl.readPixels(0,0,world.canvas.width,world.canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;};
@@ -92,7 +95,7 @@ async function run(mode='simulation'){
  }catch(e){output.errors.push(String(e));status.textContent='FAIL · '+e.message;console.error(e);publish();}
  finally{busy=false;for(const b of document.querySelectorAll('button,input'))b.disabled=false;if(world)document.querySelector('#toolToggle').checked=world.workerToolCulling!==false;}
 }
-button.onclick=()=>run('simulation');document.querySelector('#diagnose').onclick=()=>run('diagnostic');document.querySelector('#tools').onclick=()=>run('tools');
+document.querySelector('#work-indexes').onclick=()=>run('work-indexes');button.onclick=()=>run('simulation');document.querySelector('#diagnose').onclick=()=>run('diagnostic');document.querySelector('#tools').onclick=()=>run('tools');
 document.querySelector('#toolToggle').onchange=()=>{if(world&&!busy){const before=serialize(world.state);world.workerToolCulling=document.querySelector('#toolToggle').checked;world.render(0);assert(serialize(world.state)===before,'Static toggle changed logical state');}};
 addEventListener('pagehide',()=>world?.dispose());
 </script></html>
