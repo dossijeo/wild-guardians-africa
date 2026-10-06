@@ -1,6 +1,6 @@
 # Wild Guardians — Far Vegetation Impostor System
 
-Especificación solicitada por el usuario el 5 de octubre de 2026. Estado: **prototipo aislado iniciado; primer atlas precalculado**. [Atlas de acacia y pruebas](qa/far-vegetation-atlas/README.md). No acredita integración en gameplay ni éxito del sistema completo. Las distancias y resoluciones de ejemplo son experimentales.
+Especificación solicitada por el usuario el 5 de octubre de 2026. Estado: **prototipo aislado iniciado; primer atlas precalculado**. [Atlas de acacia y pruebas](qa/far-vegetation-atlas/README.md); [primer visor aislado de billboard y transición](qa/far-vegetation-transition/README.md). No acredita integración en gameplay ni éxito del sistema completo. Las distancias y resoluciones de ejemplo son experimentales.
 
 ## 1. Objetivo
 

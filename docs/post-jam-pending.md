@@ -49,7 +49,7 @@ Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-wo
 - Validar rotación, aproximación bidireccional, desplazamiento lateral, cuatro fases de luz y horizonte con cientos/miles de instancias; medir CPU/GPU/RAM y tamaño distribuido.
 - Integrar los demás biomas y estudiar una segunda fase solo después de superar los criterios visuales y de coste. Distancias, densidad y resolución configurables; los ejemplos no son valores definitivos.
 
-Estado: [primer atlas offline de acacia generado y verificado](qa/far-vegetation-atlas/README.md), ocho vistas y WebP de 255780 bytes. Prototipo aislado iniciado; pendientes billboards, transición, integración procedural y medidas/aceptación del sistema. No está activo en gameplay.
+Estado: [primer atlas offline de acacia generado y verificado](qa/far-vegetation-atlas/README.md), ocho vistas y WebP de 255780 bytes. [Visor aislado de ocho billboards y transición 3D](qa/far-vegetation-transition/README.md) añadido, con anclaje, rotación, mezcla angular, dithering y retención del modelo. Pendientes luces/materiales reales, integración procedural y medidas/aceptación del sistema. No está activo en gameplay.
 
 ## Ritmo económico con restricciones de fluidos reactivadas
 
