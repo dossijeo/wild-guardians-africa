@@ -200,3 +200,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Relieve lejano simplificado experimental](qa/far-vegetation-ground/README.md): campo de altura/paleta originales, 28.800 triángulos y error máximo 7,1 cm en 112 bases; ocho pruebas/build/paquete correctos. Comparación nativa muestra coste GPU adicional y generación inicial síncrona de 352,5 ms. Pendientes streaming acotado, iluminación/bruma, agua y transición integrada; continúa fuera del gameplay.
+
+
+[Generación experimental de paisaje en worker](qa/far-scene-worker/README.md): árboles/relieve originales idénticos, buffers transferidos y loader cancelable; nueve pruebas y build. Dos cargas nativas mantienen callbacks RAF durante el cálculo. Pendientes streaming regional, epochs, chunks reales y aceptación móvil/visual; sigue fuera de gameplay.

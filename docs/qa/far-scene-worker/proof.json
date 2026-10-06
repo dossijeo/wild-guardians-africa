@@ -1,0 +1,54 @@
+{
+  "sourceHashes": {
+    "tools/experiments/far-scene-data.js": "07fa723699cef3414df3cd27efbed545114f35d422d478633cf54e53f799f377",
+    "tools/experiments/far-scene-worker.js": "af8d3f87a24d86a6241ae069a5545502ffe97e94f7581b8397e629ca8e56fe87",
+    "tools/experiments/far-scene-loader.js": "2b5745fc15fa8b44849358c4c7474401e42f16d58b809dae70a52859191aa30c",
+    "tests/fixtures/far-scene-worker-node.mjs": "e109a4ce47bedc55eae9fcb63b830589e07a245b1d6512606cad86d744dc5e3f",
+    "tests/far-scene-loader.test.js": "80b880b78b8795c4a9b23d81711e08ef3f0eb69fc537a8adf985fc2ae2b1350f",
+    "tests/browser/far-vegetation-transition.html": "1a86fd1ff8bd704b6b7ec4e9b8a2a9008130ab45d66ba1911f5fe4dde836556a"
+  },
+  "nativeSamples": [
+    {
+      "file": "native.json",
+      "workerLoad": {
+        "elapsedMs": 495.30000001192093,
+        "buildMs": 456.80000001192093,
+        "frames": 31,
+        "maxFrameGapMs": 23.899999999999977
+      },
+      "ground": {
+        "proxy": true,
+        "step": 4,
+        "vertices": 14641,
+        "triangles": 28800,
+        "buildMs": 5.600000023841858,
+        "maxTreeHeightError": 0.07055399179244937,
+        "meanTreeHeightError": 0.014971073391140042
+      },
+      "populationSize": 112,
+      "webglError": 0,
+      "errors": []
+    },
+    {
+      "file": "native-final.json",
+      "workerLoad": {
+        "elapsedMs": 509.5999999642372,
+        "buildMs": 450.5,
+        "frames": 32,
+        "maxFrameGapMs": 17
+      },
+      "ground": {
+        "proxy": true,
+        "step": 4,
+        "vertices": 14641,
+        "triangles": 28800,
+        "buildMs": 7.5,
+        "maxTreeHeightError": 0.07055399179244937,
+        "meanTreeHeightError": 0.014971073391140042
+      },
+      "populationSize": 112,
+      "webglError": 0,
+      "errors": []
+    }
+  ]
+}

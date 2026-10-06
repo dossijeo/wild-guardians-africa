@@ -1,0 +1,35 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {Worker} from 'node:worker_threads';import {readFile} from 'node:fs/promises';
+import {buildFarSceneData} from '../tools/experiments/far-scene-data.js';
+import {loadFarSceneData} from '../tools/experiments/far-scene-loader.js';
+test('native worker returns identical scene arrays and detaches all transferred buffers',async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
+ const request={config:{seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)},profile:pack.profile,treeBounds:{minX:-180,maxX:180,minZ:-230,maxZ:48},groundBounds:{minX:-240,maxX:240,minZ:-300,maxZ:180}};
+ const worker=new Worker(new URL('./fixtures/far-scene-worker-node.mjs',import.meta.url));
+ try{
+  const messages=await new Promise((resolve,reject)=>{const received=[];worker.on('error',reject);worker.on('message',v=>{received.push(v);if(received.length===2)resolve(received);});worker.postMessage(request);});
+  assert.deepEqual(messages[0].data,buildFarSceneData(request));assert.equal(messages[0].data.trees.length,112);assert.equal(messages[0].data.ground.indices.length/3,28800);assert.ok(messages[0].buildMs>=0);assert.deepEqual(messages[1].lengths,[0,0,0]);
+ }finally{await worker.terminate();}
+});
+function fake(){return {terminated:0,requests:[],postMessage(v){this.requests.push(v);},terminate(){this.terminated++;}};}
+test('loader resolves once and releases worker handlers on success',async()=>{
+ const worker=fake(),promise=loadFarSceneData({seed:1},{workerFactory:()=>worker}),late=worker.onmessage;
+ late({data:{data:{trees:[]},buildMs:1}});late({data:{error:'late'}});
+ assert.equal((await promise).buildMs,1);assert.equal(worker.terminated,1);assert.equal(worker.onmessage,null);assert.equal(worker.onerror,null);
+});
+test('loader cancellation prevents construction or cancels an active request and ignores late data',async()=>{
+ const before=new AbortController();before.abort();let created=0;
+ await assert.rejects(loadFarSceneData({}, {signal:before.signal,workerFactory:()=>{created++;return fake();}}),{name:'AbortError'});assert.equal(created,0);
+ const controller=new AbortController(),worker=fake(),promise=loadFarSceneData({}, {signal:controller.signal,workerFactory:()=>worker}),late=worker.onmessage;
+ controller.abort();late({data:{data:{}}});await assert.rejects(promise,{name:'AbortError'});assert.equal(worker.terminated,1);assert.equal(worker.onmessage,null);
+});
+test('worker error, decode error and post failures reject and terminate once',async()=>{
+ for(const kind of ['response','runtime','message','post']){
+  const worker=fake();if(kind==='post')worker.postMessage=()=>{throw Error('post failed');};
+  const promise=loadFarSceneData({}, {workerFactory:()=>worker});
+  if(kind==='response')worker.onmessage({data:{error:'build failed'}});
+  if(kind==='runtime')worker.onerror({message:'runtime failed'});
+  if(kind==='message')worker.onmessageerror({});
+  await assert.rejects(promise,/failed/);assert.equal(worker.terminated,1);
+ }
+});
