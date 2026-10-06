@@ -37,6 +37,8 @@ Preflight posterior: [98 imágenes de color elegibles](qa/tinify-preflight/READM
 
 Siguiente variante integrada: [suelo de Gran Cañón](qa/tinify-canyon-ground/README.md), 1,53 MB menos de paquete, 43 pruebas dirigidas correctas y doce imágenes cargadas desde ruta anidada. Comparación real de día/noche en Mapungubwe sin cambios evidentes de patrón; pendiente ampliar el alcance visual/móvil/Windows.
 
+Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-worker-portraits/README.md), alpha/dimensiones conservados, 50 pruebas y comparación nativa; 47.575 bytes menos de paquete. Preflight actualizado: 93 imágenes de color elegibles, 53 que requieren revisión y dieciséis variantes integradas. No acredita RAM/FPS ni aceptación móvil/Tauri.
+
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 
 - Seguir los 25 puntos de [Wild Guardians — Far Vegetation Impostor System](far-vegetation-impostor-system.md).
