@@ -5,10 +5,11 @@ import * as Game from '../src/simulation/game.js';
 import {tutorialHandTarget} from '../src/rendering/tutorial-hand-target.js';
 import {numberOf} from '../src/simulation/money.js';
 
+for(const seed of [712,1,42])
 for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'])
 for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope'])
-test(`guided first seed can be watered, harvested and delivered on native ${biome}/${culture}`,()=>{
- const {s,nav}=createOpeningWorld({biome,culture,seed:712,slotId:`guide-${biome}-${culture}`});
+test(`guided first seed can be watered, harvested and delivered on native ${biome}/${culture}, world seed ${seed}`,()=>{
+ const {s,nav}=createOpeningWorld({biome,culture,seed,slotId:`guide-${seed}-${biome}-${culture}`});
  const target=tutorialHandTarget(s,nav,'plant');assert.ok(target,'guide offers a legal first seed');
  Game.plant(s,'guided-seed','mijo',target.position[0],target.position[2],nav);
  assert.equal(s.plants.length,1);assert.equal(numberOf(s.ledger.balance),695);

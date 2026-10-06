@@ -1,0 +1,7 @@
+# Apertura guiada en tres semillas: 90 mundos
+
+`node --test tests/guided-opening.test.js`: 90 casos correctos, cero fallos, 54,59 s. Se amplía la semilla histórica 712 con 1 y 42, cada una en los seis biomas y las cinco culturas. Código de dominio de d3dac6d; solo se modifican prueba y documentación. Los fingerprints de fuentes se capturan al finalizar, no se presentan como una copia congelada ni una procedencia registrada antes del arranque.
+
+Cada caso genera terreno y poblado originales, paga un centro y planta el mijo en el punto propuesto por la mano actual. Contrata una joven por 40, completa todos los riegos obligatorios con el trabajador apartado al menos 0,82 m del brote y exige una única caja recogida y entregada durante el primer día. Comprueba el saldo inicial de 1500, cobros de centro/semilla/jornal y cobro exacto de la entrega. No modifica dinero, crecimiento, agua, posiciones de trabajadores ni el tiempo mediante overrides, y no ordena manualmente la cosecha.
+
+Esto comprueba que el primer brote guiado es alcanzable y productivo en las 90 combinaciones concretas. No prueba todas las semillas, todos los emplazamientos elegidos por el jugador, cultivos posteriores, plantación intensiva, supervivencia nocturna, balance de 100 noches, apariencia/HUD/audio renderizados ni dispositivo móvil físico. La prueba anterior y sus capturas conservan su revisión en `../current-guided-opening-matrix`.
