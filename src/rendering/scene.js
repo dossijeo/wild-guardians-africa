@@ -313,6 +313,18 @@ export class WorldScene {
     this.raidEntryPreparer?.update(s);
     const upcoming=s.nightPlan?.group??(!s.postgame&&s.day<=5?[Object.keys(animalSources)[s.day-1]]:[]);
     const warmKey=upcoming.join(',');if(this.animalWarmKey!==warmKey){this.animalWarmKey=warmKey;this.warmAnimalModels(upcoming).catch(error=>this.onError?.(error));}
+    // Plans are known before the raid; do not reset remaining reserve counts
+    // while actors consume them. A new day also refreshes an identical group.
+    const reserveKey=s.day+':'+(s.nightPlan?.done?'done':'pending')+':'+warmKey;
+    if(s.raid)this.animalReserveKey=null; // Rebuild demand after an unplanned daytime raid too.
+    if(this.animalGpuReady&&!s.raid&&this.animalReserveKey!==reserveKey&&performance.now()>=(this.animalReserveRetryAt??0)){
+      this.animalReserveKey=reserveKey;
+      this.animalReservePreparation=this.animalPreload.reserveGroup(s.nightPlan?.done?[]:upcoming,{prepare:async rig=>{
+        if(this.disposed)return;const skeletons=new Set();rig.model.traverse(mesh=>{if(mesh.isSkinnedMesh)skeletons.add(mesh.skeleton);});
+        for(const skeleton of skeletons){skeleton.computeBoneTexture();skeleton.update();this.renderer.initTexture(skeleton.boneTexture);}
+        await waitForGpuPreload(this.renderer,{cancelled:()=>this.disposed});
+      }}).catch(error=>{if(!this.disposed&&this.animalReserveKey===reserveKey){this.animalReserveKey=null;this.animalReserveRetryAt=performance.now()+3000;this.onError?.(error);}});
+    }
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);

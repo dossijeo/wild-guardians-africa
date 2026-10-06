@@ -12,6 +12,8 @@ La restauración del viewport, scissor y autoClear ocurre sincrónicamente, incl
 
 Veintiún tests focalizados pasan para la preparación, rigs, primers, cancelación de carga, restauración de estado y espera no bloqueante. La prueba aislada de worker/texturas sigue separada: no se incorpora al cargador del juego en este cambio.
 
+La suite completa local iniciada con este cambio termina con 2412 tests pasando, cero fallos y duración de 1093775,94 ms. `full-suite-summary.txt` conserva el cierre. El checkout siguió recibiendo cambios durante esa ejecución larga, por lo que no se considera una reproducción aislada de un commit ni acredita completamente las reservas posteriores. La evidencia en checkout limpio del commit 28f2cc9 es CI: Validate game (37503185885) y Build Windows desktop (37503185814) terminan en success.
+
 ## Repetición en los seis biomas
 
 `six-biomes-summary.json` reúne Gran Cañón, Volcanes, Manglares, Sabana, Gran Río y Desierto en el commit de runtime 28f2cc9. Todos pasan: cinco rigs preparados por bioma, siete descargas antes y después de aparecer, ningún programa nuevo de animales y ninguna entrada de consola de aviso/error. Cada bioma incluye informe crudo y captura.
