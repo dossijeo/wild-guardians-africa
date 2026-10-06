@@ -1,0 +1,28 @@
+// QA counters only. They measure API calls, not GPU duration or RAM bytes.
+const names=['compileShader','linkProgram','bufferData','bufferSubData','texImage2D','texSubImage2D','texImage3D','texSubImage3D'];
+export class RenderGlCalls {
+ constructor(gl,renderer=null,{programDetails=false}={}){
+  this.gl=gl;this.hooks=[];this.frame=null;
+  try{for(const name of names){
+   if(typeof gl[name]!=='function')continue;
+   const original=gl[name],owned=Object.hasOwn(gl,name),owner=this;
+   const wrapped=function(...args){if(owner.frame)owner.frame[name]++;return original.apply(this,args);};
+   gl[name]=wrapped;this.hooks.push({name,original,owned,wrapped});
+  }
+   if(renderer){
+    const original=renderer.renderBufferDirect,owned=Object.hasOwn(renderer,'renderBufferDirect'),owner=this;
+    const wrapped=function(camera,scene,geometry,material,object,...rest){
+     const frame=owner.frame,before=frame?.linkProgram??0;
+     const programSnapshot=()=>[...renderer.properties?.get(material)?.programs?.values()??[]].map(p=>({id:p.id,key:p.cacheKey}));
+     const beforePrograms=frame&&programDetails?programSnapshot():null;
+     try{return original.call(this,camera,scene,geometry,material,object,...rest);}
+     finally{if(frame&&frame.linkProgram>before)frame.drawCompiles.push({links:frame.linkProgram-before,...(object?.parent?.native?{effect:object.parent.native.definition.id,role:object===object.parent.sprites?'sprites':object===object.parent.ribbons?'ribbons':'rigid'}:{}),object:object?.name??'',material:material.type,uniforms:Object.keys(material.uniforms??{}),metadata:Object.keys(material.userData??{}),colorWrite:material.colorWrite,camera:camera?.type,...(programDetails?{geometry:geometry?.type,instanced:!!object?.isInstancedMesh,skinned:!!object?.isSkinnedMesh,receiveShadow:!!object?.receiveShadow,castShadow:!!object?.castShadow,objectMetadata:Object.keys(object?.userData??{}),fluidKind:object?.userData?.nativeFluid,parent:object?.parent?.name??'',beforePrograms,afterPrograms:programSnapshot()}:{} )});}
+    };
+    renderer.renderBufferDirect=wrapped;this.hooks.push({target:renderer,name:'renderBufferDirect',original,owned,wrapped});
+   }
+  }catch(error){this.dispose();throw error;}
+ }
+ begin(){if(this.frame)throw Error('Nested GL frame probe');this.frame={...Object.fromEntries(names.map(n=>[n,0])),drawCompiles:[]};}
+ end(){const result=this.frame;this.frame=null;return result;}
+ dispose(){this.frame=null;for(const {target=this.gl,name,original,owned,wrapped} of this.hooks)if(target[name]===wrapped){if(owned)target[name]=original;else delete target[name];}this.hooks=[];}
+}

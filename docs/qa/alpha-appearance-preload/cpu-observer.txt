@@ -1,0 +1,44 @@
+// QA-only inclusive CPU timing. Nested rows overlap; never add them as a frame total.
+export class RenderCpuCalls {
+ constructor(world,now=()=>performance.now(),{submission=false}={}){
+  this.world=world;this.now=now;this.frame=null;this.hooks=[];
+  try{
+   for(const name of ['syncChunks','sync','updateHands'])this.hook(world,name,'world.'+name);
+   this.hook(world.assetGroups,'update','groups.update');
+   this.hook(world.materialRegistry,'update','materials.update');
+   for(const key of ['workVfx','attackVfx','shieldVfx','agricultureVfx','materialVfx','locomotionVfx'])for(const name of ['update','prepare'])this.hook(world[key],name,key+'.'+name);
+   for(const name of ['render','captureDepth','renderSmoke'])this.hook(world.destructionPass,name,'buildings.'+name);
+   const gl=world.renderer?.getContext?.();
+   for(const name of ['getProgramInfoLog','getShaderInfoLog','getProgramParameter','getActiveUniform','getUniformLocation','getActiveAttrib','getAttribLocation'])this.hook(gl,name,'gl.'+name);
+   if(submission){
+    for(const name of ['bindFramebuffer','clear','texStorage2D','framebufferTexture2D','checkFramebufferStatus'])this.hook(gl,name,'gl.'+name);
+    for(const name of ['clear','getDrawingBufferSize'])this.hook(world.renderer,name,'renderer.'+name);
+    this.hook(world.renderer,'setRenderTarget',args=>'renderer.target.'+this.targetPass(args[0]));
+    this.hook(world.destructionPass?.smokeDepth,'setSize','depthTarget.setSize');
+    this.hook(world.camera,'updateWorldMatrix','camera.updateWorldMatrix');
+   }
+   this.hook(world.renderer,'render',()=> 'renderer.'+this.pass());
+   this.hook(world.renderer,'renderBufferDirect',args=>{
+    const material=args[3],object=args[4],effect=object?.parent?.native;
+    const recipe=effect?effect.definition.id+'/'+(object===object.parent.sprites?'sprites':object===object.parent.ribbons?'ribbons':'rigid'):material?.uniforms?.uDamage?'building':Object.keys(material?.userData??{}).sort().join(',');
+    return 'draw.'+this.pass()+'.'+material?.type+'.'+recipe;
+   });
+  }catch(error){this.dispose();throw error;}
+ }
+ targetPass(target){const w=this.world;return target===w.destructionPass?.smokeDepth?'depth':target===w.destructionPass?.target?'mask':target===null?'screen':'other';}
+ pass(){return this.targetPass(this.world.renderer.getRenderTarget());}
+ hook(target,name,key){
+  if(!target||typeof target[name]!=='function')return;
+  const original=target[name],owned=Object.hasOwn(target,name),owner=this;
+  const wrapped=function(...args){
+   const frame=owner.frame;if(!frame)return original.apply(this,args);
+   const label=typeof key==='function'?key(args):key,start=owner.now();
+   try{return original.apply(this,args);}
+   finally{const ms=owner.now()-start,row=frame[label]??={calls:0,totalMs:0,maximumMs:0};row.calls++;row.totalMs+=ms;row.maximumMs=Math.max(row.maximumMs,ms);}
+  };
+  target[name]=wrapped;this.hooks.push({target,name,original,owned,wrapped});
+ }
+ begin(){if(this.frame)throw Error('Nested CPU frame probe');this.frame={};}
+ end(){const frame=this.frame;this.frame=null;return frame;}
+ dispose(){this.frame=null;for(const {target,name,original,owned,wrapped} of this.hooks.reverse())if(target[name]===wrapped){if(owned)target[name]=original;else delete target[name];}this.hooks=[];}
+}

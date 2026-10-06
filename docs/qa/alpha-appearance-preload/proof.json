@@ -1,0 +1,243 @@
+{
+  "base": "98dfa2c11bb5fdc3cd07a165b17a2af199695ac4",
+  "scope": "Controlled native desktop IAB, Mapungubwe seed 712 medium; inclusive CPU/GL reflection, not GPU/RAM/FPS or phone/night-natural coverage",
+  "riverDomainComparison": {
+    "steps": true,
+    "heldFrames": true,
+    "spawnSpecies": true,
+    "simulatedSeconds": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "logicalHits": true,
+    "actors": true,
+    "attackEffects": true,
+    "contactRequirement": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "renderedActors": true
+  },
+  "groupDomainComparison": {
+    "steps": true,
+    "heldFrames": true,
+    "spawnSpecies": true,
+    "simulatedSeconds": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "logicalHits": true,
+    "actors": true,
+    "attackEffects": true,
+    "contactRequirement": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "renderedActors": true
+  },
+  "asset": {
+    "slot": 19,
+    "name": "Remanso con orilla rocosa",
+    "clipKey": "native-chunk-clip",
+    "alphaTest": 0.35
+  },
+  "verification": {
+    "tests": 79,
+    "failures": 0,
+    "durationMs": 6300.9851,
+    "buildModules": 207,
+    "buildSeconds": 26.84
+  },
+  "pixels": {
+    "dimensions": [
+      1253,
+      705
+    ],
+    "mask": "x<1238, y<690; exclude QA header x<535 && y<225 and inspection button x>=1025 && y>=625",
+    "pixels": 720000,
+    "changed": 35,
+    "maxChannelDelta": 2,
+    "meanAbsoluteRgbDelta": 5.185185185185185e-05,
+    "scope": "Two saved native screenshots at final controlled contact. Excludes QA UI and scrollbars; not exhaustive image/biome/camera/GPU or pixel readback proof."
+  },
+  "runs": {
+    "diagnostic": {
+      "ok": true,
+      "loadingMs": 5386.300000011921,
+      "programsAfterLoad": 45,
+      "bindings": {
+        "initialized": 28,
+        "unsupported": 0
+      },
+      "newAppearancePrograms": [
+        {
+          "id": 45,
+          "name": ""
+        }
+      ],
+      "firstAppearanceFrames": [
+        {
+          "cpuMs": 84.80000001192093,
+          "compileCalls": 2,
+          "linkCalls": 1,
+          "logCalls": 3
+        },
+        {
+          "cpuMs": 15.599999964237213,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        }
+      ],
+      "motionMaxCpuMs": 25.30000001192093,
+      "motionCompileCalls": 0,
+      "motionLinkCalls": 0,
+      "steps": 523,
+      "hp": [
+        600,
+        600
+      ]
+    },
+    "warm-river": {
+      "ok": true,
+      "loadingMs": 5439.199999988079,
+      "programsAfterLoad": 54,
+      "bindings": {
+        "initialized": 41,
+        "unsupported": 0
+      },
+      "newAppearancePrograms": [],
+      "firstAppearanceFrames": [
+        {
+          "cpuMs": 28.600000023841858,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        },
+        {
+          "cpuMs": 13.200000047683716,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        }
+      ],
+      "motionMaxCpuMs": 25.80000001192093,
+      "motionCompileCalls": 0,
+      "motionLinkCalls": 0,
+      "steps": 523,
+      "hp": [
+        600,
+        600
+      ]
+    },
+    "warm-savanna": {
+      "ok": true,
+      "loadingMs": 5468.399999976158,
+      "programsAfterLoad": 54,
+      "bindings": {
+        "initialized": 41,
+        "unsupported": 0
+      },
+      "newAppearancePrograms": [],
+      "firstAppearanceFrames": [
+        {
+          "cpuMs": 42.39999997615814,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        },
+        {
+          "cpuMs": 18.200000047683716,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        }
+      ],
+      "motionMaxCpuMs": 29.69999998807907,
+      "motionCompileCalls": 0,
+      "motionLinkCalls": 0,
+      "steps": 523,
+      "hp": [
+        600,
+        600
+      ]
+    },
+    "warm-group": {
+      "ok": true,
+      "loadingMs": 5266,
+      "programsAfterLoad": 54,
+      "bindings": {
+        "initialized": 42,
+        "unsupported": 0
+      },
+      "newAppearancePrograms": [],
+      "firstAppearanceFrames": [
+        {
+          "cpuMs": 29.5,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        },
+        {
+          "cpuMs": 17.30000001192093,
+          "compileCalls": 0,
+          "linkCalls": 0,
+          "logCalls": 0
+        }
+      ],
+      "motionMaxCpuMs": 27.30000001192093,
+      "motionCompileCalls": 0,
+      "motionLinkCalls": 0,
+      "steps": 364,
+      "hp": [
+        600,
+        580
+      ]
+    }
+  },
+  "sha256": {
+    "cpu-observer.txt": {
+      "file": "2a0fa4edcfd5195a7dd195cd333ca864840617f738f86847d05f0d59269a6abd"
+    },
+    "diagnostic.json.gz": {
+      "file": "2f8efe5fe8e0222d6f6e73111ee462632b0caff36c9f3a7a69d695894792e679",
+      "raw": "28ace4ff7673a45269ee4fe7659b9c3c6ce17df35ec0efc5e177af06e508b893"
+    },
+    "diagnostic.png": {
+      "file": "141df68fd9a7de873f6fa723722f9ed136641128e1747950b16f0e6e8ba52a3a"
+    },
+    "fixture.txt": {
+      "file": "ef4204f4e37dedb37c89e417529b42dcdeb4291315cb8dd34f78d11f67ceb65b"
+    },
+    "gl-observer.txt": {
+      "file": "de02ca74b926a8372a0b420d7e9c07d94f3d079c2d32117081072f5ed590b1a3"
+    },
+    "pixel-comparison.json": {
+      "file": "e2d6d32c291b7a09d82304d8d27ae201259ebd8851cea8a044232a96856fff79"
+    },
+    "scene-final.txt": {
+      "file": "ad904494cc05e23c7a11a8fd12689a6e177fef0ca2057acb6190575025dda8bf"
+    },
+    "warm-group.json.gz": {
+      "file": "ba9d42e824893bbbc92b2316daa16d78d489b6c7989a1f8c12b5a04573ba9dbe",
+      "raw": "a0071b12fd774cd14bc0a48d59076589cbe928b28dc3c0f97d00e3a060051f19"
+    },
+    "warm-group.png": {
+      "file": "1d62dc910494bf25f909c438e54730ae4fea64219a71e686516559031dc2b412"
+    },
+    "warm-river.json.gz": {
+      "file": "0a722e17391ac45f45c9f6c146c9f2a82ea6879ff8f014f451484390f7f24b94",
+      "raw": "7d4a4fe86bbb68bc6b45b00578a3167d56181da2f9e565bebf495357efe5ed78"
+    },
+    "warm-river.png": {
+      "file": "1d595c20844a3e20fa8be67e31b4767dc8460e6fc8cd102b8b337272e2167a45"
+    },
+    "warm-savanna.json.gz": {
+      "file": "e25c73cc5a0a66067d51cdd53a062c6e9609dad73c98f714547535a5d397ae52",
+      "raw": "249fc3f400e2dfc68380b8ad33d3cb8268d921ae57151139c1cce575b43f2fbd"
+    },
+    "warm-savanna.png": {
+      "file": "69110f10673ed489164c80e5eaddeec50bc76737244af13c081b309d99970433"
+    }
+  },
+  "references": {
+    "docs\\qa\\water-shader-preload\\warm-canyon-group.json.gz": "6ef763c200dfd6ec17845e83355d2ba6101f799844d8eff90bcce5d6e96b1109",
+    "public\\content\\biome-grand_river.json": "880e1a5289d5b680fe46f12bdef54a9341d9820d3f6cec1a3f4c54c21e470ef4"
+  }
+}

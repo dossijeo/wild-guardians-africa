@@ -174,3 +174,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Precarga comprobada en los biomas restantes](qa/preload-biome-coverage/README.md): contactos de búfalo/Gran Río, rinoceronte/Manglares y león/Desierto sin compilar/enlazar durante movimiento. Finca histórica de Manglares con 66 cultivos vivos alcanza daño físico. Nueve pruebas QA correctas; runtime sin cambios. El pico de 171 ms no se reproduce ni queda explicado. Gran Río/Sabana generan un programa de vegetación alpha instanciada durante aparición, fuera de la medición de movimiento; siguiente prioridad preparar esa variante y medir aparición/carga/memoria. Campaña congelada de margen viva al día 73, sin resultado terminal.
+
+
+[Variante de pantalla de remansos preparada](qa/alpha-appearance-preload/README.md): el programa alpha detectado es el slot 19, remanso con orilla rocosa. Se compilan residentes/LODs con sombras durante carga; Gran Río y Sabana aparecen sin nuevos programas y se conserva daño al centro en Gran Cañón. 79 pruebas/build; primer render de Gran Río 84,8→28,6 ms en muestras, con nueve programas más tras carga/aparición, sin medir bytes/RAM. Capturas difieren en 35/720.000 píxeles, máximo 2/255 por canal; no igualdad exacta/global. Pendientes picos sin compilación, chunks/LOD/batching, carga/memoria, otras combinaciones/móvil y GPU sostenida.
