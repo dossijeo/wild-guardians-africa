@@ -1,3 +1,4 @@
+import {evictOldest} from './fifo-eviction.js';
 // Native Bioma Lab V4.1.10.3 generator; gameplay supplies the persisted village site.
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)}, TAU=Math.PI*2;
@@ -407,7 +408,7 @@ class TerrainField{
   }
   return h
  }
- lattice(x,z){const k=x+','+z;let h=this.heightCache.get(k);if(h===undefined){h=this.height(x,z);if(this.heightCache.size>=12000)this.heightCache.delete(this.heightCache.keys().next().value);this.heightCache.set(k,h)}return h}
+ lattice(x,z){const k=x+','+z;let h=this.heightCache.get(k);if(h===undefined){h=this.height(x,z);if(this.heightCache.size>=12000)evictOldest(this.heightCache);this.heightCache.set(k,h)}return h}
  surface(x,z){const step=1,x0=Math.floor(x/step)*step,z0=Math.floor(z/step)*step,fx=(x-x0)/step,fz=(z-z0)/step,a=this.lattice(x0,z0),b=this.lattice(x0+step,z0),d=this.lattice(x0,z0+step),c=this.lattice(x0+step,z0+step);return fx+fz<=1?a+(b-a)*fx+(d-a)*fz:c+(d-c)*(1-fx)+(b-c)*(1-fz)}
  slope(x,z){return Math.hypot(this.surface(x+.8,z)-this.surface(x-.8,z),this.surface(x,z+.8)-this.surface(x,z-.8))/1.6}
  waterInfo(x,z){

@@ -1,0 +1,54 @@
+{
+  "node": "v20.11.0",
+  "scope": "Isolated Map FIFO eviction/insert operation, 30000 evictions per sample, ten samples after two warmups, alternating order, setup excluded, insertion order and complete final maps equal. Not a frame/GPU/mobile benchmark.",
+  "rows": [
+    {
+      "limit": 4096,
+      "evictions": 30000,
+      "reference": {
+        "samples": 10,
+        "minMs": 80.09640000000013,
+        "medianMs": 95.86984999999993,
+        "maxMs": 131.57649999999995
+      },
+      "reused": {
+        "samples": 10,
+        "minMs": 4.515599999999949,
+        "medianMs": 5.813099999999906,
+        "maxMs": 10.812800000000038
+      }
+    },
+    {
+      "limit": 8192,
+      "evictions": 30000,
+      "reference": {
+        "samples": 10,
+        "minMs": 137.40279999999984,
+        "medianMs": 142.85159999999996,
+        "maxMs": 158.46450000000004
+      },
+      "reused": {
+        "samples": 10,
+        "minMs": 3.958099999999831,
+        "medianMs": 4.779400000000123,
+        "maxMs": 7.478399999999965
+      }
+    },
+    {
+      "limit": 12000,
+      "evictions": 30000,
+      "reference": {
+        "samples": 10,
+        "minMs": 276.09839999999986,
+        "medianMs": 302.3408999999997,
+        "maxMs": 318.83230000000003
+      },
+      "reused": {
+        "samples": 10,
+        "minMs": 4.357199999999466,
+        "medianMs": 5.068249999999807,
+        "maxMs": 7.04320000000007
+      }
+    }
+  ]
+}

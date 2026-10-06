@@ -7,6 +7,7 @@ import {centerFootprint} from './centers.js';
 import {TerrainField,scatterWorld} from './terrain.js';
 import {containsPoint,footprintDistance,footprintsOverlap,edgeDistance,sweptFootprintDistance} from './footprints.js';
 import {SearchFrontier} from './search-frontier.js';
+import {evictOldest} from './fifo-eviction.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
@@ -238,7 +239,7 @@ export class Navigation {
     if(!cache)return points;
     const neighbors=points.map(p=>({x:p.x,z:p.z,gridStep:p.gridStep,key:`${p.x},${p.z}`,length:Math.hypot(p.x-cur.x,p.z-cur.z),walkable:undefined}));
     // Bound transient graph memory; no routes or destinations are persisted here.
-    if(cache.size>=4096)cache.delete(cache.keys().next().value);cache.set(cacheKey,neighbors);
+    if(cache.size>=4096)evictOldest(cache);cache.set(cacheKey,neighbors);
     return neighbors;
   }
   findPath(start,end,radius=.3,ignore=null,worker=true,margin=16) {

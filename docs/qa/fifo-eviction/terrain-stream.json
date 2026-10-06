@@ -1,0 +1,89 @@
+{
+  "scope": "Nine streamed native terrain chunks per biome, exact Float64 surface samples, full procedural prop instances and final cache insertion order compared with frozen reference; forces actual height cache eviction. No rendering or frame-rate acceptance.",
+  "rows": [
+    {
+      "biome": "savanna",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 1562,
+      "evictions": {
+        "reference": 12775,
+        "candidate": 12775
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "candidateSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "exactHeightAndVegetationAndCacheOrder": true
+    },
+    {
+      "biome": "grand_river",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 819,
+      "evictions": {
+        "reference": 12789,
+        "candidate": 12789
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "candidateSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "exactHeightAndVegetationAndCacheOrder": true
+    },
+    {
+      "biome": "mangrove",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 2320,
+      "evictions": {
+        "reference": 13730,
+        "candidate": 13730
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "33cf3af3c98f4f586c59b69e217c3dd669f2b1393a384a6d327a0d98eae20fba",
+      "candidateSha256": "33cf3af3c98f4f586c59b69e217c3dd669f2b1393a384a6d327a0d98eae20fba",
+      "exactHeightAndVegetationAndCacheOrder": true
+    },
+    {
+      "biome": "volcanoes",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 1233,
+      "evictions": {
+        "reference": 12699,
+        "candidate": 12699
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "candidateSha256": "e775e420f278b23467464e99a3301e92af7450f3e1465e359f4abd7df50ee689",
+      "exactHeightAndVegetationAndCacheOrder": true
+    },
+    {
+      "biome": "canyons",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 375,
+      "evictions": {
+        "reference": 9318,
+        "candidate": 9318
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "7672bea04472c6271c955ed0b3a8ea15f700e8f55f1278c19e272829581a3a77",
+      "candidateSha256": "7672bea04472c6271c955ed0b3a8ea15f700e8f55f1278c19e272829581a3a77",
+      "exactHeightAndVegetationAndCacheOrder": true
+    },
+    {
+      "biome": "desert",
+      "chunks": 9,
+      "samples": 38025,
+      "props": 91,
+      "evictions": {
+        "reference": 22500,
+        "candidate": 22500
+      },
+      "heightCacheLimit": 12000,
+      "referenceSha256": "ef9e171c96dc2924d5e4334fae15888d88f02367d1019f115d5003ffd3f482e2",
+      "candidateSha256": "ef9e171c96dc2924d5e4334fae15888d88f02367d1019f115d5003ffd3f482e2",
+      "exactHeightAndVegetationAndCacheOrder": true
+    }
+  ]
+}

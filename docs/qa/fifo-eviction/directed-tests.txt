@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: persistent FIFO cursor matches Map insertion order through updates, removals, clear and reinsertion
+ok 1 - persistent FIFO cursor matches Map insertion order through updates, removals, clear and reinsertion
+  ---
+  duration_ms: 445.5686
+  ...
+# Subtest: a cursor exhausted on an empty map restarts after subsequent insertions
+ok 2 - a cursor exhausted on an empty map restarts after subsequent insertions
+  ---
+  duration_ms: 0.3243
+  ...
+# Subtest: full bounded caches preserve every eviction key across long insertion streams
+ok 3 - full bounded caches preserve every eviction key across long insertion streams
+  ---
+  duration_ms: 1065.6979
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 4 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 173.2794
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 5 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 4.8456
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 6 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 48.0129
+  ...
+# Subtest: successful exact queries are shared only inside the synchronous scope, with independent waypoints
+ok 7 - successful exact queries are shared only inside the synchronous scope, with independent waypoints
+  ---
+  duration_ms: 5.1323
+  ...
+# Subtest: geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+ok 8 - geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+  ---
+  duration_ms: 0.9341
+  ...
+# Subtest: failed query rules still prevail and throwing work always releases scope
+ok 9 - failed query rules still prevail and throwing work always releases scope
+  ---
+  duration_ms: 1.0608
+  ...
+# Subtest: temporary memory is bounded by route count and waypoint count
+ok 10 - temporary memory is bounded by route count and waypoint count
+  ---
+  duration_ms: 14.2113
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 11 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 17.6469
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 12 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 3.5067
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 13 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.9511
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 14 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 9.0714
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 15 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 75.4014
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 16 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 1100.8765
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 17 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 2.0508
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 18 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 1.1907
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 19 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 1.4575
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 20 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 6.5568
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 21 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.9566
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 22 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 129.3897
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1743.1595

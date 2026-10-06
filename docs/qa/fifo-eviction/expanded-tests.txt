@@ -1,0 +1,1624 @@
+TAP version 13
+# (node:41760) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# QA-137: {"villages":100,"routeQueries":99,"spent":126225000,"balance":73775000}
+# Subtest: QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+ok 1 - QA-142 mapungubwe: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 421.019
+  ...
+# Subtest: QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+ok 2 - QA-142 saheliana: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 578.305
+  ...
+# Subtest: QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+ok 3 - QA-142 suajili: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 363.4352
+  ...
+# Subtest: QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+ok 4 - QA-142 musgum: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 332.1339
+  ...
+# Subtest: QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+ok 5 - QA-142 etiope: paid native founding/reload and duplicate confirmation are idempotent
+  ---
+  duration_ms: 611.4393
+  ...
+# Subtest: QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+ok 6 - QA-138/140 mapungubwe: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 377.6514
+  ...
+# Subtest: QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+ok 7 - QA-138/140 saheliana: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 482.5678
+  ...
+# Subtest: QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+ok 8 - QA-138/140 suajili: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 344.034
+  ...
+# Subtest: QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+ok 9 - QA-138/140 musgum: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 414.2081
+  ...
+# Subtest: QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+ok 10 - QA-138/140 etiope: one invalid native unit or spent preview funds cannot partially found
+  ---
+  duration_ms: 494.5296
+  ...
+# Subtest: QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+ok 11 - QA-141 mapungubwe: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 406.8638
+  ...
+# Subtest: QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+ok 12 - QA-141 saheliana: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 440.1276
+  ...
+# Subtest: QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+ok 13 - QA-141 suajili: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 501.0975
+  ...
+# Subtest: QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+ok 14 - QA-141 musgum: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 512.4379
+  ...
+# Subtest: QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+ok 15 - QA-141 etiope: contiguous complete native villages are allowed without overlapping hulls
+  ---
+  duration_ms: 705.8374
+  ...
+# Subtest: QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+ok 16 - QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs
+  ---
+  duration_ms: 14672.3209
+  ...
+# Subtest: QA-139: switching all native cultures and repositioning previews never pays or suppresses props
+ok 17 - QA-139: switching all native cultures and repositioning previews never pays or suppresses props
+  ---
+  duration_ms: 410.0413
+  ...
+# Subtest: opposed animals route around each other when both short lookahead goals are occupied
+ok 18 - opposed animals route around each other when both short lookahead goals are occupied
+  ---
+  duration_ms: 35.6749
+  ...
+# Subtest: recorded five-animal Musgum traffic clears without overlapping bodies or changing destination
+ok 19 - recorded five-animal Musgum traffic clears without overlapping bodies or changing destination
+  ---
+  duration_ms: 76.9108
+  ...
+# Subtest: rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+ok 20 - rejoining beyond occupied waypoints validates the entire retained shortcut around a solid building
+  ---
+  duration_ms: 47.8577
+  ...
+# Subtest: warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 21 - warthog: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 3.8124
+  ...
+# Subtest: hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 22 - hyena: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 2.6619
+  ...
+# Subtest: buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 23 - buffalo: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.8367
+  ...
+# Subtest: lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 24 - lion: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 1.8636
+  ...
+# Subtest: rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+ok 25 - rhino: exhausted native body detours around a worker without a hit, speed increase or invalid segment
+  ---
+  duration_ms: 2.7376
+  ...
+# Subtest: An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+ok 26 - An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home
+  ---
+  duration_ms: 15.3733
+  ...
+# Subtest: Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+ok 27 - Workers avoid a retreating beast in both movement directions and charge only travelled running metres
+  ---
+  duration_ms: 3.4687
+  ...
+# Subtest: A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+ok 28 - A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route
+  ---
+  duration_ms: 2.0058
+  ...
+# Subtest: Two native animals crossing opposite ways maintain separation and both finish
+ok 29 - Two native animals crossing opposite ways maintain separation and both finish
+  ---
+  duration_ms: 9.0763
+  ...
+# Subtest: Saving midway through a detour preserves its route and deterministic motion
+ok 30 - Saving midway through a detour preserves its route and deterministic motion
+  ---
+  duration_ms: 3.2551
+  ...
+# Subtest: Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+ok 31 - Physical clearance preserves active encounters but protects incapacitated people and exhausted states
+  ---
+  duration_ms: 0.7808
+  ...
+# Subtest: Legacy overlaps may escape continuously but cannot move deeper or across the other body
+ok 32 - Legacy overlaps may escape continuously but cannot move deeper or across the other body
+  ---
+  duration_ms: 0.3066
+  ...
+# Subtest: Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+ok 33 - Crowded crop approaches are recomputed outside the other native bodies and the raid completes
+  ---
+  duration_ms: 41.4823
+  ...
+# Subtest: Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping
+ok 34 - Sabana/712: two native animals rejoin beyond occupied waypoints without permanent waiting or clipping
+  ---
+  duration_ms: 2003.3837
+  ...
+# Subtest: season expires at the next magical watering for all eight species and three intensities
+ok 35 - season expires at the next magical watering for all eight species and three intensities
+  ---
+  duration_ms: 16.0637
+  ...
+# Subtest: successful manual or magical water clears season, but a request without due water does not
+ok 36 - successful manual or magical water clears season, but a request without due water does not
+  ---
+  duration_ms: 0.3212
+  ...
+# Subtest: Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+ok 37 - Growth consumes season once; a saved later checkpoint freezes at its original tolerance
+  ---
+  duration_ms: 61.4315
+  ...
+# Subtest: a worker consumes season on physical first care without a second charge
+ok 38 - a worker consumes season on physical first care without a second charge
+  ---
+  duration_ms: 10.5805
+  ...
+# (node:39416) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual native map, placement and RGBA context recipes match all six biomes with a saved village pad
+ok 39 - actual native map, placement and RGBA context recipes match all six biomes with a saved village pad
+  ---
+  duration_ms: 4052.9211
+  ...
+# Subtest: context halos share exact world samples across positive and negative chunk seams
+ok 40 - context halos share exact world samples across positive and negative chunk seams
+  ---
+  duration_ms: 86.6845
+  ...
+# Subtest: ground material retains packed maps and masks across live quality changes and releases them once
+ok 41 - ground material retains packed maps and masks across live quality changes and releases them once
+  ---
+  duration_ms: 184.1322
+  ...
+# Subtest: new terrain pad survives navigation recreation while an earlier snapshot keeps its original field
+ok 42 - new terrain pad survives navigation recreation while an earlier snapshot keeps its original field
+  ---
+  duration_ms: 185.1868
+  ...
+# Subtest: Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+ok 43 - Musgum canyon retreat uses a valid river crossing and physically exits, including reload
+  ---
+  duration_ms: 1693.4358
+  ...
+# (node:33056) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+ok 44 - canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 2171.7813
+  ...
+# Subtest: canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+ok 45 - canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 7075.2667
+  ...
+# Subtest: canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+ok 46 - canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 1900.9526
+  ...
+# Subtest: canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+ok 47 - canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 2734.4889
+  ...
+# Subtest: canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+ok 48 - canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 2587.6609
+  ...
+# Subtest: crew avoids fluid outside the canyon while solid collision remains active
+ok 49 - crew avoids fluid outside the canyon while solid collision remains active
+  ---
+  duration_ms: 1586.1913
+  ...
+# Subtest: river-bank layouts also work for different seeds without reusing a single suitable location
+ok 50 - river-bank layouts also work for different seeds without reusing a single suitable location
+  ---
+  duration_ms: 14709.8352
+  ...
+# Subtest: the requested water clips retain catalogue numbers 012 and 006
+ok 51 - the requested water clips retain catalogue numbers 012 and 006
+  ---
+  duration_ms: 41.1719
+  ...
+# Subtest: youngMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 52 - youngMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 43.7217
+  ...
+# Subtest: youngMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 53 - youngMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.7664
+  ...
+# Subtest: olderMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 54 - olderMale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 44.829
+  ...
+# Subtest: olderMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 55 - olderMale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 3.2349
+  ...
+# Subtest: olderFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 56 - olderFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.3311
+  ...
+# Subtest: olderFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 57 - olderFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 3.3164
+  ...
+# Subtest: youngFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 58 - youngFemale/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 50.1352
+  ...
+# Subtest: youngFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 59 - youngFemale/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.7212
+  ...
+# Subtest: warthog/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 60 - warthog/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 3.3369
+  ...
+# Subtest: warthog/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 61 - warthog/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.5994
+  ...
+# Subtest: hyena/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 62 - hyena/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.7556
+  ...
+# Subtest: hyena/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 63 - hyena/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 2.1539
+  ...
+# Subtest: buffalo/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 64 - buffalo/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.65
+  ...
+# Subtest: buffalo/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 65 - buffalo/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 4.548
+  ...
+# Subtest: lion/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 66 - lion/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.2664
+  ...
+# Subtest: lion/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 67 - lion/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.3687
+  ...
+# Subtest: rhino/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 68 - rhino/false: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.893
+  ...
+# Subtest: rhino/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+ok 69 - rhino/true: water contacts use 012, then restore dry footsteps, with no pause duplicates
+  ---
+  duration_ms: 1.0684
+  ...
+# Subtest: 006 river ambience shares one nearby loop and fades away when the camera leaves the river
+ok 70 - 006 river ambience shares one nearby loop and fades away when the camera leaves the river
+  ---
+  duration_ms: 4.3719
+  ...
+# Subtest: QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+ok 71 - QA-036: all 40 native originals and 32 opaque bridges preserve every indexed position, normal and UV corner
+  ---
+  duration_ms: 3587.5406
+  ...
+# Subtest: QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 72 - QA-035: maiz reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 3362.9471
+  ...
+# Subtest: QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 73 - QA-035: algodon reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 2442.189
+  ...
+# Subtest: QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 74 - QA-035: girasol reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 1680.4098
+  ...
+# Subtest: QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 75 - QA-035: platano reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 2621.2375
+  ...
+# Subtest: QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 76 - QA-035: sorgo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 1882.1071
+  ...
+# Subtest: QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 77 - QA-035: mijo reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 1828.6618
+  ...
+# Subtest: QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 78 - QA-035: yuca reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 1925.7469
+  ...
+# Subtest: QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+ok 79 - QA-035: batata reconstructs each native morph at 20/50/80 percent and continues without resetting
+  ---
+  duration_ms: 1879.2924
+  ...
+# Subtest: paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+ok 80 - paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+  ---
+  duration_ms: 2056.4496
+  ...
+# Subtest: real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+ok 81 - real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+  ---
+  duration_ms: 1708.1533
+  ...
+# Subtest: a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+ok 82 - a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+  ---
+  duration_ms: 2540.6117
+  ...
+# Subtest: crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+ok 83 - crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+  ---
+  duration_ms: 1913.0776
+  ...
+# Subtest: DEST extraction and five original GLBs retain audited source hashes
+ok 84 - DEST extraction and five original GLBs retain audited source hashes
+  ---
+  duration_ms: 1529.9335
+  ...
+# Subtest: Original GLSL masks, opening-depth guard and collapse programs are retained verbatim
+ok 85 - Original GLSL masks, opening-depth guard and collapse programs are retained verbatim
+  ---
+  duration_ms: 2.6864
+  ...
+# Subtest: All original triangle pivots follow exact native trajectories and six damage stages
+ok 86 - All original triangle pivots follow exact native trajectories and six damage stages
+  ---
+  duration_ms: 317.6515
+  ...
+# Subtest: Only native Sahelian roof patch adds geometry; original UVs and buffers stay unchanged
+ok 87 - Only native Sahelian roof patch adds geometry; original UVs and buffers stay unchanged
+  ---
+  duration_ms: 136.2701
+  ...
+# Subtest: Eight fitted damage sites and footprint ash regenerate deterministically after repair
+ok 88 - Eight fitted damage sites and footprint ash regenerate deterministically after repair
+  ---
+  duration_ms: 6358.6048
+  ...
+# Subtest: Native particle shaders and fragment geometry retain source hashes and exact source code
+ok 89 - Native particle shaders and fragment geometry retain source hashes and exact source code
+  ---
+  duration_ms: 10.0604
+  ...
+# Subtest: All five houses reproduce original ash scatter, emissions, gravity, bounce, friction and upload data
+ok 90 - All five houses reproduce original ash scatter, emissions, gravity, bounce, friction and upload data
+  ---
+  duration_ms: 988.6307
+  ...
+# Subtest: Original smoke quality caps and 340-fragment cap remain bounded under repeated structural bursts
+ok 91 - Original smoke quality caps and 340-fragment cap remain bounded under repeated structural bursts
+  ---
+  duration_ms: 360.6832
+  ...
+# Subtest: Loaded collapse does not replay bursts; zero elapsed freezes particles and full repair clears emitters
+ok 92 - Loaded collapse does not replay bursts; zero elapsed freezes particles and full repair clears emitters
+  ---
+  duration_ms: 2.647
+  ...
+# Subtest: persistent FIFO cursor matches Map insertion order through updates, removals, clear and reinsertion
+ok 93 - persistent FIFO cursor matches Map insertion order through updates, removals, clear and reinsertion
+  ---
+  duration_ms: 1087.9393
+  ...
+# Subtest: a cursor exhausted on an empty map restarts after subsequent insertions
+ok 94 - a cursor exhausted on an empty map restarts after subsequent insertions
+  ---
+  duration_ms: 0.3075
+  ...
+# Subtest: full bounded caches preserve every eviction key across long insertion streams
+ok 95 - full bounded caches preserve every eviction key across long insertion streams
+  ---
+  duration_ms: 1569.9131
+  ...
+# Subtest: gran-rio/suajili: a native submerged center is rejected without charging or modifying the world
+ok 96 - gran-rio/suajili: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 151.7542
+  ...
+# Subtest: gran-rio/etiope: a native submerged center is rejected without charging or modifying the world
+ok 97 - gran-rio/etiope: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 8.606
+  ...
+# Subtest: gran-rio/mapungubwe: a native submerged center is rejected without charging or modifying the world
+ok 98 - gran-rio/mapungubwe: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 7.3294
+  ...
+# Subtest: gran-rio/saheliana: a native submerged center is rejected without charging or modifying the world
+ok 99 - gran-rio/saheliana: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 83.3705
+  ...
+# Subtest: gran-rio/musgum: a native submerged center is rejected without charging or modifying the world
+ok 100 - gran-rio/musgum: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 50.6788
+  ...
+# Subtest: volcanes/suajili: a native submerged center is rejected without charging or modifying the world
+ok 101 - volcanes/suajili: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 22.3513
+  ...
+# Subtest: volcanes/etiope: a native submerged center is rejected without charging or modifying the world
+ok 102 - volcanes/etiope: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 4.9099
+  ...
+# Subtest: volcanes/mapungubwe: a native submerged center is rejected without charging or modifying the world
+ok 103 - volcanes/mapungubwe: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 6.5309
+  ...
+# Subtest: volcanes/saheliana: a native submerged center is rejected without charging or modifying the world
+ok 104 - volcanes/saheliana: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 60.9997
+  ...
+# Subtest: volcanes/musgum: a native submerged center is rejected without charging or modifying the world
+ok 105 - volcanes/musgum: a native submerged center is rejected without charging or modifying the world
+  ---
+  duration_ms: 47.4082
+  ...
+# Subtest: suajili/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 106 - suajili/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 62.859
+  ...
+# Subtest: suajili/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 107 - suajili/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 8.3212
+  ...
+# Subtest: etiope/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 108 - etiope/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 129.6969
+  ...
+# Subtest: etiope/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 109 - etiope/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 74.8363
+  ...
+# Subtest: mapungubwe/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 110 - mapungubwe/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 7.8604
+  ...
+# Subtest: mapungubwe/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 111 - mapungubwe/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 5.4775
+  ...
+# Subtest: saheliana/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 112 - saheliana/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 8.3358
+  ...
+# Subtest: saheliana/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 113 - saheliana/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 8.8628
+  ...
+# Subtest: musgum/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 114 - musgum/0: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 5.8738
+  ...
+# Subtest: musgum/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+ok 115 - musgum/0.67: slight shore overlap shifts within 20%, with identical preview, paid, saved and event positions
+  ---
+  duration_ms: 7.0351
+  ...
+# Subtest: interior ponds, corner overlap, collisions and maximum relocation are respected
+ok 116 - interior ponds, corner overlap, collisions and maximum relocation are respected
+  ---
+  duration_ms: 28.4851
+  ...
+# Subtest: dry surfaces remain buildable despite conservative scatter exclusion; slope and collisions still reject
+ok 117 - dry surfaces remain buildable despite conservative scatter exclusion; slope and collisions still reject
+  ---
+  duration_ms: 3.6289
+  ...
+# Subtest: suajili: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 118 - suajili: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 299.9878
+  ...
+# Subtest: etiope: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 119 - etiope: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 387.3545
+  ...
+# Subtest: mapungubwe: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 120 - mapungubwe: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 462.3499
+  ...
+# Subtest: saheliana: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 121 - saheliana: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 325.3832
+  ...
+# Subtest: musgum: village shore adjustment preserves layout, payment and save; deep water rejects
+ok 122 - musgum: village shore adjustment preserves layout, payment and save; deep water rejects
+  ---
+  duration_ms: 293.6134
+  ...
+# Subtest: suajili: native volcano opening remains playable with restored fluid restrictions
+ok 123 - suajili: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 2669.837
+  ...
+# Subtest: etiope: native volcano opening remains playable with restored fluid restrictions
+ok 124 - etiope: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 2829.0346
+  ...
+# Subtest: mapungubwe: native volcano opening remains playable with restored fluid restrictions
+ok 125 - mapungubwe: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 1918.0757
+  ...
+# Subtest: saheliana: native volcano opening remains playable with restored fluid restrictions
+ok 126 - saheliana: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 2571.3334
+  ...
+# Subtest: musgum: native volcano opening remains playable with restored fluid restrictions
+ok 127 - musgum: native volcano opening remains playable with restored fluid restrictions
+  ---
+  duration_ms: 1799.0067
+  ...
+# Subtest: gran-rio/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 128 - gran-rio/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 61.2547
+  ...
+# Subtest: gran-rio/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 129 - gran-rio/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 80.147
+  ...
+# Subtest: gran-rio/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 130 - gran-rio/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 12.2359
+  ...
+# Subtest: gran-rio/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 131 - gran-rio/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 170.7274
+  ...
+# Subtest: gran-rio/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 132 - gran-rio/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 62.8023
+  ...
+# Subtest: volcanes/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 133 - volcanes/suajili: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 85.6817
+  ...
+# Subtest: volcanes/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 134 - volcanes/etiope: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 22.838
+  ...
+# Subtest: volcanes/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 135 - volcanes/mapungubwe: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 12.989
+  ...
+# Subtest: volcanes/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 136 - volcanes/saheliana: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 78.4848
+  ...
+# Subtest: volcanes/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+ok 137 - volcanes/musgum: native hydrology near a flat river bank relocates a slightly overlapping hull
+  ---
+  duration_ms: 58.7834
+  ...
+# (node:32116) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HDR environment bytes match original radiance compression for both panoramas
+ok 138 - HDR environment bytes match original radiance compression for both panoramas
+  ---
+  duration_ms: 992.0145
+  ...
+# Subtest: complete Fresnel, environment BRDF and fluid branch retain user shader constants
+ok 139 - complete Fresnel, environment BRDF and fluid branch retain user shader constants
+  ---
+  duration_ms: 1.3593
+  ...
+# Subtest: water binds common night and yaw, keeps native exposure and avoids a second tone curve
+ok 140 - water binds common night and yaw, keeps native exposure and avoids a second tone curve
+  ---
+  duration_ms: 6.6039
+  ...
+# Subtest: Extracted renderer and native source retain their registered hashes
+ok 141 - Extracted renderer and native source retain their registered hashes
+  ---
+  duration_ms: 5.2784
+  ...
+# Subtest: Native greeting curves match the original V8 source at every sampled phase
+ok 142 - Native greeting curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 15.9894
+  ...
+# Subtest: Native speak curves match the original V8 source at every sampled phase
+ok 143 - Native speak curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.7242
+  ...
+# Subtest: Native acknowledge curves match the original V8 source at every sampled phase
+ok 144 - Native acknowledge curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 5.0161
+  ...
+# Subtest: Native curious curves match the original V8 source at every sampled phase
+ok 145 - Native curious curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 3.7831
+  ...
+# Subtest: Native warning curves match the original V8 source at every sampled phase
+ok 146 - Native warning curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.0068
+  ...
+# Subtest: Native reveal curves match the original V8 source at every sampled phase
+ok 147 - Native reveal curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 4.4846
+  ...
+# Subtest: Native idle curves match the original V8 source at every sampled phase
+ok 148 - Native idle curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 2.8242
+  ...
+# Subtest: Native farewell curves match the original V8 source at every sampled phase
+ok 149 - Native farewell curves match the original V8 source at every sampled phase
+  ---
+  duration_ms: 40.8392
+  ...
+# Subtest: Native ornament springs remain finite across reading, rest and gesture changes
+ok 150 - Native ornament springs remain finite across reading, rest and gesture changes
+  ---
+  duration_ms: 119.156
+  ...
+# (node:3316) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native hand source, reproducible module and all six original textures retain registered hashes
+ok 151 - Native hand source, reproducible module and all six original textures retain registered hashes
+  ---
+  duration_ms: 492.0678
+  ...
+# Subtest: Native tap pivot and motion exactly match V8 across camera orientations
+ok 152 - Native tap pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 130.5001
+  ...
+# Subtest: Native press pivot and motion exactly match V8 across camera orientations
+ok 153 - Native press pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 44.1968
+  ...
+# Subtest: Native pinch pivot and motion exactly match V8 across camera orientations
+ok 154 - Native pinch pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 43.9866
+  ...
+# Subtest: Native point pivot and motion exactly match V8 across camera orientations
+ok 155 - Native point pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 42.1677
+  ...
+# Subtest: Native drag pivot and motion exactly match V8 across camera orientations
+ok 156 - Native drag pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 115.5942
+  ...
+# Subtest: Native open pivot and motion exactly match V8 across camera orientations
+ok 157 - Native open pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 122.0942
+  ...
+# Subtest: Quad protection catches a building crossing the middle while every corner lies outside its footprint
+ok 158 - Quad protection catches a building crossing the middle while every corner lies outside its footprint
+  ---
+  duration_ms: 1.6189
+  ...
+# Subtest: Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+ok 159 - Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+  ---
+  duration_ms: 142.908
+  ...
+# Subtest: Terrain protection includes interior ridges between low quad corners
+ok 160 - Terrain protection includes interior ridges between low quad corners
+  ---
+  duration_ms: 17.3914
+  ...
+# Subtest: Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+ok 161 - Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+  ---
+  duration_ms: 1.4603
+  ...
+# Subtest: Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state
+ok 162 - Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state
+  ---
+  duration_ms: 1.6115
+  ...
+# Subtest: Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+ok 163 - Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+  ---
+  duration_ms: 15.7237
+  ...
+# Subtest: PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+ok 164 - PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+  ---
+  duration_ms: 5.9683
+  ...
+# Subtest: shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+ok 165 - shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+  ---
+  duration_ms: 3.7238
+  ...
+# Subtest: native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+ok 166 - native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+  ---
+  duration_ms: 4.5692
+  ...
+# Subtest: disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+ok 167 - disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+  ---
+  duration_ms: 6.0092
+  ...
+# Subtest: Standard direct lighting uses native PCF while spot and point shadows keep their own source
+ok 168 - Standard direct lighting uses native PCF while spot and point shadows keep their own source
+  ---
+  duration_ms: 0.4841
+  ...
+# Subtest: ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+ok 169 - ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+  ---
+  duration_ms: 5.9443
+  ...
+# Subtest: independent water retains one valid fallback across shader recompiles and releases it with the material
+ok 170 - independent water retains one valid fallback across shader recompiles and releases it with the material
+  ---
+  duration_ms: 1.1577
+  ...
+# Subtest: PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+ok 171 - PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+  ---
+  duration_ms: 0.9861
+  ...
+# Subtest: Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+ok 172 - Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+  ---
+  duration_ms: 719.7451
+  ...
+# Subtest: Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+ok 173 - Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+  ---
+  duration_ms: 1.0413
+  ...
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 174 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 5.2028
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 175 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 1.6476
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 176 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 425.6245
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 177 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 3.5648
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 178 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 69.4586
+  ...
+# Subtest: successful exact queries are shared only inside the synchronous scope, with independent waypoints
+ok 179 - successful exact queries are shared only inside the synchronous scope, with independent waypoints
+  ---
+  duration_ms: 5.4013
+  ...
+# Subtest: geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+ok 180 - geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate
+  ---
+  duration_ms: 1.5061
+  ...
+# Subtest: failed query rules still prevail and throwing work always releases scope
+ok 181 - failed query rules still prevail and throwing work always releases scope
+  ---
+  duration_ms: 1.1088
+  ...
+# Subtest: temporary memory is bounded by route count and waypoint count
+ok 182 - temporary memory is bounded by route count and waypoint count
+  ---
+  duration_ms: 13.1101
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 183 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 9.5785
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 184 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 2.5665
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 185 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 6.6924
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 186 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 88.7554
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 187 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 177.9309
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 188 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 3327.0134
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 189 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.5256
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 190 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 78.609
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 191 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 3.2496
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 192 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 11.1243
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 193 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.9459
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 194 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 397.4446
+  ...
+# Subtest: recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+ok 195 - recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+  ---
+  duration_ms: 33298.8319
+  ...
+# Subtest: an impossible dynamic detour is cached until bodies move or terrain changes
+ok 196 - an impossible dynamic detour is cached until bodies move or terrain changes
+  ---
+  duration_ms: 1.6144
+  ...
+# Subtest: a sliced search does not cache a failure from bodies that moved within a quarter metre
+ok 197 - a sliced search does not cache a failure from bodies that moved within a quarter metre
+  ---
+  duration_ms: 0.7061
+  ...
+# Subtest: native incremental A* preserves the synchronous route and expands at most eight cells per slice
+ok 198 - native incremental A* preserves the synchronous route and expands at most eight cells per slice
+  ---
+  duration_ms: 11.4972
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 199 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2024.5603
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 200 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2331.921
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 201 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3332.4693
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 202 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1647.1997
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 203 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2569.4866
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 204 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 6995.4892
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 205 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1181.7376
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 206 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 905.8528
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 207 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1889.6262
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 208 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 755.9515
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 209 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1016.9213
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 210 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4689.3234
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 211 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 868.1851
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 212 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 904.0087
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 213 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1293.5699
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 214 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 573.6202
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 215 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 837.2537
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 216 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3450.5025
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 217 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 540.1044
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 218 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 461.6555
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 219 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 965.214
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 220 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 434.3738
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 221 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 647.7745
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 222 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2897.5216
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 223 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 567.1442
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 224 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 576.0506
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 225 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 930.0253
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 226 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 507.8361
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 227 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 673.3
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 228 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2781.8823
+  ...
+# Subtest: worker reply bounds immutable collision tables and omits actor state and failures
+ok 229 - worker reply bounds immutable collision tables and omits actor state and failures
+  ---
+  duration_ms: 44.5027
+  ...
+# Subtest: only the same geometry epoch imports static answers and existing answers prevail
+ok 230 - only the same geometry epoch imports static answers and existing answers prevail
+  ---
+  duration_ms: 0.5603
+  ...
+# Subtest: prepared successful paths require exact query parameters and give callers independent waypoints
+ok 231 - prepared successful paths require exact query parameters and give callers independent waypoints
+  ---
+  duration_ms: 1456.5944
+  ...
+# Subtest: crop epochs, rebuilt obstacles and proposed construction cannot reuse old prepared paths
+ok 232 - crop epochs, rebuilt obstacles and proposed construction cannot reuse old prepared paths
+  ---
+  duration_ms: 1766.8121
+  ...
+# Subtest: sabana: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 233 - sabana: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 3126.3497
+  ...
+# Subtest: gran-rio: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 234 - gran-rio: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 2347.3922
+  ...
+# Subtest: manglares: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 235 - manglares: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 6008.3995
+  ...
+# Subtest: volcanes: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 236 - volcanes: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 1736.2516
+  ...
+# Subtest: gran-canon: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 237 - gran-canon: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 1183.8425
+  ...
+# Subtest: desierto: a paid populated farm preserves full movement and gameplay state with prepared queries
+ok 238 - desierto: a paid populated farm preserves full movement and gameplay state with prepared queries
+  ---
+  duration_ms: 1903.0212
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 239 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 11.6726
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 240 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.5163
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 241 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.7427
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 242 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.8109
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 243 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.0426
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 244 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.9575
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 245 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3914
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 246 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5268
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 247 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2514
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 248 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3891
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 249 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 1.3103
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 250 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 8.7416
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 251 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.7799
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 252 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 3.829
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 253 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 2.4465
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 254 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.3127
+  ...
+# (node:37800) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 255 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 36.0022
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 256 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 2863.9981
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 257 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 2.1434
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 258 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.2713
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 259 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 72.7712
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 260 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.4821
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 261 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 15086.1735
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 262 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 1488.2401
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 263 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 38.6743
+  ...
+# Subtest: World surface replaces the demonstration crop bed and follows drifting sprite contacts
+ok 264 - World surface replaces the demonstration crop bed and follows drifting sprite contacts
+  ---
+  duration_ms: 72.023
+  ...
+# Subtest: VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+ok 265 - VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders
+  ---
+  duration_ms: 370.9184
+  ...
+# Subtest: Day, sunset and night environment values match original source lighting and matrices
+ok 266 - Day, sunset and night environment values match original source lighting and matrices
+  ---
+  duration_ms: 13.7639
+  ...
+# Subtest: All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+ok 267 - All 18 compositions reproduce source scheduling, particles, tool poses, geometry and local lights
+  ---
+  duration_ms: 8464.3087
+  ...
+# Subtest: Seven rigid particle geometries preserve every original position and normal
+ok 268 - Seven rigid particle geometries preserve every original position and normal
+  ---
+  duration_ms: 222.0444
+  ...
+# Subtest: Atlas frames retain original inset, flipped rows and interpolated final frame
+ok 269 - Atlas frames retain original inset, flipped rows and interpolated final frame
+  ---
+  duration_ms: 0.5415
+  ...
+# Subtest: Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+ok 270 - Private VFX clocks freeze at zero elapsed, keep preview contacts external and clear resources
+  ---
+  duration_ms: 120.255
+  ...
+# Subtest: Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+ok 271 - Original presentation caps bound dense particle bursts and layer switches hide their own outputs
+  ---
+  duration_ms: 282.329
+  ...
+# Subtest: Rig water sources replace only new droplet origins; seek replays sources and missing rigs do not emit
+ok 272 - Rig water sources replace only new droplet origins; seek replays sources and missing rigs do not emit
+  ---
+  duration_ms: 1.7854
+  ...
+# (node:27816) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five village loaders bound every indexed unit without copying or restricting its shared geometry
+ok 273 - five village loaders bound every indexed unit without copying or restricting its shared geometry
+  ---
+  duration_ms: 1995.5912
+  ...
+# Subtest: route bound retains reachable detours and stable ties; distant candidates alone are pruned
+ok 274 - route bound retains reachable detours and stable ties; distant candidates alone are pruned
+  ---
+  duration_ms: 38.9227
+  ...
+# Subtest: an unreachable nearer village cannot cap the search and no reachable route returns null
+ok 275 - an unreachable nearer village cannot cap the search and no reachable route returns null
+  ---
+  duration_ms: 0.5062
+  ...
+# Subtest: QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+ok 276 - QA-085 sabana: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 3360.8207
+  ...
+# Subtest: QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+ok 277 - QA-085 gran-rio: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2989.8936
+  ...
+# Subtest: QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+ok 278 - QA-085 manglares: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2787.0103
+  ...
+# Subtest: QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+ok 279 - QA-085 volcanes: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 2034.8007
+  ...
+# Subtest: QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+ok 280 - QA-085 gran-canon: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 1790.2758
+  ...
+# Subtest: QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+ok 281 - QA-085 desierto: a native large prop leaves a silent gap, charging only legal modules
+  ---
+  duration_ms: 6076.5356
+  ...
+# Subtest: QA-085 gran-rio: wholly submerged native walls are silently skipped without payment
+ok 282 - QA-085 gran-rio: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 812.5635
+  ...
+# Subtest: QA-085 manglares: wholly submerged native walls are silently skipped without payment
+ok 283 - QA-085 manglares: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 726.4245
+  ...
+# Subtest: QA-085 volcanes: wholly submerged native walls are silently skipped without payment
+ok 284 - QA-085 volcanes: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 670.3292
+  ...
+# Subtest: QA-085 gran-canon: wholly submerged native walls are silently skipped without payment
+ok 285 - QA-085 gran-canon: wholly submerged native walls are silently skipped without payment
+  ---
+  duration_ms: 1121.711
+  ...
+# Subtest: zarzas/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 286 - zarzas/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.9412
+  ...
+# Subtest: zarzas/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 287 - zarzas/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2383
+  ...
+# Subtest: madera/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 288 - madera/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1546
+  ...
+# Subtest: madera/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 289 - madera/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.3319
+  ...
+# Subtest: adobe/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 290 - adobe/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1495
+  ...
+# Subtest: adobe/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 291 - adobe/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.1467
+  ...
+# Subtest: piedra/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 292 - piedra/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2511
+  ...
+# Subtest: piedra/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 293 - piedra/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.3959
+  ...
+# Subtest: reforzado/false: a wall may touch shore but an entirely fluid piece is skipped
+ok 294 - reforzado/false: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2264
+  ...
+# Subtest: reforzado/true: a wall may touch shore but an entirely fluid piece is skipped
+ok 295 - reforzado/true: a wall may touch shore but an entirely fluid piece is skipped
+  ---
+  duration_ms: 0.2169
+  ...
+# Subtest: Native Bastion extraction preserves source and module hashes
+ok 296 - Native Bastion extraction preserves source and module hashes
+  ---
+  duration_ms: 22.4833
+  ...
+# Subtest: All materials and gate stages agree with the original native renderer
+ok 297 - All materials and gate stages agree with the original native renderer
+  ---
+  duration_ms: 60.4387
+  ...
+# Subtest: Every original regional bridge keeps triangle pivots and exact native trajectories
+ok 298 - Every original regional bridge keeps triangle pivots and exact native trajectories
+  ---
+  duration_ms: 2574.4014
+  ...
+# Subtest: Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+ok 299 - Production wall renders opaque native rubble, preserves gate scale and disposes private geometry
+  ---
+  duration_ms: 777.5706
+  ...
+# Subtest: Collapse follows simulated remainder and reconstructs correctly after loading or repair
+ok 300 - Collapse follows simulated remainder and reconstructs correctly after loading or repair
+  ---
+  duration_ms: 74.8171
+  ...
+# Subtest: Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+ok 301 - Ordinary damage uses native 480 ms cubic easing, pauses hold it and collapse overrides it
+  ---
+  duration_ms: 65.3235
+  ...
+# Subtest: Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+ok 302 - Articulated leaves retain finite native damage bridges and reconstruct the original closed pose
+  ---
+  duration_ms: 2524.3913
+  ...
+# Subtest: wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+ok 303 - wall/gate damage and collapse geometry resume identically in a fresh renderer after snapshot reload
+  ---
+  duration_ms: 4895.3845
+  ...
+# Subtest: paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+ok 304 - paid physical wall/gate repairs and ruin rebuilding retain their ascending native fade in a fresh renderer
+  ---
+  duration_ms: 10108.5308
+  ...
+# (node:29524) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+ok 305 - river and wetland vertices reproduce the source recipe across six biomes and chunk boundaries
+  ---
+  duration_ms: 484.0258
+  ...
+# Subtest: pond and lava pool fans preserve original outline, local level and transformed instance placement
+ok 306 - pond and lava pool fans preserve original outline, local level and transformed instance placement
+  ---
+  duration_ms: 10.1573
+  ...
+# Subtest: painted fluids evaluate transformed world coordinates for instanced pools
+ok 307 - painted fluids evaluate transformed world coordinates for instanced pools
+  ---
+  duration_ms: 0.9923
+  ...
+# Subtest: unloading a chunk releases private instance buffers and retains shared water resources
+ok 308 - unloading a chunk releases private instance buffers and retains shared water resources
+  ---
+  duration_ms: 7.0233
+  ...
+# Subtest: pool fragments keep the original half-open chunk clip and independent bounds
+ok 309 - pool fragments keep the original half-open chunk clip and independent bounds
+  ---
+  duration_ms: 1.7638
+  ...
+# Subtest: watering cannot bridge a canyon cliff even when horizontal coordinates are close
+ok 310 - watering cannot bridge a canyon cliff even when horizontal coordinates are close
+  ---
+  duration_ms: 4.9233
+  ...
+# Subtest: a saved watering action on the wrong elevation never irrigates or starts growth
+ok 311 - a saved watering action on the wrong elevation never irrigates or starts growth
+  ---
+  duration_ms: 84.1711
+  ...
+# Subtest: a legally planted native canyon plateau crop stays dormant without a physical worker route
+ok 312 - a legally planted native canyon plateau crop stays dormant without a physical worker route
+  ---
+  duration_ms: 16926.0548
+  ...
+# Subtest: olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 313 - olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 36.4419
+  ...
+# Subtest: olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 314 - olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 16.9242
+  ...
+# Subtest: youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 315 - youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 17.7877
+  ...
+# Subtest: youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 316 - youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 45.752
+  ...
+# Subtest: watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+ok 317 - watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+  ---
+  duration_ms: 1.6799
+  ...
+# (node:23884) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Prepared nozzle paths preserve world position and direction across actor/effect transforms without scanning workers
+ok 318 - Prepared nozzle paths preserve world position and direction across actor/effect transforms without scanning workers
+  ---
+  duration_ms: 60.7947
+  ...
+# Subtest: Missing actor, profile or effect does not substitute a demonstration water source
+ok 319 - Missing actor, profile or effect does not substitute a demonstration water source
+  ---
+  duration_ms: 0.5285
+  ...
+1..319
+# tests 319
+# suites 0
+# pass 319
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 53923.6044
