@@ -222,11 +222,6 @@ export class WorldScene {
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
       this.renderer.render(this.scene,this.camera);
-      // The first sprite effect captures world depth with shadows disabled.
-      // Warm that actual pass while the loading screen still covers the world,
-      // including the staged animal skinning variants. Cached depth materials
-      // retain their programs until their source material is disposed.
-      this.destructionPass.captureDepth(this.camera,this.scene);
       this.animalGpuReady=true;
     }finally{
       this.renderer.setRenderTarget(oldTarget);this.renderer.autoClear=oldAutoClear;

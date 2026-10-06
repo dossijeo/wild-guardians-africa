@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Animal preload QA</title><style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh}pre{position:fixed;top:0;left:0;max-width:520px;padding:12px;background:#172019ed;white-space:pre-wrap;max-height:25vh;overflow:auto}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body><canvas></canvas><pre id="report">Loading native world and five species…</pre><button id="inspect" disabled style="position:fixed;right:16px;bottom:16px;z-index:3;padding:12px">Inspect animal after contact</button><script type="module">
+<!doctype html><html><head><meta charset="utf-8"><title>Animal preload QA</title><style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh}pre{position:fixed;top:0;left:0;max-width:520px;padding:12px;background:#172019ed;white-space:pre-wrap;max-height:25vh;overflow:auto}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body><canvas></canvas><pre id="report">Loading native world and five speciesâ€¦</pre><button id="inspect" disabled style="position:fixed;right:16px;bottom:16px;z-index:3;padding:12px">Inspect animal after contact</button><script type="module">
 import * as Game from '/src/simulation/game.js';
 import {Box3,Frustum,Matrix4} from 'three';
 import {RenderGlCalls} from './render-gl-calls.js';
@@ -69,7 +69,7 @@ after.newAnimalPrograms=after.animalPrograms.filter(id=>!before.animalPrograms.i
 if(params.get('motion')==='1'){
  Game.resume(state,'intro');
  if(requestedSpecies){state.dayPlan={done:true};state.nightPlan={done:true};}
- const hp=state.structures[0].hp,updates=[],renderFrames=[],glProbe=params.get('frame-profile')==='1'?new RenderGlCalls(world.renderer.getContext(),world.renderer):null;let steps=0,heldFrames=0;
+ const hp=state.structures[0].hp,updates=[],renderFrames=[],glProbe=params.get('frame-profile')==='1'?new RenderGlCalls(world.renderer.getContext()):null;let steps=0,heldFrames=0;
  try{while((requestedSpecies?!state.events.some(e=>e.type==='AnimalLogicalHit'):state.structures[0].hp===hp)&&state.raid&&steps<600){
   if(errors.length)throw Error(errors.join('; '));
   if(!world.raidReady()){if(++heldFrames>600)throw Error('Actor readiness budget exhausted');world.render(0);await new Promise(requestAnimationFrame);continue;}

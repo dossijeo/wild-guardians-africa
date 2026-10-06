@@ -1,0 +1,116 @@
+{
+  "baselineHead": "423c2e08495d7f7e5f0db3087c1b9a6d24b3e4e2",
+  "sameLogicalAndPresentationFields": {
+    "logicalHits": true,
+    "actors": true,
+    "steps": true,
+    "heldFrames": true,
+    "attackEffects": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "simulatedSeconds": true
+  },
+  "tests": {
+    "command": "node --test tests/render-gl-calls.test.js tests/depth-capture.test.js tests/standard-depth.test.js tests/native-shadow.test.js tests/single-pass-alpha-depth.test.js",
+    "passed": 32,
+    "failed": 0,
+    "durationMs": 541.8006
+  },
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "modules": 204,
+    "seconds": 11.02,
+    "warning": "Chunk exceeds 500 kB"
+  },
+  "files": {
+    "before-scene.txt": {
+      "bytes": 42414,
+      "sha256": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887"
+    },
+    "contact.png": {
+      "bytes": 113021,
+      "sha256": "85afe9fa9e65d9e87cc0898be50019a6d7c9e929228bfbab8fe19d073bbfedb2"
+    },
+    "draw-contact.png": {
+      "bytes": 113004,
+      "sha256": "0905c90921655bf3a6c1004306f60849aaa44f513c08157332c88f07969bb508"
+    },
+    "draw-fixture-v1.txt": {
+      "bytes": 15866,
+      "sha256": "a3f9d351782a63726dc4ee6948a2bdd1980fc9be2756364670e8ab536804f323"
+    },
+    "draw-observer-v1.txt": {
+      "bytes": 1855,
+      "sha256": "ef2d12edb4955457ce0bd7e88d7de065e4be1f562e6bedb57f2e24550792274b"
+    },
+    "draws.json.gz": {
+      "bytes": 11969,
+      "sha256": "d986215edd0ce8b46b332d237cc691562f35ee0107c3ea10bcc406b2c622ccb8",
+      "rawBytes": 484568,
+      "rawSha256": "376638aac5ef07860e59808414d7113ece2c93e3f3f686c50ae6c87b7bfe5697"
+    },
+    "owners-fixture.txt": {
+      "bytes": 15851,
+      "sha256": "2ff55c16f4f5e8046b4cb2b02b0906a377b89019dac1e01f4b28544f844a5995"
+    },
+    "owners.json.gz": {
+      "bytes": 11092,
+      "sha256": "05e30c3790d751e38d1fb0ff7b36a6dcf11125ba9debff1fc3543dffd3dc0525",
+      "rawBytes": 462737,
+      "rawSha256": "b2239110f23362cb5f3419f71ce96cb195d0e8c43da631f107ce8c4b613a385d"
+    },
+    "README.md": {
+      "bytes": 5251,
+      "sha256": "02c87563546d876ffea6847fceb9601040765293d106c5833dbf4900ec399de6"
+    },
+    "roles-fixture.txt": {
+      "bytes": 15866,
+      "sha256": "a3f9d351782a63726dc4ee6948a2bdd1980fc9be2756364670e8ab536804f323"
+    },
+    "roles-observer.txt": {
+      "bytes": 2025,
+      "sha256": "34a93cbb5a39d4278feadba58ab1f7063af74a369a5e5e851ceabf9152dbb768"
+    },
+    "roles.json.gz": {
+      "bytes": 12045,
+      "sha256": "22ae244d668126fc8b8932a708ae900213761a2eaf49cae4642ab3c5f200798a",
+      "rawBytes": 484600,
+      "rawSha256": "83b10efdcda59fc8011c4190568c52c3d3e428e3bdf5939ee74dfba6b73fadeb"
+    },
+    "warm-depth-contact.png": {
+      "bytes": 113005,
+      "sha256": "0c610fc22b37642b9836784d8bf666603d3bddc56d413af6a00af18ea175f4d3"
+    },
+    "warm-depth.json.gz": {
+      "bytes": 12015,
+      "sha256": "9ebed5222e32e28537955e25d194697189cb65d05eddfb31c8590fdc825ad597",
+      "rawBytes": 483181,
+      "rawSha256": "1cd60ce0d631b34327f802f3d277a7e1bef8f47109c4a0f2557a7b04d7ef0997"
+    },
+    "warm-original-group.json.gz": {
+      "bytes": 1661,
+      "sha256": "8ca615e04c465b7e77bc0bf250e93fc5b6ebac42c8a1c3fd1a4800c67f4153a6",
+      "rawBytes": 6325,
+      "rawSha256": "cb758325c819e6c7ded94bcc667ee2361cfa4fe35b441b26ef0c1e0c8180cc01"
+    },
+    "warm-scene.txt": {
+      "bytes": 42789,
+      "sha256": "2b9cbf8c653b3535d5acbc5b740d1c416f74542186d6071d9b2bd61b1d13dc9f"
+    },
+    "warthog.json.gz": {
+      "bytes": 8907,
+      "sha256": "aea0769817eb0bda1e286b099037246ada6bee5bd3fd1149f56661aa3493fd74",
+      "rawBytes": 257260,
+      "rawSha256": "46d702631373f500bbf5544cd222b89080f0c269e9cf9bb726de6777a5e1e81f"
+    }
+  },
+  "finalSources": {
+    "src/rendering/scene.js": "d0d103cda624455a36e3fa7a9e2eff5f4b806d94d3ec8c6398831c82782df497",
+    "tests/browser/animal-preload.html": "0e6651f562732c48754a62344ae5ec741494ae6aa57108f523b4c9a2989647c7",
+    "tests/browser/render-gl-calls.js": "34a93cbb5a39d4278feadba58ab1f7063af74a369a5e5e851ceabf9152dbb768",
+    "tests/render-gl-calls.test.js": "42ab74aa3cb35efb08b972301a670aa77e0ce5515827744e0877bbfb2f6021cb"
+  }
+}

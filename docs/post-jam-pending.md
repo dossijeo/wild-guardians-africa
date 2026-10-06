@@ -149,3 +149,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Contactos nativos de las cinco especies en Gran Cañón](qa/canyon-five-species-contacts/README.md): cinco casos individuales con centro/brote pagados, navegación/daño reales y VFX originales activos; aparición sin descargas GLB ni programas de shader animal adicionales. Se conserva y reejecuta la prueba original de daño al centro (600→580). No acredita cinco ataques en un grupo, noche natural, audio/HUD/móvil ni ausencia de tirón. Pendiente medir shaders VFX del primer golpe y QA-155 completo.
+
+
+[Primera activación de VFX perfilada](qa/first-attack-gl-profile/README.md): preparar profundidad durante la carga elimina cuatro compilaciones MeshDepth del paso 48. Dos pruebas nativas conservan contacto de cultivo y daño al centro; 32 pruebas/build correctos. Persisten pico de frametime, dos variantes Standard y shaders de polvo/ondas/ataque: precarga incompleta, sin acreditar eliminación del tirón ni móvil.
