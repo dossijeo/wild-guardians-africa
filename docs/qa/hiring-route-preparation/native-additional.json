@@ -1,0 +1,1096 @@
+{
+  "before": {
+    "hiringRoutes": {
+      "requests": 2,
+      "accepted": 2,
+      "obsolete": 0,
+      "used": 1,
+      "failed": 0,
+      "pending": false,
+      "ready": true,
+      "workerAlive": true
+    },
+    "loading": [
+      {
+        "stamp": 2291,
+        "cover": false,
+        "hudVisibility": null
+      },
+      {
+        "stamp": 47578.40000003576,
+        "cover": true,
+        "busy": "true",
+        "hudVisibility": "hidden"
+      },
+      {
+        "stamp": 54010.90000003576,
+        "cover": false,
+        "busy": "false",
+        "hudVisibility": "visible"
+      }
+    ],
+    "campaignEvents": [
+      {
+        "day": 1,
+        "time": 0.09999999999999999,
+        "elapsed": 0.09999999999999999,
+        "id": "event-1",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.introduction"
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-2",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.center"
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-4",
+        "type": "PlacementCommitted",
+        "kind": "center",
+        "targetId": "structure-2",
+        "presentation": {
+          "x": 85.57096180102664,
+          "z": -1.4182126314316967
+        }
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-5",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.plant"
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "id": "event-7",
+        "type": "CropPlaced",
+        "targetId": "plant-3"
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "id": "event-8",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.hiring"
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "id": "event-10",
+        "type": "HiringConfirmed",
+        "count": 1
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "id": "event-11",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.work"
+      },
+      {
+        "day": 1,
+        "time": 60.612100000002464,
+        "elapsed": 60.612100000002464,
+        "id": "event-12",
+        "type": "WaterSatisfied",
+        "workerId": "worker-6",
+        "targetId": "plant-3"
+      }
+    ],
+    "campaignPhases": [
+      {
+        "day": 1,
+        "time": 0,
+        "elapsed": 0,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "tutorial-action"
+        ],
+        "structures": [],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "tutorial-action"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "hiring"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 82.7612000000019,
+        "elapsed": 82.7612000000019,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "menu"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      }
+    ],
+    "raid": null,
+    "raidView": {
+      "eye": {
+        "x": 102.20247532024266,
+        "z": 32.07367599590944
+      },
+      "target": {
+        "x": 85.5,
+        "z": 1.5
+      }
+    },
+    "completedNights": 0,
+    "result": null,
+    "nightPlan": null,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "day": 1,
+    "time": 82.7612000000019,
+    "elapsed": 82.7612000000019,
+    "balance": {
+      "n": "665",
+      "d": "1"
+    },
+    "pauses": [
+      "menu"
+    ],
+    "tutorial": {
+      "step": "observe",
+      "seen": [
+        "basic.introduction",
+        "basic.center",
+        "basic.plant",
+        "basic.hiring",
+        "basic.work"
+      ],
+      "pending": [],
+      "guideAfterAuto": [
+        "basic.center"
+      ],
+      "reading": null,
+      "basicSkipped": false,
+      "dismissed": [
+        "basic.center:",
+        "basic.work:"
+      ]
+    },
+    "hands": {
+      "hudVisible": false,
+      "worldVisible": false,
+      "toolKind": null,
+      "worldTarget": {
+        "kind": "tap",
+        "target": "plant-site",
+        "position": [
+          85.5,
+          11.018539041094435,
+          1.5
+        ]
+      },
+      "worldScreen": {
+        "x": 640,
+        "y": 364,
+        "depth": 0.9951444301279799,
+        "inFrustum": true
+      }
+    },
+    "structures": [
+      {
+        "id": "structure-2",
+        "x": 85.57096180102664,
+        "z": -1.4182126314316967,
+        "screen": {
+          "x": 674,
+          "y": 340,
+          "depth": 0.9954459722696066,
+          "inFrustum": true
+        }
+      }
+    ],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 606,
+        "y": 340,
+        "depth": 0.9954446205281784,
+        "inFrustum": true
+      }
+    },
+    "plantSpots": [
+      {
+        "x": 90,
+        "z": -4.5,
+        "screen": {
+          "x": 796,
+          "y": 337,
+          "depth": 0.9955161130183665,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -4.5,
+        "screen": {
+          "x": 829,
+          "y": 349,
+          "depth": 0.9954495338686593,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -3,
+        "screen": {
+          "x": 818,
+          "y": 362,
+          "depth": 0.995297621437633,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": -3,
+        "screen": {
+          "x": 852,
+          "y": 376,
+          "depth": 0.9952269327782254,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": -3,
+        "screen": {
+          "x": 888,
+          "y": 387,
+          "depth": 0.9951465369688561,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -1.5,
+        "screen": {
+          "x": 805,
+          "y": 375,
+          "depth": 0.9951357501981554,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": -1.5,
+        "screen": {
+          "x": 841,
+          "y": 390,
+          "depth": 0.9950606051714591,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": -1.5,
+        "screen": {
+          "x": 877,
+          "y": 401,
+          "depth": 0.9949749569139081,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": 0,
+        "screen": {
+          "x": 793,
+          "y": 389,
+          "depth": 0.9949631258857184,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": 0,
+        "screen": {
+          "x": 829,
+          "y": 404,
+          "depth": 0.9948829558094815,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": 0,
+        "screen": {
+          "x": 867,
+          "y": 417,
+          "depth": 0.9947914750952356,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 90,
+        "z": 1.5,
+        "screen": {
+          "x": 743,
+          "y": 389,
+          "depth": 0.9948637610080666,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": 1.5,
+        "screen": {
+          "x": 779,
+          "y": 404,
+          "depth": 0.9947785031817382,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": 1.5,
+        "screen": {
+          "x": 816,
+          "y": 420,
+          "depth": 0.9946924484314033,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": 1.5,
+        "screen": {
+          "x": 855,
+          "y": 433,
+          "depth": 0.9945943647213311,
+          "inFrustum": true
+        }
+      }
+    ],
+    "plants": [
+      {
+        "id": "plant-3",
+        "growth": 22.365099999999856,
+        "alive": true,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 640,
+          "y": 364,
+          "depth": 0.9951444301279799,
+          "inFrustum": true
+        }
+      }
+    ],
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "running": false,
+        "x": 84.67143227026476,
+        "z": 1.4512607217802795,
+        "path": null,
+        "screen": {
+          "x": 623,
+          "y": 359,
+          "depth": 0.9951995483515894,
+          "inFrustum": true
+        }
+      }
+    ],
+    "delivered": 0
+  },
+  "after": {
+    "hiringRoutes": {
+      "requests": 2,
+      "accepted": 2,
+      "obsolete": 0,
+      "used": 2,
+      "failed": 0,
+      "pending": false,
+      "ready": false,
+      "workerAlive": false
+    },
+    "loading": [
+      {
+        "stamp": 2291,
+        "cover": false,
+        "hudVisibility": null
+      },
+      {
+        "stamp": 47578.40000003576,
+        "cover": true,
+        "busy": "true",
+        "hudVisibility": "hidden"
+      },
+      {
+        "stamp": 54010.90000003576,
+        "cover": false,
+        "busy": "false",
+        "hudVisibility": "visible"
+      }
+    ],
+    "campaignEvents": [
+      {
+        "day": 1,
+        "time": 0.09999999999999999,
+        "elapsed": 0.09999999999999999,
+        "id": "event-1",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.introduction"
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-2",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.center"
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-4",
+        "type": "PlacementCommitted",
+        "kind": "center",
+        "targetId": "structure-2",
+        "presentation": {
+          "x": 85.57096180102664,
+          "z": -1.4182126314316967
+        }
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "id": "event-5",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.plant"
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "id": "event-7",
+        "type": "CropPlaced",
+        "targetId": "plant-3"
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "id": "event-8",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.hiring"
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "id": "event-10",
+        "type": "HiringConfirmed",
+        "count": 1
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "id": "event-11",
+        "type": "TutorialMessageStarted",
+        "messageId": "basic.work"
+      },
+      {
+        "day": 1,
+        "time": 60.612100000002464,
+        "elapsed": 60.612100000002464,
+        "id": "event-12",
+        "type": "WaterSatisfied",
+        "workerId": "worker-6",
+        "targetId": "plant-3"
+      },
+      {
+        "day": 1,
+        "time": 82.7612000000019,
+        "elapsed": 82.7612000000019,
+        "id": "event-13",
+        "type": "HiringConfirmed",
+        "count": 1,
+        "additional": true,
+        "centerId": "structure-2",
+        "cost": 29
+      }
+    ],
+    "campaignPhases": [
+      {
+        "day": 1,
+        "time": 0,
+        "elapsed": 0,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "tutorial-action"
+        ],
+        "structures": [],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 19.82189999999997,
+        "elapsed": 19.82189999999997,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "tutorial-action"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 20.237899999999982,
+        "elapsed": 20.237899999999982,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "hiring"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 29.865800000000018,
+        "elapsed": 29.865800000000018,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 82.7612000000019,
+        "elapsed": 82.7612000000019,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [
+          "menu"
+        ],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      },
+      {
+        "day": 1,
+        "time": 82.7612000000019,
+        "elapsed": 82.7612000000019,
+        "completedNights": 0,
+        "result": null,
+        "raid": null,
+        "pauses": [],
+        "structures": [
+          {
+            "id": "structure-2",
+            "status": "intact",
+            "hp": 600,
+            "maxHp": 600
+          }
+        ],
+        "notices": []
+      }
+    ],
+    "raid": null,
+    "raidView": {
+      "eye": {
+        "x": 102.20247532024266,
+        "z": 32.07367599590944
+      },
+      "target": {
+        "x": 85.5,
+        "z": 1.5
+      }
+    },
+    "completedNights": 0,
+    "result": null,
+    "nightPlan": null,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "day": 1,
+    "time": 107.95399999999943,
+    "elapsed": 107.95399999999943,
+    "balance": {
+      "n": "636",
+      "d": "1"
+    },
+    "pauses": [],
+    "tutorial": {
+      "step": "observe",
+      "seen": [
+        "basic.introduction",
+        "basic.center",
+        "basic.plant",
+        "basic.hiring",
+        "basic.work"
+      ],
+      "pending": [],
+      "guideAfterAuto": [
+        "basic.center"
+      ],
+      "reading": null,
+      "basicSkipped": false,
+      "dismissed": [
+        "basic.center:",
+        "basic.work:"
+      ]
+    },
+    "hands": {
+      "hudVisible": false,
+      "worldVisible": false,
+      "toolKind": null,
+      "worldTarget": {
+        "kind": "tap",
+        "target": "plant-site",
+        "position": [
+          85.5,
+          11.018539041094435,
+          1.5
+        ]
+      },
+      "worldScreen": {
+        "x": 640,
+        "y": 364,
+        "depth": 0.9951444301279799,
+        "inFrustum": true
+      }
+    },
+    "structures": [
+      {
+        "id": "structure-2",
+        "x": 85.57096180102664,
+        "z": -1.4182126314316967,
+        "screen": {
+          "x": 674,
+          "y": 340,
+          "depth": 0.9954459722696066,
+          "inFrustum": true
+        }
+      }
+    ],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 606,
+        "y": 340,
+        "depth": 0.9954446205281784,
+        "inFrustum": true
+      }
+    },
+    "plantSpots": [
+      {
+        "x": 90,
+        "z": -4.5,
+        "screen": {
+          "x": 796,
+          "y": 337,
+          "depth": 0.9955161130183665,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -4.5,
+        "screen": {
+          "x": 829,
+          "y": 349,
+          "depth": 0.9954495338686593,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -3,
+        "screen": {
+          "x": 818,
+          "y": 362,
+          "depth": 0.995297621437633,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": -3,
+        "screen": {
+          "x": 852,
+          "y": 376,
+          "depth": 0.9952269327782254,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": -3,
+        "screen": {
+          "x": 888,
+          "y": 387,
+          "depth": 0.9951465369688561,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": -1.5,
+        "screen": {
+          "x": 805,
+          "y": 375,
+          "depth": 0.9951357501981554,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": -1.5,
+        "screen": {
+          "x": 841,
+          "y": 390,
+          "depth": 0.9950606051714591,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": -1.5,
+        "screen": {
+          "x": 877,
+          "y": 401,
+          "depth": 0.9949749569139081,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": 0,
+        "screen": {
+          "x": 793,
+          "y": 389,
+          "depth": 0.9949631258857184,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": 0,
+        "screen": {
+          "x": 829,
+          "y": 404,
+          "depth": 0.9948829558094815,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": 0,
+        "screen": {
+          "x": 867,
+          "y": 417,
+          "depth": 0.9947914750952356,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 90,
+        "z": 1.5,
+        "screen": {
+          "x": 743,
+          "y": 389,
+          "depth": 0.9948637610080666,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 91.5,
+        "z": 1.5,
+        "screen": {
+          "x": 779,
+          "y": 404,
+          "depth": 0.9947785031817382,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 93,
+        "z": 1.5,
+        "screen": {
+          "x": 816,
+          "y": 420,
+          "depth": 0.9946924484314033,
+          "inFrustum": true
+        }
+      },
+      {
+        "x": 94.5,
+        "z": 1.5,
+        "screen": {
+          "x": 855,
+          "y": 433,
+          "depth": 0.9945943647213311,
+          "inFrustum": true
+        }
+      }
+    ],
+    "plants": [
+      {
+        "id": "plant-3",
+        "growth": 47.55790000000101,
+        "alive": true,
+        "water": [
+          {
+            "at": 0,
+            "status": "manual",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 640,
+          "y": 364,
+          "depth": 0.9951444301279799,
+          "inFrustum": true
+        }
+      }
+    ],
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "running": false,
+        "x": 84.67143227026476,
+        "z": 1.4512607217802795,
+        "path": null,
+        "screen": {
+          "x": 623,
+          "y": 359,
+          "depth": 0.9951995483515894,
+          "inFrustum": true
+        }
+      },
+      {
+        "id": "worker-9",
+        "status": "arriving",
+        "running": false,
+        "x": 86.6653604587445,
+        "z": 1.1482932823617396,
+        "path": [
+          {
+            "x": 88,
+            "z": 1
+          },
+          {
+            "x": 91,
+            "z": 1
+          },
+          {
+            "x": 90.52596081874209,
+            "z": -1.4182126314316967
+          }
+        ],
+        "screen": {
+          "x": 670,
+          "y": 366,
+          "depth": 0.995112583322215,
+          "inFrustum": true
+        }
+      }
+    ],
+    "delivered": 0
+  }
+}
