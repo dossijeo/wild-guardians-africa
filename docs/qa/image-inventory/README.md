@@ -6,10 +6,12 @@ El paquete contiene 225 entradas de imagen: 162 archivos independientes y 63 im�
 
 La auditoría conserva dimensiones, alpha, canales, espacio de color, perfil ICC, orientación, páginas y hashes. Sigue las referencias de materiales GLTF, incluyendo EXT_texture_webp y extensiones de materiales; reconoce normales y mapas de datos aunque compartan imagen con color. También incluye los atlas de props de cada bioma y las texturas de suelo secundarias de los charcos de Manglares.
 
-107 imágenes distribuidas siguen sin clasificación de uso. Se conservan sus orígenes en los labs para revisarlas; no se presupone que sean color por tener extensión WebP. 172 entradas requieren revisión o preservar píxeles, incluidas las desconocidas; no se deben optimizar con pérdida automáticamente. De las imágenes embebidas, 42 tienen usos de normales/datos y 21 solo color.
+65 imágenes distribuidas siguen sin clasificación de uso. Se conservan sus orígenes en los labs para revisarlas; no se presupone que sean color por tener extensión WebP. 130 entradas requieren revisión o preservar píxeles, incluidas las desconocidas; no se deben optimizar con pérdida automáticamente. De las imágenes embebidas, 42 tienen usos de normales/datos y 21 solo color.
 
 [Inventario](inventory.json) y [seis pruebas de clasificación](tests.txt): GLTF original/WebP, imagen compartida, extensiones, desconocidas, charcos secundarios y atlas nativos de bioma. Todos los casos pasan. El inventario cubre los contenedores GLB y los raster/vectoriales públicos reconocidos; no demuestra aceptación visual, ahorro ni conversiones correctas.
 
 Reproducir: `node tools/audit_image_assets.mjs`; resultado por defecto en `.cache/image-inventory.json`. La pertenencia a distribución depende del build existente y se debe actualizar después de cambiar el paquete.
 
 Siguiente fase: completar usos, deduplicar solicitudes por hash, convertir/optimizar y comparar dimensiones/alpha/píxeles según uso, actualizar referencias relativas y comprobar HUD, menús, biomas, culturas y modelos. La [referencia oficial de Tinify](https://tinify.com/developers/reference/http) documenta compresión/conversión a WebP por HTTPS; la clave se utilizará fuera del repositorio y los logs. No se ha hecho ninguna subida a Tinify con este inventario.
+
+Actualización: los 42 assets del HUD nativo se clasifican por sus referencias explícitas de ASSETS. El inventario sigue siendo de lectura; las primeras subidas reales se documentan por separado en [los pilotos Tinify](../tinify-color-pilot/README.md).

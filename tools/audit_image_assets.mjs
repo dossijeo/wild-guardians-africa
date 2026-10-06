@@ -58,6 +58,13 @@ export function biomeTextureReferences(payload,catalog){
 export async function auditImageAssets(){
  const publicFiles=await walk(resolve(root,'public')),ground=JSON.parse(await readFile(resolve(root,'public/content/ground-materials.json'),'utf8'));
  const knownRoles=groundImageReferences(ground);
+ const hudText=await readFile(resolve(root,'src/ui/native-hud.js'),'utf8');
+ const hudMatch=hudText.match(/const ASSETS=(\{[^\n]+?\});/);
+ if(!hudMatch)throw Error('Native HUD art dictionary requires review');
+ for(const [key,asset] of Object.entries(JSON.parse(hudMatch[1]))){
+  const path=asset.src?.replace(/^\//,'');if(!path||!imageExtension.test(path))continue;
+  const refs=knownRoles.get(path)??[];refs.push({catalog:'src/ui/native-hud.js',field:'ASSETS.'+key,role:'color'});knownRoles.set(path,refs);
+ }
  const resources=JSON.parse(await readFile(resolve(root,'content/manifests/assets.json'),'utf8')).resources;
  const origins=new Map(resources.map(r=>[r.url.replace(/^\//,''),r.origins??[]]));
  for(const file of publicFiles.filter(p=>/biome-[^\\/]+\.json$/.test(p))){

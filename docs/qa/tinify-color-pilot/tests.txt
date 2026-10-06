@@ -1,0 +1,101 @@
+TAP version 13
+# (node:8244) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: exact alpha is checked independently from lossy RGB color changes
+ok 1 - exact alpha is checked independently from lossy RGB color changes
+  ---
+  duration_ms: 98.0197
+  ...
+# Subtest: detects one changed alpha sample even when RGB colors are identical
+ok 2 - detects one changed alpha sample even when RGB colors are identical
+  ---
+  duration_ms: 110.8259
+  ...
+# Subtest: grayscale is normalized explicitly into RGB before alpha comparison
+ok 3 - grayscale is normalized explicitly into RGB before alpha comparison
+  ---
+  duration_ms: 115.1989
+  ...
+# Subtest: changed dimensions produce no invented color/alpha score
+ok 4 - changed dimensions produce no invented color/alpha score
+  ---
+  duration_ms: 83.5789
+  ...
+# (node:30888) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy and WebP texture references preserve normal, packed data and color roles
+ok 5 - legacy and WebP texture references preserve normal, packed data and color roles
+  ---
+  duration_ms: 4.5815
+  ...
+# Subtest: a shared color/normal map is treated as data even when color usage is found first
+ok 6 - a shared color/normal map is treated as data even when color usage is found first
+  ---
+  duration_ms: 0.3961
+  ...
+# Subtest: material extension colors and clearcoat normals are classified through extension nesting
+ok 7 - material extension colors and clearcoat normals are classified through extension nesting
+  ---
+  duration_ms: 0.5721
+  ...
+# Subtest: unreferenced image cannot be automatically sent through lossy color optimization
+ok 8 - unreferenced image cannot be automatically sent through lossy color optimization
+  ---
+  duration_ms: 0.2993
+  ...
+# Subtest: mangrove secondary mud maps retain their data roles and shared files retain both references
+ok 9 - mangrove secondary mud maps retain their data roles and shared files retain both references
+  ---
+  duration_ms: 1.0285
+  ...
+# Subtest: native biome atlas descriptors distinguish base color from normal and metallic roughness
+ok 10 - native biome atlas descriptors distinguish base color from normal and metallic roughness
+  ---
+  duration_ms: 0.5125
+  ...
+# (node:39532) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: converts once, publishes no credential/location and reuses the verified disk result across clients
+ok 11 - converts once, publishes no credential/location and reuses the verified disk result across clients
+  ---
+  duration_ms: 1174.8636
+  ...
+# Subtest: simultaneous requests for identical bytes share one upload and one output
+ok 12 - simultaneous requests for identical bytes share one upload and one output
+  ---
+  duration_ms: 708.6618
+  ...
+# Subtest: already WebP requests download optimization without an unnecessary conversion operation
+ok 13 - already WebP requests download optimization without an unnecessary conversion operation
+  ---
+  duration_ms: 744.9967
+  ...
+# Subtest: failed output resumes the known upload and never exposes provider error bodies or the secret
+ok 14 - failed output resumes the known upload and never exposes provider error bodies or the secret
+  ---
+  duration_ms: 715.8027
+  ...
+# Subtest: rejects hostile upload locations without sending an authenticated request to another host
+ok 15 - rejects hostile upload locations without sending an authenticated request to another host
+  ---
+  duration_ms: 349.0299
+  ...
+# Subtest: rejects corrupted disk outputs and non-WebP provider output
+ok 16 - rejects corrupted disk outputs and non-WebP provider output
+  ---
+  duration_ms: 1678.5427
+  ...
+# Subtest: network exception text cannot echo the authorization value
+ok 17 - network exception text cannot echo the authorization value
+  ---
+  duration_ms: 322.9945
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7270.7251
