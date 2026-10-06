@@ -18,6 +18,6 @@ output += helpers + geometry + '\n' + normals + '\n' + desert + '\n' + color + '
 output += 'export const TERRAIN_SOURCE_SHA256=' + json.dumps(hashlib.sha256(source.encode()).hexdigest()) + ';\n'
 output += 'export function buildGroundData(field,b,cx,cz){const bo=chunkBounds(cx,cz),g=new Geometry(),wire={line(){}};\n' + recipe
 output += '\n smoothTerrainLighting(field,g.v,bo.centerX,bo.centerZ);\n if(field.desert)desertSmoothNormals(field,g.v,bo.centerX,bo.centerZ);\n return new Float32Array(g.v);\n}\n'
-output += 'export {Geometry,desertSmoothNormals};\n'
+output += 'export {Geometry,desertSmoothNormals,groundColor};\n'
 output = '\n'.join(line.rstrip() for line in output.split('\n'))
 (root / 'src/rendering/terrain-source.js').write_bytes(output.encode('utf-8'))

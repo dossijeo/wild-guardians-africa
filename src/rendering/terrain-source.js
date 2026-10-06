@@ -64,4 +64,4 @@ export function buildGroundData(field,b,cx,cz){const bo=chunkBounds(cx,cz),g=new
  if(field.desert)desertSmoothNormals(field,g.v,bo.centerX,bo.centerZ);
  return new Float32Array(g.v);
 }
-export {Geometry,desertSmoothNormals};
+export {Geometry,desertSmoothNormals,groundColor};

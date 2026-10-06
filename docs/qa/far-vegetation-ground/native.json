@@ -1,0 +1,81 @@
+{
+  "procedural": true,
+  "ground": {
+    "proxy": true,
+    "step": 4,
+    "vertices": 14641,
+    "triangles": 28800,
+    "buildMs": 375.0999999642372,
+    "maxTreeHeightError": 0.07055399179244937,
+    "meanTreeHeightError": 0.014971073391140042
+  },
+  "populationSize": 112,
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": true,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "mediodía",
+  "nightAmount": 0,
+  "materialType": "MeshStandardMaterial",
+  "night": false,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    0,
+    29.485351025518227,
+    100
+  ],
+  "firstTree": {
+    "id": "0:-10:-10",
+    "slot": 0,
+    "x": -125.06641101329687,
+    "z": -131.23078768546281,
+    "y": 11.737313984149235,
+    "yaw": 3.832559550060221,
+    "scale": 1.1023588601103984,
+    "sx": 1.146420220244541,
+    "sy": 1.114179830405689,
+    "sz": 1.038035494534225,
+    "tint": 0.989136151727289,
+    "radius": 4.356396836929256,
+    "priority": 0.9216813880484551,
+    "origin": {
+      "x": -124.1766457822267,
+      "y": 11.737313984149235,
+      "z": -130.24750282868743
+    },
+    "distance": 262.88644761072504,
+    "atlas": {
+      "first": 3,
+      "second": 4,
+      "blend": 0.7515168144538436,
+      "nearest": 4
+    },
+    "right": {
+      "x": 0.8795842835833932,
+      "y": 0,
+      "z": -0.4757430904102434
+    },
+    "impostorVisibility": 1
+  },
+  "drawCalls": 2,
+  "triangles": 29024,
+  "modelCount": 0,
+  "impostorCount": 112,
+  "selection": {
+    "selectionScans": 2,
+    "matrixUploads": 2
+  },
+  "webglError": 0,
+  "errors": []
+}

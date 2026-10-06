@@ -1,0 +1,153 @@
+{
+  "benchmark": {
+    "aborted": false,
+    "viewport": [
+      1280,
+      720
+    ],
+    "camera": [
+      0,
+      29.485351025518227,
+      100
+    ],
+    "warmupFrames": 45,
+    "measuredFrames": 180,
+    "stages": [
+      {
+        "proxy": 0,
+        "gpuMedianMs": 0.783515,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 226,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.3999999761581421
+      },
+      {
+        "proxy": 1,
+        "gpuMedianMs": 1.0954165,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 29024,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.30000001192092896
+      },
+      {
+        "proxy": 1,
+        "gpuMedianMs": 1.0311715000000001,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 29024,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.30000001192092896
+      },
+      {
+        "proxy": 0,
+        "gpuMedianMs": 0.8216140000000001,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 226,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.30000001192092896
+      },
+      {
+        "proxy": 0,
+        "gpuMedianMs": 0.893463,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 226,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.2999999523162842
+      },
+      {
+        "proxy": 1,
+        "gpuMedianMs": 1.000208,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 29024,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.30000001192092896
+      },
+      {
+        "proxy": 1,
+        "gpuMedianMs": 1.162239,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 29024,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.2999999523162842
+      },
+      {
+        "proxy": 0,
+        "gpuMedianMs": 0.785989,
+        "sampleCount": 180,
+        "disjoint": 0,
+        "pending": 0,
+        "webglError": 0,
+        "triangles": 226,
+        "drawCalls": 2,
+        "selection": {
+          "selectionScans": 2,
+          "matrixUploads": 2
+        },
+        "cpuUpdateMedianMs": 0.0,
+        "cpuRenderMedianMs": 0.30000001192092896
+      }
+    ]
+  },
+  "sourceHashes": {
+    "tools/experiments/far-ground-data.js": "4d3a2b5da25a85c93b0ed6803faa10a23e582683127c04de563cc4a401424ca7",
+    "tests/far-ground-data.test.js": "1efda0faad035ae6eed44a0810c5982493086e5aa7ef32cea1076d294097afb9",
+    "tests/browser/far-vegetation-transition.html": "b364ff01142687dcb3188620ed3d9e808c26c1583ca2ccbacb198c318199e2cd",
+    "src/rendering/terrain-source.js": "65342c7cd1294539a841d825b0e41b01387d3b80d9f22dbe6945ed4eb2b4b21e",
+    "tools/prepare_terrain_renderer.py": "922bebfd8b8a855c623375200c99320358fcec0ca41a012fe483914fda628300"
+  }
+}

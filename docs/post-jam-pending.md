@@ -197,3 +197,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Primera consulta de árboles procedurales exactos](qa/far-vegetation-procedural/README.md): Sabana/acacia, mismos IDs/alturas/giros/escalas de los chunks, sin generar geometría ni vegetación pequeña; anclaje y escala anisotrópica en visor. Igualdad completa de generación normal en seis biomas, 73+15 pruebas, build/paquete y render nativo. Pendiente terreno, bruma, streaming/chunks tardíos y móvil; sigue fuera de gameplay.
+
+
+[Relieve lejano simplificado experimental](qa/far-vegetation-ground/README.md): campo de altura/paleta originales, 28.800 triángulos y error máximo 7,1 cm en 112 bases; ocho pruebas/build/paquete correctos. Comparación nativa muestra coste GPU adicional y generación inicial síncrona de 352,5 ms. Pendientes streaming acotado, iluminación/bruma, agua y transición integrada; continúa fuera del gameplay.
