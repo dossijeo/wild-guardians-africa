@@ -18,7 +18,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  ${hasNormals?'varying vec2 vFarRotation;varying vec3 vFarScale;':''}
  ${toon?'varying vec3 vFarWorld,vFarRight,vFarFacing;varying float vRelativeHeight;':''}
  #include <fog_pars_vertex>
- void main(){vec2 delta=cameraPosition.xz-aTreeBase.xz;float d=length(delta);vec2 dir=d>.0001?delta/d:vec2(0.,1.);vec3 right=vec3(dir.y,0.,-dir.x);float relativeAngle=atan(dir.x,dir.y)-aTreeYaw;vec2 projectedRight=vec2(cos(relativeAngle)*aTreeScale.x,sin(relativeAngle)*aTreeScale.z);float widthScale=length(projectedRight);vec3 world=aTreeBase+right*(uv.x-.5)*uSize.x*widthScale+vec3(0.,uv.y*uSize.y*aTreeScale.y,0.);vUv=uv;${rotationViews>1?'vPrelitRotation=mod(aTreeYaw+6.28318530718,6.28318530718)*8./6.28318530718;':''}${hasNormals?'vFarRotation=vec2(cos(aTreeYaw),sin(aTreeYaw));vFarScale=aTreeScale;':''}float density=1.-(1.-uDensityMinimum)*smoothstep(uDensityRange.x,uDensityRange.y,d);vDensityFade=mix(1.,clamp((density+uDensityBand-aTreeRank)/uDensityBand,0.,1.),uDensityEnabled);${toon?`vFarWorld=world;vFarRight=right;vFarFacing=vec3(dir.x,0.,dir.y);vRelativeHeight=clamp(uv.y*${metadata.impostorHeight}/${metadata.sourceBounds.max[1]-metadata.sourceBounds.min[1]},0.,1.);`:''}float angle=mod(atan(projectedRight.y,projectedRight.x)+6.28318530718,6.28318530718);vView=angle*8./6.28318530718;vMix=1.-uReady*aTreeReady*(1.-smoothstep(uStart,uEnd,d));vec4 mvPosition=viewMatrix*vec4(world,1.);gl_Position=projectionMatrix*mvPosition;
+ void main(){vec2 delta=cameraPosition.xz-aTreeBase.xz;float d=length(delta);vec2 dir=d>.0001?delta/d:vec2(0.,1.);vec3 right=vec3(dir.y,0.,-dir.x);float relativeAngle=atan(dir.x,dir.y)-aTreeYaw;vec2 projectedRight=vec2(cos(relativeAngle)*aTreeScale.x,sin(relativeAngle)*aTreeScale.z);float widthScale=length(projectedRight);vec3 world=aTreeBase+right*(uv.x-.5)*uSize.x*widthScale+vec3(0.,uv.y*uSize.y*aTreeScale.y,0.);vUv=uv;${rotationViews>1?'vPrelitRotation=mod(aTreeYaw+6.28318530718,6.28318530718)*8./6.28318530718;':''}${hasNormals?'vFarRotation=vec2(cos(aTreeYaw),sin(aTreeYaw));vFarScale=aTreeScale;':''}float density=1.-(1.-uDensityMinimum)*smoothstep(uDensityRange.x,uDensityRange.y,d);vDensityFade=mix(1.,clamp((density+uDensityBand-aTreeRank)/uDensityBand,0.,1.),uDensityEnabled)*step(0.,aTreeReady);${toon?`vFarWorld=world;vFarRight=right;vFarFacing=vec3(dir.x,0.,dir.y);vRelativeHeight=clamp(uv.y*${metadata.impostorHeight}/${metadata.sourceBounds.max[1]-metadata.sourceBounds.min[1]},0.,1.);`:''}float angle=mod(atan(projectedRight.y,projectedRight.x)+6.28318530718,6.28318530718);vView=angle*8./6.28318530718;vMix=1.-uReady*aTreeReady*(1.-smoothstep(uStart,uEnd,d));vec4 mvPosition=viewMatrix*vec4(world,1.);gl_Position=projectionMatrix*mvPosition;
  #include <fog_vertex>
  }`,fragmentShader:`uniform sampler2D uAtlas;uniform float uBlend;uniform vec3 uLighting;varying vec2 vUv;varying float vView,vMix,vDensityFade;
  ${coverageThreshold}
@@ -45,11 +45,22 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  modelMaterial.onBeforeCompile=(shader,renderer)=>{originalCompile.call(modelMaterial,shader,renderer);shader.uniforms.uStart=uniforms.uStart;shader.uniforms.uEnd=uniforms.uEnd;shader.uniforms.uReady=uniforms.uReady;shader.vertexShader='attribute vec3 aTreeBase;attribute float aTreeReady;uniform float uStart,uEnd,uReady;varying float vMix;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvMix=1.-uReady*aTreeReady*(1.-smoothstep(uStart,uEnd,length(cameraPosition.xz-aTreeBase.xz)));');shader.fragmentShader='varying float vMix;\n'+coverageThreshold+'\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(coverageThreshold(gl_FragCoord.xy)>=1.-vMix)discard;');};
  if(toon)toon.material(modelMaterial);
  const models=new THREE.InstancedMesh(modelGeometry,modelMaterial,trees.length);models.frustumCulled=false;models.castShadow=false;models.count=0;
- const selection=new NearTreeSelection(trees),dummy=new THREE.Object3D();let matrixUploads=0,readinessRevision=0,packedRevision=-1,readinessUploads=0;const indicesById=new Map(trees.map((tree,index)=>[tree.id,index]));
- function setTreeReadiness(id,value){
-  if(!Number.isFinite(value)||value<0||value>1)throw Error('Invalid tree readiness');const index=indicesById.get(id);if(index===undefined)return false;const attribute=geometry.attributes.aTreeReady;
-  if(attribute.getX(index)===Math.fround(value))return false;attribute.setX(index,value);attribute.addUpdateRange(index,1);attribute.needsUpdate=true;readinessRevision++;return true;
+ const selection=new NearTreeSelection(trees),dummy=new THREE.Object3D();let matrixUploads=0,readinessRevision=0,packedRevision=-1,readinessUploads=0;const indicesById=new Map(trees.map((tree,index)=>[tree.id,index]));const treeReadiness=new Float32Array(trees.length).fill(1),treeEnabled=new Uint8Array(trees.length).fill(1);
+ function writeTreeState(index){
+  const attribute=geometry.attributes.aTreeReady,value=treeEnabled[index]?treeReadiness[index]:-1;
+  if(attribute.getX(index)===value)return;attribute.setX(index,value);attribute.addUpdateRange(index,1);attribute.needsUpdate=true;readinessRevision++;
  }
+ function setTreeReadiness(id,value){
+  if(!Number.isFinite(value)||value<0||value>1)throw Error('Invalid tree readiness');const index=indicesById.get(id);if(index===undefined||treeReadiness[index]===Math.fround(value))return false;
+  treeReadiness[index]=value;writeTreeState(index);return true;
+ }
+ function setTreeEnabled(id,enabled){
+  if(typeof enabled!=='boolean')throw Error('Invalid tree enabled state');const index=indicesById.get(id);if(index===undefined||!!treeEnabled[index]===enabled)return false;
+  treeEnabled[index]=enabled?1:0;writeTreeState(index);return true;
+ }
+ function treeState(id){const index=indicesById.get(id);return index===undefined?null:{ready:treeReadiness[index],enabled:!!treeEnabled[index]};}
+ function snapshotTreeState(){const state=new Map();for(const [id,index] of indicesById)if(!treeEnabled[index]||treeReadiness[index]!==1)state.set(id,{ready:treeReadiness[index],enabled:!!treeEnabled[index]});return state;}
+ function restoreTreeState(state){for(const [id,value] of state){setTreeReadiness(id,value.ready);setTreeEnabled(id,value.enabled);}}
  function update(camera){
   const selected=selection.update(camera.position.x,camera.position.z,uniforms.uEnd.value,uniforms.uReady.value>0);if(selected){
    for(const [slot,index] of selection.indices.entries()){const t=trees[index];dummy.position.copy(t.origin??modelOrigin(t,metadata.localBase,t.yaw,t.scale));dummy.rotation.y=t.yaw;dummy.scale.set(t.sx??t.scale,t.sy??t.scale,t.sz??t.scale);dummy.updateMatrix();models.setMatrixAt(slot,dummy.matrix);modelGeometry.attributes.aTreeBase.setXYZ(slot,t.x,t.y,t.z);}
@@ -60,5 +71,5 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  }
  function stats(){return {selectionScans:selection.scans,matrixUploads,readinessRevision,readinessUploads};}
  function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry.dispose();modelMaterial.dispose();models.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
- return {impostors,models,uniforms,update,setTreeReadiness,stats,dispose};
+ return {impostors,models,uniforms,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
 }

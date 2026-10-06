@@ -10,5 +10,11 @@ test('independent tree readiness preserves neighbours and follows packed slots a
  for(const value of [.25,.5,.75,1]){p.setTreeReadiness('c',value);p.update(camera);assert.equal(p.models.geometry.attributes.aTreeReady.getX(1),value);assert.equal(p.models.geometry.attributes.aTreeReady.getX(0),1);assert.equal(lodMix(25,40,60,value),1-value);}
  p.setTreeReadiness('c',0);camera.position.set(110,10,0);p.update(camera);assert.equal(p.models.count,1);assert.equal(p.models.geometry.attributes.aTreeReady.getX(0),1);
  const revision=p.stats().readinessRevision;assert.equal(p.setTreeReadiness('missing',0),false);for(const invalid of [-1,2,NaN,Infinity])assert.throws(()=>p.setTreeReadiness('a',invalid),/Invalid/);assert.equal(p.stats().readinessRevision,revision);
+
+ p.setTreeReadiness('c',.5);assert.equal(p.setTreeEnabled('c',false),true);assert.equal(p.impostors.geometry.attributes.aTreeReady.getX(2),-1);assert.deepEqual(p.treeState('c'),{ready:.5,enabled:false});
+ p.setTreeReadiness('c',.75);assert.equal(p.impostors.geometry.attributes.aTreeReady.getX(2),-1);assert.equal(p.treeState('c').ready,.75);
+ const replacementTrees=[trees[2],trees[1],{...trees[0],id:'new'}],replacement=createFarImpostorPrototype(source,new THREE.Texture(),metadata,replacementTrees);replacement.restoreTreeState(p.snapshotTreeState());
+ assert.deepEqual(replacement.treeState('c'),{ready:.75,enabled:false});assert.equal(replacement.impostors.geometry.attributes.aTreeReady.getX(0),-1);assert.deepEqual(replacement.treeState('new'),{ready:1,enabled:true});
+ assert.equal(replacement.setTreeEnabled('c',true),true);assert.equal(replacement.impostors.geometry.attributes.aTreeReady.getX(0),.75);assert.equal(replacement.treeState('missing'),null);assert.throws(()=>replacement.setTreeEnabled('c',0),/Invalid/);replacement.dispose();
  p.dispose();source.geometry.dispose();source.material.dispose();
 });
