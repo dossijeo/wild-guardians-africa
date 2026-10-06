@@ -7,16 +7,17 @@ import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {Assets,json} from '../../src/rendering/assets.js';
 const params=new URLSearchParams(location.search),bakeMode=params.get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
+const bakedLod=Number(params.get('lod')??0);if(!Number.isInteger(bakedLod)||bakedLod<0||bakedLod>2)throw Error('Invalid atlas LOD');
 const rotationViews=prelitBake&&params.get('rotations')==='8'?8:1,cameraViews=prelitBake&&params.get('views')==='16'?16:8,viewResolution=params.get('resolution')==='128'?128:256,atlasWidth=cameraViews*viewResolution,atlasHeight=rotationViews*viewResolution;
 let renderer,mesh,material,scene,metadata,prototypes=[];
 try{
- const pack=await json('/content/biome-savanna.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(0,1)}),source=levels[0][0],geometry=source.geometry,position=geometry.getAttribute('position'),box=geometry.boundingBox,height=box.max.y-box.min.y;
+ const pack=await json('/content/biome-savanna.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(0,1)}),source=levels[0][bakedLod],geometry=source.geometry,frameGeometry=levels[0][0].geometry,position=frameGeometry.getAttribute('position'),box=frameGeometry.boundingBox,height=box.max.y-box.min.y;
  prototypes=levels;
  const low=[];for(let i=0;i<position.count;i++)if(position.getY(i)<=box.min.y+height*.015)low.push([position.getX(i),position.getZ(i)]);
  const base=[(Math.min(...low.map(p=>p[0]))+Math.max(...low.map(p=>p[0])))/2,box.min.y,(Math.min(...low.map(p=>p[1]))+Math.max(...low.map(p=>p[1])))/2];
  let halfWidth=0;for(let view=0;view<8;view++){const angle=view*Math.PI/4,c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<position.count;i++)halfWidth=Math.max(halfWidth,Math.abs((position.getX(i)-base[0])*c-(position.getZ(i)-base[2])*s));}
  const width=halfWidth*2*1.08,frameHeight=height*1.04;
- metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},sourceVertices:position.count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
+ metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:0,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},bakedLod,framingLod:0,sourceVertices:geometry.getAttribute('position').count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(viewResolution,viewResolution);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
  material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
  if(normalBake||prelitBake){
