@@ -1,0 +1,231 @@
+{
+  "scope": "Experimental exact wetland-mask cache, outside runtime. Native Mangrove/Mapungubwe first day, eight paid crops/two paid workers, 2000 steps each. CPU only; no GPU/mobile/RAM measurement. Seed-scoped 4096-entry cache, FIFO eviction. Two warmup pairs and eight alternating process pairs; complete serialized-state trajectory hash equality.",
+  "medians": {
+    "original": {
+      "totalMs": 1704.5194499999998,
+      "maxTickMs": 89.94255000000004,
+      "calls": 77244,
+      "computations": 77244,
+      "evictions": 0,
+      "peakEntries": 0
+    },
+    "cached": {
+      "totalMs": 1876.44235,
+      "maxTickMs": 108.66829999999999,
+      "calls": 77244,
+      "computations": 58835,
+      "evictions": 54739,
+      "peakEntries": 4096
+    }
+  },
+  "samples": [
+    {
+      "original": {
+        "cached": false,
+        "totalMs": 1705.2478999999998,
+        "maxTickMs": 87.9905,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "cached": {
+        "cached": true,
+        "totalMs": 1809.0592000000001,
+        "maxTickMs": 96.43079999999998,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "cached": {
+        "cached": true,
+        "totalMs": 1771.8993,
+        "maxTickMs": 93.17180000000008,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "original": {
+        "cached": false,
+        "totalMs": 1703.791,
+        "maxTickMs": 84.07220000000007,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "original": {
+        "cached": false,
+        "totalMs": 1787.1555999999998,
+        "maxTickMs": 101.1662,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "cached": {
+        "cached": true,
+        "totalMs": 1906.2093,
+        "maxTickMs": 110.26509999999996,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "cached": {
+        "cached": true,
+        "totalMs": 1857.7862,
+        "maxTickMs": 116.78309999999999,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "original": {
+        "cached": false,
+        "totalMs": 1781.721,
+        "maxTickMs": 91.89460000000008,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "original": {
+        "cached": false,
+        "totalMs": 1869.4891,
+        "maxTickMs": 96.13520000000005,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "cached": {
+        "cached": true,
+        "totalMs": 1954.9960999999998,
+        "maxTickMs": 107.07150000000001,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "cached": {
+        "cached": true,
+        "totalMs": 1821.1272000000001,
+        "maxTickMs": 114.0702,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "original": {
+        "cached": false,
+        "totalMs": 1659.7496,
+        "maxTickMs": 86.1450000000001,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "original": {
+        "cached": false,
+        "totalMs": 1616.5761,
+        "maxTickMs": 86.15499999999997,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "cached": {
+        "cached": true,
+        "totalMs": 1998.2316999999998,
+        "maxTickMs": 128.32809999999995,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    },
+    {
+      "cached": {
+        "cached": true,
+        "totalMs": 1895.0985,
+        "maxTickMs": 105.87569999999994,
+        "calls": 77244,
+        "computations": 58835,
+        "evictions": 54739,
+        "peakEntries": 4096,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      },
+      "original": {
+        "cached": false,
+        "totalMs": 1631.9339,
+        "maxTickMs": 92.79859999999996,
+        "calls": 77244,
+        "computations": 77244,
+        "evictions": 0,
+        "peakEntries": 0,
+        "searches": 25,
+        "steps": 2000,
+        "trajectorySha256": "09ed3fb139a6611096a4d7a798701ff487605a86a0aaf0e26c044979f82bfbac"
+      }
+    }
+  ]
+}
