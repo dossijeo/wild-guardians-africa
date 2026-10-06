@@ -18,6 +18,13 @@ test('failed preloads can retry, and a disposed pool does not create a rig after
  let finish;const pool=new AnimalPreload({model:()=>new Promise(resolve=>{finish=resolve;})},()=>({url:'animal.glb'}));
  const pending=pool.warm('rhino');pool.dispose();finish(gltf);assert.equal((await pending).spare,null);assert.equal((await pool.spares()).length,0);
 });
+test('concurrent animals consume the reserve once and get distinct rigs with shared assets',async()=>{
+ const gltf=source();let downloads=0;const pool=new AnimalPreload({model:async()=>{downloads++;return gltf;}},()=>({url:'animal.glb'}));
+ const entry=await pool.warm('warthog'),spare=entry.spare,rigs=await Promise.all(Array.from({length:4},()=>pool.take('warthog')));
+ assert.equal(downloads,1);assert.equal(rigs.filter(r=>r===spare).length,1);assert.equal(new Set(rigs.map(r=>r.model)).size,4);assert.equal(new Set(rigs.map(r=>r.mixer)).size,4);
+ for(const rig of rigs){assert.equal(rig.clips,entry.clips);assert.equal(rig.model.children[0].geometry,gltf.scene.children[0].geometry);assert.equal(rig.model.children[0].material,gltf.scene.children[0].material);releaseActorRig(rig);}
+ assert.equal(entry.spare,null);pool.dispose();
+});
 test('leaving actors release private bone textures once while retaining shared model resources',()=>{
  const model=new Group(),bone=new Bone(),skeleton=new Skeleton([bone]),geometry=new BoxGeometry(),material=new MeshStandardMaterial();
  model.add(bone);for(let i=0;i<2;i++){const mesh=new SkinnedMesh(geometry,material);model.add(mesh);mesh.bind(skeleton);}
