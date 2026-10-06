@@ -191,7 +191,7 @@ export class WorldScene {
   whenChunksReady(){return this.chunkStream?.whenIdle()??Promise.resolve({cancelled:false});}
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
-    const requested=nativeNearRegion(this.camera.position,this.quality);
+    const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
     this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz);if(material.userData.biomeGround)material.userData.biomeGround.uGroundMapped.value=0;});
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
