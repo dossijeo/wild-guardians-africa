@@ -2,11 +2,18 @@ import {Vector4} from 'three';
 
 // Prepare only the currently packed native color root. Keep it detached from
 // normal rendering until this completes; unloaded levels need their own pass.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000}={}){
- const gl=renderer.getContext(),begin=performance.now();let sync;
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1}={}){
+ if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
+ const unique=[...new Set(textures)],gl=renderer.getContext(),begin=performance.now();let sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
  try{
-  check();for(const texture of new Set(textures))renderer.initTexture(texture);
+  for(let first=0;first<unique.length;first+=texturesPerFrame){
+   check();const start=performance.now(),end=Math.min(unique.length,first+texturesPerFrame);
+   for(let i=first;i<end;i++){check();renderer.initTexture(unique[i]);}
+   textureBatches++;maxTextureBatchCount=Math.max(maxTextureBatchCount,end-first);maxTextureBatchMs=Math.max(maxTextureBatchMs,performance.now()-start);
+   if(end<unique.length)await nextFrame();
+  }
+  check();
   await renderer.compileAsync(root,camera,scene);check();
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
@@ -17,6 +24,6 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
   if(gl.getError()!==gl.NO_ERROR)throw Error('Native GPU preparation error');
-  return {elapsedMs:performance.now()-begin,textures:new Set(textures).size};
+  return {elapsedMs:performance.now()-begin,textures:unique.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs};
  }finally{if(sync)gl.deleteSync(sync);}
 }

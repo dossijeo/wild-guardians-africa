@@ -27,3 +27,15 @@ test('cancellation during fence polling releases the sync and leaves rendering r
  await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cancelled:()=>cancelled,nextFrame:async()=>{cancelled=true;}}),/cancelled/);
  f.restored();assert.equal(f.root.parent,f.parent);assert.equal(f.calls.at(-1),'delete');
 });
+test('texture preparation deduplicates and yields between bounded batches before compilation',async()=>{
+ const f=fixture(),a={},b={},c={},d={},e={};
+ const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[a,b,c,a,d,e],{texturesPerFrame:2,nextFrame:async()=>f.calls.push('frame')});
+ assert.equal(result.textures,5);assert.equal(result.textureBatches,3);assert.equal(result.maxTextureBatchCount,2);
+ assert.deepEqual(f.calls.slice(0,8),['texture','texture','frame','texture','texture','frame','texture','compile']);
+});
+test('cancelling between texture batches prevents remaining uploads and compilation',async()=>{
+ const f=fixture();let cancelled=false;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[{},{}],{cancelled:()=>cancelled,nextFrame:async()=>{cancelled=true;}}),/cancelled/);
+ assert.deepEqual(f.calls,['texture']);f.restored();
+ for(const texturesPerFrame of [0,-1,1.5,Infinity])await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{texturesPerFrame}),/budget/);
+});
