@@ -233,3 +233,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Límites de origen desde materiales únicos](qa/origin-material-registry/README.md): eliminado un recorrido completo de escena por frame, con metadatos vivos y fallback. Doce pruebas/build y dos escenas nativas Manglares/Gran Cañón conservan referencias y restauración. Sin medición de frametime/GPU ni aceptación móvil; sigue pendiente el coste integrado de render.
+
+
+[Contraejemplo alpha de Volcanes](qa/alpha-volcano-counterexample/README.md): tres secuencias nativas reproducen tres píxeles de profundidad distintos en B2 frente a B1/nativo. Candidato desactivado; corregido resumen QA para considerar todos los pares (22 pruebas). Pendiente atribuir causa, no se declara equivalencia ni mejora de rendimiento.
