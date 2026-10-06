@@ -12,4 +12,10 @@ La restauración del viewport, scissor y autoClear ocurre sincrónicamente, incl
 
 Veintiún tests focalizados pasan para la preparación, rigs, primers, cancelación de carga, restauración de estado y espera no bloqueante. La prueba aislada de worker/texturas sigue separada: no se incorpora al cargador del juego en este cambio.
 
-Pendiente: repetición en otros biomas y móvil físico; comparación cuantitativa antes/después del primer ataque; presupuesto de espera bajo carga; primera instancia adicional de una especie después de consumir su rig de reserva. No se declara la optimización de precarga completa por estas dos pruebas.
+## Repetición en los seis biomas
+
+`six-biomes-summary.json` reúne Gran Cañón, Volcanes, Manglares, Sabana, Gran Río y Desierto en el commit de runtime 28f2cc9. Todos pasan: cinco rigs preparados por bioma, siete descargas antes y después de aparecer, ningún programa nuevo de animales y ninguna entrada de consola de aviso/error. Cada bioma incluye informe crudo y captura.
+
+Esta ampliación usa seed 712, cultura Mapungubwe y calidad media. La suite completa local seguía ejecutándose en paralelo, por lo que los tiempos no se presentan como una comparación de rendimiento aislada. El resultado prueba la primera aparición controlada en estos seis mundos, no las combinaciones de todas las culturas/calidades ni campañas naturales. El primer contacto simulado se comprueba únicamente con el facóquero en Gran Cañón.
+
+Pendiente: móvil físico; otras culturas/calidades; comparación cuantitativa antes/después del primer ataque; presupuesto de espera bajo carga; primera instancia adicional de una especie después de consumir su rig de reserva. No se declara la optimización de precarga completa por estas pruebas.
