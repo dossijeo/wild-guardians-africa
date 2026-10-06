@@ -260,7 +260,7 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 ## Tarjetas de eventos y voces del espíritu (pedido el 7 de octubre de 2026)
 
-Estado: delegado a un subagente en rama independiente; pendiente implementación, pruebas y PR. Revisar y mergear en main antes de hacer pull; no publicar en itch.io hasta autorización posterior.
+Estado: implementado en rama `codex/spirit-voices-event-cards`; 54 voces originales, tarjetas recuperadas y 112 pruebas dirigidas correctas. [Evidencia y límites](qa/spirit-voices-event-cards/README.md). PR pendiente de revisión/merge. Revisar y mergear en main antes de hacer pull; no publicar en itch.io hasta autorización posterior.
 
 - Recuperar las tarjetas de evento tipo toast con icono y barra de auto hide del lab `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Respetar el área segura del HUD y los layouts móviles; mantener cierre manual y evitar duplicar eventos ya explicados por el tutorial.
 - Integrar las voces del nuevo `Wild_Guardians_Spirit_Voice_Lab_V9_UnityStereo.html`, adjunto del usuario, con los textos ES/EN ya integrados desde `docs/reference/Wild_Guardians_Espiritu_ES_EN_v2.json`. Conservar la correspondencia texto/idioma/audio original del lab.

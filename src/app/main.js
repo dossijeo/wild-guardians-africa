@@ -232,7 +232,7 @@ function updateUI(force=false) {
   contextPanel();const activeTutorial=narrator();
   if(commandFeedback&&tutorialCoversNotice(state,{text:commandFeedback},activeTutorial))commandFeedback='';
   eventCards??=new EventCards(document.querySelector('#notices'),ASSETS);
-  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed',maxVisible:stage.classList.contains('short')?2:3}),noticeLifetime,now/1000);
+  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden,maxVisible:stage.classList.contains('short')?2:3}),noticeLifetime,now/1000);
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
   document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
@@ -387,7 +387,7 @@ function frame(now) {
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
     try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
-    catch(e){Game.pause(state,'runtime-error');error(e.message);console.error(e);}
+    catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
 }
