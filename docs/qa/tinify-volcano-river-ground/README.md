@@ -1,0 +1,15 @@
+# Ground color compression and corrected scene evidence
+
+Volcanoes: 1,453,569 → 141,524 bytes (1,312,045 saved). Grand River: 649,370 → 263,712 bytes (385,658 saved). Combined encoded reduction: 1,697,703 bytes. Tinify pilot reports retain their historical acceptedForRuntime:false; this follow-up accepts the color variants within the checks below. Dimensions and decoded alpha remain exact; RGB compression is lossy. Original resources remain in Git but are excluded from the shipped package. No UV, sampling, normal map, shader, geometry or texture size changes.
+
+The former ground comparator used resolved JSON, and Vite also rewrites public catalog URLs. Consequently its historical Desert/Canyon scene captures could show the compressed texture in both slots. Those captures do not establish original/candidate equivalence. This comparator finds the canonical source in the manifest, loads that binary directly and rejects a source or candidate URL that does not match the recorded path. New scene evidence supersedes those old captures; independent pixel/hash/native image checks retain their original scope. The failed first attempt is archived separately and is not acceptance evidence.
+
+Repeated native WorldScene views: Volcanoes (case=16), Grand River (6), Canyon (21), Desert (26), Mapungubwe, seed 712, medium quality, 1600×900 world render. Four frames per biome: actual original and candidate in day/night, with identical camera within each set and zero reported shader errors. Browser proof records actual distinct image URLs and warning/error logs. No evident deformation or material discontinuity in these views; this does not establish all cameras, cultures, mobile or Windows acceptance. Source-only fixture: tests/browser/african-toon.html, “Suelo Tinify / original (QA)” and “Día / noche”. The packaged build deliberately excludes originals.
+
+Screenshots are lossless WebP conversions of native PNG captures: all 16 decoded RGBA buffers compared equal after conversion; hashes recorded in screenshots.json. The source PNG captures are retained locally under .cache/tinify-ground-screenshots. This conversion does not alter the visual evidence.
+
+Validation: 68 directed image/policy/cache/data-map/role tests pass; build succeeds (211 modules, 12.95 s, existing bundle-size warning). Packaged resource verification passes: 587 files, 379,637,798 bytes, 859 relative references, 20 runtime GLBs. Compared with the preceding 381,332,978-byte package, net reduction is 1,695,180 bytes. This is encoded storage evidence, not GPU RAM or frametime evidence.
+
+Canyon browser logs contain one ANGLE compiler warning about potentially uninitialized f_volumeFineNoise/f_environment4; no shader error is reported. Other three scene logs contain no warning/error. The warning is retained for shader investigation and is not claimed fixed by image compression.
+
+Packaged native browser QA: all 32 variants decode at /nested/itch/audio-qa/tests/browser/image-runtime.html on port 5193. SHA-256 and dimensions match, console warning/error log is empty, and the server has no root fallback. See nested-images.json.

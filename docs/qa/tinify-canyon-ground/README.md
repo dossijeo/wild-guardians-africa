@@ -1,5 +1,7 @@
 # Suelo de Gran Cañón: Tinify WebP integrado
 
+Corrección de evidencia (2026-10-07): las comparaciones históricas de suelo de esta carpeta no acreditan original frente a candidato: el resolvedor podía sustituir ambos por la variante runtime. Véase ../tinify-volcano-river-ground/README.md y sus nuevas capturas con URLs originales/candidatas distintas. Los informes de píxeles, hashes y carga de variantes conservan su alcance.
+
 El albedo del terreno original del lab pasa de 1.753.093 bytes JPEG a 225.226 bytes WebP: 1.527.867 bytes menos, conservando 1024 × 1024 píxeles y alpha opaco exacto. Se procesó con Tinify mediante la credencial privada; el informe público no contiene credencial ni URL privada del proveedor. La compresión modifica RGB (error absoluto medio 5,275/255); no es una conversión sin pérdida.
 
 La variante se distribuye por el alias relativo de `image-runtime.json`. El original permanece en Git para comparar y se excluye del paquete. No cambia el UV, la escala, los filtros, shaders, normales, mapas de datos ni número de muestras por fragmento.

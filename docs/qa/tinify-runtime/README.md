@@ -1,5 +1,7 @@
 # First three Tinify images in runtime
 
+Corrección de evidencia (2026-10-07): las comparaciones históricas de suelo de esta carpeta no acreditan original frente a candidato: el resolvedor podía sustituir ambos por la variante runtime. Véase ../tinify-volcano-river-ground/README.md y sus nuevas capturas con URLs originales/candidatas distintas. Los informes de píxeles, hashes y carga de variantes conservan su alcance.
+
 The crop thumbnail, native HUD coin and desert base-color now resolve through content/manifests/image-runtime.json. Original sources remain in public for provenance; the build excludes them and ships one content-hashed WebP per image. Shader data maps and embedded GLB textures are unchanged. No extra sampler, shader calculation, resizing or texture-coordinate change is introduced.
 
 12 directed tests pass: three hash/dimension/exact-alpha and relative-context image cases, six role cases and three existing web-package cases. The complete package verifier passes: 586 files, 391,703,905 bytes, 859 relative links, 20 runtime GLBs. Against the preceding measured 393,994,577-byte package, net reduction is 2,290,672 bytes after alias/manifest/bundle overhead. Encoded image reduction alone is 2,294,345 bytes. This is not GPU-memory or frametime evidence.

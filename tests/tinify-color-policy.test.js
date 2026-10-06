@@ -43,3 +43,9 @@ test('stale hashes and metadata are rejected even with a valid color classificat
  await assert.rejects(requireTinifyColorInput({...item, width: 5}, bytes), /metadata/);
  await assert.rejects(requireTinifyColorInput({...item, format: 'png'}, bytes), /format/);
 });
+
+test('classified SVG remains a conversion review instead of a stale-inventory format failure',async()=>{
+ const bytes=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="3"><rect width="4" height="3" fill="green"/></svg>');
+ const item=await record(bytes);assert.equal(item.format,'svg');
+ await assert.rejects(requireTinifyColorInput(item,bytes),/separate conversion review/);
+});

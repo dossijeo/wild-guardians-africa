@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {gltfImageRoles,groundImageReferences,biomeTextureReferences,nativeCatalogImageReferences} from '../tools/audit_image_assets.mjs';
+import {gltfImageRoles,groundImageReferences,biomeTextureReferences,nativeCatalogImageReferences,displayImageReferences} from '../tools/audit_image_assets.mjs';
 
 test('legacy and WebP texture references preserve normal, packed data and color roles',()=>{
  const json={textures:[{source:0},{extensions:{EXT_texture_webp:{source:1}}},{source:2}],materials:[{pbrMetallicRoughness:{baseColorTexture:{index:0},metallicRoughnessTexture:{index:2}},normalTexture:{index:1},occlusionTexture:{index:2}}]};
@@ -44,4 +44,25 @@ test('wall art and VFX thumbnails are color, but sprite atlas stays conservative
 test('menu ground alpha mask cannot be mistaken for display-color art',()=>{
  const menuHtml='<script id="skydata">/assets/sky.webp</script><script type="x" id="terrainmaskdata">/assets/mask.png</script><script id="cleandata">/assets/clean.webp</script>';
  const refs=nativeCatalogImageReferences({menuHtml});assert.equal(refs.find(r=>r.path==='assets/mask.png').reference.role,'data');assert.equal(refs.find(r=>r.path==='assets/clean.webp').reference.role,'color');
+});
+
+test('explicit HTML images and hand/guardian constants are display color, not arbitrary script URLs',()=>{
+ const refs=displayImageReferences({catalog:'menu/index.html',markup:`<img alt="logo" src='/assets/logo.webp'><img data-src="/assets/lazy.webp"><script>const normal='/assets/normal.webp'</script><img src="https://example.com/no.webp">`,handsText:'export const HAND_ASSETS = {"point":"/assets/point.webp","tap":"/assets/tap.webp"};',guardianText:"export const GUARDIAN_SPRITE='/assets/guardian.webp';"});
+ assert.deepEqual(refs.map(r=>r.path),['assets/logo.webp','assets/point.webp','assets/tap.webp','assets/guardian.webp']);
+ assert.ok(refs.every(r=>r.reference.role==='color'));assert.equal(refs[0].reference.catalog,'menu/index.html');
+});
+test('display art extraction fails closed when generated dictionaries change shape',()=>{
+ assert.throws(()=>displayImageReferences({handsText:'export const HAND_ASSETS = makeAssets();'}),/requires review/);
+ assert.throws(()=>displayImageReferences({guardianText:'export const GUARDIAN_SPRITE = new URL(url);'}),/requires review/);
+});
+
+test('reference thumbnails are color while WebP support payload stays protected data',()=>{
+ const refs=displayImageReferences({destructionText:`const BUILDINGS=[{preview:'/assets/photo.jpg',previewKind:'reference',normal:'/assets/n.webp'}];`,supportProbeText:`detectSupport(){if(!this.isSupported){const image=new Image();image.src='/assets/probe.webp';image.onload=function(){resolve(image.height===1);};}}`});
+ assert.deepEqual(refs.map(r=>[r.path,r.reference.role]),[['assets/photo.jpg','color'],['assets/probe.webp','data']]);
+ assert.throws(()=>displayImageReferences({destructionText:'const BUILDINGS=[];'}),/requires review/);
+ assert.throws(()=>displayImageReferences({supportProbeText:'const url="/assets/other.webp"'}),/requires review/);
+});
+test('comments and script/style strings cannot make arbitrary textures eligible as HTML display art',()=>{
+ const refs=displayImageReferences({catalog:'test.html',markup:`<!-- <img src='/assets/comment.webp'> --><script>const html="<img src='/assets/script.webp'>";</script><style>x{content:"<img src='/assets/style.webp'>"}</style><IMG SRC="/assets/actual.webp">`});
+ assert.deepEqual(refs.map(r=>r.path),['assets/actual.webp']);
 });
