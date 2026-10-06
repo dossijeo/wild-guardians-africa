@@ -1,0 +1,221 @@
+{
+  "base": "b3b0602 (rendering unchanged from 82d2d52)",
+  "scope": "Controlled native desktop IAB, seed 712, Mapungubwe, medium; inclusive CPU observer, not GPU/FPS/RAM or natural night/mobile coverage",
+  "sources": {
+    "scene-final.txt": "src/rendering/scene.js",
+    "program-bindings.txt": "src/rendering/program-bindings.js",
+    "cpu-observer-final.txt": "tests/browser/render-cpu-calls.js",
+    "fixture-final.txt": "tests/browser/animal-preload.html"
+  },
+  "comparisons": {
+    "canyon-domain": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    },
+    "savanna-domain": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    },
+    "group-domain": {
+      "steps": true,
+      "heldFrames": true,
+      "spawnSpecies": true,
+      "simulatedSeconds": true,
+      "centerHpBefore": true,
+      "centerHpAfter": true,
+      "logicalHits": true,
+      "actors": true,
+      "attackEffects": true,
+      "contactRequirement": true,
+      "firstHit": true,
+      "firstStructureHit": true,
+      "renderedActors": true
+    }
+  },
+  "runs": {
+    "canyon": {
+      "ok": true,
+      "loadingMs": 5133.399999976158,
+      "steps": 399,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 115.10000002384186,
+      "observedPeakStep": 48,
+      "observedPeakCpuMs": 115.10000002384186,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "reflectionLogCalls": null,
+      "bindings": null,
+      "reflectionLogInstrumentation": false
+    },
+    "reflection": {
+      "ok": true,
+      "loadingMs": 4787,
+      "steps": 399,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 145.30000001192093,
+      "observedPeakStep": 48,
+      "observedPeakCpuMs": 145.30000001192093,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "reflectionLogCalls": 15,
+      "bindings": null
+    },
+    "bindings": {
+      "ok": true,
+      "loadingMs": 4996,
+      "steps": 399,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 24.100000023841858,
+      "observedPeakStep": 48,
+      "observedPeakCpuMs": 21.599999964237213,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "reflectionLogCalls": 0,
+      "bindings": {
+        "initialized": 27,
+        "unsupported": 0
+      }
+    },
+    "bindings-savanna": {
+      "ok": true,
+      "loadingMs": 5385.800000011921,
+      "steps": 523,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        600
+      ],
+      "maxCpuMs": 234.5,
+      "observedPeakStep": 77,
+      "observedPeakCpuMs": 234.5,
+      "compileCalls": 4,
+      "linkCalls": 2,
+      "reflectionLogCalls": 6,
+      "bindings": {
+        "initialized": 25,
+        "unsupported": 0
+      }
+    },
+    "bindings-group": {
+      "ok": true,
+      "loadingMs": 4931.400000035763,
+      "steps": 364,
+      "heldFrames": 0,
+      "hp": [
+        600,
+        580
+      ],
+      "maxCpuMs": 39,
+      "observedPeakStep": 48,
+      "observedPeakCpuMs": 7.600000023841858,
+      "compileCalls": 0,
+      "linkCalls": 0,
+      "reflectionLogCalls": 0,
+      "bindings": {
+        "initialized": 26,
+        "unsupported": 0
+      }
+    }
+  },
+  "sha256": {
+    "bindings-group.json.gz": {
+      "compressed": "ba73b3bc28790e1768c928f0cf2262f99f0b20b154de8ddacbe2a9b4298759f5",
+      "raw": "e19cfcbef23e697b16b12fb83ddb2139639b653dd31c3eea9fb0fba0bf442f2c"
+    },
+    "bindings-group.png": {
+      "file": "773618a45a610813a7ed2d86984e181321624975d5452f1688bdc3f6917fc5c6"
+    },
+    "bindings-savanna.json.gz": {
+      "compressed": "38ca068197a33bf08d323b9db3e9711583786e469accac4b00389d7d0523f864",
+      "raw": "629009d41dc2ec10ad255988c7400f95cc1e4e60d3adf10f85c0bc9ee73717c7"
+    },
+    "bindings-savanna.png": {
+      "file": "49084644bc440ca9dfbf1f303fa008667ced49a7e109aa3925cfbd616ff08ad6"
+    },
+    "bindings.json.gz": {
+      "compressed": "d542fea7a6d7856448abaa8d3c3f02c1cf0b610e1aacf8be579a5473c8a1f699",
+      "raw": "ffbba89e1d56467f55ed68c1c53abb1d9311d2b46584f20559425747f4b12aad"
+    },
+    "bindings.png": {
+      "file": "211891710421592b6befd8a003fa9f83923026e8e3e2c9c63e1ee44491f39272"
+    },
+    "canyon.json.gz": {
+      "compressed": "366b900dd52b6d8894d1fd189ba011f697bfd909ab1c3e7639af8e24e060daa0",
+      "raw": "6aa13f680f4b19ed78ebdd11e60597efb247688777f90fb63723db78a4d735f8"
+    },
+    "canyon.png": {
+      "file": "737f8986040d664c6d296612391c012c83c94c6b4709efd18acd1675a3911229"
+    },
+    "cpu-observer-final.txt": {
+      "file": "6b54abaecff82e8961b73dba229e8bf9106f19ef98a2e5f621c34dd438483704"
+    },
+    "cpu-observer-v1.txt": {
+      "file": "4b51e705e299b4144c903a38f99a6ea4a783804f6aad89bf9438e3d7fd869691"
+    },
+    "cpu-observer-v2.txt": {
+      "file": "6b54abaecff82e8961b73dba229e8bf9106f19ef98a2e5f621c34dd438483704"
+    },
+    "fixture-final.txt": {
+      "file": "634d33ce811af43881e80e33be85e3e2922bc9c85adbe252ca814df3911d2d7b"
+    },
+    "fixture-v1.txt": {
+      "file": "01b0cffe8e8ed9e21448b665f3ab3ea965820a2cdcbe93c440eac06aeda9ea75"
+    },
+    "program-bindings.txt": {
+      "file": "abc5e1b19eb0517639e2f9cb7f53c98039d764dceae0c1c00e2b9f61b38eb580"
+    },
+    "reflection.json.gz": {
+      "compressed": "d6a943b7cd5586f2c22827871fe204514d78301fc7b1a5d8618aa005fef3ad7c",
+      "raw": "9efe1e8648e0a333ef0181b2d9cd060862926f5a75b5b9aadab33b1d15d6ae9d"
+    },
+    "scene-final.txt": {
+      "file": "8cc5cb02bdc35c8d5796e05e511c0004d9393acc75cb622a9419c23f2436a27d"
+    }
+  },
+  "installedThree": {
+    "node_modules/three/src/renderers/webgl/WebGLProgram.js": "d1ce381d6bfd7a632e708b1cd49b3332c16c5d0165a9532ab20788f6fafcc7fa",
+    "node_modules/three/src/renderers/WebGLRenderer.js": "35cea4871231c3fddc3517dcd03fc876bdb8f9e73f1a77042b35e3de0498c4cd",
+    "package.json": "096199e8b8fcb55022c750c7c8ebc65cae92192e8fb497e252fe970f7764334a"
+  },
+  "verification": {
+    "targetedTests": 74,
+    "failures": 0,
+    "durationMs": 3899.0674,
+    "buildModules": 206,
+    "buildSeconds": 9.25
+  }
+}

@@ -165,3 +165,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 - Verificar cobertura de las sustituciones en ambos idiomas, ausencia de mensajes antiguos o mezclas de idioma y legibilidad de los nuevos textos en móvil y escritorio. Si una clave ha cambiado entretanto, revisar su equivalencia de contexto en lugar de omitirla silenciosamente.
 
 Estado: registrado y pendiente de integración POST-JAM. JSON original guardado sin modificaciones (18.628 bytes; SHA-256 `c006ad919e24f4031425cd86b32ad4985240498388140f9e9c39b3d115ac0a6f`).
+
+
+[Diagnósticos de shader adelantados a la carga](qa/first-dust-cpu/README.md): 74 pruebas y build; Gran Cañón conserva contacto de cultivo y daño al centro sin nuevas compilaciones/consultas de logs. Pico CPU del recorrido del facóquero 145,3→24,1 ms máximo en las muestras, sin acreditar FPS/GPU/móvil general. Sabana sigue alcanzando 234,5 ms al compilar dos variantes de agua paintUniforms en profundidad/color. Pendientes localizar su disparador, nuevos residentes/calidades/luz y coste de carga/memoria/aceptación amplia.
