@@ -1,0 +1,1180 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "warthog",
+    "hyena",
+    "lion",
+    "rhino"
+  ],
+  "copies": 4,
+  "plannedReserves": false,
+  "savedReserves": false,
+  "savedActive": true,
+  "savedRaidUnchangedAtLoad": true,
+  "loadReservedRigs": 4,
+  "repeatedRigResources": {
+    "lion": {
+      "copies": 4,
+      "sparesUsed": 4,
+      "uniqueModels": 4,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "0f4d1a3d-f321-4e41-9ec6-bd7bb4af3230",
+      "fromSpare": true,
+      "skeletons": [
+        "9488e298-a914-4bba-a420-8a753134de21"
+      ],
+      "boneTextures": [
+        "83cc8641-542a-4a36-a692-a93635b3fc47"
+      ],
+      "geometry": [
+        "65f53853-3a55-47e9-874b-e86473611336"
+      ],
+      "materials": [
+        "73896d7f-3b89-41bd-9981-3e08af708b9c"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "71732b3a-c233-4955-b63b-6bc05ede8888",
+      "fromSpare": true,
+      "skeletons": [
+        "e638d128-2858-4005-8313-54606037d985"
+      ],
+      "boneTextures": [
+        "45a473f8-41bf-4416-9d01-1b3fdfd3b189"
+      ],
+      "geometry": [
+        "65f53853-3a55-47e9-874b-e86473611336"
+      ],
+      "materials": [
+        "73896d7f-3b89-41bd-9981-3e08af708b9c"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "1c145a2d-83c5-49c5-a872-cdfe05073e77",
+      "fromSpare": true,
+      "skeletons": [
+        "c790c8b2-3638-4255-8fe8-855673558c65"
+      ],
+      "boneTextures": [
+        "51065cbb-5500-41de-b1da-153cc3267ba9"
+      ],
+      "geometry": [
+        "65f53853-3a55-47e9-874b-e86473611336"
+      ],
+      "materials": [
+        "73896d7f-3b89-41bd-9981-3e08af708b9c"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "88c31717-790b-4b63-8487-f81075d08ff2",
+      "fromSpare": true,
+      "skeletons": [
+        "53062c42-8cd4-4217-af4e-cf7b9a30a41c"
+      ],
+      "boneTextures": [
+        "b233cb0a-ad7f-4a00-97f6-791e5f433af4"
+      ],
+      "geometry": [
+        "65f53853-3a55-47e9-874b-e86473611336"
+      ],
+      "materials": [
+        "73896d7f-3b89-41bd-9981-3e08af708b9c"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "spareModelIds": [
+      "efee2e83-45dc-4c2b-9183-22103a145ec2",
+      "bf08dac9-f04e-43f6-8539-3eccf6caa75c",
+      "5aa81d05-60cf-498e-8da2-0656aafdb176",
+      "0f4d1a3d-f321-4e41-9ec6-bd7bb4af3230",
+      "71732b3a-c233-4955-b63b-6bc05ede8888",
+      "1c145a2d-83c5-49c5-a872-cdfe05073e77",
+      "88c31717-790b-4b63-8487-f81075d08ff2",
+      "33883978-de62-4b26-8136-de87804c19d2"
+    ],
+    "animalPrograms": [
+      1
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "newPrograms": [],
+    "animalPrograms": [
+      1
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 7,
+    "animalPrograms": [
+      1
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 32.10000002384186,
+  "loadingMs": 5021.099999964237,
+  "errors": [],
+  "timing": {
+    "settle": [
+      {
+        "cpuMs": 17.30000001192093,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 13.100000023841858,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 14.600000023841858,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 10.599999964237213,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 11.5,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 15.400000035762787,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 12.399999976158142,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 12.399999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 12.600000023841858,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.600000023841858,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.299999952316284,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.600000023841858,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.400000035762787,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.199999988079071,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.100000023841858,
+        "intervalMs": 33.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.600000023841858,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "baseline": [
+      {
+        "cpuMs": 10.900000035762787,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 49.80000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.100000023841858,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.299999952316284,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.599999964237213,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.399999976158142,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.399999976158142,
+        "intervalMs": 33.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.399999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.399999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.699999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.600000023841858,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.400000035762787,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "appearance": [
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.300000011920929,
+        "intervalMs": 49.69999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.699999988079071,
+        "intervalMs": 17,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 20.100000023841858,
+        "intervalMs": 66.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 11.300000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 10.199999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 10.800000011920929,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 50,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.699999988079071,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.599999964237213,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.899999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.599999964237213,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.699999988079071,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.899999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.199999988079071,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.299999952316284,
+        "intervalMs": 33.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.899999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.799999952316284,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.399999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.200000047683716,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.100000023841858,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.699999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.099999964237213,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.799999952316284,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.599999964237213,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.600000023841858,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.199999988079071,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.100000023841858,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.400000035762787,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "takes": [],
+    "creations": [],
+    "firstRenderCalls": [
+      {
+        "cpuMs": 21.799999952316284,
+        "horizonCpuMs": 0.19999998807907104,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "horizonCpuMs": 0.10000002384185791,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      }
+    ],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "spawnMs": 0,
+    "focusMs": 0.30000001192092896,
+    "summary": {
+      "baseline": {
+        "frames": 24,
+        "cpuMs": {
+          "median": 9.100000023841858,
+          "p95": 9.699999988079071,
+          "maximum": 10.900000035762787
+        },
+        "intervalMs": {
+          "median": 33.30000000000018,
+          "p95": 33.5,
+          "maximum": 49.899999999999636
+        }
+      },
+      "appearance": {
+        "frames": 60,
+        "cpuMs": {
+          "median": 9,
+          "p95": 11.099999964237213,
+          "maximum": 20.100000023841858
+        },
+        "intervalMs": {
+          "median": 33.20000000000073,
+          "p95": 49.69999999999982,
+          "maximum": 66.20000000000073
+        }
+      }
+    },
+    "horizonWorker": {
+      "available": true,
+      "disabled": false,
+      "pending": false,
+      "region": {
+        "cx": -1,
+        "cz": 2,
+        "range": 2,
+        "bounds": [
+          -168,
+          -24,
+          72,
+          216
+        ]
+      }
+    },
+    "newProgramUsers": [],
+    "motion": {
+      "steps": 364,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "lion",
+        "lion",
+        "lion",
+        "lion"
+      ],
+      "simulatedSeconds": 18.2,
+      "centerHpBefore": 600,
+      "centerHpAfter": 560,
+      "logicalHits": [
+        {
+          "id": "event-12",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-10",
+          "targetId": "structure-2",
+          "species": "lion",
+          "presentation": {
+            "elapsed": 418.30000000000416,
+            "animal": {
+              "x": -30.82637044431257,
+              "z": 34.04443679249471,
+              "heading": 3.1007830505520517
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "lion",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -28,
+            40.69679438962876
+          ],
+          "renderY": 3.7677449790019595
+        },
+        {
+          "species": "lion",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -30.82637044431257,
+            34.04443679249471
+          ],
+          "renderY": 3.706827483458772
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -34.88459543678033,
+            67.85891007139165
+          ]
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -26.484595436780328,
+            67.85891007139165
+          ]
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "lion",
+          "sprites": 18
+        }
+      ],
+      "contactRequirement": "selected-species-paid-crop-or-center",
+      "firstHit": {
+        "id": "event-12",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-10",
+        "targetId": "structure-2",
+        "species": "lion",
+        "presentation": {
+          "elapsed": 418.30000000000416,
+          "animal": {
+            "x": -30.82637044431257,
+            "z": 34.04443679249471,
+            "heading": 3.1007830505520517
+          },
+          "target": {
+            "x": -30.684595436780327,
+            "z": 30.572305649518967,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-11",
+        "type": "StructureHit",
+        "animalId": "animal-7",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 560,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 35.59999996423721,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "id": "animal-6",
+          "species": "lion",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -28.43507717379932,
+              3.78974497883654,
+              40.222976723349376
+            ],
+            "max": [
+              -27.534455408482955,
+              5.640420410107148,
+              41.015684650681266
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "animal-7",
+          "species": "lion",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -31.28092261960337,
+              3.7288274842558513,
+              33.658935671700654
+            ],
+            "max": [
+              -30.365047282030257,
+              5.583889036726707,
+              34.3387007878904
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "lion",
+    "lion",
+    "lion",
+    "lion"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "inspection": {
+    "scope": "Close camera after first hit; no subsequent simulation ticks",
+    "logicalStateUnchanged": true,
+    "eye": [
+      -28,
+      6.970143573937015,
+      48.09364248889292
+    ],
+    "target": [
+      -28,
+      3.9227449790019597,
+      40.69679438962876
+    ]
+  }
+}

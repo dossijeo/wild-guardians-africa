@@ -1,0 +1,1180 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "warthog",
+    "lion",
+    "buffalo",
+    "rhino",
+    "hyena"
+  ],
+  "copies": 4,
+  "plannedReserves": false,
+  "savedReserves": false,
+  "savedActive": true,
+  "savedRaidUnchangedAtLoad": true,
+  "loadReservedRigs": 4,
+  "repeatedRigResources": {
+    "rhino": {
+      "copies": 4,
+      "sparesUsed": 4,
+      "uniqueModels": 4,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "44906701-e8a8-4f1f-9dcc-be3703e26c24",
+      "fromSpare": true,
+      "skeletons": [
+        "161ba7b6-9a11-4169-a5f2-29303763a079"
+      ],
+      "boneTextures": [
+        "9a2a4ebe-76d8-44f1-92cd-0881d9069353"
+      ],
+      "geometry": [
+        "b359dbac-0a70-4261-844b-d28e81ba2328"
+      ],
+      "materials": [
+        "d4a72de7-6ec3-43ac-bbf2-a000a3d4429b"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "294291b0-a0f0-4359-9765-eebfeeba6695",
+      "fromSpare": true,
+      "skeletons": [
+        "cc002b76-cca6-400e-bd64-fe533ba7a3f6"
+      ],
+      "boneTextures": [
+        "4cd7e1dc-3062-45ab-a7c9-813595589063"
+      ],
+      "geometry": [
+        "b359dbac-0a70-4261-844b-d28e81ba2328"
+      ],
+      "materials": [
+        "d4a72de7-6ec3-43ac-bbf2-a000a3d4429b"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "613f0254-b40e-4565-8a39-59e00eb677d5",
+      "fromSpare": true,
+      "skeletons": [
+        "c866d6b1-a498-4040-9343-722810847635"
+      ],
+      "boneTextures": [
+        "95a3d3a5-e9d1-4c28-a015-7f55fb4a77d3"
+      ],
+      "geometry": [
+        "b359dbac-0a70-4261-844b-d28e81ba2328"
+      ],
+      "materials": [
+        "d4a72de7-6ec3-43ac-bbf2-a000a3d4429b"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "0d8a19d7-e465-4bc7-b1c9-8cb859bbbbed",
+      "fromSpare": true,
+      "skeletons": [
+        "ec3aad8d-5ae8-4526-b185-3d0f17ec621a"
+      ],
+      "boneTextures": [
+        "b760170d-e1fe-44b8-a136-981052cb4a08"
+      ],
+      "geometry": [
+        "b359dbac-0a70-4261-844b-d28e81ba2328"
+      ],
+      "materials": [
+        "d4a72de7-6ec3-43ac-bbf2-a000a3d4429b"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "spareModelIds": [
+      "d25217c0-7d15-4555-a625-7f09ce8263f5",
+      "15efd57f-02ad-4c4f-b087-aa6201b90d91",
+      "b5b00352-b092-4f66-a5ab-8370132590d1",
+      "92c3a36d-ac79-4ac8-ba91-68a26ec12c80",
+      "44906701-e8a8-4f1f-9dcc-be3703e26c24",
+      "294291b0-a0f0-4359-9765-eebfeeba6695",
+      "613f0254-b40e-4565-8a39-59e00eb677d5",
+      "0d8a19d7-e465-4bc7-b1c9-8cb859bbbbed"
+    ],
+    "animalPrograms": [
+      0
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "newPrograms": [],
+    "animalPrograms": [
+      0
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 7,
+    "animalPrograms": [
+      0
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 29.19999998807907,
+  "loadingMs": 4913.699999988079,
+  "errors": [],
+  "timing": {
+    "settle": [
+      {
+        "cpuMs": 21.30000001192093,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 18.5,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 12,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 12.599999964237213,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 11.900000035762787,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 13.400000035762787,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.899999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.899999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.100000023841858,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.600000023841858,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.099999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.699999988079071,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.900000035762787,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "baseline": [
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.900000035762787,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 49.80000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.700000047683716,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11.299999952316284,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.100000023841858,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.600000023841858,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.200000047683716,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.199999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.900000035762787,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "appearance": [
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.700000047683716,
+        "intervalMs": 16.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.100000023841858,
+        "intervalMs": 66.70000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 22.19999998807907,
+        "intervalMs": 66.5,
+        "actorsReady": 4,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 11.800000011920929,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.899999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.899999976158142,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.200000047683716,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.799999952316284,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.099999964237213,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.399999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.599999964237213,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 11,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.399999976158142,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.300000011920929,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.900000035762787,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.399999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.900000035762787,
+        "intervalMs": 16.799999999999272,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.599999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.100000023841858,
+        "intervalMs": 49.79999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.299999952316284,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 16.599999999998545,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.400000035762787,
+        "intervalMs": 33.70000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.100000023841858,
+        "intervalMs": 16.200000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.699999988079071,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.800000011920929,
+        "intervalMs": 33.400000000001455,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.199999988079071,
+        "intervalMs": 16.599999999998545,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.100000023841858,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.399999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.299999952316284,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "takes": [],
+    "creations": [],
+    "firstRenderCalls": [
+      {
+        "cpuMs": 19.099999964237213,
+        "horizonCpuMs": 0.19999998807907104,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      },
+      {
+        "cpuMs": 8.5,
+        "horizonCpuMs": 0,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      }
+    ],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "spawnMs": 0,
+    "focusMs": 0.30000001192092896,
+    "summary": {
+      "baseline": {
+        "frames": 24,
+        "cpuMs": {
+          "median": 8.300000011920929,
+          "p95": 10,
+          "maximum": 11.299999952316284
+        },
+        "intervalMs": {
+          "median": 33.29999999999927,
+          "p95": 33.399999999999636,
+          "maximum": 49.80000000000018
+        }
+      },
+      "appearance": {
+        "frames": 60,
+        "cpuMs": {
+          "median": 9,
+          "p95": 11,
+          "maximum": 22.19999998807907
+        },
+        "intervalMs": {
+          "median": 33.20000000000073,
+          "p95": 33.70000000000073,
+          "maximum": 66.70000000000073
+        }
+      }
+    },
+    "horizonWorker": {
+      "available": true,
+      "disabled": false,
+      "pending": false,
+      "region": {
+        "cx": -1,
+        "cz": 2,
+        "range": 2,
+        "bounds": [
+          -168,
+          -24,
+          72,
+          216
+        ]
+      }
+    },
+    "newProgramUsers": [],
+    "motion": {
+      "steps": 360,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "rhino",
+        "rhino",
+        "rhino",
+        "rhino"
+      ],
+      "simulatedSeconds": 18,
+      "centerHpBefore": 600,
+      "centerHpAfter": 540,
+      "logicalHits": [
+        {
+          "id": "event-12",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-10",
+          "targetId": "structure-2",
+          "species": "rhino",
+          "presentation": {
+            "elapsed": 418.1000000000041,
+            "animal": {
+              "x": -30.93486573072866,
+              "z": 34.74188077947899,
+              "heading": 3.0816416082643197
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "rhino",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -27.404037554318524,
+            39.40403755431853
+          ],
+          "renderY": 3.818409000716905
+        },
+        {
+          "species": "rhino",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -30.93486573072866,
+            34.74188077947899
+          ],
+          "renderY": 3.703382978727772
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -36.984595436780324,
+            68.55891007139165
+          ]
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -24.384595436780327,
+            68.55891007139165
+          ]
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "rhino",
+          "sprites": 53
+        }
+      ],
+      "contactRequirement": "selected-species-paid-crop-or-center",
+      "firstHit": {
+        "id": "event-12",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-10",
+        "targetId": "structure-2",
+        "species": "rhino",
+        "presentation": {
+          "elapsed": 418.1000000000041,
+          "animal": {
+            "x": -30.93486573072866,
+            "z": 34.74188077947899,
+            "heading": 3.0816416082643197
+          },
+          "target": {
+            "x": -30.684595436780327,
+            "z": 30.572305649518967,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-11",
+        "type": "StructureHit",
+        "animalId": "animal-7",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 540,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 51.69999998807907,
+      "medianGameTickMs": 0.20000004768371582,
+      "renderedActors": [
+        {
+          "id": "animal-6",
+          "species": "rhino",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -28.4234444342349,
+              3.8404089986627468,
+              38.77641349367323
+            ],
+            "max": [
+              -26.49394931201227,
+              6.769010227542078,
+              40.300530819745774
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "animal-7",
+          "species": "rhino",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -31.771593297989437,
+              3.725382979181066,
+              33.855977117377364
+            ],
+            "max": [
+              -30.156170682173983,
+              6.666716478177149,
+              35.7544198044744
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "rhino",
+    "rhino",
+    "rhino",
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "inspection": {
+    "scope": "Close camera after first hit; no subsequent simulation ticks",
+    "logicalStateUnchanged": true,
+    "eye": [
+      -27.404037554318524,
+      7.02080759565196,
+      46.80088565358269
+    ],
+    "target": [
+      -27.404037554318524,
+      3.9734090007169054,
+      39.40403755431853
+    ]
+  }
+}
