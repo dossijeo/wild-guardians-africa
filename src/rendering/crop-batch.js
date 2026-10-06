@@ -11,6 +11,8 @@ export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
  // A bounded sample per species and one synchronous pose avoid copying plant
  // state and allocating identical botanical recipes for mature/paused cohorts.
  const stageSamples=Array(8),renderPlant={};
+ // Consumed synchronously by writeValues; no per-plant upload tuple allocation.
+ const instanceValues=[0,0,0,0];
  // Presentation-only metadata; logical entities are never changed. Height caching
  // is opt-in for an immutable terrain identity, not arbitrary ground callbacks.
  let entitySamples=new WeakMap(),terrainIdentity=null;
@@ -223,7 +225,9 @@ function writePose(item,slot,plant){
 }
 function writeBridge(index,plant,part){
  const b=bridges[index],slot=bridgeCounts[index]++;if(slot>=MAX_PLANTS)return;
- writePose(b,slot,plant);writeValues(b.attr,slot*4,[part.t,part.e,plant.seed||0,0]);
+ writePose(b,slot,plant);
+ instanceValues[0]=part.t;instanceValues[1]=part.e;instanceValues[2]=plant.seed||0;instanceValues[3]=0;
+ writeValues(b.attr,slot*4,instanceValues);
 }
 
 function stageSample(crop,growth){
@@ -243,7 +247,9 @@ function stageSample(crop,growth){
 }
 function writeInstance(modelIndex,plant,part){
  const item=models[modelIndex],slot=counts[modelIndex]++;if(slot>=MAX_PLANTS)return;
- writePose(item,slot,plant);writeValues(item.growthAttr,slot*4,[part.sy,part.sr,part.open,plant.seed||0]);
+ writePose(item,slot,plant);
+ instanceValues[0]=part.sy;instanceValues[1]=part.sr;instanceValues[2]=part.open;instanceValues[3]=plant.seed||0;
+ writeValues(item.growthAttr,slot*4,instanceValues);
 }
 
  prepareModels(gltf);prepareBridges(bridgeData);
