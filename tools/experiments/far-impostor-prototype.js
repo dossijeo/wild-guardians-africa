@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
-import {modelOrigin} from './far-impostor-math.js';
+import {modelOrigin,NearTreeSelection} from './far-impostor-math.js';
 export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60}={}){
  const uniforms={uAtlas:{value:texture},uStart:{value:start},uEnd:{value:end},uReady:{value:1},uBlend:{value:1},uSize:{value:new THREE.Vector2(metadata.impostorWidth,metadata.impostorHeight)},uLighting:{value:new THREE.Color(1,1,1)},...THREE.UniformsUtils.clone(THREE.UniformsLib.fog)};
  const attrs=(geometry,count)=>{for(const [name,size] of [['aTreeBase',3],['aTreeYaw',1],['aTreeScale',1]])geometry.setAttribute(name,new THREE.InstancedBufferAttribute(new Float32Array(count*size),size));};
@@ -24,8 +24,16 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  const modelGeometry=source.geometry.clone();attrs(modelGeometry,trees.length);
  const originalColor=source.material.color.clone(),modelMaterial=new THREE.MeshBasicMaterial({map:source.material.map,color:originalColor,alphaTest:source.material.alphaTest,side:source.material.side});
  modelMaterial.onBeforeCompile=shader=>{shader.uniforms.uStart=uniforms.uStart;shader.uniforms.uEnd=uniforms.uEnd;shader.uniforms.uReady=uniforms.uReady;shader.vertexShader='attribute vec3 aTreeBase;uniform float uStart,uEnd,uReady;varying float vMix;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvMix=1.-uReady*(1.-smoothstep(uStart,uEnd,length(cameraPosition.xz-aTreeBase.xz)));');shader.fragmentShader='varying float vMix;\n'+coverageThreshold+'\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(coverageThreshold(gl_FragCoord.xy)>=1.-vMix)discard;');};
- const models=new THREE.InstancedMesh(modelGeometry,modelMaterial,trees.length);models.frustumCulled=false;models.castShadow=false;let key=null;
- function update(camera){const selected=trees.map((t,i)=>[t,i]).filter(([t])=>Math.hypot(t.x-camera.position.x,t.z-camera.position.z)<uniforms.uEnd.value&&uniforms.uReady.value>0),next=selected.map(([,i])=>i).join(',');if(next!==key){key=next;const dummy=new THREE.Object3D();for(const [slot,[t]] of selected.entries()){dummy.position.copy(modelOrigin(t,metadata.localBase,t.yaw,t.scale));dummy.rotation.y=t.yaw;dummy.scale.setScalar(t.scale);dummy.updateMatrix();models.setMatrixAt(slot,dummy.matrix);modelGeometry.attributes.aTreeBase.setXYZ(slot,t.x,t.y,t.z);}models.count=selected.length;models.instanceMatrix.needsUpdate=true;modelGeometry.attributes.aTreeBase.needsUpdate=true;}modelMaterial.color.copy(originalColor).multiply(uniforms.uLighting.value);}
+ const models=new THREE.InstancedMesh(modelGeometry,modelMaterial,trees.length);models.frustumCulled=false;models.castShadow=false;models.count=0;
+ const selection=new NearTreeSelection(trees),dummy=new THREE.Object3D();let matrixUploads=0;
+ function update(camera){
+  if(selection.update(camera.position.x,camera.position.z,uniforms.uEnd.value,uniforms.uReady.value>0)){
+   for(const [slot,index] of selection.indices.entries()){const t=trees[index];dummy.position.copy(modelOrigin(t,metadata.localBase,t.yaw,t.scale));dummy.rotation.y=t.yaw;dummy.scale.setScalar(t.scale);dummy.updateMatrix();models.setMatrixAt(slot,dummy.matrix);modelGeometry.attributes.aTreeBase.setXYZ(slot,t.x,t.y,t.z);}
+   models.count=selection.indices.length;models.instanceMatrix.needsUpdate=true;modelGeometry.attributes.aTreeBase.needsUpdate=true;matrixUploads++;
+  }
+  modelMaterial.color.copy(originalColor).multiply(uniforms.uLighting.value);
+ }
+ function stats(){return {selectionScans:selection.scans,matrixUploads};}
  function dispose(){geometry.dispose();material.dispose();modelGeometry.dispose();modelMaterial.dispose();models.dispose();texture.dispose();}
- return {impostors,models,uniforms,update,dispose};
+ return {impostors,models,uniforms,update,stats,dispose};
 }

@@ -17,3 +17,16 @@ export function billboardRight(camera,base){
  const dx=camera.x-base.x,dz=camera.z-base.z,length=Math.hypot(dx,dz);
  return length?{x:dz/length,y:0,z:-dx/length}:{x:1,y:0,z:0};
 }
+
+// Fixed populations use an explicit revision when tree positions change.
+export class NearTreeSelection {
+ constructor(trees){this.trees=trees;this.indices=[];this.scans=0;this.inputs=null;}
+ update(x,z,end,available,revision=0){
+  const previous=this.inputs;
+  if(previous&&previous.x===x&&previous.z===z&&previous.end===end&&previous.available===available&&previous.revision===revision)return false;
+  this.inputs={x,z,end,available,revision};this.scans++;
+  const oldLength=this.indices.length;let count=0,changed=!!previous&&previous.revision!==revision;
+  if(available)for(let i=0;i<this.trees.length;i++){const t=this.trees[i];if(Math.hypot(t.x-x,t.z-z)>=end)continue;if(this.indices[count]!==i)changed=true;this.indices[count++]=i;}
+  if(count!==oldLength)changed=true;this.indices.length=count;return changed;
+ }
+}

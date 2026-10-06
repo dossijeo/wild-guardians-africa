@@ -142,3 +142,6 @@ Priorizar silueta, tamaño, posición, color, densidad y coherencia atmosférica
 Solo tras validar árboles, estudiar arbustos, vegetación característica, rocas grandes, edificios lejanos, formaciones geológicas, atlas multiespecie, normales, LOD ultralejano o terreno simplificado.
 
 El primer objetivo sigue siendo ocultar visualmente el borde de generación de chunks mediante árboles impostores, sin introducir un coste importante.
+
+
+Avance experimental: [horizonte de mil acacias adicionales medido](qa/far-vegetation-horizon/README.md), ocho lotes nativos, cinco pruebas dirigidas y selección cercana sin reconstrucción con cámara quieta. Coste incremental GPU aproximado de 0,49 ms en este visor; todavía fuera de gameplay, sin acreditar móvil, RAM o integración procedural/iluminación real.

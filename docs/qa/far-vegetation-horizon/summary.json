@@ -1,0 +1,101 @@
+{
+  "baseHead": "d0d44517fa446ac975eb0a0429c0e2e94e4b7544",
+  "viewport": [
+    1280,
+    720
+  ],
+  "warmupFrames": 45,
+  "measuredFramesPerStage": 180,
+  "stages": [
+    {
+      "stage": 1,
+      "count": 8,
+      "angularBlend": true,
+      "gpuMedianMs": 0.634374,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.600000000000364
+    },
+    {
+      "stage": 2,
+      "count": 1008,
+      "angularBlend": true,
+      "gpuMedianMs": 1.099114,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.600000000002183
+    },
+    {
+      "stage": 3,
+      "count": 1008,
+      "angularBlend": false,
+      "gpuMedianMs": 1.0568735,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.600000000002183
+    },
+    {
+      "stage": 4,
+      "count": 8,
+      "angularBlend": false,
+      "gpuMedianMs": 0.6346864999999999,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.600000000002183
+    },
+    {
+      "stage": 5,
+      "count": 8,
+      "angularBlend": false,
+      "gpuMedianMs": 0.636119,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.600000000002183
+    },
+    {
+      "stage": 6,
+      "count": 1008,
+      "angularBlend": false,
+      "gpuMedianMs": 1.2244000000000002,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.599999999998545
+    },
+    {
+      "stage": 7,
+      "count": 1008,
+      "angularBlend": true,
+      "gpuMedianMs": 1.1542185,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.599999999998545
+    },
+    {
+      "stage": 8,
+      "count": 8,
+      "angularBlend": true,
+      "gpuMedianMs": 0.6360669999999999,
+      "cpuRenderMedianMs": 0.19999998807907104,
+      "cpuUpdateMedianMs": 0.0,
+      "rafMedianMs": 16.599999999998545
+    }
+  ],
+  "benchmarkRawSha256": "b5f6e641dd1341c5725f9132c236b84ca885f38f845e4b6eb1b37d503efe1ed1",
+  "backgroundCampaignProcesses": [
+    20608,
+    36076
+  ],
+  "measurementSourceHashes": {
+    "tests/browser/far-vegetation-transition.html": "73fcbee4f2653f2b1cc40cedeb10d32a8394aa059246446f8599ca9c7f710335",
+    "tools/experiments/far-impostor-prototype.js": "45bf4785a3ae939d7f73eab51ac8954c0f62b10d3ebad89c5cee66d867bd6e8f",
+    "tools/experiments/far-impostor-math.js": "82474f7dfbd532e59fa298070dec4b57643dcd3fde33e4b0957803f687268cc3",
+    "tests/far-impostor-math.test.js": "05a44a81fdbc71d2bc6aa2eb03ab411927d4f3d3e59ac1637bb5f0aded31de2b"
+  },
+  "finalSourceHashes": {
+    "tests/browser/far-vegetation-transition.html": "73fcbee4f2653f2b1cc40cedeb10d32a8394aa059246446f8599ca9c7f710335",
+    "tools/experiments/far-impostor-prototype.js": "45bf4785a3ae939d7f73eab51ac8954c0f62b10d3ebad89c5cee66d867bd6e8f",
+    "tools/experiments/far-impostor-math.js": "a1492f8c7492dc8f26baff36f36f59da26420713865cc5be8fc73a49796d04e3",
+    "tests/far-impostor-math.test.js": "9915cf8b85b3a195485bb1cefb69cbda07d439a238bf8ead98b8fb90aad92019"
+  },
+  "postMeasurementChange": "Revision changes now invalidate matrices even when selected IDs stay identical; revision remains zero throughout the recorded native benchmark. Directed test expanded and rerun."
+}
