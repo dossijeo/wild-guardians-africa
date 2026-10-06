@@ -49,7 +49,7 @@ Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-wo
 
 Último lote: [seis atlas de color de props de bioma](qa/tinify-biome-atlases/README.md), doce comparaciones nativas día/noche y 22 variantes cargadas desde ruta anidada. Ahorro neto de paquete: 6.056.158 bytes; 87 imágenes de color y 53 de revisión siguen pendientes. No acredita mejora de RAM/FPS ni aceptación móvil/Tauri.
 
-[Pilotos de los tres atlas de poblados restantes](qa/tinify-remaining-village-pilots/README.md): candidatos reales Mapungubwe/Saheliana/Etíope, 2.090.366 bytes de reducción potencial, hashes/dimensiones/alpha verificados y 53 pruebas dirigidas correctas. **Pendiente comparación nativa antes de integrarlos**; los candidatos no se distribuyen. Preflight actualizado sobre cee494f: 82 imágenes independientes elegibles, 45 de revisión y 35 variantes ya integradas; cero roles de imagen sin clasificar en la distribución. No acredita mejora de RAM/FPS ni aceptación móvil/Tauri.
+[Pilotos de los tres atlas de poblados restantes](qa/tinify-remaining-village-pilots/README.md): candidatos reales Mapungubwe/Saheliana/Etíope, 2.090.366 bytes de reducción potencial, hashes/dimensiones/alpha verificados y 53 pruebas dirigidas correctas. Comparación nativa de doce vistas día/noche completada e integración posterior: 56 pruebas y paquete web correctos, 2.086.563 bytes menos de distribución. Preflight actualizado sobre cee494f: 82 imágenes independientes elegibles, 45 de revisión y 35 variantes ya integradas; cero roles de imagen sin clasificar en la distribución. No acredita mejora de RAM/FPS ni aceptación móvil/Tauri.
 
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 

@@ -50,9 +50,17 @@ let tinifyVillageMaps=null,tinifyVillageEnabled=true;
 document.querySelector('#tinifyVillage').onclick=async()=>{
  const village=world.objects.get(world.state.villages[0].id),materials=new Set();village.traverse(mesh=>{if(mesh.isMesh)materials.add(mesh.material);});
  if(!tinifyVillageMaps){
-  const candidate=[...materials][0].map,candidateUrl=candidate.image.currentSrc||candidate.image.src;
-  const record=imageRuntime.records.find(r=>new URL(candidateUrl,document.URL).pathname==='/'+r.runtime);
-  if(!record)throw Error('Village comparison requires an integrated color variant');
+  const baseline=[...materials][0].map;let candidate=baseline,candidateUrl=candidate.image.currentSrc||candidate.image.src;
+  let record=imageRuntime.records.find(r=>new URL(candidateUrl,document.URL).pathname==='/'+r.runtime);
+  if(new URLSearchParams(location.search).has('village-pilot')&&!record){
+   const directory=new URL('../../docs/qa/tinify-remaining-village-pilots/'+world.state.culture+'/',import.meta.url),response=await fetch(new URL('report.json',directory));
+   if(!response.ok)throw Error('Missing village pilot report');const pilot=await response.json();
+   if(!pilot.structuralChecksPassed||pilot.alphaDifferences!==0||new URL(candidateUrl,document.URL).pathname!=='/'+pilot.sourcePath)throw Error('Pilot does not match the native original colour atlas');
+   candidate=await new THREE.TextureLoader().loadAsync(new URL('candidate.webp',directory).href);candidateUrl=candidate.image.currentSrc||candidate.image.src;
+   for(const key of ['wrapS','wrapT','minFilter','magFilter','anisotropy','generateMipmaps','colorSpace','flipY'])candidate[key]=baseline[key];candidate.needsUpdate=true;qaGroundTextures.push(candidate);
+   record={source:pilot.sourcePath};
+  }
+  if(!record)throw Error('Village comparison requires an integrated color variant or an explicit QA pilot');
   const original=await new THREE.TextureLoader().loadAsync('/'+record.source),originalUrl=original.image.currentSrc||original.image.src;
   if(new URL(originalUrl,document.URL).pathname!=='/'+record.source||originalUrl===candidateUrl)throw Error('QA requires distinct village source and candidate');
   for(const key of ['wrapS','wrapT','minFilter','magFilter','anisotropy','generateMipmaps','colorSpace','flipY'])original[key]=candidate[key];original.needsUpdate=true;qaGroundTextures.push(original);tinifyVillageMaps={candidate,original,originalUrl,candidateUrl};
