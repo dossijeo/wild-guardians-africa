@@ -76,5 +76,5 @@ test('the first seed hint leaves billboard clearance instead of pointing above a
  const nearRoof={...nav,placement:(x,z,radius)=>({valid:Math.hypot(x-center.position[0],z-center.position[2])>=2+radius})};
  assert.equal(nearRoof.placement(center.position[0],center.position[2]+3,.4).valid,true);
  const seed=tutorialHandTarget(s,nearRoof,'plant');
- assert.ok(seed);assert.ok(Math.hypot(seed.position[0]-center.position[0],seed.position[2]-center.position[2])>=3.6);
+ assert.ok(seed);assert.ok(Math.hypot(seed.position[0]-center.position[0],seed.position[2]-center.position[2])>=5.6);
 });

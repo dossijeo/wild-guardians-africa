@@ -7,7 +7,7 @@ export function tutorialHandTarget(state,nav,toolKind=null){
   if(state.tutorial.dismissed?.includes('basic.'+step+':')&&!state.tutorial.guideAfterAuto?.includes('basic.'+step))return null;
   const village=state.villages[0],entry=village.entry??village;
   const center=state.structures.find(s=>s.kind==='center'&&s.status!=='ruined');
-  const target=(kind,p,id)=>({kind,target:id,position:[p.x,nav.field.surface(p.x,p.z)+.025,p.z]});
+  const target=(kind,p,id)=>({kind,target:id,minimumScreenHeight:40,position:[p.x,nav.field.surface(p.x,p.z)+.025,p.z]});
   if(step==='center'){
     if(center)return null;
     if(village.center&&previewCenter(state,village.center,nav).valid)return target('point',village.center,'center-site');
@@ -25,7 +25,7 @@ export function tutorialHandTarget(state,nav,toolKind=null){
     if(seen.has(key))continue;seen.add(key);
     // Keep the native billboard clear of nearby buildings/props. A legal crop
     // can be closer, but its guide must not be lifted onto a neighbouring roof.
-    if(nav.placement(p.x,p.z,1.6).valid&&nav.path(departure,p,.28,null,true))return target('tap',p,'plant-site');
+    if(nav.placement(p.x,p.z,3.6).valid&&nav.path(departure,p,.28,null,true))return target('tap',p,'plant-site');
   }
   return null;
 }

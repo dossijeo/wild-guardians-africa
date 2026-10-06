@@ -1,0 +1,86 @@
+- main:
+  - generic "Wild Guardians Africa world"
+  - img "Sun clock"
+  - generic: 10:50
+  - img "Money"
+  - generic: "655"
+  - generic "0/100 nights survived":
+    - img "Survival"
+    - generic: Day 1
+  - button "Open pause menu"
+  - navigation "Farm actions":
+    - button "Back":
+      - generic: Back
+    - button "Build":
+      - generic: Build
+    - button "Grow crops":
+      - generic: Grow crops
+    - button "Power":
+      - generic: Power
+  - complementary
+  - complementary
+  - dialog "Add workers":
+    - heading "Add workers" [level=2]
+    - paragraph: Shift in progress
+    - generic: Ⅱ
+    - generic: Time paused
+    - paragraph: Hire more people for this work centre. Pay only for the remaining part of their shift, rounded up.
+    - article:
+      - img "Young man"
+      - heading "Young man" [level=3]
+      - strong: "40"
+      - generic: / day
+      - generic: Pace ×1.50
+      - generic: Harvest +20 %
+      - generic: 10 h
+      - generic: 10:50–17:05
+      - button "Hire one fewer young man": −
+      - 'spinbutton "Count: Young man"': "1"
+      - button "Hire one more young man" [active]: +
+    - article:
+      - img "Young woman"
+      - heading "Young woman" [level=3]
+      - strong: "40"
+      - generic: / day
+      - generic: Pace ×1.50
+      - generic: Harvest base
+      - generic: 12 h · +20 %
+      - generic: 10:50–19:05
+      - button "Hire one fewer young woman": −
+      - 'spinbutton "Count: Young woman"': "0"
+      - button "Hire one more young woman": +
+    - article:
+      - img "Older man"
+      - heading "Older man" [level=3]
+      - strong: "30"
+      - generic: / day
+      - generic: Pace ×1.00
+      - generic: Harvest +20 %
+      - generic: 10 h
+      - generic: 10:50–17:05
+      - button "Hire one fewer older man": −
+      - 'spinbutton "Count: Older man"': "0"
+      - button "Hire one more older man": +
+    - article:
+      - img "Older woman"
+      - heading "Older woman" [level=3]
+      - strong: "30"
+      - generic: / day
+      - generic: Pace ×1.00
+      - generic: Harvest base
+      - generic: 12 h · +20 %
+      - generic: 10:50–19:05
+      - button "Hire one fewer older woman": −
+      - 'spinbutton "Count: Older woman"': "0"
+      - button "Hire one more older woman": +
+    - generic "How they work and what you pay"
+    - generic: Available
+    - strong: "655"
+    - generic: Today's cost
+    - strong: "25"
+    - generic: Remaining balance
+    - strong: "630"
+    - status: Wages are charged once, when you confirm.
+    - button "Clear all"
+    - button "Hire and start"
+    - button "Close"
