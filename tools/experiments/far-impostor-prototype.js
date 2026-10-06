@@ -36,7 +36,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  #include <colorspace_fragment>
  #include <fog_fragment>
  }`});
- if(toon)material.toneMapped=false;
+ if(toon||prelitAtlas)material.toneMapped=false;
  const impostors=new THREE.Mesh(geometry,material);impostors.frustumCulled=false;impostors.castShadow=false;
  let modelGeometry,modelMaterial,models,originalColor;
  if(nativeModels){
