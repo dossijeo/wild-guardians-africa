@@ -27,7 +27,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
  }});
  async function region(center){
   const key=center.x+':'+center.z;if(lastRequested===key)return;lastRequested=key;
-  try{const result=await layer.request(key,farRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundHalf:treeHalf,step:8}));if(result)stats.regions++;}
+  try{const result=await layer.request(key,{...farRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundHalf:treeHalf+32,step:8}),treeBase:metadata.localBase});if(result)stats.regions++;}
   catch(error){if(!closed){lastRequested=null;errors.push(String(error));}}
  }
  function schedulePreparation(){

@@ -1,5 +1,6 @@
 // Height-only proxy for the isolated Sabana experiment. No native chunk buffers,
 // water, props or detail textures. Never generated in the gameplay frame loop.
+import {groundCellTriangles,groundTriangleWeights} from './far-ground-contacts.js';
 export function farGroundData(field,bounds,{step=4,color=[.59,.61,.38],colorAt=null,wash=.25}={}){
  if(!(step>0)||!Number.isFinite(step)||![bounds.minX,bounds.maxX,bounds.minZ,bounds.maxZ].every(Number.isFinite)||bounds.maxX<=bounds.minX||bounds.maxZ<=bounds.minZ)throw Error('Invalid far ground bounds/step');
  const nx=Math.ceil((bounds.maxX-bounds.minX)/step),nz=Math.ceil((bounds.maxZ-bounds.minZ)/step),count=(nx+1)*(nz+1);
@@ -19,6 +20,7 @@ export function farGroundHeight(data,x,z){
  const {bounds,nx,nz,positions}=data;
  if(x<bounds.minX||x>bounds.maxX||z<bounds.minZ||z>bounds.maxZ)return null;
  const fx=(x-bounds.minX)/(bounds.maxX-bounds.minX)*nx,fz=(z-bounds.minZ)/(bounds.maxZ-bounds.minZ)*nz,ix=Math.min(nx-1,Math.floor(fx)),iz=Math.min(nz-1,Math.floor(fz)),u=fx-ix,v=fz-iz,a=iz*(nx+1)+ix;
+ if(data.contactCells?.[ix+':'+iz])for(const triangle of groundCellTriangles(data,ix,iz)){const weights=groundTriangleWeights(positions,triangle,x,z);if(weights&&weights.every(w=>w>=-1e-7))return triangle.reduce((sum,index,i)=>sum+positions[index*3+1]*weights[i],0);}
  const h=i=>positions[i*3+1],aa=h(a),b=h(a+1),d=h(a+nx+1);
  return u+v<=1?aa+u*(b-aa)+v*(d-aa):h(a+nx+2)+(1-u)*(d-h(a+nx+2))+(1-v)*(b-h(a+nx+2));
 }
