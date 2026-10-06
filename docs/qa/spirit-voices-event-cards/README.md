@@ -35,7 +35,7 @@ CUA Browser2, ventana coordinada con root y agente de impostores. Fixture nativo
 - `manual-toast-dismiss.json`: cierre individual reduce las tarjetas visibles; las imágenes portrait/landscape muestran iconos cargados, barra y espacio libre para acciones HUD.
 - `es-portrait.png`, `en-landscape.png`, `cards-portrait.png`, `cards-landscape.png`: componentes nativos en viewports móviles. Los controles amarillos pertenecen solo al fixture.
 
-`tools/serve_spirit_voice_qa.mjs` compila el fixture aislado y lo sirve bajo `/nested/itch/spirit/` sin fallback raíz. Se comprobó reproducción nativa ES/EN y carga de sprite/iconos desde esa ruta. El paquete principal verifica los 54 hashes de voz también después del build; 641 archivos, 386.397.447 bytes y 859 enlaces relativos. ZIP local 336.636.389 bytes, CRC correcto; no subido.
+`tools/serve_spirit_voice_qa.mjs` compila el fixture aislado y lo sirve bajo `/nested/itch/spirit/` sin fallback raíz. Se comprobó reproducción nativa ES/EN y carga de sprite/iconos desde esa ruta. El paquete principal verifica los 54 hashes de voz también después del build; 641 archivos, 386.397.521 bytes y 859 enlaces relativos. ZIP local 336.636.411 bytes, CRC correcto; no subido.
 
 ## Límites
 
