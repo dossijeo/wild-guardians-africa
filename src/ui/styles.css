@@ -41,3 +41,22 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 
 #stage .notices{right:calc(var(--action-w) + 26px + env(safe-area-inset-right));max-width:min(310px,calc(100vw - var(--action-w) - 50px));z-index:20;pointer-events:auto}
 .notice-card{display:flex;align-items:stretch;background:#203629ef;border-radius:8px}.notice-card [data-notice]{flex:1;min-width:0;background:transparent}.notice-card [data-dismiss-notice]{flex:none;padding:8px;background:transparent;align-self:flex-start}
+
+/* Original HUD Lab icon toast, with its lifetime driven by NoticeLifetime. */
+#stage .notices{left:calc(18px + env(safe-area-inset-left));right:auto;top:calc(var(--header) + 12px);bottom:auto;width:254px;max-width:calc(100vw - var(--action-w) - 40px);max-height:calc(100dvh - var(--header) - var(--reserve) - 24px);overflow:auto;overflow-x:hidden;padding:5px 0 5px 9px;gap:9px;pointer-events:none}
+.notice-card{position:relative;min-height:62px;border:1px solid #b38c4b80;border-radius:12px;background:linear-gradient(110deg,#3d382df2,#4b3929e6);color:#f7eac7;box-shadow:0 4px 13px #27312b2e;pointer-events:auto;text-align:left;flex:none}
+.notice-card .notice-visit{display:flex;align-items:center;gap:8px;width:100%;padding:8px 26px 12px 54px;border:0;border-radius:12px;text-align:left;color:inherit;position:relative}
+.notice-card .notice-visit:hover{background:#ffe6af12}
+.notice-card img{position:absolute;width:68px;height:68px;left:-9px;top:50%;transform:translateY(-50%);object-fit:contain;filter:drop-shadow(0 3px 3px #281c1c33);pointer-events:none}
+.notice-card strong{display:block;font-size:12.5px;line-height:1.24}
+.notice-card small{display:block;font-size:10px;line-height:1.3;color:#e0c89e;margin-top:3px;font-weight:400}
+.notice-card.urgent{border-color:#ed955a;background:linear-gradient(100deg,#673b2af5,#4a302aec)}
+.notice-card [data-dismiss-notice]{position:absolute;right:2px;top:2px;border:0;background:transparent;color:#d4ba99;font-size:20px;line-height:28px;width:28px;height:28px;padding:0}
+.notice-card .life{position:absolute;left:54px;right:12px;bottom:4px;height:2px;background:#d8b364;transform-origin:left;border-radius:2px;pointer-events:none}
+.notice-card.urgent .life{background:#f09961}
+#stage.short .notices{width:240px}
+#stage.short .notice-card{min-height:52px}
+#stage.short .notice-visit{padding-left:46px}
+#stage.short .notice-card img{width:56px;height:56px}
+#stage.short .notice-card .life{left:46px}
+#stage.portrait .notices{left:calc(10px + env(safe-area-inset-left));width:min(254px,calc(100vw - var(--action-w) - 30px))}
