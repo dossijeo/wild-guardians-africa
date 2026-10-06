@@ -41,6 +41,6 @@ for(const species of ['lion','hyena','buffalo','rhino','warthog'])for(const prof
   assert.equal(calls[0].options.emitter,worker.id);assert.equal(calls[1].options.emitter,animal.id);assert.equal(calls[1].options.gain,1);assert.equal(calls[1].options.family,'beast-worker-contact');
   worker.x=80;worker.z=80;updateWorkerEncounters(state,nav);worker.x=24;worker.z=.1;updateWorkerEncounters(state,nav);
   assert.equal(state.events.at(-1).type,'WorkerIncapacitated');assert.equal(worker.hits,2);assert.equal(animal.hitsRemaining,2);assert.equal(state.people[0].recoveryUntil,2);
-  const second=serialize(state);audio.process(state.events,{state});audio.process(state.events,{state});assert.equal(serialize(state),second);assert.deepEqual(calls.map(c=>c.id),['npc_hit','beast_hit_character','npc_fall','beast_hit_character']);
+  const second=serialize(state);audio.process(state.events,{state});audio.process(state.events,{state});assert.equal(serialize(state),second);assert.deepEqual(calls.map(c=>c.id),['npc_hit','beast_hit_character','npc_fall','game_farmer_hurt','beast_hit_character']);
   const fresh=audioFixture(),restored=deserialize(second);fresh.audio.remember(restored.events);fresh.audio.process(restored.events,{state:restored});assert.equal(fresh.calls.length,0);
 });

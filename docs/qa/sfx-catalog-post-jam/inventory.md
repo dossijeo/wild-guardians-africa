@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **82**. Sin asignar en gameplay: **44**.
+Asignados: **83**. Sin asignar en gameplay: **43**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -128,7 +128,7 @@ Asignados: **82**. Sin asignar en gameplay: **44**.
 | 120 | game_enemy_detected · Enemigo detectado | Asignado | Detección/localización de enemigo; variante local, sin repetir el aviso global. | src/audio/raid-arrival-audio.js:2 → RaidArrivalAudio.update: first observed physical farm entry per raid |
 | 121 | game_building_attacked · Edificio bajo ataque | Asignado | Centro/edificio bajo ataque; limitar recurrencia por estructura. | src/audio/structure-audio.js:3 → StructureHit:first-center-hit |
 | 122 | game_wall_critical · Muralla crítica | Asignado | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | src/audio/structure-audio.js:3 → StructureHit:wall-critical |
-| 123 | game_farmer_hurt · Granjero herido | Pendiente | Trabajador lesionado; aviso agrupable y enlazable a posición. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 123 | game_farmer_hurt · Granjero herido | Asignado | Trabajador lesionado; aviso agrupable y enlazable a posición. | src/audio/audio.js:21 → WorkerIncapacitated (grouped gameplay warning) |
 | 124 | game_attack_over · Ataque terminado | Asignado | Fin de incursión al retirarse el último animal. | src/audio/audio.js:19 → RaidEnded |
 | 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:19 → CampaignWon |
 | 126 | game_major_loss · Derrota / pérdida importante | Asignado | Game Over o pérdida importante confirmada; evitar repetir al mostrar y guardar el resultado. | src/audio/audio.js:19 → GameOver |

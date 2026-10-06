@@ -1,0 +1,360 @@
+TAP version 13
+# (node:26888) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: quiet frames do not revisit IDs or allocate a replacement deduplication set
+ok 1 - quiet frames do not revisit IDs or allocate a replacement deduplication set
+  ---
+  duration_ms: 6.1103
+  ...
+# Subtest: actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+ok 2 - actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+  ---
+  duration_ms: 41.7573
+  ...
+# Subtest: losing the old anchor falls back to processing the complete available history
+ok 3 - losing the old anchor falls back to processing the complete available history
+  ---
+  duration_ms: 3.0349
+  ...
+# Subtest: replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+ok 4 - replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+  ---
+  duration_ms: 1.5397
+  ...
+# Subtest: remember seeds the cursor silently and a restored history only plays subsequent events
+ok 5 - remember seeds the cursor silently and a restored history only plays subsequent events
+  ---
+  duration_ms: 1.7829
+  ...
+# Subtest: music-only and global audio stops do not replay processed event history
+ok 6 - music-only and global audio stops do not replay processed event history
+  ---
+  duration_ms: 1.2749
+  ...
+# Subtest: unknown event types and repeated undefined IDs retain the existing dispatcher contract
+ok 7 - unknown event types and repeated undefined IDs retain the existing dispatcher contract
+  ---
+  duration_ms: 0.4757
+  ...
+# Subtest: failed asynchronous playback is consumed once while following events still dispatch
+ok 8 - failed asynchronous playback is consumed once while following events still dispatch
+  ---
+  duration_ms: 14.3936
+  ...
+# Subtest: all logical audio routes keep their original selection when histories roll
+ok 9 - all logical audio routes keep their original selection when histories roll
+  ---
+  duration_ms: 3.6429
+  ...
+# (node:36632) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 10 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 212.231
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 11 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.1511
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 12 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 5.7324
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 13 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.7006
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 14 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 2453.0242
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 15 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 17.5405
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 16 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 12.4333
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 17 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 10.7198
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 18 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 8.4296
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 19 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 11.3685
+  ...
+# (node:41224) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mapungubwe paid center emits one placement and one completion with a stable captured position
+ok 20 - mapungubwe paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 19.2945
+  ...
+# Subtest: saheliana paid center emits one placement and one completion with a stable captured position
+ok 21 - saheliana paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 21.0785
+  ...
+# Subtest: suajili paid center emits one placement and one completion with a stable captured position
+ok 22 - suajili paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 3.4394
+  ...
+# Subtest: musgum paid center emits one placement and one completion with a stable captured position
+ok 23 - musgum paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 4.5927
+  ...
+# Subtest: etiope paid center emits one placement and one completion with a stable captured position
+ok 24 - etiope paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 5.7082
+  ...
+# Subtest: a paid wall chain completes once for the entire command rather than per segment or automatic gate
+ok 25 - a paid wall chain completes once for the entire command rather than per segment or automatic gate
+  ---
+  duration_ms: 15.1379
+  ...
+# Subtest: a rejected center has no placement or completion cue and cannot spend money
+ok 26 - a rejected center has no placement or completion cue and cannot spend money
+  ---
+  duration_ms: 1.0704
+  ...
+# Subtest: lion/olderMale actual first/second collision produces one contact plus its NPC response
+ok 27 - lion/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 3.636
+  ...
+# Subtest: lion/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 28 - lion/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.5989
+  ...
+# Subtest: lion/youngMale actual first/second collision produces one contact plus its NPC response
+ok 29 - lion/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.3002
+  ...
+# Subtest: lion/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 30 - lion/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.2228
+  ...
+# Subtest: hyena/olderMale actual first/second collision produces one contact plus its NPC response
+ok 31 - hyena/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.8184
+  ...
+# Subtest: hyena/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 32 - hyena/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.6517
+  ...
+# Subtest: hyena/youngMale actual first/second collision produces one contact plus its NPC response
+ok 33 - hyena/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7548
+  ...
+# Subtest: hyena/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 34 - hyena/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.8279
+  ...
+# Subtest: buffalo/olderMale actual first/second collision produces one contact plus its NPC response
+ok 35 - buffalo/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 3.3306
+  ...
+# Subtest: buffalo/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 36 - buffalo/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.2832
+  ...
+# Subtest: buffalo/youngMale actual first/second collision produces one contact plus its NPC response
+ok 37 - buffalo/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.1316
+  ...
+# Subtest: buffalo/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 38 - buffalo/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.505
+  ...
+# Subtest: rhino/olderMale actual first/second collision produces one contact plus its NPC response
+ok 39 - rhino/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7064
+  ...
+# Subtest: rhino/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 40 - rhino/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.3907
+  ...
+# Subtest: rhino/youngMale actual first/second collision produces one contact plus its NPC response
+ok 41 - rhino/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.635
+  ...
+# Subtest: rhino/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 42 - rhino/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.5978
+  ...
+# Subtest: warthog/olderMale actual first/second collision produces one contact plus its NPC response
+ok 43 - warthog/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7048
+  ...
+# Subtest: warthog/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 44 - warthog/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.577
+  ...
+# Subtest: warthog/youngMale actual first/second collision produces one contact plus its NPC response
+ok 45 - warthog/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7386
+  ...
+# Subtest: warthog/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 46 - warthog/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.6075
+  ...
+# (node:43260) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mapungubwe first paid center hit alerts once per raid and remains suppressed after reload
+ok 47 - mapungubwe first paid center hit alerts once per raid and remains suppressed after reload
+  ---
+  duration_ms: 25.8654
+  ...
+# Subtest: saheliana first paid center hit alerts once per raid and remains suppressed after reload
+ok 48 - saheliana first paid center hit alerts once per raid and remains suppressed after reload
+  ---
+  duration_ms: 8.8131
+  ...
+# Subtest: suajili first paid center hit alerts once per raid and remains suppressed after reload
+ok 49 - suajili first paid center hit alerts once per raid and remains suppressed after reload
+  ---
+  duration_ms: 2.6933
+  ...
+# Subtest: musgum first paid center hit alerts once per raid and remains suppressed after reload
+ok 50 - musgum first paid center hit alerts once per raid and remains suppressed after reload
+  ---
+  duration_ms: 3.6981
+  ...
+# Subtest: etiope first paid center hit alerts once per raid and remains suppressed after reload
+ok 51 - etiope first paid center hit alerts once per raid and remains suppressed after reload
+  ---
+  duration_ms: 4.0717
+  ...
+# Subtest: zarzas/false critical crossing uses captured damage and does not repeat below the threshold
+ok 52 - zarzas/false critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 7.6619
+  ...
+# Subtest: zarzas/true critical crossing uses captured damage and does not repeat below the threshold
+ok 53 - zarzas/true critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.6811
+  ...
+# Subtest: empalizada/false critical crossing uses captured damage and does not repeat below the threshold
+ok 54 - empalizada/false critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.3965
+  ...
+# Subtest: empalizada/true critical crossing uses captured damage and does not repeat below the threshold
+ok 55 - empalizada/true critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.2675
+  ...
+# Subtest: piedra/false critical crossing uses captured damage and does not repeat below the threshold
+ok 56 - piedra/false critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.6784
+  ...
+# Subtest: piedra/true critical crossing uses captured damage and does not repeat below the threshold
+ok 57 - piedra/true critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.542
+  ...
+# Subtest: adobe/false critical crossing uses captured damage and does not repeat below the threshold
+ok 58 - adobe/false critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 2.0748
+  ...
+# Subtest: adobe/true critical crossing uses captured damage and does not repeat below the threshold
+ok 59 - adobe/true critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 1.7995
+  ...
+# Subtest: reforzado/false critical crossing uses captured damage and does not repeat below the threshold
+ok 60 - reforzado/false critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 1.971
+  ...
+# Subtest: reforzado/true critical crossing uses captured damage and does not repeat below the threshold
+ok 61 - reforzado/true critical crossing uses captured damage and does not repeat below the threshold
+  ---
+  duration_ms: 1.8807
+  ...
+# Subtest: legacy, shielded/no-damage and non-crossing hits have no new structure alert
+ok 62 - legacy, shielded/no-damage and non-crossing hits have no new structure alert
+  ---
+  duration_ms: 0.4177
+  ...
+# Subtest: an actual shielded center hit cannot issue a building-damage warning
+ok 63 - an actual shielded center hit cannot issue a building-damage warning
+  ---
+  duration_ms: 2.7385
+  ...
+# Subtest: late decode and scene disposal prevent stale danger sources
+ok 64 - late decode and scene disposal prevent stale danger sources
+  ---
+  duration_ms: 2.7537
+  ...
+# Subtest: simultaneous critical crossings group one warning while preserving each material contact
+ok 65 - simultaneous critical crossings group one warning while preserving each material contact
+  ---
+  duration_ms: 8.8835
+  ...
+# (node:20664) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: simultaneous injuries group one warning, never replay history, and leave facts unchanged
+ok 66 - simultaneous injuries group one warning, never replay history, and leave facts unchanged
+  ---
+  duration_ms: 13.357
+  ...
+# Subtest: first hit, fall animation and recovery are not an incapacitation warning
+ok 67 - first hit, fall animation and recovery are not an incapacitation warning
+  ---
+  duration_ms: 5.231
+  ...
+# Subtest: late decoding, blocking pause and leaving the scene discard a stale injury warning
+ok 68 - late decoding, blocking pause and leaving the scene discard a stale injury warning
+  ---
+  duration_ms: 3.228
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3328.6454

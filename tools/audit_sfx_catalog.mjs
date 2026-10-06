@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-import {eventSound,eventExtraSound} from '../src/audio/audio.js';
+import {eventSound,eventExtraSound,eventAlertSound} from '../src/audio/audio.js';
 import {WALL_HIT_SOUNDS,STRUCTURE_ALERT_SOUNDS} from '../src/audio/structure-audio.js';
 import {ANIMAL_SOUND_ROUTES} from '../src/audio/animal-audio.js';
 import {AMBIENT_SOUND_IDS} from '../src/audio/ambient-audio.js';
@@ -30,6 +30,7 @@ function add(id,file,selector,trigger){
 }
 for(const [event,id] of Object.entries(eventSound))add(id,'src/audio/audio.js','export const eventSound=',event);
 for(const [event,id] of Object.entries(eventExtraSound))add(id,'src/audio/audio.js','export const eventExtraSound=',event+' (extra contact/completion)');
+for(const [event,id] of Object.entries(eventAlertSound))add(id,'src/audio/audio.js','export const eventAlertSound=',event+' (grouped gameplay warning)');
 for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))add(id,'src/audio/structure-audio.js','export const WALL_HIT_SOUNDS','StructureHit: '+material);
 for(const [trigger,id] of Object.entries(STRUCTURE_ALERT_SOUNDS))add(id,'src/audio/structure-audio.js','export const STRUCTURE_ALERT_SOUNDS',trigger);
 for(const [species,routes] of Object.entries(ANIMAL_SOUND_ROUTES))for(const [phase,id] of Object.entries(routes))add(id,'src/audio/animal-audio.js','export const ANIMAL_SOUND_ROUTES',species+': '+phase);
