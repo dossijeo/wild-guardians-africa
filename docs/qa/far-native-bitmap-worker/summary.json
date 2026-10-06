@@ -1,0 +1,64 @@
+{
+  "pattern": "ABBAABBA",
+  "done": true,
+  "bitmapWorker": true,
+  "groups": {
+    "HTML": {
+      "lots": 4,
+      "medianTotalMs": 803.1999999880791,
+      "medianMaxTextureBatchMs": 361.4500000178814,
+      "maxFrameMs": [
+        665.1000000000004,
+        299.3999999999978,
+        282.5,
+        448.8999999999942
+      ],
+      "frameCounts": [
+        9,
+        6,
+        6,
+        6
+      ],
+      "medianFrameMsPerLot": [
+        16.700000000000728,
+        83.14999999999964,
+        74.89999999999782,
+        83.20000000000073
+      ]
+    },
+    "Bitmap": {
+      "lots": 4,
+      "medianTotalMs": 4110.050000011921,
+      "medianMaxTextureBatchMs": 32.150000005960464,
+      "maxFrameMs": [
+        249.39999999999782,
+        299.3000000000029,
+        66.59999999999854,
+        764.9000000000015
+      ],
+      "frameCounts": [
+        399,
+        241,
+        179,
+        147
+      ],
+      "medianFrameMsPerLot": [
+        16.600000000002183,
+        16.600000000002183,
+        16.600000000002183,
+        16.69999999999709
+      ]
+    }
+  },
+  "worldPixelComparison": {
+    "crop": [
+      400,
+      0,
+      1280,
+      720
+    ],
+    "differentPixels": 0,
+    "pixels": 633600,
+    "maxChannelDifference": 0
+  }
+}
