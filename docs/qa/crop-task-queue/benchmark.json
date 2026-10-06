@@ -1,0 +1,66 @@
+{
+  "node": "v20.11.0",
+  "scope": "Synthetic CPU only; per-pass deduplication of due-water and maturity tasks. Setup excluded, alternating order, full result state equivalence checked. Does not measure frame, GPU, route searches or mobile performance.",
+  "rows": [
+    {
+      "plants": 32,
+      "reference": {
+        "samples": 10,
+        "minMs": 0.03370000000001028,
+        "medianMs": 0.03985000000000127,
+        "maxMs": 0.1349999999999909
+      },
+      "indexed": {
+        "samples": 10,
+        "minMs": 0.024399999999985766,
+        "medianMs": 0.03334999999999866,
+        "maxMs": 0.04359999999999786
+      }
+    },
+    {
+      "plants": 256,
+      "reference": {
+        "samples": 10,
+        "minMs": 0.6324000000000183,
+        "medianMs": 0.6875499999999874,
+        "maxMs": 0.8094999999999857
+      },
+      "indexed": {
+        "samples": 10,
+        "minMs": 0.1490000000000009,
+        "medianMs": 0.1884499999999889,
+        "maxMs": 0.3205999999999847
+      }
+    },
+    {
+      "plants": 1024,
+      "reference": {
+        "samples": 10,
+        "minMs": 5.159500000000037,
+        "medianMs": 8.783449999999988,
+        "maxMs": 10.084799999999973
+      },
+      "indexed": {
+        "samples": 10,
+        "minMs": 0.28560000000004493,
+        "medianMs": 0.5066500000000076,
+        "maxMs": 1.4003000000000156
+      }
+    },
+    {
+      "plants": 4096,
+      "reference": {
+        "samples": 10,
+        "minMs": 141.7147,
+        "medianMs": 156.83889999999997,
+        "maxMs": 175.8255999999999
+      },
+      "indexed": {
+        "samples": 10,
+        "minMs": 1.1073999999998705,
+        "medianMs": 1.8577000000000226,
+        "maxMs": 2.2618999999999687
+      }
+    }
+  ]
+}

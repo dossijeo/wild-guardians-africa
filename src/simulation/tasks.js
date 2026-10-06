@@ -3,8 +3,29 @@ import {cancelIdle} from './idle.js';
 
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
+  return appendTask(state,centerId,kind,targetId);
+}
+function appendTask(state,centerId,kind,targetId) {
   const t={id:`task-${state.nextId++}`,created:state.sequence++,centerId,kind,targetId,workerId:null,blocked:false};
   state.tasks.push(t);return t;
+}
+// Local to one synchronous append-only crop pass. Never retained across ticks,
+// worker completions, queue reconstruction, attacks or restored snapshots.
+export function taskEnqueuer(state) {
+  let targets=null;
+  return (centerId,kind,targetId)=>{
+    if(!centerId)return null;
+    if(!targets){
+      targets=new Map();
+      for(const task of state.tasks){
+        const ids=targets.get(task.kind)??new Set();ids.add(task.targetId);targets.set(task.kind,ids);
+      }
+    }
+    const ids=targets.get(kind)??new Set();
+    if(ids.has(targetId))return null;
+    ids.add(targetId);targets.set(kind,ids);
+    return appendTask(state,centerId,kind,targetId);
+  };
 }
 export function reserveTasks(state,canExecute=()=>true) {
   if(!state.workers.some(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state))) {

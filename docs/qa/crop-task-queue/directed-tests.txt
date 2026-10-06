@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: crop pass preserves exact FIFO IDs and deduplication across kinds and centers
+ok 1 - crop pass preserves exact FIFO IDs and deduplication across kinds and centers
+  ---
+  duration_ms: 5.3108
+  ...
+# Subtest: existing reserved tasks remain deduplicated and no stale index survives queue reconstruction
+ok 2 - existing reserved tasks remain deduplicated and no stale index survives queue reconstruction
+  ---
+  duration_ms: 0.7164
+  ...
+# Subtest: unused crop pass avoids reading the task collection
+ok 3 - unused crop pass avoids reading the task collection
+  ---
+  duration_ms: 0.2747
+  ...
+# Subtest: varied append-only passes match every original result and full queue state
+ok 4 - varied append-only passes match every original result and full queue state
+  ---
+  duration_ms: 160.2941
+  ...
+# Subtest: large historical farm keeps identical FIFO reservations for crops, loose crates and repairs
+ok 5 - large historical farm keeps identical FIFO reservations for crops, loose crates and repairs
+  ---
+  duration_ms: 506.7697
+  ...
+# Subtest: reachable nearest employee requires only one route query; blocked nearest candidates fall through in order
+ok 6 - reachable nearest employee requires only one route query; blocked nearest candidates fall through in order
+  ---
+  duration_ms: 1.2206
+  ...
+# Subtest: no idle eligible employee preserves missing-target and reserved flags without querying routes
+ok 7 - no idle eligible employee preserves missing-target and reserved flags without querying routes
+  ---
+  duration_ms: 1.0432
+  ...
+# Subtest: nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility
+ok 8 - nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility
+  ---
+  duration_ms: 188.0769
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 913.1638

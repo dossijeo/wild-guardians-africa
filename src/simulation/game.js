@@ -11,7 +11,7 @@ import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
-import {enqueue,reserveTasks,releaseTask} from './tasks.js';
+import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
@@ -257,10 +257,10 @@ export function hire(s,id,selection) {
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total});
 }
 export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
-function queueMatureHarvest(s,p) {
+function queueMatureHarvest(s,p,queue) {
   if(!isMature(p))return;
   if(!p.harvestRequested){p.harvestRequested=true;emit(s,'HarvestRequested',{targetId:p.id,count:1,automatic:true});}
-  if(!s.raid&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,'harvest',p.id);
+  if(!s.raid&&s.structures.some(c=>c.id===p.centerId&&operational(c))){if(queue)queue(p.centerId,'harvest',p.id);else enqueue(s,p.centerId,'harvest',p.id);}
 }
 export function rebuildTasks(s) {
   const committed=new Set(s.workers.filter(w=>contractExpired(w,s)&&w.status==='acting').map(w=>w.taskId));
@@ -577,12 +577,13 @@ export function tick(s,seconds,nav) {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
     }
     if(previousTime<300) {
+      const enqueueCrop=taskEnqueuer(s);
       for(const p of s.plants) {
         if(!p.alive)continue;
         const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
-        if(!p.harvestRequested)queueMatureHarvest(s,p);
-        if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueue(s,p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
+        if(!p.harvestRequested)queueMatureHarvest(s,p,enqueueCrop);
+        if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueueCrop(p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
       }
     }
     const spellCount=s.spells.length;
