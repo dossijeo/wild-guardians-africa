@@ -5,15 +5,14 @@ import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
-import {attachBiomeFarVegetation} from '../../src/rendering/far-vegetation.js';
 const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',quality=params.get('quality')??'media',culture=params.get('culture')??'mapungubwe',errors=[];let world,adapter,dead=false,last=performance.now(),lastReport=0,removed=null,benchmark=null,profiling=false;
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
+ const progress=stage=>document.querySelector('#report').textContent=JSON.stringify({loading:stage,errors});progress('biome and village metadata');
  if(!BIOME_IDS[biome])throw Error('Invalid QA biome');
- const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture),state=Game.newGame({seed:712,biome,culture}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture),state=Game.newGame({seed:712,biome,culture}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);progress('site found; native world loading');
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
- world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);await world.load(state,nav,payload);world.render(0);
- const compact=params.get('compact')==='1';adapter=await attachBiomeFarVegetation(world,compact?{start:40,end:60,groundStep:8}:{});const baselineRange=null,candidateRange=compact?(quality==='alta'?2:1):null;world.farResidentRange=candidateRange;for(const button of document.querySelectorAll('button'))button.disabled=false;
+ const compact=params.get('compact')==='1';world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);world.onChunkProgress=p=>progress('native chunks '+p.loaded+'/'+p.desired);const baselineRange=null,candidateRange=compact?(quality==='alta'?2:1):null;await world.load(state,nav,payload,{farVegetation:compact?{start:40,end:60,groundStep:8,residentRange:candidateRange}:{}});adapter=world.farVegetation;world.render(0);for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#benchmark').onclick=async()=>{
   if(profiling)return;profiling=true;world.controls.enabled=false;for(const button of document.querySelectorAll('button'))button.disabled=true;
   const previousAutoReset=world.renderer.info.autoReset;world.renderer.info.autoReset=false;const gpu=new GpuTimer(world.renderer.getContext()),tick=()=>new Promise(resolve=>requestAnimationFrame(resolve)),summary=values=>{const rows=[...values].sort((a,b)=>a-b);return rows.length?{count:rows.length,p50:rows[Math.ceil(rows.length*.5)-1],p95:rows[Math.ceil(rows.length*.95)-1],mean:rows.reduce((a,b)=>a+b,0)/rows.length}:null;},snapshot=JSON.stringify(state);benchmark={done:false,lots:[],camera:world.camera.position.toArray(),viewport:[innerWidth,innerHeight],framebuffer:[world.renderer.domElement.width,world.renderer.domElement.height],hidden:false};

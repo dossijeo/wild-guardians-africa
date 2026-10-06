@@ -6,13 +6,14 @@ import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-wo
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
+ if(residentRange!==null&&(!Number.isInteger(residentRange)||residentRange<1||residentRange>3))throw Error('Invalid far resident radius');
  const loader=new TextureLoader(),loadManifest=services.loadManifest??json,loadTexture=services.loadTexture??(path=>loader.loadAsync(path)),attachSpecies=services.attachSpecies??attachNativeFarWorld,makeBackdrop=services.makeBackdrop??createBiomeBackdrop;
- const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog;
+ const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange;
  let closed=false,backdrop=null,owner;
  const cancelled=()=>closed||world.disposed||world.loading.signal.aborted;
- const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;if(world.farVegetation===owner)world.farVegetation=null;};
+ const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;if(world.farVegetation===owner)world.farVegetation=null;};
  owner={update(){},dispose:release};world.farVegetation=owner;
  const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{
@@ -28,7 +29,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,...options
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
   backdrop=makeBackdrop(world,backdropTexture);
   owner={enabled:true,adapters,stats:{species:species.length,estimatedAtlasTextureBytes:species.length*2*1024*1024*4*4/3,estimatedBackdropTextureBytes:2048*512*4*4/3,errors:[]},update(dt){
-   if(closed)return;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
+   if(closed)return;world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
    for(const adapter of adapters){adapter.enabled=this.enabled;adapter.update(dt);}
    if(!this.enabled)world.scene.fog=previousFog;
   },dispose:release};

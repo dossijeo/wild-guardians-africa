@@ -109,7 +109,7 @@ export class WorldScene {
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {this.quality=quality;this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
   async loadReady(pending,releaseLate){const value=await pending;if(this.disposed){releaseLate?.(value);throw new Error('Carga de mundo cancelada');}return value;}
-  async load(state,nav,villagePayload) {
+  async load(state,nav,villagePayload,{farVegetation=false}={}) {
     await this.loadReady(this.sky.load());this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await this.loadReady(this.assets.biome(this.pack));this.biomeGround=new BiomeGround();await this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);
     this.villagePrototypes=await this.loadReady(this.assets.village(villagePayload));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
@@ -140,6 +140,9 @@ export class WorldScene {
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
     await this.loadReady(this.warmAnimalGpu());
+    // The normal game remains unchanged; native QA can opt into the horizon
+    // through the same loading/cancellation boundary as every other asset.
+    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
@@ -197,7 +200,9 @@ export class WorldScene {
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.
     const region=this.horizon.update(this.nav.config,this.pack.profile,requested,this.quality,force)??requested,{cx,cz,range}=region;
-    this.nearBounds=region.bounds;this.nav.setActiveBounds?.(region.bounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
+    // A smaller visual radius must not move the gameplay raid-entry border.
+    const logicalBounds=this.farResidentRange==null?region.bounds:nativeNearRegion({x:cx*48,z:cz*48},this.quality).bounds;
+    this.nearBounds=region.bounds;this.nav.setActiveBounds?.(logicalBounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const [key,group] of this.chunks)if(force||!desired.has(key)){disposeAssetShadows(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;}
     if(this.chunkStream){const key=cx+','+cz+':'+range;if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}

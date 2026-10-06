@@ -15,3 +15,15 @@ The current version uses one continuous, lower backdrop cylinder instead of eigh
 Four active species require eight RGBA 1024-square atlases: approximately 42.67 MiB with mipmaps; one RGBA 2048x512 backdrop adds approximately 5.33 MiB. Canyon uses two species (21.33 MiB plus backdrop). These are storage estimates, not measured total GPU/CPU memory. WebP transfer size is not decoded memory. Tests verify current-biome-only fetching and cancellation release of late textures and adapters.
 
 Visual matching, coarse terrain seams, reduced residency navigation, angular transitions, quality profiles and combined cost still require evidence before normal gameplay activation.
+
+## Compact-residency Sabana ABBA (bd1da2f)
+
+`savanna-compact-abba.json` contains all 480 GPU samples, four lots of 120 frames at the same camera, 1600x900 framebuffer and medium quality. GPU p50 A1/B1/B2/A2: 21.784/18.433/18.447/21.630 ms; CPU p50: 6.5/3.9/4.2/5.9 ms. Calls: 59/43/43/59; triangles: 960014/726721/726721/960014. No disjoint, context loss, hidden frames, pending queries or game-state changes. This view shows a consistent reduction, not an FPS claim for other views/devices/biomes.
+
+The earlier failed attempt produced no measured lots: the preceding webview stopped advancing preparation. A fresh tab completed the same source. The fixture now reports native loading stages and keeps frames running while awaiting changes in residency.
+
+`savanna-compact-seam.png` records the flat-color seam before the mapped-ground fix. `savanna-compact-mapped-ground.png` records the later textured result, and `mangrove-mapped-ground.png` records full-residency Mangrove with shared base material. Water shoreline precision and all movement/day/night checks are still pending.
+
+After the measurement, the world loader gained an explicit fourth argument `{farVegetation: options}`. It defaults to false; the normal game requests no far textures/worker. Optional `residentRange` ownership restores the preceding radius on disable/dispose. Logical raid-entry bounds retain normal quality radius, independently of the visual resident radius. Four directed world-sync tests verify this and preserve navigation route/suppression objects.
+
+**Activation blocker:** the compact-residency experiment also shrinks `terrainMeshes` used for picking. A player could see approximate distant ground that cannot be clicked. A visual-only reduction with exact picking coverage, or an exact terrain fallback, must be validated before activation. Compact radius must not be presented as a completed gameplay optimization.
