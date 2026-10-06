@@ -1,0 +1,39 @@
+<!doctype html><meta charset="utf-8"><title>Native sky lifecycle QA</title>
+<style>body{margin:0;background:#142019;color:white;font:13px system-ui}canvas{display:block;position:fixed;inset:0;width:100vw;height:100vh}pre{position:fixed;top:0;left:0;background:#142019e8;padding:12px;max-width:600px;max-height:38vh;overflow:auto;white-space:pre-wrap}</style>
+<canvas></canvas><pre id="report">Testing catalogue abort, binary abort and normal native sky…</pre>
+<script type="module">
+import * as THREE from 'three';
+import {NativeSky} from '/src/rendering/sky.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {newGame} from '/src/simulation/game.js';
+const errors=[],cases=[],nativeFetch=window.fetch;
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const snapshot=sky=>({disposed:sky.disposed,aborted:sky.loading.signal.aborted,meshes:sky.scene.children.length,textures:sky.textures.length,environmentTextures:sky.environmentTextures.length,materials:sky.materials.length});
+try{
+ for(const stage of ['catalogue','binary']){
+  const canvas=document.createElement('canvas');document.querySelector('canvas').replaceWith(canvas);
+  const world=new WorldScene(canvas,()=>{}),requests=[];let closed=false;
+  window.fetch=(url,options)=>{requests.push({url:String(url),signal:options?.signal});const pending=nativeFetch(url,options);if(stage==='binary'&&String(url).endsWith('.hdr')&&!closed){closed=true;queueMicrotask(()=>world.dispose());}return pending;};
+  // Valid new state; cancellation intentionally happens in the sky phase,
+  // before navigation/village data are consumed by WorldScene.load.
+  const pending=world.load(newGame({seed:712,biome:'sabana'}),null,null);
+  if(stage==='catalogue')world.dispose();
+  let rejection;try{await pending;throw Error('Closed world load unexpectedly completed');}catch(error){rejection={name:error.name,message:error.message};if(!['AbortError'].includes(error.name)&&error.message!=='Sky load cancelled')throw error;}
+  window.fetch=nativeFetch;
+  const row={stage,rejection,requests:requests.map(r=>({url:r.url,aborted:r.signal?.aborted??null})),sky:snapshot(world.sky),worldDisposed:world.disposed,contextLost:world.renderer.getContext().isContextLost(),cachedAssets:world.assets.cache.size};
+  if(!row.worldDisposed||!row.sky.aborted||row.sky.meshes||row.sky.textures||row.sky.materials||row.cachedAssets)throw Error('Closed world retained sky/assets');
+  if(stage==='binary'&&!requests.some(r=>r.url.endsWith('.hdr')))throw Error('Binary abort was not exercised');
+  cases.push(row);
+ }
+ const canvas=document.createElement('canvas');document.querySelector('canvas').replaceWith(canvas);const renderer=new THREE.WebGLRenderer({canvas,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);
+ const sky=new NativeSky(),camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,600);camera.lookAt(1,.2,-1);
+ renderer.debug.onShaderError=()=>errors.push('Native sky shader error');await sky.load();
+ for(const time of [0,300.5,600])sky.render(renderer,camera,{day:1,time});
+ const loaded=snapshot(sky),before={...renderer.info.memory,programs:renderer.info.programs.length};sky.render(renderer,camera,{day:1,time:0});
+ sky.dispose();sky.dispose();const after={...renderer.info.memory,programs:renderer.info.programs.length};let draws=0;sky.render({render:()=>draws++},null,null);
+ if(loaded.meshes!==2||loaded.textures!==2||loaded.environmentTextures!==2||after.geometries||after.textures||after.programs||draws)throw Error('Normal sky lifecycle failed');
+ cases.push({stage:'normal-day-transition-night',loaded,before,after,closed:snapshot(sky),drawsAfterClose:draws});
+ renderer.dispose();renderer.forceContextLoss();
+ document.querySelector('#report').textContent=JSON.stringify({ok:errors.length===0,cases,errors,scope:'Two real WorldScene loads aborted in the sky phase before navigation/assets, plus native HDR day/transition/night rendering in an isolated renderer. PreserveDrawingBuffer is QA-only; no timing, physical RAM or whole-world cancellation acceptance.'},null,2);
+}catch(error){window.fetch=nativeFetch;document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,cases,errors},null,2);}
+</script>

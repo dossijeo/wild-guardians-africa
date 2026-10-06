@@ -183,3 +183,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Limpieza de prototipos y cachés corregida](qa/asset-owner-close/README.md): Assets registra los recursos empaquetados y texturas, libera cargas tardías y vacía sus cachés; el mundo cierra cropBatch y assets antes del contexto. Tres contactos nativos dejan cero buffers observados/geometrías y cachés antes de perder contexto; nueve campos lógicos de dos recorridos coinciden con baseline. 83 pruebas/build correctos. Pendientes atribuir cuatro texturas/tres programas restantes, cancelación independiente de NativeSky.load, ciclos completos y RAM física/móvil. Campaña congelada de margen viva al día 76, sin resultado terminal.
+
+
+[Cancelación de carga del cielo corregida](qa/sky-load-cancel/README.md): AbortSignal propio y guardas antes de decodificar/crear panoramas, cierre idempotente y referencias vacías. 16 pruebas/build; dos cargas reales de WorldScene abortadas en catálogo/HDR sin recursos tardíos y cielo normal con contadores a cero al cerrar. Gran Cañón conserva nueve campos lógicos y limpieza de buffers/cachés. Siguen pendientes otras fases de cancelación/ciclos, cuatro texturas/tres programas del mundo completo y RAM/móvil; campaña congelada de margen viva al día 78, todavía sin resultado terminal.
