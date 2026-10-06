@@ -269,3 +269,6 @@ Estado: integrado en main mediante [PR #5](https://github.com/dossijeo/wild-guar
 - Reproducir la voz mientras se muestra su texto. Al finalizar realmente el audio, avanzar automáticamente al siguiente mensaje o cerrar si es el último. Si el jugador salta o cierra, detener inmediatamente esa voz; evitar audios superpuestos, eventos ended tardíos y reproducción de mensajes anteriores.
 - Conservar la guía por manos 2D/3D y sus requisitos de acción: terminar una voz no debe dar por hecha una acción que el jugador aún no ha realizado. Validar autoplay bloqueado, errores de carga, pausa/cambio de idioma, cierre del juego y limpieza de recursos.
 - Mantener rutas relativas, formato Opus del lab y la carga/descodificación limitada a voces necesarias; comprobar sincronización, ambos idiomas, móvil landscape/portrait y paquete web anidado. Adjuntar evidencia visual/audio y regresiones en la PR.
+
+
+[Recogida física de caja — SFX 117](qa/sfx-crate-pickup/README.md): contacto nativo de tarea crate, separado del SFX 026 al caer y del ingreso al entregar. 67 pruebas/build/paquete correctos; fixture de navegador con decodificación Opus, caída/recogida/entrega única y limpieza. Catálogo actual: 91 asignados/35 pendientes. Prueba silenciada y sin mundo 3D; escucha/mezcla y aceptación móvil pendientes.

@@ -1,7 +1,7 @@
 import {FARM_ACTIONS} from './farm-actions-data.js';
 import {PROFILES} from '../simulation/workforce.js';
 import {isMature} from '../simulation/crops.js';
-export const FARM_CONTACT_IDS=Object.freeze(['farm_sow','farm_seeds_drop','farm_water_soil','farm_harvest_pick','farm_plant_pull','farm_crate_move']);
+export const FARM_CONTACT_IDS=Object.freeze(['farm_sow','farm_seeds_drop','farm_water_soil','farm_harvest_pick','farm_plant_pull','eco_item_pickup']);
 export function farmActivity(worker,task,target){
  if(worker.status!=='acting'||worker.incapacitated||worker.fallRemaining>0||worker.gateWaiting||!task||worker.taskId!==task.id||!(worker.actionRemaining>0))return null;
  const fractions=FARM_ACTIONS.sources[worker.profile]?.fractions;if(!fractions)return null;
@@ -13,7 +13,7 @@ export function farmActivity(worker,task,target){
  if(phase==='plant'){duration=3.8;markers=[{id:'farm_sow',at:fractions.sowStart*duration,gain:.35},{id:'farm_seeds_drop',at:fractions.seedDrop*duration,gain:.12}];}
  else if(phase==='water'){duration=3.4;markers=[{id:'farm_water_soil',at:fractions.pourStart*duration,until:fractions.pourEnd*duration,gain:.16}];}
  else if(phase==='harvest'&&target?.harvestRequested&&isMature(target)){duration=3.6;markers=[{id:['batata','yuca'].includes(target.species)?'farm_plant_pull':'farm_harvest_pick',at:fractions.harvestContact*duration,gain:.35}];}
- else if(phase==='crate'&&target&&!target.delivered&&!target.carrierId){duration=1;markers=[{id:'farm_crate_move',at:fractions.harvestContact,gain:.25}];}
+ else if(phase==='crate'&&target&&!target.delivered&&!target.carrierId){duration=1;markers=[{id:'eco_item_pickup',at:fractions.harvestContact,gain:.25}];}
  else return null;
  return {phase,progress:Math.max(0,progress),duration,markers};
 }

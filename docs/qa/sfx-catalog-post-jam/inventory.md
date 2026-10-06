@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **90**. Sin asignar en gameplay: **36**.
+Asignados: **91**. Sin asignar en gameplay: **35**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -31,7 +31,7 @@ Asignados: **90**. Sin asignar en gameplay: **36**.
 | 023 | farm_harvest_pick · Recoger cultivo | Asignado | Contacto de recogida de una planta madura. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 024 | farm_plant_pull · Arrancar planta | Asignado | Extracción de raíz/planta en cosecha; alternativa por especie, no segundo ingreso. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 025 | farm_crop_to_crate · Colocar cosecha en caja | Asignado | Depósito de producto en la caja durante la cadena de cosecha. | src/audio/audio.js:20 → CropPicked |
-| 026 | farm_crate_move · Caja de fruta moviéndose | Asignado | Levantar/dejar una caja; una toma por acción, no por fotograma. | src/audio/audio.js:20 → CrateDropped; src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
+| 026 | farm_crate_move · Caja de fruta moviéndose | Asignado | Levantar/dejar una caja; una toma por acción, no por fotograma. | src/audio/audio.js:20 → CrateDropped |
 | 027 | farm_sack_handle · Saco manipulándose | Pendiente | Reserva de manejo de saco; no hay un objeto saco jugable aprobado. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 028 | farm_crop_interact · Interacción genérica con cultivo | Pendiente | Interacción ligera con vegetación; variante contextual de agricultura. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 029 | build_place · Colocar elemento / edificio | Asignado | Confirmación de una colocación válida; nunca al mover el fantasma. | src/audio/audio.js:20 → PlacementCommitted; src/audio/audio.js:20 → WallChainBuilt |
@@ -122,7 +122,7 @@ Asignados: **90**. Sin asignar en gameplay: **36**.
 | 114 | eco_gain · Ganar recurso | Pendiente | Ingreso real de dinero; alternativa a sonidos específicos de venta. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 115 | eco_spend · Gastar recurso | Pendiente | Gasto real; alternativa a compra específica, nunca al solicitar reparación. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 116 | eco_crop_sold · Cosecha vendida | Asignado | Caja entregada en centro y cosecha contabilizada. | src/audio/audio.js:20 → CrateDelivered |
-| 117 | eco_item_pickup · Objeto recogido | Pendiente | Recogida física de caja/producto; no suma dinero. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 117 | eco_item_pickup · Objeto recogido | Asignado | Recogida física de caja/producto; no suma dinero. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 118 | eco_big_reward · Recompensa importante | Pendiente | Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 119 | game_attack_alert · Alerta de ataque | Asignado | Comienzo global de incursión; un aviso por grupo, no uno por animal. | src/audio/audio.js:20 → RaidSpawned |
 | 120 | game_enemy_detected · Enemigo detectado | Asignado | Detección/localización de enemigo; variante local, sin repetir el aviso global. | src/audio/raid-arrival-audio.js:2 → RaidArrivalAudio.update: first observed physical farm entry per raid |
@@ -133,4 +133,4 @@ Asignados: **90**. Sin asignar en gameplay: **36**.
 | 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:20 → CampaignWon |
 | 126 | game_major_loss · Derrota / pérdida importante | Asignado | Game Over o pérdida importante confirmada; evitar repetir al mostrar y guardar el resultado. | src/audio/audio.js:20 → GameOver |
 
-Las 36 alternativas/contextos y 12 reservas del plan requieren su contexto correcto. No se crean lluvia, salud de animales, sacos o recompensas monetarias para que suenen tomas reservadas. Los usos compatibles pendientes deben recibir implementación y pruebas antes de cerrar la tarea.
+Las alternativas y reservas restantes requieren su contexto correcto. No se crean lluvia, salud de animales, sacos o recompensas monetarias para que suenen tomas reservadas. Los usos compatibles pendientes deben recibir implementación y pruebas antes de cerrar la tarea.

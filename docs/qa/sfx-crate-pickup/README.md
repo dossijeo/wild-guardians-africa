@@ -1,0 +1,9 @@
+# SFX 117: physical pickup of a dropped crate
+
+The existing native crate task now uses `eco_item_pickup` at the worker's authored harvest-contact marker. SFX 026 remains attached to `CrateDropped`; sale/payment remains SFX 116 on `CrateDelivered`. These cues are separate actions, without an extra layer on pickup or a new economic event. Pickup explicitly uses the world bus and worker emitter, with distance attenuation and the existing one-shot, deadline, cancellation and carry-tail guards.
+
+67 directed tests pass, including all four worker profiles, one cue per contact, unchanged domain at audio update, no delivery during the contact, cancellation when another worker already carries the crate, routing and voice limits. Build and web-package verification pass. The complete 126-row code/byte audit now records 91 assigned and 35 unassigned sounds. Assignment is not proof of audible playback for the whole catalogue.
+
+`native-report.json` and `native.png` record the browser fixture at localhost:5191. It uses paid centre/seed/worker, a controlled 10,000-coin balance, postgame and obstacle-free navigation. A requested real simulation raid interrupts carrying, causes one crate drop, and the worker subsequently picks it up and delivers it once. Both runtime Opus assets decode as stereo at 48 kHz: 026 lasts 2.48 seconds and 117 lasts two seconds. Playback accepted 026 for the dropped crate and 117 for the acting worker's crate task, at rate 1 on the world bus. No domain mutation, duplicate delivery, remaining voices or console errors were reported; the audio context closed.
+
+This fixture is muted and has no 3D world. It proves decoding, routing and simulation/task sequencing; it does not prove perceptual mix, native visual contact alignment or physical-mobile acceptance. Existing harvest triggering in this historical fixture is not used as evidence of automatic-harvest acceptance.

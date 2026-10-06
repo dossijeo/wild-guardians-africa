@@ -292,8 +292,7 @@
       "sha256": "20ba7460680f89f3c3e945dc088396e5a1166e15194d42bd94fb21d3eacf820b",
       "status": "connected",
       "destination": [
-        "CrateDropped",
-        "native-farm-contact"
+        "CrateDropped"
       ],
       "planned_trigger": "Levantar/dejar una caja; una toma por acción, no por fotograma."
     },
@@ -1353,11 +1352,11 @@
       "id": "eco_item_pickup",
       "filename": "117_eco_item_pickup.mp3",
       "sha256": "7e826f77e077f0951a6cb774411124916304b040a5a56864027352c97f64e2ed",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "native-farm-contact"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": null,
       "planned_trigger": "Recogida física de caja/producto; no suma dinero."
     },
     {
