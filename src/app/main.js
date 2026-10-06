@@ -43,6 +43,7 @@ import {TutorialProfile} from '../tutorial/profile.js';
 import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
+const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
@@ -215,6 +216,7 @@ function updateUI(force=false) {
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
+  if(guidanceQa){const stats=document.querySelector('#stats');stats.setAttribute('data-no-i18n','');stats.hidden=true;stats.textContent=JSON.stringify({step:state.tutorial.step,reading:state.tutorial.reading,guides:state.tutorial.guideAfterAuto,pauses:state.pauses,tool:tool?.kind,worldTool:world.tutorialToolKind,handsEnabled:world.tutorialHandsEnabled,worldHand:{visible:world.hands?.mesh.visible,textures:world.hands?.textures.size,...world.hands?.hints.getState()},hudHand:{hidden:hudHand?.image.hidden,loaded:hudHand?.image.complete&&hudHand.image.naturalWidth>0,selector:hudHand?.selector},voice:guardian?.voice?.status,camera:world.camera.position.toArray(),plants:state.plants.map(p=>({id:p.id,growth:p.growth,water:p.water,alive:p.alive})),workers:state.workers.map(w=>({id:w.id,status:w.status,taskId:w.taskId,x:w.x,z:w.z}))});}
   const stage=document.querySelector('#stage'),size=`${stage.clientWidth}:${stage.clientHeight}`;
   if(size!==hudSize){hudSize=size;const dims=layoutHud(stage);if(frameImages&&document.querySelector('#hiring-dialog'))framePaint(document.querySelector('#modal'),dims,frameImages);}
   document.querySelector('#clockValue').textContent=Game.clockLabel(state);
