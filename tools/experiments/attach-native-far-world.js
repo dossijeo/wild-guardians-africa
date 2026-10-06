@@ -16,7 +16,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
  let closed=false,busy=false,lastRequested=null;
  // Readiness modifies color visibility and consequently merged matrix versions.
  // Those versions must not invalidate the preparation that enabled that fade.
- const errors=[],coverage=new NativeTreeCoverage(),signature=()=>world.renderOrigin.revision+'|'+[...world.assetGroups.colors.values()].map(g=>[g.mesh.geometry.uuid,g.mesh.material.uuid,g.mesh.material.version,g.mesh.count].join(':')).join('|');
+ const errors=[],coverage=new NativeTreeCoverage(),signature=()=>world.renderOrigin.revision+'|'+[...world.assetGroups.colors.values()].map(g=>[g.mesh.geometry.uuid,g.mesh.material.uuid,g.mesh.material.version].join(':')).join('|');
  const frustum=new Frustum(),vp=new Matrix4();
  const prepared=new NativePreparedTreeCoverage(coverage,signature),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
  const stats={regions:0,nativePreparations:0,stalePreparations:0,errors};

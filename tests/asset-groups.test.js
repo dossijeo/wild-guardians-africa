@@ -86,3 +86,14 @@ test('shadow selection includes bounds of the final native variant even if they 
  assert.ok(nativeChunkBounds(chunks.get('front')).max.z>160);
  groups.update(chunks,camera,{x:0,z:0},light);assert.ok(groups.shadows.get('0').mesh.count>=3);groups.dispose();
 });
+
+test('optional far color compaction removes only fully hidden instances and preserves native shadows',()=>{
+ const {groups,chunks,camera}=fixture(),batch=chunks.get('front').userData.lodBatches[0],attribute=batch.meshes[0].geometry.attributes.nativeVisibility;
+ attribute.array.set([0,.001,1]);attribute.needsUpdate=true;groups.omitZeroColor=true;
+ groups.update(chunks,camera);const color=groups.colors.get('0:0').mesh,shadow=groups.shadows.get('0').mesh;
+ assert.equal(color.count,5);assert.equal(shadow.count,9);assert.ok(Math.abs(color.geometry.attributes.nativeVisibility.getX(0)-.001)<1e-8);
+ const version=color.instanceMatrix.version;groups.update(chunks,camera);assert.equal(color.count,5);assert.equal(color.instanceMatrix.version,version);
+ attribute.setX(0,.25);attribute.needsUpdate=true;groups.update(chunks,camera);assert.equal(color.count,6);assert.equal(shadow.count,9);
+ attribute.setX(0,0);attribute.needsUpdate=true;groups.update(chunks,camera);assert.equal(color.count,5);
+ groups.omitZeroColor=false;groups.update(chunks,camera);assert.equal(color.count,6);assert.equal(color.geometry.attributes.nativeVisibility.getX(0),0);groups.dispose();
+});

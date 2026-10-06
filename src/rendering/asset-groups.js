@@ -33,7 +33,7 @@ export class NativeAssetGroups{
   constructor(scene){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
     this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    this.enabled=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
+    this.enabled=true;this.omitZeroColor=false;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
   retire(cache,key){const g=cache.get(key);g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color')g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
@@ -49,16 +49,18 @@ export class NativeAssetGroups{
       if(pass==='color')this.root.add(mesh);
       g={mesh,capacity,pass,stamp:null};cache.set(key,g);
     }
-    const stamp=entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
-    g.mesh.count=count;
+    const stamp=(pass==='color'&&this.omitZeroColor?'compact|':'full|')+entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
     if(stamp!==g.stamp){
       const matrix=new THREE.Matrix4();let offset=0;
       for(const e of entries)for(let i=0;i<e.mesh.count;i++){
+        // Completely faded native trees have a faithful billboard replacement.
+        // Keep partial coverage and every shadow caster; omit only zero color.
+        if(pass==='color'&&this.omitZeroColor&&(e.mesh.geometry.attributes.nativeVisibility?.array[i]??1)<=0)continue;
         matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
         if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.array[offset]=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
         offset++;
       }
-      g.mesh.instanceMatrix.needsUpdate=true;if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
+      g.mesh.count=offset;g.mesh.instanceMatrix.needsUpdate=true;if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
       g.mesh.boundingBox=null;g.mesh.boundingSphere=null;g.stamp=stamp;stats.uploads++;
     }
     stats.bytes+=capacity*(pass==='color'?68:64);
