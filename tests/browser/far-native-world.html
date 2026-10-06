@@ -14,7 +14,7 @@ try{
  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe'}),nav=new Navigation(712,'sabana',pack.profile),site=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
  world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting('media');await world.load(state,nav,payload);world.render(0);
- const metadata=await json('/docs/qa/far-prelit-elevation8/day.json'),loader=new THREE.TextureLoader(),texture=await loader.loadAsync('../../docs/qa/far-vegetation-atlas/savanna-acacia-8views.webp'),prelitAtlas={day:await loader.loadAsync('../../docs/qa/far-prelit-elevation8/day.webp'),night:await loader.loadAsync('../../docs/qa/far-prelit-elevation8/night.webp'),views:8,rotations:8,resolution:128};
+ const metadata=await json('/docs/qa/far-prelit-lod2-elevation8/day.json'),loader=new THREE.TextureLoader(),texture=await loader.loadAsync('../../docs/qa/far-vegetation-atlas/savanna-acacia-8views.webp'),prelitAtlas={day:await loader.loadAsync('../../docs/qa/far-prelit-lod2-elevation8/day.webp'),night:await loader.loadAsync('../../docs/qa/far-prelit-lod2-elevation8/night.webp'),views:8,rotations:8,resolution:128};
  adapter=await attachNativeFarWorld(world,{metadata,texture,prelitAtlas});
  const enable=()=>{const p=adapter.layer.current?.prototype;if(p){p.uniforms.uDensityEnabled.value=1;p.uniforms.uDensityRange.value.set(180,400);}};enable();
  document.querySelectorAll('button').forEach(b=>b.disabled=false);

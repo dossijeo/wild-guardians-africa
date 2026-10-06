@@ -23,7 +23,8 @@ for mode, coverage in expected.items():
     assert report['representation'] == mode and report['gpuReady'] and report['gpuCovered']
     assert report['state']['ready'] == 1 and not report['errors']
     assert report['webglError'] == 0
-    assert report['nativeColorCoverage'][1] == {'count': 1, 'coverage': coverage}
+    active = [entry for entry in report['nativeColorCoverage'] if entry['count']]
+    assert active == [{'count': 1, 'coverage': coverage}]
 assert not read('console')
 images = {mode: Image.open(root / (mode + '.png')).convert('RGB') for mode in expected}
 assert len({image.size for image in images.values()}) == 1
@@ -53,7 +54,7 @@ for threshold in [0, 8]:
                  'impostorPixels': len(impostor), 'intersectionPixels': len(intersection),
                  'unionPixels': len(union), 'intersectionOverUnion': len(intersection) / len(union),
                  'nativeBounds': bounds(native), 'impostorBounds': bounds(impostor)})
-summary = {'atlasLod': reference['atlasLod'], 'nativeLod': 1,
+summary = {'atlasLod': reference['atlasLod'], 'nativeLod': next(i for i, entry in enumerate(reference['nativeColorCoverage']) if entry['count']),
            'camera': reference['camera'], 'atlasElevation':reference.get('atlasElevation',0), 'view':reference.get('view'), 'pixelMasks': rows,
            'scope': 'Single stationary configured view, masks from RGB difference against separately rendered background; includes leaf holes, antialias and shading, not geometry-only silhouette or perceived quality',
            'errors': []}
