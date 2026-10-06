@@ -10,6 +10,7 @@ import {quadTerrainLift} from '../src/rendering/hand-terrain.js';
 import {tutorialHandTarget} from '../src/rendering/tutorial-hand-target.js';
 const source=readFileSync(new URL('../references/extracted/Guardian_Tutorial_V8_Avatar_y_Manos_3D/script-0.js',import.meta.url),'utf8');
 const manifest=JSON.parse(readFileSync(new URL('../content/manifests/hands-native.json',import.meta.url),'utf8'));
+const imageVariants=JSON.parse(readFileSync(new URL('../content/manifests/image-runtime.json',import.meta.url),'utf8'));
 const plain=value=>JSON.parse(JSON.stringify(value));
 const context=vm.createContext({});
 vm.runInContext(source.slice(source.indexOf('const HAND_ASSETS ='),source.indexOf('const $ ='))+
@@ -77,7 +78,11 @@ test('Production renderer uses a depth-tested four-vertex quad, follows targets 
   const world=new THREE.Scene(),loaded=[],textures=[];
   const textureLoader={loadAsync:async url=>{loaded.push(url);const texture=new THREE.Texture();textures.push(texture);return texture;}};
   const hands=new NativeHands(world,()=>-4,{textureLoader});await hands.ready;
-  assert.deepEqual(loaded.sort(),Object.values(HAND_ASSETS).sort());
+  const expectedUrls=Object.values(HAND_ASSETS).map(source=>{
+    const variant=imageVariants.records.find(record=>record.source===source.slice(1));
+    return variant?'/'+variant.runtime:source;
+  });
+  assert.deepEqual(loaded.sort(),expectedUrls.sort());
   assert.equal(hands.mesh.geometry.getAttribute('position').count,4);assert.equal(hands.mesh.geometry.getIndex().count,6);
   assert.equal(hands.material.depthTest,true);assert.equal(hands.material.depthWrite,false);
   const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(5,4,8);camera.lookAt(0,0,0);
