@@ -1,0 +1,161 @@
+{
+  "schema": "wg-fixed-output-margin-1",
+  "evidence": {
+    "balanceSha256": "11ea583de3879ce45187c073952a6c48343baf9238ae2d2d4ce5fd08ea67d2af",
+    "stateGzipSha256": "0f6d330ab2bef3c7e641381771231fa016149d696ef2789d54864ae1f6a698fe",
+    "stateSha256": "dcbbf6ba821352da041986ce746ea1b6782ba0afda75c375919d5eb4d6fe0cae"
+  },
+  "baseline": {
+    "biome": "manglares",
+    "culture": "saheliana",
+    "completedNights": 100,
+    "result": "victory",
+    "policy": {
+      "profile": "olderFemale",
+      "mixed": true,
+      "middayHiring": false,
+      "plantsPerWorker": 12,
+      "defend": false,
+      "reserveLabourGrowth": true,
+      "reserveMaintenance": true,
+      "burstPlanting": false,
+      "cameraEntry": true
+    },
+    "prices": {
+      "mijo": 11,
+      "girasol": 36,
+      "sorgo": 13,
+      "maiz": 17,
+      "batata": 23,
+      "algodon": 178,
+      "yuca": 32,
+      "platano": 267
+    },
+    "income": "1652711",
+    "seeds": "840103",
+    "wages": "272340",
+    "repairs": "0",
+    "centres": "800",
+    "other": "0",
+    "operatingCosts": "1112443",
+    "operatingProfit": "540268",
+    "endingBalance": "540968",
+    "activity": {
+      "daylightSeconds": 30000,
+      "idleSecondsByReason": {
+        "budget": 4046,
+        "space": 0,
+        "shift-end": 1998
+      },
+      "unoccupiedFraction": 0.20146666666666666
+    },
+    "finalAttraction": "133474"
+  },
+  "bySpecies": {
+    "mijo": {
+      "planted": 4857,
+      "living": 136,
+      "picked": 4681,
+      "destroyed": 40,
+      "delivered": 4676,
+      "inTransit": 5,
+      "lostBeforeFirstWater": 11,
+      "seedCosts": "24285",
+      "income": "58481",
+      "harvestMinusSeedCosts": "34196",
+      "seedOnlyBreakEvenHarvest": "5"
+    },
+    "girasol": {
+      "planted": 2682,
+      "living": 165,
+      "picked": 2516,
+      "destroyed": 1,
+      "delivered": 2515,
+      "inTransit": 1,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "48276",
+      "income": "102794",
+      "harvestMinusSeedCosts": "54518",
+      "seedOnlyBreakEvenHarvest": "17"
+    },
+    "sorgo": {
+      "planted": 2682,
+      "living": 143,
+      "picked": 2539,
+      "destroyed": 0,
+      "delivered": 2538,
+      "inTransit": 1,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "16092",
+      "income": "37046",
+      "harvestMinusSeedCosts": "20954",
+      "seedOnlyBreakEvenHarvest": "6"
+    },
+    "maiz": {
+      "planted": 2687,
+      "living": 174,
+      "picked": 2513,
+      "destroyed": 0,
+      "delivered": 2513,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "21496",
+      "income": "48989",
+      "harvestMinusSeedCosts": "27493",
+      "seedOnlyBreakEvenHarvest": "8"
+    },
+    "batata": {
+      "planted": 2684,
+      "living": 142,
+      "picked": 2542,
+      "destroyed": 0,
+      "delivered": 2540,
+      "inTransit": 2,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "26840",
+      "income": "66058",
+      "harvestMinusSeedCosts": "39218",
+      "seedOnlyBreakEvenHarvest": "10"
+    },
+    "algodon": {
+      "planted": 2695,
+      "living": 219,
+      "picked": 2440,
+      "destroyed": 36,
+      "delivered": 2440,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 9,
+      "seedCosts": "269500",
+      "income": "503705",
+      "harvestMinusSeedCosts": "234205",
+      "seedOnlyBreakEvenHarvest": "96"
+    },
+    "yuca": {
+      "planted": 2672,
+      "living": 140,
+      "picked": 2532,
+      "destroyed": 0,
+      "delivered": 2531,
+      "inTransit": 1,
+      "lostBeforeFirstWater": 0,
+      "seedCosts": "32064",
+      "income": "90829",
+      "harvestMinusSeedCosts": "58765",
+      "seedOnlyBreakEvenHarvest": "12"
+    },
+    "platano": {
+      "planted": 2677,
+      "living": 279,
+      "picked": 2139,
+      "destroyed": 259,
+      "delivered": 2139,
+      "inTransit": 0,
+      "lostBeforeFirstWater": 76,
+      "seedCosts": "401550",
+      "income": "744809",
+      "harvestMinusSeedCosts": "343259",
+      "seedOnlyBreakEvenHarvest": "144"
+    }
+  },
+  "scope": "Historical ledger reconciliation only; no simulation or balance approval for current HEAD."
+}
