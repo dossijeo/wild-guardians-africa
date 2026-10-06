@@ -134,13 +134,23 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
-    this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
+    this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();
+    await this.loadReady(this.prepareSavedAnimalRigs(state));this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
     await this.loadReady(this.hands.ready);
-    // A resumed save can be seconds away from a multi-animal raid. Prepare
-    // its complete pending group under the loading screen, then warm all rigs.
-    await this.loadReady(this.animalPreload.reserveGroup(state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[]));
+    await this.loadReady(this.loadedAnimalActors());
     await this.loadReady(this.warmAnimalGpu());
+  }
+  prepareSavedAnimalRigs(state){
+    const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
+    return this.animalPreload.reserveGroup(group);
+  }
+  async loadedAnimalActors(){
+    for(const animal of this.state.raid?.animals??[]){
+      if(animal.status==='gone'||this.mixers.has(animal.id))continue;
+      await this.loadReady(this.objects.get(animal.id)?.userData.actorReady);
+      if(!this.mixers.has(animal.id))throw Error('Animal guardado sin modelo: '+animal.id);
+    }
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
@@ -222,7 +232,11 @@ export class WorldScene {
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
     const originals=[];
-    for(const rig of rigs){staging.add(rig.model);rig.model.traverse(mesh=>{if(mesh.isMesh){originals.push([mesh,mesh.frustumCulled]);mesh.frustumCulled=false;}});}
+    for(const rig of rigs)staging.add(rig.model);
+    // Restored actors stay parented to their world roots. Warm their private
+    // bone textures even if the saved raid lies outside the opening camera.
+    const active=(this.state.raid?.animals??[]).filter(a=>a.status!=='gone').map(a=>this.mixers.get(a.id)).filter(Boolean);
+    for(const rig of [...rigs,...active])rig.model.traverse(mesh=>{if(mesh.isMesh){originals.push([mesh,mesh.frustumCulled]);mesh.frustumCulled=false;}});
     this.scene.add(staging);let vfxPrimer=null,fluidPrimer=null,prepared=false;
     try{
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
@@ -261,7 +275,8 @@ export class WorldScene {
   requestActor(entity,type,root){
     if(root.userData.actorLoading||performance.now()<(root.userData.actorRetryAt??0))return;
     root.userData.actorLoading=true;
-    this.actor(entity,type).catch(error=>{
+    root.userData.actorReady=this.actor(entity,type);
+    root.userData.actorReady.catch(error=>{
       if(this.disposed||this.objects.get(entity.id)!==root)return;
       const failures=(root.userData.actorLoadFailures??0)+1;root.userData.actorLoadFailures=failures;
       root.userData.actorRetryAt=performance.now()+Math.min(30000,3000*failures);

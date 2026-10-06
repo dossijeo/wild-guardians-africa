@@ -1,0 +1,1217 @@
+{
+  "hiringRoutes": null,
+  "loading": [
+    {
+      "stamp": 6721.800000011921,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 32875.5,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 38794.30000001192,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "campaignEvents": [
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-2",
+      "type": "PlacementCommitted",
+      "kind": "center",
+      "targetId": "structure-2",
+      "presentation": {
+        "x": -30.684595436780327,
+        "z": 30.572305649518967
+      }
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-4",
+      "type": "CropPlaced",
+      "targetId": "plant-3"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-6",
+      "type": "CropPlaced",
+      "targetId": "plant-5"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-8",
+      "type": "CropPlaced",
+      "targetId": "plant-7"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-10",
+      "type": "CropPlaced",
+      "targetId": "plant-9"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-11",
+      "type": "NightStarted"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-13",
+      "type": "RaidSpawned"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-14",
+      "type": "TutorialMessageStarted",
+      "messageId": "mechanic.first-raid"
+    },
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "id": "event-15",
+      "type": "TutorialMessageStarted",
+      "messageId": "magic.shield"
+    }
+  ],
+  "campaignPhases": [
+    {
+      "day": 1,
+      "time": 400.1,
+      "elapsed": 400.0999999999901,
+      "completedNights": 0,
+      "result": null,
+      "raid": {
+        "id": "raid-1-night",
+        "animals": [
+          {
+            "id": "animal-11",
+            "species": "warthog",
+            "status": "retreating",
+            "x": 67.2,
+            "z": -7.427694350481033,
+            "spawn": {
+              "x": 67.2,
+              "z": -7.427694350481033
+            },
+            "exit": {
+              "x": 70.2,
+              "z": -7.427694350481033
+            },
+            "screen": {
+              "x": 1084,
+              "y": 325,
+              "depth": 0.9969167430953052,
+              "inFrustum": true
+            }
+          },
+          {
+            "id": "animal-12",
+            "species": "hyena",
+            "status": "retreating",
+            "x": 67.2,
+            "z": -3.4276943504810333,
+            "spawn": {
+              "x": 67.2,
+              "z": -3.4276943504810333
+            },
+            "exit": {
+              "x": 70.2,
+              "z": -3.4276943504810333
+            },
+            "screen": {
+              "x": 1117,
+              "y": 323,
+              "depth": 0.9966559542319231,
+              "inFrustum": true
+            }
+          },
+          {
+            "id": "animal-13",
+            "species": "buffalo",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 0.5723056495189667,
+            "spawn": {
+              "x": 67.2,
+              "z": 0.5723056495189667
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 0.5723056495189667
+            },
+            "screen": {
+              "x": 1156,
+              "y": 320,
+              "depth": 0.9963529560173972,
+              "inFrustum": true
+            }
+          },
+          {
+            "id": "animal-14",
+            "species": "lion",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 4.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 4.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 4.572305649518967
+            },
+            "screen": {
+              "x": 1202,
+              "y": 316,
+              "depth": 0.9959965985965357,
+              "inFrustum": true
+            }
+          },
+          {
+            "id": "animal-15",
+            "species": "rhino",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 8.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 8.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 8.572305649518967
+            },
+            "screen": {
+              "x": 1256,
+              "y": 311,
+              "depth": 0.9955714258720085,
+              "inFrustum": true
+            }
+          },
+          {
+            "id": "animal-16",
+            "species": "warthog",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 12.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 12.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 12.572305649518967
+            },
+            "screen": {
+              "x": 1322,
+              "y": 304,
+              "depth": 0.9950553744050088,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-17",
+            "species": "hyena",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 16.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 16.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 16.572305649518967
+            },
+            "screen": {
+              "x": 1403,
+              "y": 294,
+              "depth": 0.9944158202012452,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-18",
+            "species": "buffalo",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 20.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 20.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 20.572305649518967
+            },
+            "screen": {
+              "x": 1507,
+              "y": 279,
+              "depth": 0.9936024014204891,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-19",
+            "species": "lion",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 24.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 24.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 24.572305649518967
+            },
+            "screen": {
+              "x": 1643,
+              "y": 259,
+              "depth": 0.9925330667805774,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-20",
+            "species": "rhino",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 28.572305649518967,
+            "spawn": {
+              "x": 67.2,
+              "z": 28.572305649518967
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 28.572305649518967
+            },
+            "screen": {
+              "x": 1830,
+              "y": 231,
+              "depth": 0.9910644975343019,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-21",
+            "species": "warthog",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 32.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 32.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 32.57230564951897
+            },
+            "screen": {
+              "x": 2104,
+              "y": 192,
+              "depth": 0.9889217970039949,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-22",
+            "species": "hyena",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 36.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 36.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 36.57230564951897
+            },
+            "screen": {
+              "x": 2540,
+              "y": 131,
+              "depth": 0.9855025106507582,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-23",
+            "species": "buffalo",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 40.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 40.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 40.57230564951897
+            },
+            "screen": {
+              "x": 3346,
+              "y": 20,
+              "depth": 0.9791817417282974,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-24",
+            "species": "lion",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 44.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 44.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 44.57230564951897
+            },
+            "screen": {
+              "x": 5340,
+              "y": -249,
+              "depth": 0.9635446502359768,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-25",
+            "species": "rhino",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 48.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 48.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 48.57230564951897
+            },
+            "screen": {
+              "x": 18507,
+              "y": -2005,
+              "depth": 0.8602860507532281,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-26",
+            "species": "warthog",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 52.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 52.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 52.57230564951897
+            },
+            "screen": {
+              "x": -9277,
+              "y": 1677,
+              "depth": 1.078166891296385,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-27",
+            "species": "hyena",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 56.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 56.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 56.57230564951897
+            },
+            "screen": {
+              "x": -3241,
+              "y": 877,
+              "depth": 1.0308368884465793,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-28",
+            "species": "buffalo",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 60.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 60.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 60.57230564951897
+            },
+            "screen": {
+              "x": -1773,
+              "y": 678,
+              "depth": 1.0193212136488268,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-29",
+            "species": "lion",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 64.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 64.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 64.57230564951897
+            },
+            "screen": {
+              "x": -1111,
+              "y": 594,
+              "depth": 1.0141274895840426,
+              "inFrustum": false
+            }
+          },
+          {
+            "id": "animal-30",
+            "species": "rhino",
+            "status": "retreating",
+            "x": 67.2,
+            "z": 68.57230564951897,
+            "spawn": {
+              "x": 67.2,
+              "z": 68.57230564951897
+            },
+            "exit": {
+              "x": 70.2,
+              "z": 68.57230564951897
+            },
+            "screen": {
+              "x": -733,
+              "y": 550,
+              "depth": 1.01117095638303,
+              "inFrustum": false
+            }
+          }
+        ]
+      },
+      "pauses": [
+        "qa-camera"
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "status": "intact",
+          "hp": 600,
+          "maxHp": 600
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "raid": {
+    "id": "raid-1-night",
+    "animals": [
+      {
+        "id": "animal-11",
+        "species": "warthog",
+        "status": "retreating",
+        "x": 67.2,
+        "z": -7.427694350481033,
+        "spawn": {
+          "x": 67.2,
+          "z": -7.427694350481033
+        },
+        "exit": {
+          "x": 70.2,
+          "z": -7.427694350481033
+        },
+        "screen": {
+          "x": 2266,
+          "y": -392,
+          "depth": 0.9968565862254504,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-12",
+        "species": "hyena",
+        "status": "retreating",
+        "x": 67.2,
+        "z": -3.4276943504810333,
+        "spawn": {
+          "x": 67.2,
+          "z": -3.4276943504810333
+        },
+        "exit": {
+          "x": 70.2,
+          "z": -3.4276943504810333
+        },
+        "screen": {
+          "x": 2380,
+          "y": -417,
+          "depth": 0.9966091044891849,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-13",
+        "species": "buffalo",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 0.5723056495189667,
+        "spawn": {
+          "x": 67.2,
+          "z": 0.5723056495189667
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 0.5723056495189667
+        },
+        "screen": {
+          "x": 2511,
+          "y": -446,
+          "depth": 0.9963240666436406,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-14",
+        "species": "lion",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 4.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 4.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 4.572305649518967
+        },
+        "screen": {
+          "x": 2663,
+          "y": -481,
+          "depth": 0.9959908139703507,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-15",
+        "species": "rhino",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 8.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 8.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 8.572305649518967
+        },
+        "screen": {
+          "x": 2844,
+          "y": -522,
+          "depth": 0.9955971400805226,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-16",
+        "species": "warthog",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 12.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 12.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 12.572305649518967
+        },
+        "screen": {
+          "x": 3060,
+          "y": -573,
+          "depth": 0.9951256378569115,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-17",
+        "species": "hyena",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 16.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 16.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 16.572305649518967
+        },
+        "screen": {
+          "x": 3326,
+          "y": -636,
+          "depth": 0.9945476864586011,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-18",
+        "species": "buffalo",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 20.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 20.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 20.572305649518967
+        },
+        "screen": {
+          "x": 3659,
+          "y": -718,
+          "depth": 0.9938222090586939,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-19",
+        "species": "lion",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 24.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 24.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 24.572305649518967
+        },
+        "screen": {
+          "x": 4086,
+          "y": -823,
+          "depth": 0.9928916626029591,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-20",
+        "species": "rhino",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 28.572305649518967,
+        "spawn": {
+          "x": 67.2,
+          "z": 28.572305649518967
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 28.572305649518967
+        },
+        "screen": {
+          "x": 4655,
+          "y": -964,
+          "depth": 0.9916506231198464,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-21",
+        "species": "warthog",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 32.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 32.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 32.57230564951897
+        },
+        "screen": {
+          "x": 5446,
+          "y": -1158,
+          "depth": 0.989926948767261,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-22",
+        "species": "hyena",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 36.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 36.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 36.57230564951897
+        },
+        "screen": {
+          "x": 6623,
+          "y": -1445,
+          "depth": 0.9873618957604801,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-23",
+        "species": "buffalo",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 40.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 40.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 40.57230564951897
+        },
+        "screen": {
+          "x": 8561,
+          "y": -1917,
+          "depth": 0.983140138764805,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-24",
+        "species": "lion",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 44.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 44.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 44.57230564951897
+        },
+        "screen": {
+          "x": 12330,
+          "y": -2830,
+          "depth": 0.974925491487303,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-25",
+        "species": "rhino",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 48.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 48.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 48.57230564951897
+        },
+        "screen": {
+          "x": 22896,
+          "y": -5384,
+          "depth": 0.9519017476956058,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-26",
+        "species": "warthog",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 52.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 52.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 52.57230564951897
+        },
+        "screen": {
+          "x": 218671,
+          "y": -52543,
+          "depth": 0.5252885780096952,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-27",
+        "species": "hyena",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 56.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 56.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 56.57230564951897
+        },
+        "screen": {
+          "x": -27348,
+          "y": 6717,
+          "depth": 1.0613895624023348,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-28",
+        "species": "buffalo",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 60.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 60.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 60.57230564951897
+        },
+        "screen": {
+          "x": -12541,
+          "y": 3144,
+          "depth": 1.0291223488831462,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-29",
+        "species": "lion",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 64.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 64.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 64.57230564951897
+        },
+        "screen": {
+          "x": -7952,
+          "y": 2046,
+          "depth": 1.0191228608158167,
+          "inFrustum": false
+        }
+      },
+      {
+        "id": "animal-30",
+        "species": "rhino",
+        "status": "retreating",
+        "x": 67.2,
+        "z": 68.57230564951897,
+        "spawn": {
+          "x": 67.2,
+          "z": 68.57230564951897
+        },
+        "exit": {
+          "x": 70.2,
+          "z": 68.57230564951897
+        },
+        "screen": {
+          "x": -5723,
+          "y": 1516,
+          "depth": 1.0142648770397023,
+          "inFrustum": false
+        }
+      }
+    ]
+  },
+  "raidView": {
+    "eye": {
+      "x": -30.684595436780327,
+      "z": 62.008910071391654
+    },
+    "target": {
+      "x": -30.684595436780327,
+      "z": 30.572305649518967
+    }
+  },
+  "completedNights": 0,
+  "result": null,
+  "nightPlan": {
+    "at": 400,
+    "group": [
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino",
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino"
+    ],
+    "done": true
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "day": 1,
+  "time": 400.1,
+  "elapsed": 400.0999999999901,
+  "balance": {
+    "n": "680",
+    "d": "1"
+  },
+  "pauses": [
+    "qa-camera"
+  ],
+  "tutorial": {
+    "step": "done",
+    "seen": [
+      "mechanic.first-raid"
+    ],
+    "pending": [
+      "mechanic.defenses"
+    ],
+    "guideAfterAuto": [],
+    "reading": "magic.shield",
+    "basicSkipped": false,
+    "magicReminders": {},
+    "dismissed": [
+      "mechanic.first-raid:"
+    ]
+  },
+  "hands": {
+    "hudVisible": false,
+    "worldVisible": false,
+    "toolKind": null,
+    "worldScreen": null
+  },
+  "structures": [
+    {
+      "id": "structure-2",
+      "x": -30.684595436780327,
+      "z": 30.572305649518967,
+      "screen": {
+        "x": 640,
+        "y": 364,
+        "depth": 0.9945267498123629,
+        "inFrustum": true
+      }
+    }
+  ],
+  "proposedCenter": {
+    "kind": "center",
+    "x": -30.684595436780327,
+    "z": 30.572305649518967,
+    "culture": "mapungubwe",
+    "screen": {
+      "x": 640,
+      "y": 364,
+      "depth": 0.9945267498123629,
+      "inFrustum": true
+    }
+  },
+  "plantSpots": [
+    {
+      "x": -25.5,
+      "z": 27,
+      "screen": {
+        "x": 770,
+        "y": 329,
+        "depth": 0.9950458723710444,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 28.5,
+      "screen": {
+        "x": 775,
+        "y": 343,
+        "depth": 0.9948394915053785,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 30,
+      "screen": {
+        "x": 781,
+        "y": 358,
+        "depth": 0.9946165246780203,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 31.5,
+      "screen": {
+        "x": 786,
+        "y": 374,
+        "depth": 0.9943749278608706,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": -25.5,
+      "z": 33,
+      "screen": {
+        "x": 793,
+        "y": 391,
+        "depth": 0.9941122705225759,
+        "inFrustum": true
+      }
+    }
+  ],
+  "plants": [
+    {
+      "id": "plant-3",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 764,
+        "y": 325,
+        "depth": 0.9951010115827122,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-5",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 771,
+        "y": 344,
+        "depth": 0.9948291671851162,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-7",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 778,
+        "y": 364,
+        "depth": 0.994526697822,
+        "inFrustum": true
+      }
+    },
+    {
+      "id": "plant-9",
+      "growth": 0,
+      "alive": true,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "screen": {
+        "x": 786,
+        "y": 386,
+        "depth": 0.9941894979716266,
+        "inFrustum": true
+      }
+    }
+  ],
+  "workers": [],
+  "delivered": 0
+}
