@@ -56,7 +56,7 @@ export class AnimalPreload {
     while(!stale()&&missing()){
       await nextFrame();if(stale())return false;const next=missing();if(!next)break;
       const rig=this.create(next.species,next.entry);
-      try{await prepare(rig);}catch(error){releaseActorRig(rig);throw error;}
+      try{await prepare(rig);}catch(error){releaseActorRig(rig);if(stale())return false;throw error;}
       if(stale()||size(next.entry)>=next.entry.target){releaseActorRig(rig);continue;}
       if(!next.entry.spare)next.entry.spare=rig;else next.entry.additional.push(rig);
     }

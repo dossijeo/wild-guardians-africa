@@ -49,6 +49,11 @@ test('failed GPU preparation releases the new rig and retains existing reserves 
  await assert.rejects(pool.reserveGroup(Array(2).fill('warthog'),{nextFrame:async()=>{},prepare:async rig=>{const stop=rig.mixer.stopAllAction.bind(rig.mixer);rig.mixer.stopAllAction=()=>{released++;stop();};throw Error('GPU failed');}}),/GPU failed/);
  assert.equal(released,1);assert.equal((await pool.spares()).length,1);assert.equal(await pool.reserveGroup(Array(2).fill('warthog'),{nextFrame:async()=>{}}),true);assert.equal((await pool.spares()).length,2);pool.dispose();
 });
+test('an obsolete preparation failure cancels quietly even when the same composition returns',async()=>{
+ const pool=new AnimalPreload({model:async()=>source()},()=>({url:'animal.glb'}));await pool.warm('warthog');let fail;
+ const old=pool.reserveGroup(Array(2).fill('warthog'),{nextFrame:async()=>{},prepare:()=>new Promise((resolve,reject)=>fail=reject)});while(!fail)await Promise.resolve();
+ await pool.reserveGroup([]);await pool.reserveGroup(Array(2).fill('warthog'),{nextFrame:async()=>{}});fail(Error('Old GPU failure'));assert.equal(await old,false);assert.equal((await pool.spares()).length,2);pool.dispose();
+});
 test('leaving actors release private bone textures once while retaining shared model resources',()=>{
  const model=new Group(),bone=new Bone(),skeleton=new Skeleton([bone]),geometry=new BoxGeometry(),material=new MeshStandardMaterial();
  model.add(bone);for(let i=0;i<2;i++){const mesh=new SkinnedMesh(geometry,material);model.add(mesh);mesh.bind(skeleton);}
