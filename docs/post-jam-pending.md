@@ -155,3 +155,13 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Shaders VFX preparados y retenidos durante carga](qa/vfx-shader-preload/README.md): cuatro materiales, sin conservar geometrías/partículas de preparación, ondas de río preparadas sin contactos falsos, recetas/destino reales de profundidad y máscara de daño. Gran Cañón: contacto de cultivo y golpe al centro sin compileShader/linkProgram en las trazas correspondientes; 78 pruebas/build. Sabana mantiene dos variantes Standard y persiste un pico CPU sin compilación. Pendientes otros biomas/culturas/calidades/móvil, costes de memoria/carga y primeras subidas/ejecuciones; no se declara resuelto todo el tirón.
+
+
+## Textos del guardián con carisma y lore (pedido el 6 de octubre de 2026)
+
+- Sustituir los textos existentes del guardián por los del [JSON bilingüe proporcionado por el usuario](reference/Wild_Guardians_Espiritu_ES_EN_v2.json).
+- El archivo contiene 27 sustituciones en español y 27 en inglés: cada clave es el texto anterior y cada valor, la nueva versión. Conservar esta referencia original y comprobar la correspondencia con los textos actuales antes de integrar.
+- Aplicar ambas versiones al tutorial, recordatorios, mensajes de victoria/derrota y demás intervenciones del guardián cubiertas por el archivo; mantener las reglas de gameplay, disparadores, tiempos y señalización existentes.
+- Verificar cobertura de las sustituciones en ambos idiomas, ausencia de mensajes antiguos o mezclas de idioma y legibilidad de los nuevos textos en móvil y escritorio. Si una clave ha cambiado entretanto, revisar su equivalencia de contexto en lugar de omitirla silenciosamente.
+
+Estado: registrado y pendiente de integración POST-JAM. JSON original guardado sin modificaciones (18.628 bytes; SHA-256 `c006ad919e24f4031425cd86b32ad4985240498388140f9e9c39b3d115ac0a6f`).
