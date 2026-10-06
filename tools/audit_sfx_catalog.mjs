@@ -1,3 +1,4 @@
+import {POWER_READY_SOUND_IDS} from '../src/audio/power-ready-audio.js';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
@@ -44,6 +45,7 @@ for(const [file,selector,ids,trigger] of [
  ['worker-audio','WORKER_SOUND_IDS',WORKER_SOUND_IDS,'WorkerAudio.update: observed assignment/work/flight reaction'],
  ['guardian-audio','GUARDIAN_SOUND_IDS',GUARDIAN_SOUND_IDS,'GuardianAudio.observe: actual rendered portrait lifecycle'],
  ['raid-arrival-audio','RAID_ARRIVAL_SOUND_IDS',RAID_ARRIVAL_SOUND_IDS,'RaidArrivalAudio.update: first observed physical farm entry per raid'],
+ ['power-ready-audio','POWER_READY_SOUND_IDS',POWER_READY_SOUND_IDS,'PowerReadyAudio.update: observed positive cooldown reaching zero'],
  ['unlock-audio','UNLOCK_SOUND_IDS',UNLOCK_SOUND_IDS,'UnlockAudio.update: newly reached permanent magic milestone'],
 ])for(const id of ids)add(id,`src/audio/${file}.js`,`export const ${selector}`,trigger);
 for(const [id,trigger] of Object.entries(UI_SOUND_ROUTES))add(id,'src/audio/ui-audio.js','export const UI_SOUND_ROUTES',trigger);

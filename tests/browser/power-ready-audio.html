@@ -1,0 +1,32 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Magia recargada SFX 099</title>
+<style>body{font:16px system-ui;padding:24px;background:#213729;color:#fff}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>SFX 099 · Magia recargada</h1><p>Reproducción nativa silenciada a 44,1/48 kHz. No acredita escucha ni móvil físico.</p><button id="run">Verificar recargas</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+const rows=[],errors=[],status=document.querySelector('#status'),report=document.querySelector('#report');
+const check=(ok,message)=>{if(!ok)throw Error(message);};
+const paint=()=>report.textContent=JSON.stringify({rows,errors},null,2);
+addEventListener('error',e=>{errors.push(String(e.error??e.message));paint();});addEventListener('unhandledrejection',e=>{errors.push(String(e.reason));paint();});
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;let audio;
+ try{
+  for(const rate of [44100,48000]){
+   audio=new AudioSystem({sfx:0,music:0});audio.context=new AudioContext({sampleRate:rate});await audio.unlock();
+   const bank=await audio.sfxBank(),item=bank.items.find(i=>i.id==='spirit_power_charge');check(item,'Missing catalogue sound');
+   const buffer=await audio.buffer(item.audio.url),play=audio.sound.bind(audio),accepted=[];
+   audio.sound=async(id,options)=>{const source=await play(id,options);if(source){accepted.push({id,bus:audio.voices.get(source).bus,sameBuffer:source.buffer===buffer,rate:source.playbackRate.value,loop:source.loop});}return source;};
+   const s={day:5,time:100,elapsed:100,result:null,pauses:[],cooldowns:{shield:2,growth:2,multiply:2}};
+   audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===0,'Snapshot availability played');
+   const before=JSON.stringify(s);audio.updateUnlocks(s);check(JSON.stringify(s)===before,'Observer mutated state');
+   s.elapsed+=2;s.cooldowns={shield:0,growth:0,multiply:0};audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,50));
+   check(accepted.length===1,'Simultaneous readiness was not grouped');check(accepted[0].id==='spirit_power_charge'&&accepted[0].bus==='ui'&&accepted[0].sameBuffer&&accepted[0].rate===1&&!accepted[0].loop,'Native voice policy changed');
+   for(let i=0;i<100;i++)audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===1,'Stable frames replayed');
+   audio.updateUnlocks({...s,cooldowns:{...s.cooldowns}});await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===1,'Loaded snapshot replayed');
+   audio.stop();audio.updateUnlocks(s);await new Promise(resolve=>setTimeout(resolve,20));check(accepted.length===1,'Restart replayed history');
+   audio.dispose();await new Promise(resolve=>setTimeout(resolve,40));check(audio.context.state==='closed'&&audio.active.length===0&&audio.voices.size===0,'Voice/context retained');
+   rows.push({rate,accepted,codec:bank.runtimeCodec,url:item.audio.url,channels:buffer.numberOfChannels,samples:buffer.length,duration:buffer.duration,closed:true,active:audio.active.length});audio=null;paint();
+  }
+  status.textContent='Correcto · dos frecuencias, una voz agrupada y cierre completo';
+ }catch(e){errors.push(String(e));audio?.dispose();status.textContent='ERROR: '+e.message;paint();}
+};
+</script></html>

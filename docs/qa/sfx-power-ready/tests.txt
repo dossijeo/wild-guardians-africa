@@ -1,0 +1,593 @@
+TAP version 13
+# (node:21564) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: worker contact and vocal response share one committed fact with independent emitter budgets
+ok 1 - worker contact and vocal response share one committed fact with independent emitter budgets
+  ---
+  duration_ms: 36.3538
+  ...
+# Subtest: late decoding cannot play either half of an old aggression after leaving the scene
+ok 2 - late decoding cannot play either half of an old aggression after leaving the scene
+  ---
+  duration_ms: 3.5253
+  ...
+# Subtest: native portrait disappearance uses the complete original UI source beyond visual closure
+ok 3 - native portrait disappearance uses the complete original UI source beyond visual closure
+  ---
+  duration_ms: 5.7364
+  ...
+# Subtest: context suspension invalidates pending portrait audio and resumes its phase silently
+ok 4 - context suspension invalidates pending portrait audio and resumes its phase silently
+  ---
+  duration_ms: 5.4582
+  ...
+# Subtest: four original NPC reactions share one voice family, pitch and world bus
+ok 5 - four original NPC reactions share one voice family, pitch and world bus
+  ---
+  duration_ms: 1.6512
+  ...
+# Subtest: context suspension invalidates a pending NPC reaction before another frame
+ok 6 - context suspension invalidates a pending NPC reaction before another frame
+  ---
+  duration_ms: 43.2007
+  ...
+# Subtest: four buses preserve public music/SFX controls, remain reusable on stop and release on disposal
+ok 7 - four buses preserve public music/SFX controls, remain reusable on stop and release on disposal
+  ---
+  duration_ms: 1.2657
+  ...
+# Subtest: a repeated emitter across different sound families is bounded after concurrent decode
+ok 8 - a repeated emitter across different sound families is bounded after concurrent decode
+  ---
+  duration_ms: 2.0789
+  ...
+# Subtest: rejecting a cue under two independent saturated limits does not partially evict voices
+ok 9 - rejecting a cue under two independent saturated limits does not partially evict voices
+  ---
+  duration_ms: 1.4721
+  ...
+# Subtest: native worker/animal metadata chooses positional world cues while UI and results stay unattenuated
+ok 10 - native worker/animal metadata chooses positional world cues while UI and results stay unattenuated
+  ---
+  duration_ms: 0.5245
+  ...
+# Subtest: a foot contact invalidated or expired during decode never creates a voice
+ok 11 - a foot contact invalidated or expired during decode never creates a voice
+  ---
+  duration_ms: 0.7612
+  ...
+# Subtest: context suspension cancels a pending foot contact even when no simulation frame runs
+ok 12 - context suspension cancels a pending foot contact even when no simulation frame runs
+  ---
+  duration_ms: 6.2829
+  ...
+# Subtest: native ambient loops use the ambient child bus and share SFX budgets without changing simulation
+ok 13 - native ambient loops use the ambient child bus and share SFX budgets without changing simulation
+  ---
+  duration_ms: 3.0583
+  ...
+# Subtest: leaving while original ambient MP3s decode prevents every late loop from starting
+ok 14 - leaving while original ambient MP3s decode prevents every late loop from starting
+  ---
+  duration_ms: 1.9765
+  ...
+# Subtest: native work audio uses one unpitched world source and completion events do not replay it
+ok 15 - native work audio uses one unpitched world source and completion events do not replay it
+  ---
+  duration_ms: 2.8515
+  ...
+# Subtest: suspending during work decode invalidates its request even before the next frame
+ok 16 - suspending during work decode invalidates its request even before the next frame
+  ---
+  duration_ms: 1.2169
+  ...
+# Subtest: native UI transition decodes into the UI child bus while stale panel-open requests stay silent
+ok 17 - native UI transition decodes into the UI child bus while stale panel-open requests stay silent
+  ---
+  duration_ms: 3.3574
+  ...
+# Subtest: leaving the production UI cancels pending one-shots without affecting the next scene
+ok 18 - leaving the production UI cancels pending one-shots without affecting the next scene
+  ---
+  duration_ms: 1.4707
+  ...
+# Subtest: native animal activity uses original unpitched world audio and preserves its family/emitter
+ok 19 - native animal activity uses original unpitched world audio and preserves its family/emitter
+  ---
+  duration_ms: 4.1066
+  ...
+# Subtest: context suspension invalidates pending native animal activity even before the next frame
+ok 20 - context suspension invalidates pending native animal activity even before the next frame
+  ---
+  duration_ms: 1.3821
+  ...
+# Subtest: seed purchase and crop-to-crate facts select receipts instead of replaying physical sow/pick contacts
+ok 21 - seed purchase and crop-to-crate facts select receipts instead of replaying physical sow/pick contacts
+  ---
+  duration_ms: 1.1869
+  ...
+# Subtest: original can and soil contact coexist only during the authored pour without changing pitch
+ok 22 - original can and soil contact coexist only during the authored pour without changing pitch
+  ---
+  duration_ms: 4.2636
+  ...
+# Subtest: sowing and seed layers share four family slots and two slots per worker after concurrent decode
+ok 23 - sowing and seed layers share four family slots and two slots per worker after concurrent decode
+  ---
+  duration_ms: 6.4051
+  ...
+# (node:40572) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: quiet frames do not revisit IDs or allocate a replacement deduplication set
+ok 24 - quiet frames do not revisit IDs or allocate a replacement deduplication set
+  ---
+  duration_ms: 6.8289
+  ...
+# Subtest: actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+ok 25 - actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+  ---
+  duration_ms: 57.3169
+  ...
+# Subtest: losing the old anchor falls back to processing the complete available history
+ok 26 - losing the old anchor falls back to processing the complete available history
+  ---
+  duration_ms: 4.0979
+  ...
+# Subtest: replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+ok 27 - replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+  ---
+  duration_ms: 40.851
+  ...
+# Subtest: remember seeds the cursor silently and a restored history only plays subsequent events
+ok 28 - remember seeds the cursor silently and a restored history only plays subsequent events
+  ---
+  duration_ms: 1.1567
+  ...
+# Subtest: music-only and global audio stops do not replay processed event history
+ok 29 - music-only and global audio stops do not replay processed event history
+  ---
+  duration_ms: 0.7769
+  ...
+# Subtest: unknown event types and repeated undefined IDs retain the existing dispatcher contract
+ok 30 - unknown event types and repeated undefined IDs retain the existing dispatcher contract
+  ---
+  duration_ms: 0.3442
+  ...
+# Subtest: failed asynchronous playback is consumed once while following events still dispatch
+ok 31 - failed asynchronous playback is consumed once while following events still dispatch
+  ---
+  duration_ms: 14.5589
+  ...
+# Subtest: all logical audio routes keep their original selection when histories roll
+ok 32 - all logical audio routes keep their original selection when histories roll
+  ---
+  duration_ms: 1.7471
+  ...
+# (node:33112) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: switching while music fetches discards eight queued old stems and skips obsolete decoding
+ok 33 - switching while music fetches discards eight queued old stems and skips obsolete decoding
+  ---
+  duration_ms: 22.4323
+  ...
+# Subtest: already running music decodes share the two-job limit with the replacement pack
+ok 34 - already running music decodes share the two-job limit with the replacement pack
+  ---
+  duration_ms: 10.0313
+  ...
+# Subtest: a cancelled music fetch is evicted without poisoning a later request for the same URL
+ok 35 - a cancelled music fetch is evicted without poisoning a later request for the same URL
+  ---
+  duration_ms: 7.2315
+  ...
+# Subtest: leaving during menu JSON cannot start or decode stale music
+ok 36 - leaving during menu JSON cannot start or decode stale music
+  ---
+  duration_ms: 1.8225
+  ...
+# Subtest: leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+ok 37 - leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+  ---
+  duration_ms: 0.513
+  ...
+# Subtest: late pack A loading and rejection cannot start A or stop the newer B stems
+ok 38 - late pack A loading and rejection cannot start A or stop the newer B stems
+  ---
+  duration_ms: 2.6998
+  ...
+# Subtest: failed network and failed decoder caches are evicted and one later request can retry
+ok 39 - failed network and failed decoder caches are evicted and one later request can retry
+  ---
+  duration_ms: 1.4959
+  ...
+# Subtest: failed SFX catalogue is coalesced, released and retryable
+ok 40 - failed SFX catalogue is coalesced, released and retryable
+  ---
+  duration_ms: 0.9929
+  ...
+# Subtest: failed stem allows same-day retry and partial playback start is cleaned up
+ok 41 - failed stem allows same-day retry and partial playback start is cleaned up
+  ---
+  duration_ms: 2.7465
+  ...
+# Subtest: suspending during decode does not falsely mark an inaudible pack as playing
+ok 42 - suspending during decode does not falsely mark an inaudible pack as playing
+  ---
+  duration_ms: 2.7598
+  ...
+# Subtest: twenty menu enter/exit cycles release all source and volume nodes
+ok 43 - twenty menu enter/exit cycles release all source and volume nodes
+  ---
+  duration_ms: 37.3393
+  ...
+# Subtest: a rejected resume leaves audio idle and the next gesture can unlock the same context
+ok 44 - a rejected resume leaves audio idle and the next gesture can unlock the same context
+  ---
+  duration_ms: 0.5441
+  ...
+# Subtest: pack switching preserves active world/UI/ambient voices and pending SFX decode
+ok 45 - pack switching preserves active world/UI/ambient voices and pending SFX decode
+  ---
+  duration_ms: 2.9864
+  ...
+# Subtest: decoded pack cache retains only current music and preserves reusable SFX
+ok 46 - decoded pack cache retains only current music and preserves reusable SFX
+  ---
+  duration_ms: 0.8748
+  ...
+# Subtest: automatic daily selection coalesces frames, changes without a gesture and preserves results
+ok 47 - automatic daily selection coalesces frames, changes without a gesture and preserves results
+  ---
+  duration_ms: 2.681
+  ...
+# Subtest: automatic retry is bounded and a failed pack does not stop world effects
+ok 48 - automatic retry is bounded and a failed pack does not stop world effects
+  ---
+  duration_ms: 1.8921
+  ...
+# Subtest: old menu JSON and old decoded music cannot survive a music-only transition
+ok 49 - old menu JSON and old decoded music cannot survive a music-only transition
+  ---
+  duration_ms: 1.7624
+  ...
+# Subtest: music transport failure releases only music and retains pending result feedback
+ok 50 - music transport failure releases only music and retains pending result feedback
+  ---
+  duration_ms: 1.0252
+  ...
+# Subtest: repeated menu gestures share one pending load and preserve the active original player
+ok 51 - repeated menu gestures share one pending load and preserve the active original player
+  ---
+  duration_ms: 2.0966
+  ...
+# Subtest: a failed menu request is retryable without retaining a false active player
+ok 52 - a failed menu request is retryable without retaining a false active player
+  ---
+  duration_ms: 0.8374
+  ...
+# (node:29236) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 53 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 1013.7662
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 54 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.4451
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 55 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 4.9298
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 56 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.7397
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 57 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 1908.269
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 58 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 18.5726
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 59 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 12.4263
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 60 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 12.9357
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 61 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 9.1432
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 62 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 11.2671
+  ...
+# (node:39284) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: musical catalogue aliases use the same full Opus file for windows and fallback
+ok 63 - musical catalogue aliases use the same full Opus file for windows and fallback
+  ---
+  duration_ms: 136.222
+  ...
+# Subtest: all musical aliases remain relative in native documents and nested menu
+ok 64 - all musical aliases remain relative in native documents and nested menu
+  ---
+  duration_ms: 1.4327
+  ...
+# Subtest: SFX source provenance remains available while runtime uses matching Opus metadata
+ok 65 - SFX source provenance remains available while runtime uses matching Opus metadata
+  ---
+  duration_ms: 2194.7669
+  ...
+# (node:22372) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: upcoming raid sounds decode once per species before first contact, without starting any voice
+ok 66 - upcoming raid sounds decode once per species before first contact, without starting any voice
+  ---
+  duration_ms: 48.9287
+  ...
+# Subtest: Every gameplay sound resolves to a one-shot in the supplied SFX lab
+ok 67 - Every gameplay sound resolves to a one-shot in the supplied SFX lab
+  ---
+  duration_ms: 56.8846
+  ...
+# Subtest: Leaving a scene while a sound decodes cannot start playback afterwards
+ok 68 - Leaving a scene while a sound decodes cannot start playback afterwards
+  ---
+  duration_ms: 0.9828
+  ...
+# Subtest: Loading a save suppresses historical sound events while new events still play
+ok 69 - Loading a save suppresses historical sound events while new events still play
+  ---
+  duration_ms: 4.0358
+  ...
+# (node:36524) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mapungubwe paid center emits one placement and one completion with a stable captured position
+ok 70 - mapungubwe paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 29.4479
+  ...
+# Subtest: saheliana paid center emits one placement and one completion with a stable captured position
+ok 71 - saheliana paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 36.3861
+  ...
+# Subtest: suajili paid center emits one placement and one completion with a stable captured position
+ok 72 - suajili paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 3.162
+  ...
+# Subtest: musgum paid center emits one placement and one completion with a stable captured position
+ok 73 - musgum paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 3.0928
+  ...
+# Subtest: etiope paid center emits one placement and one completion with a stable captured position
+ok 74 - etiope paid center emits one placement and one completion with a stable captured position
+  ---
+  duration_ms: 5.8063
+  ...
+# Subtest: a paid wall chain completes once for the entire command rather than per segment or automatic gate
+ok 75 - a paid wall chain completes once for the entire command rather than per segment or automatic gate
+  ---
+  duration_ms: 14.1989
+  ...
+# Subtest: a rejected center has no placement or completion cue and cannot spend money
+ok 76 - a rejected center has no placement or completion cue and cannot spend money
+  ---
+  duration_ms: 1.1019
+  ...
+# Subtest: lion/olderMale actual first/second collision produces one contact plus its NPC response
+ok 77 - lion/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 3.2761
+  ...
+# Subtest: lion/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 78 - lion/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 7.2883
+  ...
+# Subtest: lion/youngMale actual first/second collision produces one contact plus its NPC response
+ok 79 - lion/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.3053
+  ...
+# Subtest: lion/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 80 - lion/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 3.7565
+  ...
+# Subtest: hyena/olderMale actual first/second collision produces one contact plus its NPC response
+ok 81 - hyena/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.704
+  ...
+# Subtest: hyena/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 82 - hyena/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7486
+  ...
+# Subtest: hyena/youngMale actual first/second collision produces one contact plus its NPC response
+ok 83 - hyena/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.7531
+  ...
+# Subtest: hyena/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 84 - hyena/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.8721
+  ...
+# Subtest: buffalo/olderMale actual first/second collision produces one contact plus its NPC response
+ok 85 - buffalo/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.3349
+  ...
+# Subtest: buffalo/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 86 - buffalo/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.9331
+  ...
+# Subtest: buffalo/youngMale actual first/second collision produces one contact plus its NPC response
+ok 87 - buffalo/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.8255
+  ...
+# Subtest: buffalo/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 88 - buffalo/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.6741
+  ...
+# Subtest: rhino/olderMale actual first/second collision produces one contact plus its NPC response
+ok 89 - rhino/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.0014
+  ...
+# Subtest: rhino/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 90 - rhino/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 1.5872
+  ...
+# Subtest: rhino/youngMale actual first/second collision produces one contact plus its NPC response
+ok 91 - rhino/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.552
+  ...
+# Subtest: rhino/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 92 - rhino/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.4954
+  ...
+# Subtest: warthog/olderMale actual first/second collision produces one contact plus its NPC response
+ok 93 - warthog/olderMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.5239
+  ...
+# Subtest: warthog/olderFemale actual first/second collision produces one contact plus its NPC response
+ok 94 - warthog/olderFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.424
+  ...
+# Subtest: warthog/youngMale actual first/second collision produces one contact plus its NPC response
+ok 95 - warthog/youngMale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.4137
+  ...
+# Subtest: warthog/youngFemale actual first/second collision produces one contact plus its NPC response
+ok 96 - warthog/youngFemale actual first/second collision produces one contact plus its NPC response
+  ---
+  duration_ms: 0.4463
+  ...
+# (node:28500) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real positive cooldown transitions group simultaneously ready spells into one UI cue
+ok 97 - real positive cooldown transitions group simultaneously ready spells into one UI cue
+  ---
+  duration_ms: 9.0805
+  ...
+# Subtest: load, replacement, rollback, locked spells and unchanged simulated time seed silently
+ok 98 - load, replacement, rollback, locked spells and unchanged simulated time seed silently
+  ---
+  duration_ms: 0.4547
+  ...
+# Subtest: pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+ok 99 - pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+  ---
+  duration_ms: 5.3093
+  ...
+# Subtest: native simulated Growth duration ending does not count as cooldown completion
+ok 100 - native simulated Growth duration ending does not count as cooldown completion
+  ---
+  duration_ms: 46.0684
+  ...
+# Subtest: AudioSystem stop/suspend and a suspended context release the observer
+ok 101 - AudioSystem stop/suspend and a suspended context release the observer
+  ---
+  duration_ms: 1.357
+  ...
+# (node:28292) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared calendar predicate preserves the approved exact boundaries
+ok 102 - shared calendar predicate preserves the approved exact boundaries
+  ---
+  duration_ms: 3.4709
+  ...
+# Subtest: live milestones play once, tolerate a dropped frame and never mutate the simulation
+ok 103 - live milestones play once, tolerate a dropped frame and never mutate the simulation
+  ---
+  duration_ms: 48.0503
+  ...
+# Subtest: saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+ok 104 - saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+  ---
+  duration_ms: 0.4796
+  ...
+# Subtest: simultaneous new milestones coalesce and hiring defers only the live cue
+ok 105 - simultaneous new milestones coalesce and hiring defers only the live cue
+  ---
+  duration_ms: 1.8221
+  ...
+# Subtest: pending decode is cancelled on pause
+ok 106 - pending decode is cancelled on pause
+  ---
+  duration_ms: 1.0759
+  ...
+# Subtest: pending decode is cancelled on result
+ok 107 - pending decode is cancelled on result
+  ---
+  duration_ms: 2.2555
+  ...
+# Subtest: pending decode is cancelled on replacement
+ok 108 - pending decode is cancelled on replacement
+  ---
+  duration_ms: 1.3374
+  ...
+# Subtest: pending decode is cancelled on dispose
+ok 109 - pending decode is cancelled on dispose
+  ---
+  duration_ms: 1.1785
+  ...
+# Subtest: pending decode is cancelled on expiry
+ok 110 - pending decode is cancelled on expiry
+  ---
+  duration_ms: 1.2774
+  ...
+# Subtest: defeat discards deferred milestones and playback failures do not retry every frame
+ok 111 - defeat discards deferred milestones and playback failures do not retry every frame
+  ---
+  duration_ms: 0.8101
+  ...
+# Subtest: actual paid calendar through day five produces three unlocks without changing money or RNG
+ok 112 - actual paid calendar through day five produces three unlocks without changing money or RNG
+  ---
+  duration_ms: 846.0943
+  ...
+# Subtest: postgame unlock dispatches once and loading its saved event is silent
+ok 113 - postgame unlock dispatches once and loading its saved event is silent
+  ---
+  duration_ms: 3.3888
+  ...
+1..113
+# tests 113
+# suites 0
+# pass 113
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3887.3379
