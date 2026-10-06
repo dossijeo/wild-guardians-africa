@@ -79,3 +79,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Corrección del paseo tras cosecha completa](qa/idle-anchor-shared/README.md): el selector de dos pasadas se sustituye por un subconjunto vivo compartido por actualización, con fallback histórico original. Incluye diagnósticos rechazados, coste de preparación y cambios de vida durante el paso. La medición de cien consultas con vivos baja a 3–8 ms; sin vivos no se acredita ahorro (−2,3 % a +6,1 %).
+
+
+[Primera finca avanzada real renderizada comparada](qa/late-farm-render/README.md): cuatro lotes A/B/B/A, mismas entregas y estado final, 800 muestras CPU/GPU. La simulación mejora pero el render mantiene GPU ~63–64 ms y ~1.731 draw calls/~6,05 millones de triángulos por frame con pases sumados. Intervalos RAF ~84–91 ms; no acredita ganancia grande/general de FPS. Siguiente paso: atribuir el coste por categorías y pases.

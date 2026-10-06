@@ -1,0 +1,11 @@
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+const expected=execFileSync('git',['show','1bfd85a:src/simulation/game.js']);
+assert.deepEqual(readFileSync(new URL('../.cache/worker-lookups-1bfd-reference/src/simulation/game.js',import.meta.url)),expected,'Extract frozen 1bfd85a src/content/package.json first');
+assert.deepEqual(readFileSync(new URL('../.cache/worker-lookups-1bfd-reference/src/world/navigation.js',import.meta.url)),execFileSync('git',['show','1bfd85a:src/world/navigation.js']),'Frozen navigation must match its simulation module');
+const bytes=readFileSync(new URL('../docs/qa/intensive-mangrove-shield-100/state.json.gz',import.meta.url));
+mkdirSync(new URL('../.cache/late-farm-render/',import.meta.url),{recursive:true});
+writeFileSync(new URL('../.cache/late-farm-render/state.bin',import.meta.url),bytes);
+console.log(JSON.stringify({compressedInputSha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,referenceGameSha256:createHash('sha256').update(expected).digest('hex')}));

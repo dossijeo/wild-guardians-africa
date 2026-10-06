@@ -1,0 +1,79 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA render de finca avanzada real</title>
+<style>body{margin:0;font:14px system-ui;background:#233126}canvas{display:block;width:100vw;height:100vh}header{position:absolute;z-index:2;top:8px;left:8px;background:#ffffedee;padding:12px;max-width:480px}button{padding:9px}pre{max-height:160px;overflow:auto;font-size:11px}</style>
+<header><strong>Finca avanzada real · Manglares/Saheliana</strong><p>Guardado histórico intacto; continuación y contratación pagadas. Mundo 3D actual, cámara/medio/sombras iguales. Solo cambia la simulación 1bfd85a/actual. Sin audio, HUD, guardado ni incursión. Paso controlado de 100 ms por frame mediante advanceReal; no ritmo variable del bucle de producción.</p><button id="run">Comparar cuatro lotes A/B/B/A</button><p id="status">Lista para cargar</p><pre id="report"></pre></header><canvas id="world" aria-label="Finca avanzada en Manglares"></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import * as Reference from '../../.cache/worker-lookups-1bfd-reference/src/simulation/game.js';
+import {Navigation as ReferenceNavigation} from '../../.cache/worker-lookups-1bfd-reference/src/world/navigation.js';
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {numberOf} from '../../src/simulation/money.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {GpuTimer} from './gpu-timer.js';
+const button=document.querySelector('#run'),status=document.querySelector('#status'),report=document.querySelector('#report');
+const output={scope:'Four A/B/B/A controlled late-farm continuations with current WorldScene and native navigation, quality media and shadows. Reference simulation 1bfd85a versus current simulation. Real archived snapshot; ordinary postgame and paid hiring. Fifteen simulated seconds warmup, twenty measured; advanceReal(0.1) per RAF, not production variable frame pacing. No audio, HUD, autosave, raid, mobile, memory bytes or current 100-night balance acceptance.',lots:[],errors:[]};
+let world=null,busy=false;
+const assert=(ok,message)=>{if(!ok)throw Error(message);};
+const raf=()=>new Promise(requestAnimationFrame);
+const hash=async text=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))).map(x=>x.toString(16).padStart(2,'0')).join('');
+const summary=a=>{const s=[...a].sort((x,y)=>x-y);return {samples:s.length,median:(s[(s.length-1)>>1]+s[s.length>>1])/2,p95:s[Math.ceil(s.length*.95)-1],max:s.at(-1),mean:s.reduce((a,b)=>a+b,0)/s.length};};
+const publish=()=>{report.textContent=JSON.stringify(output,null,2);};
+button.onclick=async()=>{
+ if(busy)return;busy=true;button.disabled=true;
+ try{
+  // Vite assigns application/json to state.json.gz; native browser sniffing can
+  // reject those compressed bytes. Preparation copies identical bytes to .bin.
+  const response=await fetch('../../.cache/late-farm-render/state.bin');assert(response.ok,'Run tools/prepare_late_farm_render.mjs first');
+  const raw=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).text();output.inputSha256=await hash(raw);
+  const saved=deserialize(raw);assert(saved.result==='victory'&&saved.day===101,'Expected archived victory');
+  const pack=await json('/content/biome-'+BIOME_IDS[saved.biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(saved.culture==='saheliana'?'saheliano':saved.culture));assert(payload,'Missing village payload');
+  const live=saved.plants.filter(p=>p.alive).length,staff=Math.min(Math.ceil(live/12),Math.floor(numberOf(saved.ledger.balance)/30));
+  output.input={biome:saved.biome,culture:saved.culture,history:saved.plants.length,live,crates:saved.crates.length,staff,wages:staff*30};
+  let expectedSetup=null,expectedEnd=null,expectedQueries=null,expectedEvents=null;
+  for(const [label,module] of [['A1',Reference],['B1',Game],['B2',Game],['A2',Reference]]){
+   status.textContent='Cargando '+label;
+   if(world){world.dispose();world=null;const old=document.querySelector('#world');old.replaceWith(old.cloneNode(false));}
+   const NavigationClass=module===Reference?ReferenceNavigation:Navigation;
+   const state=deserialize(raw),nav=new NavigationClass(state.seed,state.biome,pack.profile);nav.setState(state);
+   module.continuePostgame(state);module.hire(state,'qa-render-late-hire',{olderFemale:staff});
+   assert(numberOf(state.ledger.balance)===numberOf(saved.ledger.balance)-staff*30,'Incorrect paid hiring');
+   const setup=serialize(state);expectedSetup??=setup;assert(setup===expectedSetup,'Different setup');
+   const loading=performance.now();world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>{output.errors.push(String(e));};world.qualitySetting('media');await world.load(state,nav,payload);world.focusFarm();
+   world.render(0);await world.whenChunksReady();
+   for(let ready=0;!world.actorsReady();ready++){assert(ready<1200,'Workers not ready');await raf();world.render(0);}
+   const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info'),timer=new GpuTimer(gl,32);
+   const lot={label,loadingMs:performance.now()-loading,setupSha256:await hash(setup),viewport:{css:[innerWidth,innerHeight],buffer:[world.canvas.width,world.canvas.height],dpr:devicePixelRatio},quality:world.quality,shadows:world.renderer.shadowMap.enabled,renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),samples:[],events:{},pathSearches:0};
+   const find=nav.findPath;nav.findPath=function(...args){lot.pathSearches++;return find.apply(this,args);};
+   const seen=new Set(state.events.map(e=>e.id)),previousAutoReset=world.renderer.info.autoReset;
+   let previous=null;
+   try{
+    world.renderer.info.autoReset=false;
+    for(let step=0;step<350;step++){
+     await raf();assert(!document.hidden,'Hidden benchmark');assert(world.actorsReady(),'Actor unloaded');
+     const start=performance.now(),interval=previous===null?null:start-previous;previous=start;
+     module.advanceReal(state,.1,nav);const simulated=performance.now()-start;
+     assert(!state.result&&!state.pauses.length,'Unexpected terminal/pause');
+     if(step>=150)timer.begin(step);world.renderer.info.reset();
+     const renderStart=performance.now();world.render(.1);const renderMs=performance.now()-renderStart;
+     if(step>=150){timer.end();lot.samples.push({step:step+1,simulationMs:simulated,renderCpuMs:renderMs,frameIntervalMs:interval,calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles});}
+     for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);if(step>=150)lot.events[e.type]=(lot.events[e.type]??0)+1;}
+     if(step%50===0)status.textContent=label+' · '+(step+1)+'/350';
+    }
+    for(let i=0;i<60&&timer.pending.length;i++){await raf();timer.poll();}
+    lot.gpu=timer.report();
+   }finally{world.renderer.info.autoReset=previousAutoReset;timer.dispose();}
+   lot.endSha256=await hash(serialize(state));expectedEnd??=lot.endSha256;assert(lot.endSha256===expectedEnd,'Different end state');
+   expectedQueries??=lot.pathSearches;assert(lot.pathSearches===expectedQueries,'Different path-search count');
+   expectedEvents??=JSON.stringify(lot.events);assert(JSON.stringify(lot.events)===expectedEvents,'Different physical event counts');
+   lot.end={time:state.time,money:numberOf(state.ledger.balance),workers:state.workers.length,live:state.plants.filter(p=>p.alive).length};
+   lot.summary=Object.fromEntries(['simulationMs','renderCpuMs','frameIntervalMs','calls','triangles'].map(k=>[k,summary(lot.samples.map(s=>s[k]))]));
+   const glError=gl.getError();assert(glError===gl.NO_ERROR,'WebGL error '+glError);assert(!output.errors.length,'Scene errors');
+   lot.memoryCounts={...world.renderer.info.memory};output.lots.push(lot);publish();
+  }
+  status.textContent='PASS · cuatro lotes, estados finales idénticos';
+ }catch(e){output.errors.push(String(e));status.textContent='FAIL · '+e.message;console.error(e);publish();}
+ finally{busy=false;button.disabled=false;}
+};
+addEventListener('pagehide',()=>world?.dispose());
+</script></html>

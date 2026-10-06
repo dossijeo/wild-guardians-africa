@@ -1,0 +1,31 @@
+{
+  "testedHead": "229aa70",
+  "referenceHead": "1bfd85a",
+  "sourceHashes": {
+    "tests/browser/late-farm-render.html": "300bffec7688eb6bc2b8575001bbb0d6a22b31b09dd49ddf87bfffd128b5b61b",
+    "tools/prepare_late_farm_render.mjs": "6864d5ade3cd2b1ecbca5ba2c8137cc1eed8224e84dfc4a1bd91b18b99643ae7",
+    "src/simulation/game.js": "a59b1cdc52d0b0721516d4540c50938c514a38521b583b2a9b2c5d8e95534ddc",
+    "src/world/navigation.js": "528251722c4ade4e56c80f9561b8ab5f9c845827886cdb19b4b6efe5654e66db",
+    "src/world/navigation-query-scope.js": "b968e12a328b9bb14e0a7891d773a944a9ad6245ae19575f5d71ee4db917fb16",
+    "src/rendering/scene.js": "bbaa6e822d0a569f3c014f53760ebb8c630bd819b39262113adbacc7db1115c4"
+  },
+  "referenceGameSha256": "ed120f506b8dd906571ac16f170e39cfb81fdc57aa69f14da0545003dea9fa7b",
+  "referenceNavigationSha256": "528251722c4ade4e56c80f9561b8ab5f9c845827886cdb19b4b6efe5654e66db",
+  "checks": {
+    "lots": 4,
+    "cpuSamples": 800,
+    "gpuSamples": 800,
+    "identicalSetupAndFinalState": true,
+    "pathSearchesPerLot": 89,
+    "measuredPhysicalDeliveriesPerLot": 17,
+    "sceneAndGlErrors": 0
+  },
+  "inputCompressedSha256": "e6e423c6fbd5627ecec09f38e2b619e18c3548ee01677b0e1b8d0a4dceb1d9b8",
+  "resultHashes": {
+    "farm.png": "4f4c386d8876713097adcd5bccaae914c08bd142e4441940a060ac1429bcff82",
+    "native.json": "f9d677c205d572c5347d5820e7ee43fb815b8513be1c2dfa9c355c3b9771887a",
+    "README.md": "accc08cf172888e13f2b3a977fe5b99a2d5fde2f85b362236361db81d3766ea2",
+    "rejected-mixed-navigation.json": "fe9045cbfb5873507f89ef3991796b1bbcce1a76557410f99f5782a198fe56b1"
+  },
+  "scope": "One rendered historical late farm; current renderer both versions; controlled advanceReal time per RAF. Final complete states, not intermediate per-frame equivalence. No mobile, audio/HUD/autosave, RAM bytes, raid or current 100-night balance proof."
+}
