@@ -43,3 +43,11 @@ test('disposal restores borrowed native color visibility without touching logica
  assert.equal(geometry.attributes.nativeVisibility.getX(0),.5);assert.equal(logical.getX(0),1);
  f.layer.dispose();assert.equal(geometry.attributes.nativeVisibility.getX(0),1);assert.equal(logical.getX(0),1);geometry.dispose();
 });
+
+test('prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden',async()=>{
+ const f=fixture();await f.layer.request('a',{});const geometry=new THREE.BufferGeometry();geometry.setAttribute('nativeVisibility',new THREE.InstancedBufferAttribute(new Float32Array([1]),1));const mesh={geometry,instanceMatrix:{version:1},count:1},logical=new THREE.InstancedBufferAttribute(new Float32Array([.8]),1),batch={slot:0,instances:[tree],fade:{attribute:logical},meshes:[mesh],orders:[[0]],key:'test'},chunks=new Map([['0,0',{userData:{lodBatches:[batch]}}]]),camera=new THREE.PerspectiveCamera();camera.position.set(16,10,68);
+ const joint={revision:1,has:()=>true},native={revision:1,has:()=>false};f.layer.update(chunks,camera,joint,true,1,{x:0,z:0},new Set(),native);
+ assert.equal(f.layer.current.prototype.treeState('tree').ready,1);assert.equal(geometry.attributes.nativeVisibility.getX(0),0);assert.ok(Math.abs(logical.getX(0)-.8)<1e-6);
+ native.revision++;native.has=()=>true;f.layer.update(chunks,camera,joint,true,.016,{x:0,z:0},new Set(),native);assert.equal(f.layer.current.prototype.treeState('tree').ready,1);assert.ok(Math.abs(geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
+ f.layer.dispose();geometry.dispose();
+});

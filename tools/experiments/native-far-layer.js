@@ -25,16 +25,16 @@ export class NativeFarLayer {
   if(this.closed||epoch!==this.epoch){candidate.dispose({disposeTexture:false});return null;}
   const previous=this.current;
   this.transitions.bind(candidate,trees);this.transitions.setSuppressions(this.suppressed);
-  this.scene.add(candidate.impostors);this.current={key,prototype:candidate,trees};this.revision++;
+  this.scene.add(candidate.impostors);this.current={key,prototype:candidate,trees,treeById:new Map(trees.map(tree=>[tree.id,tree]))};this.revision++;
   if(previous){this.scene.remove(previous.prototype.impostors);previous.prototype.dispose({disposeTexture:false});}
   return this.current;
  }
- update(chunks,camera,coverage,gpuReady,dt,origin={x:0,z:0},suppressed=this.suppressed){
+ update(chunks,camera,coverage,gpuReady,dt,origin={x:0,z:0},suppressed=this.suppressed,nativeCoverage=null){
   if(this.closed||!this.current)return;
   this.latest={chunks,camera};
   this.suppressed=suppressed;this.transitions.setSuppressions(suppressed);this.transitions.setCoverage(coverage,gpuReady);this.transitions.advance(dt);
   const p=this.current.prototype;p.update(camera,origin);
-  this.fade.update(chunks,camera,id=>p.treeState(id),this.revision+':'+p.stats().readinessRevision);
+  this.fade.update(chunks,camera,id=>{const state=p.treeState(id);return state&&nativeCoverage&&!nativeCoverage.has(id)?{ready:0,enabled:state.enabled}:state;},this.revision+':'+p.stats().readinessRevision+':'+(nativeCoverage?.revision??''));
  }
  dispose(chunks,camera){
   if(this.closed)return;this.closed=true;this.epoch++;this.stream.dispose();this.transitions.clear();

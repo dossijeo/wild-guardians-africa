@@ -1,4 +1,5 @@
 import {nativeFarRenderSignature,nativeFarPackingSignature} from './native-far-render-signature.js';
+import {NativeTreeStandby,standbyTreeKey} from './native-tree-standby.js';
 import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
@@ -30,6 +31,10 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);
   await prepareNativeFarGpu(world.renderer,candidate.impostors,world.scene,world.camera,[texture,prelitAtlas.day,prelitAtlas.night],{cancelled:()=>cancelled()||world.disposed});
  }});
+ const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cancelled:()=>cancelled()||closed||world.disposed})});
+ const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision;},has(id,suppressed){return prepared.has(id,suppressed)||standby.has(id,layer.current?.treeById.get(id),suppressed);}};
+ let referencesRevision=-1;const nativeReferences=new Map();
+ function frozenEntries(snapshot){const rows=[],matrix=new Matrix4();for(const [,record] of snapshot.entries){record.group.updateMatrixWorld(true);for(const [i,index] of record.batch.orders[record.level].entries()){const tree=record.batch.instances[index];if(!record.ids.has(tree.id))continue;matrix.fromArray(record.mesh.instanceMatrix.array,i*16).premultiply(record.group.matrixWorld);rows.push({id:tree.id,key:standbyTreeKey(tree),x:tree.x,z:tree.z,level:record.level,matrix:matrix.toArray()});}}return rows;}
  async function region(center){
   const key=center.x+':'+center.z;if(lastRequested===key)return;lastRequested=key;
   try{const result=await layer.request(key,{...farRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundHalf:treeHalf+32,step:groundStep}),waterSurface:bakedOnly,treeBase:metadata.localBase,treeBases:groundTreeBases,slots:includeGround&&groundTreeBases?Object.keys(groundTreeBases).map(Number):[slot]});if(result)stats.regions++;}
@@ -42,6 +47,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   Promise.resolve().then(async()=>{
    if(closed)return;
    const snapshot=prepared.capture(),cancelled=()=>closed||world.disposed||snapshot.signature!==signature();
+   standby.request(frozenEntries(snapshot),world.camera.position);
    try{
     const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled});
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
@@ -53,10 +59,12 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&group.userData.farPropsVisible!==false&&frustum.intersectsBox(nativeChunkBounds(group))));
   if(coverage.update(visible))stats.packingChanges++;prepared.update();const currentSignature=signature();if(stats.signature!==undefined&&stats.signature!==currentSignature)stats.signatureChanges++;stats.coverage=coverage.counts.size;stats.prepared=prepared.counts.size;stats.signature=currentSignature;schedulePreparation();
+  if(referencesRevision!==coverage.revision){nativeReferences.clear();for(const [,record] of coverage.batches)for(const index of record.batch.orders[record.level]){const tree=record.batch.instances[index];if(record.ids.has(tree.id))nativeReferences.set(tree.id,{batch:record.batch,index});}referencesRevision=coverage.revision;}
   if(layer.current)layer.current.prototype.impostors.visible=this.enabled;
-  if(this.enabled)layer.update(world.chunks,world.camera,prepared,true,dt,world.renderOrigin,world.nav.suppressed);
+  if(this.enabled){layer.update(world.chunks,world.camera,joint,true,dt,world.renderOrigin,world.nav.suppressed,prepared);if(layer.current)standby.update(world.camera.position,layer.current.treeById,id=>layer.current.prototype.treeState(id),id=>prepared.has(id),world.nav.suppressed,id=>{const ref=nativeReferences.get(id);return ref?.batch.fade?.attribute.getX(ref.index)??1;});}
   else layer.fade.update(world.chunks,world.camera,()=>null,'disabled');
- },dispose(){if(closed)return;closed=true;layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
+  if(standby.active)standby.active.root.visible=this.enabled;stats.standby=standby.stats;
+ },dispose(){if(closed)return;closed=true;standby.dispose();nativeReferences.clear();layer.dispose(world.chunks,world.camera);prepared.clear();coverage.clear();if(ownsWorld)releaseNativeFarGpuCache(world.renderer);if(world.farVegetation===adapter)world.farVegetation=null;}};
  if(ownsWorld)world.farVegetation=adapter;
  await region(tracker.center);
  if(closed||world.disposed){adapter.dispose();throw Error('Far world attachment cancelled');}

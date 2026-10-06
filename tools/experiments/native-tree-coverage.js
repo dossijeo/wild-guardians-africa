@@ -17,7 +17,7 @@ export class NativeTreeCoverage {
     for(let i=0;i<mesh.count;i++){const source=batch.orders[level]?.[i],tree=batch.instances[source];if(tree)ids.add(tree.id);}
     }
     for(const id of ids)this.counts.set(id,(this.counts.get(id)??0)+1);
-    this.batches.set(mesh,{stamp,ids,batch,level,mesh});changed=true;
+    this.batches.set(mesh,{stamp,ids,batch,level,mesh,group});changed=true;
    }
   }
   for(const [batch,record] of this.batches)if(!live.has(batch)){this.remove(record.ids);this.batches.delete(batch);changed=true;}
