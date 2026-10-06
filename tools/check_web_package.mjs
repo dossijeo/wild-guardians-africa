@@ -28,6 +28,7 @@ const {default:sharp}=await import('sharp');
 for(const item of imageManifest.records){
  assert(!await exists(resolve(root,item.source)),'Original image duplicated: '+item.source);
  const output=await readFile(resolve(root,item.runtime));assert.equal(sha(output),item.runtimeSha256,'Runtime image bytes changed');
+ if(item.kind==='data-image'){const {compareDataPixels}=await import('./lossless-data-image.mjs');const comparison=await compareDataPixels(await readFile(resolve('public',item.source)),output);assert(comparison.rawPixelsEqual,'Shader data channels changed');assert.equal(comparison.runtimePixelSha256,item.runtimePixelSha256);}
  const info=await sharp(output).metadata();assert.equal(info.format,'webp');assert.equal(info.width,item.width);assert.equal(info.height,item.height);assert.equal(info.hasAlpha,item.hasAlpha);
 }
 const packagedManifest=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));

@@ -1,10 +1,12 @@
 import {createServer} from 'node:http';
-import {readFile} from 'node:fs/promises';
-import {resolve,extname} from 'node:path';
+import {readFile,mkdir,copyFile} from 'node:fs/promises';
+import {resolve,extname,dirname} from 'node:path';
 import {build} from 'vite';
 import {webPackagePlugin} from './web-package.mjs';
 const port=Number(process.env.WG_QA_PORT??4175);
-await build({configFile:false,base:'./',plugins:[webPackagePlugin()],build:{target:'esnext',outDir:'.cache/web-assets-qa',rollupOptions:{input:{images:resolve('tests/browser/image-runtime.html'),animal:resolve('tests/browser/animal-audio.html'),sfx:resolve('tests/browser/sfx-runtime.html'),audio:resolve('tests/browser/audio-runtime.html'),assets:resolve('tests/browser/web-assets.html'),vfx:resolve('tests/browser/vfx.html'),work:resolve('tests/browser/work-vfx.html')}}}});
+await build({configFile:false,base:'./',plugins:[webPackagePlugin()],build:{target:'esnext',outDir:'.cache/web-assets-qa',rollupOptions:{input:{dataImages:resolve('tests/browser/data-image-runtime.html'),images:resolve('tests/browser/image-runtime.html'),animal:resolve('tests/browser/animal-audio.html'),sfx:resolve('tests/browser/sfx-runtime.html'),audio:resolve('tests/browser/audio-runtime.html'),assets:resolve('tests/browser/web-assets.html'),vfx:resolve('tests/browser/vfx.html'),work:resolve('tests/browser/work-vfx.html')}}}});
+const dataImages=JSON.parse(await readFile('content/manifests/image-runtime.json','utf8')).records.filter(r=>r.kind==='data-image');
+for(const r of dataImages){const target=resolve('.cache/web-assets-qa/original-images',r.source);await mkdir(dirname(target),{recursive:true});await copyFile(resolve('public',r.source),target);}
 createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost'),prefix=url.pathname.startsWith('/nested/itch/game/')?'/nested/itch/game/':url.pathname.startsWith('/nested/itch/audio-qa/')?'/nested/itch/audio-qa/':url.pathname.startsWith('/qa/')?'/qa/':null;if(!prefix){res.writeHead(404);res.end('No root fallback');return;}
  const dir=prefix!=='/nested/itch/game/'?resolve('.cache/web-assets-qa'):resolve('dist'),file=resolve(dir,decodeURIComponent(url.pathname.slice(prefix.length))||'index.html');if(!file.startsWith(dir))throw Error('Outside root');
  res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.glb':'model/gltf-binary','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.mp3':'audio/mpeg','.opus':'audio/ogg'})[extname(file)]??'application/octet-stream');res.end(await readFile(file));

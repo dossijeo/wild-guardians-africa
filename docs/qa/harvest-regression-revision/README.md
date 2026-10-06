@@ -15,3 +15,7 @@ Directed validation: 126 tests passed, plus four lifecycle tests passed. These d
 The historical source differs in balance, shield placement exclusions, and structure audio facts; those differences are recorded by source hash. To isolate the price change, an additional diagnostic child process used the current code with only the eight old harvest values. Its exact complete-state hash equals the historical hash. That diagnostic does not change repository sources or production balances and is not a responsible-player acceptance campaign.
 
 The new test retains an exact revised state hash and checks default versus explicit policy; staffing and normal wage checks remain. Increased income changes planting opportunities and subsequent state, so the old complete-state hash is deliberately preserved as historical evidence, not required as today's game result.
+
+## Complete CI acceptance on f7906f6
+
+[Validate game run 37395118867](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37395118867) completed successfully: 2,095 tests passed, zero failed/cancelled/skipped. Asset, compressed GLB, Opus, plan and balance verifiers passed, followed by the build, full relative-package verifier and itch ZIP creation with CRC checks. The run is frozen at f7906f6; it does not include the later lossless-data image change. Its raw log is preserved as gzip with a concise summary. This establishes full-suite acceptance of the reconciled harvest/audio tests, not proof of all master-plan or manual-device requirements.
