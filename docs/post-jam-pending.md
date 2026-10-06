@@ -97,3 +97,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Destinos de VFX reutilizados durante actividad](qa/cached-work-targets/README.md): referencias/IDs verificados en cada llamada, actualización directa de reemplazos únicos y reconstrucción para cambios de pertenencia/IDs. 41 pruebas, build, 400 entradas equivalentes y cuatro lotes renderizados con estado/rutas/entregas idénticos. Menor CPU aislada y reducción modesta en pares nativos, sin FPS estable/general acreditado. Se conserva un candidato rechazado por penalizar reemplazos. La comprobación sigue siendo O(N), con metadatos residentes; pendiente GPU sostenida y aceptación amplia.
+
+
+[Coste de ruido fino medido en finca real](qa/late-farm-fine-noise/README.md): cuatro lotes, 800 muestras CPU/GPU y mismos estados/rutas/entregas. Desactivarlo solo en QA reduce GPU ~61–62→58–59 ms, pero modifica imagen; producción conserva el shader original. Pendiente alternativa barata que conserve detalle, coste GPU restante y aceptación amplia.

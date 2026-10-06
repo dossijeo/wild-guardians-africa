@@ -1,0 +1,25 @@
+{
+  "baseCommit": "8865252",
+  "sourceSha256": {
+    "tests/browser/late-farm-render.html": "c1a98655ba1274bf3a135c0fe36c91063f300a799225df0499f28a9b7d053fa1",
+    "src/rendering/fine-noise.js": "fedb902cb8431f52edf06fb01be28a6c23b011b2dae05b945b0cdbde6d3c3fa8",
+    "src/rendering/african-toon.js": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "src/rendering/buildings.js": "1223b88afefaa4dd5a21e6ac150da56f4c208ad8afb2521a0d195e49093fccd0",
+    "src/rendering/work-vfx.js": "63b37240a14fdea400715597138b62d75b51e31daa5210bfa1510f8b637dbe43",
+    "src/rendering/work-target-index.js": "ba471df2ac8bb30d0c284ba66cab543c65846889e6f76e311f0c888b72cc9f8b"
+  },
+  "evidenceSha256": {
+    "analytic.png": "3b3d217d751866844a04ca733406d1f77ac646418d6b24f6ff2f1385c7860620",
+    "image-difference.json": "c2b69223b29105e7e054992a933a9e1ca94b3303a5387bf03136e2e381c25d4a",
+    "mean.png": "b3f5276a404ccf2acb23022e62cc89049d135070e0c5a8e802bb205f81562572",
+    "native.json": "7bf959bf75a5b4a199b342ae848d7044a0aee3f4ef8fa0b5074f086c7079b8e3",
+    "README.md": "0ac0678bea5272e00dd110f98a29d95b15822a2aa1004cb5dbaabe849d5861f0"
+  },
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "cpuSamples": 800,
+  "gpuSamples": 800,
+  "productionChanged": false,
+  "conclusion": "Fine noise has measurable GPU cost in this scenario, but mean replacement changes image. Keep original production shader; broader FPS/mobile/visual acceptance unproven."
+}
