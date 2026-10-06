@@ -31,7 +31,7 @@ Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/R
 - Actualizar todas las referencias y verificar carga completa de HUD/contratación, culturas, biomas y modelos, además del paquete de itch.io y Windows.
 - Comparar imágenes y tamaños antes/después; documentar cualquier caso que requiera WebP sin pérdida para preservar el resultado del juego.
 
-Estado: pendiente; no se han enviado imágenes a Tinify por esta anotación.
+Estado: [inventario inicial medido](qa/image-inventory/README.md): 225 imágenes distribuidas (162 independientes y 63 embebidas), 219.365.411 bytes codificados y seis pruebas de clasificación correctas. Quedan 107 usos sin clasificar, conversión/optimización y aceptación visual; no se han enviado imágenes a Tinify.
 
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 
