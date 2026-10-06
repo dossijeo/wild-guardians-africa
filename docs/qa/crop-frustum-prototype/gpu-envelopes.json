@@ -1,0 +1,728 @@
+{
+  "scope": "Native WebGL2 transform feedback of authored growth/bridge vertex hooks on all 40 original meshes and 32 opaque bridges. Local deformation envelopes, not camera/shadow/color equivalence, mobile, performance, gameplay or all real-time parameter combinations.",
+  "cases": [
+    {
+      "name": "maiz_01_brote",
+      "kind": "original",
+      "vertices": 1452,
+      "parameterSamples": 6,
+      "checked": 8712,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "maiz_02_joven",
+      "kind": "original",
+      "vertices": 2132,
+      "parameterSamples": 6,
+      "checked": 12792,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "maiz_03_adulto",
+      "kind": "original",
+      "vertices": 4999,
+      "parameterSamples": 6,
+      "checked": 29994,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "maiz_04_desarrollo",
+      "kind": "original",
+      "vertices": 5778,
+      "parameterSamples": 6,
+      "checked": 34668,
+      "maxOutside": 2.8228759774151513e-7,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "maiz_05_maduro",
+      "kind": "original",
+      "vertices": 8983,
+      "parameterSamples": 6,
+      "checked": 53898,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "algodon_01_brote",
+      "kind": "original",
+      "vertices": 1092,
+      "parameterSamples": 6,
+      "checked": 6552,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "algodon_02_joven",
+      "kind": "original",
+      "vertices": 2765,
+      "parameterSamples": 6,
+      "checked": 16590,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "algodon_03_adulto",
+      "kind": "original",
+      "vertices": 4180,
+      "parameterSamples": 6,
+      "checked": 25080,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "algodon_04_desarrollo",
+      "kind": "original",
+      "vertices": 5722,
+      "parameterSamples": 6,
+      "checked": 34332,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "algodon_05_maduro",
+      "kind": "original",
+      "vertices": 5697,
+      "parameterSamples": 6,
+      "checked": 34182,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "girasol_01_brote",
+      "kind": "original",
+      "vertices": 1032,
+      "parameterSamples": 6,
+      "checked": 6192,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "girasol_02_joven",
+      "kind": "original",
+      "vertices": 2475,
+      "parameterSamples": 6,
+      "checked": 14850,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "girasol_03_adulto",
+      "kind": "original",
+      "vertices": 3111,
+      "parameterSamples": 6,
+      "checked": 18666,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "girasol_04_desarrollo",
+      "kind": "original",
+      "vertices": 3435,
+      "parameterSamples": 6,
+      "checked": 20610,
+      "maxOutside": 4.863739011540247e-8,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "girasol_05_maduro",
+      "kind": "original",
+      "vertices": 4772,
+      "parameterSamples": 6,
+      "checked": 28632,
+      "maxOutside": 3.037452698251286e-7,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "platano_01_brote",
+      "kind": "original",
+      "vertices": 1270,
+      "parameterSamples": 6,
+      "checked": 7620,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "platano_02_joven",
+      "kind": "original",
+      "vertices": 2497,
+      "parameterSamples": 6,
+      "checked": 14982,
+      "maxOutside": 6.532669072356612e-8,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "platano_03_adulto",
+      "kind": "original",
+      "vertices": 3969,
+      "parameterSamples": 6,
+      "checked": 23814,
+      "maxOutside": 1.1539459254805706e-7,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "platano_04_desarrollo",
+      "kind": "original",
+      "vertices": 3872,
+      "parameterSamples": 6,
+      "checked": 23232,
+      "maxOutside": 3.910064716450279e-8,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "platano_05_maduro",
+      "kind": "original",
+      "vertices": 10981,
+      "parameterSamples": 6,
+      "checked": 65886,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "sorgo_01_brote",
+      "kind": "original",
+      "vertices": 4860,
+      "parameterSamples": 6,
+      "checked": 29160,
+      "maxOutside": 7.367134080560334e-8,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "sorgo_02_joven",
+      "kind": "original",
+      "vertices": 5793,
+      "parameterSamples": 6,
+      "checked": 34758,
+      "maxOutside": 9.393692046444357e-8,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "sorgo_03_adulto",
+      "kind": "original",
+      "vertices": 7354,
+      "parameterSamples": 6,
+      "checked": 44124,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "sorgo_04_desarrollo",
+      "kind": "original",
+      "vertices": 9739,
+      "parameterSamples": 6,
+      "checked": 58434,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "sorgo_05_maduro",
+      "kind": "original",
+      "vertices": 13097,
+      "parameterSamples": 6,
+      "checked": 78582,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "mijo_01_brote",
+      "kind": "original",
+      "vertices": 4059,
+      "parameterSamples": 6,
+      "checked": 24354,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "mijo_02_joven",
+      "kind": "original",
+      "vertices": 4514,
+      "parameterSamples": 6,
+      "checked": 27084,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "mijo_03_adulto",
+      "kind": "original",
+      "vertices": 5456,
+      "parameterSamples": 6,
+      "checked": 32736,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "mijo_04_desarrollo",
+      "kind": "original",
+      "vertices": 6686,
+      "parameterSamples": 6,
+      "checked": 40116,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "mijo_05_maduro",
+      "kind": "original",
+      "vertices": 6589,
+      "parameterSamples": 6,
+      "checked": 39534,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "yuca_01_brote",
+      "kind": "original",
+      "vertices": 3883,
+      "parameterSamples": 6,
+      "checked": 23298,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "yuca_02_joven",
+      "kind": "original",
+      "vertices": 4993,
+      "parameterSamples": 6,
+      "checked": 29958,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "yuca_03_adulto",
+      "kind": "original",
+      "vertices": 5587,
+      "parameterSamples": 6,
+      "checked": 33522,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "yuca_04_desarrollo",
+      "kind": "original",
+      "vertices": 6593,
+      "parameterSamples": 6,
+      "checked": 39558,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "yuca_05_maduro",
+      "kind": "original",
+      "vertices": 6183,
+      "parameterSamples": 6,
+      "checked": 37098,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "batata_01_brote",
+      "kind": "original",
+      "vertices": 3677,
+      "parameterSamples": 6,
+      "checked": 22062,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "batata_02_joven",
+      "kind": "original",
+      "vertices": 4989,
+      "parameterSamples": 6,
+      "checked": 29934,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "batata_03_adulto",
+      "kind": "original",
+      "vertices": 5988,
+      "parameterSamples": 6,
+      "checked": 35928,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "batata_04_desarrollo",
+      "kind": "original",
+      "vertices": 6976,
+      "parameterSamples": 6,
+      "checked": 41856,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "batata_05_maduro",
+      "kind": "original",
+      "vertices": 7924,
+      "parameterSamples": 6,
+      "checked": 47544,
+      "maxOutside": 0,
+      "vertexHookSha256": "99deb5244668abd25daee99e3ed4ddb2c4412b9311b62725ce428e6a02d80d1d",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_maiz_1_2",
+      "kind": "bridge",
+      "vertices": 6456,
+      "parameterSamples": 30,
+      "checked": 193680,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_maiz_2_3",
+      "kind": "bridge",
+      "vertices": 11991,
+      "parameterSamples": 30,
+      "checked": 359730,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_maiz_3_4",
+      "kind": "bridge",
+      "vertices": 17844,
+      "parameterSamples": 30,
+      "checked": 535320,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_maiz_4_5",
+      "kind": "bridge",
+      "vertices": 24420,
+      "parameterSamples": 30,
+      "checked": 732600,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_algodon_1_2",
+      "kind": "bridge",
+      "vertices": 6642,
+      "parameterSamples": 30,
+      "checked": 199260,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_algodon_2_3",
+      "kind": "bridge",
+      "vertices": 11469,
+      "parameterSamples": 30,
+      "checked": 344070,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_algodon_3_4",
+      "kind": "bridge",
+      "vertices": 15870,
+      "parameterSamples": 30,
+      "checked": 476100,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_algodon_4_5",
+      "kind": "bridge",
+      "vertices": 18768,
+      "parameterSamples": 30,
+      "checked": 563040,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_girasol_1_2",
+      "kind": "bridge",
+      "vertices": 6069,
+      "parameterSamples": 30,
+      "checked": 182070,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_girasol_2_3",
+      "kind": "bridge",
+      "vertices": 9444,
+      "parameterSamples": 30,
+      "checked": 283320,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_girasol_3_4",
+      "kind": "bridge",
+      "vertices": 11370,
+      "parameterSamples": 30,
+      "checked": 341100,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_girasol_4_5",
+      "kind": "bridge",
+      "vertices": 14430,
+      "parameterSamples": 30,
+      "checked": 432900,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_platano_1_2",
+      "kind": "bridge",
+      "vertices": 6621,
+      "parameterSamples": 30,
+      "checked": 198630,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_platano_2_3",
+      "kind": "bridge",
+      "vertices": 11229,
+      "parameterSamples": 30,
+      "checked": 336870,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_platano_3_4",
+      "kind": "bridge",
+      "vertices": 13692,
+      "parameterSamples": 30,
+      "checked": 410760,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_platano_4_5",
+      "kind": "bridge",
+      "vertices": 23652,
+      "parameterSamples": 30,
+      "checked": 709560,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_sorgo_1_2",
+      "kind": "bridge",
+      "vertices": 15702,
+      "parameterSamples": 30,
+      "checked": 471060,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_sorgo_2_3",
+      "kind": "bridge",
+      "vertices": 19908,
+      "parameterSamples": 30,
+      "checked": 597240,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_sorgo_3_4",
+      "kind": "bridge",
+      "vertices": 25731,
+      "parameterSamples": 30,
+      "checked": 771930,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_sorgo_4_5",
+      "kind": "bridge",
+      "vertices": 33645,
+      "parameterSamples": 30,
+      "checked": 1009350,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_mijo_1_2",
+      "kind": "bridge",
+      "vertices": 12639,
+      "parameterSamples": 30,
+      "checked": 379170,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_mijo_2_3",
+      "kind": "bridge",
+      "vertices": 15057,
+      "parameterSamples": 30,
+      "checked": 451710,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_mijo_3_4",
+      "kind": "bridge",
+      "vertices": 18828,
+      "parameterSamples": 30,
+      "checked": 564840,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_mijo_4_5",
+      "kind": "bridge",
+      "vertices": 20445,
+      "parameterSamples": 30,
+      "checked": 613350,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_yuca_1_2",
+      "kind": "bridge",
+      "vertices": 12885,
+      "parameterSamples": 30,
+      "checked": 386550,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_yuca_2_3",
+      "kind": "bridge",
+      "vertices": 15336,
+      "parameterSamples": 30,
+      "checked": 460080,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_yuca_3_4",
+      "kind": "bridge",
+      "vertices": 18165,
+      "parameterSamples": 30,
+      "checked": 544950,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_yuca_4_5",
+      "kind": "bridge",
+      "vertices": 19824,
+      "parameterSamples": 30,
+      "checked": 594720,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_batata_1_2",
+      "kind": "bridge",
+      "vertices": 12498,
+      "parameterSamples": 30,
+      "checked": 374940,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_batata_2_3",
+      "kind": "bridge",
+      "vertices": 15900,
+      "parameterSamples": 30,
+      "checked": 477000,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_batata_3_4",
+      "kind": "bridge",
+      "vertices": 19356,
+      "parameterSamples": 30,
+      "checked": 580680,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    },
+    {
+      "name": "puente_batata_4_5",
+      "kind": "bridge",
+      "vertices": 22563,
+      "parameterSamples": 30,
+      "checked": 676890,
+      "maxOutside": 0,
+      "vertexHookSha256": "7a1d64c596024490fc28e7285d9832369232de3516b157a01c5853ebab0967ce",
+      "colorDepthPositionHooksIdentical": true
+    }
+  ],
+  "errors": [],
+  "points": 16484394,
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+}

@@ -111,3 +111,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Descarte de cultivos probado como candidato QA](qa/crop-frustum-prototype/README.md): 19 pruebas y cuatro lotes nativos con estados/rutas/entregas iguales. En la vista general no reduce envíos (637 llamadas/5,14M triángulos) y añade trabajo de límites, por lo que no se adopta. Pendientes verificar envolventes GPU de bridges, investigar diferencias estáticas, vistas cercanas/laterales y agrupación espacial con su coste incluido; no marcar optimización de cultivos completa.
+
+
+[Envolventes de morph verificadas en GPU](qa/crop-frustum-prototype/GPU.md): 16,48 millones de posiciones de 40 originales y 32 bridges con hooks nativos, dentro de tolerancia 1e-4; no prueba todas las combinaciones ni el pipeline completo. [Cuatro lotes con cámara cercana](qa/crop-frustum-prototype/NEAR.md) reducen diez llamadas/0,62 % de triángulos, sin ganancia GPU consistente en los pares. Candidato todavía fuera del producto; pendientes diferencias de imagen, vistas laterales/centradas en cultivos y agrupación espacial/coste.

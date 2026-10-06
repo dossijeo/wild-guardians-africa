@@ -1,0 +1,32 @@
+{
+  "base": "dcf556d",
+  "sourceSha256": {
+    "tests/browser/crop-bound-gpu.html": "97376742b875a6782e0de6b3cccd0e80b5bcd00aa236daea0ad9661fd418e77c",
+    "tests/browser/crop-frustum.js": "0f33e77ba838ee4df2dde53d9c1050ec6421068bbbf856902bb2fae7071384e4",
+    "tests/browser/late-farm-render.html": "bc574f44b5c27f59bacde65c1d339953a4c8c1c8752f253daf87062f856e7d21",
+    "src/rendering/crop-batch.js": "e289f5d25c1ea9c8ed1dd46d4deca92a980ceef29780460c373a7c24829a71cd",
+    "public/content/crop-bridges.json": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309"
+  },
+  "evidenceSha256": {
+    "GPU.md": "d5b794b1872e0c4850ab8fde648a5f8694e4ae5dbcaee9881cbafd3383669dd4",
+    "gpu-envelopes.json": "4b50baa0676fb98fb2b96d92484aa62152283091052e9a2def7fcc08225fbd96",
+    "NEAR.md": "80ce1c7f57ff75c5dc671f121410d75aa6e8492becb6ea5bc4e05a0ae3e02d96",
+    "near-native.json": "ad46af72ef10e9b5cd354c227bf0c4c652d44de565d7227ab1b5be9512f23411",
+    "near-disabled.png": "4ed3db5d1d3a0bea5f2a976ae66c03f319135aaf809c34f43732d63281f02fc7",
+    "near-enabled.png": "d3c3c6dfe05afdfd49dc23dc0d17713722f6b2313d35b45014e805c421e0f5e1",
+    "near-image-difference.json": "825f061608b128da68f36965b0e9aea4e8c1e610cc76012d2bc5aa15f2b512f5"
+  },
+  "nativeGpuPositions": 16484394,
+  "meshes": {
+    "original": 40,
+    "bridge": 32
+  },
+  "gpuEnvelopeTolerance": 0.0001,
+  "maximumPositiveUnpaddedDeviation": 3.037452698251286e-07,
+  "nearCpuSamples": 800,
+  "nearGpuSamples": 800,
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "productionChanged": false,
+  "decision": "Still not adopted: some close-view submission savings but no consistent paired GPU gain; static image differences and broad coverage remain unverified."
+}
