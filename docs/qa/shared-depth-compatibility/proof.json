@@ -1,0 +1,29 @@
+{
+  "base": "35ba81f03dbc713ab38daaf58e3a81e936c689af",
+  "executedSources": {
+    "src/rendering/depth-capture.js": "3f758cf0db8363032668d6ee68021133df0a658b3feac4bdf1ef13784bb0cf01",
+    "tests/browser/depth-capture.html": "a31fc1f6822d169c55802c08444b382f01d3fed090350a90bedb1dcad46a3bbd",
+    "tests/browser/depth-capture-before-compatibility.js": "0de0e4da173695d5c7747be82cd5afd6020938c962195248f0aafe3b3ce13d5c",
+    "tests/depth-capture.test.js": "37ca62f27528243e3bc03f5022633022d642119025ced6291099a6fe674f6ead"
+  },
+  "evidence": {
+    "collapse.json": "590dcb1c089d2e02538520876f427c21989b34a1bf4f7c5f44bba930f8e58748",
+    "collapse.png": "14b9f675f3c17670c2c9e003f6128cb2a48531011cb7ccaedb6e505aedee25ac",
+    "cpu.json": "f25728997fda862bd165ea808dcc8e416457a86c3388b4c1499ca2a1a20e0d47",
+    "intact.json": "c8c2e53eb7e37f374853329a4d38c0052ff98c32a98976120cfb023e93101965"
+  },
+  "tests": {
+    "command": "node --test tests/depth-capture.test.js tests/standard-depth.test.js tests/native-shadow.test.js tests/single-pass-alpha-depth.test.js",
+    "passed": 28,
+    "exitCode": 0,
+    "durationMs": 444.3806
+  },
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "modules": 204,
+    "durationSeconds": 9.32,
+    "warning": "main chunk exceeds 500 kB"
+  },
+  "scope": "Native CPU no-op draw baseline/current with alpha true in both paths; no edits/build/tests during measurements. Frozen campaigns remained running. Current production alpha and empty filters remain off."
+}

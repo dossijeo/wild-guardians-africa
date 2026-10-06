@@ -1,8 +1,9 @@
+// Frozen QA CPU baseline from 35ba81f; never used by gameplay.
 // Only authored depth shaders with matching silhouettes opt into this pass.
 // Unknown vertex/discard recipes keep their color shader until audited.
-import {standardDepthMaterial} from './standard-depth.js';
+import {standardDepthMaterial} from '../../src/rendering/standard-depth.js';
 import * as THREE from 'three';
-import {nativeDepthRecipe} from './depth-recipes.js';
+import {nativeDepthRecipe} from '../../src/rendering/depth-recipes.js';
 function emptyRenderable(object){
   const geometry=object.geometry;
   if(!geometry||!(geometry.drawRange.count===0||(object.isInstancedMesh?object.count===0:geometry.isInstancedBufferGeometry&&geometry.instanceCount===0)))return false;
@@ -36,20 +37,14 @@ export function withDepthCaptureMaterials(world, render, {optimized=true,visible
       if(skipEmpty&&emptyRenderable(object)){stats.emptySkipped++;return;}
       const source=object.material,list=Array.isArray(source)?source:[source];
       list.forEach(remember);
-      let candidate=null,accepted=false;
+      let candidate=null;
       if(optimized&&!world.overrideMaterial&&!Array.isArray(source)&&source.visible&&!source.transparent&&source.depthWrite){
-        if(object.customDepthMaterial){candidate=object.customDepthMaterial;accepted=compatible(source,candidate);}
+        if(object.customDepthMaterial)candidate=object.customDepthMaterial;
         // Keep textured alpha silhouettes on their native recipe until combined
         // biome readbacks prove equivalence; authored crop depths remain eligible.
-        else if(!source.alphaTest||stockAlpha){
-          // Source properties cannot change before the draw callback. Share this
-          // decision only within this capture, with the existing recipe lookup.
-          let entry=standards.get(source);
-          if(!entry){const depth=standardDepthMaterial(source);entry={depth,accepted:Boolean(depth&&compatible(source,depth))};standards.set(source,entry);}
-          candidate=entry.depth;accepted=entry.accepted;
-        }
+        else if(!source.alphaTest||stockAlpha){if(!standards.has(source))standards.set(source,standardDepthMaterial(source));candidate=standards.get(source);}
       }
-      if(accepted){
+      if(candidate&&compatible(source,candidate)){
         const depth=candidate;remember(depth);depth.visible=source.visible;
         objects.push([object,source]);object.material=depth;stats.specialized++;
         if(stockAlpha&&source.alphaTest&&!object.customDepthMaterial)stats.stockAlphaSpecialized++;

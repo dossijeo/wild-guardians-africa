@@ -104,3 +104,33 @@ test('alpha opt-in retains unknown/rasterization exceptions and authored-depth p
   const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,kind==='authored'?depth:source),{stockAlpha:true,optimized:kind!=='disabled'});assert.equal(stats.stockAlphaSpecialized,0);
  }
 });
+
+
+test('shared standard compatibility is checked once per capture and refreshed after raster or hook changes',()=>{
+ const source=new THREE.MeshStandardMaterial(),world=new THREE.Scene(),geometry=new THREE.BoxGeometry();
+ let side=THREE.FrontSide,reads=0;
+ Object.defineProperty(source,'side',{get(){reads++;return side;},set(value){side=value;},configurable:true});
+ for(let i=0;i<40;i++)world.add(new THREE.Mesh(geometry,source));
+ let observed;
+ const first=withDepthCaptureMaterials(world,()=>{observed=world.children[0].material;assert.ok(world.children.every(o=>o.material===observed));});
+ assert.equal(first.specialized,40);assert.ok(reads<=3,'Compatibility must not re-read side for every owner');
+ assert.ok(world.children.every(o=>o.material===source));
+ side=THREE.BackSide;reads=0;
+ withDepthCaptureMaterials(world,()=>{assert.equal(world.children[0].material.side,THREE.BackSide);});
+ assert.ok(reads<=4);
+ source.polygonOffset=true;const blocked=withDepthCaptureMaterials(world,()=>assert.ok(world.children.every(o=>o.material===source)));
+ assert.equal(blocked.specialized,0);assert.equal(blocked.fallback,40);
+ source.polygonOffset=false;source.onBeforeCompile=()=>{};
+ const unknown=withDepthCaptureMaterials(world,()=>assert.ok(world.children.every(o=>o.material===source)));
+ assert.equal(unknown.specialized,0);geometry.dispose();source.dispose();
+});
+
+test('authored depths retain individual compatibility even when they share a source with standard owners',()=>{
+ const source=new THREE.MeshStandardMaterial(),geometry=new THREE.BoxGeometry(),world=new THREE.Scene();
+ const a=new THREE.Mesh(geometry,source),b=new THREE.Mesh(geometry,source),c=new THREE.Mesh(geometry,source);
+ const authored=new THREE.MeshDepthMaterial();authored.userData.worldDepthCompatible=true;authored.side=THREE.BackSide;b.customDepthMaterial=authored;
+ c.customDepthMaterial=new THREE.MeshDepthMaterial();c.customDepthMaterial.userData.worldDepthCompatible=true;
+ world.add(a,b,c);const stats=withDepthCaptureMaterials(world,()=>{assert.ok(a.material.isMeshDepthMaterial);assert.equal(b.material,source);assert.equal(c.material,c.customDepthMaterial);});
+ assert.equal(stats.specialized,2);assert.equal(stats.fallback,1);for(const mesh of world.children)assert.equal(mesh.material,source);
+ geometry.dispose();source.dispose();authored.dispose();c.customDepthMaterial.dispose();
+});

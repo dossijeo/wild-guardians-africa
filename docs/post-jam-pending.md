@@ -143,3 +143,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Alpha comparado con profundidad nativa completa](qa/alpha-native-baseline/README.md): tres rutas N/G/B en seis renders por escena, 28 pares de profundidad idénticos en Manglares intacto/colapso/giro y Gran Cañón intacto. El color coincide en Gran Cañón y sigue variando entre controles en Manglares. El contraejemplo histórico no se reproduce en estas vistas actuales, pero no se explica su causa ni se retira la salvaguarda. Pendientes CPU de preparación, estados/efectos/móvil y repetibilidad de color.
+
+
+[Compatibilidad de profundidad reutilizada por captura](qa/shared-depth-compatibility/README.md): 28 pruebas y build; CPU nativa aislada ~24–32 % menor con alpha=true en ambas rutas (~0,18–0,27 ms por captura), mismas selecciones y restauraciones. Catorce pares actuales intacto/colapso coinciden en profundidad. Mejora de preparación aplicada sin activar alpha experimental ni filtro de vacíos; no es evidencia de FPS. [Traza de cámara](qa/static-camera-color/README.md) exactamente estable, pero variación de color aún sin causa aislada.
