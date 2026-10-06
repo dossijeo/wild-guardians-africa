@@ -1,0 +1,39 @@
+{
+  "base": "e263b11fa5aa9ff9246c880cb2f55a4f4c22716e",
+  "executedSources": {
+    "tests/browser/depth-capture.html": "2129a50826d9d9ab2de0a0d19f3a12af46f54820ac4c4d6cf661f51ef42cc5d0",
+    "src/rendering/depth-capture.js": "6ab80a3cae96a898809538dd7e4f1e837f01daa677232560ef9df59f1d128d58",
+    "src/rendering/standard-depth.js": "7e3bf8084eb74d52e47bab8b670a6e21689f9c79185e5cb3e7d0c565bbcc0e6c",
+    "src/rendering/depth-recipes.js": "8a4fff986eef87f820ce33852ae475e758315169d64897d2b863ecefef27426a",
+    "src/rendering/buildings.js": "81643d827f178167e46c4df0642b7d92abd73ad8d801bb018f899a96fb3f89e6",
+    "tests/browser/single-pass-alpha-depth.js": "6b5de715325f94c11ede16381c61ea2b2b65cca49786772570005e605c2fef4e",
+    "tests/browser/depth-readback.js": "cfa4026642df22615e470da9a3a26615ec9424d20e0b01b15c12a057822fd18e"
+  },
+  "evidence": {
+    "canyon-intact.json": {
+      "bytes": 6063,
+      "sha256": "83a8b1acf84f81f131551d45f44c8fe7a13edbbd24211b2ad5fbeccf6c8712b5"
+    },
+    "canyon-intact.png": {
+      "bytes": 164306,
+      "sha256": "de91d0300d103972e4692153cc36b21e7c228669b2abb9defac71097a84687c8"
+    },
+    "mangrove-collapse-side.json": {
+      "bytes": 6092,
+      "sha256": "d12dfa912ac2431d816890b900905213462a9ecc2a44493678353b5db89d1663"
+    },
+    "mangrove-collapse.json": {
+      "bytes": 6086,
+      "sha256": "5375cb61cb35b76bd97599dd8b329a53a70c4e184ed6033891ac812a25345062"
+    },
+    "mangrove-collapse.png": {
+      "bytes": 252135,
+      "sha256": "610456de20f1b89adc9be08830aae40f57f42eaf8211cd5ffabdc4a10b998eaa"
+    },
+    "mangrove-intact.json": {
+      "bytes": 6082,
+      "sha256": "f567275420b7c740ccf88b5f25170652e0b9994713200bc2bd37284624bdfb56"
+    }
+  },
+  "scope": "Current native full / current guard / single-pass alpha, seed 712, fixed paused simulation, no edits during active readings. Not reproduction of historical source/assets."
+}

@@ -140,3 +140,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Profundidad alpha integrada en un recorrido](qa/single-pass-alpha-depth/README.md): 26 pruebas y build; cuatro lotes reales con estados/rutas/eventos/envíos idénticos. GPU ~2,86/~2,30 ms menor y RAF ~1,80/~2,35 ms menor en los pares, CPU integrada variable y preparación aislada ~0,41–0,48 ms más costosa por captura. Diez pares Manglares/Mapungubwe intacto/colapso conservan profundidad idéntica; color varía también entre controles. Flag QA apagado por defecto hasta ampliar estados/biomas/efectos/móvil y explicar diferencias históricas. Campaña congelada de margen verificada viva al día 67, sin resultado terminal.
+
+
+[Alpha comparado con profundidad nativa completa](qa/alpha-native-baseline/README.md): tres rutas N/G/B en seis renders por escena, 28 pares de profundidad idénticos en Manglares intacto/colapso/giro y Gran Cañón intacto. El color coincide en Gran Cañón y sigue variando entre controles en Manglares. El contraejemplo histórico no se reproduce en estas vistas actuales, pero no se explica su causa ni se retira la salvaguarda. Pendientes CPU de preparación, estados/efectos/móvil y repetibilidad de color.
