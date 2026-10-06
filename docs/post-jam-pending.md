@@ -107,3 +107,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Profundidad de la textura de ruido comprobada](qa/late-farm-noise-volume/DEPTH.md): cuatro pares Manglares/Gran Cañón intactos/colapso, sin diferencias en 1,44 millones de píxeles por par ni cambios de estado/materiales preparados. Sigue fuera de gameplay; pendientes otras etapas/poses, biomas/culturas/luz, móvil y coste GPU restante.
+
+
+[Descarte de cultivos probado como candidato QA](qa/crop-frustum-prototype/README.md): 19 pruebas y cuatro lotes nativos con estados/rutas/entregas iguales. En la vista general no reduce envíos (637 llamadas/5,14M triángulos) y añade trabajo de límites, por lo que no se adopta. Pendientes verificar envolventes GPU de bridges, investigar diferencias estáticas, vistas cercanas/laterales y agrupación espacial con su coste incluido; no marcar optimización de cultivos completa.

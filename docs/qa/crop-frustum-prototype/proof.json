@@ -1,0 +1,29 @@
+{
+  "base": "834298d",
+  "sourceSha256": {
+    "tests/browser/crop-frustum.js": "0f33e77ba838ee4df2dde53d9c1050ec6421068bbbf856902bb2fae7071384e4",
+    "tests/browser/late-farm-render.html": "27816486d7d68dd33f2b5fbf5d6ee8fbfea8402bce7fb3a1316d0485a93f98a8",
+    "tests/crop-native-reload.test.js": "ee3c794df06db8a104e6dfef29c6e8c92fa7a658bf8070ea10d4b7ebe7f0270e",
+    "src/rendering/crop-batch.js": "e289f5d25c1ea9c8ed1dd46d4deca92a980ceef29780460c373a7c24829a71cd",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "public/content/crop-bridges.json": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309"
+  },
+  "evidenceSha256": {
+    "disabled.png": "4bb1d23a3e62e4e5b1df5a681279d02ffef9d4c5916f97c86edd22ad39cbd077",
+    "enabled.png": "12dcbad0f178561911b035be462b68681fb1fc28183fbe925ec3122d10a0119c",
+    "image-difference.json": "204f3823d1b44d5fb27989fb98660dd1793fa7ecac3f5c3978ba3d16f395b38b",
+    "native.json": "3490e082f06db1d7e0dfb160f8937629063d106ec8f575bf1a1e47fcaa8a2855",
+    "README.md": "dc207eb8a8af930975789b3bd9796295de400375b2982023465c60ac39ef502d"
+  },
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "cpuSamples": 800,
+  "gpuSamples": 800,
+  "productionChanged": false,
+  "tests": {
+    "command": "node --test tests/crop-native-reload.test.js tests/crop-upload.test.js",
+    "passed": 19,
+    "failed": 0
+  },
+  "decision": "Not adopted: no submission savings in this farm view; extra bounds work and no paired GPU gain. Bridge GPU envelope, camera/light coverage and visual differences remain unverified."
+}

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {installCropFrustum} from './browser/crop-frustum.js';
 import {createCropBatch} from '../src/rendering/crop-batch.js';
 import * as Game from '../src/simulation/game.js';
 import {advancePlant,waterPlant} from '../src/simulation/crops.js';
@@ -102,4 +103,39 @@ for(const [crop,species] of ids.entries())test(`QA-035: ${species} reconstructs 
    assert.ok(s.plants[0].growth>growth);assert.equal(before.batch.sample(species,s.plants[0].growth).phase,'original');
   }
  }finally{before.batch.dispose();after.batch.dispose();}
+});
+
+
+test('experimental culling encloses every native original vertex across growth, rotation and wind extremes',()=>{
+ const view=batch(),candidate=installCropFrustum(view.batch,view.scene,gltf),point=new THREE.Vector3(),matrix=new THREE.Matrix4();
+ const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+ let checked=0;
+ try{
+  candidate.setEnabled(true);
+  for(const species of ids)for(const ratio of [0,.03,.065,.12,.269,.27,.4,.529,.53,.65,.779,.78,.9,1]){
+   const plant={id:'bounds-7',species,growth:ratio*cropSpec(species).growth_seconds,x:123.456,z:-321.123,rotation:1.7};
+   view.batch.update([plant],5,()=>3.4,{x:96,z:-288});
+   for(const item of candidate.items)if(item.mesh.count&&!item.metas){
+    const {mesh,attr}=item,pg=mesh.geometry.attributes.position,sy=attr.array[0],sr=attr.array[1],folded=1-attr.array[2];mesh.getMatrixAt(0,matrix);
+    for(let i=0;i<pg.count;i++)for(const wind of [-.026,.026]){
+     const x=pg.getX(i),y=pg.getY(i),z=pg.getZ(i),above=Math.max(0,y-.1),pm=smooth(.1,.22,y),lm=pm*smooth(.035,.22,Math.hypot(x,z));
+     point.set(x*(1+(sr-1)*pm)*(1-lm*folded*.16)+wind,y+above*(sy-1)*pm+lm*folded*(.1+above*.12),z*(1+(sr-1)*pm)*(1-lm*folded*.16)+wind*.47).applyMatrix4(matrix);
+     assert.ok(mesh.boundingBox.containsPoint(point),species+'/'+ratio+'/'+mesh.name);checked++;
+    }
+   }
+  }
+  assert.ok(checked>100000,'Use the actual native topology');
+ }finally{candidate.dispose();view.batch.dispose();}
+});
+
+test('experimental bounds follow membership and origin, reuse paused bounds, and leave logical plants unchanged',()=>{
+ const view=batch(),candidate=installCropFrustum(view.batch,view.scene,gltf);
+ try{
+  const plants=[{id:'bounds-1',species:'maiz',growth:cropSpec('maiz').growth_seconds,x:100,z:200,rotation:2.3}];const before=JSON.stringify(plants);
+  candidate.setEnabled(true);view.batch.update(plants,0,()=>3,{x:96,z:192});const mesh=candidate.items.find(i=>i.mesh.count).mesh;
+  const sphere=mesh.boundingSphere.clone(),updates=candidate.updates;view.batch.update(plants,9,()=>3,{x:96,z:192});assert.equal(candidate.updates,updates);assert.deepEqual(mesh.boundingSphere,sphere);
+  view.batch.update(plants,9,()=>3,{x:144,z:240});assert.notDeepEqual(mesh.boundingSphere,sphere);assert.ok(mesh.boundingBox.containsPoint(new THREE.Vector3(-44,3,-40)));
+  const camera=new THREE.PerspectiveCamera(45,1,.1,10);camera.position.set(0,10,0);camera.lookAt(0,10,-1);camera.updateMatrixWorld();mesh.updateMatrixWorld();const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));assert.equal(frustum.intersectsObject(mesh),false);
+  view.batch.update([],9,()=>3);assert.equal(mesh.count,0);assert.equal(mesh.visible,false);assert.equal(JSON.stringify(plants),before);candidate.setEnabled(false);assert.ok(candidate.items.every(i=>!i.mesh.frustumCulled));
+ }finally{candidate.dispose();view.batch.dispose();}
 });

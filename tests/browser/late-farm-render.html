@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA render de finca avanzada real</title>
 <style>body{margin:0;font:14px system-ui;background:#233126}canvas{display:block;width:100vw;height:100vh}header{position:absolute;z-index:2;top:8px;left:8px;background:#ffffedee;padding:12px;max-width:480px}button{padding:9px}pre{max-height:160px;overflow:auto;font-size:11px}</style>
-<header><strong>Finca avanzada real · Manglares/Saheliana</strong><p>Guardado histórico intacto; continuación y contratación pagadas. Mundo 3D, cámara/medio/sombras iguales. Comparación de simulación, herramientas ocultas o envíos por categoría según el botón. Sin audio, HUD, guardado ni incursión. Paso controlado de 100 ms por frame mediante advanceReal; no ritmo variable de producción.</p><button id="run">Comparar cuatro lotes A/B/B/A</button><button id="diagnose">Diagnosticar envíos por categoría</button><button id="tools">Comparar herramientas ocultas A/B/B/A</button><button id="work-indexes">Comparar índices de VFX A/B/B/A</button><button id="noise-volume">Comparar textura de ruido A/B/B/A</button><label><input id="volumeToggle" type="checkbox">Textura de ruido en vista estática</label><button id="fine-noise">Comparar ruido fino A/B/B/A</button><label><input id="noiseToggle" type="checkbox" checked>Ruido fino en vista estática</label><label><input id="toolToggle" type="checkbox" checked>Ocultar herramientas inactivas en vista estática</label><p id="status">Lista para cargar</p><pre id="report"></pre></header><canvas id="world" aria-label="Finca avanzada en Manglares"></canvas>
+<header><strong>Finca avanzada real · Manglares/Saheliana</strong><p>Guardado histórico intacto; continuación y contratación pagadas. Mundo 3D, cámara/medio/sombras iguales. Comparación de simulación, herramientas ocultas o envíos por categoría según el botón. Sin audio, HUD, guardado ni incursión. Paso controlado de 100 ms por frame mediante advanceReal; no ritmo variable de producción.</p><button id="run">Comparar cuatro lotes A/B/B/A</button><button id="diagnose">Diagnosticar envíos por categoría</button><button id="tools">Comparar herramientas ocultas A/B/B/A</button><button id="work-indexes">Comparar índices de VFX A/B/B/A</button><button id="crop-culling">Comparar descarte de cultivos A/B/B/A</button><label><input id="cropToggle" type="checkbox">Descarte de cultivos en vista estática</label><button id="noise-volume">Comparar textura de ruido A/B/B/A</button><label><input id="volumeToggle" type="checkbox">Textura de ruido en vista estática</label><button id="fine-noise">Comparar ruido fino A/B/B/A</button><label><input id="noiseToggle" type="checkbox" checked>Ruido fino en vista estática</label><label><input id="toolToggle" type="checkbox" checked>Ocultar herramientas inactivas en vista estática</label><p id="status">Lista para cargar</p><pre id="report"></pre></header><canvas id="world" aria-label="Finca avanzada en Manglares"></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import * as Reference from '../../.cache/worker-lookups-1bfd-reference/src/simulation/game.js';
@@ -10,13 +10,14 @@ import {numberOf} from '../../src/simulation/money.js';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
+import {installCropFrustum} from './crop-frustum.js';
 import {FineNoiseVolume} from './noise-volume.js';
 import {GpuTimer} from './gpu-timer.js';
 import {WorkVfx as ReferenceWorkVfx} from './work-vfx-lazy-reference.js';
 import {captureRenderSubmissions} from './render-submission-breakdown.js';
 const button=document.querySelector('#run'),status=document.querySelector('#status'),report=document.querySelector('#report');
 const output={scope:'Four A/B/B/A controlled late-farm continuations with current WorldScene and native navigation, quality media and shadows. Reference simulation 1bfd85a versus current simulation. Real archived snapshot; ordinary postgame and paid hiring. Fifteen simulated seconds warmup, twenty measured; advanceReal(0.1) per RAF, not production variable frame pacing. No audio, HUD, autosave, raid, mobile, memory bytes or current 100-night balance acceptance.',lots:[],errors:[]};
-let world=null,busy=false,volume=null;
+let world=null,busy=false,volume=null,cropFrustum=null;
 const comparisonScope=output.scope;
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const raf=()=>new Promise(requestAnimationFrame);
@@ -24,11 +25,12 @@ const hash=async text=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA
 const summary=a=>{const s=[...a].sort((x,y)=>x-y);return {samples:s.length,median:(s[(s.length-1)>>1]+s[s.length>>1])/2,p95:s[Math.ceil(s.length*.95)-1],max:s.at(-1),mean:s.reduce((a,b)=>a+b,0)/s.length};};
 const publish=()=>{report.textContent=JSON.stringify(output,null,2);};
 async function run(mode='simulation'){
- const diagnostic=mode==='diagnostic',toolComparison=mode==='tools',workComparison=mode==='work-indexes',noiseComparison=mode==='fine-noise',volumeComparison=mode==='noise-volume';
+ const diagnostic=mode==='diagnostic',toolComparison=mode==='tools',workComparison=mode==='work-indexes',noiseComparison=mode==='fine-noise',volumeComparison=mode==='noise-volume',cropComparison=mode==='crop-culling';
  if(busy)return;busy=true;for(const b of document.querySelectorAll('button,input'))b.disabled=true;
  output.lots=[];output.errors=[];output.diagnostic=diagnostic;
- output.toolComparison=toolComparison;output.workComparison=workComparison;output.noiseComparison=noiseComparison;output.volumeComparison=volumeComparison;
+ output.toolComparison=toolComparison;output.workComparison=workComparison;output.noiseComparison=noiseComparison;output.volumeComparison=volumeComparison;output.cropComparison=cropComparison;
  output.scope=diagnostic?'Actual render submissions observed at five points in an ordinary paid late-farm continuation. Extra static instrumented renders preserve logical state and reconcile submitted calls/triangles. Timings in this diagnostic are perturbed and must not be used as a performance comparison. No audio, HUD, autosave, raid, mobile or 100-night balance acceptance.':comparisonScope;
+ if(cropComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations with identical current simulation/navigation/world and analytic fine noise. QA conservative growth/bridge batch bounds disabled/enabled/enabled/disabled. Same snapshot/camera/media/shadows, fixed advanceReal(0.1) per RAF. No audio/HUD/autosave/raid/mobile/RAM bytes acceptance; not proof of every crop morph or camera.';
  if(volumeComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations with identical current simulation/navigation/world and QA shader program. Only uFineNoiseVolumeEnabled=0/1/1/0 changes. R8 64-cubed trilinear texture replaces fine pigment and ground noise; coarse noise and audited depth hooks remain unchanged. Not pixel-identical: quantized periodic field. Same snapshot/camera/media/shadows, fixed advanceReal(0.1) per RAF. No audio/HUD/autosave/raid/mobile or RAM bytes acceptance.';
  if(noiseComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations with current simulation/navigation/world. Only QA uniform uFineNoise=1/0/0/1 changes; mean pigment and ground fine noise replace analytic evaluations. Coarse noise, palettes, cel bands, outlines, environment, lighting, shadows and geometry unchanged. Same snapshot/camera/media, fixed advanceReal(0.1) per RAF. No audio/HUD/autosave, raid, mobile or RAM bytes acceptance.';
  if(workComparison)output.scope='Four A/B/B/A paid rendered late-farm continuations, current simulation/navigation/world. Only WorkVfx planner reference a8f3e37 versus current verified cached targets changes. Authored hidden-tool culling enabled in every lot. Same snapshot, camera, quality and shadows, fixed advanceReal(0.1) per RAF; no audio/HUD/autosave, raid, mobile or RAM bytes acceptance.';
@@ -43,10 +45,10 @@ async function run(mode='simulation'){
   const live=saved.plants.filter(p=>p.alive).length,staff=Math.min(Math.ceil(live/12),Math.floor(numberOf(saved.ledger.balance)/30));
   output.input={biome:saved.biome,culture:saved.culture,history:saved.plants.length,live,crates:saved.crates.length,staff,wages:staff*30};
   let expectedSetup=null,expectedEnd=null,expectedQueries=null,expectedEvents=null;
-  const sequence=volumeComparison?[['A1',Game,true,true,1,0],['B1',Game,true,true,1,1],['B2',Game,true,true,1,1],['A2',Game,true,true,1,0]]:noiseComparison?[['A1',Game,true,true,1],['B1',Game,true,true,0],['B2',Game,true,true,0],['A2',Game,true,true,1]]:workComparison?[['A1',Game,true,false],['B1',Game,true,true],['B2',Game,true,true],['A2',Game,true,false]]:diagnostic?[['Diagnostic',Game,true]]:toolComparison?[['A1',Game,false],['B1',Game,true],['B2',Game,true],['A2',Game,false]]:[['A1',Reference,true],['B1',Game,true],['B2',Game,true],['A2',Reference,true]];
-  for(const [label,module,cullTools,optimizedWork=true,fineNoise=1,volumeEnabled=0] of sequence){
+  const sequence=cropComparison?[['A1',Game,true,true,1,0,false],['B1',Game,true,true,1,0,true],['B2',Game,true,true,1,0,true],['A2',Game,true,true,1,0,false]]:volumeComparison?[['A1',Game,true,true,1,0],['B1',Game,true,true,1,1],['B2',Game,true,true,1,1],['A2',Game,true,true,1,0]]:noiseComparison?[['A1',Game,true,true,1],['B1',Game,true,true,0],['B2',Game,true,true,0],['A2',Game,true,true,1]]:workComparison?[['A1',Game,true,false],['B1',Game,true,true],['B2',Game,true,true],['A2',Game,true,false]]:diagnostic?[['Diagnostic',Game,true]]:toolComparison?[['A1',Game,false],['B1',Game,true],['B2',Game,true],['A2',Game,false]]:[['A1',Reference,true],['B1',Game,true],['B2',Game,true],['A2',Reference,true]];
+  for(const [label,module,cullTools,optimizedWork=true,fineNoise=1,volumeEnabled=0,cropEnabled=false] of sequence){
    status.textContent='Cargando '+label;
-   if(world){volume?.dispose();volume=null;world.dispose();world=null;const old=document.querySelector('#world');old.replaceWith(old.cloneNode(false));}
+   if(world){cropFrustum?.dispose();cropFrustum=null;volume?.dispose();volume=null;world.dispose();world=null;const old=document.querySelector('#world');old.replaceWith(old.cloneNode(false));}
    const NavigationClass=module===Reference?ReferenceNavigation:Navigation;
    const state=deserialize(raw),nav=new NavigationClass(state.seed,state.biome,pack.profile);nav.setState(state);
    module.continuePostgame(state);module.hire(state,'qa-render-late-hire',{olderFemale:staff});
@@ -56,10 +58,11 @@ async function run(mode='simulation'){
    if(workComparison&&!optimizedWork){const current=world.workVfx;current.dispose();world.workVfx=new ReferenceWorkVfx(current.library,current.pipeline,current.scene,current.surface,current.waterSource);}
    world.render(0);await world.whenChunksReady();
    for(let ready=0;!world.actorsReady();ready++){assert(ready<1200,'Workers not ready');await raf();world.render(0);}
+   if(cropComparison){cropFrustum=installCropFrustum(world.cropBatch,world.scene,world.cropGltf);cropFrustum.setEnabled(cropEnabled);world.render(0);}
    if(volumeComparison){volume=new FineNoiseVolume();volume.uniforms.uFineNoiseVolumeEnabled.value=volumeEnabled;volume.apply(world.scene);world.render(0);}
    const gl=world.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info'),timer=new GpuTimer(gl,32);
    const lot={label,loadingMs:performance.now()-loading,setupSha256:await hash(setup),viewport:{css:[innerWidth,innerHeight],buffer:[world.canvas.width,world.canvas.height],dpr:devicePixelRatio},quality:world.quality,shadows:world.renderer.shadowMap.enabled,renderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),samples:[],events:{},pathSearches:0,submissions:[]};
-   lot.toolCulling=cullTools;if(volumeComparison)lot.volumeEnabled=volumeEnabled;if(noiseComparison)lot.fineNoise=fineNoise;if(workComparison)lot.optimizedWork=optimizedWork;
+   lot.toolCulling=cullTools;if(cropComparison)lot.cropCulling=cropEnabled;if(volumeComparison)lot.volumeEnabled=volumeEnabled;if(noiseComparison)lot.fineNoise=fineNoise;if(workComparison)lot.optimizedWork=optimizedWork;
    const find=nav.findPath;nav.findPath=function(...args){lot.pathSearches++;return find.apply(this,args);};
    const seen=new Set(state.events.map(e=>e.id)),previousAutoReset=world.renderer.info.autoReset;
    let previous=null;
@@ -93,16 +96,18 @@ async function run(mode='simulation'){
    lot.end={time:state.time,money:numberOf(state.ledger.balance),workers:state.workers.length,live:state.plants.filter(p=>p.alive).length};
    lot.summary=Object.fromEntries(['simulationMs','renderCpuMs','frameIntervalMs','calls','triangles'].map(k=>[k,summary(lot.samples.map(s=>s[k]))]));
    const glError=gl.getError();assert(glError===gl.NO_ERROR,'WebGL error '+glError);assert(!output.errors.length,'Scene errors');
+   if(cropComparison)lot.boundsRebuilds=cropFrustum.updates;
    if(volumeComparison){lot.volumePatchedPrograms=volume.patched;assert(volume.patched>0,"Volume shader not compiled");lot.volumeSourceBytes=volume.texture.image.data.byteLength;}
    lot.memoryCounts={...world.renderer.info.memory};output.lots.push(lot);publish();
   }
   status.textContent=diagnostic?'PASS · cinco capturas de envíos reconciliadas':'PASS · cuatro lotes, estados finales idénticos';
  }catch(e){output.errors.push(String(e));status.textContent='FAIL · '+e.message;console.error(e);publish();}
- finally{busy=false;for(const b of document.querySelectorAll('button,input'))b.disabled=false;if(world){document.querySelector('#toolToggle').checked=world.workerToolCulling!==false;document.querySelector('#volumeToggle').checked=volume?.uniforms.uFineNoiseVolumeEnabled.value>.5;document.querySelector('#noiseToggle').checked=world.toon.uniforms.uFineNoise.value>.5;}}
+ finally{busy=false;for(const b of document.querySelectorAll('button,input'))b.disabled=false;if(world){document.querySelector('#cropToggle').checked=cropComparison&&output.lots.at(-1)?.cropCulling;document.querySelector('#toolToggle').checked=world.workerToolCulling!==false;document.querySelector('#volumeToggle').checked=volume?.uniforms.uFineNoiseVolumeEnabled.value>.5;document.querySelector('#noiseToggle').checked=world.toon.uniforms.uFineNoise.value>.5;}}
 }
-document.querySelector('#noise-volume').onclick=()=>run('noise-volume');document.querySelector('#fine-noise').onclick=()=>run('fine-noise');document.querySelector('#work-indexes').onclick=()=>run('work-indexes');button.onclick=()=>run('simulation');document.querySelector('#diagnose').onclick=()=>run('diagnostic');document.querySelector('#tools').onclick=()=>run('tools');
+document.querySelector('#crop-culling').onclick=()=>run('crop-culling');document.querySelector('#noise-volume').onclick=()=>run('noise-volume');document.querySelector('#fine-noise').onclick=()=>run('fine-noise');document.querySelector('#work-indexes').onclick=()=>run('work-indexes');button.onclick=()=>run('simulation');document.querySelector('#diagnose').onclick=()=>run('diagnostic');document.querySelector('#tools').onclick=()=>run('tools');
 document.querySelector('#toolToggle').onchange=()=>{if(world&&!busy){const before=serialize(world.state);world.workerToolCulling=document.querySelector('#toolToggle').checked;world.render(0);assert(serialize(world.state)===before,'Static toggle changed logical state');}};
 document.querySelector('#noiseToggle').onchange=()=>{if(world&&!busy){const before=serialize(world.state);world.toon.uniforms.uFineNoise.value=document.querySelector('#noiseToggle').checked?1:0;world.render(0);assert(serialize(world.state)===before,'Static noise toggle changed logical state');}};
 document.querySelector('#volumeToggle').onchange=()=>{if(world&&volume&&!busy){const before=serialize(world.state);volume.uniforms.uFineNoiseVolumeEnabled.value=document.querySelector('#volumeToggle').checked?1:0;world.render(0);assert(serialize(world.state)===before,'Static volume toggle changed logical state');}};
-addEventListener('pagehide',()=>{volume?.dispose();world?.dispose();});
+document.querySelector('#cropToggle').onchange=()=>{if(world&&cropFrustum&&!busy){const before=serialize(world.state);cropFrustum.setEnabled(document.querySelector('#cropToggle').checked);world.render(0);assert(serialize(world.state)===before,'Static crop culling changed state');}};
+addEventListener('pagehide',()=>{cropFrustum?.dispose();volume?.dispose();world?.dispose();});
 </script></html>
