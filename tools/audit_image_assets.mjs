@@ -73,6 +73,37 @@ export function nativeCatalogImageReferences({villages=[],walls={},vfx={},menuHt
  }
  return refs;
 }
+// Only explicit display consumers are classified; arbitrary asset URLs in scripts
+// can be shader data and must remain unknown until their semantic use is reviewed.
+export function displayImageReferences({markup='',catalog='',handsText='',guardianText='',destructionText='',supportProbeText=''}={}){
+ const refs=[];
+ const add=(path,source,field)=>{if(typeof path==='string'&&/^\/?assets\//.test(path)&&imageExtension.test(path))refs.push({path:path.replace(/^\//,''),reference:{catalog:source,field,role:'color'}});};
+ const displayMarkup=markup.replace(/<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,part=>' '.repeat(part.length));
+ for(const tag of displayMarkup.matchAll(/<img\b[^>]*>/gi)){
+  const src=tag[0].match(/\ssrc\s*=\s*(["'])(.*?)\1/i);if(src)add(src[2],catalog,'img.src@'+tag.index);
+ }
+ if(handsText){
+  const dictionary=handsText.match(/export const HAND_ASSETS\s*=\s*(\{[^\n]+?\});/);
+  if(!dictionary)throw Error('Native hand art dictionary requires review');
+  for(const [kind,path] of Object.entries(JSON.parse(dictionary[1])))add(path,'src/rendering/hands-native.js','HAND_ASSETS.'+kind);
+ }
+ if(guardianText){
+  const sprite=guardianText.match(/export const GUARDIAN_SPRITE\s*=\s*(["'])(.*?)\1/);
+  if(!sprite)throw Error('Native guardian sprite requires review');
+  add(sprite[2],'src/ui/guardian-native.js','GUARDIAN_SPRITE');
+ }
+ if(destructionText){
+  const previews=[...destructionText.matchAll(/\bpreview\s*:\s*(["'])(\/?assets\/[^"']+)\1\s*,\s*previewKind\s*:\s*(["'])reference\3/g)];
+  if(!previews.length)throw Error('Destruction reference preview catalog requires review');
+  for(const preview of previews)add(preview[2],'library/destruction/script-5.js','BUILDINGS.preview@'+preview.index);
+ }
+ if(supportProbeText){
+  const probe=supportProbeText.match(/detectSupport\(\)\{[^}]{0,250}?image\.src\s*=\s*(["'])(\/?assets\/[^"']+)\1;[^\n]{0,300}?image\.height===1/);
+  if(!probe)throw Error('WebP capability probe requires review');
+  const path=probe[2];if(imageExtension.test(path))refs.push({path:path.replace(/^\//,''),reference:{catalog:'library/crops/script-3.js',field:'GLTFTextureWebPExtension.detectSupport',role:'data'}});
+ }
+ return refs;
+}
 export async function auditImageAssets(){
  const publicFiles=await walk(resolve(root,'public')),ground=JSON.parse(await readFile(resolve(root,'public/content/ground-materials.json'),'utf8'));
  const knownRoles=groundImageReferences(ground);
@@ -102,6 +133,9 @@ export async function auditImageAssets(){
  for(const name of ['villages','walls','vfx'])nativeCatalogs[name]=JSON.parse(await readFile(resolve(root,'public/content/'+name+'.json'),'utf8'));
  nativeCatalogs.menuHtml=await readFile(resolve(root,'public/menu/index.html'),'utf8');
  for(const {path,reference} of nativeCatalogImageReferences(nativeCatalogs)){const refs=knownRoles.get(path)??[];refs.push(reference);knownRoles.set(path,refs);}
+ const displayRefs=displayImageReferences({handsText:await readFile(resolve(root,'src/rendering/hands-native.js'),'utf8'),guardianText:await readFile(resolve(root,'src/ui/guardian-native.js'),'utf8'),destructionText:await readFile(resolve(root,'public/library/destruction/script-5.js'),'utf8'),supportProbeText:await readFile(resolve(root,'public/library/crops/script-3.js'),'utf8')});
+ for(const file of publicFiles.filter(file=>extname(file).toLowerCase()==='.html'))displayRefs.push(...displayImageReferences({markup:await readFile(file,'utf8'),catalog:publicPath(file)}));
+ for(const {path,reference} of displayRefs){const refs=knownRoles.get(path)??[];refs.push(reference);knownRoles.set(path,refs);}
  const imageVariants=JSON.parse(await readFile(resolve(root,'content/manifests/image-runtime.json'),'utf8'));
  for(const record of imageVariants.records){const refs=knownRoles.get(record.source);if(!refs?.length||refs.some(r=>r.role==='unclassified')||refs.some(r=>r.role!=='color')&&!(record.kind==='data-image'&&record.encoding==='lossless-webp'&&record.rawPixelsEqual===true))throw Error('Image runtime alias requires reviewed color or exact data source');knownRoles.set(record.runtime,refs.map(r=>({...r,source:record.source})));}
  const standalone=[],embedded=[],inline=[],unparsedInline=[],errors=[];

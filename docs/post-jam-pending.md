@@ -251,3 +251,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Tuplas temporales de cultivos reutilizadas](qa/crop-instance-scratch/README.md): 32 pruebas y build correctos; cinco casos CPU aislados con buffers idénticos. Maduras: mediana aproximada 0,55 a 0,26 ms para 1.200 plantas, sin mejora amplia de FPS acreditada. Pendientes GC/RAM y coste integrado/móvil.
+
+
+[Usos de imágenes distribuidas completos](qa/image-display-classification/README.md): 225 entradas, cero desconocidas y cero errores. Preflight actual: 95 candidatas de color, 45 de revisión y 22 variantes integradas; SVG y prueba de soporte WebP preservados. No son nuevas conversiones ni ahorro; pendientes API/aceptación, perfiles y mapas embebidos.

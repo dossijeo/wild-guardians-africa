@@ -1,0 +1,57 @@
+{
+  "baseCommit": "b93df1a90d93c68dcf9a8f83c507f6f6a62f60b8",
+  "sourceSha256": {
+    "tools/audit_image_assets.mjs": "2179d88cb95e552e1c9aea50840d4b1d76072a2783dffbc5fcd03f341a80e887",
+    "tools/tinify-color-policy.mjs": "1ac5ad125d2412987745f24a8c5c14ef927b21fb7d9c447538ac001e5f1580bc",
+    "tools/plan_tinify_images.mjs": "cbc05577b3c7e8593c49c8cc0fda42abbe6f23b29a8cdbf573deb8d0b021604a",
+    "tests/image-roles.test.js": "80bd0bd42dd4fa269ba266fd75987ed91bcb5230b07cee3e6b107ed4f821eeb0",
+    "tests/tinify-color-policy.test.js": "9a8582d3e547c5960fc438c3e4c77429f9839151881668d9385482a96e11c96e",
+    "src/rendering/hands-native.js": "3ba7d1cc7197960fb58b190cd4f75c4eb00831d977210596e53da003635e44eb",
+    "src/ui/guardian-native.js": "70f5e8fa1df98208a7a37945aefd41a0938c18b2e1a7d17289b4ed000b0f6f5d",
+    "public/library/destruction/script-5.js": "42eab9440a1faf1f6919778a0a61c77da87f72b72d52dfd804c3d0b066efc6e7",
+    "public/library/crops/script-3.js": "c6817b1300ea412a8cfea7d34c7f8027556d29c14b8f57b319bb5f3ca3dc9913",
+    "public/menu/index.html": "2fd7ecc4af98c3ca686adc580ceda3c02c5fb98fc25adf272be935b04e92494e"
+  },
+  "distributedSummary": {
+    "count": 225,
+    "bytes": 207290581,
+    "formats": {
+      "jpeg": 25,
+      "svg": 1,
+      "webp": 199
+    },
+    "exactPixels": 78,
+    "unclassified": 0,
+    "uniqueHashes": 213
+  },
+  "planSummary": {
+    "eligible": {
+      "count": 95,
+      "bytes": 14998080
+    },
+    "review": {
+      "count": 45,
+      "bytes": 54393053
+    },
+    "alreadyIntegrated": {
+      "count": 22,
+      "bytes": 22637272
+    }
+  },
+  "apiOperations": 0,
+  "runtimeImagesChanged": false,
+  "tests": [
+    {
+      "command": "node --test tests/image-roles.test.js tests/tinify-color-policy.test.js tests/image-runtime.test.js",
+      "pass": 41,
+      "fail": 0,
+      "scope": "before separating unsupported-format vs stale-format errors"
+    },
+    {
+      "command": "node --test tests/tinify-color-policy.test.js tests/image-roles.test.js",
+      "pass": 20,
+      "fail": 0,
+      "scope": "final policy and classification including SVG regression"
+    }
+  ]
+}
