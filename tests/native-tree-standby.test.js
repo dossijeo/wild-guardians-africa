@@ -34,7 +34,7 @@ test('inactive banks are reused and source GPU attribute identities remain borro
 });
 test('world close during replacement removes visible bank and releases late buffers exactly once',async()=>{
  let finish;const f=fixture();f.owner.request([descriptor(tree())],{x:0,z:0});await settled(f.owner);f.owner.prepare=()=>new Promise(resolve=>finish=resolve);f.owner.request([descriptor(tree('b',2))],{x:0,z:0});const geometries=f.owner.banks.flatMap(b=>b.meshes.map(m=>m.geometry)),releases=new Map();for(const g of geometries)g.addEventListener('dispose',()=>releases.set(g,(releases.get(g)??0)+1));
- f.owner.dispose();assert.equal(f.scene.children.length,0);finish();await settled(f.owner);assert.equal(f.owner.active,null);assert.equal(f.owner.banks.every(b=>b===null),true);assert.ok(geometries.every(g=>releases.get(g)===1));f.close();
+ f.owner.dispose();assert.equal(f.scene.children.length,0);finish();await settled(f.owner);assert.equal(f.owner.active,null);assert.equal(f.owner.banks.every(b=>b===null),true);assert.ok(geometries.every(g=>releases.get(g)===1));assert.equal(f.owner.stats.estimatedOwnedGpuBytes,0);assert.equal(f.owner.stats.rendered,0);assert.equal(f.owner.stats.trees,0);f.close();
 });
 test('standby prunes distant identities and refuses to exceed its explicit population budget',async()=>{
  const f=fixture();f.owner.request([descriptor(tree())],{x:0,z:0});await settled(f.owner);f.owner.request([descriptor(tree('b',200))],{x:200,z:0});await settled(f.owner);assert.equal(f.owner.has('a',tree()),false);assert.equal(f.owner.has('b',tree('b',200)),true);
@@ -48,4 +48,8 @@ test('replacement source geometry cannot borrow the old bank buffers or its uplo
  const f=fixture(),t=tree();f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);const old=f.owner.active.meshes[0].geometry.attributes.position.array,replacement=new THREE.SphereGeometry(2,8,4);
  f.sources[0]={geometry:replacement,material:f.sources[0].material};assert.equal(f.owner.has(t.id,t),false);f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
  assert.equal(f.owner.has(t.id,t),true);assert.notEqual(f.owner.active.meshes[0].geometry.attributes.position.array,old);assert.equal(f.owner.active.meshes[0].geometry.attributes.position.array,replacement.attributes.position.array);f.close();replacement.dispose();
+});
+test('large world placement preserves fractional coordinates through a relative GPU bank anchor',async()=>{
+ const f=fixture(),t=tree('far',1e8+.25);t.z=-1e8+.125;f.owner.request([descriptor(t)],{x:t.x,z:t.z});await settled(f.owner);const bank=f.owner.active,m=bank.meshes[0];
+ assert.equal(bank.entries.get(t.id).matrix[12],t.x);assert.equal(bank.root.position.x+m.instanceMatrix.array[12],t.x);assert.equal(bank.root.position.z+m.instanceMatrix.array[14],t.z);assert.equal(f.owner.has(t.id,t),true);f.close();
 });
