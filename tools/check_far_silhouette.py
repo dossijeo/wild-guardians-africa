@@ -18,6 +18,8 @@ for mode, coverage in expected.items():
     report = reports[mode]
     assert report['camera'] == reference['camera']
     assert report['atlasLod'] == reference['atlasLod']
+    assert report.get('view') == reference.get('view')
+    assert report.get('atlasElevation',0) == reference.get('atlasElevation',0)
     assert report['representation'] == mode and report['gpuReady'] and report['gpuCovered']
     assert report['state']['ready'] == 1 and not report['errors']
     assert report['webglError'] == 0
@@ -52,8 +54,8 @@ for threshold in [0, 8]:
                  'unionPixels': len(union), 'intersectionOverUnion': len(intersection) / len(union),
                  'nativeBounds': bounds(native), 'impostorBounds': bounds(impostor)})
 summary = {'atlasLod': reference['atlasLod'], 'nativeLod': 1,
-           'camera': reference['camera'], 'pixelMasks': rows,
-           'scope': 'Single stationary daytime view, masks from RGB difference against separately rendered background; includes leaf holes, antialias and shading, not geometry-only silhouette or perceived quality',
+           'camera': reference['camera'], 'atlasElevation':reference.get('atlasElevation',0), 'view':reference.get('view'), 'pixelMasks': rows,
+           'scope': 'Single stationary configured view, masks from RGB difference against separately rendered background; includes leaf holes, antialias and shading, not geometry-only silhouette or perceived quality',
            'errors': []}
 result = json.dumps(summary, indent=2) + '\n'
 if args.output:

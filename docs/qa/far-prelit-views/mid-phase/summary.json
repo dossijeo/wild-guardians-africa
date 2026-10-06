@@ -1,0 +1,60 @@
+{
+  "atlasLod": 1,
+  "nativeLod": 1,
+  "camera": [
+    50,
+    10,
+    3.061616997868383e-15
+  ],
+  "atlasElevation": 8,
+  "view": {
+    "height": 10,
+    "cameraYaw": 90,
+    "treeYaw": 22.5,
+    "night": 0.5
+  },
+  "pixelMasks": [
+    {
+      "rgbDifferenceThreshold": 0,
+      "nativePixels": 12242,
+      "impostorPixels": 12941,
+      "intersectionPixels": 11652,
+      "unionPixels": 13531,
+      "intersectionOverUnion": 0.8611336930012564,
+      "nativeBounds": [
+        591,
+        271,
+        736,
+        423
+      ],
+      "impostorBounds": [
+        584,
+        271,
+        736,
+        416
+      ]
+    },
+    {
+      "rgbDifferenceThreshold": 8,
+      "nativePixels": 8316,
+      "impostorPixels": 8949,
+      "intersectionPixels": 7830,
+      "unionPixels": 9435,
+      "intersectionOverUnion": 0.8298887122416534,
+      "nativeBounds": [
+        600,
+        272,
+        727,
+        417
+      ],
+      "impostorBounds": [
+        591,
+        272,
+        724,
+        415
+      ]
+    }
+  ],
+  "scope": "Single stationary configured view, masks from RGB difference against separately rendered background; includes leaf holes, antialias and shading, not geometry-only silhouette or perceived quality",
+  "errors": []
+}
