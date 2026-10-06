@@ -1,0 +1,166 @@
+{
+  "runtimeCommit": "39d753d45a515334591b73149f97f2c827bf756d",
+  "cases": [
+    {
+      "case": "canyon",
+      "rawSha256": "b1ba18ed9112dc0ea4d69420c1640a0843dc2dd3bb3134a8c75c1664a5f8c193",
+      "stages": [
+        {
+          "stage": "before-gpu-warm",
+          "contextLost": false,
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0,
+          "bufferBytes": 0,
+          "deletedBytes": 0,
+          "peakBytes": 0
+        },
+        {
+          "stage": "after-gpu-warm",
+          "contextLost": false,
+          "geometries": 44,
+          "textures": 52,
+          "programs": 55,
+          "bufferBytes": 36635672,
+          "deletedBytes": 98852,
+          "peakBytes": 36734524
+        },
+        {
+          "stage": "after-load",
+          "contextLost": false,
+          "geometries": 80,
+          "textures": 55,
+          "programs": 57,
+          "bufferBytes": 41983824,
+          "deletedBytes": 98852,
+          "peakBytes": 41983824
+        },
+        {
+          "stage": "after-contact-or-appearance",
+          "contextLost": false,
+          "geometries": 79,
+          "textures": 54,
+          "programs": 57,
+          "bufferBytes": 40338532,
+          "deletedBytes": 21502252,
+          "peakBytes": 44571528
+        },
+        {
+          "stage": "before-context-loss",
+          "contextLost": false,
+          "geometries": 24,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 9121602,
+          "deletedBytes": 52719182,
+          "peakBytes": 44571528
+        },
+        {
+          "stage": "after-dispose",
+          "contextLost": true,
+          "geometries": 20,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 2562812,
+          "deletedBytes": 59277972,
+          "peakBytes": 44571528
+        },
+        {
+          "stage": "after-context-loss-event",
+          "contextLost": true,
+          "geometries": 20,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 2562812,
+          "deletedBytes": 59277972,
+          "peakBytes": 44571528
+        }
+      ]
+    },
+    {
+      "case": "savanna",
+      "rawSha256": "2ddb2fe10a7d5f2e01f732338352c204d333e9f476eda81bfc0dd374c3401774",
+      "stages": [
+        {
+          "stage": "before-gpu-warm",
+          "contextLost": false,
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0,
+          "bufferBytes": 0,
+          "deletedBytes": 0,
+          "peakBytes": 0
+        },
+        {
+          "stage": "after-gpu-warm",
+          "contextLost": false,
+          "geometries": 104,
+          "textures": 47,
+          "programs": 52,
+          "bufferBytes": 49233452,
+          "deletedBytes": 98852,
+          "peakBytes": 49332304
+        },
+        {
+          "stage": "after-load",
+          "contextLost": false,
+          "geometries": 160,
+          "textures": 50,
+          "programs": 54,
+          "bufferBytes": 59165432,
+          "deletedBytes": 98852,
+          "peakBytes": 59165432
+        },
+        {
+          "stage": "after-contact-or-appearance",
+          "contextLost": false,
+          "geometries": 175,
+          "textures": 55,
+          "programs": 54,
+          "bufferBytes": 61708242,
+          "deletedBytes": 19682494,
+          "peakBytes": 62847188
+        },
+        {
+          "stage": "before-context-loss",
+          "contextLost": false,
+          "geometries": 31,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 10930990,
+          "deletedBytes": 70459746,
+          "peakBytes": 62847188
+        },
+        {
+          "stage": "after-dispose",
+          "contextLost": true,
+          "geometries": 27,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 4175300,
+          "deletedBytes": 77215436,
+          "peakBytes": 62847188
+        },
+        {
+          "stage": "after-context-loss-event",
+          "contextLost": true,
+          "geometries": 27,
+          "textures": 25,
+          "programs": 10,
+          "bufferBytes": 4175300,
+          "deletedBytes": 77215436,
+          "peakBytes": 62847188
+        }
+      ]
+    }
+  ],
+  "files": {
+    "buffer-requests.js.txt": "22da8f37c58ab01d72e16ebcbb4d658dd5771842333249d2b5f0baae335b9387",
+    "canyon.json.gz": "adea95bfc9bd95f6653aaca2ef380d10cc710478f30d5487860f29d664673ef1",
+    "canyon.png": "3e73b2e4a8483f402334d697d1793437e11a24bb0dc95db7f94ec2c15ba27fe7",
+    "fixture.html.txt": "540f159edfadbe766586616fe04981ec97571d26bdbd0fcd57ae77df1436f641",
+    "savanna.json.gz": "57386a6051b412844fc48c6686a9fcfb36d8bf0950b51c0390bd192b3ce7ffa3",
+    "savanna.png": "3e73b2e4a8483f402334d697d1793437e11a24bb0dc95db7f94ec2c15ba27fe7"
+  },
+  "limits": "QA buffer request ledger only; excludes texture/shader/driver memory, JavaScript heap and implicit context loss. Query instrumentation adds overhead. No load-time or frametime comparison."
+}

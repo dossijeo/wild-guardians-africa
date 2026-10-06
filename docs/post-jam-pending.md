@@ -177,3 +177,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Variante de pantalla de remansos preparada](qa/alpha-appearance-preload/README.md): el programa alpha detectado es el slot 19, remanso con orilla rocosa. Se compilan residentes/LODs con sombras durante carga; Gran Río y Sabana aparecen sin nuevos programas y se conserva daño al centro en Gran Cañón. 79 pruebas/build; primer render de Gran Río 84,8→28,6 ms en muestras, con nueve programas más tras carga/aparición, sin medir bytes/RAM. Capturas difieren en 35/720.000 píxeles, máximo 2/255 por canal; no igualdad exacta/global. Pendientes picos sin compilación, chunks/LOD/batching, carga/memoria, otras combinaciones/móvil y GPU sostenida.
+
+
+[Recursos de precarga y cierre medidos](qa/preload-buffer-lifecycle/README.md): dos contactos nativos y pérdida real de contexto comprobados; 31 pruebas dirigidas. La preparación libera 98.852 bytes solicitados de buffers en ambas muestras. El saldo tras cierre (2,56/4,18 MB) excluye la liberación implícita del contexto y no acredita una fuga ni RAM total. Pendientes propietarios de prototipos/texturas/cachés, orden de limpieza, ciclos e interrupciones, memoria física/móvil y coste de arranque sin sonda. Runtime sin cambios. Campaña congelada de margen sigue viva al día 75, todavía sin resultado terminal.
