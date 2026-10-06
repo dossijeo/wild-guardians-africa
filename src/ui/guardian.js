@@ -66,6 +66,7 @@ export class NativeGuardian {
     if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}
     const stamp=performance.now(),elapsed=this.lastStamp===null?0:Math.max(0,(stamp-this.lastStamp)/1000);this.lastStamp=stamp;
     this.time+=elapsed;this.age+=elapsed;
+    if(this.voice?.duration)this.duration=this.voice.duration;
     if(this.closeAfter&&!this.voice?.active&&this.age>=this.duration+.9)this.hide();
     this.lifecycle.advance(elapsed,this.duration);
     this.root.classList.toggle('leaving',this.lifecycle.phase==='outro');

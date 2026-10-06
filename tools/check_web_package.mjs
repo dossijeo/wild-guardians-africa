@@ -7,6 +7,12 @@ const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+const spiritManifest=JSON.parse(await readFile('content/manifests/spirit-voices.json','utf8'));
+assert.equal(spiritManifest.records.length,54);
+for(const record of spiritManifest.records){
+ const bytes=await readFile(resolve(root,record.path));
+ assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,'Original Spirit clip changed in package: '+record.path);
+}
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
 for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
 const musicManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
