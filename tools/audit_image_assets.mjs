@@ -80,6 +80,8 @@ export async function auditImageAssets(){
   };
   visit(JSON.parse(await readFile(resolve(root,'public/content/'+catalog+'.json'),'utf8')),'');
  }
+ const imageVariants=JSON.parse(await readFile(resolve(root,'content/manifests/image-runtime.json'),'utf8'));
+ for(const record of imageVariants.records){const refs=knownRoles.get(record.source);if(!refs?.length||refs.some(r=>r.role!=='color'))throw Error('Image runtime alias requires reviewed color source');knownRoles.set(record.runtime,refs.map(r=>({...r,source:record.source})));}
  const standalone=[],embedded=[],inline=[],unparsedInline=[],errors=[];
  const distributed=path=>exists(resolve(root,'dist',path));
  for(const file of publicFiles){

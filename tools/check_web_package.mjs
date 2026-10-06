@@ -23,6 +23,15 @@ for(const item of audioManifest.records){
  if(item.kind==='music'||item.kind==='sfx')assert.equal(sha(packaged),item.runtimeSha256,'Runtime audio bytes changed: '+item.runtime);
  else assert.equal(packaged.toString('utf8'),publicText(await readFile(resolve('public',item.runtime),'utf8'),item.runtime,audioManifest),'Audio metadata changed beyond relative routes');
 }
+const imageManifest=JSON.parse(await readFile('content/manifests/image-runtime.json','utf8'));
+const {default:sharp}=await import('sharp');
+for(const item of imageManifest.records){
+ assert(!await exists(resolve(root,item.source)),'Original image duplicated: '+item.source);
+ const output=await readFile(resolve(root,item.runtime));assert.equal(sha(output),item.runtimeSha256,'Runtime image bytes changed');
+ const info=await sharp(output).metadata();assert.equal(info.format,'webp');assert.equal(info.width,item.width);assert.equal(info.height,item.height);assert.equal(info.hasAlpha,item.hasAlpha);
+}
+const packagedManifest=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
+for(const item of imageManifest.records)assert(packagedManifest.records.some(r=>r.source===item.source&&r.runtime===item.runtime),'Missing packaged image alias');
 for(const pack of ['a','b']){
  const index=JSON.parse(await readFile(resolve(root,`content/music-opus-windows-${pack}.json`),'utf8'));
  for(const track of index.tracks){

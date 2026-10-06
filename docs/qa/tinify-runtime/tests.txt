@@ -1,0 +1,76 @@
+TAP version 13
+# (node:36368) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy and WebP texture references preserve normal, packed data and color roles
+ok 1 - legacy and WebP texture references preserve normal, packed data and color roles
+  ---
+  duration_ms: 4.7504
+  ...
+# Subtest: a shared color/normal map is treated as data even when color usage is found first
+ok 2 - a shared color/normal map is treated as data even when color usage is found first
+  ---
+  duration_ms: 0.3906
+  ...
+# Subtest: material extension colors and clearcoat normals are classified through extension nesting
+ok 3 - material extension colors and clearcoat normals are classified through extension nesting
+  ---
+  duration_ms: 2.9838
+  ...
+# Subtest: unreferenced image cannot be automatically sent through lossy color optimization
+ok 4 - unreferenced image cannot be automatically sent through lossy color optimization
+  ---
+  duration_ms: 0.3198
+  ...
+# Subtest: mangrove secondary mud maps retain their data roles and shared files retain both references
+ok 5 - mangrove secondary mud maps retain their data roles and shared files retain both references
+  ---
+  duration_ms: 1.0874
+  ...
+# Subtest: native biome atlas descriptors distinguish base color from normal and metallic roughness
+ok 6 - native biome atlas descriptors distinguish base color from normal and metallic roughness
+  ---
+  duration_ms: 0.4774
+  ...
+# (node:13684) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Tinify assets/37c2daf23efce6481a5308acab8c1c9b372e7711024cf77bc5db02a10a33d359.webp retains dimensions/alpha and resolves in every public context
+ok 7 - Tinify assets/37c2daf23efce6481a5308acab8c1c9b372e7711024cf77bc5db02a10a33d359.webp retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 36.8568
+  ...
+# Subtest: Tinify assets/a4b7f0c0d5bb4ec2de72b1f0d45a7fe2e59b3361046c566371966b0fa15f9943.webp retains dimensions/alpha and resolves in every public context
+ok 8 - Tinify assets/a4b7f0c0d5bb4ec2de72b1f0d45a7fe2e59b3361046c566371966b0fa15f9943.webp retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 12.4683
+  ...
+# Subtest: Tinify assets/91b249bed15bc5cc260e041d4eb01bb7b5c3b5c12da0ec141ef2e1249c59910e.png retains dimensions/alpha and resolves in every public context
+ok 9 - Tinify assets/91b249bed15bc5cc260e041d4eb01bb7b5c3b5c12da0ec141ef2e1249c59910e.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 129.8135
+  ...
+# (node:27228) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all twenty original GLBs resolve to one distinct runtime variant
+ok 10 - all twenty original GLBs resolve to one distinct runtime variant
+  ---
+  duration_ms: 3.8164
+  ...
+# Subtest: native pages, injected scripts, JSON and stylesheets use their actual resolution context
+ok 11 - native pages, injected scripts, JSON and stylesheets use their actual resolution context
+  ---
+  duration_ms: 0.8594
+  ...
+# Subtest: native menu and library receive local decoding before their original parsers
+ok 12 - native menu and library receive local decoding before their original parsers
+  ---
+  duration_ms: 9.485
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 648.802

@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Tinify runtime image QA</title><style>body{background:#d6c7a4;font:15px system-ui}main{display:flex;gap:24px;flex-wrap:wrap}figure{margin:8px}img{display:block;max-width:360px;max-height:360px;background:repeating-conic-gradient(#ddd 0% 25%,#fff 0% 50%) 50% / 16px 16px}</style><h1>Tinify runtime image QA</h1><p>Native browser decode and relative resource aliases; no saved game modifications.</p><main></main><pre id="result">Loading...</pre><script type="module">
+import manifest from '../../content/manifests/image-runtime.json';
+import {assetUrl} from '../../src/rendering/asset-url.js';
+const result={done:false,ok:false,images:[],errors:[]};
+try{
+ for(const r of manifest.records){
+  const url=assetUrl('/'+r.source),response=await fetch(url);if(!response.ok)throw Error('Image HTTP '+response.status);
+  const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),n=>n.toString(16).padStart(2,'0')).join('');
+  if(hash!==r.runtimeSha256)throw Error('Runtime image hash mismatch');
+  const image=new Image();image.src=url;await image.decode();if(image.naturalWidth!==r.width||image.naturalHeight!==r.height)throw Error('Image dimensions changed');
+  const figure=document.createElement('figure'),caption=document.createElement('figcaption');caption.textContent=r.width+' x '+r.height+' / '+bytes.byteLength+' bytes';figure.append(image,caption);document.querySelector('main').append(figure);
+  result.images.push({source:r.source,url,hash,bytes:bytes.byteLength,width:image.naturalWidth,height:image.naturalHeight});
+ }
+ result.ok=true;
+}catch(error){result.errors.push(error.message);}
+result.done=true;document.querySelector('#result').textContent=JSON.stringify(result,null,2);
+</script></html>

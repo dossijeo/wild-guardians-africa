@@ -17,3 +17,5 @@ Run `node tools/audit_image_assets.mjs`, then set `TINIFY_API_KEY` privately and
 Pixel comparison uses explicit sRGB RGBA8 for display-color images. It does not establish exact preservation of shader data, ICC profiles or oriented/animated images. Source pilots have no ICC profile and no orientation transform. Those other cases require separate policies before upload.
 
 Next: bind accepted outputs through relative asset aliases, verify the web/Windows packages and rendering, then extend beyond this small pilot. Embedded GLB images remain untouched.
+
+Seguimiento: [las tres primeras variantes se han integrado y comprobado](../tinify-runtime/README.md). Este informe conserva la etapa previa al runtime.

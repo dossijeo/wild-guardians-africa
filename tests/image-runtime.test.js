@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import sharp from 'sharp';
+import manifest from '../content/manifests/image-runtime.json' with {type:'json'};
+import {assetUrl,resolveAssetValues} from '../src/rendering/asset-url.js';
+import {publicText} from '../tools/web-package.mjs';
+import {compareColorPixels} from '../tools/image-pixel-comparison.mjs';
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+for(const r of manifest.records)test('Tinify '+r.source+' retains dimensions/alpha and resolves in every public context',async()=>{
+ const input=readFileSync(new URL('../public/'+r.source,import.meta.url)),output=readFileSync(new URL('../public/'+r.runtime,import.meta.url));
+ assert.equal(sha(input),r.sourceSha256);assert.equal(sha(output),r.runtimeSha256);assert.equal(output.length,r.afterBytes);assert(output.length<input.length);
+ const info=await sharp(output).metadata();assert.equal(info.format,'webp');assert.equal(info.width,r.width);assert.equal(info.height,r.height);assert.equal(info.hasAlpha,r.hasAlpha);
+ const pixels=await compareColorPixels(input,output);assert(pixels.dimensionsMatch);assert.equal(pixels.alphaDifferences,0);
+ assert.equal(assetUrl('/'+r.source),'/'+r.runtime);assert.equal(assetUrl(r.source),'/'+r.runtime);
+ assert.equal(resolveAssetValues({base:'/'+r.source}).base,'/'+r.runtime);
+ assert.equal(publicText('<img src="/'+r.source+'">','menu/index.html',manifest),'<img src="../'+r.runtime+'">');
+ assert.equal(publicText('{"base":"/'+r.source+'"}','content/ground-materials.json',manifest),'{"base":"'+r.runtime+'"}');
+ assert.equal(publicText('url(/'+r.source+')','content/ui/type.css',manifest),'url(../../'+r.runtime+')');
+});
