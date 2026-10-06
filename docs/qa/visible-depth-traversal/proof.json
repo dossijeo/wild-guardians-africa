@@ -1,0 +1,140 @@
+{
+  "baseCommit": "8227587",
+  "sources": {
+    "src/rendering/depth-capture.js": "68ba7b06c02b000eb13f40d189442ffb7b5dff94bb31620de06e1b2058057900",
+    "src/rendering/buildings.js": "1223b88afefaa4dd5a21e6ac150da56f4c208ad8afb2521a0d195e49093fccd0",
+    "tests/depth-capture.test.js": "d418f4b2478354fa778817ac7c7fddbaa7dca97395c1b9eb14930b61095cd506",
+    "tests/browser/depth-capture.html": "526a959c731a401a89096215a30bad060a0af2aaef953741fd64fe1f4cbc9d60",
+    "node_modules/three/src/core/Object3D.js": "cfed8e6018386737493550ffc71df046538d687843c0ff5a3206eaa5994b07f1",
+    "node_modules/three/src/renderers/WebGLRenderer.js": "35cea4871231c3fddc3517dcd03fc876bdb8f9e73f1a77042b35e3de0498c4cd"
+  },
+  "evidence": {
+    "build.log.gz": "c82eed5d733879526b47c5a4cdd81454460100e12ae890fb7637ff4370592c82",
+    "canyon-collapse.json": "8ed363c9ee98ecbd96be2d38b4ade5431cbc70bbf4f9488a67042a6e257bc517",
+    "canyon-intact.json": "21f8963995e30109a7c6be8588af89816f5995d5181cf7681b08bae8b640fd09",
+    "canyon-work.json": "bdfa35590e97d0ebf8e24c0db272e1996ddaace2ede9927d182d9cacc37ce588",
+    "canyon.png": "baf99c1096cc0d97b7c5fe089926309ab1388c4aefae449ddf51eb3345bbb6c3",
+    "mangrove-collapse.json": "1efb9b60673c1eef4c13991080ee7ff3930bd6dcd4d38706392f6f67620eb5a2",
+    "mangrove-intact.json": "64588bafd0baace287dd71e9970cd00096a26c59a3ee37c1529498bbce822c05",
+    "README.md": "2f8cc4d0e5a443fcf95e5f6de836178316cf69c109f23b45ad5e3f2784f6731c",
+    "rejected-work-after-collapse.json": "2591009c5d89aeb061a04ead0bc6f77a02c206f5a9db86e6bb2c14532c7714c4"
+  },
+  "cases": [
+    {
+      "file": "canyon-collapse.json",
+      "result": {
+        "mode": "all-subtrees-vs-visible-subtrees",
+        "differentBytes": 0,
+        "differentPixels": 0,
+        "nonUniformPixels": 1439993,
+        "pixels": 1440000,
+        "baselineStats": {
+          "specialized": 141,
+          "fallback": 537,
+          "excluded": 7
+        },
+        "candidateStats": {
+          "specialized": 39,
+          "fallback": 537,
+          "excluded": 0
+        },
+        "logicalStateUnchanged": true
+      }
+    },
+    {
+      "file": "canyon-intact.json",
+      "result": {
+        "mode": "all-subtrees-vs-visible-subtrees",
+        "differentBytes": 0,
+        "differentPixels": 0,
+        "nonUniformPixels": 1439993,
+        "pixels": 1440000,
+        "baselineStats": {
+          "specialized": 134,
+          "fallback": 537,
+          "excluded": 5
+        },
+        "candidateStats": {
+          "specialized": 39,
+          "fallback": 534,
+          "excluded": 0
+        },
+        "logicalStateUnchanged": true
+      }
+    },
+    {
+      "file": "canyon-work.json",
+      "result": {
+        "mode": "all-subtrees-vs-visible-subtrees",
+        "differentBytes": 0,
+        "differentPixels": 0,
+        "nonUniformPixels": 1439993,
+        "pixels": 1440000,
+        "baselineStats": {
+          "specialized": 141,
+          "fallback": 537,
+          "excluded": 7
+        },
+        "candidateStats": {
+          "specialized": 39,
+          "fallback": 534,
+          "excluded": 0
+        },
+        "logicalStateUnchanged": true
+      }
+    },
+    {
+      "file": "mangrove-collapse.json",
+      "result": {
+        "mode": "all-subtrees-vs-visible-subtrees",
+        "differentBytes": 0,
+        "differentPixels": 0,
+        "nonUniformPixels": 1439590,
+        "pixels": 1440000,
+        "baselineStats": {
+          "specialized": 156,
+          "fallback": 870,
+          "excluded": 5
+        },
+        "candidateStats": {
+          "specialized": 61,
+          "fallback": 870,
+          "excluded": 0
+        },
+        "logicalStateUnchanged": true
+      }
+    },
+    {
+      "file": "mangrove-intact.json",
+      "result": {
+        "mode": "all-subtrees-vs-visible-subtrees",
+        "differentBytes": 0,
+        "differentPixels": 0,
+        "nonUniformPixels": 1439590,
+        "pixels": 1440000,
+        "baselineStats": {
+          "specialized": 156,
+          "fallback": 870,
+          "excluded": 5
+        },
+        "candidateStats": {
+          "specialized": 61,
+          "fallback": 867,
+          "excluded": 0
+        },
+        "logicalStateUnchanged": true
+      }
+    }
+  ],
+  "tests": {
+    "command": "node --test tests/depth-capture.test.js tests/standard-depth.test.js tests/crop-upload.test.js tests/render-origin.test.js",
+    "exit": 0,
+    "passed": 21,
+    "failed": 0
+  },
+  "build": {
+    "exit": 0,
+    "warning": "Vite large bundle"
+  },
+  "scope": "Depth equivalence of full versus visible subtree preparation only. No frame speed or mobile acceptance claim."
+}

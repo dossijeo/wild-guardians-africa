@@ -24,3 +24,19 @@ test('transparency and non-writing materials remain excluded; override and diagn
  world.overrideMaterial=new THREE.MeshBasicMaterial();withDepthCaptureMaterials(world,()=>{assert.equal(mesh.material,source);assert.equal(world.overrideMaterial.colorWrite,false);});assert.equal(world.overrideMaterial.colorWrite,true);world.overrideMaterial=null;
  const stats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,source),{optimized:false});assert.equal(stats.specialized,0);assert.equal(depth.colorWrite,true);
 });
+
+test('hidden ancestors skip depth preparation while shared visible materials and restoration remain correct',()=>{
+ const {world,mesh,source,depth}=fixture(),hidden=new THREE.Group();hidden.visible=false;world.add(hidden);
+ const child=new THREE.Mesh(mesh.geometry,source);child.customDepthMaterial=depth;hidden.add(child);
+ const hiddenSource=new THREE.MeshStandardMaterial(),hiddenOnly=new THREE.Mesh(mesh.geometry,hiddenSource);hidden.add(hiddenOnly);
+ const stats=withDepthCaptureMaterials(world,()=>{
+  assert.equal(mesh.material,depth);assert.equal(child.material,source);
+  assert.equal(hiddenOnly.material,hiddenSource);assert.equal(hiddenSource.colorWrite,true);
+ });
+ assert.equal(stats.specialized,1);assert.equal(stats.fallback,0);assert.equal(child.material,source);assert.equal(source.colorWrite,true);
+ hidden.visible=true;const revealed=withDepthCaptureMaterials(world,()=>assert.equal(child.material,depth));assert.equal(revealed.specialized,3);
+ hidden.visible=false;const reference=withDepthCaptureMaterials(world,()=>assert.equal(child.material,depth),{visibleOnly:false});assert.equal(reference.specialized,3);
+ assert.throws(()=>withDepthCaptureMaterials(world,()=>{assert.equal(child.material,source);throw Error('render failure');}),/render failure/);
+ assert.equal(mesh.material,source);assert.equal(depth.colorWrite,true);assert.equal(source.colorWrite,true);
+ mesh.geometry.dispose();source.dispose();depth.dispose();hiddenSource.dispose();
+});

@@ -85,3 +85,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Envíos reales atribuidos](qa/late-farm-submissions/README.md) y [herramientas ocultas de trabajadores optimizadas](qa/worker-hidden-tools/README.md): se evita enviar meshes que los clips nativos reducen a escala 1e-5, conservando herramientas activas y recorridos físicos. 62 pruebas, build y cuatro lotes nativos con estado final idéntico; mediana de llamadas 1.731→637 y GPU ~63–65→60 ms en esta finca. Sin mejora estable de FPS acreditada. Pendiente: coste sostenido GPU (cultivos/props/materiales y pases), móvil y aceptación amplia; no considerar terminadas las optimizaciones.
+
+
+[Preparación de profundidad limitada a subárboles visibles](qa/visible-depth-traversal/README.md): 21 pruebas dirigidas, build y cinco pares nativos de Manglares/Gran Cañón con profundidad idéntica y estado lógico preservado. Menos meshes preparados; sin mejora de FPS o RAM medida. Pendientes aceptación más amplia y reducción del coste GPU.
