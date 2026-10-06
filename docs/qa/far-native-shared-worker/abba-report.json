@@ -1,0 +1,1525 @@
+{
+  "renderOrigin": {
+    "x": 0,
+    "z": 0
+  },
+  "camera": [
+    0,
+    10,
+    25
+  ],
+  "gpuReady": true,
+  "prepareMs": 740.5,
+  "preparedTextures": 6,
+  "preparation": {
+    "elapsedMs": 158.80000001192093,
+    "textures": 6,
+    "textureBatches": 6,
+    "maxTextureBatchCount": 1,
+    "maxTextureBatchMs": 25.5,
+    "textureUploads": [
+      {
+        "index": 0,
+        "width": 2048,
+        "height": 256,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0
+      },
+      {
+        "index": 1,
+        "width": 1024,
+        "height": 1024,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0
+      },
+      {
+        "index": 2,
+        "width": 1024,
+        "height": 1024,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0.10000002384185791
+      },
+      {
+        "index": 3,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "ImageBitmap",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 22.899999976158142
+      },
+      {
+        "index": 4,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "ImageBitmap",
+        "mipmaps": true,
+        "colorSpace": "",
+        "decodeMs": 0,
+        "cpuMs": 24.69999998807907
+      },
+      {
+        "index": 5,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "ImageBitmap",
+        "mipmaps": true,
+        "colorSpace": "",
+        "decodeMs": 0,
+        "cpuMs": 25.5
+      }
+    ]
+  },
+  "bitmapConversions": [
+    {
+      "elapsedMs": 144,
+      "width": 2048,
+      "height": 2048,
+      "workerTiming": {
+        "receivedEpochMs": 1791306929377.7,
+        "fetchHeadersMs": 9.599999964237213,
+        "fetchBodyMs": 7.100000023841858,
+        "bitmapMs": 99.89999997615814,
+        "workerTotalMs": 116.59999996423721,
+        "postEpochMs": 1791306929494.4,
+        "startupAndDispatchMs": 27.10009765625,
+        "transferAndDeliveryMs": 0,
+        "totalMs": 143.800048828125
+      }
+    },
+    {
+      "elapsedMs": 281.69999998807907,
+      "width": 2048,
+      "height": 2048,
+      "workerTiming": {
+        "receivedEpochMs": 1791306929525.3,
+        "fetchHeadersMs": 4.599999964237213,
+        "fetchBodyMs": 11.800000011920929,
+        "bitmapMs": 238.9000000357628,
+        "workerTotalMs": 255.30000001192093,
+        "postEpochMs": 1791306929780.6,
+        "startupAndDispatchMs": 26.10009765625,
+        "transferAndDeliveryMs": 0.2998046875,
+        "totalMs": 281.699951171875
+      }
+    },
+    {
+      "elapsedMs": 135,
+      "width": 2048,
+      "height": 2048,
+      "workerTiming": {
+        "receivedEpochMs": 1791306929804,
+        "fetchHeadersMs": 9.800000011920929,
+        "fetchBodyMs": 2.199999988079071,
+        "bitmapMs": 99.30000001192093,
+        "workerTotalMs": 111.30000001192093,
+        "postEpochMs": 1791306929915.5,
+        "startupAndDispatchMs": 22.300048828125,
+        "transferAndDeliveryMs": 1.199951171875,
+        "totalMs": 135
+      }
+    }
+  ],
+  "comparison": {
+    "pattern": "ABBAABBA",
+    "workerOnly": true,
+    "bitmapYieldBetweenConversions": true,
+    "bitmapWorker": false,
+    "done": true,
+    "lots": [
+      {
+        "mode": "Single",
+        "totalMs": 849.6999999880791,
+        "conversionMs": 613.5,
+        "preparation": {
+          "elapsedMs": 200.19999998807907,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 34.89999997615814,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.09999996423721313
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0.10000002384185791,
+              "cpuMs": 34.799999952316284
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 32.19999998807907
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 136.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306924304.6,
+              "fetchHeadersMs": 4.399999976158142,
+              "fetchBodyMs": 3.100000023841858,
+              "bitmapMs": 101.5,
+              "workerTotalMs": 109,
+              "postEpochMs": 1791306924413.7,
+              "startupAndDispatchMs": 26.60009765625,
+              "transferAndDeliveryMs": 0.5,
+              "totalMs": 136.199951171875
+            }
+          },
+          {
+            "elapsedMs": 310.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306924450.8,
+              "fetchHeadersMs": 4.5,
+              "fetchBodyMs": 8.399999976158142,
+              "bitmapMs": 272,
+              "workerTotalMs": 284.89999997615814,
+              "postEpochMs": 1791306924735.9001,
+              "startupAndDispatchMs": 22.60009765625,
+              "transferAndDeliveryMs": 2.19970703125,
+              "totalMs": 309.89990234375
+            }
+          },
+          {
+            "elapsedMs": 166.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306924791.9001,
+              "fetchHeadersMs": 6.699999988079071,
+              "fetchBodyMs": 11.800000011920929,
+              "bitmapMs": 108.89999997615814,
+              "workerTotalMs": 127.39999997615814,
+              "postEpochMs": 1791306924919.5,
+              "startupAndDispatchMs": 38.10009765625,
+              "transferAndDeliveryMs": 0.599853515625,
+              "totalMs": 166.2998046875
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.599999999999454,
+          16.600000000000364,
+          16.699999999999818,
+          16.600000000000364,
+          16.699999999999818,
+          16.5,
+          16.699999999999818,
+          16.700000000000728,
+          16.69999999999891,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.5,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          17.5,
+          16.399999999999636,
+          16,
+          16.700000000000728,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          33.19999999999891,
+          16.80000000000109,
+          49.899999999999636,
+          16.600000000000364,
+          16.600000000000364,
+          16.599999999998545
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Shared",
+        "totalMs": 670.5,
+        "conversionMs": 496.2999999523163,
+        "preparation": {
+          "elapsedMs": 150.29999995231628,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 25.5,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.09999996423721313
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0.10000002384185791,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 21.600000023841858
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.5
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.19999998807907
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 148.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306925185.7,
+              "fetchHeadersMs": 7,
+              "fetchBodyMs": 6.699999988079071,
+              "bitmapMs": 92.09999996423721,
+              "workerTotalMs": 105.79999995231628,
+              "postEpochMs": 1791306925291.7998,
+              "startupAndDispatchMs": 30.60009765625,
+              "transferAndDeliveryMs": 11.400146484375,
+              "totalMs": 148.10009765625
+            }
+          },
+          {
+            "elapsedMs": 251.89999997615814,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306925311.5999,
+              "fetchHeadersMs": 8.5,
+              "fetchBodyMs": 5.300000011920929,
+              "bitmapMs": 236.30000001192093,
+              "workerTotalMs": 250.10000002384186,
+              "postEpochMs": 1791306925561.7,
+              "startupAndDispatchMs": 1.2998046875,
+              "transferAndDeliveryMs": 0.300048828125,
+              "totalMs": 251.699951171875
+            }
+          },
+          {
+            "elapsedMs": 95.89999997615814,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306925575.2998,
+              "fetchHeadersMs": 7.300000011920929,
+              "fetchBodyMs": 1.899999976158142,
+              "bitmapMs": 85.80000001192093,
+              "workerTotalMs": 95,
+              "postEpochMs": 1791306925670.4,
+              "startupAndDispatchMs": 0.199951171875,
+              "transferAndDeliveryMs": 0.5,
+              "totalMs": 95.800048828125
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.600000000000364,
+          16.700000000000728,
+          16.69999999999891,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.799999999999272,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.69999999999891,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.80000000000109,
+          16.5,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.700000000000728,
+          16.5,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          33.29999999999927,
+          33.600000000000364,
+          16.30000000000109
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Shared",
+        "totalMs": 642,
+        "conversionMs": 465.60000002384186,
+        "preparation": {
+          "elapsedMs": 150.10000002384186,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 25.69999998807907,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 19.899999976158142
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.69999998807907
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.100000023841858
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 113.90000003576279,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306925848.9,
+              "fetchHeadersMs": 5.199999988079071,
+              "fetchBodyMs": 1.899999976158142,
+              "bitmapMs": 96.60000002384186,
+              "workerTotalMs": 103.69999998807907,
+              "postEpochMs": 1791306925952.5999,
+              "startupAndDispatchMs": 7.199951171875,
+              "transferAndDeliveryMs": 3,
+              "totalMs": 113.89990234375
+            }
+          },
+          {
+            "elapsedMs": 255.30000001192093,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306925957.5999,
+              "fetchHeadersMs": 7.399999976158142,
+              "fetchBodyMs": 6.800000011920929,
+              "bitmapMs": 240.4000000357628,
+              "workerTotalMs": 254.60000002384186,
+              "postEpochMs": 1791306926212.2,
+              "startupAndDispatchMs": 0.2998046875,
+              "transferAndDeliveryMs": 0.199951171875,
+              "totalMs": 255.099853515625
+            }
+          },
+          {
+            "elapsedMs": 96.39999997615814,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306926223.7,
+              "fetchHeadersMs": 7.299999952316284,
+              "fetchBodyMs": 4.800000011920929,
+              "bitmapMs": 83.80000001192093,
+              "workerTotalMs": 95.89999997615814,
+              "postEpochMs": 1791306926319.5999,
+              "startupAndDispatchMs": 0.300048828125,
+              "transferAndDeliveryMs": 0.10009765625,
+              "totalMs": 96.300048828125
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.599999999998545,
+          17,
+          16.30000000000109,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.5,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.80000000000109,
+          33.399999999999636,
+          32.899999999999636,
+          16.600000000000364
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Single",
+        "totalMs": 735.5,
+        "conversionMs": 548.1999999880791,
+        "preparation": {
+          "elapsedMs": 153.69999998807907,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 24.899999976158142,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 24.899999976158142
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.19999998807907
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 23.399999976158142
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 133.10000002384186,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306926516,
+              "fetchHeadersMs": 4.400000035762787,
+              "fetchBodyMs": 2,
+              "bitmapMs": 100.59999996423721,
+              "workerTotalMs": 107,
+              "postEpochMs": 1791306926623,
+              "startupAndDispatchMs": 25.699951171875,
+              "transferAndDeliveryMs": 0.199951171875,
+              "totalMs": 132.89990234375
+            }
+          },
+          {
+            "elapsedMs": 283.19999998807907,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306926660.4,
+              "fetchHeadersMs": 6.5,
+              "fetchBodyMs": 5.300000011920929,
+              "bitmapMs": 249.5,
+              "workerTotalMs": 261.30000001192093,
+              "postEpochMs": 1791306926922.1,
+              "startupAndDispatchMs": 21.199951171875,
+              "transferAndDeliveryMs": 0.199951171875,
+              "totalMs": 283.10009765625
+            }
+          },
+          {
+            "elapsedMs": 131.89999997615814,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306926962.6,
+              "fetchHeadersMs": 7.5,
+              "fetchBodyMs": 3.300000011920929,
+              "bitmapMs": 96.69999998807907,
+              "workerTotalMs": 107.5,
+              "postEpochMs": 1791306927070.2,
+              "startupAndDispatchMs": 24.000244140625,
+              "transferAndDeliveryMs": 0.199951171875,
+              "totalMs": 131.800048828125
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          17,
+          16.299999999999272,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.700000000000728,
+          16.5,
+          16.599999999998545,
+          16.80000000000109,
+          16.600000000000364,
+          16.5,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.5,
+          16.799999999999272,
+          16.5,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.80000000000109,
+          16.599999999998545,
+          16.600000000000364,
+          33.30000000000109,
+          16.599999999998545,
+          16.700000000000728,
+          16.399999999999636
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Single",
+        "totalMs": 738,
+        "conversionMs": 554,
+        "preparation": {
+          "elapsedMs": 166.80000001192093,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 26,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.09999996423721313
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 20.399999976158142
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.899999976158142
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 26
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 145.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306927286,
+              "fetchHeadersMs": 11.100000023841858,
+              "fetchBodyMs": 3.300000011920929,
+              "bitmapMs": 95.69999998807907,
+              "workerTotalMs": 110.10000002384186,
+              "postEpochMs": 1791306927396.2002,
+              "startupAndDispatchMs": 35,
+              "transferAndDeliveryMs": 0.099853515625,
+              "totalMs": 145.300048828125
+            }
+          },
+          {
+            "elapsedMs": 288.30000001192093,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306927424.2,
+              "fetchHeadersMs": 6.900000035762787,
+              "fetchBodyMs": 5.5,
+              "bitmapMs": 249.69999998807907,
+              "workerTotalMs": 262.10000002384186,
+              "postEpochMs": 1791306927686.4,
+              "startupAndDispatchMs": 19.89990234375,
+              "transferAndDeliveryMs": 6.199951171875,
+              "totalMs": 288.2998046875
+            }
+          },
+          {
+            "elapsedMs": 120.19999998807907,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306927714.7,
+              "fetchHeadersMs": 4.800000011920929,
+              "fetchBodyMs": 2.899999976158142,
+              "bitmapMs": 91,
+              "workerTotalMs": 98.69999998807907,
+              "postEpochMs": 1791306927813.6,
+              "startupAndDispatchMs": 20.60009765625,
+              "transferAndDeliveryMs": 0.599853515625,
+              "totalMs": 120.10009765625
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.80000000000109,
+          16.5,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.5,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          33.19999999999891,
+          33.400000000001455,
+          16.799999999999272,
+          16.399999999999636
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Shared",
+        "totalMs": 645.9000000357628,
+        "conversionMs": 459.4000000357628,
+        "preparation": {
+          "elapsedMs": 167.60000002384186,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 26.80000001192093,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 26.80000001192093
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 21.80000001192093
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 26.099999964237213
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 114.5,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306928011.4,
+              "fetchHeadersMs": 6.699999988079071,
+              "fetchBodyMs": 1.899999976158142,
+              "bitmapMs": 99.10000002384186,
+              "workerTotalMs": 107.69999998807907,
+              "postEpochMs": 1791306928119.0999,
+              "startupAndDispatchMs": 0.199951171875,
+              "transferAndDeliveryMs": 6.5,
+              "totalMs": 114.39990234375
+            }
+          },
+          {
+            "elapsedMs": 247.19999998807907,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306928126.5999,
+              "fetchHeadersMs": 6.300000011920929,
+              "fetchBodyMs": 7.199999988079071,
+              "bitmapMs": 233,
+              "workerTotalMs": 246.5,
+              "postEpochMs": 1791306928373.0999,
+              "startupAndDispatchMs": 0.199951171875,
+              "transferAndDeliveryMs": 0.300048828125,
+              "totalMs": 247
+            }
+          },
+          {
+            "elapsedMs": 97.70000004768372,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306928385.2998,
+              "fetchHeadersMs": 6.300000011920929,
+              "fetchBodyMs": 1.899999976158142,
+              "bitmapMs": 88.80000001192093,
+              "workerTotalMs": 97,
+              "postEpochMs": 1791306928482.2998,
+              "startupAndDispatchMs": 0.2998046875,
+              "transferAndDeliveryMs": 0.300048828125,
+              "totalMs": 97.599853515625
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.799999999999272,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.69999999999891,
+          16.5,
+          16.700000000000728,
+          16.600000000000364,
+          16.69999999999891,
+          16.700000000000728,
+          16.5,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          33.5,
+          33.100000000000364,
+          33.099999999998545,
+          16.80000000000109
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Shared",
+        "totalMs": 665.6000000238419,
+        "conversionMs": 487.5999999642372,
+        "preparation": {
+          "elapsedMs": 148.0999999642372,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 28.400000035762787,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 21.899999976158142
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 28.400000035762787
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.400000035762787
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 119.09999996423721,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306928676.4,
+              "fetchHeadersMs": 7.899999976158142,
+              "fetchBodyMs": 2.400000035762787,
+              "bitmapMs": 100.09999996423721,
+              "workerTotalMs": 110.39999997615814,
+              "postEpochMs": 1791306928786.7998,
+              "startupAndDispatchMs": 8.199951171875,
+              "transferAndDeliveryMs": 0.300048828125,
+              "totalMs": 118.89990234375
+            }
+          },
+          {
+            "elapsedMs": 264.80000001192093,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306928801,
+              "fetchHeadersMs": 7.300000011920929,
+              "fetchBodyMs": 7.400000035762787,
+              "bitmapMs": 249.5999999642372,
+              "workerTotalMs": 264.30000001192093,
+              "postEpochMs": 1791306929065.2998,
+              "startupAndDispatchMs": 0.300048828125,
+              "transferAndDeliveryMs": 0.2001953125,
+              "totalMs": 264.800048828125
+            }
+          },
+          {
+            "elapsedMs": 103.69999998807907,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306929067.9,
+              "fetchHeadersMs": 9.099999964237213,
+              "fetchBodyMs": 2.300000011920929,
+              "bitmapMs": 90.69999998807907,
+              "workerTotalMs": 102.09999996423721,
+              "postEpochMs": 1791306929170,
+              "startupAndDispatchMs": 1.300048828125,
+              "transferAndDeliveryMs": 0.199951171875,
+              "totalMs": 103.60009765625
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.700000000000728,
+          16.5,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          33.19999999999891,
+          33.399999999999636,
+          16.5
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Single",
+        "totalMs": 740.5,
+        "conversionMs": 560.6999999880791,
+        "preparation": {
+          "elapsedMs": 158.80000001192093,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 25.5,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 22.899999976158142
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.69999998807907
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.5
+            }
+          ]
+        },
+        "bitmapConversions": [
+          {
+            "elapsedMs": 144,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306929377.7,
+              "fetchHeadersMs": 9.599999964237213,
+              "fetchBodyMs": 7.100000023841858,
+              "bitmapMs": 99.89999997615814,
+              "workerTotalMs": 116.59999996423721,
+              "postEpochMs": 1791306929494.4,
+              "startupAndDispatchMs": 27.10009765625,
+              "transferAndDeliveryMs": 0,
+              "totalMs": 143.800048828125
+            }
+          },
+          {
+            "elapsedMs": 281.69999998807907,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306929525.3,
+              "fetchHeadersMs": 4.599999964237213,
+              "fetchBodyMs": 11.800000011920929,
+              "bitmapMs": 238.9000000357628,
+              "workerTotalMs": 255.30000001192093,
+              "postEpochMs": 1791306929780.6,
+              "startupAndDispatchMs": 26.10009765625,
+              "transferAndDeliveryMs": 0.2998046875,
+              "totalMs": 281.699951171875
+            }
+          },
+          {
+            "elapsedMs": 135,
+            "width": 2048,
+            "height": 2048,
+            "workerTiming": {
+              "receivedEpochMs": 1791306929804,
+              "fetchHeadersMs": 9.800000011920929,
+              "fetchBodyMs": 2.199999988079071,
+              "bitmapMs": 99.30000001192093,
+              "workerTotalMs": 111.30000001192093,
+              "postEpochMs": 1791306929915.5,
+              "startupAndDispatchMs": 22.300048828125,
+              "transferAndDeliveryMs": 1.199951171875,
+              "totalMs": 135
+            }
+          }
+        ],
+        "frameIntervals": [
+          16.700000000000728,
+          16.600000000000364,
+          16.599999999998545,
+          16.700000000000728,
+          16.5,
+          16.600000000000364,
+          16.69999999999891,
+          16.700000000000728,
+          16.600000000000364,
+          16.5,
+          16.69999999999891,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.5,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.599999999998545,
+          16.600000000000364,
+          16.600000000000364,
+          16.700000000000728,
+          16.69999999999891,
+          16.5,
+          16.600000000000364,
+          16.600000000000364,
+          16.600000000000364,
+          16.799999999999272,
+          16.700000000000728,
+          33,
+          33.399999999999636
+        ],
+        "programs": 3,
+        "webglError": 0
+      }
+    ]
+  },
+  "state": {
+    "ready": 1,
+    "enabled": true
+  },
+  "activeTransitions": 0,
+  "nativePacked": true,
+  "gpuCovered": true,
+  "nativeColorCoverage": [
+    {
+      "count": 1,
+      "coverage": 1
+    },
+    {
+      "count": 0,
+      "coverage": 1
+    },
+    {
+      "count": 0,
+      "coverage": 1
+    }
+  ],
+  "mergedColorGroups": 1,
+  "prototype": {
+    "selectionScans": 1,
+    "matrixUploads": 1,
+    "readinessRevision": 74,
+    "readinessUploads": 74
+  },
+  "nativeFadeScans": 74,
+  "programs": 3,
+  "drawCalls": 3,
+  "webglError": 0,
+  "errors": []
+}
