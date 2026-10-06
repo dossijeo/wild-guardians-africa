@@ -1,0 +1,40 @@
+{
+  "baseCommit": "1650d74752d29d13c20905e0e3266a9cb6e573b7",
+  "sourceSha256": {
+    "content/manifests/image-runtime.json": "b865494692fdf291a4abe6dc885df8946c09828f7bb55de805d0ba17c5232819",
+    "src/rendering/asset-url.js": "0a074dab43353d45a026ddf73e9c89c05d13269463589c42d050c60a93a8700d",
+    "src/rendering/hands.js": "a75342ea98615f5eb064294cba4921833f600e94f83655e802e8c11cdf708bfc",
+    "src/ui/guardian.js": "048332e10b948f0e6090f2d4a6fa61ca8e75edd6a8f973fbefd15f9b16fe0011",
+    "tools/web-package.mjs": "3f0aecb4ad153dc8e7d14293c24b23148acda0a8efe4dcfba3b258d217df5050",
+    "tests/browser/tutorial-menu-images.html": "6dbe3a5da927b66830400c67fc4fed20876b5cd120f807188e1490b3ec746d59"
+  },
+  "testCommand": "node --test tests/image-runtime.test.js tests/image-roles.test.js tests/tinify-color-policy.test.js tests/tinify-image-cache.test.js tests/image-pixel-comparison.test.js tests/web-package.test.js",
+  "tests": {
+    "pass": 64,
+    "fail": 0,
+    "exitCode": 0,
+    "durationMs": 12415.9932
+  },
+  "build": {
+    "exitCode": 0,
+    "modules": 211,
+    "seconds": 14.21,
+    "warning": "bundle exceeds 500 kB"
+  },
+  "imageSavedBytes": 821936,
+  "package": {
+    "before": {
+      "files": 587,
+      "bytes": 382145139,
+      "scope": "Existing dist before eight new image aliases; built from b93df1a runtime"
+    },
+    "after": {
+      "files": 587,
+      "bytes": 381332978,
+      "relativeLinks": 859,
+      "runtimeGlbs": 20
+    },
+    "netSavedBytes": 812161
+  },
+  "scope": "Eight Tinify color variants, desktop native decode/visual comparison and 30-alias nested loading; no FPS/RAM/mobile/Tauri acceptance claim"
+}

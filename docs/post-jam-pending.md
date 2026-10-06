@@ -254,3 +254,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Usos de imágenes distribuidas completos](qa/image-display-classification/README.md): 225 entradas, cero desconocidas y cero errores. Preflight actual: 95 candidatas de color, 45 de revisión y 22 variantes integradas; SVG y prueba de soporte WebP preservados. No son nuevas conversiones ni ahorro; pendientes API/aceptación, perfiles y mapas embebidos.
+
+
+[Manos, Espíritu y logo Tinify integrados](qa/tinify-tutorial-menu/README.md): ocho imágenes, alpha/dimensiones exactos, 64 pruebas y treinta alias cargados en ruta anidada. 821.936 bytes menos en imágenes; paquete neto 812.161 bytes menor. Quedan 87 candidatas de color/45 de revisión, mapas embebidos y aceptación móvil/Tauri.
