@@ -23,7 +23,9 @@ export function tutorialHandTarget(state,nav,toolKind=null){
   for(let ring=1;ring<=8;ring++)for(let i=0;i<16;i++){
     const angle=i*Math.PI/8,p={x:Math.round((center.x+Math.sin(angle)*(ring+.5))/1.5)*1.5,z:Math.round((center.z+Math.cos(angle)*(ring+.5))/1.5)*1.5},key=p.x+','+p.z;
     if(seen.has(key))continue;seen.add(key);
-    if(nav.placement(p.x,p.z,.4).valid&&nav.path(departure,p,.28,null,true))return target('tap',p,'plant-site');
+    // Keep the native billboard clear of nearby buildings/props. A legal crop
+    // can be closer, but its guide must not be lifted onto a neighbouring roof.
+    if(nav.placement(p.x,p.z,1.6).valid&&nav.path(departure,p,.28,null,true))return target('tap',p,'plant-site');
   }
   return null;
 }

@@ -1,25 +1,41 @@
-<!doctype html><html lang="es"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>QA · Manos V8 en la finca real</title><style>body{margin:0;font:14px system-ui;background:#ebe2c9}header{position:absolute;z-index:1;padding:12px;background:#fff9ed;max-width:370px}button,select{font:inherit;padding:8px;margin:5px}canvas{width:100vw;height:100vh;display:block}#status{display:block}</style><header>Visor de manos: usa WorldScene, el terreno original y entidades creadas con comandos del juego.<br><label>Paso <select id="step"><option value="intro">Mano abierta</option><option value="center">Señalar</option><option value="plant">Tocar</option><option value="hire">Mantener pulsado</option><option value="observe">Arrastrar</option><option value="harvest">Pellizcar</option><option value="done">Tutorial terminado</option></select></label><button id="focus">Acercar al objetivo</button><button id="day">Mostrar día 2</button><span id="status" role="status">Cargando finca y seis texturas originales…</span></header><canvas id="world" aria-label="Finca original con manos del tutorial"></canvas><script type="module">
+<!doctype html><html lang="es"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>QA · Guías 3D del primer día</title>
+<style>body{margin:0;font:13px system-ui;background:#ebe2c9}header{position:absolute;z-index:1;padding:10px;background:#fff9ed;max-width:400px}button,select{font:inherit;padding:6px;margin:3px}canvas{width:100vw;height:100vh;display:block}#status{display:block}#data{max-height:100px;overflow:auto;font-size:10px}</style>
+<header><strong>Guías 3D reales: primer centro y primer brote</strong><p>Terreno y WorldScene originales. Comandos pagados; sin simulación de jornada, audio ni HUD 2D. Acercar es una cámara diagnóstica.</p>
+<label>Bioma <select id="biome"><option value="sabana">Sabana</option><option value="gran-rio">Gran río</option><option value="manglares">Manglares</option><option value="volcanes">Volcanes</option><option value="gran-canon">Gran cañón</option><option value="desierto">Desierto</option></select></label><button id="reload">Cargar bioma</button><br>
+<button id="center" disabled>Seleccionar centro</button><button id="build" disabled>Construir centro señalado</button><button id="seed" disabled>Seleccionar semilla</button><button id="plant" disabled>Plantar semilla señalada</button><button id="focus" disabled>Acercar al objetivo</button><button id="game-distance" disabled>Distancia de juego</button><button id="rotate" disabled>Girar cámara 90°</button><button id="dismiss" disabled>Cerrar guía</button><button id="day" disabled>Mostrar día 2</button>
+<span id="status" role="status">Cargando mundo y texturas…</span><pre id="data"></pre></header><canvas id="world" aria-label="Finca original con guías del tutorial"></canvas>
+<script type="module">
 import * as THREE from 'three';
-import {quadTerrainLift} from '../../src/rendering/hand-terrain.js';
 import * as Game from '../../src/simulation/game.js';
-import {Navigation} from '../../src/world/navigation.js';
+import {TutorialController} from '../../src/tutorial/controller.js';
+import {quadTerrainLift} from '../../src/rendering/hand-terrain.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
-const pack=await json('/content/biome-savanna.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
-const state=Game.newGame({seed:712}),nav=new Navigation(712,'sabana',pack.profile),location=await findInitialLocationAsync(nav,payload);
-Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);Game.resume(state,'intro');
-Game.placeStructure(state,'qa-center',{x:location.center.x,z:location.center.z},nav);
-let site;
-for(let z=-6;z<=6&&!site;z+=1.5)for(let x=4.5;x<12&&!site;x+=1.5){const p={x:location.center.x+x,z:location.center.z+z};if(nav.placement(p.x,p.z,.4).valid)site=p;}
-Game.plant(state,'qa-seed','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-contract',{olderMale:1});
-const world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>document.querySelector('#status').textContent=e.message;world.qualitySetting('media');await world.load(state,nav,payload);
-state.tutorial.step='intro';
-function focus(){angle=0;world.updateHands(.05);const corners=world.hands.hints.last?.corners;if(!corners)return;const points=[...corners,world.hands.hints.last.target];const p=corners[0].map((_,i)=>(Math.min(...points.map(c=>c[i]))+Math.max(...points.map(c=>c[i])))/2);p[1]=nav.field.surface(p[0],p[2])+.18;const radius=Math.max(...points.map(c=>Math.hypot(...c.map((v,i)=>v-p[i]))));const distance=Math.max(8,radius/Math.sin(world.camera.fov*Math.PI/360)*1.6);world.controls.target.set(...p);world.camera.position.set(p[0]+distance*.45,p[1]+distance*.4,p[2]+distance*.8);world.controls.update();}
-const details=document.createElement('pre');details.id='data';details.style.cssText='max-height:120px;overflow:auto;font-size:11px';document.querySelector('header').append(details);
-let angle=0;const rotate=document.createElement('button');rotate.textContent='Girar cámara 90°';rotate.onclick=()=>{angle=(angle+90)%360;const t=world.controls.target,offset=world.camera.position.clone().sub(t);offset.applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);world.camera.position.copy(t).add(offset);world.controls.update();};document.querySelector('header').insertBefore(rotate,document.querySelector('#status'));
-world.controls.enableDamping=false;
-document.querySelector('#step').onchange=e=>{state.tutorial.step=e.target.value;focus();};document.querySelector('#focus').onclick=focus;
-document.querySelector('#day').onclick=e=>{state.day=state.day===1?2:1;e.target.textContent=state.day===1?'Mostrar día 2':'Mostrar día 1';};focus();
-let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;world.render(dt);const s=world.hands.hints.getState();details.textContent=JSON.stringify({angle,step:state.tutorial.step,day:state.day,hands:s,colliders:world.hands.adapter.colliders,remainingTerrainLift:s.corners?quadTerrainLift(s.corners,world.hands.surface,0):null},null,2);document.querySelector('#status').textContent=`Día ${state.day} · ${s.kind??'sin manos'} · ${s.vertices} vértices / ${s.triangles} triángulos · profundidad activada · ${s.intersections.length} intersecciones · objetivo ${s.target??'ninguno'}`;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+const params=new URLSearchParams(location.search),biome=Object.hasOwn(BIOME_IDS,params.get('biome'))?params.get('biome'):'sabana';
+document.querySelector('#biome').value=biome;document.querySelector('#reload').onclick=()=>{location.search='?biome='+encodeURIComponent(document.querySelector('#biome').value);};
+try{
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),villages=await json('/content/villages.json'),payload=villages.find(v=>v.id==='mapungubwe');
+ const state=Game.newGame({seed:712,biome,culture:'mapungubwe'}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);
+ const tutorial=new TutorialController(state,{read:()=>new Set(),record(){},basicCompleted:false});tutorial.acknowledge();
+ const errors=[],world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>errors.push(String(e.message??e));world.qualitySetting('media');await world.load(state,nav,payload);world.controls.enableDamping=false;
+ let angle=0,last=performance.now(),lastReport=0;
+ function report(){const hand=world.hands.hints.getState(),value={biome,culture:'mapungubwe',day:state.day,step:state.tutorial.step,tool:world.tutorialToolKind??null,angle,hands:hand,remainingTerrainLift:hand.corners?quadTerrainLift(hand.corners,world.hands.surface,0):null,loadedTextures:world.hands.textures.size,colliderCount:world.hands.adapter.colliders.length,money:state.ledger.balance,errors};document.querySelector('#data').textContent=JSON.stringify(value,null,2);document.querySelector('#status').textContent=`Día ${state.day} · ${hand.kind??'sin guía'} · ${hand.vertices} vértices / ${hand.triangles} triángulos · ${hand.intersections.length} intersecciones · ${errors.length} errores`;return value;}
+ function choose(kind){angle=0;const message=tutorial.presentation();world.tutorialHandsEnabled=message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);world.tutorialToolKind=kind;if(world.tutorialHandsEnabled)world.focusTutorialPlacement(kind);world.updateHands(.05);report();}
+ function closeup(){world.updateHands(.05);const pose=world.hands.hints.last;if(!pose)return;const points=[...pose.corners,pose.target],p=pose.target.slice(),radius=Math.max(...points.map(c=>Math.hypot(...c.map((v,i)=>v-p[i])))),distance=Math.max(8,radius/Math.sin(world.camera.fov*Math.PI/360)*1.6);world.controls.target.set(...p);world.camera.position.set(p[0]+distance*.45,p[1]+distance*.4,p[2]+distance*.8);world.controls.update();report();}
+ document.querySelector('#center').onclick=()=>choose('center');
+ document.querySelector('#seed').onclick=()=>choose('plant');
+ document.querySelector('#build').onclick=()=>{const target=world.tutorialGuideTarget();if(target?.target!=='center-site')return;Game.placeStructure(state,'qa-center',{x:target.position[0],z:target.position[2]},nav);tutorial.update();world.tutorialToolKind=null;world.syncResidentProps();document.querySelector('#center').disabled=document.querySelector('#build').disabled=true;document.querySelector('#seed').disabled=false;document.querySelector('#plant').disabled=false;report();};
+ document.querySelector('#plant').onclick=()=>{const target=world.tutorialGuideTarget();if(target?.target!=='plant-site')return;Game.plant(state,'qa-seed','mijo',target.position[0],target.position[2],nav);tutorial.update();world.tutorialToolKind=null;world.syncResidentProps();document.querySelector('#seed').disabled=document.querySelector('#plant').disabled=true;report();};
+ document.querySelector('#focus').onclick=closeup;
+ document.querySelector('#game-distance').onclick=()=>{const target=world.tutorialGuideTarget();if(target)world.focus({x:target.position[0],z:target.position[2]});};
+ document.querySelector('#rotate').onclick=()=>{angle=(angle+90)%360;const target=world.controls.target,offset=world.camera.position.clone().sub(target);offset.applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);world.camera.position.copy(target).add(offset);world.controls.update();report();};
+ document.querySelector('#dismiss').onclick=()=>{tutorial.dismiss();world.tutorialHandsEnabled=false;world.updateHands(.05);report();};
+ document.querySelector('#day').onclick=()=>{state.day=2;world.updateHands(.05);report();};
+ for(const id of ['center','build','focus','game-distance','rotate','dismiss','day'])document.querySelector('#'+id).disabled=false;
+ addEventListener('pagehide',()=>world.dispose(),{once:true});
+ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;world.render(dt);if(now-lastReport>200){lastReport=now;report();}requestAnimationFrame(frame);}requestAnimationFrame(frame);report();
+}catch(error){document.querySelector('#status').textContent='ERROR: '+error.message;document.querySelector('#data').textContent=error.stack;}
 </script></html>

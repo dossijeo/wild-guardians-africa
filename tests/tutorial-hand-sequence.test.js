@@ -69,3 +69,12 @@ test('a new game repeats both HUD and world placement guidance after a previous 
  assert.equal(skipController.skipBasic(),true);assert.equal(tutorialHudHandTarget(skipped,skipController.presentation()),null);
  assert.equal(tutorialHandTarget(skipped,nav,'center'),null);
 });
+
+test('the first seed hint leaves billboard clearance instead of pointing above a neighbouring roof',()=>{
+ const s=fixture(),center=tutorialHandTarget(s,nav,'center');
+ Game.placeStructure(s,'first-center',{x:center.position[0],z:center.position[2]},nav);
+ const nearRoof={...nav,placement:(x,z,radius)=>({valid:Math.hypot(x-center.position[0],z-center.position[2])>=2+radius})};
+ assert.equal(nearRoof.placement(center.position[0],center.position[2]+3,.4).valid,true);
+ const seed=tutorialHandTarget(s,nearRoof,'plant');
+ assert.ok(seed);assert.ok(Math.hypot(seed.position[0]-center.position[0],seed.position[2]-center.position[2])>=3.6);
+});
