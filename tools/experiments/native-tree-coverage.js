@@ -1,7 +1,7 @@
 // Experimental bridge to native color LOD batches. Packed CPU matrices alone
 // are not proof that GPU textures/programs have finished preparing.
 export class NativeTreeCoverage {
- constructor(slot=0){this.slot=slot;this.batches=new Map();this.counts=new Map();this.scans=0;}
+ constructor(slot=0){this.slot=slot;this.batches=new Map();this.counts=new Map();this.scans=0;this.revision=0;}
  remove(ids){for(const id of ids){const count=this.counts.get(id)-1;if(count)this.counts.set(id,count);else this.counts.delete(id);}}
  update(chunks){
   const live=new Set();let changed=false;
@@ -18,8 +18,8 @@ export class NativeTreeCoverage {
    this.batches.set(batch,{stamp,ids});changed=true;
   }
   for(const [batch,record] of this.batches)if(!live.has(batch)){this.remove(record.ids);this.batches.delete(batch);changed=true;}
-  return changed;
+  if(changed)this.revision++;return changed;
  }
  has(id,suppressed){return !suppressed?.has(id)&&this.counts.has(id);}
- clear(){this.batches.clear();this.counts.clear();}
+ clear(){if(this.batches.size||this.counts.size)this.revision++;this.batches.clear();this.counts.clear();}
 }
