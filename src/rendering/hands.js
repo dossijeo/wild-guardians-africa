@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {assetUrl} from './asset-url.js';
-import {HAND_ASSETS,HandHints3D,handEffects} from './hands-native.js';
+import {HAND_ASSETS,HAND_INFO,HandHints3D,handEffects} from './hands-native.js';
+import {handVisualScale} from './hand-visual-scale.js';
 import {quadTerrainLift} from './hand-terrain.js';
 
 export class NativeHands {
@@ -53,8 +54,11 @@ export class NativeHands {
     this.route=config.route??[config.position];this.hints.custom=config;this.hints.kind=config.kind;this.adapter.phase='reading';
     this.hints.routeFloor=config.kind==='drag'?this.hints.routeClearance():0;
   }
-  update(dt,camera){
+  update(dt,camera,viewportHeight=0){
     this.elapsed+=dt;camera.updateMatrixWorld();
+    const config=this.hints.configuration(),position=config?.position,e=camera.matrixWorldInverse.elements;
+    const depth=position?-(e[2]*position[0]+e[6]*position[1]+e[10]*position[2]+e[14]):0;
+    this.hints.size=handVisualScale({height:HAND_INFO[config?.kind]?.height,depth,projectionY:camera.projectionMatrix.elements[5],viewportHeight,minimumPixels:config?.minimumScreenHeight});
     const right=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0).toArray(),up=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,1).toArray();
     const pose=this.hints.update(this.elapsed,dt,{right,up}),texture=pose&&this.textures.get(pose.type);
     this.mesh.visible=!!texture;for(const object of this.effects)object.visible=!!texture;if(!texture)return;

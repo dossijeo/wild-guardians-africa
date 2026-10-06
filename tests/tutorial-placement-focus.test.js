@@ -8,7 +8,7 @@ import {serialize} from '../src/persistence/snapshots.js';
 test('a tool chosen during the introduction is focused when its actionable hand first appears',()=>{
  const state=Game.newGame({seed:712});state.villages[0].center={x:83,z:0};
  const nav={field:{surface:()=>11},placement:()=>({valid:true}),path:(_a,b)=>[b]},calls=[];
- const world={state,nav,tutorialToolKind:'center',focus:p=>calls.push(p),tutorialGuideTarget:WorldScene.prototype.tutorialGuideTarget,hands:{show(){},update(){}} ,handColliders:()=>[]};
+ const world={state,nav,renderer:{domElement:{clientHeight:390}},tutorialToolKind:'center',focus:p=>calls.push(p),tutorialGuideTarget:WorldScene.prototype.tutorialGuideTarget,hands:{show(){},update(){}} ,handColliders:()=>[]};
  assert.equal(WorldScene.prototype.focusTutorialPlacement.call(world,'center'),null);assert.equal(calls.length,0);
  state.tutorial.step='center';const before=serialize(state);
  WorldScene.prototype.updateHands.call(world,.016);assert.deepEqual(calls,[{x:83,z:0}]);assert.equal(serialize(state),before);
