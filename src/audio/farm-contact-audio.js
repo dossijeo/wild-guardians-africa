@@ -29,9 +29,10 @@ export class FarmContactAudio {
  update(state,{listener}={}){
   if(this.stateRef&&this.stateRef!==state||this.elapsed!==null&&state.elapsed<this.elapsed)this.dispose();
   if(state.pauses?.length||state.result){this.dispose();return;}
-  const dt=this.elapsed===null?0:state.elapsed-this.elapsed,continuous=dt>0&&dt<=.25,tasks=new Map(state.tasks.map(t=>[t.id,t])),seen=new Set();this.stateRef=state;
+  const dt=this.elapsed===null?0:state.elapsed-this.elapsed,continuous=dt>0&&dt<=.25,seen=new Set();let tasks;this.stateRef=state;
   for(const worker of state.workers){
-   const task=tasks.get(worker.taskId),candidate=worker.status==='acting'&&task&&['initial','water','harvest','crate'].includes(task.kind),target=candidate?this.targetsFor(state).get(task.targetId):undefined,plan=target?farmActivity(worker,task,target):null,previous=this.entries.get(worker.id);
+   // Carry tails and cancellation remain observable without indexing the FIFO.
+   const task=worker.status==='acting'?(tasks??=new Map(state.tasks.map(t=>[t.id,t]))).get(worker.taskId):undefined,candidate=task&&['initial','water','harvest','crate'].includes(task.kind),target=candidate?this.targetsFor(state).get(task.targetId):undefined,plan=target?farmActivity(worker,task,target):null,previous=this.entries.get(worker.id);
    if(!plan){if(previous&&carryTail(worker,previous,state)&&(continuous||dt===0)){seen.add(worker.id);continue;}continue;}
    seen.add(worker.id);const same=previous&&previous.taskId===task.id&&previous.phase===plan.phase&&plan.progress>=previous.progress;
    if(previous&&(!same||dt>.25))this.release(previous);

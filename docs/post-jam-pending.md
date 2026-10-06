@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Índices de audio agrícola diferidos](qa/farm-audio-idle-index/README.md): regadera/contactos omiten la FIFO sin trabajadores actuando, manteniendo limpieza de voces y transporte de cajas. 423 pruebas de audio y build correctos; cuatro lotes CPU por caso muestran ahorro aislado en reposo/caminata/transporte/huida y pequeñas diferencias desfavorables durante actividad. No acredita FPS, reproducción móvil ni cierre del barrido SFX.
+
 ## Barrido completo del catálogo SFX (pedido el 5 de octubre de 2026)
 
 - Revisar los 126 efectos sonoros del catálogo y registrar para cada ID sus acciones asignadas y puntos de reproducción.

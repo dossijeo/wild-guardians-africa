@@ -1,0 +1,133 @@
+{
+  "reference": "834a07567b972ce4c67ed20afe7c1069de77fe16",
+  "node": "v20.11.0",
+  "scope": "isolated CPU; 100 workers, 1,000 queued tasks; no rendering/decoding",
+  "warmup": 100,
+  "samples": 500,
+  "modules": [
+    {
+      "name": "WorkAudio",
+      "baselineHash": "54c0c3852c64ebf36c350baa8ef4bf56af356b1a2f79fc25478fa0f882975712",
+      "candidateHash": "bef14f025616dd3be7bc26efdb45baf5951bbe40e42dedee9caa426812b52492",
+      "cases": [
+        {
+          "status": "idle",
+          "baseline": {
+            "medianMs": 0.08780000000001564,
+            "p95Ms": 0.21839999999997417
+          },
+          "candidate": {
+            "medianMs": 0.0006000000000199179,
+            "p95Ms": 0.023500000000012733
+          }
+        },
+        {
+          "status": "walking",
+          "baseline": {
+            "medianMs": 0.087600000000009,
+            "p95Ms": 0.16440000000000055
+          },
+          "candidate": {
+            "medianMs": 0.0007999999999697138,
+            "p95Ms": 0.0009999999999763531
+          }
+        },
+        {
+          "status": "fleeing",
+          "baseline": {
+            "medianMs": 0.08719999999993888,
+            "p95Ms": 0.177599999999984
+          },
+          "candidate": {
+            "medianMs": 0.0006999999999379725,
+            "p95Ms": 0.0009000000000014552
+          }
+        },
+        {
+          "status": "carrying",
+          "baseline": {
+            "medianMs": 0.08759999999995216,
+            "p95Ms": 0.13139999999998508
+          },
+          "candidate": {
+            "medianMs": 0.0006000000000767614,
+            "p95Ms": 0.0008000000000265572
+          }
+        },
+        {
+          "status": "acting",
+          "baseline": {
+            "medianMs": 0.09809999999993124,
+            "p95Ms": 0.17069999999989705
+          },
+          "candidate": {
+            "medianMs": 0.10529999999994288,
+            "p95Ms": 0.20840000000009695
+          }
+        }
+      ]
+    },
+    {
+      "name": "FarmContactAudio",
+      "baselineHash": "f10dca981a04b6bcb3502d30043c8a629e4f768903b0fe9f0ef694e8d4e76abd",
+      "candidateHash": "8d1342e2613598c7dd3cb251297e73616b2900359cd53c3c02a7c20bc88638d1",
+      "cases": [
+        {
+          "status": "idle",
+          "baseline": {
+            "medianMs": 0.08730000000014115,
+            "p95Ms": 0.14459999999985484
+          },
+          "candidate": {
+            "medianMs": 0.0019999999999527063,
+            "p95Ms": 0.030399999999872307
+          }
+        },
+        {
+          "status": "walking",
+          "baseline": {
+            "medianMs": 0.08770000000004075,
+            "p95Ms": 0.1710000000000491
+          },
+          "candidate": {
+            "medianMs": 0.0018000000000029104,
+            "p95Ms": 0.0019999999999527063
+          }
+        },
+        {
+          "status": "fleeing",
+          "baseline": {
+            "medianMs": 0.08979999999996835,
+            "p95Ms": 0.11370000000010805
+          },
+          "candidate": {
+            "medianMs": 0.0017000000000280124,
+            "p95Ms": 0.0019999999999527063
+          }
+        },
+        {
+          "status": "carrying",
+          "baseline": {
+            "medianMs": 0.08539999999993597,
+            "p95Ms": 0.15000000000009095
+          },
+          "candidate": {
+            "medianMs": 0.0014000000001033186,
+            "p95Ms": 0.0018000000000029104
+          }
+        },
+        {
+          "status": "acting",
+          "baseline": {
+            "medianMs": 0.13449999999966167,
+            "p95Ms": 0.2424999999998363
+          },
+          "candidate": {
+            "medianMs": 0.1391000000000986,
+            "p95Ms": 0.27719999999999345
+          }
+        }
+      ]
+    }
+  ]
+}

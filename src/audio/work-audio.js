@@ -14,9 +14,12 @@ export class WorkAudio {
   update(state,{listener}={}){
     if(this.stateRef&&this.stateRef!==state)this.dispose();this.stateRef=state;
     if(state.pauses?.length||state.result){this.dispose();return;}
-    const tasks=new Map(state.tasks.map(t=>[t.id,t])),desired=new Set();
+    let tasks;const desired=new Set();
     for(const worker of state.workers){
-      const task=tasks.get(worker.taskId);if(!wateringActivity(worker,task))continue;desired.add(worker.id);
+      // Travelling/idle/fleeing workers cannot pour. Still reach release below,
+      // but do not traverse a potentially large FIFO just to discover that.
+      if(worker.status!=='acting')continue;
+      const task=(tasks??=new Map(state.tasks.map(t=>[t.id,t]))).get(worker.taskId);if(!wateringActivity(worker,task))continue;desired.add(worker.id);
       let entry=this.entries.get(worker.id);
       if(entry?.taskId!==task.id){if(entry)this.release(entry);entry={taskId:task.id,current:true,source:null};this.entries.set(worker.id,entry);
         const isCurrent=()=>entry.current&&this.stateRef===state&&!state.pauses?.length&&!state.result&&state.workers.includes(worker)&&wateringActivity(worker,state.tasks.find(t=>t.id===entry.taskId));
