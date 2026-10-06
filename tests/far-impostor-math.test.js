@@ -33,12 +33,12 @@ test('near selection reuses quiet-camera results, excludes the far field, and in
 
 test('anisotropic atlas angle agrees with inverse native model transform and screen projection',()=>{
  const base={x:7,z:-9,sx:.8,sy:1.15,sz:1.25},camera={x:0,z:0};
- for(let i=0;i<64;i++)for(const yaw of [0,.3,Math.PI/2,Math.PI]){
+ for(const views of [8,16])for(let i=0;i<64;i++)for(const yaw of [0,.3,Math.PI/2,Math.PI]){
   const azimuth=i*Math.PI/32;camera.x=base.x+Math.sin(azimuth)*70;camera.z=base.z+Math.cos(azimuth)*70;
   const native=new THREE.Matrix4().compose(new THREE.Vector3(),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw),new THREE.Vector3(base.sx,base.sy,base.sz));
   const local=new THREE.Vector3(camera.x-base.x,0,camera.z-base.z).applyMatrix4(native.clone().invert());
-  const expected=((Math.atan2(local.x,local.z)%(2*Math.PI))+2*Math.PI)%(2*Math.PI),actual=atlasViews(camera,base,yaw);
-  const angle=(actual.first+actual.blend)*2*Math.PI/8;
+  const expected=((Math.atan2(local.x,local.z)%(2*Math.PI))+2*Math.PI)%(2*Math.PI),actual=atlasViews(camera,base,yaw,views);
+  const angle=(actual.first+actual.blend)*2*Math.PI/views;
   assert.ok(Math.abs(Math.atan2(Math.sin(angle-expected),Math.cos(angle-expected)))<1e-12);
   const point=new THREE.Vector3(2,0,-3),world=point.clone().applyMatrix4(native),screenRight=new THREE.Vector3(Math.cos(azimuth),0,-Math.sin(azimuth));
   const r=azimuth-yaw,width=Math.hypot(Math.cos(r)*base.sx,Math.sin(r)*base.sz);

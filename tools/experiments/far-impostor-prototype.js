@@ -3,7 +3,7 @@ import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
 import {modelOrigin,NearTreeSelection,treeDensityRank} from './far-impostor-math.js';
 export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null}={}){
- const hasNormals=!!toon&&!!normalAtlas,rotationViews=prelitAtlas?.rotations??1,prelitResolution=prelitAtlas?.resolution??256;
+ const hasNormals=!!toon&&!!normalAtlas,rotationViews=prelitAtlas?.rotations??1,prelitViews=prelitAtlas?.views??8,prelitResolution=prelitAtlas?.resolution??256;
  const uniforms={uAtlas:{value:texture},uStart:{value:start},uEnd:{value:end},uReady:{value:1},uBlend:{value:1},uDensityEnabled:{value:0},uDensityRange:{value:new THREE.Vector2(100,240)},uDensityMinimum:{value:.15},uDensityBand:{value:.04},uSize:{value:new THREE.Vector2(metadata.impostorWidth,metadata.impostorHeight)},uLighting:{value:new THREE.Color(1,1,1)},...THREE.UniformsUtils.clone(THREE.UniformsLib.fog)};
  if(toon)Object.assign(uniforms,impostorLightingUniforms(toon,source));
  if(hasNormals){normalAtlas.colorSpace=THREE.NoColorSpace;normalAtlas.premultiplyAlpha=true;normalAtlas.generateMipmaps=true;uniforms.uNormalAtlas={value:normalAtlas};uniforms.uNormalAtlasEnabled={value:0};}
@@ -26,11 +26,11 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  ${hasNormals?normalAtlasDeclarations:''}
  #include <fog_pars_fragment>
  vec4 viewAt(float view){vec2 cell=vec2(clamp(vUv.x,.5/256.,255.5/256.),vUv.y);return texture2D(uAtlas,vec2((mod(view,8.)+cell.x)/8.,cell.y));}
- ${prelitAtlas?`vec4 prelitAt(sampler2D atlas,float view,float row){vec2 cell=clamp(vUv,vec2(.5/${prelitResolution}.),vec2(${prelitResolution-.5}/${prelitResolution}.));return texture2D(atlas,vec2((mod(view,8.)+cell.x)/8.,(${rotationViews-1}. -mod(row,${rotationViews}.)+cell.y)/${rotationViews}.));}
- vec4 prelitPair(sampler2D atlas,float first,float row){return uBlend>.5?mix(prelitAt(atlas,first,row),prelitAt(atlas,first+1.,row),fract(vView)):prelitAt(atlas,floor(vView+.5),row);}
+ ${prelitAtlas?`vec4 prelitAt(sampler2D atlas,float view,float row){vec2 cell=clamp(vUv,vec2(.5/${prelitResolution}.),vec2(${prelitResolution-.5}/${prelitResolution}.));return texture2D(atlas,vec2((mod(view,${prelitViews}.)+cell.x)/${prelitViews}.,(${rotationViews-1}. -mod(row,${rotationViews}.)+cell.y)/${rotationViews}.));}
+ vec4 prelitPair(sampler2D atlas,float first,float row){return uBlend>.5?mix(prelitAt(atlas,first,row),prelitAt(atlas,first+1.,row),fract(vView*${prelitViews}./8.)):prelitAt(atlas,floor(vView*${prelitViews}./8.+.5),row);}
  vec4 prelitPhase(sampler2D atlas,float first){${rotationViews>1?'float row=floor(vPrelitRotation);return uRotationBlend>.5?mix(prelitPair(atlas,first,row),prelitPair(atlas,first,row+1.),fract(vPrelitRotation)):prelitPair(atlas,first,floor(vPrelitRotation+.5));':'return prelitPair(atlas,first,0.);'}}
  vec4 prelitColor(float first){vec4 color;if(uNight<=0.)color=prelitPhase(uPrelitDay,first);else if(uNight>=1.)color=prelitPhase(uPrelitNight,first);else color=mix(prelitPhase(uPrelitDay,first),prelitPhase(uPrelitNight,first),uNight);return color;}`:''}
- void main(){float first=floor(vView);vec4 c=${prelitAtlas?'uPrelitEnabled>.5?prelitColor(first):(':''}(uBlend>.5?mix(viewAt(first),viewAt(first+1.),fract(vView)):viewAt(floor(vView+.5)))${prelitAtlas?')':''};if(c.a<.35||coverageThreshold(gl_FragCoord.xy)<1.-vMix*vDensityFade)discard;${prelitAtlas?'if(uPrelitEnabled>.5){gl_FragColor=vec4(c.rgb/max(c.a,.0001),1.);}else{':''}${toon?(hasNormals?normalAtlasLightingColor():impostorLightingColor):'gl_FragColor=vec4(c.rgb/max(c.a,.0001)*uLighting,1.);'}${prelitAtlas?'}':''}
+ void main(){float first=floor(vView);vec4 c=${prelitAtlas?'uPrelitEnabled>.5?prelitColor(floor(vView*'+prelitViews+'./8.)):(':''}(uBlend>.5?mix(viewAt(first),viewAt(first+1.),fract(vView)):viewAt(floor(vView+.5)))${prelitAtlas?')':''};if(c.a<.35||coverageThreshold(gl_FragCoord.xy)<1.-vMix*vDensityFade)discard;${prelitAtlas?'if(uPrelitEnabled>.5){gl_FragColor=vec4(c.rgb/max(c.a,.0001),1.);}else{':''}${toon?(hasNormals?normalAtlasLightingColor():impostorLightingColor):'gl_FragColor=vec4(c.rgb/max(c.a,.0001)*uLighting,1.);'}${prelitAtlas?'}':''}
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
  #include <fog_fragment>
