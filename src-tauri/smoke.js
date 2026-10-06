@@ -80,7 +80,9 @@
     const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));
     report.checks.models = [];
     // Decode every shipped culture, worker and beast using the production WASM decoder.
-    for (const model of manifest.records) {
+    const models = manifest.records.filter(record => record.source.endsWith('.glb') && record.runtime.endsWith('.glb'));
+    if (!models.length) throw Error('No runtime models in package manifest');
+    for (const model of models) {
       const decoded = await decodeWebGlb(await (await load(model.runtime)).arrayBuffer());
       if (new DataView(decoded).getUint32(0, true) !== 0x46546c67) throw Error('Invalid decoded GLB');
       report.checks.models.push(model.runtime);
@@ -92,9 +94,13 @@
     const worker = new Worker(blob);
     await new Promise((resolve, reject) => {worker.onmessage = event => event.data === 42 ? resolve() : reject(Error('Worker reply')); worker.onerror = reject;});
     worker.terminate(); URL.revokeObjectURL(blob); report.checks.worker = true;
-    const bank = await (await load('content/sfx.json')).json();
+    const variants = new Map(manifest.records.map(record => [record.source, record.runtime]));
+    const runtime = path => variants.get(path.replace(/^\//, '')) ?? path;
+    const bank = await (await load(runtime('content/sfx.json'))).json();
     const context = new AudioContext();
-    const audio = await context.decodeAudioData(await (await load(`assets/${bank.items[0].sha256}.mp3`)).arrayBuffer());
+    const sample = bank.items[0], audioUrl = runtime(sample.audio.url);
+    const audio = await context.decodeAudioData(await (await load(audioUrl)).arrayBuffer());
+    report.checks.audio = {id: sample.id, url: audioUrl, seconds: audio.duration, channels: audio.numberOfChannels, sampleRate: audio.sampleRate};
     report.checks.audioSeconds = audio.duration; await context.close();
     localStorage.setItem('wild-guardians:desktop-smoke', 'roundtrip');
     if (localStorage.getItem('wild-guardians:desktop-smoke') !== 'roundtrip') throw Error('Storage failed');
