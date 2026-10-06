@@ -220,12 +220,15 @@ export class WorldScene {
     try{
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
       await this.renderer.compileAsync(staging,this.camera,this.scene);if(this.disposed)return;
-      // The first building hit makes its opening-mask mesh drawable. Compile
-      // that retained native recipe even while the intact opening is hidden.
-      await this.renderer.compileAsync(this.destructionPass.scene,this.camera,this.scene);if(this.disposed)return;
       if(this.nav.field.canyon)await this.renderer.compileAsync(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
-      await this.destructionPass.prepareDepth(this.camera,this.scene);if(this.disposed)return;
+      // Depth capture keeps alpha-tested color recipes for their silhouettes.
+      // Compile all resident owners without shadows, including ones outside the
+      // initial camera frustum that the first effect may bring into view.
+      const shadows=this.renderer.shadowMap.enabled;
+      try{this.renderer.shadowMap.enabled=false;await this.renderer.compileAsync(this.scene,this.camera);}
+      finally{this.renderer.shadowMap.enabled=shadows;}
+      if(this.disposed)return;
       this.renderer.setRenderTarget(target);this.renderer.autoClear=true;
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.

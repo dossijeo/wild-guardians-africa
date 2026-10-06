@@ -1,0 +1,246 @@
+{
+  "baselineHead": "df7ea67fff8c6b1a5d4e70d85b42e60c1cf6fa22",
+  "sameWarthogDomainAndPresentationFields": {
+    "logicalHits": true,
+    "actors": true,
+    "steps": true,
+    "heldFrames": true,
+    "attackEffects": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "simulatedSeconds": true
+  },
+  "sameOriginalGroupDomainAndPresentationFields": {
+    "logicalHits": true,
+    "actors": true,
+    "steps": true,
+    "heldFrames": true,
+    "attackEffects": true,
+    "centerHpBefore": true,
+    "centerHpAfter": true,
+    "firstHit": true,
+    "firstStructureHit": true,
+    "simulatedSeconds": true
+  },
+  "cases": {
+    "hyena.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 401,
+      "compileShader": 4,
+      "linkProgram": 2,
+      "newProgramFrames": [
+        48
+      ]
+    },
+    "opening-group.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 364,
+      "compileShader": 0,
+      "linkProgram": 0,
+      "newProgramFrames": []
+    },
+    "original-group.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 364,
+      "compileShader": 2,
+      "linkProgram": 1,
+      "newProgramFrames": [
+        363
+      ]
+    },
+    "rhino.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 399,
+      "compileShader": 4,
+      "linkProgram": 2,
+      "newProgramFrames": [
+        79
+      ]
+    },
+    "savanna-hyena.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 523,
+      "compileShader": 4,
+      "linkProgram": 2,
+      "newProgramFrames": [
+        77
+      ]
+    },
+    "warthog-depth-recipes.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 399,
+      "compileShader": 0,
+      "linkProgram": 0,
+      "newProgramFrames": []
+    },
+    "warthog-resident.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 399,
+      "compileShader": 4,
+      "linkProgram": 2,
+      "newProgramFrames": [
+        48
+      ]
+    },
+    "warthog.json.gz": {
+      "ok": true,
+      "errors": [],
+      "steps": 399,
+      "compileShader": 4,
+      "linkProgram": 2,
+      "newProgramFrames": [
+        48
+      ]
+    }
+  },
+  "tests": {
+    "passed": 78,
+    "failed": 0,
+    "durationMs": 2765.299,
+    "command": "node --test tests/depth-preload.test.js tests/vfx-preload.test.js tests/vfx-rendering.test.js tests/vfx-origin-surface.test.js tests/locomotion-vfx.test.js tests/attack-vfx.test.js tests/animal-preload.test.js tests/render-gl-calls.test.js tests/depth-capture.test.js tests/standard-depth.test.js tests/native-shadow.test.js tests/single-pass-alpha-depth.test.js"
+  },
+  "build": {
+    "modules": 205,
+    "seconds": 9.38,
+    "exitCode": 0,
+    "warning": "Chunk exceeds 500 kB"
+  },
+  "files": {
+    "buildings-final.txt": {
+      "bytes": 17847,
+      "sha256": "df0c9a7b0e8cdc3c94d71cee9ac31478697a4d2c91c7b184d8ebbea088796c68"
+    },
+    "fixture-final.txt": {
+      "bytes": 16216,
+      "sha256": "7db95482c518383a569a4d2959b6cede9593044ac2afcf9c095213cb4a675bab"
+    },
+    "hyena.json.gz": {
+      "bytes": 11187,
+      "sha256": "d22fc370f0644cc8cc8dde7e2b3689832e6605655bf2d2a811d3c32f7de0a52e",
+      "rawBytes": 475338,
+      "rawSha256": "20797f49cd005f4bf50ea4a67c175d178c45805da049c20a462952b7a14caef7"
+    },
+    "locomotion-vfx.js.txt": {
+      "bytes": 4516,
+      "sha256": "f6b8869de5068e73a7464370656bce4433f4944a165a276b17145fd191b727e2"
+    },
+    "opening-group.json.gz": {
+      "bytes": 10697,
+      "sha256": "fb52c1a14b58a80f94db3208007405ff4e16580bcbacb41cc0da225e1bf24585",
+      "rawBytes": 410898,
+      "rawSha256": "37d92fa93a951788d6ffa784865e24a823539b713ab4aeac8540031eaf3f2156"
+    },
+    "opening-group.png": {
+      "bytes": 113299,
+      "sha256": "e66d6581dd7b68ac003d681b4fb6f1c87218af8098f01117d706f43127affe7d"
+    },
+    "original-group.json.gz": {
+      "bytes": 11084,
+      "sha256": "3d9a3e1d1565604785c64fdf3f57dec18b256768ab2cc3206bf2ce81cab0f1ff",
+      "rawBytes": 412807,
+      "rawSha256": "6973ee19b257399268cae46b16ebcd269377fbdd178f60d19c27c73ebf924e41"
+    },
+    "original-group.png": {
+      "bytes": 113295,
+      "sha256": "acf4f6707e36a0c4c401ddfe1ff414c7080f47209a64efab841f8d5d448331a6"
+    },
+    "README.md": {
+      "bytes": 6787,
+      "sha256": "b5bffb1a74bb4a8a0db9a8cde721fdf4b60a7b043ac21efe91fb6e918c90fe77"
+    },
+    "rhino.json.gz": {
+      "bytes": 10918,
+      "sha256": "fae2975e609daf08a76686122a64d23a8a7061f06bab7a4bbcbfc541b215e00e",
+      "rawBytes": 474217,
+      "rawSha256": "b9dd14b19387273233f9007b096a778f62b9f4543a788dab5991859e6f514a3d"
+    },
+    "savanna-hyena.json.gz": {
+      "bytes": 11542,
+      "sha256": "3b58f9791224643bc9a60ae1825465fd1c199cdc53857c565bbcbdb88e2d62cc",
+      "rawBytes": 383350,
+      "rawSha256": "b7b5214262e354f97df61ba73e1361ec6c296ce64dd4e8b4d33deffca0603b9f"
+    },
+    "savanna-hyena.png": {
+      "bytes": 188308,
+      "sha256": "31f9f42ca59a699a38af90f5b64eb695c73c0252ec8f1b2bc1518f00ae2bafac"
+    },
+    "scene-before-opening.txt": {
+      "bytes": 43346,
+      "sha256": "972640b5fbab473c1c74fd0e1f776f21dcd81c0be510cd43f8f2354436c3cc8c"
+    },
+    "scene-final.txt": {
+      "bytes": 43617,
+      "sha256": "2c109f07047df6c88ccc05c476528b921955c5689c06848c2268b1f4e8d6c98f"
+    },
+    "scene-primer-only.txt": {
+      "bytes": 43251,
+      "sha256": "d74cc119082b86bd5875e42ba793ab7c7e0eaa2a9607796d389c7a052ca16679"
+    },
+    "scene-resident-experiment.txt": {
+      "bytes": 43733,
+      "sha256": "1ce6b86907fc96a3b4cb1cebdb5936483c86c1b0f8b2a9a3033a79f042429922"
+    },
+    "step-ripples.js.txt": {
+      "bytes": 2457,
+      "sha256": "53e2c0e2d933cf3395d552fa88c03dd6956bb553fedf7ea752320ae9d1fc3af0"
+    },
+    "vfx-preload.js.txt": {
+      "bytes": 1110,
+      "sha256": "fdb806b3ac11fd5687030aade54dd2b00d5e623defa482769fd9c2f90ad20dcb"
+    },
+    "vfx.js.txt": {
+      "bytes": 13499,
+      "sha256": "fd7a97a7189e73aa7a2587d026c2e4213873dfc40964da893894623c01d1f6f2"
+    },
+    "warthog-depth-recipes.json.gz": {
+      "bytes": 9091,
+      "sha256": "22c58b76ca5a05c871e7c72c0264f99a3feb33c878461dafe98cfea6a8c59f9d",
+      "rawBytes": 293807,
+      "rawSha256": "9761d39c0174e34dec4cabc69425b484dafb3f73e24475a869752525358c451c"
+    },
+    "warthog-depth-recipes.png": {
+      "bytes": 112997,
+      "sha256": "8dc5c0cc15bcbccec4148f2d4aa36947acf2d2d5d1d547312cfa93c290ec488c"
+    },
+    "warthog-resident.json.gz": {
+      "bytes": 11062,
+      "sha256": "f91e74872b90f9b324d882ba9bdaeaacbf7d763faf7c7d0eb58d129fa47757f5",
+      "rawBytes": 474708,
+      "rawSha256": "f6b29840e9adf2a9b9e8328b6944c4b12fa58f7cf81afa86196514b8b7a6f79c"
+    },
+    "warthog-resident.png": {
+      "bytes": 112991,
+      "sha256": "8362ab23f961ee798fab78c2e49827ffb3145a95f353ced61209d1f87061814f"
+    },
+    "warthog.json.gz": {
+      "bytes": 11162,
+      "sha256": "4e867374ba8856640c38f9bf0e1bcb20988ace3c49c6524cce43556c07e64621",
+      "rawBytes": 474364,
+      "rawSha256": "18877978c1cf33b5515b2731e4d3ed2c340c288d8f43c52683c613a020154543"
+    },
+    "warthog.png": {
+      "bytes": 113001,
+      "sha256": "a9276116eb305e955b9279acc580254c28acf57b990b6f5d134c8609c75d59a5"
+    }
+  },
+  "finalSourceHashes": {
+    "src/rendering/scene.js": "2c109f07047df6c88ccc05c476528b921955c5689c06848c2268b1f4e8d6c98f",
+    "src/rendering/buildings.js": "df0c9a7b0e8cdc3c94d71cee9ac31478697a4d2c91c7b184d8ebbea088796c68",
+    "src/rendering/vfx.js": "fd7a97a7189e73aa7a2587d026c2e4213873dfc40964da893894623c01d1f6f2",
+    "src/rendering/vfx-preload.js": "fdb806b3ac11fd5687030aade54dd2b00d5e623defa482769fd9c2f90ad20dcb",
+    "src/rendering/step-ripples.js": "53e2c0e2d933cf3395d552fa88c03dd6956bb553fedf7ea752320ae9d1fc3af0",
+    "src/rendering/locomotion-vfx.js": "f6b8869de5068e73a7464370656bce4433f4944a165a276b17145fd191b727e2",
+    "tests/browser/animal-preload.html": "7db95482c518383a569a4d2959b6cede9593044ac2afcf9c095213cb4a675bab",
+    "tests/depth-preload.test.js": "f16477713b15a977c8ba8fb466aa7a9a66957ec1d3ab0d8eb151d08b6d24934a",
+    "tests/vfx-preload.test.js": "c14e992d3a7fb8b34da63f77eb9f7cb4450456c7b4921a85e8db7725f670b4a8"
+  }
+}

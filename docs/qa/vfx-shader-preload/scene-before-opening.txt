@@ -220,9 +220,6 @@ export class WorldScene {
     try{
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
       await this.renderer.compileAsync(staging,this.camera,this.scene);if(this.disposed)return;
-      // The first building hit makes its opening-mask mesh drawable. Compile
-      // that retained native recipe even while the intact opening is hidden.
-      await this.renderer.compileAsync(this.destructionPass.scene,this.camera,this.scene);if(this.disposed)return;
       if(this.nav.field.canyon)await this.renderer.compileAsync(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
       await this.destructionPass.prepareDepth(this.camera,this.scene);if(this.disposed)return;

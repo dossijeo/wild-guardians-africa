@@ -152,3 +152,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Primera activación de VFX perfilada](qa/first-attack-gl-profile/README.md): preparar profundidad durante la carga elimina cuatro compilaciones MeshDepth del paso 48. Dos pruebas nativas conservan contacto de cultivo y daño al centro; 32 pruebas/build correctos. Persisten pico de frametime, dos variantes Standard y shaders de polvo/ondas/ataque: precarga incompleta, sin acreditar eliminación del tirón ni móvil.
+
+
+[Shaders VFX preparados y retenidos durante carga](qa/vfx-shader-preload/README.md): cuatro materiales, sin conservar geometrías/partículas de preparación, ondas de río preparadas sin contactos falsos, recetas/destino reales de profundidad y máscara de daño. Gran Cañón: contacto de cultivo y golpe al centro sin compileShader/linkProgram en las trazas correspondientes; 78 pruebas/build. Sabana mantiene dos variantes Standard y persiste un pico CPU sin compilación. Pendientes otros biomas/culturas/calidades/móvil, costes de memoria/carga y primeras subidas/ejecuciones; no se declara resuelto todo el tirón.
