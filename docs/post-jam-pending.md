@@ -131,3 +131,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Coste GPU atribuido por pases en finca avanzada](qa/late-farm-pass-cost/README.md): 200 frames y 1.800 queries completas, 13 pruebas dirigidas; contadores reconciliados y mismo estado lógico final. Medianas GPU: dibujo final ~37,6 ms, profundidad VFX ~16,3 ms, sombras ~8,3 ms, cielo ~1,0 ms. Instrumentación QA, sin optimización aplicada/FPS general; siguiente prioridad: categorías/materiales del dibujo y profundidad conservando siluetas y efectos.
+
+
+[Profundidad alpha reevaluada en finca real](qa/late-farm-alpha-depth/README.md): 13 pruebas, cuatro lotes nativos y 800 queries; mismo estado/rutas/eventos/envíos. GPU ~2,82/~1,14 ms menor pero CPU mayor y RAF sin mejora: solo QA, no se adopta. Cuatro escenas actuales de Manglares/Sabana intactas/colapso conservan profundidad idéntica; color presenta diferencias pequeñas también entre originales. Pendientes integración sin recorrido duplicado, repetibilidad, más estados/biomas/móvil y coste total.

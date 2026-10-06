@@ -1,0 +1,63 @@
+{
+  "base": "df23ddd2689bf73813efea6a414d3df4eedff04d",
+  "sources": {
+    "tests/browser/alpha-depth-experiment.js": "55edc765598f7bbeaecef75b64c1ffd67d67377742264d3cf2af30b2c9cc5111",
+    "tests/browser/depth-readback.js": "cfa4026642df22615e470da9a3a26615ec9424d20e0b01b15c12a057822fd18e",
+    "tests/browser/depth-capture.html": "f5b3d4a3ea3770ac4acb0cf302b2e3a5d1371bcc8386ca3b88dd8370d6fae8a7",
+    "tests/browser/late-farm-render.html": "90aeb33c535551139e3f288040ae54fe1fc9c13e7047a78e33861a480b9d1708",
+    "tests/alpha-depth-experiment.test.js": "9cdd4d3207791e2ffa24cb52b437d901a60d770aa99de0c641ed6fa69d0a6158",
+    "src/rendering/depth-capture.js": "68ba7b06c02b000eb13f40d189442ffb7b5dff94bb31620de06e1b2058057900",
+    "src/rendering/standard-depth.js": "7e3bf8084eb74d52e47bab8b670a6e21689f9c79185e5cb3e7d0c565bbcc0e6c",
+    "src/rendering/buildings.js": "1223b88afefaa4dd5a21e6ac150da56f4c208ad8afb2521a0d195e49093fccd0",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887"
+  },
+  "compressedSha256": "efc28aa905d515321f0a6598d606e24df2844b341ca39c8f443c276c7413a191",
+  "originalJsonSha256": "c9a3dc8bacf00e051a4c1f193fd7a488e66da402c3ba79f7541bfbade34aae97",
+  "gzipMtime": 0,
+  "evidence": {
+    "farm.png": "c78abad592acdd5ed338b88f748e4d43c4bb5fea2705ed9c69ebc9472f5207d4",
+    "mangrove-collapse.png": "22ba896c226024d9968989631e89b4352aca59d393407a6cb56b34cab440f34b",
+    "mangrove-mapungubwe-collapse.json": "d6b06c732a8f2bd284698b7e27aaea11cf3841e38e990183119d622bd90cccdb",
+    "mangrove-mapungubwe-intact.json": "2eec3389ddba59eea1cfcdcb275fd4e081af14ce824b42624575c4ff8f522836",
+    "native.json.gz": "efc28aa905d515321f0a6598d606e24df2844b341ca39c8f443c276c7413a191",
+    "savanna-collapse.png": "6dcaf00f852baf8c57dc148444a7d6a9fffd71acd9c7d5e97c804db4114506a1",
+    "savanna-suajili-collapse.json": "d8bd77cc2aa8415e31b4e4d3c44d95cfc84d8e76e219b8656718f2c65fffd894",
+    "savanna-suajili-intact.json": "6e5007b42e4e8cc2fce1c318a4743fe535d556733516ed07a62fa173090e2a7e"
+  },
+  "summaries": [
+    {
+      "label": "A1",
+      "gpuMedian": 62.1370045,
+      "gpuP95": 66.202551,
+      "renderCpuMedian": 41.80000001192093,
+      "frameIntervalMedian": 68.2000000178814,
+      "alphaApplications": 0
+    },
+    {
+      "label": "B1",
+      "gpuMedian": 59.320494,
+      "gpuP95": 64.17307,
+      "renderCpuMedian": 44.19999998807907,
+      "frameIntervalMedian": 69.84999999403954,
+      "alphaApplications": 292174
+    },
+    {
+      "label": "B2",
+      "gpuMedian": 59.272317,
+      "gpuP95": 64.597394,
+      "renderCpuMedian": 45.849999994039536,
+      "frameIntervalMedian": 68.69999995827675,
+      "alphaApplications": 292174
+    },
+    {
+      "label": "A2",
+      "gpuMedian": 60.41065,
+      "gpuP95": 64.599166,
+      "renderCpuMedian": 41.900000005960464,
+      "frameIntervalMedian": 66.94999998807907,
+      "alphaApplications": 0
+    }
+  ],
+  "perStepSubmissionCountsEqual": true,
+  "decision": "QA only; GPU improvement accompanied by additional CPU cost and no better native frame pacing. Wider depth/color acceptance and cheaper eligibility integration remain pending."
+}
