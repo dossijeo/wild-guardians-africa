@@ -1,0 +1,1180 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "warthog",
+    "lion",
+    "hyena",
+    "rhino"
+  ],
+  "copies": 4,
+  "plannedReserves": false,
+  "savedReserves": false,
+  "savedActive": true,
+  "savedRaidUnchangedAtLoad": true,
+  "loadReservedRigs": 4,
+  "repeatedRigResources": {
+    "warthog": {
+      "copies": 4,
+      "sparesUsed": 4,
+      "uniqueModels": 4,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "2216d4f9-dd9f-4512-bc83-66ebbdc3a048",
+      "fromSpare": true,
+      "skeletons": [
+        "8ae2ba7b-014a-42f9-9cbe-7943e9515647"
+      ],
+      "boneTextures": [
+        "2c349144-e380-4c4e-844b-4f1750e70597"
+      ],
+      "geometry": [
+        "1429c656-c9bb-40ff-8c29-fa1fc0ad4ffb"
+      ],
+      "materials": [
+        "30dfc60d-c189-4003-a05d-4d4e41f18ea9"
+      ]
+    },
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "1dabacdd-0e05-4bf2-a8e7-afa378252239",
+      "fromSpare": true,
+      "skeletons": [
+        "34de44d3-3d90-40c1-a860-a4d1d1f734ef"
+      ],
+      "boneTextures": [
+        "cdb9f6ac-70bc-49fc-a357-a97289d6b41e"
+      ],
+      "geometry": [
+        "1429c656-c9bb-40ff-8c29-fa1fc0ad4ffb"
+      ],
+      "materials": [
+        "30dfc60d-c189-4003-a05d-4d4e41f18ea9"
+      ]
+    },
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "917cea67-1ed4-4432-9a0f-547ddd1dc13b",
+      "fromSpare": true,
+      "skeletons": [
+        "5b73a3ac-7752-45f0-b238-0dfa24cd6a4d"
+      ],
+      "boneTextures": [
+        "b02b48d9-63ed-4385-8aef-cbc7485f0f00"
+      ],
+      "geometry": [
+        "1429c656-c9bb-40ff-8c29-fa1fc0ad4ffb"
+      ],
+      "materials": [
+        "30dfc60d-c189-4003-a05d-4d4e41f18ea9"
+      ]
+    },
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "ad5108f1-2671-4013-8fac-c908200a0165",
+      "fromSpare": true,
+      "skeletons": [
+        "c412e40a-e1e5-4d8b-a827-8a26cbb8756c"
+      ],
+      "boneTextures": [
+        "03297e31-d32e-49a2-b7fd-a4f067664a04"
+      ],
+      "geometry": [
+        "1429c656-c9bb-40ff-8c29-fa1fc0ad4ffb"
+      ],
+      "materials": [
+        "30dfc60d-c189-4003-a05d-4d4e41f18ea9"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "spareModelIds": [
+      "2216d4f9-dd9f-4512-bc83-66ebbdc3a048",
+      "1dabacdd-0e05-4bf2-a8e7-afa378252239",
+      "917cea67-1ed4-4432-9a0f-547ddd1dc13b",
+      "ad5108f1-2671-4013-8fac-c908200a0165",
+      "955630bb-a166-4a2b-addc-ddba7902ac40",
+      "05c4ab10-671b-4d54-a2cb-703d74f8d231",
+      "e06c9a1a-6a0c-4438-b016-d79beabf021e",
+      "e1cab8f6-c78a-427f-bf59-8117c3fcdf33"
+    ],
+    "animalPrograms": [
+      0
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 41,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 43,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "newPrograms": [],
+    "animalPrograms": [
+      0
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 7,
+    "animalPrograms": [
+      0
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 23.19999998807907,
+  "loadingMs": 4976.700000047684,
+  "errors": [],
+  "timing": {
+    "settle": [
+      {
+        "cpuMs": 12.199999988079071,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 8.800000011920929,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 8.599999964237213,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 13.400000035762787,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 10.599999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 9.800000011920929,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 10.900000035762787,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.100000023841858,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.099999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.099999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.099999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.200000047683716,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "intervalMs": 50,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.900000035762787,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.899999976158142,
+        "intervalMs": 33.400000000000546,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "baseline": [
+      {
+        "cpuMs": 6.800000011920929,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.599999964237213,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.099999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.299999952316284,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.800000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.899999976158142,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.200000047683716,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.599999964237213,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.400000035762787,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.300000011920929,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.300000011920929,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.199999988079071,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "appearance": [
+      {
+        "cpuMs": 8.400000035762787,
+        "intervalMs": null,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 49.69999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.699999988079071,
+        "intervalMs": 49.899999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.600000023841858,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 21.5,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 6.900000035762787,
+        "intervalMs": 33.399999999999636,
+        "actorsReady": 4,
+        "queuedChunks": 4
+      },
+      {
+        "cpuMs": 9.599999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 3
+      },
+      {
+        "cpuMs": 9,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 2
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 1
+      },
+      {
+        "cpuMs": 7.600000023841858,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.200000047683716,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 49.80000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.699999988079071,
+        "intervalMs": 16.599999999999454,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.099999964237213,
+        "intervalMs": 16.800000000000182,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.699999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.100000023841858,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.800000011920929,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.699999988079071,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8,
+        "intervalMs": 16.699999999999818,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.199999988079071,
+        "intervalMs": 33.19999999999982,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.5,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 8.5,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.599999964237213,
+        "intervalMs": 33.30000000000018,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.200000047683716,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.599999964237213,
+        "intervalMs": 16.600000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.400000035762787,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.699999988079071,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.099999964237213,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.5,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.699999988079071,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "intervalMs": 34,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.600000023841858,
+        "intervalMs": 16,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.5,
+        "intervalMs": 33.599999999998545,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 16.400000000001455,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.899999976158142,
+        "intervalMs": 33.19999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 16.69999999999891,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.699999988079071,
+        "intervalMs": 33.20000000000073,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.799999952316284,
+        "intervalMs": 16.5,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.600000023841858,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.900000035762787,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6,
+        "intervalMs": 33.100000000000364,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 5.799999952316284,
+        "intervalMs": 16.700000000000728,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.300000011920929,
+        "intervalMs": 33.29999999999927,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 6.899999976158142,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 7.900000035762787,
+        "intervalMs": 16.599999999998545,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      },
+      {
+        "cpuMs": 9.5,
+        "intervalMs": 33.30000000000109,
+        "actorsReady": 4,
+        "queuedChunks": 0
+      }
+    ],
+    "takes": [],
+    "creations": [],
+    "firstRenderCalls": [
+      {
+        "cpuMs": 13.099999964237213,
+        "horizonCpuMs": 0.10000002384185791,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "horizonCpuMs": 0,
+        "actorsBefore": 4,
+        "actorsAfter": 4
+      }
+    ],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "spawnMs": 0,
+    "focusMs": 0.10000002384185791,
+    "summary": {
+      "baseline": {
+        "frames": 24,
+        "cpuMs": {
+          "median": 6,
+          "p95": 7,
+          "maximum": 7.599999964237213
+        },
+        "intervalMs": {
+          "median": 33.19999999999982,
+          "p95": 33.30000000000018,
+          "maximum": 49.899999999999636
+        }
+      },
+      "appearance": {
+        "frames": 60,
+        "cpuMs": {
+          "median": 6.899999976158142,
+          "p95": 9.5,
+          "maximum": 21.5
+        },
+        "intervalMs": {
+          "median": 33.20000000000073,
+          "p95": 34,
+          "maximum": 49.899999999999636
+        }
+      }
+    },
+    "horizonWorker": {
+      "available": true,
+      "disabled": false,
+      "pending": false,
+      "region": {
+        "cx": -1,
+        "cz": 2,
+        "range": 2,
+        "bounds": [
+          -168,
+          -24,
+          72,
+          216
+        ]
+      }
+    },
+    "newProgramUsers": [],
+    "motion": {
+      "steps": 363,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog"
+      ],
+      "simulatedSeconds": 18.150000000000002,
+      "centerHpBefore": 600,
+      "centerHpAfter": 580,
+      "logicalHits": [
+        {
+          "id": "event-12",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-10",
+          "targetId": "structure-2",
+          "species": "warthog",
+          "presentation": {
+            "elapsed": 418.25000000000415,
+            "animal": {
+              "x": -30.862388392023835,
+              "z": 34.29373896118004,
+              "heading": 3.093853555456272
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "warthog",
+          "status": "walking",
+          "ready": true,
+          "position": [
+            -28.858795081057345,
+            41.858795081057345
+          ],
+          "renderY": 3.6952558139594354
+        },
+        {
+          "species": "warthog",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -30.862388392023835,
+            34.29373896118004
+          ],
+          "renderY": 3.7055962917783205
+        },
+        {
+          "species": "warthog",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -35.63459543678033,
+            68.10891007139165
+          ]
+        },
+        {
+          "species": "warthog",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -25.734595436780328,
+            68.10891007139165
+          ]
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "warthog",
+          "sprites": 16
+        }
+      ],
+      "contactRequirement": "selected-species-paid-crop-or-center",
+      "firstHit": {
+        "id": "event-12",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-10",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "elapsed": 418.25000000000415,
+          "animal": {
+            "x": -30.862388392023835,
+            "z": 34.29373896118004,
+            "heading": 3.093853555456272
+          },
+          "target": {
+            "x": -30.684595436780327,
+            "z": 30.572305649518967,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-11",
+        "type": "StructureHit",
+        "animalId": "animal-7",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 40.39999997615814,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "id": "animal-6",
+          "species": "warthog",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -29.4618278910928,
+              3.717255813822785,
+              40.916881485326655
+            ],
+            "max": [
+              -27.957908365672928,
+              6.430502129308713,
+              42.44570757626072
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "id": "animal-7",
+          "species": "warthog",
+          "status": "walking",
+          "bounds": {
+            "min": [
+              -31.581650040685044,
+              3.7275962907276687,
+              33.412834894167304
+            ],
+            "max": [
+              -30.162648492676155,
+              6.440139548032333,
+              34.752806666841344
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "species": "warthog",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "warthog",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "inspection": {
+    "scope": "Close camera after first hit; no subsequent simulation ticks",
+    "logicalStateUnchanged": true,
+    "eye": [
+      -28.858795081057345,
+      6.897654408894491,
+      49.255643180321506
+    ],
+    "target": [
+      -28.858795081057345,
+      3.8502558139594356,
+      41.858795081057345
+    ]
+  }
+}

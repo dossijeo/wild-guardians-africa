@@ -17,4 +17,4 @@ El guardado contiene un centro y cuatro brotes pagados. La simulación dispara u
 - Pasan 28 tests de reservas, planificación, carga guardada, cancelación y preparación GPU.
 - Compilación de producción correcta, 209 módulos; persiste el aviso de tamaño del bundle principal.
 
-`report.json` registra la disponibilidad al resolver load, `player.json` el estado restaurado y `console.json` los avisos/errores. `ready.png` muestra la vista inicial de la plantación; los animales están fuera de esa cámara. No acredita contacto de ataque, visibilidad posterior al mover la cámara, frametime ni memoria de móvil físico. Esas comprobaciones requieren pruebas adicionales.
+`report.json` registra la disponibilidad al resolver load, `player.json` el estado restaurado y `console.json` los avisos/errores. `ready.png` muestra la vista inicial de la plantación; los animales están fuera de esa cámara. El contacto y la visibilidad de facóqueros restaurados se verifican posteriormente en [animal-active-motion](../animal-active-motion/README.md), mediante otro fixture. Siguen pendientes las demás especies/combinaciones y el rendimiento/memoria de móvil físico.
