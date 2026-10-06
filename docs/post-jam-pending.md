@@ -209,3 +209,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Seguimiento regional del foco experimental](qa/far-camera-regions/README.md): regiones simétricas X/Z con histéresis/settling, sin muestreo por frame; veinte pruebas y secuencia nativa órbita/desplazamiento/acercamiento sin errores. Pendientes tiles de anticipación, chunks reales, iluminación/bruma/crossfade y móvil; sigue fuera de gameplay.
+
+
+[Atlas normal offline candidato](qa/far-normal-atlas/README.md): comparación de una acacia confirma diferencias de sombreado; ocho vistas lineales de normales con misma máscara alpha, WebP 321 kB y verificación de fuentes. Pendientes conexión experimental, transformación anisotrópica/renormalización, A/B visual y coste GPU/móvil antes de adoptarlo. Sigue fuera de gameplay.

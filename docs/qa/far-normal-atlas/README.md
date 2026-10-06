@@ -1,0 +1,15 @@
+# Candidato offline de normales para acacia impostor
+
+El visor admite `population=single` para comparar una acacia a cámara fija. Mediodía: day-model.png frente a day-approximate.png; noche: night-model.png frente a night-approximate.png. Cámara [0,14,50], misma primera instancia sin giro, shader 3D original y paleta artística compartida. Sin errores GL/consola. La aproximación de copa/tronco del billboard produce una distribución de luces y sombras distinta al modelo; también hay diferencias de proyección/altura de silueta. Esta comparación no separa cuantitativamente todas las causas ni prueba un fallo del shader del juego.
+
+La normal artificial actual utiliza ejes de billboard/cámara, mientras que el modelo utiliza normales geométricas/mapa normal y envolvente local de copa transformadas por el giro/escala del árbol. Es una hipótesis concreta para mejorar la sustitución; no se ajustan a ojo las luces del mundo para ocultarla.
+
+## Precálculo experimental
+
+`tests/browser/far-vegetation-atlas.html?bake=normals` añade modo opcional. Reutiliza encuadre/anclaje originales y ocho vistas de 256×256. Clona material nativo con normal map y AfricanToon; después de formar toonN escribe RGB = normalize(toonN)*0,5+0,5. El modelo no tiene giro ni escala en el precálculo: codifica dirección en orientación original de la especie. Elimina conversiones de color/tonemapping para escribir datos lineales, no color sRGB ni iluminación del momento. Normales incluyen la envolvente artística de Sabana actual; cambiar esa receta requerirá rebake. Nunca se genera durante gameplay.
+
+Captura nativa correcta, ocho vistas distintas, GL cero y consola vacía. PNG 447.850 bytes; WebP lossless 320.852 bytes, alpha y RGB visibles sin cambios de compresión. `verify_far_normal_atlas.mjs` comprueba hash de atlas y fuentes (pack/binario/color/normal), resolución, mismos bounds/dimensiones/base que atlas de color, márgenes/base inferior por vista y datos normales. La máscara alpha coincide exactamente con la de color en las ocho vistas (IoU1). El verificador original del atlas de color sigue pasando sin modificarlo.
+
+146.348 texeles completamente opacos: longitud decodificada media 0,972965, mínimo 0,030122 y máximo 1,010114. El antialiasing mezcla direcciones y la cuantización no preserva exactamente longitud unitaria. La futura lectura deberá renormalizar y tratar direcciones casi canceladas; no se afirma que todos los texeles sean vectores unitarios. Mipmaps y mezcla angular requieren cuidado adicional. Los normales se cargarán con NoColorSpace, y su transformación por giro/escala anisotrópica debe verificarse.
+
+No se ha conectado todavía este atlas al shader del impostor. Por tanto, NO acredita mejora visual, transición imperceptible ni coste aceptable: falta comparación A/B con envolvente, modelo real y candidato durante distintas fases/ángulos, y medir lectura extra de textura/GPU/memoria/móvil. Si no compensa, se rechaza. No se añade ningún asset al paquete del juego ni se modifica su renderer. La opción sin normales y el atlas original siguen disponibles.
