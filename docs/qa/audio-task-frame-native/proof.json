@@ -1,0 +1,28 @@
+{
+  "logicalAndCameraMatch": true,
+  "sampleCount": 800,
+  "gpuSampleCount": 800,
+  "rawSha256": "46100d6cf5275bfb86cbaf06827218076e5be5351aaf2be997880f4a9f4426a1",
+  "compressedSha256": "19cab030b0dfdc913e162afa3dbc52ef0fa7a0fe00e3d6aaff9561413e4329ef",
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "audioCueCountPerLot": 48,
+  "pathSearchesPerLot": 89,
+  "events": {
+    "CrateDelivered": 17,
+    "CropPicked": 23,
+    "WaterSatisfied": 2,
+    "CropMatured": 3,
+    "HarvestRequested": 3
+  },
+  "renderSubmissionsMatchPerFrame": true,
+  "sourceHashes": {
+    "tests/browser/late-farm-render.html": "a0889fe5545c21d5ae9e5753c4a57d0a1390740eb4f789804932450d2a6264e2",
+    "src/audio/audio.js": "8ef4b834baf7b0485635f73b1baff9bec6f9fb43f793a91a2e3a8b4406340fdd",
+    "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
+    "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
+    "src/audio/farm-contact-audio.js": "15de7934842caaeb0c4b5bee6a2e4f4d84d621a98b384d668addf460b444ba12",
+    "src/rendering/scene.js": "961c6200040031d8d0bf7d624b545facbc5734a83f88380acb40c62a6047c05b",
+    "src/simulation/game.js": "b74c09c2c391e635056995e5ce5db647202641616b660aa62deecfa3765bd05c"
+  }
+}

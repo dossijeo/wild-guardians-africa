@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Índice de audio medido en finca renderizada](qa/audio-task-frame-native/README.md): 800 muestras, cuatro continuaciones pagadas con estado/rutas/cues/envíos idénticos. La mediana de audio queda en 0,2 ms en ambos brazos y no aparece mejora consistente de frametime. Observadores con voces null, sin reproducción/descodificación; no extrapolar el ahorro aislado a FPS. Pendiente coste GPU sostenido y poblaciones mayores.
+
 [Índice de audio compartido durante actividad](qa/audio-task-frame/README.md): tres sistemas agrícolas reutilizan una FIFO local a la llamada, con validación viva de descargas tardías. 431 pruebas y build; cuatro perfiles pagan y entregan sobre terreno nativo con cues/liberaciones idénticos. CPU aislada menor durante actividad, pequeño coste del coordinador en reposo; efecto en frametime/móvil pendiente.
 
 [Respaldo de pantalla según política del iframe](qa/wake-policy/README.md): evita solicitudes nativas destinadas al rechazo e inicia directamente el vídeo desde el gesto. 16 pruebas, build y rutas nativa/iframe reales correctas; aceptación física Pixel/Chrome/itch.io todavía pendiente.
