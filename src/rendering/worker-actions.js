@@ -1,4 +1,5 @@
 import {sampleFixedPose} from './fixed-pose.js';
+import {syncWorkerToolVisibility} from './worker-tool-visibility.js';
 import {PROFILES} from '../simulation/workforce.js';
 import {LoopRepeat,LoopOnce,Box3,Vector3} from 'three';
 export function nativeCrate(gltf){
@@ -8,12 +9,13 @@ export function nativeCrate(gltf){
   const box=new Box3().setFromObject(crate),center=box.getCenter(new Vector3());
   crate.position.set(-center.x,-box.min.y,-center.z);return crate;
 }
-export function applyWorkerPose(data,worker,task,elapsed,library){
+export function applyWorkerPose(data,worker,task,elapsed,library,cullHiddenTools=true){
   const pose=workerPose(worker,task,elapsed,library),clip=data.clips.find(c=>c.name===pose.name);
   if(!clip)throw new Error(`Falta la acción original ${pose.name} de ${worker.profile}`);
   const restart=data.name!==pose.name;
   if(restart){data.action?.stop();data.action=data.mixer.clipAction(clip);data.action.reset().setLoop(pose.loop?LoopRepeat:LoopOnce,pose.loop?Infinity:1).play();data.action.paused=true;data.action.clampWhenFinished=true;data.name=pose.name;}
   sampleFixedPose(data,pose.time,restart);
+  syncWorkerToolVisibility(data,cullHiddenTools);
   return pose;
 }
 export function workerPose(worker,task,elapsed,library) {

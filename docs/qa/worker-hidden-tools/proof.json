@@ -1,0 +1,167 @@
+{
+  "baseCommit": "5bfdabe",
+  "scope": "Only authored hidden tool visibility changes in current renderer. Fixed-step paid late-farm continuation, not production pacing or mobile acceptance.",
+  "sources": {
+    "src/rendering/worker-tool-visibility.js": "a41b8479af4b8d34744147a4641b3cbce1fcfe1135169cf4cfa8cf421a654e8a",
+    "src/rendering/worker-actions.js": "8d08e86a5a8be9485bf890c5c2afcea5660c524b0227dc90a4060a1a5931518d",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "tests/browser/late-farm-render.html": "4bf8569cdf30a66331dac5c28788b7e0e67ca4dd1c608a883a84370bec856714",
+    "tests/browser/render-submission-breakdown.js": "b4a43839f00adf8c79c93486bbbfc1cb77a60761dccb3b201b00b3bf05ead7cd",
+    "tests/worker-tool-visibility.test.js": "9c7d9ee65c00267f29814463aa5eca9065fafe73b94bb4a369de548be090c2f7",
+    "tests/worker-actions.test.js": "5c4720de949d127032c5f0e1ad728b52948dd68e65ab5bacd8aa34757c8f6ba6",
+    "tests/render-submission-breakdown.test.js": "8f467dbd5042d83149378d459b68095efc781236c678ae672fd9c72a97fe8f9f"
+  },
+  "evidence": {
+    "after.png": "364e3b8043c3cc44ced9d0245c1f803cf676dab8880adf916c48baf7d90b1bda",
+    "authored-tool-scales.json": "1b5704a53e07850af474ed35da6f87eeab7ecbfff7620977c416f70761a919d6",
+    "before.png": "0bb60c375b903639cd8fec8b9fdfa7ace33b65af7fb5f7af6084d72390667aff",
+    "benchmark.json": "618debbae405f6efdda5f3e35a0eba8d066064ab1bbd4e1bf9633b74e87c1b09",
+    "build.log.gz": "7e3233877c6442506487709f2e31514512331657878e12f8bf41c21fe6e15359",
+    "README.md": "aa0498eab77c0183a06d77c0de60bd51a7bc78e05bcbd655e82c046059bc58ee",
+    "tests.tap": "f97f10eddb1b85a0ee13fcaa6649c5f48fdc97223d65c1ce9dc792e909f2086b",
+    "visual-repeat.json.gz": "51ecaaf39051fac48134851813ceeb1c38fe1661774b2ec2a314bde4cb19d8ff",
+    "visual.json.gz": "ccc1b495a5a9a4b632a839967d883ceb4d873b5ff89fc1a68551e8f8e6ed6f32"
+  },
+  "medianRows": [
+    {
+      "lot": "A1",
+      "culling": false,
+      "calls": 1730.5,
+      "triangles": 6048399,
+      "renderCpuMs": 50.10000002384186,
+      "frameIntervalMs": 70.69999998807907,
+      "gpuMs": 62.8327855
+    },
+    {
+      "lot": "B1",
+      "culling": true,
+      "calls": 637,
+      "triangles": 5135701,
+      "renderCpuMs": 52.400000005960464,
+      "frameIntervalMs": 74.80000001192093,
+      "gpuMs": 59.978175500000006
+    },
+    {
+      "lot": "B2",
+      "culling": true,
+      "calls": 637,
+      "triangles": 5135701,
+      "renderCpuMs": 52.94999998807907,
+      "frameIntervalMs": 73.59999999403954,
+      "gpuMs": 60.3441915
+    },
+    {
+      "lot": "A2",
+      "culling": false,
+      "calls": 1730.5,
+      "triangles": 6048399,
+      "renderCpuMs": 60.400000005960464,
+      "frameIntervalMs": 81.4500000178814,
+      "gpuMs": 65.06755100000001
+    }
+  ],
+  "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "setupSha256": "de9def6c10925b23a2e3042dc4dedb8330a78133440aceed96ef8e99c605813b",
+  "endSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "visualFrames": [
+    {
+      "step": 151,
+      "before": {
+        "calls": 1749,
+        "triangles": 6202994
+      },
+      "after": {
+        "calls": 561,
+        "triangles": 5170850
+      },
+      "image": {
+        "channels": 5760000,
+        "differentChannels": 96,
+        "maxError": 27
+      }
+    },
+    {
+      "step": 201,
+      "before": {
+        "calls": 1734,
+        "triangles": 6077467
+      },
+      "after": {
+        "calls": 654,
+        "triangles": 5199883
+      },
+      "image": {
+        "channels": 5760000,
+        "differentChannels": 45,
+        "maxError": 19
+      }
+    },
+    {
+      "step": 251,
+      "before": {
+        "calls": 1761,
+        "triangles": 6051698
+      },
+      "after": {
+        "calls": 645,
+        "triangles": 5106602
+      },
+      "image": {
+        "channels": 5760000,
+        "differentChannels": 109,
+        "maxError": 27
+      }
+    },
+    {
+      "step": 301,
+      "before": {
+        "calls": 1739,
+        "triangles": 6023187
+      },
+      "after": {
+        "calls": 677,
+        "triangles": 5155371
+      },
+      "image": {
+        "channels": 5760000,
+        "differentChannels": 126,
+        "maxError": 36
+      }
+    },
+    {
+      "step": 350,
+      "before": {
+        "calls": 1680,
+        "triangles": 5919081
+      },
+      "after": {
+        "calls": 694,
+        "triangles": 5137753
+      },
+      "image": {
+        "channels": 5760000,
+        "differentChannels": 109,
+        "maxError": 124
+      }
+    }
+  ],
+  "tests": {
+    "passed": 62,
+    "failed": 0
+  },
+  "build": "success; Vite large chunk warning remains",
+  "backgroundCampaigns": "Existing frozen campaigns PID 20608 and 36076 remained live; no other own tests/builds ran during timed A/B/B/A.",
+  "manualReview": "Before/after local screenshots inspected; same farm appearance. Reopened native diagnostic PASS, console errors empty. Scope limited to this viewport/farm.",
+  "gzipOriginals": {
+    "worker-hidden-tools/visual.json": {
+      "bytes": 4745254,
+      "sha256": "588791964907d284830a09b4cc13932ca3a693a5fa76225c1c73e03816ea8500",
+      "compressedBytes": 63407
+    },
+    "worker-hidden-tools/visual-repeat.json": {
+      "bytes": 4745634,
+      "sha256": "00517871e287f4fab12605879a043d4a8723bf555c8c31e7215f6444c4e9b2ec",
+      "compressedBytes": 63400
+    }
+  }
+}

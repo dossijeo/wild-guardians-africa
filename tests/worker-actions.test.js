@@ -39,9 +39,13 @@ for(const [profile,library] of Object.entries(libraries))test(`${profile}: Three
   assert.ok(moved,'Native action must change the rig, not leave a bind pose');
   assert.ok(gltf.scene.getObjectByName('Prop_WateringCan').scale.length()>1);
   assert.ok(gltf.scene.getObjectByName('Prop_FruitCrate').scale.length()<.001);
+  assert.equal(gltf.scene.getObjectByName('Prop_WateringCan').visible,true);
+  assert.equal(gltf.scene.getObjectByName('Prop_FruitCrate').visible,false);
   applyWorkerPose(data,{profile,status:'carrying'},null,1,library);
   assert.ok(gltf.scene.getObjectByName('Prop_FruitCrate').scale.length()>1);
   assert.ok(gltf.scene.getObjectByName('Prop_WateringCan').scale.length()<.001);
+  assert.equal(gltf.scene.getObjectByName('Prop_FruitCrate').visible,true);
+  assert.equal(gltf.scene.getObjectByName('Prop_WateringCan').visible,false);
   const crate=nativeCrate(gltf),box=new THREE.Box3().setFromObject(crate),size=box.getSize(new THREE.Vector3());
   assert.ok(size.x>.2&&size.y>.1&&size.z>.2,'Dropped crate must preserve full native geometry');
   assert.ok(Math.abs(box.min.y)<1e-5,'Dropped crate rests on the terrain');

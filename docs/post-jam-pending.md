@@ -82,3 +82,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Primera finca avanzada real renderizada comparada](qa/late-farm-render/README.md): cuatro lotes A/B/B/A, mismas entregas y estado final, 800 muestras CPU/GPU. La simulación mejora pero el render mantiene GPU ~63–64 ms y ~1.731 draw calls/~6,05 millones de triángulos por frame con pases sumados. Intervalos RAF ~84–91 ms; no acredita ganancia grande/general de FPS. Siguiente paso: atribuir el coste por categorías y pases.
+
+
+[Envíos reales atribuidos](qa/late-farm-submissions/README.md) y [herramientas ocultas de trabajadores optimizadas](qa/worker-hidden-tools/README.md): se evita enviar meshes que los clips nativos reducen a escala 1e-5, conservando herramientas activas y recorridos físicos. 62 pruebas, build y cuatro lotes nativos con estado final idéntico; mediana de llamadas 1.731→637 y GPU ~63–65→60 ms en esta finca. Sin mejora estable de FPS acreditada. Pendiente: coste sostenido GPU (cultivos/props/materiales y pases), móvil y aceptación amplia; no considerar terminadas las optimizaciones.
