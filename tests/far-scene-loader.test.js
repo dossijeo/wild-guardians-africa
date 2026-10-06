@@ -12,6 +12,15 @@ test('native worker returns identical scene arrays and detaches all transferred 
  }finally{await worker.terminate();}
 });
 function fake(){return {terminated:0,requests:[],postMessage(v){this.requests.push(v);},terminate(){this.terminated++;}};}
+test('native worker vegetation-only protocol returns the same trees with no ground transfers',async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
+ const request={config:{seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)},profile:pack.profile,treeBounds:{minX:-180,maxX:180,minZ:-230,maxZ:48},treesOnly:true};
+ const worker=new Worker(new URL('./fixtures/far-scene-worker-node.mjs',import.meta.url));
+ try{
+  const messages=await new Promise((resolve,reject)=>{const received=[];worker.on('error',reject);worker.on('message',v=>{received.push(v);if(received.length===2)resolve(received);});worker.postMessage(request);});
+  assert.deepEqual(messages[0].data,buildFarSceneData(request));assert.equal(messages[0].data.trees.length,112);assert.equal(messages[0].data.ground,null);assert.deepEqual(messages[1].lengths,[]);
+ }finally{await worker.terminate();}
+});
 test('loader resolves once and releases worker handlers on success',async()=>{
  const worker=fake(),promise=loadFarSceneData({seed:1},{workerFactory:()=>worker}),late=worker.onmessage;
  late({data:{data:{trees:[]},buildMs:1}});late({data:{error:'late'}});

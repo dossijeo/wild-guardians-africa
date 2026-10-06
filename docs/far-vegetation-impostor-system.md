@@ -207,3 +207,12 @@ La perspectiva atmosférica reduce contraste/saturación e integra los colores c
 Comparación opcional de normales: [evidencia y límites](qa/far-normal-lighting/README.md). No acreditó coste nulo; se conserva únicamente como referencia experimental.
 
 Aclaración del usuario: el sol del juego conserva dirección fija; únicamente cambia la fase día/noche. La limitación del atlas de una sola orientación es el giro procedural del árbol frente a ese sol, no un movimiento solar. Probar atlas con filas de orientación mundial y columnas de vista relativa para ambas fases, y elegir cantidad/resolución tras medir tamaño y GPU.
+
+
+## Capa regional para la integración nativa (6 de octubre)
+
+`tools/experiments/native-far-layer.js` coordina el worker, los billboards y la cobertura nativa. Todavía no se instancia desde WorldScene: no acredita integración en gameplay. Recibe la escena, el prototipo y texturas prestadas, metadatos y una función explícita de preparación GPU. La región anterior permanece visible hasta completar la preparación de la nueva; resultados obsoletos o fallidos no sustituyen esa región. Se conservan IDs, anclajes anisótropos, estado de transición y supresiones. Al descartarse, restaura la cobertura de color nativa sin modificar la obstrucción lógica y no destruye recursos prestados.
+
+Las consultas `treesOnly` conservan exactamente la generación de acacias, pero omiten los buffers de posiciones, colores e índices del terreno lejano. El worker real confirma 112 árboles idénticos en la región de referencia y cero buffers de suelo transferidos. La receta existente con terreno sigue funcionando.
+
+Validación: 22 pruebas de capa regional, worker, cancelación, cobertura CPU/GPU, reemplazo y limpieza. Falta conectar el ciclo de render de WorldScene, preparar las generaciones GPU durante streaming, comprobar las sombras/obstrucción y realizar la prueba visual en partida. No activar todos los biomas antes de validar Sabana.
