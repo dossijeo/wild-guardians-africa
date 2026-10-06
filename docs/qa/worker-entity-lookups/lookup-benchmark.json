@@ -1,0 +1,110 @@
+{
+  "node": "v20.11.0",
+  "scope": "Synthetic read-only lookup passes: crop, crate and task IDs near the end of historical arrays, plus unassigned task IDs. Ten warmup pairs and ten measured pairs, alternating order. Collections and inputs prepared outside timing; per-update lookup creation/indexing included. Results deep-equal. No terrain, gameplay tick, FPS, GPU, RAM, mobile or campaign claim.",
+  "scenarios": [
+    {
+      "historyPerCropCrateCollection": 32,
+      "workers": 8,
+      "scopeRepeatsPerSample": 100,
+      "samples": [
+        {
+          "reference": 0.008943000000000012,
+          "indexed": 0.009885000000000019
+        },
+        {
+          "indexed": 0.006345000000000028,
+          "reference": 0.008478000000000065
+        },
+        {
+          "reference": 0.008269999999999982,
+          "indexed": 0.006972999999999984
+        },
+        {
+          "indexed": 0.006675999999999931,
+          "reference": 0.008586000000000099
+        },
+        {
+          "reference": 0.008353000000000037,
+          "indexed": 0.008275000000000006
+        },
+        {
+          "indexed": 0.006285999999999916,
+          "reference": 0.008307999999999965
+        },
+        {
+          "reference": 0.006491000000000042,
+          "indexed": 0.0042329999999999755
+        },
+        {
+          "indexed": 0.0061020000000000605,
+          "reference": 0.0073499999999999946
+        },
+        {
+          "reference": 0.008089999999999976,
+          "indexed": 0.0042300000000000185
+        },
+        {
+          "indexed": 0.003825999999999965,
+          "reference": 0.00514400000000009
+        }
+      ],
+      "medianMs": {
+        "reference": 0.008288999999999973,
+        "indexed": 0.006315499999999972
+      },
+      "indexedWins": 9
+    },
+    {
+      "historyPerCropCrateCollection": 14558,
+      "workers": 114,
+      "scopeRepeatsPerSample": 10,
+      "samples": [
+        {
+          "reference": 27.101049999999987,
+          "indexed": 4.078369999999995
+        },
+        {
+          "indexed": 4.29722999999999,
+          "reference": 28.400279999999974
+        },
+        {
+          "reference": 24.97854000000002,
+          "indexed": 3.9458300000000235
+        },
+        {
+          "indexed": 4.103870000000052,
+          "reference": 26.541869999999925
+        },
+        {
+          "reference": 28.830130000000008,
+          "indexed": 4.047389999999996
+        },
+        {
+          "indexed": 4.423119999999926,
+          "reference": 28.016340000000035
+        },
+        {
+          "reference": 27.884010000000035,
+          "indexed": 4.166060000000016
+        },
+        {
+          "indexed": 4.090819999999985,
+          "reference": 29.870780000000014
+        },
+        {
+          "reference": 26.396599999999943,
+          "indexed": 4.342689999999948
+        },
+        {
+          "indexed": 3.7882700000000114,
+          "reference": 26.99882000000007
+        }
+      ],
+      "medianMs": {
+        "reference": 27.49253000000001,
+        "indexed": 4.0973450000000184
+      },
+      "indexedWins": 10
+    }
+  ]
+}

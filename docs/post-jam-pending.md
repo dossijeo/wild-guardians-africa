@@ -67,3 +67,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 ## Coste de colas con historial grande
 
 [Mantenimiento de tareas bloqueadas optimizado](qa/busy-task-targets/README.md): 65 pruebas dirigidas y 15.600 pasos nativos equivalentes en seis biomas. Mediana aislada sintética de 130,88 a 2,59 ms; no acredita FPS ni resuelve los picos de A* pendientes. Las campañas largas ya iniciadas conservan sus fuentes congeladas.
+
+
+[Búsquedas de entidades por trabajador optimizadas](qa/worker-entity-lookups/README.md): índices locales solo para consultas repetidas en colecciones grandes, 68 pruebas y 15.600 pasos nativos equivalentes, trayectoria integrada idéntica. Mediana sintética grande de 27,49 a 4,10 ms; sin mejora global significativa acreditada para la finca pequeña ni medidas de FPS/RAM/móvil.

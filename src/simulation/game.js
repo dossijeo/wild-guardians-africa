@@ -12,6 +12,7 @@ import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
+import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
@@ -430,6 +431,7 @@ function reserveAvailableTasks(s,nav){
   });
 }
 function updateWorkers(s,dt,nav) {
+  const findPlant=workerEntityLookup(()=>s.plants),findCrate=workerEntityLookup(()=>s.crates),findTask=workerEntityLookup(()=>s.tasks);
   const newArrivals=[];
   if(!s.raid&&s.time<300)for(const w of s.workers){
     if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
@@ -457,10 +459,10 @@ function updateWorkers(s,dt,nav) {
     if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;continue;}
     if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&urgentWork(s,w)}})){w.status='idle';w.raidReturn=false;}continue;}
     if(w.status==='carrying') {
-      const crate=s.crates.find(c=>c.id===w.crateId);
+      const crate=findCrate(w.crateId);
       if(!crate){w.crateId=null;w.status='idle';continue;}
       if(w.deliveryApproach?.crateId!==crate.id||w.deliveryApproach?.centerId!==center.id||!Number.isFinite(w.deliveryApproach?.x)||!Number.isFinite(w.deliveryApproach?.z)){
-        const source=s.plants.find(p=>p.id===crate.sourcePlantId)??crate;
+        const source=findPlant(crate.sourcePlantId)??crate;
         w.deliveryApproach={...centerDeliveryPoint(center,source,s),crateId:crate.id,centerId:center.id};w.path=null;
       }
       const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
@@ -471,14 +473,14 @@ function updateWorkers(s,dt,nav) {
       }
       continue;
     }
-    const t=s.tasks.find(t=>t.id===w.taskId);
+    const t=findTask(w.taskId);
     if(!t) {
       if(w.status!=='idle')w.status='idle';
       if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
       else updateIdle(w,idleFarmAnchor(s,w,center),dt,nav,s.seed,s.structures);
       continue;
     }
-    const target=s.plants.find(e=>e.id===t.targetId)??s.crates.find(e=>e.id===t.targetId)??s.structures.find(e=>e.id===t.targetId);
+    const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
     if(!target || ('alive' in target&&!target.alive)) {s.tasks=s.tasks.filter(q=>q.id!==t.id);w.taskId=null;w.status='idle';w.path=null;continue;}
     if(w.status==='walking') {
       let destination=target;
