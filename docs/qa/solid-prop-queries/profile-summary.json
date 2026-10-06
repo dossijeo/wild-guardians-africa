@@ -1,0 +1,125 @@
+{
+  "scope": "Single instrumented CPU profile including trace serialization and hashing; self time only. Not an uninstrumented frametime measurement. Diagnostic used to select the candidate.",
+  "selfTimes": [
+    {
+      "function": "serialize",
+      "file": "snapshots.js",
+      "line": 65,
+      "selfMs": 4256.95
+    },
+    {
+      "function": "",
+      "file": "game.js",
+      "line": 558,
+      "selfMs": 1565.06
+    },
+    {
+      "function": "testWalkable",
+      "file": "navigation.js",
+      "line": 125,
+      "selfMs": 564.71
+    },
+    {
+      "function": "propsAt",
+      "file": "navigation.js",
+      "line": 40,
+      "selfMs": 391.9
+    },
+    {
+      "function": "lattice",
+      "file": "terrain.js",
+      "line": 411,
+      "selfMs": 359.4
+    },
+    {
+      "function": "(garbage collector)",
+      "file": "",
+      "line": 0,
+      "selfMs": 342.32
+    },
+    {
+      "function": "push",
+      "file": "search-frontier.js",
+      "line": 8,
+      "selfMs": 326.73
+    },
+    {
+      "function": "update",
+      "file": "hash",
+      "line": 96,
+      "selfMs": 158.24
+    },
+    {
+      "function": "fluidInside",
+      "file": "terrain.js",
+      "line": 420,
+      "selfMs": 137.07
+    },
+    {
+      "function": "terrainValid",
+      "file": "navigation.js",
+      "line": 106,
+      "selfMs": 132.66
+    },
+    {
+      "function": "sweptFootprintDistance",
+      "file": "footprints.js",
+      "line": 19,
+      "selfMs": 95.84
+    },
+    {
+      "function": "findPathSteps",
+      "file": "navigation.js",
+      "line": 254,
+      "selfMs": 90.35
+    },
+    {
+      "function": "slope",
+      "file": "terrain.js",
+      "line": 419,
+      "selfMs": 89.14
+    },
+    {
+      "function": "validateSnapshot",
+      "file": "snapshots.js",
+      "line": 6,
+      "selfMs": 88.37
+    },
+    {
+      "function": "tickScoped",
+      "file": "game.js",
+      "line": 560,
+      "selfMs": 82.58
+    },
+    {
+      "function": "surface",
+      "file": "terrain.js",
+      "line": 412,
+      "selfMs": 77.83
+    },
+    {
+      "function": "segmentClear",
+      "file": "navigation.js",
+      "line": 331,
+      "selfMs": 63.68
+    },
+    {
+      "function": "edgeDistance",
+      "file": "footprints.js",
+      "line": 9,
+      "selfMs": 63.55
+    },
+    {
+      "function": "segmentDistance",
+      "file": "footprints.js",
+      "line": 14,
+      "selfMs": 47.87
+    },
+    {
+      "function": "updateWorkers",
+      "file": "game.js",
+      "line": 432,
+      "selfMs": 43.05
+    }
+  ]
+}
