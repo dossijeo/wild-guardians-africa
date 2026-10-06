@@ -1,0 +1,22 @@
+{
+  "base": "6924ce6",
+  "sourceSha256": {
+    "tests/browser/late-farm-render.html": "d0018f994551d527ca213da66fb9bd21dbfc84278853fd86b87479a019865fe2",
+    "tests/browser/crop-frustum.js": "0f33e77ba838ee4df2dde53d9c1050ec6421068bbbf856902bb2fae7071384e4",
+    "src/rendering/crop-batch.js": "e289f5d25c1ea9c8ed1dd46d4deca92a980ceef29780460c373a7c24829a71cd",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "src/rendering/shadow-cache.js": "5a9e45d306482b7c22bd350215d9aa37fe48e4cc91ab369697babc8051add7b3",
+    "src/rendering/native-shadow.js": "3fadd82d2e4dd37b25d07d99539302ae661ce92ae62636ad93665741d5729aa8"
+  },
+  "evidenceSha256": {
+    "STATIC.md": "a61acba612ad47052cdb21eef7fbacf76ef94651898abdbd7ccd32fdd101791b",
+    "static-first.json": "64bd808831f2d6c4c75a05cccae82b21a51a673aea55e421dfacc5d27d2a6eb5",
+    "static-repeat.json": "02f27750fab603c0be3c324688fe840d466d143014a83e70117155f6e48b13e6",
+    "static-repeat.png": "765d212bcc92d82af06db7fc9bcff19804bcd8379755cdde7f45aa50729c72dd"
+  },
+  "sequence": "A/A/B/B/A repeated at fixed logical state and camera",
+  "pixelsPerRead": 1440000,
+  "logicalSha256": "c6cd4533687b41c35d494e322c8f82ab0e613544819fe0f8d7c1ded224300fdd",
+  "productionChanged": false,
+  "conclusion": "No differences in original-to-candidate pair in either sequence; second sequence all identical. Tiny initial repeat differences retained, cause not isolated. No broad visual/mobile/performance acceptance."
+}

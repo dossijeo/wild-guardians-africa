@@ -114,3 +114,17 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Envolventes de morph verificadas en GPU](qa/crop-frustum-prototype/GPU.md): 16,48 millones de posiciones de 40 originales y 32 bridges con hooks nativos, dentro de tolerancia 1e-4; no prueba todas las combinaciones ni el pipeline completo. [Cuatro lotes con cámara cercana](qa/crop-frustum-prototype/NEAR.md) reducen diez llamadas/0,62 % de triángulos, sin ganancia GPU consistente en los pares. Candidato todavía fuera del producto; pendientes diferencias de imagen, vistas laterales/centradas en cultivos y agrupación espacial/coste.
+
+
+[Repetibilidad de imagen del descarte de cultivos](qa/crop-frustum-prototype/STATIC.md): dos secuencias A/A/B/B/A con lectura directa de 1,44 millones de píxeles, sin diferencias al pasar original→candidato y repetición completa idéntica. Se conservan diferencias iniciales de 2–10 píxeles sin atribuir su causa. No acredita otras vistas/móvil/FPS; candidato sigue fuera de producción por beneficio pequeño/no consistente. Campaña de margen viva al día 62, sin resultado terminal.
+
+
+## Protección de cámara en primeros planos (pedido el 6 de octubre de 2026)
+
+- Seguir la [especificación independiente de protección de cámara](camera-close-protection-post-jam.md), junto a distancia de dibujado/impostores/horizonte pero sin confundir sus objetivos.
+- Evitar penetraciones y ampliaciones problemáticas con soft collision y volúmenes de exclusión finitos, márgenes contextuales por categoría/modelo y desaceleración suave.
+- Conservar360°, desplazamiento, zoom, inclinación y sobrevuelo. No aumentar simplemente una distancia mínima global ni crear columnas/paredes invisibles.
+- Fade temporal solo como último recurso; ajustar distancias experimentalmente, revisar varios assets/culturas y medir coste en desktop/móvil.
+- Contemplar cámara/objetivo dentro de volúmenes, streaming, construcción/destrucción, Volver/continuar/incursiones y gestos rápidos/simultáneos.
+
+Estado: registrado y pendiente de implementación; abordarlo cuando sea posible sin desplazar prioridades actuales.
