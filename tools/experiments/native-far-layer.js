@@ -7,19 +7,20 @@ import {createFarImpostorPrototype} from './far-impostor-prototype.js';
 // Regional billboard ownership; native geometry and atlas textures are borrowed.
 // Call after native CPU packing and supply coverage with verified GPU completion.
 export class NativeFarLayer {
- constructor({scene,source,texture,metadata,options={},stream=new FarSceneStream(),prepare,create=createFarImpostorPrototype}){
+ constructor({scene,source,texture,metadata,options={},stream=new FarSceneStream(),prepare,create=createFarImpostorPrototype,treesOnly=true,attachData=()=>{}}){
   if(typeof prepare!=='function')throw Error('Explicit GPU preparation is required');
   this.scene=scene;this.source=source;this.texture=texture;this.metadata=metadata;this.options=options;this.stream=stream;this.prepare=prepare;this.create=create;
+  this.treesOnly=treesOnly;this.attachData=attachData;
   this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,options);this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;
  }
  async request(key,request){
   if(this.closed)return null;
   if(this.current?.key===key&&!this.stream.pending)return this.current;
-  const epoch=++this.epoch,result=await this.stream.request(key,{...request,treesOnly:true});
+  const epoch=++this.epoch,result=await this.stream.request(key,{...request,treesOnly:this.treesOnly});
   if(this.closed||epoch!==this.epoch||!result)return null;
   const trees=result.data.trees.map(tree=>treeAtlasAnchor(tree,this.metadata.localBase));
   const candidate=this.create(this.source,this.texture,this.metadata,trees,{...this.options,nativeModels:false});
-  try{await this.prepare(candidate,()=>this.closed||epoch!==this.epoch);}
+  try{this.attachData(candidate,result.data);await this.prepare(candidate,()=>this.closed||epoch!==this.epoch);}
   catch(error){candidate.dispose({disposeTexture:false});if(this.closed||epoch!==this.epoch)return null;throw error;}
   if(this.closed||epoch!==this.epoch){candidate.dispose({disposeTexture:false});return null;}
   const previous=this.current;

@@ -216,3 +216,10 @@ Aclaración del usuario: el sol del juego conserva dirección fija; únicamente 
 Las consultas `treesOnly` conservan exactamente la generación de acacias, pero omiten los buffers de posiciones, colores e índices del terreno lejano. El worker real confirma 112 árboles idénticos en la región de referencia y cero buffers de suelo transferidos. La receta existente con terreno sigue funcionando.
 
 Validación: 22 pruebas de capa regional, worker, cancelación, cobertura CPU/GPU, reemplazo y limpieza. Falta conectar el ciclo de render de WorldScene, preparar las generaciones GPU durante streaming, comprobar las sombras/obstrucción y realizar la prueba visual en partida. No activar todos los biomas antes de validar Sabana.
+
+
+### Conexión optativa con WorldScene
+
+La prueba `tests/browser/far-native-world.html` ya conecta el adaptador regional con el WorldScene real de Sabana. Los callbacks de actualización/descarte permanecen inactivos en partidas normales. La prueba valida carga de regiones, preparación GPU, supresiones y limpieza; no constituye aprobación visual del horizonte. [Evidencia y limitaciones](qa/far-native-world/README.md).
+
+La cobertura GPU usa únicamente los chunks dentro del frustum de color y debe ignorar cambios de versiones causados por el propio crossfade para evitar bucles. Los cambios estructurales, de material, anclaje de render y packing nativo sí invalidan la preparación. El suelo regional de baja resolución es necesario en Sabana; los billboards por sí solos dejan árboles contra el cielo donde ya no existe terreno residente. Falta afinar su alineación, color y bruma antes de habilitar el sistema en gameplay.
