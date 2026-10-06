@@ -1,0 +1,814 @@
+{
+  "renderOrigin": {
+    "x": 0,
+    "z": 0
+  },
+  "camera": [
+    0,
+    10,
+    25
+  ],
+  "gpuReady": true,
+  "prepareMs": 526.5999999642372,
+  "preparedTextures": 6,
+  "preparation": {
+    "elapsedMs": 526.3000000119209,
+    "textures": 6,
+    "textureBatches": 6,
+    "maxTextureBatchCount": 1,
+    "maxTextureBatchMs": 251.5,
+    "textureUploads": [
+      {
+        "index": 0,
+        "width": 2048,
+        "height": 256,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0
+      },
+      {
+        "index": 1,
+        "width": 1024,
+        "height": 1024,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0.09999996423721313
+      },
+      {
+        "index": 2,
+        "width": 1024,
+        "height": 1024,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 0.10000002384185791
+      },
+      {
+        "index": 3,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "srgb",
+        "decodeMs": 0,
+        "cpuMs": 114.39999997615814
+      },
+      {
+        "index": 4,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "",
+        "decodeMs": 0,
+        "cpuMs": 251.5
+      },
+      {
+        "index": 5,
+        "width": 2048,
+        "height": 2048,
+        "imageType": "HTMLImageElement",
+        "mipmaps": true,
+        "colorSpace": "",
+        "decodeMs": 0,
+        "cpuMs": 103.59999996423721
+      }
+    ]
+  },
+  "bitmapConversions": [],
+  "comparison": {
+    "pattern": "ABBAABBA",
+    "bitmapYieldBetweenConversions": true,
+    "done": true,
+    "lots": [
+      {
+        "mode": "HTML",
+        "totalMs": 610.6999999880791,
+        "conversionMs": 0,
+        "preparation": {
+          "elapsedMs": 608,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 259.5999999642372,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.19999998807907104
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 125.30000001192093
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 259.5
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 115.5
+            }
+          ]
+        },
+        "frameIntervals": [
+          16.699999999999818,
+          16.699999999999818,
+          16.600000000000364,
+          116.39999999999964,
+          266,
+          133.10000000000036,
+          16.5,
+          16.799999999999272,
+          16.5
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Bitmap",
+        "totalMs": 579.6999999880791,
+        "conversionMs": 405.49999994039536,
+        "preparation": {
+          "elapsedMs": 136.89999997615814,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 26.100000023841858,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.09999996423721313
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 23.099999964237213
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 26.100000023841858
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.30000001192093
+            }
+          ]
+        },
+        "frameIntervals": [
+          83.09999999999945,
+          249.40000000000055,
+          99.79999999999927,
+          16.600000000000364,
+          16.699999999999818,
+          16.600000000000364,
+          16.599999999999454,
+          33.20000000000073,
+          16.699999999999818,
+          16.800000000000182
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Bitmap",
+        "totalMs": 553.3999999761581,
+        "conversionMs": 408.9000000357628,
+        "preparation": {
+          "elapsedMs": 131.4000000357628,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 25.30000001192093,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 22.30000001192093
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.19999998807907
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.299999952316284
+            }
+          ]
+        },
+        "frameIntervals": [
+          99.80000000000018,
+          232.80000000000018,
+          83.19999999999982,
+          16.5,
+          16.699999999999818,
+          16.699999999999818,
+          16.600000000000364,
+          33.19999999999982,
+          16.700000000000728,
+          16.899999999999636
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "HTML",
+        "totalMs": 535.3999999761581,
+        "conversionMs": 0,
+        "preparation": {
+          "elapsedMs": 534.5,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 245.39999997615814,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 113.19999998807907
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 245.39999997615814
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 115.89999997615814
+            }
+          ]
+        },
+        "frameIntervals": [
+          16.700000000000728,
+          16.5,
+          16.69999999999891,
+          99.70000000000073,
+          249.5,
+          133.10000000000036
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "HTML",
+        "totalMs": 550.6000000238419,
+        "conversionMs": 0,
+        "preparation": {
+          "elapsedMs": 549.8999999761581,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 247,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 115.40000003576279
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 247
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 109.29999995231628
+            }
+          ]
+        },
+        "frameIntervals": [
+          16.799999999999272,
+          16.399999999999636,
+          16.80000000000109,
+          116.29999999999927,
+          249.39999999999964,
+          133
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Bitmap",
+        "totalMs": 584.3999999761581,
+        "conversionMs": 397.69999998807907,
+        "preparation": {
+          "elapsedMs": 151.5999999642372,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 30.69999998807907,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 26.19999998807907
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 30.599999964237213
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 25.30000001192093
+            }
+          ]
+        },
+        "frameIntervals": [
+          83.10000000000036,
+          232.79999999999927,
+          99.70000000000073,
+          16.599999999998545,
+          16.700000000000728,
+          16.600000000000364,
+          33.399999999999636,
+          33.29999999999927,
+          33.400000000001455
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "Bitmap",
+        "totalMs": 539.1000000238419,
+        "conversionMs": 393.9000000357628,
+        "preparation": {
+          "elapsedMs": 125.40000003576279,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 24.600000023841858,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 20.400000035762787
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "ImageBitmap",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 24.600000023841858
+            }
+          ]
+        },
+        "frameIntervals": [
+          99.79999999999927,
+          232.8000000000011,
+          83.19999999999891,
+          16.5,
+          16.700000000000728,
+          16.600000000000364,
+          16.799999999999272,
+          16.600000000000364,
+          33.20000000000073,
+          16.69999999999891
+        ],
+        "programs": 3,
+        "webglError": 0
+      },
+      {
+        "mode": "HTML",
+        "totalMs": 526.5999999642372,
+        "conversionMs": 0,
+        "preparation": {
+          "elapsedMs": 526.3000000119209,
+          "textures": 6,
+          "textureBatches": 6,
+          "maxTextureBatchCount": 1,
+          "maxTextureBatchMs": 251.5,
+          "textureUploads": [
+            {
+              "index": 0,
+              "width": 2048,
+              "height": 256,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0
+            },
+            {
+              "index": 1,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.09999996423721313
+            },
+            {
+              "index": 2,
+              "width": 1024,
+              "height": 1024,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 0.10000002384185791
+            },
+            {
+              "index": 3,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "srgb",
+              "decodeMs": 0,
+              "cpuMs": 114.39999997615814
+            },
+            {
+              "index": 4,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 251.5
+            },
+            {
+              "index": 5,
+              "width": 2048,
+              "height": 2048,
+              "imageType": "HTMLImageElement",
+              "mipmaps": true,
+              "colorSpace": "",
+              "decodeMs": 0,
+              "cpuMs": 103.59999996423721
+            }
+          ]
+        },
+        "frameIntervals": [
+          16.600000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          99.70000000000073,
+          266.2999999999993,
+          116.20000000000073
+        ],
+        "programs": 3,
+        "webglError": 0
+      }
+    ]
+  },
+  "state": {
+    "ready": 1,
+    "enabled": true
+  },
+  "activeTransitions": 0,
+  "nativePacked": true,
+  "gpuCovered": true,
+  "nativeColorCoverage": [
+    {
+      "count": 1,
+      "coverage": 1
+    },
+    {
+      "count": 0,
+      "coverage": 1
+    },
+    {
+      "count": 0,
+      "coverage": 1
+    }
+  ],
+  "mergedColorGroups": 1,
+  "prototype": {
+    "selectionScans": 1,
+    "matrixUploads": 1,
+    "readinessRevision": 76,
+    "readinessUploads": 76
+  },
+  "nativeFadeScans": 76,
+  "programs": 3,
+  "drawCalls": 3,
+  "webglError": 0,
+  "errors": []
+}

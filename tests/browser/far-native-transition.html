@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Transición nativa de acacia</title>
 <style>body{margin:0;overflow:hidden;font:14px system-ui}header{position:absolute;z-index:1;background:#fff9de;padding:12px;max-width:370px;max-height:90vh;overflow:auto}button{padding:9px}pre{font-size:11px;white-space:pre-wrap}canvas{display:block}</style>
-<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="hide" disabled>Ocultar/restaurar árbol</button><label><input id="decode" type="checkbox">Decodificar imágenes antes (QA)</label><label><input id="bitmap" type="checkbox">ImageBitmap nativo (QA)</label><button id="rebase">Recentrar origen</button><p><label>Distancia <select id="distance"><option>25</option><option>40</option><option>50</option><option>60</option><option>100</option></select></label></p><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
+<header><strong>Lote nativo + impostor precocinado</strong><p>Prueba aislada, sin gameplay. La preparación GPU requiere una acción explícita.</p><button id="prepare" disabled>Preparar GPU</button><button id="compare" disabled>Comparar HTML / Bitmap ABBA</button><button id="hide" disabled>Ocultar/restaurar árbol</button><label><input id="decode" type="checkbox">Decodificar imágenes antes (QA)</label><label><input id="bitmap" type="checkbox">ImageBitmap nativo (QA)</label><button id="rebase">Recentrar origen</button><p><label>Distancia <select id="distance"><option>25</option><option>40</option><option>50</option><option>60</option><option>100</option></select></label></p><p id="status">Cargando…</p><pre id="report"></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
 import {Assets,json} from '../../src/rendering/assets.js';
@@ -19,7 +19,7 @@ import {FarTreeTransitions} from '../../tools/experiments/far-tree-transitions.j
 const canvas=document.querySelector('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:true}),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,500),assets=new Assets(),toon=new AfricanToon(),errors=[],status=document.querySelector('#status'),report=document.querySelector('#report');
 renderer.setPixelRatio(1);renderer.debug.onShaderError=()=>errors.push('Shader compilation failed');scene.background=new THREE.Color('#b5d9e8');scene.fog=new THREE.Fog('#b5d9e8',30,300);camera.position.set(0,10,25);camera.lookAt(0,3,0);
 const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-30,55,25);scene.add(sun,new THREE.HemisphereLight('#ebf1d9','#765b3b',2));toon.update(0,sun,'sabana');
-let prototype,levels=[],group,groups,coverage,prepared,fade,controller,ground,dead=false,gpuReady=false,hidden=false,last=performance.now(),lastReport=0,prepareMs=null,preparedTextures=0,preparation=null,bitmapConversions=[];const bitmapResources=[],chunks=new Map(),origin={x:0,z:0};
+let prototype,levels=[],group,groups,coverage,prepared,fade,controller,ground,dead=false,gpuReady=false,hidden=false,last=performance.now(),lastReport=0,prepareMs=null,preparedTextures=0,preparation=null,bitmapConversions=[],profiling=false,comparison=null,lotFrameIntervals=null;const bitmapResources=[],chunks=new Map(),origin={x:0,z:0};
 document.querySelector("#rebase").onclick=()=>{origin.x=origin.x?0:192;origin.z=origin.z?0:144;};
 try{
  const metadata=await json('/docs/qa/far-vegetation-atlas/acacia.json'),pack=await json('/content/biome-savanna.json');levels=(await assets.biome({...pack,assets:pack.assets.slice(0,1)}))[0];for(const source of levels)toon.material(source.material);
@@ -31,17 +31,36 @@ try{
  document.querySelector('#prepare').disabled=false;document.querySelector('#hide').disabled=false;
  document.querySelector('#hide').onclick=()=>{hidden=!hidden;controller.setSuppressions(new Set(hidden?[tree.id]:[]));};
  document.querySelector('#distance').onchange=event=>{camera.position.z=Number(event.target.value);camera.lookAt(0,3,0);};
- document.querySelector('#prepare').onclick=async()=>{
+ async function prepare(){
   document.querySelector('#prepare').disabled=true;gpuReady=false;controller.setCoverage(prepared,false);const snapshot=prepared.capture(),begin=performance.now();status.textContent='Preparando recursos GPU…';
   try{
-   if(document.querySelector("#bitmap").checked&&!bitmapResources.length){const nativeTextures=new Set(levels.flatMap(source=>Object.values(source.material).filter(value=>value?.isTexture)));for(const t of nativeTextures){const conversion=await textureImageBitmap(t,{cancelled:()=>dead});bitmapResources.push(conversion);bitmapConversions.push({elapsedMs:conversion.elapsedMs,width:conversion.width,height:conversion.height});}}
+   if(document.querySelector("#bitmap").checked&&!bitmapResources.length){const nativeTextures=new Set(levels.flatMap(source=>Object.values(source.material).filter(value=>value?.isTexture)));for(const t of nativeTextures){const conversion=await textureImageBitmap(t,{cancelled:()=>dead});bitmapResources.push(conversion);bitmapConversions.push({elapsedMs:conversion.elapsedMs,width:conversion.width,height:conversion.height});await new Promise(resolve=>requestAnimationFrame(resolve));}}
    const textures=new Set([texture,prelit.day,prelit.night]);for(const source of levels)for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);preparedTextures=textures.size;
    preparation=await prepareNativeFarGpu(renderer,groups.root,scene,camera,textures,{cancelled:()=>dead,decodeImages:document.querySelector("#decode").checked});if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;prepared.complete(snapshot);scene.add(groups.root);gpuReady=true;controller.setCoverage(prepared,true);
-  }catch(error){errors.push(String(error));status.textContent='Error de preparación';}finally{if(!dead)document.querySelector('#prepare').disabled=false;}
+  }catch(error){errors.push(String(error));status.textContent='Error de preparación';}finally{if(!dead)document.querySelector('#prepare').disabled=profiling;}
+ }
+ document.querySelector('#prepare').onclick=prepare;
+ document.querySelector('#compare').disabled=false;
+ document.querySelector('#compare').onclick=async()=>{
+  if(profiling)return;profiling=true;comparison={pattern:'ABBAABBA',bitmapYieldBetweenConversions:true,done:false,lots:[]};document.querySelectorAll('button,input,select').forEach(control=>control.disabled=true);
+  try{
+   const nativeTextures=new Set(levels.flatMap(source=>Object.values(source.material).filter(value=>value?.isTexture)));
+   for(const mode of ['HTML','Bitmap','Bitmap','HTML','HTML','Bitmap','Bitmap','HTML']){
+    if(dead)return;gpuReady=false;controller.setCoverage(prepared,false);groups.root.removeFromParent();
+    for(const conversion of bitmapResources.splice(0))conversion.release();bitmapConversions=[];
+    for(const t of nativeTextures)t.dispose();
+    document.querySelector('#bitmap').checked=mode==='Bitmap';document.querySelector('#decode').checked=false;
+    lotFrameIntervals=[];await prepare();if(errors.length)throw Error('Preparation lot failed');
+    comparison.lots.push({mode,totalMs:prepareMs,conversionMs:bitmapConversions.reduce((sum,value)=>sum+value.elapsedMs,0),preparation,frameIntervals:lotFrameIntervals,programs:renderer.info.programs.length,webglError:renderer.getContext().getError()});lotFrameIntervals=null;
+    await new Promise(resolve=>requestAnimationFrame(resolve));
+   }
+   comparison.done=true;
+  }catch(error){errors.push(String(error));comparison.error=String(error);}
+  finally{profiling=false;lotFrameIntervals=null;if(!dead)document.querySelectorAll('button,input,select').forEach(control=>control.disabled=false);}
  };
- function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.width!==innerWidth||canvas.height!==innerHeight){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+ function frame(now){if(dead)return;if(lotFrameIntervals)lotFrameIntervals.push(now-last);const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.width!==innerWidth||canvas.height!==innerHeight){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
   updateAssetLods(chunks,camera,'media');coverage.update(chunks);prepared.update();controller.setCoverage(prepared,gpuReady);controller.advance(dt);prototype.update(camera,origin);fade.update(chunks,camera,id=>prototype.treeState(id),prototype.stats().readinessRevision);groups.update(chunks,camera,origin);toon.uniforms.uWorldOrigin.value.set(origin.x,origin.z);withRenderOrigin({scene,camera,origin},()=>renderer.render(scene,camera));
-  if(now-lastReport>200){lastReport=now;const state=prototype.treeState(tree.id);status.textContent=gpuReady?'GPU preparada':'GPU retenida';report.textContent=JSON.stringify({renderOrigin:origin,camera:camera.position.toArray(),gpuReady,prepareMs,preparedTextures,preparation,bitmapConversions,state,activeTransitions:controller.active.size,nativePacked:coverage.has(tree.id),gpuCovered:prepared.has(tree.id),nativeColorCoverage:group.userData.lodBatches[0].meshes.map(m=>({count:m.count,coverage:m.geometry.attributes.nativeVisibility?.getX(0)})),mergedColorGroups:groups.colors.size,prototype:prototype.stats(),nativeFadeScans:fade.scans,programs:renderer.info.programs.length,drawCalls:renderer.info.render.calls,webglError:renderer.getContext().getError(),errors},null,2);}requestAnimationFrame(frame);
+  if(now-lastReport>200){lastReport=now;const state=prototype.treeState(tree.id);status.textContent=gpuReady?'GPU preparada':'GPU retenida';report.textContent=JSON.stringify({renderOrigin:origin,camera:camera.position.toArray(),gpuReady,prepareMs,preparedTextures,preparation,bitmapConversions,comparison,state,activeTransitions:controller.active.size,nativePacked:coverage.has(tree.id),gpuCovered:prepared.has(tree.id),nativeColorCoverage:group.userData.lodBatches[0].meshes.map(m=>({count:m.count,coverage:m.geometry.attributes.nativeVisibility?.getX(0)})),mergedColorGroups:groups.colors.size,prototype:prototype.stats(),nativeFadeScans:fade.scans,programs:renderer.info.programs.length,drawCalls:renderer.info.render.calls,webglError:renderer.getContext().getError(),errors},null,2);}requestAnimationFrame(frame);
  }requestAnimationFrame(frame);
 }catch(error){errors.push(String(error));status.textContent='ERROR';report.textContent=JSON.stringify({errors});}
 addEventListener('pagehide',()=>{dead=true;for(const r of bitmapResources)r.release();controller?.clear();prepared?.clear();coverage?.clear();groups?.dispose();for(const b of group?.userData.lodBatches??[]){b.shadow.dispose();for(const mesh of b.meshes){mesh.dispose();if(mesh.geometry!==b.levels[0].geometry)mesh.geometry.dispose();}}prototype?.dispose();ground?.geometry.dispose();ground?.material.dispose();assets.disposeModels();toon.shadowUniforms.fallback.dispose();renderer.dispose();renderer.forceContextLoss();},{once:true});
