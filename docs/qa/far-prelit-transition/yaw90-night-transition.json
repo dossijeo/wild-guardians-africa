@@ -1,0 +1,90 @@
+{
+  "procedural": false,
+  "region": {
+    "epoch": 0,
+    "requested": {
+      "x": 0,
+      "z": 0
+    },
+    "focus": [
+      0,
+      3,
+      0
+    ],
+    "pending": null
+  },
+  "workerLoad": null,
+  "ground": {
+    "proxy": false
+  },
+  "populationSize": 1,
+  "fog": {
+    "transitionHaze": true,
+    "near": 30,
+    "far": 300,
+    "color": "182b45"
+  },
+  "prelitAtlasLoaded": true,
+  "prelitAtlasEnabled": true,
+  "normalAtlasLoaded": false,
+  "normalAtlasEnabled": false,
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": false,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "noche",
+  "nightAmount": 1,
+  "materialType": "MeshStandardMaterial",
+  "night": true,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    0,
+    14.000000000000005,
+    50
+  ],
+  "firstTree": {
+    "id": "prototype-tree-0",
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 1.5707963267948966,
+    "scale": 1,
+    "sx": 0.8,
+    "sy": 1.15,
+    "sz": 1.25,
+    "distance": 50,
+    "atlas": {
+      "first": 6,
+      "second": 7,
+      "blend": 0,
+      "nearest": 6
+    },
+    "right": {
+      "x": 1,
+      "y": 0,
+      "z": 0
+    },
+    "impostorVisibility": 0.5
+  },
+  "drawCalls": 3,
+  "triangles": 9685,
+  "modelCount": 1,
+  "impostorCount": 1,
+  "selection": {
+    "selectionScans": 9,
+    "matrixUploads": 5
+  },
+  "webglError": 0,
+  "errors": []
+}

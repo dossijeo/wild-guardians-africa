@@ -212,3 +212,8 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Atlas normal offline candidato](qa/far-normal-atlas/README.md): comparación de una acacia confirma diferencias de sombreado; ocho vistas lineales de normales con misma máscara alpha, WebP 321 kB y verificación de fuentes. Pendientes conexión experimental, transformación anisotrópica/renormalización, A/B visual y coste GPU/móvil antes de adoptarlo. Sigue fuera de gameplay.
+
+
+[Atlas precocinados día/noche](qa/far-prelit-atlas/README.md): petición del usuario del 6 de octubre, sustituye preferencia inicial de atlas sin fases. Ocho vistas con shader real por fase, 484 KiB WebP en total. Ruta precocinada omite normales/iluminación, mezcla extremos y conserva fog/dither; 28 pruebas y comparación nativa GPU. Pendientes coincidencia de luz con giros/elevación, GPU crepúsculo, integración con chunks y móvil.
+
+[Bruma residual y giros del prototipo](qa/far-prelit-transition/README.md): niebla existente compartida, rangos configurables y comparación de árboles a 90° con escala anisotrópica y 180°. Retención de modelo tardío y llegada al modelo próximo comprobadas en visor; ocho lotes GPU con los mismos programas/texturas/calls. Persisten diferencias de silueta/sombreado; no aceptación visual completa ni integración en gameplay.
