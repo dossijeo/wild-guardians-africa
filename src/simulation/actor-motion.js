@@ -4,6 +4,13 @@ const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const radius=a=>a.radius??.28;
 const blockedDetours=new WeakMap();
 const pendingDetours=new WeakMap();
+// Match the native search corridor (32 grid cells). Bodies whose clearance
+// discs cannot touch it cannot change this search, even while moving elsewhere.
+function detourBodies(actor,goal,blockers){
+  const minX=Math.min(Math.round(actor.x),Math.round(goal.x))-32,maxX=Math.max(Math.round(actor.x),Math.round(goal.x))+32;
+  const minZ=Math.min(Math.round(actor.z),Math.round(goal.z))-32,maxZ=Math.max(Math.round(actor.z),Math.round(goal.z))+32;
+  return blockers.filter(b=>{const reach=radius(actor)+radius(b);return b.x+reach>=minX&&b.x-reach<=maxX&&b.z+reach>=minZ&&b.z-reach<=maxZ;});
+}
 const detourKey=(actor,goal,blockers,nav,worker)=>JSON.stringify([nav.version,worker,actor.x,actor.z,goal.x,goal.z,blockers.map(b=>[b.id,Math.floor(b.x*4),Math.floor(b.z*4),radius(b)])]);
 const exactDetourKey=(key,blockers)=>JSON.stringify([key,blockers.map(b=>[b.x,b.z])]);
 // The small disc graph cannot route around a solid corner next to a fallen
@@ -11,6 +18,7 @@ const exactDetourKey=(key,blockers)=>JSON.stringify([key,blockers.map(b=>[b.x,b.
 // caches belong to this attempt, never to the shared static navigation graph.
 function terrainDetour(actor,goal,blockers,nav,worker,clear){
   if(!nav.findPathSteps)return null;
+  blockers=detourBodies(actor,goal,blockers);
   const key=detourKey(actor,goal,blockers,nav,worker);
   const exactKey=exactDetourKey(key,blockers);
   if(blockedDetours.get(actor)===exactKey)return null;
@@ -116,8 +124,8 @@ export function prepareActorMotion(state,actor,nav,worker){
     // returning here first made both bodies wait forever at the saved route.
     if(!clear(goal,goal)){yieldToOpposing();return clear;}
   }
-  const key=detourKey(actor,goal,blockers,nav,worker);
-  if(pendingDetours.get(actor)?.key===key||blockedDetours.get(actor)===exactDetourKey(key,blockers)){
+  const localBlockers=detourBodies(actor,goal,blockers),key=detourKey(actor,goal,localBlockers,nav,worker);
+  if(pendingDetours.get(actor)?.key===key||blockedDetours.get(actor)===exactDetourKey(key,localBlockers)){
     // The same disc graph already failed. Resume its bounded terrain search,
     // rather than rebuilding every local edge while the actor waits.
     const detour=terrainDetour(actor,goal,blockers,nav,worker,clear);

@@ -103,3 +103,46 @@ test('Recorded night 39 retreat approaches distant occupied bends instead of rep
  assert.deepEqual(s.ledger,ledger);assert.deepEqual(s.workers,workers);
  assert.deepEqual(a.exit,{x:exit.x,z:exit.z});
 });
+
+test('Motion outside the native search corridor cannot restart an incremental detour',()=>{
+ let searches=0;
+ const nav={version:1,walkable:()=>true,segmentClear:()=>false,*findPathSteps(){searches++;yield null;yield null;return null;}};
+ const actor={id:'actor',x:0,z:0,radius:.5,path:[{x:3,z:0}]};
+ const fallen={id:'fallen',x:1,z:0,radius:.5,incapacitated:true,status:'fleeing'};
+ const far={id:'remote',x:100,z:0,radius:2,status:'retreating'};
+ const state={workers:[fallen],raid:{animals:[actor,far]}};
+ for(let i=0;i<10;i++){far.x--;prepareActorMotion(state,actor,nav,false);}
+ assert.equal(searches,1,'Finish and cache the same search despite remote movement');
+ // The corridor ends at x=35. The other body's clearance disc reaches it
+ // before its centre does; entering that overlap must invalidate the cache.
+ far.x=37.4;prepareActorMotion(state,actor,nav,false);
+ assert.equal(searches,2,'Include bodies whose discs overlap the corridor');
+ far.x=20;prepareActorMotion(state,actor,nav,false);
+ assert.equal(searches,3,'An entering body also invalidates an in-progress search');
+});
+
+test('Recorded paid-defense night 39 actually finishes past fallen workers, including reload',()=>{
+ let s=deserialize(gunzipSync(readFileSync(new URL('../docs/qa/paid-defense-failure-ee25c8c/failure-state.json.gz',import.meta.url))).toString());
+ const profile=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile;
+ const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
+ const exits=new Map(s.raid.animals.map(a=>[a.id,{...a.exit}]));
+ const fallen=s.workers.filter(w=>w.incapacitated).map(w=>({...w}));
+ let reloaded=false,finalAnimals;
+ for(let i=0;i<6000&&s.raid;i++){
+  const before=new Map(s.raid.animals.map(a=>[a.id,{x:a.x,z:a.z,status:a.status}]));
+  finalAnimals=s.raid.animals;Game.tick(s,.1,nav);
+  const animals=s.raid?.animals??finalAnimals;
+  for(const a of animals){
+   const start=before.get(a.id);if(start.status==='gone')continue;
+   assert.ok(Math.hypot(a.x-start.x,a.z-start.z)<=.38+1e-8,'Keep native speed');
+   assert.ok(nav.segmentClear(start,a,a.radius,null,false),'Respect terrain, props and walls throughout the full raid');
+   assert.ok(actorSegmentClear(start,a,a,fallen),'Do not traverse fallen workers');
+  }
+  for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')
+   assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=animals[a].radius+animals[b].radius-1e-8);
+  if(i===50&&s.raid){s=deserialize(serialize(s));nav.setState(s);reloaded=true;}
+ }
+ assert.ok(reloaded);assert.equal(s.raid,null);assert.equal(s.completedNights,39);assert.equal(s.day,40);assert.ok(s.pauses.includes('hiring'));
+ assert.ok(finalAnimals.every(a=>a.status==='gone'));
+ for(const a of finalAnimals)assert.deepEqual({x:a.x,z:a.z},exits.get(a.id));
+});
