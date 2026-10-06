@@ -40,14 +40,19 @@ export function withRenderOrigin({scene,camera,origin,detached=[],minMax=[],minS
   }
 }
 
-export function renderOriginBounds(scene){
+export function renderOriginBounds(scene,materials=null){
   const bounds=new Set();
-  scene.traverse(object=>{
-    for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
-      const data=material.userData;
-      if(data.horizonBounds)bounds.add(data.horizonBounds);
-      if(data.paintUniforms)bounds.add(data.paintUniforms.uFluidBounds.value);
-    }
+  const remember=material=>{
+    const data=material.userData;
+    if(data.horizonBounds)bounds.add(data.horizonBounds);
+    if(data.paintUniforms)bounds.add(data.paintUniforms.uFluidBounds.value);
+  };
+  // The live registry includes shared, hidden and newly attached mesh materials.
+  // Read metadata each time: bounds/uniform objects can be replaced independently
+  // of scene membership. General callers retain the complete traversal fallback.
+  if(materials)for(const material of materials)remember(material);
+  else scene.traverse(object=>{
+    for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[])remember(material);
   });
   return [...bounds];
 }

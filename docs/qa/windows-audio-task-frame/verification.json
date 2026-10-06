@@ -1,0 +1,33 @@
+{
+  "head": "7779a8ec6438388afba06244424f304f84c64b92",
+  "hiddenMs": 300708.09999999986,
+  "sameSimulationFields": [
+    "commandIds",
+    "completedNights",
+    "cooldowns",
+    "crates",
+    "day",
+    "dayPlan",
+    "elapsed",
+    "ledger",
+    "nightPlan",
+    "plants",
+    "postgame",
+    "raid",
+    "result",
+    "rng",
+    "spells",
+    "structures",
+    "suppressed",
+    "tasks",
+    "time",
+    "villages",
+    "workers"
+  ],
+  "hiddenStatesEqual": true,
+  "visibleMenuPauses": [
+    "menu"
+  ],
+  "resumedSimulatedSeconds": 0.7202999999992699,
+  "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange."
+}
