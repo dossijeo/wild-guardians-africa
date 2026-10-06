@@ -27,7 +27,20 @@ test('loading or skipping past physical harvest contact does not replay it',asyn
  for(const skip of [false,true]){const f=fixture('olderFemale','harvest');if(skip)await f.advance(2);else {f.audio.dispose();f.worker.actionRemaining=1.6;f.audio.update(f.state);}for(let i=0;i<20;i++)await f.advance();assert.equal(f.calls.length,0);}
 });
 test('a crate pickup permits its natural one-shot tail while carrying, and flight stops it',async()=>{
- const f=fixture('olderFemale','crate');while(!f.calls.length)await f.advance();assert.equal(f.calls[0].id,'farm_crate_move');f.worker.status='carrying';f.worker.crateId=f.target.id;f.target.carrierId=f.worker.id;f.worker.taskId=null;f.state.tasks=[];await f.advance();assert.equal(f.stopped.length,0);f.worker.status='fleeing';await f.advance();assert.ok(f.stopped.includes(f.calls[0].source));assert.equal(f.audio.entries.size,0);
+ const f=fixture('olderFemale','crate');while(!f.calls.length)await f.advance();assert.equal(f.calls[0].id,'eco_item_pickup');f.worker.status='carrying';f.worker.crateId=f.target.id;f.target.carrierId=f.worker.id;f.worker.taskId=null;f.state.tasks=[];await f.advance();assert.equal(f.stopped.length,0);f.worker.status='fleeing';await f.advance();assert.ok(f.stopped.includes(f.calls[0].source));assert.equal(f.audio.entries.size,0);
+});
+for(const profile of PROFILES)test(profile.id+' dropped-crate pickup uses one world cue without delivery or domain mutation',async()=>{
+ const f=fixture(profile.id,'crate'),before=JSON.stringify(f.state);
+ assert.equal(f.calls.length,0);
+ while(!f.calls.length)await f.advance();
+ const cue=f.calls[0];assert.equal(cue.id,'eco_item_pickup');assert.equal(cue.options.bus,'world');assert.equal(cue.options.emitter,f.worker.id);assert.equal(cue.options.gain,.125);
+ assert.equal(f.target.delivered,false);assert.equal(f.target.carrierId,null);
+ const atContact=JSON.stringify(f.state);f.audio.update(f.state);await flush();assert.equal(JSON.stringify(f.state),atContact);assert.equal(f.calls.length,1);
+ for(let i=0;i<30&&f.worker.actionRemaining>0;i++)await f.advance();assert.equal(f.calls.length,1);assert.equal(f.target.delivered,false);assert.notEqual(JSON.stringify(f.state),before);f.audio.dispose();
+});
+test('a decoded crate pickup is rejected if another worker already carries the crate',async()=>{
+ const f=fixture('olderFemale','crate');let resolve;f.audio.play=(id,options)=>{f.calls.push({id,options});return new Promise(done=>resolve=done);};
+ while(!f.calls.length)await f.advance();f.target.carrierId='other-worker';assert.equal(f.calls[0].options.isCurrent(),false);const source={};resolve(source);await flush();assert.ok(f.stopped.includes(source));f.audio.dispose();
 });
 test('water soil contact is invalid after its authored pour window even before another audio frame',async()=>{
  const f=fixture('olderFemale','water');while(!f.calls.length)await f.advance();f.worker.actionRemaining=3.4-FARM_ACTIONS.sources.olderFemale.fractions.pourEnd*3.4;assert.equal(f.calls[0].options.isCurrent(),false);f.audio.update(f.state);assert.ok(f.stopped.includes(f.calls[0].source));

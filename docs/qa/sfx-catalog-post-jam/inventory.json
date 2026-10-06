@@ -3,13 +3,13 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "c6a7f05ac05e2c740994504386e8d4837f1bea81fb6b768d8b6c2a224a8e2777",
+    "public/content/sfx-routing.json": "c53449278b304372d9f1e0e862c746a18c4f1d913baebab9067338d1ea9b5cb6",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
-    "src/app/main.js": "5ebbe6b0bfe12117f8819f82abd48051aa489a26eca6d87feed99c6e7c934cb1",
+    "src/app/main.js": "91d701e2ee7d043f3b37dc1225c105f7d04e011532dfd70b9b82f30136efd08c",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
     "src/audio/audio.js": "b1bc262de79fc7bfa9161c75131cb518448f6057d605d5be721d0e63f48dd69e",
-    "src/audio/farm-contact-audio.js": "15de7934842caaeb0c4b5bee6a2e4f4d84d621a98b384d668addf460b444ba12",
+    "src/audio/farm-contact-audio.js": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
     "src/audio/movement-audio.js": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7",
     "src/audio/power-ready-audio.js": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77",
@@ -19,12 +19,12 @@
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
-    "src/rendering/scene.js": "ae13195cf916fc2f8589f58128490f36c8aabfceaae7d83c8275822134017895",
+    "src/rendering/scene.js": "4a2867377e12956e6fcc37b67b042d5ac73dba6d965c42aae15763cc38bd94da",
     "src/simulation/raids.js": "5a12b076e54cfdd9bf0feb10ce103491fcc05469ca8a17d81b9d03726d7feff6"
   },
   "total": 126,
-  "assigned": 90,
-  "unassigned": 36,
+  "assigned": 91,
+  "unassigned": 35,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -142,8 +142,7 @@
       "spirit_invalid",
       "ui_sell",
       "eco_gain",
-      "eco_spend",
-      "eco_item_pickup"
+      "eco_spend"
     ],
     "Alternativa / contextual / assigned": [
       "farm_seeds_drop",
@@ -157,6 +156,7 @@
       "spirit_power_charge",
       "ui_buy",
       "ui_objective_complete",
+      "eco_item_pickup",
       "game_enemy_detected",
       "game_building_attacked",
       "game_wall_critical",
@@ -669,11 +669,6 @@
           "file": "src/audio/audio.js",
           "line": 20,
           "trigger": "CrateDropped"
-        },
-        {
-          "file": "src/audio/farm-contact-audio.js",
-          "line": 4,
-          "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
@@ -2441,10 +2436,16 @@
       "sha256": "7e826f77e077f0951a6cb774411124916304b040a5a56864027352c97f64e2ed",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Recogida física de caja/producto; no suma dinero.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4,
+          "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 118,

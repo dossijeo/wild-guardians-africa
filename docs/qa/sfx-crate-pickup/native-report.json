@@ -1,0 +1,49 @@
+{
+  "steps": 5011,
+  "day": 101,
+  "simulatedSeconds": 250.55000000000013,
+  "raidStarted": true,
+  "cratePhaseSeen": true,
+  "accepted": [
+    {
+      "id": "farm_crate_move",
+      "elapsed": 160.90000000000654,
+      "emitter": "crate-10",
+      "family": "farm_crate_move",
+      "bus": "world",
+      "status": null,
+      "task": null,
+      "rate": 1
+    },
+    {
+      "id": "eco_item_pickup",
+      "elapsed": 248.05000000002636,
+      "emitter": "worker-6",
+      "family": "eco_item_pickup",
+      "bus": "world",
+      "status": "acting",
+      "task": "crate",
+      "rate": 1
+    }
+  ],
+  "decoded": {
+    "farm_crate_move": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2.48
+    },
+    "eco_item_pickup": {
+      "channels": 2,
+      "sampleRate": 48000,
+      "duration": 2
+    }
+  },
+  "drops": 1,
+  "picks": 1,
+  "deliveries": 1,
+  "finalVoices": 0,
+  "context": "closed",
+  "errors": [],
+  "muted": true,
+  "world3D": false
+}

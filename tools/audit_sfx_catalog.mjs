@@ -81,7 +81,7 @@ else{
   `Asignados: **${report.assigned}**. Sin asignar en gameplay: **${report.unassigned}**.`, '',
   '| Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |','| --- | --- | --- | --- | --- |',
   ...rows.map(r=>`| ${String(r.number).padStart(3,'0')} | ${escape(r.id+' · '+r.name)} | ${r.runtimeStatus==='assigned'?'Asignado':'Pendiente'} | ${escape(r.plannedAction)} | ${escape(r.codePoints.length?r.codePoints.map(p=>p.file+':'+p.line+' → '+p.trigger).join('; '):r.pendingContext)} |`),
-  '', 'Las 36 alternativas/contextos y 12 reservas del plan requieren su contexto correcto. No se crean lluvia, salud de animales, sacos o recompensas monetarias para que suenen tomas reservadas. Los usos compatibles pendientes deben recibir implementación y pruebas antes de cerrar la tarea.',''];
+  '', 'Las alternativas y reservas restantes requieren su contexto correcto. No se crean lluvia, salud de animales, sacos o recompensas monetarias para que suenen tomas reservadas. Los usos compatibles pendientes deben recibir implementación y pruebas antes de cerrar la tarea.',''];
  writeFileSync(resolve(folder,'inventory.md'),table.join('\n'));
 }
 console.log(JSON.stringify({total:report.total,assigned:report.assigned,unassigned:report.unassigned,exactOriginalFiles:rows.length,stale:false}));
