@@ -1,0 +1,273 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "hyena",
+    "warthog",
+    "rhino",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true
+    },
+    {
+      "species": "hyena",
+      "ready": true
+    },
+    {
+      "species": "buffalo",
+      "ready": true
+    },
+    {
+      "species": "lion",
+      "ready": true
+    },
+    {
+      "species": "rhino",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 19,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      7
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 19,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      7
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 167.5,
+  "loadingMs": 4564.699999988079,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 364,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "simulatedSeconds": 18.2,
+      "centerHpBefore": 600,
+      "centerHpAfter": 580,
+      "logicalHits": [
+        {
+          "id": "event-7",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-5",
+          "targetId": "structure-2",
+          "species": "warthog",
+          "presentation": {
+            "elapsed": 18.200000000000124,
+            "animal": {
+              "x": -30.684595436780327,
+              "z": 34.295554712749734,
+              "heading": 3.141592653589793
+            },
+            "target": {
+              "x": -30.684595436780327,
+              "z": 30.572305649518967,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "warthog",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -30.684595436780327,
+            34.295554712749734
+          ],
+          "renderY": 3.705590582072172
+        },
+        {
+          "species": "hyena",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -26.484595436780328,
+            67.90891007139166
+          ]
+        },
+        {
+          "species": "buffalo",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -34.88459543678033,
+            67.97891007139165
+          ]
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -30.684595436780327,
+            71.85891007139165
+          ]
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "ready": false,
+          "position": [
+            -34.88459543678033,
+            72.55891007139165
+          ]
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "warthog",
+          "sprites": 16
+        }
+      ],
+      "contactRequirement": "original-structure-hit",
+      "firstHit": {
+        "id": "event-6",
+        "type": "StructureHit",
+        "animalId": "animal-3",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "firstStructureHit": {
+        "id": "event-6",
+        "type": "StructureHit",
+        "animalId": "animal-3",
+        "targetId": "structure-2",
+        "structureHit": {
+          "kind": "center",
+          "x": -30.684595436780327,
+          "z": 30.572305649518967,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        }
+      },
+      "maximumGameTickMs": 6.100000023841858,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "species": "warthog",
+          "bounds": {
+            "min": [
+              -31.409369361450075,
+              3.7275905809805145,
+              33.42344866119132
+            ],
+            "max": [
+              -29.981481804032402,
+              6.4354380154236575,
+              34.75788441858553
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        },
+        {
+          "species": "hyena",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "buffalo",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "lion",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        },
+        {
+          "species": "rhino",
+          "status": "gone",
+          "meshPresent": false,
+          "visibleMeshes": 0,
+          "intersectsCamera": false
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}

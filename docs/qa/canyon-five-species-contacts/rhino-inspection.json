@@ -1,0 +1,186 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "hyena",
+    "buffalo",
+    "warthog",
+    "lion",
+    "rhino"
+  ],
+  "rigs": [
+    {
+      "species": "rhino",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 22,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      9
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 22,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      8
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 69.39999997615814,
+  "loadingMs": 4690.600000023842,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 399,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "rhino"
+      ],
+      "simulatedSeconds": 19.950000000000003,
+      "centerHpBefore": 600,
+      "centerHpAfter": 600,
+      "logicalHits": [
+        {
+          "id": "event-11",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-9",
+          "targetId": "plant-3",
+          "species": "rhino",
+          "presentation": {
+            "elapsed": 19.95000000000015,
+            "animal": {
+              "x": -25.469368539516363,
+              "z": 34.07396275732291,
+              "heading": 2.767948308735615
+            },
+            "target": {
+              "x": -24.684595436780327,
+              "z": 32.07230564951897
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "rhino",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -25.469368539516363,
+            34.07396275732291
+          ],
+          "renderY": 3.7099247359175505
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "rhino",
+          "sprites": 53
+        }
+      ],
+      "contactRequirement": "selected-species-paid-crop-or-center",
+      "firstHit": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "rhino",
+        "presentation": {
+          "elapsed": 19.95000000000015,
+          "animal": {
+            "x": -25.469368539516363,
+            "z": 34.07396275732291,
+            "heading": 2.767948308735615
+          },
+          "target": {
+            "x": -24.684595436780327,
+            "z": 32.07230564951897
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": null,
+      "maximumGameTickMs": 24.5,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "species": "rhino",
+          "bounds": {
+            "min": [
+              -26.2218310416492,
+              3.73081649618651,
+              33.17811223061456
+            ],
+            "max": [
+              -24.826272997625004,
+              6.693934678408111,
+              34.96421968849471
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "inspection": {
+    "scope": "Close camera after first hit; no subsequent simulation ticks",
+    "logicalStateUnchanged": true,
+    "eye": [
+      -25.469368539516363,
+      6.9123233308526055,
+      41.47081085658707
+    ],
+    "target": [
+      -25.469368539516363,
+      3.8649247359175507,
+      34.07396275732291
+    ]
+  }
+}

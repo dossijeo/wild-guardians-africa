@@ -1,0 +1,171 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "hyena",
+    "warthog",
+    "rhino",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "lion",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 22,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "animalPrograms": [
+      0,
+      9,
+      1,
+      8
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 22,
+    "newPrograms": [],
+    "animalPrograms": [
+      1,
+      8
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 67.39999997615814,
+  "loadingMs": 4682.300000011921,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 402,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "lion"
+      ],
+      "simulatedSeconds": 20.1,
+      "centerHpBefore": 600,
+      "centerHpAfter": 600,
+      "logicalHits": [
+        {
+          "id": "event-11",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-9",
+          "targetId": "plant-3",
+          "species": "lion",
+          "presentation": {
+            "elapsed": 20.10000000000015,
+            "animal": {
+              "x": -24.945613018660037,
+              "z": 33.49861901689294,
+              "heading": 2.960593875557084
+            },
+            "target": {
+              "x": -24.684595436780327,
+              "z": 32.07230564951897
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "lion",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -24.945613018660037,
+            33.49861901689294
+          ],
+          "renderY": 3.7117837099563835
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "lion",
+          "sprites": 18
+        }
+      ],
+      "firstHit": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "lion",
+        "presentation": {
+          "elapsed": 20.10000000000015,
+          "animal": {
+            "x": -24.945613018660037,
+            "z": 33.49861901689294,
+            "heading": 2.960593875557084
+          },
+          "target": {
+            "x": -24.684595436780327,
+            "z": 32.07230564951897
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": null,
+      "maximumGameTickMs": 38.10000002384186,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "species": "lion",
+          "bounds": {
+            "min": [
+              -25.34570485029941,
+              3.7337837110079057,
+              32.81751196694591
+            ],
+            "max": [
+              -24.560682393801702,
+              5.547668093789124,
+              33.95552098618095
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "lion"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}

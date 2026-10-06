@@ -146,3 +146,6 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 
 [Compatibilidad de profundidad reutilizada por captura](qa/shared-depth-compatibility/README.md): 28 pruebas y build; CPU nativa aislada ~24–32 % menor con alpha=true en ambas rutas (~0,18–0,27 ms por captura), mismas selecciones y restauraciones. Catorce pares actuales intacto/colapso coinciden en profundidad. Mejora de preparación aplicada sin activar alpha experimental ni filtro de vacíos; no es evidencia de FPS. [Traza de cámara](qa/static-camera-color/README.md) exactamente estable, pero variación de color aún sin causa aislada.
+
+
+[Contactos nativos de las cinco especies en Gran Cañón](qa/canyon-five-species-contacts/README.md): cinco casos individuales con centro/brote pagados, navegación/daño reales y VFX originales activos; aparición sin descargas GLB ni programas de shader animal adicionales. Se conserva y reejecuta la prueba original de daño al centro (600→580). No acredita cinco ataques en un grupo, noche natural, audio/HUD/móvil ni ausencia de tirón. Pendiente medir shaders VFX del primer golpe y QA-155 completo.

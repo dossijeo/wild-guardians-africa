@@ -1,0 +1,171 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "rhino",
+    "hyena",
+    "buffalo",
+    "warthog",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "buffalo",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 22,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "animalPrograms": [
+      0,
+      8,
+      1,
+      9
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 22,
+    "newPrograms": [],
+    "animalPrograms": [
+      1,
+      9
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 76.19999998807907,
+  "loadingMs": 4663.700000047684,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 401,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "buffalo"
+      ],
+      "simulatedSeconds": 20.05,
+      "centerHpBefore": 600,
+      "centerHpAfter": 600,
+      "logicalHits": [
+        {
+          "id": "event-11",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-9",
+          "targetId": "plant-3",
+          "species": "buffalo",
+          "presentation": {
+            "elapsed": 20.05000000000015,
+            "animal": {
+              "x": -24.966217071372313,
+              "z": 33.61684093721224,
+              "heading": 2.9612396757167647
+            },
+            "target": {
+              "x": -24.684595436780327,
+              "z": 32.07230564951897
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "buffalo",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -24.966217071372313,
+            33.61684093721224
+          ],
+          "renderY": 3.7108326400542593
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "buffalo",
+          "sprites": 25
+        }
+      ],
+      "firstHit": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "buffalo",
+        "presentation": {
+          "elapsed": 20.05000000000015,
+          "animal": {
+            "x": -24.966217071372313,
+            "z": 33.61684093721224,
+            "heading": 2.9612396757167647
+          },
+          "target": {
+            "x": -24.684595436780327,
+            "z": 32.07230564951897
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": null,
+      "maximumGameTickMs": 32.5,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "species": "buffalo",
+          "bounds": {
+            "min": [
+              -25.556767109203847,
+              3.732832641136151,
+              32.594176126235276
+            ],
+            "max": [
+              -24.29269717265421,
+              6.025415833407733,
+              34.13786421811262
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "buffalo"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}

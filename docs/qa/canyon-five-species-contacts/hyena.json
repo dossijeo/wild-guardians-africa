@@ -1,0 +1,171 @@
+{
+  "ok": true,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "hyena",
+    "warthog",
+    "rhino",
+    "lion"
+  ],
+  "rigs": [
+    {
+      "species": "hyena",
+      "ready": true
+    }
+  ],
+  "before": {
+    "downloads": 7,
+    "programs": 22,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "animalPrograms": [
+      0,
+      9,
+      1,
+      8
+    ]
+  },
+  "after": {
+    "downloads": 7,
+    "programs": 22,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      9
+    ],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 70.40000003576279,
+  "loadingMs": 4804.399999976158,
+  "errors": [],
+  "timing": {
+    "settle": [],
+    "baseline": [],
+    "appearance": [],
+    "takes": [],
+    "firstRenderCalls": [],
+    "scope": "Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.",
+    "motion": {
+      "steps": 401,
+      "heldFrames": 0,
+      "spawnSpecies": [
+        "hyena"
+      ],
+      "simulatedSeconds": 20.05,
+      "centerHpBefore": 600,
+      "centerHpAfter": 600,
+      "logicalHits": [
+        {
+          "id": "event-11",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-9",
+          "targetId": "plant-3",
+          "species": "hyena",
+          "presentation": {
+            "elapsed": 20.05000000000015,
+            "animal": {
+              "x": -24.954215764443873,
+              "z": 33.54787499011621,
+              "heading": 2.9608635140505886
+            },
+            "target": {
+              "x": -24.684595436780327,
+              "z": 32.07230564951897
+            },
+            "shield": null
+          }
+        }
+      ],
+      "actors": [
+        {
+          "species": "hyena",
+          "status": "walking",
+          "animation": "Right_Hand_Sword_Slash",
+          "ready": true,
+          "position": [
+            -24.954215764443873,
+            33.54787499011621
+          ],
+          "renderY": 3.711386625153411
+        }
+      ],
+      "attackEffects": [
+        {
+          "id": "hyena",
+          "sprites": 12
+        }
+      ],
+      "firstHit": {
+        "id": "event-11",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-9",
+        "targetId": "plant-3",
+        "species": "hyena",
+        "presentation": {
+          "elapsed": 20.05000000000015,
+          "animal": {
+            "x": -24.954215764443873,
+            "z": 33.54787499011621,
+            "heading": 2.9608635140505886
+          },
+          "target": {
+            "x": -24.684595436780327,
+            "z": 32.07230564951897
+          },
+          "shield": null
+        }
+      },
+      "firstStructureHit": null,
+      "maximumGameTickMs": 31.600000023841858,
+      "medianGameTickMs": 0.19999998807907104,
+      "renderedActors": [
+        {
+          "species": "hyena",
+          "bounds": {
+            "min": [
+              -25.504285870006132,
+              3.7333866263956073,
+              32.6931983256176
+            ],
+            "max": [
+              -24.42105553294359,
+              5.751212279229221,
+              34.05163275034374
+            ]
+          },
+          "intersectsCamera": true,
+          "meshes": 1,
+          "visibleMeshes": 1
+        }
+      ]
+    }
+  },
+  "spawnSpecies": [
+    "hyena"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime."
+}
