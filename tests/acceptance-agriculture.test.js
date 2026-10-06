@@ -111,7 +111,7 @@ test('QA-015: large real frames stop at each dawn and charge only an explicitly 
   Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9790);
   assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),10030);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
+  assert.equal(numberOf(s.ledger.balance),10057);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 
@@ -175,8 +175,8 @@ test('QA-025/026/028: mixed group harvest reserves distinct plants for two worke
     if(reserved.length===2){assert.equal(new Set(reserved.map(t=>t.workerId)).size,2);assert.equal(new Set(reserved.map(t=>t.targetId)).size,2);parallel=true;}
   }
   assert.equal(parallel,true);assert.equal(s.crates.length,2);assert.ok(s.crates.every(c=>c.delivered));assert.equal(new Set(s.crates.map(c=>c.sourcePlantId)).size,2);
-  assert.equal(numberOf(s.ledger.balance),balance+22);assert.equal(s.events.filter(e=>e.type==='CropPicked').length,2);
-  grow(s,1);assert.equal(numberOf(s.ledger.balance),balance+22);assert.ok(ps.filter((_,i)=>i%2).every(p=>p.alive));
+  assert.equal(numberOf(s.ledger.balance),balance+28);assert.equal(s.events.filter(e=>e.type==='CropPicked').length,2);
+  grow(s,1);assert.equal(numberOf(s.ledger.balance),balance+28);assert.ok(ps.filter((_,i)=>i%2).every(p=>p.alive));
 });
 
 test('QA-027: automatic maturity preserves an older watering task and adds each harvest once in creation order',()=>{
@@ -192,21 +192,21 @@ test('QA-033: Multiply marks survive expiry before the physical pickup',()=>{
   const s=farm(),p=sow(s,'mijo',70);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.cast(s,'multiply','multiply',p.x,p.z,nav);Game.harvest(s,'harvest',p.id);
   for(let i=0;i<2400&&s.crates.length===0;i++)grow(s,.05);
-  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),21.6);
-  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+22);
+  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),26.4);
+  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+27);
   assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
 });
 
-test('QA-034: male pickup within Multiply fixes one 21.6-valued crate, rounds delivery to 22 and survives reload',()=>{
+test('QA-034: male pickup within Multiply fixes one 26.4-valued crate, rounds delivery to 27 and survives reload',()=>{
   let s=farm();const p=sow(s);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.harvest(s,'harvest',p.id);
   for(let i=0;i<1200&&s.workers[0].status!=='acting';i++)grow(s,.05);
   assert.equal(s.workers[0].status,'acting');Game.cast(s,'multiply','multiply',p.x,p.z,nav);
   for(let i=0;i<100&&s.crates.length===0;i++)grow(s,.05);
-  assert.equal(s.crates.length,1);assert.ok(s.spells[0].remaining>0);close(numberOf(s.crates[0].value),21.6);
+  assert.equal(s.crates.length,1);assert.ok(s.spells[0].remaining>0);close(numberOf(s.crates[0].value),26.4);
   const value=JSON.stringify(s.crates[0].value),balance=numberOf(s.ledger.balance);
   s=deserialize(serialize(s));grow(s,30);assert.equal(s.spells.length,0);assert.equal(JSON.stringify(s.crates[0].value),value);
-  assert.equal(numberOf(s.ledger.balance),balance+22);assert.equal(s.crates[0].delivered,true);
-  grow(s,30);assert.equal(numberOf(s.ledger.balance),balance+22);
+  assert.equal(numberOf(s.ledger.balance),balance+27);assert.equal(s.crates[0].delivered,true);
+  grow(s,30);assert.equal(numberOf(s.ledger.balance),balance+27);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,1);
 });
