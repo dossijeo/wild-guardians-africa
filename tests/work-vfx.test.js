@@ -13,6 +13,22 @@ import {PROFILES} from '../src/simulation/workforce.js';
 import {numberOf} from '../src/simulation/money.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url)));
 const nav={placement:()=>({valid:true,suppress:[]}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(start,end)=>[{x:end.x,z:end.z}]};
+
+test('non-acting workers and repair dust do not index historical tasks or crops',()=>{
+ const state={elapsed:10,workers:['idle','walking','carrying','fleeing','home'].map(status=>({status})),events:[{id:'repair',type:'RepairApplied',presentation:{elapsed:10,x:5,z:2,yaw:.3}}]};
+ for(const key of ['tasks','plants','structures'])Object.defineProperty(state,key,{get(){throw Error('Unexpected history scan: '+key);}});
+ const plans=workVfxPlans(state);assert.equal(plans.length,1);assert.equal(plans[0].id,'dust');
+ state.workers=[{status:'acting',incapacitated:true},{status:'acting',fallRemaining:1}];assert.equal(workVfxPlans(state).length,1);
+});
+
+test('missing tasks skip target history; active plans see same-length target replacements immediately',()=>{
+ const worker={id:'w',profile:'olderMale',status:'acting',taskId:'water',actionRemaining:2},state={workers:[worker],tasks:[],plants:[],structures:[]};
+ Object.defineProperty(state,'plants',{configurable:true,get(){throw Error('Unexpected target history scan');}});
+ assert.deepEqual(workVfxPlans(state),[]);
+ Object.defineProperty(state,'plants',{value:[{id:'plant',x:8,z:4}],writable:true});state.tasks.push({id:'water',kind:'water',targetId:'plant'});
+ assert.equal(workVfxPlans(state)[0].x,8);state.plants[0]={id:'plant',x:12,z:7};assert.equal(workVfxPlans(state)[0].x,12);
+ state.tasks[0]={id:'water',kind:'harvest',targetId:'plant'};assert.equal(workVfxPlans(state)[0].id,'harvest');
+});
 function graphics(){const renderer={shadowMap:{enabled:false},getDrawingBufferSize:v=>v.set(800,600)},pipeline=new BuildingDestructionPass(renderer),texture=new THREE.Texture({width:4096,height:2048}),library=new VfxLibrary(catalog,texture),scene=new THREE.Scene();return {library,pipeline,scene,manager:new WorkVfx(library,pipeline,scene,()=>0)};}
 
 test('Initial planting and first water track the four original profile speeds in separate phases',()=>{

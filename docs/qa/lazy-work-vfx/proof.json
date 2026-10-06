@@ -1,0 +1,24 @@
+{
+  "baseCommit": "067e91a",
+  "sourceSha256": {
+    "src/rendering/work-vfx.js": "85b8809ab4dd0b5a22a923b645423de4fcb88bd332737424c9dcd81137c2c6e7",
+    "tests/work-vfx.test.js": "a8b65dece1872f95efd4d066284fe834b0069dc2042eab5a09bd2c694bc48fbe",
+    "tools/benchmark_work_vfx_indexes.mjs": "13ce07bef0d3cf357e5bc6a0faeda601d12b243de5db024db672b69b88d902d2",
+    "src/simulation/workforce.js": "acebcf4d0ad4d1b55db513e1ac59a9cc755b5b98b9ff046fad72b7617fdb62f9",
+    "src/rendering/vfx-native.js": "abf38e604a91454343fe4f2f1d0afe36a366d4b9cbcdfaeb97c0764ef069b61a"
+  },
+  "evidenceSha256": {
+    "benchmark.json": "9dbcff36712fd2697c4b23cb128f4848ef75970a65a6704a9a76805505458778",
+    "build.log.gz": "4b660b9f51c735cab21a304b9bd7311bd276dc0f15cd58e070f064db5ad99c0d",
+    "README.md": "d9a59288e8edcabdcf036212c0912a6d615e681cd994e4341952c4d90ed5c05c",
+    "tests.tap": "7dda269b377c66eb164a1e072d49c70fd727df5b2b16df50f8f1d634ff27faef"
+  },
+  "testCommand": "node --test tests/work-vfx.test.js tests/worker-actions.test.js tests/farm-action-markers.test.js tests/acceptance-worker-chains.test.js",
+  "testExit": 0,
+  "passed": 37,
+  "failed": 0,
+  "buildExit": 0,
+  "historicalInputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+  "equivalentControlledInputs": 400,
+  "limits": "Isolated planner on real history with controlled worker/task states. No frame/GPU/mobile/RAM acceptance; QA-014 real hidden web tab not achieved."
+}

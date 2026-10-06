@@ -88,3 +88,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Preparación de profundidad limitada a subárboles visibles](qa/visible-depth-traversal/README.md): 21 pruebas dirigidas, build y cinco pares nativos de Manglares/Gran Cañón con profundidad idéntica y estado lógico preservado. Menos meshes preparados; sin mejora de FPS o RAM medida. Pendientes aceptación más amplia y reducción del coste GPU.
+
+
+[Índices de VFX de trabajo diferidos](qa/lazy-work-vfx/README.md): se omite el historial mientras no hay trabajo activo válido, manteniendo polvo de reparación y datos frescos. 37 pruebas, build y 400 entradas de presentación equivalentes. En una medición aislada de diez llamadas sin actividad pasa de ~23–26 ms a <0,03 ms; riego activo sin ganancia. Pendiente efecto en frametime y aceptación amplia. QA-014 sigue pendiente: dos pestañas IAB no producían ocultación real.

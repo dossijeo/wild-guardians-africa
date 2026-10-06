@@ -5,10 +5,15 @@ const durations={water:3.4,harvest:3.6,repair:3.8};
 
 // Presentation reads committed tasks. It never completes work or emits gameplay.
 export function workVfxPlans(state){
-  const tasks=new Map(state.tasks.map(t=>[t.id,t])),targets=new Map([...state.plants,...state.structures].map(e=>[e.id,e])),plans=[];
+  const plans=[];let tasks,targets;
   for(const worker of state.workers){
     if(worker.status!=='acting'||worker.incapacitated||worker.fallRemaining>0)continue;
-    const task=tasks.get(worker.taskId),target=targets.get(task?.targetId);if(!task||!target)continue;
+    // No historical crop/task index is needed while workers travel, carry,
+    // flee or idle. Keep these local to this call so live edits stay visible.
+    tasks??=new Map(state.tasks.map(t=>[t.id,t]));
+    const task=tasks.get(worker.taskId);if(!task)continue;
+    targets??=new Map([...state.plants,...state.structures].map(e=>[e.id,e]));
+    const target=targets.get(task.targetId);if(!target)continue;
     let kind=task.kind,id,elapsed,duration;
     const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;
     if(kind==='initial'){

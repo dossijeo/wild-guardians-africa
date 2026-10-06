@@ -1,0 +1,195 @@
+TAP version 13
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 1 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 381.505
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 2 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 310.0927
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 3 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 145.8693
+  ...
+# Subtest: QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+ok 4 - QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+  ---
+  duration_ms: 189.9499
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 5 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 180.8134
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 6 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 5.289
+  ...
+# Subtest: farm contact calibration regenerates exactly from all four original source scripts and GLB hashes
+ok 7 - farm contact calibration regenerates exactly from all four original source scripts and GLB hashes
+  ---
+  duration_ms: 305.9279
+  ...
+# Subtest: youngMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 8 - youngMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 287.5925
+  ...
+# Subtest: olderMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 9 - olderMale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 208.6658
+  ...
+# Subtest: olderFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 10 - olderFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 180.0487
+  ...
+# Subtest: youngFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+ok 11 - youngFemale authored phase gates and native prop visibility support sow/pick/pour, not an initial hoe
+  ---
+  duration_ms: 153.9424
+  ...
+# Subtest: the threshold inverse is finite and monotonic at both endpoints and the authored water gate
+ok 12 - the threshold inverse is finite and monotonic at both endpoints and the authored water gate
+  ---
+  duration_ms: 0.4209
+  ...
+# Subtest: non-acting workers and repair dust do not index historical tasks or crops
+ok 13 - non-acting workers and repair dust do not index historical tasks or crops
+  ---
+  duration_ms: 4.9939
+  ...
+# Subtest: missing tasks skip target history; active plans see same-length target replacements immediately
+ok 14 - missing tasks skip target history; active plans see same-length target replacements immediately
+  ---
+  duration_ms: 1.3204
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 15 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 0.9672
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 16 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 328.6286
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 17 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 37.6898
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 18 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 11.8307
+  ...
+# Subtest: Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+ok 19 - Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+  ---
+  duration_ms: 192.294
+  ...
+# Subtest: Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+ok 20 - Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+  ---
+  duration_ms: 13.0794
+  ...
+# Subtest: Work manager attaches the worker emitter to the actual native water effect
+ok 21 - Work manager attaches the worker emitter to the actual native water effect
+  ---
+  duration_ms: 15.9571
+  ...
+# Subtest: youngMale: Three loads and applies every native action to its real rig
+ok 22 - youngMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 359.3066
+  ...
+# Subtest: olderMale: Three loads and applies every native action to its real rig
+ok 23 - olderMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 283.0417
+  ...
+# Subtest: olderFemale: Three loads and applies every native action to its real rig
+ok 24 - olderFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 196.1478
+  ...
+# Subtest: youngFemale: Three loads and applies every native action to its real rig
+ok 25 - youngFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 175.9454
+  ...
+# Subtest: youngMale: native action tracks are finite and preserve their last key
+ok 26 - youngMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 57.1661
+  ...
+# Subtest: olderMale: native action tracks are finite and preserve their last key
+ok 27 - olderMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 33.7556
+  ...
+# Subtest: olderFemale: native action tracks are finite and preserve their last key
+ok 28 - olderFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 39.4156
+  ...
+# Subtest: youngFemale: native action tracks are finite and preserve their last key
+ok 29 - youngFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 26.7278
+  ...
+# Subtest: Combined initial work shows planting followed by first watering for both age speeds
+ok 30 - Combined initial work shows planting followed by first watering for both age speeds
+  ---
+  duration_ms: 0.6915
+  ...
+# Subtest: Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+ok 31 - Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+  ---
+  duration_ms: 0.4002
+  ...
+# Subtest: Carrying uses the original crate and idle uses the supplied resting pose
+ok 32 - Carrying uses the original crate and idle uses the supplied resting pose
+  ---
+  duration_ms: 0.2367
+  ...
+# Subtest: youngMale: cached water emitter follows the actual animated nozzle holes
+ok 33 - youngMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 188.5192
+  ...
+# Subtest: olderMale: cached water emitter follows the actual animated nozzle holes
+ok 34 - olderMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 162.1047
+  ...
+# Subtest: olderFemale: cached water emitter follows the actual animated nozzle holes
+ok 35 - olderFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 151.8096
+  ...
+# Subtest: youngFemale: cached water emitter follows the actual animated nozzle holes
+ok 36 - youngFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 153.1524
+  ...
+# Subtest: Prepared nozzle paths reject missing, malformed and non-finite samples
+ok 37 - Prepared nozzle paths reject missing, malformed and non-finite samples
+  ---
+  duration_ms: 1.2855
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2385.7462
