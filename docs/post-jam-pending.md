@@ -257,3 +257,13 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Manos, Espíritu y logo Tinify integrados](qa/tinify-tutorial-menu/README.md): ocho imágenes, alpha/dimensiones exactos, 64 pruebas y treinta alias cargados en ruta anidada. 821.936 bytes menos en imágenes; paquete neto 812.161 bytes menor. Quedan 87 candidatas de color/45 de revisión, mapas embebidos y aceptación móvil/Tauri.
+
+## Tarjetas de eventos y voces del espíritu (pedido el 7 de octubre de 2026)
+
+Estado: delegado a un subagente en rama independiente; pendiente implementación, pruebas y PR. Revisar y mergear en main antes de hacer pull; no publicar en itch.io hasta autorización posterior.
+
+- Recuperar las tarjetas de evento tipo toast con icono y barra de auto hide del lab `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Respetar el área segura del HUD y los layouts móviles; mantener cierre manual y evitar duplicar eventos ya explicados por el tutorial.
+- Integrar las voces del nuevo `Wild_Guardians_Spirit_Voice_Lab_V9_UnityStereo.html`, adjunto del usuario, con los textos ES/EN ya integrados desde `docs/reference/Wild_Guardians_Espiritu_ES_EN_v2.json`. Conservar la correspondencia texto/idioma/audio original del lab.
+- Reproducir la voz mientras se muestra su texto. Al finalizar realmente el audio, avanzar automáticamente al siguiente mensaje o cerrar si es el último. Si el jugador salta o cierra, detener inmediatamente esa voz; evitar audios superpuestos, eventos ended tardíos y reproducción de mensajes anteriores.
+- Conservar la guía por manos 2D/3D y sus requisitos de acción: terminar una voz no debe dar por hecha una acción que el jugador aún no ha realizado. Validar autoplay bloqueado, errores de carga, pausa/cambio de idioma, cierre del juego y limpieza de recursos.
+- Mantener rutas relativas, formato Opus del lab y la carga/descodificación limitada a voces necesarias; comprobar sincronización, ambos idiomas, móvil landscape/portrait y paquete web anidado. Adjuntar evidencia visual/audio y regresiones en la PR.
