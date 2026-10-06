@@ -1,0 +1,120 @@
+{
+  "procedural": true,
+  "region": {
+    "epoch": 2,
+    "requested": {
+      "x": 96,
+      "z": 96
+    },
+    "focus": [
+      96,
+      13.597097376603688,
+      96
+    ],
+    "resident": "96:96",
+    "pending": null
+  },
+  "workerLoad": {
+    "elapsedMs": 509.30000001192093,
+    "buildMs": 455.89999997615814,
+    "frames": 30,
+    "maxFrameGapMs": 33.30000000000007
+  },
+  "regionCorrespondence": {
+    "shared": 66,
+    "changed": 0,
+    "added": 57,
+    "removed": 65
+  },
+  "ground": {
+    "proxy": true,
+    "step": 4,
+    "vertices": 14641,
+    "triangles": 28800,
+    "buildMs": 546.5999999642372,
+    "maxTreeHeightError": 0.08605762929802951,
+    "meanTreeHeightError": 0.01545267815272902
+  },
+  "populationSize": 123,
+  "fog": {
+    "transitionHaze": true,
+    "near": 30,
+    "far": 300,
+    "color": "b5d9e8"
+  },
+  "prelitAtlasLoaded": true,
+  "prelitRotationViews": 8,
+  "prelitCameraViews": 16,
+  "prelitResolution": 128,
+  "prelitAtlasEnabled": true,
+  "normalAtlasLoaded": false,
+  "normalAtlasEnabled": false,
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": true,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "mediodía",
+  "nightAmount": 0,
+  "materialType": "MeshStandardMaterial",
+  "night": false,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    96,
+    28.597097376603685,
+    166
+  ],
+  "firstTree": {
+    "id": "0:-1:-4",
+    "slot": 0,
+    "x": -12.768519432070244,
+    "z": -48.25983975746009,
+    "y": 3.671572839032006,
+    "yaw": 5.021863025598015,
+    "scale": 0.9924146986729465,
+    "sx": 0.9585588895569309,
+    "sy": 0.9801071104558104,
+    "sz": 1.024547861496817,
+    "tint": 0.9534070077980868,
+    "radius": 3.8932818736879047,
+    "priority": 0.17644236935302615,
+    "origin": {
+      "x": -11.538106440044938,
+      "y": 3.671572839032006,
+      "z": -48.70509726363234
+    },
+    "distance": 240.28705698047307,
+    "atlas": {
+      "first": 4,
+      "second": 5,
+      "blend": 0.3822512362864101,
+      "nearest": 4
+    },
+    "right": {
+      "x": 0.891682816585797,
+      "y": 0,
+      "z": -0.45266075001663253
+    },
+    "impostorVisibility": 1
+  },
+  "drawCalls": 3,
+  "triangles": 116175,
+  "modelCount": 9,
+  "impostorCount": 123,
+  "selection": {
+    "selectionScans": 1,
+    "matrixUploads": 1
+  },
+  "webglError": 0,
+  "errors": []
+}

@@ -11,3 +11,13 @@ export function treeAtlasAnchor(tree,localBase){
  const c=Math.cos(tree.yaw),s=Math.sin(tree.yaw),[x,y,z]=localBase;
  return {...tree,origin:{x:tree.x,y:tree.y,z:tree.z},x:tree.x+x*tree.sx*c+z*tree.sz*s,y:tree.y+y*tree.sy,z:tree.z-x*tree.sx*s+z*tree.sz*c};
 }
+
+// QA correspondence across region replacement, outside the per-frame render path.
+export function compareTreeInstances(previous,next){
+ const before=new Map(previous.map(t=>[t.id,t])),after=new Map(next.map(t=>[t.id,t]));
+ let shared=0,changed=0;const fields=['x','y','z','yaw','scale','sx','sy','sz'];
+ for(const [id,t] of after){const old=before.get(id);if(!old)continue;shared++;
+  if(fields.some(key=>!Object.is(old[key],t[key]))||['x','y','z'].some(key=>!Object.is(old.origin?.[key],t.origin?.[key])))changed++;
+ }
+ return {shared,changed,added:after.size-shared,removed:before.size-shared};
+}
