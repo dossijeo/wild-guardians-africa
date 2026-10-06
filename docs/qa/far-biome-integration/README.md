@@ -35,3 +35,26 @@ After the measurement, the world loader gained an explicit fourth argument `{far
 This experiment still replaces visible distant ground with a coarse surface while allowing exact picking. Crops or buildings in that region can therefore disagree with its height. It is not accepted for gameplay.
 
 The next candidate, `compact=trees`, keeps the original exact terrain rendered and pickable and shortens only native prop rendering. Clip/water batches remain intact, including their shadows. Logical IDs, transforms, hazards, and routes remain resident; hidden props regain rendering as the camera moves. The default optional-controller setting is `preserveTerrain: true`; `compact=visual` explicitly disables it for comparison. Twenty-two targeted tests pass, including original raid bounds, ownership restoration, merged and fallback prop selection. No performance result from the whole-chunk experiments is attributed to this new candidate.
+
+## Exact terrain / shorter prop residency (8df30bd)
+
+`savanna-tree-only-abba.json` was measured after integrating main f806e29, before main b93df1a. Original 25 exact rendered/pickable terrains remain loaded; candidate renders native props from nine chunks and retains native clip/water batches. The four lots contain 120 frames each at the same camera/framebuffer as above. GPU p50 A1/B1/B2/A2: 24.550/22.317/21.737/22.405 ms; CPU p50: 6.1/5.6/5.6/6.4 ms. Calls 59/49/49/59, triangles 960014/745279/745279/960014. All 480 queries valid, no disjoint/context loss/hidden frames/pending queries/game-state changes.
+
+A1/A2 drift is about 9%; B1 is nearly the same as A2. This demonstrates fewer submissions in this view, **not a robust GPU improvement**, broad FPS claim or mobile result. Atlases remain allocated while the optional layer is toggled off during A lots; this benchmark does not compare memory allocation.
+
+## Native visual smoke checks (main b93df1a integrated)
+
+All files listed below come from one Mapungubwe village, seed 712, no gameplay saves. Four profiles are represented, not a full biome × culture × quality matrix. Native camera operations also clamp distance/height and may cross chunk borders; the JSON reports actual coordinates.
+
+| Biome | Quality | Evidence | Observation |
+| --- | --- | --- | --- |
+| Sabana | Medium | `savanna-tree-only-horizon-day/night.png` | Low horizon; backdrop remains too flat/blue. This is an acceptance counterexample. |
+| Gran Cañón | Medium | `canyon-tree-only-day/night.json/png`, `canyon-tree-only-orbit.png` | River and cliff terrain retained. Two resident species. Horizon-button view could enter a cliff; orbit view exposes mesa backdrop. |
+| Volcanes | Medium | `volcano-tree-only-day/night.json/png`, `volcano-tree-only-moved.png` | Lateral 96 m movement changes region to 192:0; native preparation settles without GL errors. Nearby baked billboards can visibly simplify the silhouette while models prepare. |
+| Manglares | High | `mangrove-high-tree-only-day/night.json/png` | 49 exact terrains and 25 prop chunks; water channels/moss remain native. Angular movement and night phase tested. |
+| Gran Río | Low | `river-low-tree-only-day/dusk.json/png` | Original river near terrain; angular movement and mixed day/night atlas phase. Coarse far shoreline remains approximate. |
+| Desierto | Very low | `desert-min-tree-only-day/night.json/png`, `desert-min-tree-only-horizon.png` | Native dunes/coarse horizon retained; mesa backdrop visible. Sparse tree population in reference scene. |
+
+Recorded JSON checks show zero world/shader/WebGL errors; no missing-biome asset exception. Static captures are not proof of imperceptible animated transitions. Native 8° atlas elevation is appropriate for distant trees, but the 40–60 m candidate transition remains visibly simplified in elevated/teleported views. Remaining acceptance work: slow approach/retreat and lateral/orbital recordings, delayed-chunk perception, precise far shorelines, backdrop art/composition, independent performance repetitions, mobile/device memory and other cultures. The optional loader is connected but **normal gameplay remains OFF**.
+
+Runtime atlas storage is bounded by active biome (eight 1024² atlases for four species or four for canyon), plus one backdrop. Cancellation tests release every borrowed/owned late resource exactly once; those tests do not measure browser caches, driver residency, decoded CPU images or total game RAM. Distributed atlas transfer is 20,450,296 bytes for all 22 species, not 235 MiB of simultaneous GPU textures.
