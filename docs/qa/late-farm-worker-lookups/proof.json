@@ -1,0 +1,23 @@
+{
+  "testedHead": "d77baf6703023ee7961f546a5dab38caed0c96da",
+  "referenceHead": "1bfd85a",
+  "referenceGameSha256": "ed120f506b8dd906571ac16f170e39cfb81fdc57aa69f14da0545003dea9fa7b",
+  "sourceHashes": {
+    "tools/benchmark_late_farm_worker_lookups.mjs": "509a2321d5e6c1d6a8949d0eaddf461bc4f81aa31bff496d3902798240b26707",
+    "src/simulation/game.js": "620e1b5e10b84827fb8c361710e174193b389f244f43024599550692665d2e61",
+    "src/simulation/worker-entity-lookup.js": "2e736726e78b5c3445a682a9b3dec577c37cdf8b83990852418841780f88fe22",
+    "src/simulation/tasks.js": "ec6c4ff11cf365e05ab5b789a6613e593535f3b7d985714295d2a6ae1b0b1062",
+    "src/world/navigation.js": "528251722c4ade4e56c80f9561b8ab5f9c845827886cdb19b4b6efe5654e66db",
+    "src/rendering/terrain-camera.js": "c585f7265e069448d0f2e1ee48b96129e3626d7f4d24da61508a07202531b317"
+  },
+  "inputs": {
+    "intensive-mangrove-shield-100": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+    "intensive-river-rejoin-100": "3c1831ea8c59ebbb7f6a669465e50b211c6022e470cd070ce04ac1d489547bc4",
+    "crop-lifecycle-eight-100": "6da1de9d51b41b829ce4a9a7180dbb8ed5b86481e01d6575954b1a4437569ea0"
+  },
+  "backgroundProcesses": [
+    20608,
+    36076
+  ],
+  "checks": "Three case outputs, 600 raw measured tick pairs, recomputed medians/maxima/win counts, nine complete-state equality checkpoints per case, identical event counts and path search counts; no economic 100-night or renderer acceptance."
+}

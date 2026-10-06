@@ -1,0 +1,3305 @@
+{
+  "scope": "Continuation of three actual archived 100-night victories through ordinary postgame and paid hiring commands. Native terrain; no overrides to balance, growth, FIFO, route, damage or history. Fifteen simulated seconds warmup then twenty measured, tick=0.1 seconds; alternating reference/candidate order each step. Setup, checkpoint validation/serialization/hash, events collection and file IO excluded from tick timing. CPU simulation costs, not rendering frametimes, FPS, GPU, RAM, phone or a current-balance 100-night campaign.",
+  "node": "v20.11.0",
+  "referenceRoot": "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\worker-lookups-1bfd-reference",
+  "cases": [
+    {
+      "source": "intensive-mangrove-shield-100",
+      "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+      "biome": "manglares",
+      "culture": "saheliana",
+      "day": 101,
+      "history": {
+        "plants": 12201,
+        "livePlants": 215,
+        "crates": 11602
+      },
+      "staff": 18,
+      "wages": 540,
+      "setupMoney": 563,
+      "endMoney": 841,
+      "events": {
+        "warmup": {
+          "CropMatured": 1,
+          "HarvestRequested": 1,
+          "CropPicked": 6,
+          "CrateDelivered": 2
+        },
+        "measured": {
+          "CrateDelivered": 17,
+          "CropPicked": 23,
+          "WaterSatisfied": 2,
+          "CropMatured": 3,
+          "HarvestRequested": 3
+        }
+      },
+      "pathSearches": 89,
+      "checkpoints": [
+        {
+          "label": "paid-postgame-setup",
+          "sha256": "ce9143e5fd81fea864909960ac6ad3ef4dfa607a8656a4b2a184e6f70ce7c34a",
+          "elapsed": 60008.99999939999
+        },
+        {
+          "label": "step-50",
+          "sha256": "5ff4485b7355f6b5cd796a9e1bcfd7765970d0e146ea3b1067fd39a4f8e94204",
+          "elapsed": 60013.999999399915
+        },
+        {
+          "label": "step-100",
+          "sha256": "4bc5c0d6831e857a737dda2dd9a0c0388012246489498b6da28056ad4d42be53",
+          "elapsed": 60018.99999939984
+        },
+        {
+          "label": "step-150",
+          "sha256": "d714f530696171e6dc1a412b550b673868ecc8b9b151ca7e111efdc2c2a91c4b",
+          "elapsed": 60023.99999939977
+        },
+        {
+          "label": "step-200",
+          "sha256": "e65b147eb247a23f04f503b7de5529113110a653cd201b36afd049ea2b4a7e51",
+          "elapsed": 60028.9999993997
+        },
+        {
+          "label": "step-250",
+          "sha256": "51b284a16a3e496d83a92c5641d2f683c98d33768cde9e5d4e5ad2581c7e3288",
+          "elapsed": 60033.999999399624
+        },
+        {
+          "label": "step-300",
+          "sha256": "fce51e148817c621357d7ea75d79cc8a38aad289a0e2f0e74eb30976f4ee08e8",
+          "elapsed": 60038.99999939955
+        },
+        {
+          "label": "step-350",
+          "sha256": "8255b9072d8d787187d0b986c2abd200cf0aa33149fb95d80cd1c5d4b3f4a752",
+          "elapsed": 60043.99999939948
+        },
+        {
+          "label": "end",
+          "sha256": "8255b9072d8d787187d0b986c2abd200cf0aa33149fb95d80cd1c5d4b3f4a752",
+          "elapsed": 60043.99999939948
+        }
+      ],
+      "samples": [
+        {
+          "step": 151,
+          "referenceMs": 12.08219999999983,
+          "candidateMs": 6.806599999999889
+        },
+        {
+          "step": 152,
+          "referenceMs": 9.41859999999997,
+          "candidateMs": 6.083599999999933
+        },
+        {
+          "step": 153,
+          "referenceMs": 10.171100000000479,
+          "candidateMs": 7.339399999999841
+        },
+        {
+          "step": 154,
+          "referenceMs": 13.67489999999998,
+          "candidateMs": 9.646099999999933
+        },
+        {
+          "step": 155,
+          "referenceMs": 8.407000000000153,
+          "candidateMs": 8.609699999999975
+        },
+        {
+          "step": 156,
+          "referenceMs": 13.192999999999302,
+          "candidateMs": 6.349499999999352
+        },
+        {
+          "step": 157,
+          "referenceMs": 15.32470000000012,
+          "candidateMs": 6.500500000000102
+        },
+        {
+          "step": 158,
+          "referenceMs": 14.3125,
+          "candidateMs": 10.292599999999766
+        },
+        {
+          "step": 159,
+          "referenceMs": 10.066899999999805,
+          "candidateMs": 6.899300000000039
+        },
+        {
+          "step": 160,
+          "referenceMs": 9.20219999999972,
+          "candidateMs": 6.962099999999737
+        },
+        {
+          "step": 161,
+          "referenceMs": 21.502700000000004,
+          "candidateMs": 20.18119999999999
+        },
+        {
+          "step": 162,
+          "referenceMs": 16.211200000000645,
+          "candidateMs": 11.234000000000378
+        },
+        {
+          "step": 163,
+          "referenceMs": 9.527900000000045,
+          "candidateMs": 7.632100000000719
+        },
+        {
+          "step": 164,
+          "referenceMs": 10.60990000000038,
+          "candidateMs": 5.993299999999181
+        },
+        {
+          "step": 165,
+          "referenceMs": 9.853699999999662,
+          "candidateMs": 6.388100000000122
+        },
+        {
+          "step": 166,
+          "referenceMs": 11.324100000000726,
+          "candidateMs": 5.971800000000258
+        },
+        {
+          "step": 167,
+          "referenceMs": 10.709100000000035,
+          "candidateMs": 7.956500000000233
+        },
+        {
+          "step": 168,
+          "referenceMs": 10.750600000000304,
+          "candidateMs": 6.07169999999951
+        },
+        {
+          "step": 169,
+          "referenceMs": 11.863299999999981,
+          "candidateMs": 6.6247999999995955
+        },
+        {
+          "step": 170,
+          "referenceMs": 13.15899999999965,
+          "candidateMs": 6.404900000000453
+        },
+        {
+          "step": 171,
+          "referenceMs": 8.515699999999924,
+          "candidateMs": 6.350499999999556
+        },
+        {
+          "step": 172,
+          "referenceMs": 8.431000000000495,
+          "candidateMs": 6.334200000000237
+        },
+        {
+          "step": 173,
+          "referenceMs": 7.291999999999462,
+          "candidateMs": 7.826100000000224
+        },
+        {
+          "step": 174,
+          "referenceMs": 13.96519999999964,
+          "candidateMs": 10.217200000000048
+        },
+        {
+          "step": 175,
+          "referenceMs": 12.550400000000081,
+          "candidateMs": 7.268399999999929
+        },
+        {
+          "step": 176,
+          "referenceMs": 9.158699999999953,
+          "candidateMs": 4.752700000000004
+        },
+        {
+          "step": 177,
+          "referenceMs": 12.71559999999954,
+          "candidateMs": 6.852600000000166
+        },
+        {
+          "step": 178,
+          "referenceMs": 10.503099999999904,
+          "candidateMs": 6.164300000000367
+        },
+        {
+          "step": 179,
+          "referenceMs": 8.323999999999614,
+          "candidateMs": 9.462399999999434
+        },
+        {
+          "step": 180,
+          "referenceMs": 12.085799999999836,
+          "candidateMs": 6.77179999999953
+        },
+        {
+          "step": 181,
+          "referenceMs": 13.0049999999992,
+          "candidateMs": 5.9452000000001135
+        },
+        {
+          "step": 182,
+          "referenceMs": 37.83940000000075,
+          "candidateMs": 34.100100000000566
+        },
+        {
+          "step": 183,
+          "referenceMs": 18.121799999999894,
+          "candidateMs": 9.827800000000025
+        },
+        {
+          "step": 184,
+          "referenceMs": 10.657200000000557,
+          "candidateMs": 7.475599999999758
+        },
+        {
+          "step": 185,
+          "referenceMs": 9.389099999999416,
+          "candidateMs": 6.842299999999341
+        },
+        {
+          "step": 186,
+          "referenceMs": 11.894599999999627,
+          "candidateMs": 7.054700000000594
+        },
+        {
+          "step": 187,
+          "referenceMs": 14.608499999999367,
+          "candidateMs": 10.67410000000018
+        },
+        {
+          "step": 188,
+          "referenceMs": 12.669299999999566,
+          "candidateMs": 8.091699999999946
+        },
+        {
+          "step": 189,
+          "referenceMs": 11.499699999999393,
+          "candidateMs": 8.251199999999699
+        },
+        {
+          "step": 190,
+          "referenceMs": 15.156299999999646,
+          "candidateMs": 10.36660000000029
+        },
+        {
+          "step": 191,
+          "referenceMs": 13.73700000000008,
+          "candidateMs": 6.761000000000422
+        },
+        {
+          "step": 192,
+          "referenceMs": 12.106600000000071,
+          "candidateMs": 6.932600000000093
+        },
+        {
+          "step": 193,
+          "referenceMs": 10.0645999999997,
+          "candidateMs": 7.507300000000214
+        },
+        {
+          "step": 194,
+          "referenceMs": 12.057799999999588,
+          "candidateMs": 6.05619999999999
+        },
+        {
+          "step": 195,
+          "referenceMs": 10.995700000000397,
+          "candidateMs": 6.72820000000047
+        },
+        {
+          "step": 196,
+          "referenceMs": 18.196799999999712,
+          "candidateMs": 13.530999999999949
+        },
+        {
+          "step": 197,
+          "referenceMs": 20.901700000000346,
+          "candidateMs": 9.371000000000095
+        },
+        {
+          "step": 198,
+          "referenceMs": 12.291999999999462,
+          "candidateMs": 6.412999999999556
+        },
+        {
+          "step": 199,
+          "referenceMs": 11.534099999999853,
+          "candidateMs": 7.245899999999892
+        },
+        {
+          "step": 200,
+          "referenceMs": 10.59559999999965,
+          "candidateMs": 7.66820000000007
+        },
+        {
+          "step": 201,
+          "referenceMs": 12.384000000000015,
+          "candidateMs": 9.287500000000364
+        },
+        {
+          "step": 202,
+          "referenceMs": 11.199499999999716,
+          "candidateMs": 7.786199999999553
+        },
+        {
+          "step": 203,
+          "referenceMs": 9.033400000000256,
+          "candidateMs": 6.547700000000077
+        },
+        {
+          "step": 204,
+          "referenceMs": 11.684400000000096,
+          "candidateMs": 6.228799999999865
+        },
+        {
+          "step": 205,
+          "referenceMs": 17.281599999999344,
+          "candidateMs": 6.826000000000022
+        },
+        {
+          "step": 206,
+          "referenceMs": 13.188599999999497,
+          "candidateMs": 6.91399999999976
+        },
+        {
+          "step": 207,
+          "referenceMs": 12.464799999999741,
+          "candidateMs": 6.818500000000313
+        },
+        {
+          "step": 208,
+          "referenceMs": 12.183399999999892,
+          "candidateMs": 7.1754000000000815
+        },
+        {
+          "step": 209,
+          "referenceMs": 10.211899999999332,
+          "candidateMs": 6.479199999999764
+        },
+        {
+          "step": 210,
+          "referenceMs": 19.35279999999966,
+          "candidateMs": 15.517100000000028
+        },
+        {
+          "step": 211,
+          "referenceMs": 18.276100000000042,
+          "candidateMs": 10.076699999999619
+        },
+        {
+          "step": 212,
+          "referenceMs": 10.704499999999825,
+          "candidateMs": 6.0734999999995125
+        },
+        {
+          "step": 213,
+          "referenceMs": 9.567600000000311,
+          "candidateMs": 6.850599999999758
+        },
+        {
+          "step": 214,
+          "referenceMs": 9.539300000000367,
+          "candidateMs": 6.26969999999983
+        },
+        {
+          "step": 215,
+          "referenceMs": 9.283300000000054,
+          "candidateMs": 6.009900000000016
+        },
+        {
+          "step": 216,
+          "referenceMs": 11.975400000000263,
+          "candidateMs": 7.917699999999968
+        },
+        {
+          "step": 217,
+          "referenceMs": 8.663500000000568,
+          "candidateMs": 6.267799999999625
+        },
+        {
+          "step": 218,
+          "referenceMs": 10.270900000000438,
+          "candidateMs": 6.022800000000643
+        },
+        {
+          "step": 219,
+          "referenceMs": 9.684299999999894,
+          "candidateMs": 7.2640999999994165
+        },
+        {
+          "step": 220,
+          "referenceMs": 13.848399999999856,
+          "candidateMs": 6.918400000000474
+        },
+        {
+          "step": 221,
+          "referenceMs": 10.839899999999943,
+          "candidateMs": 7.836100000000442
+        },
+        {
+          "step": 222,
+          "referenceMs": 11.362900000000081,
+          "candidateMs": 7.040600000000268
+        },
+        {
+          "step": 223,
+          "referenceMs": 8.534700000000157,
+          "candidateMs": 5.152799999999843
+        },
+        {
+          "step": 224,
+          "referenceMs": 9.879099999999198,
+          "candidateMs": 4.307799999999588
+        },
+        {
+          "step": 225,
+          "referenceMs": 8.696399999999812,
+          "candidateMs": 6.22440000000006
+        },
+        {
+          "step": 226,
+          "referenceMs": 10.562799999999697,
+          "candidateMs": 6.038300000000163
+        },
+        {
+          "step": 227,
+          "referenceMs": 9.960000000000036,
+          "candidateMs": 11.768600000000333
+        },
+        {
+          "step": 228,
+          "referenceMs": 11.315999999999804,
+          "candidateMs": 7.272200000000339
+        },
+        {
+          "step": 229,
+          "referenceMs": 8.714500000000044,
+          "candidateMs": 6.429599999999482
+        },
+        {
+          "step": 230,
+          "referenceMs": 11.475400000000263,
+          "candidateMs": 7.816499999999905
+        },
+        {
+          "step": 231,
+          "referenceMs": 24.11789999999928,
+          "candidateMs": 18.26459999999952
+        },
+        {
+          "step": 232,
+          "referenceMs": 13.607100000000173,
+          "candidateMs": 8.95430000000033
+        },
+        {
+          "step": 233,
+          "referenceMs": 8.429699999999684,
+          "candidateMs": 5.667199999999866
+        },
+        {
+          "step": 234,
+          "referenceMs": 7.283999999999651,
+          "candidateMs": 5.143799999999828
+        },
+        {
+          "step": 235,
+          "referenceMs": 5.102299999999559,
+          "candidateMs": 5.632800000000316
+        },
+        {
+          "step": 236,
+          "referenceMs": 12.017499999999927,
+          "candidateMs": 7.492400000000089
+        },
+        {
+          "step": 237,
+          "referenceMs": 11.459600000000137,
+          "candidateMs": 9.803899999999885
+        },
+        {
+          "step": 238,
+          "referenceMs": 8.983900000000176,
+          "candidateMs": 5.842200000000048
+        },
+        {
+          "step": 239,
+          "referenceMs": 7.07169999999951,
+          "candidateMs": 6.056599999999889
+        },
+        {
+          "step": 240,
+          "referenceMs": 11.886400000000322,
+          "candidateMs": 6.112100000000282
+        },
+        {
+          "step": 241,
+          "referenceMs": 8.060599999999795,
+          "candidateMs": 4.920700000000579
+        },
+        {
+          "step": 242,
+          "referenceMs": 10.161699999999655,
+          "candidateMs": 8.357100000000173
+        },
+        {
+          "step": 243,
+          "referenceMs": 10.92830000000049,
+          "candidateMs": 6.567500000000109
+        },
+        {
+          "step": 244,
+          "referenceMs": 13.611399999999776,
+          "candidateMs": 7.543599999999969
+        },
+        {
+          "step": 245,
+          "referenceMs": 11.155800000000454,
+          "candidateMs": 5.576600000000326
+        },
+        {
+          "step": 246,
+          "referenceMs": 9.665899999999965,
+          "candidateMs": 6.373400000000402
+        },
+        {
+          "step": 247,
+          "referenceMs": 15.310199999999895,
+          "candidateMs": 13.565700000000106
+        },
+        {
+          "step": 248,
+          "referenceMs": 16.9367000000002,
+          "candidateMs": 8.907600000000457
+        },
+        {
+          "step": 249,
+          "referenceMs": 15.086599999999635,
+          "candidateMs": 5.743099999999686
+        },
+        {
+          "step": 250,
+          "referenceMs": 12.025800000000345,
+          "candidateMs": 7.587899999999536
+        },
+        {
+          "step": 251,
+          "referenceMs": 8.272299999998722,
+          "candidateMs": 5.955799999999726
+        },
+        {
+          "step": 252,
+          "referenceMs": 14.117099999999482,
+          "candidateMs": 4.97269999999844
+        },
+        {
+          "step": 253,
+          "referenceMs": 6.946599999999307,
+          "candidateMs": 4.997699999999895
+        },
+        {
+          "step": 254,
+          "referenceMs": 13.128899999999703,
+          "candidateMs": 3.8716000000003987
+        },
+        {
+          "step": 255,
+          "referenceMs": 6.1230000000014115,
+          "candidateMs": 7.890399999998408
+        },
+        {
+          "step": 256,
+          "referenceMs": 16.387500000000728,
+          "candidateMs": 7.0385000000005675
+        },
+        {
+          "step": 257,
+          "referenceMs": 40.261499999998705,
+          "candidateMs": 41.207800000000134
+        },
+        {
+          "step": 258,
+          "referenceMs": 12.226000000000568,
+          "candidateMs": 11.66610000000037
+        },
+        {
+          "step": 259,
+          "referenceMs": 9.06590000000142,
+          "candidateMs": 6.034900000000562
+        },
+        {
+          "step": 260,
+          "referenceMs": 9.225200000000768,
+          "candidateMs": 5.907400000000052
+        },
+        {
+          "step": 261,
+          "referenceMs": 7.547699999999168,
+          "candidateMs": 5.815699999999197
+        },
+        {
+          "step": 262,
+          "referenceMs": 9.46849999999904,
+          "candidateMs": 5.688000000000102
+        },
+        {
+          "step": 263,
+          "referenceMs": 11.81630000000041,
+          "candidateMs": 7.511499999998705
+        },
+        {
+          "step": 264,
+          "referenceMs": 13.573700000000827,
+          "candidateMs": 8.39259999999922
+        },
+        {
+          "step": 265,
+          "referenceMs": 12.51839999999902,
+          "candidateMs": 7.91530000000057
+        },
+        {
+          "step": 266,
+          "referenceMs": 11.513899999999921,
+          "candidateMs": 6.542100000000573
+        },
+        {
+          "step": 267,
+          "referenceMs": 7.079200000000128,
+          "candidateMs": 7.833300000000236
+        },
+        {
+          "step": 268,
+          "referenceMs": 11.966700000000856,
+          "candidateMs": 7.058899999999994
+        },
+        {
+          "step": 269,
+          "referenceMs": 11.900700000000143,
+          "candidateMs": 6.231499999999869
+        },
+        {
+          "step": 270,
+          "referenceMs": 9.73109999999906,
+          "candidateMs": 6.29490000000078
+        },
+        {
+          "step": 271,
+          "referenceMs": 12.734700000000885,
+          "candidateMs": 6.740899999998874
+        },
+        {
+          "step": 272,
+          "referenceMs": 10.506400000000212,
+          "candidateMs": 6.481200000000172
+        },
+        {
+          "step": 273,
+          "referenceMs": 9.830500000000029,
+          "candidateMs": 6.89429999999993
+        },
+        {
+          "step": 274,
+          "referenceMs": 12.282200000001467,
+          "candidateMs": 7.650100000000748
+        },
+        {
+          "step": 275,
+          "referenceMs": 11.087600000000748,
+          "candidateMs": 6.645700000000943
+        },
+        {
+          "step": 276,
+          "referenceMs": 13.115799999999581,
+          "candidateMs": 6.199200000000928
+        },
+        {
+          "step": 277,
+          "referenceMs": 8.608299999999872,
+          "candidateMs": 6.536900000000969
+        },
+        {
+          "step": 278,
+          "referenceMs": 10.970500000001266,
+          "candidateMs": 7.18119999999908
+        },
+        {
+          "step": 279,
+          "referenceMs": 12.358899999999267,
+          "candidateMs": 7.667799999999261
+        },
+        {
+          "step": 280,
+          "referenceMs": 16.687200000000303,
+          "candidateMs": 8.23909999999887
+        },
+        {
+          "step": 281,
+          "referenceMs": 12.322599999999511,
+          "candidateMs": 10.524100000000544
+        },
+        {
+          "step": 282,
+          "referenceMs": 14.177099999998973,
+          "candidateMs": 11.281100000000151
+        },
+        {
+          "step": 283,
+          "referenceMs": 12.284100000000763,
+          "candidateMs": 7.971199999999953
+        },
+        {
+          "step": 284,
+          "referenceMs": 12.813900000001013,
+          "candidateMs": 6.579400000000533
+        },
+        {
+          "step": 285,
+          "referenceMs": 8.824300000000221,
+          "candidateMs": 6.0776999999998225
+        },
+        {
+          "step": 286,
+          "referenceMs": 12.418999999999869,
+          "candidateMs": 6.4452000000001135
+        },
+        {
+          "step": 287,
+          "referenceMs": 9.255300000000716,
+          "candidateMs": 6.539300000000367
+        },
+        {
+          "step": 288,
+          "referenceMs": 15.655899999999747,
+          "candidateMs": 8.204499999999825
+        },
+        {
+          "step": 289,
+          "referenceMs": 9,
+          "candidateMs": 6.21900000000096
+        },
+        {
+          "step": 290,
+          "referenceMs": 10.5625,
+          "candidateMs": 6.0261999999984255
+        },
+        {
+          "step": 291,
+          "referenceMs": 8.735400000001391,
+          "candidateMs": 7.210100000000239
+        },
+        {
+          "step": 292,
+          "referenceMs": 15.453100000000632,
+          "candidateMs": 6.324999999998909
+        },
+        {
+          "step": 293,
+          "referenceMs": 9.390600000000632,
+          "candidateMs": 7.233299999999872
+        },
+        {
+          "step": 294,
+          "referenceMs": 10.10070000000087,
+          "candidateMs": 6.671500000000378
+        },
+        {
+          "step": 295,
+          "referenceMs": 10.791600000000471,
+          "candidateMs": 6.302499999999782
+        },
+        {
+          "step": 296,
+          "referenceMs": 14.040800000000672,
+          "candidateMs": 7.339799999999741
+        },
+        {
+          "step": 297,
+          "referenceMs": 8.676499999999578,
+          "candidateMs": 6.960300000000643
+        },
+        {
+          "step": 298,
+          "referenceMs": 12.657900000000154,
+          "candidateMs": 5.966500000000451
+        },
+        {
+          "step": 299,
+          "referenceMs": 9.36620000000039,
+          "candidateMs": 6.931000000000495
+        },
+        {
+          "step": 300,
+          "referenceMs": 9.73869999999988,
+          "candidateMs": 8.061599999999089
+        },
+        {
+          "step": 301,
+          "referenceMs": 11.879800000000614,
+          "candidateMs": 6.467799999998533
+        },
+        {
+          "step": 302,
+          "referenceMs": 11.228499999999258,
+          "candidateMs": 7.793499999999767
+        },
+        {
+          "step": 303,
+          "referenceMs": 7.730999999999767,
+          "candidateMs": 5.5108000000000175
+        },
+        {
+          "step": 304,
+          "referenceMs": 12.307699999999386,
+          "candidateMs": 6.513100000000122
+        },
+        {
+          "step": 305,
+          "referenceMs": 7.9099999999998545,
+          "candidateMs": 7.445700000000215
+        },
+        {
+          "step": 306,
+          "referenceMs": 13.938000000000102,
+          "candidateMs": 5.999700000000303
+        },
+        {
+          "step": 307,
+          "referenceMs": 12.467500000000655,
+          "candidateMs": 7.6863999999986845
+        },
+        {
+          "step": 308,
+          "referenceMs": 13.600099999999657,
+          "candidateMs": 6.972200000000157
+        },
+        {
+          "step": 309,
+          "referenceMs": 19.54030000000057,
+          "candidateMs": 15.403200000000652
+        },
+        {
+          "step": 310,
+          "referenceMs": 16.199499999998807,
+          "candidateMs": 11.161599999999453
+        },
+        {
+          "step": 311,
+          "referenceMs": 8.39679999999862,
+          "candidateMs": 7.36239999999998
+        },
+        {
+          "step": 312,
+          "referenceMs": 10.296299999999974,
+          "candidateMs": 7.22190000000046
+        },
+        {
+          "step": 313,
+          "referenceMs": 6.394500000000335,
+          "candidateMs": 6.5385000000005675
+        },
+        {
+          "step": 314,
+          "referenceMs": 11.811099999998987,
+          "candidateMs": 5.964799999999741
+        },
+        {
+          "step": 315,
+          "referenceMs": 13.15599999999904,
+          "candidateMs": 6.303599999999278
+        },
+        {
+          "step": 316,
+          "referenceMs": 14.898800000000847,
+          "candidateMs": 7.459500000000844
+        },
+        {
+          "step": 317,
+          "referenceMs": 10.459600000000137,
+          "candidateMs": 6.4935999999997875
+        },
+        {
+          "step": 318,
+          "referenceMs": 14.037500000000364,
+          "candidateMs": 6.921500000000378
+        },
+        {
+          "step": 319,
+          "referenceMs": 26.568999999999505,
+          "candidateMs": 29.53480000000127
+        },
+        {
+          "step": 320,
+          "referenceMs": 18.461100000000442,
+          "candidateMs": 12.886199999999008
+        },
+        {
+          "step": 321,
+          "referenceMs": 10.989900000000489,
+          "candidateMs": 4.900400000000445
+        },
+        {
+          "step": 322,
+          "referenceMs": 11.369999999998981,
+          "candidateMs": 5.140599999998813
+        },
+        {
+          "step": 323,
+          "referenceMs": 8.82550000000083,
+          "candidateMs": 7.113699999999881
+        },
+        {
+          "step": 324,
+          "referenceMs": 8.775299999999334,
+          "candidateMs": 5.63760000000002
+        },
+        {
+          "step": 325,
+          "referenceMs": 8.633100000000923,
+          "candidateMs": 6.3289999999997235
+        },
+        {
+          "step": 326,
+          "referenceMs": 10.789800000000469,
+          "candidateMs": 7.30029999999897
+        },
+        {
+          "step": 327,
+          "referenceMs": 9.177799999999479,
+          "candidateMs": 7.538800000000265
+        },
+        {
+          "step": 328,
+          "referenceMs": 11.118399999999383,
+          "candidateMs": 6.009599999999409
+        },
+        {
+          "step": 329,
+          "referenceMs": 8.039099999999962,
+          "candidateMs": 8.193100000000413
+        },
+        {
+          "step": 330,
+          "referenceMs": 10.311799999999494,
+          "candidateMs": 6.900400000000445
+        },
+        {
+          "step": 331,
+          "referenceMs": 11.454099999999016,
+          "candidateMs": 6.253600000000006
+        },
+        {
+          "step": 332,
+          "referenceMs": 10.262699999999313,
+          "candidateMs": 5.634399999999005
+        },
+        {
+          "step": 333,
+          "referenceMs": 6.995100000000093,
+          "candidateMs": 6.404199999999037
+        },
+        {
+          "step": 334,
+          "referenceMs": 9.094699999999648,
+          "candidateMs": 5.728800000000774
+        },
+        {
+          "step": 335,
+          "referenceMs": 6.880900000000111,
+          "candidateMs": 6.17239999999947
+        },
+        {
+          "step": 336,
+          "referenceMs": 9.939700000000812,
+          "candidateMs": 6.680500000000393
+        },
+        {
+          "step": 337,
+          "referenceMs": 11.457900000001246,
+          "candidateMs": 7.961999999999534
+        },
+        {
+          "step": 338,
+          "referenceMs": 13.254699999999502,
+          "candidateMs": 17.026899999998932
+        },
+        {
+          "step": 339,
+          "referenceMs": 14.54949999999917,
+          "candidateMs": 9.89810000000034
+        },
+        {
+          "step": 340,
+          "referenceMs": 9.084100000000035,
+          "candidateMs": 9.03479999999945
+        },
+        {
+          "step": 341,
+          "referenceMs": 7.95260000000053,
+          "candidateMs": 6.6965000000000146
+        },
+        {
+          "step": 342,
+          "referenceMs": 9.579499999999825,
+          "candidateMs": 5.402799999999843
+        },
+        {
+          "step": 343,
+          "referenceMs": 8.176299999999173,
+          "candidateMs": 5.668999999999869
+        },
+        {
+          "step": 344,
+          "referenceMs": 8.834800000000541,
+          "candidateMs": 5.680599999999686
+        },
+        {
+          "step": 345,
+          "referenceMs": 12.299200000001292,
+          "candidateMs": 11.11659999999938
+        },
+        {
+          "step": 346,
+          "referenceMs": 14.513999999999214,
+          "candidateMs": 9.387700000001132
+        },
+        {
+          "step": 347,
+          "referenceMs": 9.033199999999852,
+          "candidateMs": 5.654399999999441
+        },
+        {
+          "step": 348,
+          "referenceMs": 10.402500000000146,
+          "candidateMs": 3.9104999999999563
+        },
+        {
+          "step": 349,
+          "referenceMs": 7.751599999999598,
+          "candidateMs": 5.978699999999662
+        },
+        {
+          "step": 350,
+          "referenceMs": 12.089399999998932,
+          "candidateMs": 6.461600000000544
+        }
+      ],
+      "candidateFasterTicks": 188,
+      "timing": {
+        "reference": {
+          "samples": 200,
+          "medianMs": 11.177650000000085,
+          "p95Ms": 18.196799999999712,
+          "maxMs": 40.261499999998705,
+          "totalMs": 2357.510199999995
+        },
+        "candidate": {
+          "samples": 200,
+          "medianMs": 6.84644999999955,
+          "p95Ms": 12.886199999999008,
+          "maxMs": 41.207800000000134,
+          "totalMs": 1565.4340999999922
+        }
+      },
+      "wallMsIncludingBothWorldsAndChecks": 9987.7518
+    },
+    {
+      "source": "intensive-river-rejoin-100",
+      "inputSha256": "3c1831ea8c59ebbb7f6a669465e50b211c6022e470cd070ce04ac1d489547bc4",
+      "biome": "gran-rio",
+      "culture": "mapungubwe",
+      "day": 101,
+      "history": {
+        "plants": 13541,
+        "livePlants": 557,
+        "crates": 12597
+      },
+      "staff": 47,
+      "wages": 1410,
+      "setupMoney": 804,
+      "endMoney": 6922,
+      "events": {
+        "warmup": {
+          "CropMatured": 4,
+          "HarvestRequested": 4,
+          "CropPicked": 10,
+          "WaterSatisfied": 7,
+          "CrateDelivered": 3
+        },
+        "measured": {
+          "CropPicked": 39,
+          "WaterSatisfied": 24,
+          "CrateDelivered": 26,
+          "CropMatured": 6,
+          "HarvestRequested": 6
+        }
+      },
+      "pathSearches": 214,
+      "checkpoints": [
+        {
+          "label": "paid-postgame-setup",
+          "sha256": "d8ba7dc732099286c934a63ad9dcbed05e103548c97849697600e427c961f385",
+          "elapsed": 60027.29999939969
+        },
+        {
+          "label": "step-50",
+          "sha256": "57852b95b7ef0a86e78bb13c25fa6f2e333933b001d3e8b46354b95f251888e2",
+          "elapsed": 60032.29999939962
+        },
+        {
+          "label": "step-100",
+          "sha256": "b825eaad77fc3fd09e04bb86ee84ac3bd53ecd01f0c37345c0203beb3afc1ce9",
+          "elapsed": 60037.29999939955
+        },
+        {
+          "label": "step-150",
+          "sha256": "99e373f79f79d923dea84119e9d98b60146c85e4a523a54ea640bea2cee2a39c",
+          "elapsed": 60042.299999399474
+        },
+        {
+          "label": "step-200",
+          "sha256": "651ccf3f5a480baca1a31b9ec131ccda4ec022038150dfb0e48468a5807c7139",
+          "elapsed": 60047.2999993994
+        },
+        {
+          "label": "step-250",
+          "sha256": "c35eddf3189b61382e91d71d6b4db8adbb38ecd87ce00cdc74b8d8b985caa55b",
+          "elapsed": 60052.29999939933
+        },
+        {
+          "label": "step-300",
+          "sha256": "4d64d85abc18a6a0a9fe1ce38aff6895d06cbb3fd3e34444a45a35e01f2de74b",
+          "elapsed": 60057.299999399256
+        },
+        {
+          "label": "step-350",
+          "sha256": "f606da03521b9472bd34b8572f19c8fe6579a1bce6baa102ce6f037f3cba4d3a",
+          "elapsed": 60062.29999939918
+        },
+        {
+          "label": "end",
+          "sha256": "f606da03521b9472bd34b8572f19c8fe6579a1bce6baa102ce6f037f3cba4d3a",
+          "elapsed": 60062.29999939918
+        }
+      ],
+      "samples": [
+        {
+          "step": 151,
+          "referenceMs": 22.193500000001222,
+          "candidateMs": 8.026600000001054
+        },
+        {
+          "step": 152,
+          "referenceMs": 18.053100000000995,
+          "candidateMs": 7.164700000001176
+        },
+        {
+          "step": 153,
+          "referenceMs": 39.18449999999939,
+          "candidateMs": 28.198899999999412
+        },
+        {
+          "step": 154,
+          "referenceMs": 20.993500000000495,
+          "candidateMs": 11.462599999998929
+        },
+        {
+          "step": 155,
+          "referenceMs": 20.93159999999989,
+          "candidateMs": 8.166399999998248
+        },
+        {
+          "step": 156,
+          "referenceMs": 22.08640000000014,
+          "candidateMs": 7.862300000000687
+        },
+        {
+          "step": 157,
+          "referenceMs": 19.11859999999797,
+          "candidateMs": 6.548600000001898
+        },
+        {
+          "step": 158,
+          "referenceMs": 15.658199999998033,
+          "candidateMs": 5.447899999999208
+        },
+        {
+          "step": 159,
+          "referenceMs": 19.132000000001426,
+          "candidateMs": 8.350000000002183
+        },
+        {
+          "step": 160,
+          "referenceMs": 22.135999999998603,
+          "candidateMs": 13.53070000000298
+        },
+        {
+          "step": 161,
+          "referenceMs": 25.058600000000297,
+          "candidateMs": 13.401700000002165
+        },
+        {
+          "step": 162,
+          "referenceMs": 19.35769999999684,
+          "candidateMs": 9.845100000002276
+        },
+        {
+          "step": 163,
+          "referenceMs": 20.15480000000025,
+          "candidateMs": 7.860399999997753
+        },
+        {
+          "step": 164,
+          "referenceMs": 26.704399999998714,
+          "candidateMs": 14.15769999999975
+        },
+        {
+          "step": 165,
+          "referenceMs": 19.860499999998865,
+          "candidateMs": 11.41229999999996
+        },
+        {
+          "step": 166,
+          "referenceMs": 22.97559999999794,
+          "candidateMs": 10.269000000000233
+        },
+        {
+          "step": 167,
+          "referenceMs": 29.955700000002253,
+          "candidateMs": 17.96559999999954
+        },
+        {
+          "step": 168,
+          "referenceMs": 27.135699999998906,
+          "candidateMs": 14.151599999997416
+        },
+        {
+          "step": 169,
+          "referenceMs": 25.244299999998475,
+          "candidateMs": 9.567699999999604
+        },
+        {
+          "step": 170,
+          "referenceMs": 21.42320000000109,
+          "candidateMs": 7.836800000000949
+        },
+        {
+          "step": 171,
+          "referenceMs": 21.1166000000012,
+          "candidateMs": 8.38130000000092
+        },
+        {
+          "step": 172,
+          "referenceMs": 22.059000000001106,
+          "candidateMs": 8.669499999999971
+        },
+        {
+          "step": 173,
+          "referenceMs": 15.921399999999267,
+          "candidateMs": 12.40520000000106
+        },
+        {
+          "step": 174,
+          "referenceMs": 22.519000000000233,
+          "candidateMs": 16.971799999999348
+        },
+        {
+          "step": 175,
+          "referenceMs": 20.682600000000093,
+          "candidateMs": 13.708300000002055
+        },
+        {
+          "step": 176,
+          "referenceMs": 34.38139999999839,
+          "candidateMs": 15.525300000001153
+        },
+        {
+          "step": 177,
+          "referenceMs": 23.92120000000068,
+          "candidateMs": 11.329699999998411
+        },
+        {
+          "step": 178,
+          "referenceMs": 18.086999999999534,
+          "candidateMs": 5.248999999999796
+        },
+        {
+          "step": 179,
+          "referenceMs": 20.506099999998696,
+          "candidateMs": 8.046199999997043
+        },
+        {
+          "step": 180,
+          "referenceMs": 22.883700000002136,
+          "candidateMs": 12.482100000001083
+        },
+        {
+          "step": 181,
+          "referenceMs": 23.67030000000159,
+          "candidateMs": 13.68920000000071
+        },
+        {
+          "step": 182,
+          "referenceMs": 23.914300000000367,
+          "candidateMs": 18.73990000000049
+        },
+        {
+          "step": 183,
+          "referenceMs": 19.1150000000016,
+          "candidateMs": 8.630499999999302
+        },
+        {
+          "step": 184,
+          "referenceMs": 22.052999999999884,
+          "candidateMs": 7.216300000000047
+        },
+        {
+          "step": 185,
+          "referenceMs": 14.597300000001269,
+          "candidateMs": 15.160299999999552
+        },
+        {
+          "step": 186,
+          "referenceMs": 21.115600000000995,
+          "candidateMs": 12.572199999998702
+        },
+        {
+          "step": 187,
+          "referenceMs": 17.253100000001723,
+          "candidateMs": 10.104600000002392
+        },
+        {
+          "step": 188,
+          "referenceMs": 20.349699999998847,
+          "candidateMs": 7.7281999999977415
+        },
+        {
+          "step": 189,
+          "referenceMs": 23.916799999999057,
+          "candidateMs": 8.295200000000477
+        },
+        {
+          "step": 190,
+          "referenceMs": 48.96350000000166,
+          "candidateMs": 36.99910000000091
+        },
+        {
+          "step": 191,
+          "referenceMs": 31.896200000002864,
+          "candidateMs": 15.84769999999844
+        },
+        {
+          "step": 192,
+          "referenceMs": 17.84360000000015,
+          "candidateMs": 9.618200000000797
+        },
+        {
+          "step": 193,
+          "referenceMs": 21.518400000000838,
+          "candidateMs": 7.588999999999942
+        },
+        {
+          "step": 194,
+          "referenceMs": 25.4500999999982,
+          "candidateMs": 8.260100000003149
+        },
+        {
+          "step": 195,
+          "referenceMs": 23.40940000000046,
+          "candidateMs": 10.082199999997101
+        },
+        {
+          "step": 196,
+          "referenceMs": 26.585699999999633,
+          "candidateMs": 11.27009999999791
+        },
+        {
+          "step": 197,
+          "referenceMs": 30.634399999999005,
+          "candidateMs": 11.27679999999964
+        },
+        {
+          "step": 198,
+          "referenceMs": 22.016100000000733,
+          "candidateMs": 11.72859999999855
+        },
+        {
+          "step": 199,
+          "referenceMs": 19.804199999998673,
+          "candidateMs": 10.648700000001554
+        },
+        {
+          "step": 200,
+          "referenceMs": 21.688600000001315,
+          "candidateMs": 10.232399999997142
+        },
+        {
+          "step": 201,
+          "referenceMs": 79.92709999999715,
+          "candidateMs": 10.739699999998265
+        },
+        {
+          "step": 202,
+          "referenceMs": 21.3804999999993,
+          "candidateMs": 8.585500000001048
+        },
+        {
+          "step": 203,
+          "referenceMs": 16.3070000000007,
+          "candidateMs": 7.230299999999261
+        },
+        {
+          "step": 204,
+          "referenceMs": 23.15780000000086,
+          "candidateMs": 8.69510000000082
+        },
+        {
+          "step": 205,
+          "referenceMs": 16.537500000002183,
+          "candidateMs": 10.313600000001315
+        },
+        {
+          "step": 206,
+          "referenceMs": 23.771899999999732,
+          "candidateMs": 8.683400000001711
+        },
+        {
+          "step": 207,
+          "referenceMs": 21.189399999999296,
+          "candidateMs": 7.634699999998702
+        },
+        {
+          "step": 208,
+          "referenceMs": 27.42829999999958,
+          "candidateMs": 8.759600000001228
+        },
+        {
+          "step": 209,
+          "referenceMs": 20.800899999998364,
+          "candidateMs": 7.9232000000010885
+        },
+        {
+          "step": 210,
+          "referenceMs": 33.468699999997625,
+          "candidateMs": 18.77769999999873
+        },
+        {
+          "step": 211,
+          "referenceMs": 28.088900000002468,
+          "candidateMs": 9.81840000000011
+        },
+        {
+          "step": 212,
+          "referenceMs": 22.494200000001,
+          "candidateMs": 7.188200000000506
+        },
+        {
+          "step": 213,
+          "referenceMs": 25.983800000001793,
+          "candidateMs": 9.527699999998731
+        },
+        {
+          "step": 214,
+          "referenceMs": 26.645199999999022,
+          "candidateMs": 7.664000000000669
+        },
+        {
+          "step": 215,
+          "referenceMs": 22.016700000000128,
+          "candidateMs": 8.260000000002037
+        },
+        {
+          "step": 216,
+          "referenceMs": 19.852200000001176,
+          "candidateMs": 8.330900000000838
+        },
+        {
+          "step": 217,
+          "referenceMs": 22.160799999997835,
+          "candidateMs": 11.72859999999855
+        },
+        {
+          "step": 218,
+          "referenceMs": 21.16660000000047,
+          "candidateMs": 9.870899999998073
+        },
+        {
+          "step": 219,
+          "referenceMs": 23.81840000000011,
+          "candidateMs": 8.03859999999986
+        },
+        {
+          "step": 220,
+          "referenceMs": 37.21479999999792,
+          "candidateMs": 17.869800000000396
+        },
+        {
+          "step": 221,
+          "referenceMs": 24.03359999999884,
+          "candidateMs": 9.750099999997474
+        },
+        {
+          "step": 222,
+          "referenceMs": 18.39060000000245,
+          "candidateMs": 10.399399999998423
+        },
+        {
+          "step": 223,
+          "referenceMs": 21.459399999999732,
+          "candidateMs": 7.995699999999488
+        },
+        {
+          "step": 224,
+          "referenceMs": 29.069299999999203,
+          "candidateMs": 9.192099999996572
+        },
+        {
+          "step": 225,
+          "referenceMs": 15.066800000000512,
+          "candidateMs": 10.607700000000477
+        },
+        {
+          "step": 226,
+          "referenceMs": 23.327499999999418,
+          "candidateMs": 16.217000000000553
+        },
+        {
+          "step": 227,
+          "referenceMs": 12.078700000001845,
+          "candidateMs": 7.603300000002491
+        },
+        {
+          "step": 228,
+          "referenceMs": 14.683700000001409,
+          "candidateMs": 7.077400000001944
+        },
+        {
+          "step": 229,
+          "referenceMs": 14.657800000000861,
+          "candidateMs": 11.690099999999802
+        },
+        {
+          "step": 230,
+          "referenceMs": 13.21429999999964,
+          "candidateMs": 8.209899999998015
+        },
+        {
+          "step": 231,
+          "referenceMs": 14.144899999999325,
+          "candidateMs": 9.845000000001164
+        },
+        {
+          "step": 232,
+          "referenceMs": 12.948500000002241,
+          "candidateMs": 8.311800000003132
+        },
+        {
+          "step": 233,
+          "referenceMs": 13.810199999999895,
+          "candidateMs": 10.427999999999884
+        },
+        {
+          "step": 234,
+          "referenceMs": 16.400499999999738,
+          "candidateMs": 9.421299999998155
+        },
+        {
+          "step": 235,
+          "referenceMs": 14.99659999999858,
+          "candidateMs": 8.065500000000611
+        },
+        {
+          "step": 236,
+          "referenceMs": 16.868999999998778,
+          "candidateMs": 9.716599999999744
+        },
+        {
+          "step": 237,
+          "referenceMs": 11.525799999999435,
+          "candidateMs": 7.4650000000001455
+        },
+        {
+          "step": 238,
+          "referenceMs": 17.603100000000268,
+          "candidateMs": 7.638100000000122
+        },
+        {
+          "step": 239,
+          "referenceMs": 14.39060000000245,
+          "candidateMs": 8.743200000000797
+        },
+        {
+          "step": 240,
+          "referenceMs": 14.720099999998638,
+          "candidateMs": 8.809900000000198
+        },
+        {
+          "step": 241,
+          "referenceMs": 13.808600000000297,
+          "candidateMs": 7.955699999998615
+        },
+        {
+          "step": 242,
+          "referenceMs": 12.381299999997282,
+          "candidateMs": 9.308499999999185
+        },
+        {
+          "step": 243,
+          "referenceMs": 19.148700000001554,
+          "candidateMs": 6.764600000002247
+        },
+        {
+          "step": 244,
+          "referenceMs": 15.966199999998935,
+          "candidateMs": 11.531200000001263
+        },
+        {
+          "step": 245,
+          "referenceMs": 18.383499999999913,
+          "candidateMs": 12.211100000000442
+        },
+        {
+          "step": 246,
+          "referenceMs": 16.079499999999825,
+          "candidateMs": 8.644100000001345
+        },
+        {
+          "step": 247,
+          "referenceMs": 18.41270000000077,
+          "candidateMs": 7.502799999998388
+        },
+        {
+          "step": 248,
+          "referenceMs": 48.20650000000023,
+          "candidateMs": 51.74229999999807
+        },
+        {
+          "step": 249,
+          "referenceMs": 19.51429999999891,
+          "candidateMs": 14.416600000000471
+        },
+        {
+          "step": 250,
+          "referenceMs": 13.463400000000547,
+          "candidateMs": 8.481100000000879
+        },
+        {
+          "step": 251,
+          "referenceMs": 15.223300000001473,
+          "candidateMs": 9.732199999998556
+        },
+        {
+          "step": 252,
+          "referenceMs": 14.870200000001205,
+          "candidateMs": 8.657500000001164
+        },
+        {
+          "step": 253,
+          "referenceMs": 9.007900000000518,
+          "candidateMs": 8.99949999999808
+        },
+        {
+          "step": 254,
+          "referenceMs": 22.370999999999185,
+          "candidateMs": 19.857499999998254
+        },
+        {
+          "step": 255,
+          "referenceMs": 19.68370000000141,
+          "candidateMs": 12.11109999999826
+        },
+        {
+          "step": 256,
+          "referenceMs": 13.56079999999929,
+          "candidateMs": 7.660800000001473
+        },
+        {
+          "step": 257,
+          "referenceMs": 31.841499999998632,
+          "candidateMs": 23.895300000000134
+        },
+        {
+          "step": 258,
+          "referenceMs": 18.274199999999837,
+          "candidateMs": 8.673800000000483
+        },
+        {
+          "step": 259,
+          "referenceMs": 17.776499999999942,
+          "candidateMs": 8.555999999996857
+        },
+        {
+          "step": 260,
+          "referenceMs": 14.179100000001199,
+          "candidateMs": 7.7849999999998545
+        },
+        {
+          "step": 261,
+          "referenceMs": 14.701399999998102,
+          "candidateMs": 11.427400000000489
+        },
+        {
+          "step": 262,
+          "referenceMs": 18.036700000000565,
+          "candidateMs": 13.2429000000011
+        },
+        {
+          "step": 263,
+          "referenceMs": 13.569900000002235,
+          "candidateMs": 7.316000000002532
+        },
+        {
+          "step": 264,
+          "referenceMs": 24.6237000000001,
+          "candidateMs": 17.910800000001473
+        },
+        {
+          "step": 265,
+          "referenceMs": 15.102699999999459,
+          "candidateMs": 10.67949999999837
+        },
+        {
+          "step": 266,
+          "referenceMs": 12.66110000000117,
+          "candidateMs": 10.54739999999947
+        },
+        {
+          "step": 267,
+          "referenceMs": 12.94680000000153,
+          "candidateMs": 10.55449999999837
+        },
+        {
+          "step": 268,
+          "referenceMs": 17.78979999999865,
+          "candidateMs": 8.331100000003062
+        },
+        {
+          "step": 269,
+          "referenceMs": 17.686600000000908,
+          "candidateMs": 7.943100000000413
+        },
+        {
+          "step": 270,
+          "referenceMs": 12.8849999999984,
+          "candidateMs": 5.988099999998667
+        },
+        {
+          "step": 271,
+          "referenceMs": 7.680299999999988,
+          "candidateMs": 6.558299999996962
+        },
+        {
+          "step": 272,
+          "referenceMs": 9.623900000002322,
+          "candidateMs": 6.849900000001071
+        },
+        {
+          "step": 273,
+          "referenceMs": 10.743099999999686,
+          "candidateMs": 7.273399999998219
+        },
+        {
+          "step": 274,
+          "referenceMs": 12.907999999999447,
+          "candidateMs": 7.502099999997881
+        },
+        {
+          "step": 275,
+          "referenceMs": 11.794600000001083,
+          "candidateMs": 8.065999999998894
+        },
+        {
+          "step": 276,
+          "referenceMs": 16.042100000002392,
+          "candidateMs": 10.429199999998673
+        },
+        {
+          "step": 277,
+          "referenceMs": 14.701499999999214,
+          "candidateMs": 7.314699999998993
+        },
+        {
+          "step": 278,
+          "referenceMs": 21.4516999999978,
+          "candidateMs": 14.533400000000256
+        },
+        {
+          "step": 279,
+          "referenceMs": 19.820599999999104,
+          "candidateMs": 12.161000000000058
+        },
+        {
+          "step": 280,
+          "referenceMs": 13.452200000003359,
+          "candidateMs": 7.648400000001857
+        },
+        {
+          "step": 281,
+          "referenceMs": 14.657800000000861,
+          "candidateMs": 9.630600000000413
+        },
+        {
+          "step": 282,
+          "referenceMs": 11.652799999999843,
+          "candidateMs": 8.980600000002596
+        },
+        {
+          "step": 283,
+          "referenceMs": 12.899700000001758,
+          "candidateMs": 8.041600000000471
+        },
+        {
+          "step": 284,
+          "referenceMs": 13.504499999999098,
+          "candidateMs": 7.526699999998527
+        },
+        {
+          "step": 285,
+          "referenceMs": 13.741399999998976,
+          "candidateMs": 11.117299999998068
+        },
+        {
+          "step": 286,
+          "referenceMs": 23.368200000000797,
+          "candidateMs": 16.311399999998685
+        },
+        {
+          "step": 287,
+          "referenceMs": 15.294499999999971,
+          "candidateMs": 9.946899999999005
+        },
+        {
+          "step": 288,
+          "referenceMs": 16.329499999999825,
+          "candidateMs": 11.65309999999954
+        },
+        {
+          "step": 289,
+          "referenceMs": 13.528299999998126,
+          "candidateMs": 13.584899999998015
+        },
+        {
+          "step": 290,
+          "referenceMs": 21.0512000000017,
+          "candidateMs": 17.15560000000187
+        },
+        {
+          "step": 291,
+          "referenceMs": 15.653999999998632,
+          "candidateMs": 11.915400000001682
+        },
+        {
+          "step": 292,
+          "referenceMs": 12.45180000000255,
+          "candidateMs": 9.287799999998242
+        },
+        {
+          "step": 293,
+          "referenceMs": 12.912100000001374,
+          "candidateMs": 7.955999999998312
+        },
+        {
+          "step": 294,
+          "referenceMs": 11.101300000002084,
+          "candidateMs": 9.131099999998696
+        },
+        {
+          "step": 295,
+          "referenceMs": 18.03859999999986,
+          "candidateMs": 12.380800000002637
+        },
+        {
+          "step": 296,
+          "referenceMs": 15.914899999999761,
+          "candidateMs": 11.107499999998254
+        },
+        {
+          "step": 297,
+          "referenceMs": 13.301199999998062,
+          "candidateMs": 7.3725999999987835
+        },
+        {
+          "step": 298,
+          "referenceMs": 14.369399999999587,
+          "candidateMs": 6.490799999999581
+        },
+        {
+          "step": 299,
+          "referenceMs": 11.553400000000693,
+          "candidateMs": 9.13969999999972
+        },
+        {
+          "step": 300,
+          "referenceMs": 15.151200000000244,
+          "candidateMs": 7.750499999998283
+        },
+        {
+          "step": 301,
+          "referenceMs": 13.571899999999005,
+          "candidateMs": 8.83980000000156
+        },
+        {
+          "step": 302,
+          "referenceMs": 16.561099999998987,
+          "candidateMs": 9.994699999999284
+        },
+        {
+          "step": 303,
+          "referenceMs": 16.414800000002288,
+          "candidateMs": 7.670900000000984
+        },
+        {
+          "step": 304,
+          "referenceMs": 14.17450000000099,
+          "candidateMs": 8.716699999997218
+        },
+        {
+          "step": 305,
+          "referenceMs": 10.563399999999092,
+          "candidateMs": 9.715299999999843
+        },
+        {
+          "step": 306,
+          "referenceMs": 14.462499999997817,
+          "candidateMs": 7.552700000000186
+        },
+        {
+          "step": 307,
+          "referenceMs": 13.614300000001094,
+          "candidateMs": 6.960800000000745
+        },
+        {
+          "step": 308,
+          "referenceMs": 13.749700000000303,
+          "candidateMs": 7.110899999999674
+        },
+        {
+          "step": 309,
+          "referenceMs": 10.090200000002369,
+          "candidateMs": 8.410099999997328
+        },
+        {
+          "step": 310,
+          "referenceMs": 12.458299999998417,
+          "candidateMs": 7.396200000002864
+        },
+        {
+          "step": 311,
+          "referenceMs": 9.037599999999657,
+          "candidateMs": 9.232299999999668
+        },
+        {
+          "step": 312,
+          "referenceMs": 14.708300000002055,
+          "candidateMs": 8.892699999996694
+        },
+        {
+          "step": 313,
+          "referenceMs": 12.122300000002724,
+          "candidateMs": 8.618000000002212
+        },
+        {
+          "step": 314,
+          "referenceMs": 15.33719999999812,
+          "candidateMs": 11.695599999999104
+        },
+        {
+          "step": 315,
+          "referenceMs": 16.02939999999944,
+          "candidateMs": 9.982899999999063
+        },
+        {
+          "step": 316,
+          "referenceMs": 15.721099999998842,
+          "candidateMs": 8.13130000000092
+        },
+        {
+          "step": 317,
+          "referenceMs": 17.077799999999115,
+          "candidateMs": 8.527500000000146
+        },
+        {
+          "step": 318,
+          "referenceMs": 15.987100000002101,
+          "candidateMs": 10.81199999999808
+        },
+        {
+          "step": 319,
+          "referenceMs": 17.045799999999872,
+          "candidateMs": 8.020599999999831
+        },
+        {
+          "step": 320,
+          "referenceMs": 16.965500000002066,
+          "candidateMs": 8.538000000000466
+        },
+        {
+          "step": 321,
+          "referenceMs": 14.343600000000151,
+          "candidateMs": 10.154999999998836
+        },
+        {
+          "step": 322,
+          "referenceMs": 17.05359999999928,
+          "candidateMs": 9.832399999999325
+        },
+        {
+          "step": 323,
+          "referenceMs": 17.497699999999895,
+          "candidateMs": 10.937699999998586
+        },
+        {
+          "step": 324,
+          "referenceMs": 15.526299999997718,
+          "candidateMs": 8.683799999998882
+        },
+        {
+          "step": 325,
+          "referenceMs": 16.48649999999907,
+          "candidateMs": 7.624300000003132
+        },
+        {
+          "step": 326,
+          "referenceMs": 17.77850000000035,
+          "candidateMs": 5.987700000001496
+        },
+        {
+          "step": 327,
+          "referenceMs": 19.05359999999928,
+          "candidateMs": 12.453299999997398
+        },
+        {
+          "step": 328,
+          "referenceMs": 12.462999999999738,
+          "candidateMs": 9.641200000001845
+        },
+        {
+          "step": 329,
+          "referenceMs": 11.319700000000012,
+          "candidateMs": 6.22019999999975
+        },
+        {
+          "step": 330,
+          "referenceMs": 15.338199999998324,
+          "candidateMs": 9.21820000000298
+        },
+        {
+          "step": 331,
+          "referenceMs": 14.079900000000634,
+          "candidateMs": 6.933099999998376
+        },
+        {
+          "step": 332,
+          "referenceMs": 13.047599999998056,
+          "candidateMs": 8.415399999998044
+        },
+        {
+          "step": 333,
+          "referenceMs": 18.465799999998126,
+          "candidateMs": 11.550999999999476
+        },
+        {
+          "step": 334,
+          "referenceMs": 16.14810000000216,
+          "candidateMs": 10.743299999998271
+        },
+        {
+          "step": 335,
+          "referenceMs": 16.545099999999366,
+          "candidateMs": 8.386200000000827
+        },
+        {
+          "step": 336,
+          "referenceMs": 16.667100000002392,
+          "candidateMs": 9.880499999999302
+        },
+        {
+          "step": 337,
+          "referenceMs": 12.230800000001182,
+          "candidateMs": 8.600399999999354
+        },
+        {
+          "step": 338,
+          "referenceMs": 16.022099999998318,
+          "candidateMs": 11.375200000002224
+        },
+        {
+          "step": 339,
+          "referenceMs": 13.535900000002584,
+          "candidateMs": 13.41779999999926
+        },
+        {
+          "step": 340,
+          "referenceMs": 23.022400000001653,
+          "candidateMs": 20.837800000001153
+        },
+        {
+          "step": 341,
+          "referenceMs": 14.007699999998295,
+          "candidateMs": 10.479299999999057
+        },
+        {
+          "step": 342,
+          "referenceMs": 13.656800000000658,
+          "candidateMs": 13.263800000000629
+        },
+        {
+          "step": 343,
+          "referenceMs": 14.207299999998213,
+          "candidateMs": 8.789700000001176
+        },
+        {
+          "step": 344,
+          "referenceMs": 14.606199999998353,
+          "candidateMs": 8.708099999999831
+        },
+        {
+          "step": 345,
+          "referenceMs": 12.609099999997852,
+          "candidateMs": 7.167999999997846
+        },
+        {
+          "step": 346,
+          "referenceMs": 10.60649999999805,
+          "candidateMs": 6.982200000002194
+        },
+        {
+          "step": 347,
+          "referenceMs": 11.669499999999971,
+          "candidateMs": 7.695000000003347
+        },
+        {
+          "step": 348,
+          "referenceMs": 13.64890000000014,
+          "candidateMs": 9.719499999999243
+        },
+        {
+          "step": 349,
+          "referenceMs": 10.880599999996775,
+          "candidateMs": 8.032600000002276
+        },
+        {
+          "step": 350,
+          "referenceMs": 15.381199999999808,
+          "candidateMs": 11.125
+        }
+      ],
+      "candidateFasterTicks": 196,
+      "timing": {
+        "reference": {
+          "samples": 200,
+          "medianMs": 16.768050000000585,
+          "p95Ms": 29.955700000002253,
+          "maxMs": 79.92709999999715,
+          "totalMs": 3722.475400000003
+        },
+        "candidate": {
+          "samples": 200,
+          "medianMs": 9.165899999998146,
+          "p95Ms": 17.869800000000396,
+          "maxMs": 51.74229999999807,
+          "totalMs": 2083.432799999984
+        }
+      },
+      "wallMsIncludingBothWorldsAndChecks": 13934.125900000001
+    },
+    {
+      "source": "crop-lifecycle-eight-100",
+      "inputSha256": "6da1de9d51b41b829ce4a9a7180dbb8ed5b86481e01d6575954b1a4437569ea0",
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "day": 101,
+      "history": {
+        "plants": 20443,
+        "livePlants": 546,
+        "crates": 19436
+      },
+      "staff": 46,
+      "wages": 1380,
+      "setupMoney": 631703,
+      "endMoney": 637985,
+      "events": {
+        "warmup": {
+          "CropMatured": 10,
+          "HarvestRequested": 10,
+          "WaterSatisfied": 13,
+          "CropPicked": 6
+        },
+        "measured": {
+          "CropPicked": 41,
+          "WaterSatisfied": 22,
+          "CrateDelivered": 28,
+          "CropMatured": 2,
+          "HarvestRequested": 2
+        }
+      },
+      "pathSearches": 218,
+      "checkpoints": [
+        {
+          "label": "paid-postgame-setup",
+          "sha256": "c284194267b78ef6cdcd8587fd260b80bd4659760db25eca68b876270a6a3f6a",
+          "elapsed": 60127.29999939824
+        },
+        {
+          "label": "step-50",
+          "sha256": "5f64d594ba7b70c98a553d85b27ce469f44dd0227797a24f1a3390c2a0dedbf0",
+          "elapsed": 60132.299999398165
+        },
+        {
+          "label": "step-100",
+          "sha256": "e249b906e34cf8b6d8a2f3333f10d87593a61f2f0b0d24381a2293ec3c0659c9",
+          "elapsed": 60137.29999939809
+        },
+        {
+          "label": "step-150",
+          "sha256": "01d7669a333e3a7261204289be0a607df00f0e807caf23ceb52bff17e3b96e5d",
+          "elapsed": 60142.29999939802
+        },
+        {
+          "label": "step-200",
+          "sha256": "8a7ceb8b11c2707cdea89860bae652d283e18c1740c1d19e15cd4a84725e5f25",
+          "elapsed": 60147.29999939795
+        },
+        {
+          "label": "step-250",
+          "sha256": "f3564f6514ceedd27b7191e9efe727040a95606b85209e46e96ce97b880b13b5",
+          "elapsed": 60152.299999397874
+        },
+        {
+          "label": "step-300",
+          "sha256": "f76057cefa39a28d7ae2f83ed06088da72cc296fe66410eb08e6efd5e980349c",
+          "elapsed": 60157.2999993978
+        },
+        {
+          "label": "step-350",
+          "sha256": "61f33e2fa571b7d31cdf98d7a742151cf2c3fe1f6b4c59c63dda0a97813d6746",
+          "elapsed": 60162.29999939773
+        },
+        {
+          "label": "end",
+          "sha256": "61f33e2fa571b7d31cdf98d7a742151cf2c3fe1f6b4c59c63dda0a97813d6746",
+          "elapsed": 60162.29999939773
+        }
+      ],
+      "samples": [
+        {
+          "step": 151,
+          "referenceMs": 24.19340000000375,
+          "candidateMs": 14.272100000001956
+        },
+        {
+          "step": 152,
+          "referenceMs": 22.01430000000255,
+          "candidateMs": 11.673299999994924
+        },
+        {
+          "step": 153,
+          "referenceMs": 19.09900000000198,
+          "candidateMs": 12.55279999999766
+        },
+        {
+          "step": 154,
+          "referenceMs": 20.500999999996566,
+          "candidateMs": 18.518000000003667
+        },
+        {
+          "step": 155,
+          "referenceMs": 23.82680000000255,
+          "candidateMs": 18.52379999999539
+        },
+        {
+          "step": 156,
+          "referenceMs": 24.952799999999115,
+          "candidateMs": 20.76430000000255
+        },
+        {
+          "step": 157,
+          "referenceMs": 22.394599999999627,
+          "candidateMs": 17.752400000004855
+        },
+        {
+          "step": 158,
+          "referenceMs": 24.69959999999992,
+          "candidateMs": 19.13470000000234
+        },
+        {
+          "step": 159,
+          "referenceMs": 21.48449999999866,
+          "candidateMs": 12.78570000000036
+        },
+        {
+          "step": 160,
+          "referenceMs": 20.690200000004552,
+          "candidateMs": 12.000099999997474
+        },
+        {
+          "step": 161,
+          "referenceMs": 25.093699999997625,
+          "candidateMs": 14.040100000005623
+        },
+        {
+          "step": 162,
+          "referenceMs": 22.139400000000023,
+          "candidateMs": 17.893400000000838
+        },
+        {
+          "step": 163,
+          "referenceMs": 29.686500000003434,
+          "candidateMs": 13.377700000004552
+        },
+        {
+          "step": 164,
+          "referenceMs": 30.581700000002456,
+          "candidateMs": 14.887799999996787
+        },
+        {
+          "step": 165,
+          "referenceMs": 22.913000000000466,
+          "candidateMs": 19.87029999999504
+        },
+        {
+          "step": 166,
+          "referenceMs": 26.686099999998987,
+          "candidateMs": 16.42189999999391
+        },
+        {
+          "step": 167,
+          "referenceMs": 28.896600000000035,
+          "candidateMs": 13.90729999999894
+        },
+        {
+          "step": 168,
+          "referenceMs": 25.50170000000071,
+          "candidateMs": 12.510299999994459
+        },
+        {
+          "step": 169,
+          "referenceMs": 36.41690000000381,
+          "candidateMs": 23.062799999999697
+        },
+        {
+          "step": 170,
+          "referenceMs": 25.525300000001153,
+          "candidateMs": 15.582799999996496
+        },
+        {
+          "step": 171,
+          "referenceMs": 20.76799999999639,
+          "candidateMs": 12.899899999996705
+        },
+        {
+          "step": 172,
+          "referenceMs": 26.120899999994435,
+          "candidateMs": 12.375900000006368
+        },
+        {
+          "step": 173,
+          "referenceMs": 29.12510000000475,
+          "candidateMs": 23.18340000000171
+        },
+        {
+          "step": 174,
+          "referenceMs": 30.541000000004715,
+          "candidateMs": 15.271399999997811
+        },
+        {
+          "step": 175,
+          "referenceMs": 19.74409999999625,
+          "candidateMs": 20.174199999994016
+        },
+        {
+          "step": 176,
+          "referenceMs": 23.42740000000049,
+          "candidateMs": 12.11699999999837
+        },
+        {
+          "step": 177,
+          "referenceMs": 23.24960000000283,
+          "candidateMs": 12.71129999999539
+        },
+        {
+          "step": 178,
+          "referenceMs": 26.727100000003702,
+          "candidateMs": 23.68970000000263
+        },
+        {
+          "step": 179,
+          "referenceMs": 28.864800000003015,
+          "candidateMs": 16.520500000005995
+        },
+        {
+          "step": 180,
+          "referenceMs": 19.9346000000005,
+          "candidateMs": 10.750399999997171
+        },
+        {
+          "step": 181,
+          "referenceMs": 20.872300000002724,
+          "candidateMs": 11.399600000004284
+        },
+        {
+          "step": 182,
+          "referenceMs": 21.370600000002014,
+          "candidateMs": 11.40179999999964
+        },
+        {
+          "step": 183,
+          "referenceMs": 21.151300000004994,
+          "candidateMs": 14.185099999995145
+        },
+        {
+          "step": 184,
+          "referenceMs": 26.569799999997485,
+          "candidateMs": 13.833300000005693
+        },
+        {
+          "step": 185,
+          "referenceMs": 33.88139999999839,
+          "candidateMs": 30.905400000003283
+        },
+        {
+          "step": 186,
+          "referenceMs": 39.49279999999999,
+          "candidateMs": 21.837099999997008
+        },
+        {
+          "step": 187,
+          "referenceMs": 27.228000000002794,
+          "candidateMs": 15.799499999993714
+        },
+        {
+          "step": 188,
+          "referenceMs": 28.58360000000539,
+          "candidateMs": 24.53899999999703
+        },
+        {
+          "step": 189,
+          "referenceMs": 29.950700000001234,
+          "candidateMs": 25.62120000000141
+        },
+        {
+          "step": 190,
+          "referenceMs": 33.650000000001455,
+          "candidateMs": 25.85120000000461
+        },
+        {
+          "step": 191,
+          "referenceMs": 23.737800000002608,
+          "candidateMs": 15.309699999997974
+        },
+        {
+          "step": 192,
+          "referenceMs": 35.02070000000094,
+          "candidateMs": 24.04439999999886
+        },
+        {
+          "step": 193,
+          "referenceMs": 29.519200000002456,
+          "candidateMs": 17.786700000004203
+        },
+        {
+          "step": 194,
+          "referenceMs": 22.837899999998626,
+          "candidateMs": 14.492299999998068
+        },
+        {
+          "step": 195,
+          "referenceMs": 23.428500000001804,
+          "candidateMs": 19.25920000000042
+        },
+        {
+          "step": 196,
+          "referenceMs": 23.07430000000022,
+          "candidateMs": 13.026399999995192
+        },
+        {
+          "step": 197,
+          "referenceMs": 21.311699999998382,
+          "candidateMs": 13.359599999996135
+        },
+        {
+          "step": 198,
+          "referenceMs": 21.847999999998137,
+          "candidateMs": 15.248599999998987
+        },
+        {
+          "step": 199,
+          "referenceMs": 21.154999999998836,
+          "candidateMs": 10.9346000000005
+        },
+        {
+          "step": 200,
+          "referenceMs": 21.11579999999958,
+          "candidateMs": 12.101399999999558
+        },
+        {
+          "step": 201,
+          "referenceMs": 19.918000000005122,
+          "candidateMs": 11.810199999999895
+        },
+        {
+          "step": 202,
+          "referenceMs": 21.44220000000496,
+          "candidateMs": 14.153299999998126
+        },
+        {
+          "step": 203,
+          "referenceMs": 21.01430000000255,
+          "candidateMs": 13.094199999999546
+        },
+        {
+          "step": 204,
+          "referenceMs": 23.316500000000815,
+          "candidateMs": 13.092899999996007
+        },
+        {
+          "step": 205,
+          "referenceMs": 32.36699999999837,
+          "candidateMs": 13.644699999997101
+        },
+        {
+          "step": 206,
+          "referenceMs": 35.64510000000155,
+          "candidateMs": 23.090400000000955
+        },
+        {
+          "step": 207,
+          "referenceMs": 29.253100000001723,
+          "candidateMs": 17.727099999996426
+        },
+        {
+          "step": 208,
+          "referenceMs": 23.957500000004075,
+          "candidateMs": 13.783000000003085
+        },
+        {
+          "step": 209,
+          "referenceMs": 19.626399999993737,
+          "candidateMs": 17.13539999999921
+        },
+        {
+          "step": 210,
+          "referenceMs": 24.988499999999476,
+          "candidateMs": 13.38760000000184
+        },
+        {
+          "step": 211,
+          "referenceMs": 24.09620000000723,
+          "candidateMs": 10.29780000000028
+        },
+        {
+          "step": 212,
+          "referenceMs": 25.83839999999327,
+          "candidateMs": 15.099699999998847
+        },
+        {
+          "step": 213,
+          "referenceMs": 24.610500000002503,
+          "candidateMs": 19.900500000003376
+        },
+        {
+          "step": 214,
+          "referenceMs": 29.217299999996612,
+          "candidateMs": 17.80050000000483
+        },
+        {
+          "step": 215,
+          "referenceMs": 34.710800000000745,
+          "candidateMs": 21.776200000000244
+        },
+        {
+          "step": 216,
+          "referenceMs": 23.5963999999949,
+          "candidateMs": 11.245699999999488
+        },
+        {
+          "step": 217,
+          "referenceMs": 21.591099999997823,
+          "candidateMs": 12.496199999994133
+        },
+        {
+          "step": 218,
+          "referenceMs": 21.667900000000373,
+          "candidateMs": 15.112300000000687
+        },
+        {
+          "step": 219,
+          "referenceMs": 22.781000000002678,
+          "candidateMs": 19.461499999997613
+        },
+        {
+          "step": 220,
+          "referenceMs": 35.58159999999771,
+          "candidateMs": 21.21600000000035
+        },
+        {
+          "step": 221,
+          "referenceMs": 22.87670000000071,
+          "candidateMs": 12.871600000005856
+        },
+        {
+          "step": 222,
+          "referenceMs": 31.42740000000049,
+          "candidateMs": 28.478699999999662
+        },
+        {
+          "step": 223,
+          "referenceMs": 24.408300000002782,
+          "candidateMs": 15.807700000004843
+        },
+        {
+          "step": 224,
+          "referenceMs": 19.451999999997497,
+          "candidateMs": 13.852499999993597
+        },
+        {
+          "step": 225,
+          "referenceMs": 19.399100000002363,
+          "candidateMs": 13.448899999995774
+        },
+        {
+          "step": 226,
+          "referenceMs": 27.015299999999115,
+          "candidateMs": 19.31210000000283
+        },
+        {
+          "step": 227,
+          "referenceMs": 31.03450000000157,
+          "candidateMs": 23.056700000001
+        },
+        {
+          "step": 228,
+          "referenceMs": 25.283199999998033,
+          "candidateMs": 15.620899999994435
+        },
+        {
+          "step": 229,
+          "referenceMs": 19.049599999998463,
+          "candidateMs": 15.689400000002934
+        },
+        {
+          "step": 230,
+          "referenceMs": 37.642100000004575,
+          "candidateMs": 21.8804999999993
+        },
+        {
+          "step": 231,
+          "referenceMs": 24.135999999998603,
+          "candidateMs": 14.612900000000081
+        },
+        {
+          "step": 232,
+          "referenceMs": 21.85779999999795,
+          "candidateMs": 13.906300000002375
+        },
+        {
+          "step": 233,
+          "referenceMs": 22.016700000000128,
+          "candidateMs": 15.477200000001176
+        },
+        {
+          "step": 234,
+          "referenceMs": 23.36760000000504,
+          "candidateMs": 13.137000000002445
+        },
+        {
+          "step": 235,
+          "referenceMs": 22.887300000002142,
+          "candidateMs": 15.813800000003539
+        },
+        {
+          "step": 236,
+          "referenceMs": 21.572199999995064,
+          "candidateMs": 12.810499999999593
+        },
+        {
+          "step": 237,
+          "referenceMs": 24.65439999999944,
+          "candidateMs": 15.206899999997404
+        },
+        {
+          "step": 238,
+          "referenceMs": 24.34429999999702,
+          "candidateMs": 22.96020000000135
+        },
+        {
+          "step": 239,
+          "referenceMs": 28.638899999998102,
+          "candidateMs": 20.150699999998324
+        },
+        {
+          "step": 240,
+          "referenceMs": 26.618899999994028,
+          "candidateMs": 19.657700000003388
+        },
+        {
+          "step": 241,
+          "referenceMs": 28.186699999998382,
+          "candidateMs": 18.043600000004517
+        },
+        {
+          "step": 242,
+          "referenceMs": 25.56919999999809,
+          "candidateMs": 17.97200000000157
+        },
+        {
+          "step": 243,
+          "referenceMs": 25.18119999999908,
+          "candidateMs": 12.836699999999837
+        },
+        {
+          "step": 244,
+          "referenceMs": 20.4658999999956,
+          "candidateMs": 14.440699999999197
+        },
+        {
+          "step": 245,
+          "referenceMs": 25.08640000000014,
+          "candidateMs": 11.145700000000943
+        },
+        {
+          "step": 246,
+          "referenceMs": 23.325400000001537,
+          "candidateMs": 11.630099999994854
+        },
+        {
+          "step": 247,
+          "referenceMs": 23.058100000002014,
+          "candidateMs": 14.010800000003655
+        },
+        {
+          "step": 248,
+          "referenceMs": 32.43549999999959,
+          "candidateMs": 20.366399999998976
+        },
+        {
+          "step": 249,
+          "referenceMs": 26.281800000004296,
+          "candidateMs": 20.55340000000433
+        },
+        {
+          "step": 250,
+          "referenceMs": 27.695999999996275,
+          "candidateMs": 18.070800000001327
+        },
+        {
+          "step": 251,
+          "referenceMs": 24.37840000000142,
+          "candidateMs": 15.188999999998487
+        },
+        {
+          "step": 252,
+          "referenceMs": 22.353399999999965,
+          "candidateMs": 10.71759999999631
+        },
+        {
+          "step": 253,
+          "referenceMs": 15.702599999996892,
+          "candidateMs": 13.164800000005926
+        },
+        {
+          "step": 254,
+          "referenceMs": 21.144399999997404,
+          "candidateMs": 11.495799999996962
+        },
+        {
+          "step": 255,
+          "referenceMs": 20.468699999997625,
+          "candidateMs": 13.203099999998813
+        },
+        {
+          "step": 256,
+          "referenceMs": 23.029099999999744,
+          "candidateMs": 13.464999999996508
+        },
+        {
+          "step": 257,
+          "referenceMs": 19.758300000001327,
+          "candidateMs": 20.050300000002608
+        },
+        {
+          "step": 258,
+          "referenceMs": 21.299200000001292,
+          "candidateMs": 13.930799999994633
+        },
+        {
+          "step": 259,
+          "referenceMs": 20.066800000000512,
+          "candidateMs": 14.367799999999988
+        },
+        {
+          "step": 260,
+          "referenceMs": 23.61359999999695,
+          "candidateMs": 15.36819999999716
+        },
+        {
+          "step": 261,
+          "referenceMs": 23.775300000001153,
+          "candidateMs": 11.423299999994924
+        },
+        {
+          "step": 262,
+          "referenceMs": 23.37850000000617,
+          "candidateMs": 11.792099999998754
+        },
+        {
+          "step": 263,
+          "referenceMs": 22.235599999999977,
+          "candidateMs": 14.773399999998219
+        },
+        {
+          "step": 264,
+          "referenceMs": 19.993099999999686,
+          "candidateMs": 15.393600000003062
+        },
+        {
+          "step": 265,
+          "referenceMs": 21.77719999999681,
+          "candidateMs": 14.916599999996834
+        },
+        {
+          "step": 266,
+          "referenceMs": 18.781999999999243,
+          "candidateMs": 20.491800000003423
+        },
+        {
+          "step": 267,
+          "referenceMs": 21.271700000004785,
+          "candidateMs": 15.516600000002654
+        },
+        {
+          "step": 268,
+          "referenceMs": 16.96600000000035,
+          "candidateMs": 14.027500000003783
+        },
+        {
+          "step": 269,
+          "referenceMs": 19.34469999999419,
+          "candidateMs": 12.238999999994121
+        },
+        {
+          "step": 270,
+          "referenceMs": 19.62340000000404,
+          "candidateMs": 12.438199999996868
+        },
+        {
+          "step": 271,
+          "referenceMs": 22.444400000000314,
+          "candidateMs": 12.531699999999546
+        },
+        {
+          "step": 272,
+          "referenceMs": 22.362699999997858,
+          "candidateMs": 12.159999999996217
+        },
+        {
+          "step": 273,
+          "referenceMs": 29.440199999997276,
+          "candidateMs": 15.498799999993935
+        },
+        {
+          "step": 274,
+          "referenceMs": 22.587800000001153,
+          "candidateMs": 21.04239999999845
+        },
+        {
+          "step": 275,
+          "referenceMs": 24.080699999998615,
+          "candidateMs": 15.944100000000617
+        },
+        {
+          "step": 276,
+          "referenceMs": 22.311699999998382,
+          "candidateMs": 14.219200000006822
+        },
+        {
+          "step": 277,
+          "referenceMs": 27.785400000000664,
+          "candidateMs": 15.318100000004051
+        },
+        {
+          "step": 278,
+          "referenceMs": 23.754199999995762,
+          "candidateMs": 11.354000000006636
+        },
+        {
+          "step": 279,
+          "referenceMs": 23.325799999998708,
+          "candidateMs": 12.978800000004412
+        },
+        {
+          "step": 280,
+          "referenceMs": 26.839700000004086,
+          "candidateMs": 13.65179999999964
+        },
+        {
+          "step": 281,
+          "referenceMs": 25.30460000000312,
+          "candidateMs": 17.162499999998545
+        },
+        {
+          "step": 282,
+          "referenceMs": 26.15559999999823,
+          "candidateMs": 20.57850000000326
+        },
+        {
+          "step": 283,
+          "referenceMs": 34.1877999999997,
+          "candidateMs": 14.089200000002165
+        },
+        {
+          "step": 284,
+          "referenceMs": 24.621899999998277,
+          "candidateMs": 14.936000000001513
+        },
+        {
+          "step": 285,
+          "referenceMs": 23.303500000001804,
+          "candidateMs": 15.491900000000896
+        },
+        {
+          "step": 286,
+          "referenceMs": 24.97320000000036,
+          "candidateMs": 25.96349999999802
+        },
+        {
+          "step": 287,
+          "referenceMs": 35.82519999999931,
+          "candidateMs": 21.00100000000384
+        },
+        {
+          "step": 288,
+          "referenceMs": 26.045099999995728,
+          "candidateMs": 18.432199999995646
+        },
+        {
+          "step": 289,
+          "referenceMs": 27.611000000004424,
+          "candidateMs": 19.47479999999632
+        },
+        {
+          "step": 290,
+          "referenceMs": 36.457900000001246,
+          "candidateMs": 27.970800000002782
+        },
+        {
+          "step": 291,
+          "referenceMs": 26.00920000000042,
+          "candidateMs": 19.080000000001746
+        },
+        {
+          "step": 292,
+          "referenceMs": 16.98420000000624,
+          "candidateMs": 12.1137000000017
+        },
+        {
+          "step": 293,
+          "referenceMs": 19.61290000000008,
+          "candidateMs": 12.0824000000066
+        },
+        {
+          "step": 294,
+          "referenceMs": 18.558099999994738,
+          "candidateMs": 11.798099999999977
+        },
+        {
+          "step": 295,
+          "referenceMs": 19.433100000002014,
+          "candidateMs": 12.45049999999901
+        },
+        {
+          "step": 296,
+          "referenceMs": 25.498399999996764,
+          "candidateMs": 20.0315000000046
+        },
+        {
+          "step": 297,
+          "referenceMs": 25.78399999999965,
+          "candidateMs": 24.497699999999895
+        },
+        {
+          "step": 298,
+          "referenceMs": 34.20019999999931,
+          "candidateMs": 27.119400000003225
+        },
+        {
+          "step": 299,
+          "referenceMs": 34.50500000000466,
+          "candidateMs": 23.013199999993958
+        },
+        {
+          "step": 300,
+          "referenceMs": 23.487600000000384,
+          "candidateMs": 16.214599999999336
+        },
+        {
+          "step": 301,
+          "referenceMs": 23.340400000000955,
+          "candidateMs": 10.836200000005192
+        },
+        {
+          "step": 302,
+          "referenceMs": 23.31130000000121,
+          "candidateMs": 15.150399999998626
+        },
+        {
+          "step": 303,
+          "referenceMs": 23.945599999999104,
+          "candidateMs": 19.038800000002084
+        },
+        {
+          "step": 304,
+          "referenceMs": 28.532200000001467,
+          "candidateMs": 25.92149999999674
+        },
+        {
+          "step": 305,
+          "referenceMs": 25.726500000004307,
+          "candidateMs": 20.152099999999336
+        },
+        {
+          "step": 306,
+          "referenceMs": 26.29239999999845,
+          "candidateMs": 12.959799999996903
+        },
+        {
+          "step": 307,
+          "referenceMs": 32.63549999999668,
+          "candidateMs": 23.33480000000418
+        },
+        {
+          "step": 308,
+          "referenceMs": 24.841099999997823,
+          "candidateMs": 15.34479999999894
+        },
+        {
+          "step": 309,
+          "referenceMs": 23.843000000000757,
+          "candidateMs": 12.569499999997788
+        },
+        {
+          "step": 310,
+          "referenceMs": 23.65679999999702,
+          "candidateMs": 12.648399999998219
+        },
+        {
+          "step": 311,
+          "referenceMs": 22.63690000000497,
+          "candidateMs": 12.093000000000757
+        },
+        {
+          "step": 312,
+          "referenceMs": 22.93850000000384,
+          "candidateMs": 13.356100000004517
+        },
+        {
+          "step": 313,
+          "referenceMs": 21.483900000006543,
+          "candidateMs": 13.210299999998824
+        },
+        {
+          "step": 314,
+          "referenceMs": 28.736900000003516,
+          "candidateMs": 15.735299999993003
+        },
+        {
+          "step": 315,
+          "referenceMs": 28.500200000002224,
+          "candidateMs": 14.464000000007218
+        },
+        {
+          "step": 316,
+          "referenceMs": 27.18789999999717,
+          "candidateMs": 15.595700000005309
+        },
+        {
+          "step": 317,
+          "referenceMs": 23.569400000000314,
+          "candidateMs": 10.568299999998999
+        },
+        {
+          "step": 318,
+          "referenceMs": 25.386200000000827,
+          "candidateMs": 10.055200000002515
+        },
+        {
+          "step": 319,
+          "referenceMs": 25.19090000000142,
+          "candidateMs": 11.830499999996391
+        },
+        {
+          "step": 320,
+          "referenceMs": 26.386300000005576,
+          "candidateMs": 15.600699999995413
+        },
+        {
+          "step": 321,
+          "referenceMs": 23.31880000000092,
+          "candidateMs": 14.729200000001583
+        },
+        {
+          "step": 322,
+          "referenceMs": 21.479199999994307,
+          "candidateMs": 14.346799999999348
+        },
+        {
+          "step": 323,
+          "referenceMs": 19.105499999997846,
+          "candidateMs": 12.940099999999802
+        },
+        {
+          "step": 324,
+          "referenceMs": 20.317399999999907,
+          "candidateMs": 11.691500000000815
+        },
+        {
+          "step": 325,
+          "referenceMs": 22.20850000000064,
+          "candidateMs": 11.75970000000234
+        },
+        {
+          "step": 326,
+          "referenceMs": 22.08810000000085,
+          "candidateMs": 12.12619999999879
+        },
+        {
+          "step": 327,
+          "referenceMs": 18.499799999997776,
+          "candidateMs": 19.053700000004028
+        },
+        {
+          "step": 328,
+          "referenceMs": 26.965400000000955,
+          "candidateMs": 14.062899999997171
+        },
+        {
+          "step": 329,
+          "referenceMs": 36.92810000000463,
+          "candidateMs": 17.929800000005343
+        },
+        {
+          "step": 330,
+          "referenceMs": 32.93080000000191,
+          "candidateMs": 13.759699999995064
+        },
+        {
+          "step": 331,
+          "referenceMs": 20.27169999999751,
+          "candidateMs": 13.24829999999929
+        },
+        {
+          "step": 332,
+          "referenceMs": 26.808799999998882,
+          "candidateMs": 14.518800000005285
+        },
+        {
+          "step": 333,
+          "referenceMs": 23.240100000002712,
+          "candidateMs": 12.27049999999872
+        },
+        {
+          "step": 334,
+          "referenceMs": 22.293299999997544,
+          "candidateMs": 13.688900000001013
+        },
+        {
+          "step": 335,
+          "referenceMs": 22.0879999999961,
+          "candidateMs": 12.797400000003108
+        },
+        {
+          "step": 336,
+          "referenceMs": 22.162899999995716,
+          "candidateMs": 14.033100000000559
+        },
+        {
+          "step": 337,
+          "referenceMs": 23.63509999999951,
+          "candidateMs": 18.988299999997253
+        },
+        {
+          "step": 338,
+          "referenceMs": 31.275500000003376,
+          "candidateMs": 15.082900000001246
+        },
+        {
+          "step": 339,
+          "referenceMs": 21.1846000000005,
+          "candidateMs": 12.873399999996764
+        },
+        {
+          "step": 340,
+          "referenceMs": 26.25619999999617,
+          "candidateMs": 13.138900000005378
+        },
+        {
+          "step": 341,
+          "referenceMs": 21.675900000002002,
+          "candidateMs": 12.51640000000043
+        },
+        {
+          "step": 342,
+          "referenceMs": 22.279999999998836,
+          "candidateMs": 18.284899999998743
+        },
+        {
+          "step": 343,
+          "referenceMs": 30.158699999999953,
+          "candidateMs": 17.936600000000908
+        },
+        {
+          "step": 344,
+          "referenceMs": 20.38590000000113,
+          "candidateMs": 13.483899999999267
+        },
+        {
+          "step": 345,
+          "referenceMs": 22.27060000000347,
+          "candidateMs": 17.167099999998754
+        },
+        {
+          "step": 346,
+          "referenceMs": 30.508800000003248,
+          "candidateMs": 16.331200000000536
+        },
+        {
+          "step": 347,
+          "referenceMs": 24.36609999999928,
+          "candidateMs": 14.790600000000268
+        },
+        {
+          "step": 348,
+          "referenceMs": 25.52799999999843,
+          "candidateMs": 12.264500000004773
+        },
+        {
+          "step": 349,
+          "referenceMs": 22.819200000005367,
+          "candidateMs": 15.149899999996705
+        },
+        {
+          "step": 350,
+          "referenceMs": 35.77900000000227,
+          "candidateMs": 26.367200000000594
+        }
+      ],
+      "candidateFasterTicks": 195,
+      "timing": {
+        "reference": {
+          "samples": 200,
+          "medianMs": 23.745999999999185,
+          "p95Ms": 34.710800000000745,
+          "maxMs": 39.49279999999999,
+          "totalMs": 4981.212400000062
+        },
+        "candidate": {
+          "samples": 200,
+          "medianMs": 14.839199999998527,
+          "p95Ms": 24.497699999999895,
+          "maxMs": 30.905400000003283,
+          "totalMs": 3198.271700000005
+        }
+      },
+      "wallMsIncludingBothWorldsAndChecks": 21088.307999999997
+    }
+  ]
+}

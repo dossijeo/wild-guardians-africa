@@ -70,3 +70,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Búsquedas de entidades por trabajador optimizadas](qa/worker-entity-lookups/README.md): índices locales solo para consultas repetidas en colecciones grandes, 68 pruebas y 15.600 pasos nativos equivalentes, trayectoria integrada idéntica. Mediana sintética grande de 27,49 a 4,10 ms; sin mejora global significativa acreditada para la finca pequeña ni medidas de FPS/RAM/móvil.
+
+
+[Continuación de tres fincas avanzadas reales comparada](qa/late-farm-worker-lookups/README.md): 12.201–20.443 cultivos históricos, contratación pagada y recorridos físicos preservados; mediana de simular 100 ms reducida aproximadamente 39/45/38 %. Muestras individuales y estados completos en nueve checkpoints por caso. No acredita FPS, móvil o campañas actuales de cien noches.
