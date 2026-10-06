@@ -1,3 +1,4 @@
+import {guardianCopy} from '../tutorial/guardian-copy.js';
 import {HiringRoutePreparer} from '../world/hiring-route-preparer.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
@@ -346,7 +347,7 @@ function settingsDialog(inGame=false) {
 }
 function resultDialog() {
   openSurface('result');
-  const won=state.result==='victory';Game.pause(state,'result');document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" id="result-dialog" role="dialog" aria-modal="true"><div class="eyebrow">El Espíritu</div><h2>${won?'La maldición ha terminado':'El poblado necesita un nuevo comienzo'}</h2><p>${won?'Has sobrevivido a cien noches. La tierra queda libre: puedes seguir cultivando y fundar nuevos poblados en paz.':esc(state.messages.at(-1)?.text??'No quedan recursos suficientes para continuar.')}</p><div class="dialog-actions">${button('close-result','Cerrar','ghost')}${button('result-menu','Volver al menú')}${won?button('continue','Seguir en este mundo'):button('retry','Nueva partida')}</div></section></div>`;
+  const won=state.result==='victory';Game.pause(state,'result');document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" id="result-dialog" role="dialog" aria-modal="true"><div class="eyebrow">El Espíritu</div><h2>${won?'La tierra respira libre':'Otra semilla, otro comienzo'}</h2><p>${won?'Resististe cien noches. La oscuridad ya no muerde: puedes seguir cultivando y fundar nuevos poblados en paz.':esc(guardianCopy(state.messages.at(-1)?.text??'Faltan recursos para alimentar otro mañana.'))}</p><div class="dialog-actions">${button('close-result','Cerrar','ghost')}${button('result-menu','Volver al menú')}${won?button('continue','Seguir en este mundo'):button('retry','Nueva partida')}</div></section></div>`;
   bind('close-result',closeSurface);bind('result-menu',menu);bind('retry',async()=>{if(!await save())return;state=null;clearWorld();newGameScreen();});bind('continue',()=>{Game.resume(state,'result');Game.continuePostgame(state);closeSurface();save();});
 }
 function libraryScreen() {

@@ -46,5 +46,5 @@ test('follow-up defence explanation has complete English and Spanish translation
   assert.ok(messages[DEFENSES_FOLLOWUP.text]);
   assert.equal(translate(DEFENSES_FOLLOWUP.text,'es'),DEFENSES_FOLLOWUP.text);
   assert.equal(translate(DEFENSES_FOLLOWUP.text,'en'),messages[DEFENSES_FOLLOWUP.text]);
-  assert.match(translate(DEFENSES_FOLLOWUP.text,'en'),/future raids/);
+  assert.match(translate(DEFENSES_FOLLOWUP.text,'en'),/more raids/);
 });

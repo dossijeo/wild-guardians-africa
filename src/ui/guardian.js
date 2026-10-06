@@ -1,3 +1,4 @@
+import {guardianCopy} from '../tutorial/guardian-copy.js';
 import './guardian-native.css';
 import {GuardianMesh,GuardianMagic,OrnamentPhysics,guardianPose,GUARDIAN_SPRITE,GESTURE_MIN_SECONDS} from './guardian-native.js';
 import {assetUrl} from '../rendering/asset-url.js';
@@ -37,6 +38,7 @@ export class NativeGuardian {
     this.blocking=blocking;this.skip=skip;this.skipButton.hidden=!skip;this.root.classList.toggle('reading',blocking);this.root.classList.toggle('result-narration',result);
     this.root.setAttribute('role',blocking?'dialog':'region');this.root.setAttribute('aria-label','El Espíritu');
     if(blocking)this.root.setAttribute('aria-modal','true');else this.root.removeAttribute('aria-modal');
+    text=guardianCopy(text);
     const words=text.trim().split(/\s+/).length;
     this.duration=Math.max(GESTURE_MIN_SECONDS[gesture]??5.8,words*60/155+.45);
     this.message.textContent=text;this.button.disabled=!advance;this.button.hidden=!advance;this.button.style.display=advance?'':'none';

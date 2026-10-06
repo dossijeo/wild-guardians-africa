@@ -159,6 +159,8 @@ Estado: registrado y pendiente de implementación; abordarlo cuando sea posible 
 
 ## Textos del guardián con carisma y lore (pedido el 6 de octubre de 2026)
 
+Estado: [integrados y verificados en ES/EN](qa/guardian-copy-v2/README.md). Las 27 parejas coinciden con la referencia; compatibilidad con mensajes guardados anteriores, 54 comprobaciones DOM y nueve layouts con el HUD. No cambia el gameplay. CI completa de esta revisión queda pendiente.
+
 - Sustituir los textos existentes del guardián por los del [JSON bilingüe proporcionado por el usuario](reference/Wild_Guardians_Espiritu_ES_EN_v2.json).
 - El archivo contiene 27 sustituciones en español y 27 en inglés: cada clave es el texto anterior y cada valor, la nueva versión. Conservar esta referencia original y comprobar la correspondencia con los textos actuales antes de integrar.
 - Aplicar ambas versiones al tutorial, recordatorios, mensajes de victoria/derrota y demás intervenciones del guardián cubiertas por el archivo; mantener las reglas de gameplay, disparadores, tiempos y señalización existentes.

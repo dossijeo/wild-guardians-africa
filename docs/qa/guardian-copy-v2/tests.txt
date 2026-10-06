@@ -1,0 +1,287 @@
+TAP version 13
+# Subtest: all supplied Spirit replacements preserve the exact Spanish and paired English copy
+ok 1 - all supplied Spirit replacements preserve the exact Spanish and paired English copy
+  ---
+  duration_ms: 3.9149
+  ...
+# Subtest: tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged
+ok 2 - tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged
+  ---
+  duration_ms: 0.3308
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 3 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 3.2879
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 4 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.3396
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 5 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.4358
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 6 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 133.242
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 7 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 20.108
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 8 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 35.3052
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 9 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.6645
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 10 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 60.7218
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 11 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 2.1501
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 12 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.7211
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 13 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 10.2848
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 14 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.3304
+  ...
+# (node:36664) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completing placement immediately advances the visible text and hand without acknowledging the old instruction
+ok 15 - completing placement immediately advances the visible text and hand without acknowledging the old instruction
+  ---
+  duration_ms: 15.7753
+  ...
+# Subtest: actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+ok 16 - actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+  ---
+  duration_ms: 114.9339
+  ...
+# Subtest: reload preserves unfinished instructions but advances instructions whose actions already completed
+ok 17 - reload preserves unfinished instructions but advances instructions whose actions already completed
+  ---
+  duration_ms: 2.3883
+  ...
+# Subtest: first-night defence warning updates when the raid starts and remains accurate after withdrawal
+ok 18 - first-night defence warning updates when the raid starts and remains accurate after withdrawal
+  ---
+  duration_ms: 8.6981
+  ...
+# Subtest: a delayed defence message survives reload without announcing a first raid that already happened
+ok 19 - a delayed defence message survives reload without announcing a first raid that already happened
+  ---
+  duration_ms: 2.7545
+  ...
+# Subtest: liberation removes unread and queued defence warnings without acknowledging them
+ok 20 - liberation removes unread and queued defence warnings without acknowledging them
+  ---
+  duration_ms: 0.8879
+  ...
+# Subtest: follow-up defence explanation has complete English and Spanish translations
+ok 21 - follow-up defence explanation has complete English and Spanish translations
+  ---
+  duration_ms: 0.6212
+  ...
+# Subtest: shield appears on each arriving raid, once, without pausing, including a completed global tutorial
+ok 22 - shield appears on each arriving raid, once, without pausing, including a completed global tutorial
+  ---
+  duration_ms: 11.0276
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 23 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 0.9707
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 24 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 2.2923
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 25 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.5706
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 26 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 1.7497
+  ...
+# Subtest: growth repeats only for watered growing crops and repeated notices receive their full reading time
+ok 27 - growth repeats only for watered growing crops and repeated notices receive their full reading time
+  ---
+  duration_ms: 0.9962
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 28 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 1.1133
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 29 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 2.8854
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 30 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 13.3361
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 31 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 599.9685
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 32 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 579.9796
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 33 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 1.0482
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 34 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.7965
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 35 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.7432
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 36 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 2.4674
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 37 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.7698
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 38 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.8512
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 39 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.9326
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 40 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.8467
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 41 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3833
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 42 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.7106
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 43 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 473.251
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 44 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 1.3545
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 45 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.3369
+  ...
+# Subtest: zarzas: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 46 - zarzas: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 21.1424
+  ...
+# Subtest: empalizada: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 47 - empalizada: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 1.6636
+  ...
+# Subtest: adobe: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 48 - adobe: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 2.2533
+  ...
+# Subtest: reforzado: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 49 - reforzado: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 1.514
+  ...
+# Subtest: piedra: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+ok 50 - piedra: a long visible native stroke stops at the affordable modules and keeps the wage reserve
+  ---
+  duration_ms: 2.8077
+  ...
+# Subtest: real pointer release builds immediately without a confirmation step; pointer cancellation never spends
+ok 51 - real pointer release builds immediately without a confirmation step; pointer cancellation never spends
+  ---
+  duration_ms: 4.4098
+  ...
+# Subtest: existing modules do not spend the new stroke budget twice
+ok 52 - existing modules do not spend the new stroke budget twice
+  ---
+  duration_ms: 2.2313
+  ...
+# Subtest: healthy, damaged, fractional-health gate and ruined pieces refund their remaining whole-coin value once
+ok 53 - healthy, damaged, fractional-health gate and ruined pieces refund their remaining whole-coin value once
+  ---
+  duration_ms: 4.7777
+  ...
+# Subtest: blocked modules do not consume the release budget; current funds determine the final count
+ok 54 - blocked modules do not consume the release budget; current funds determine the final count
+  ---
+  duration_ms: 1.9357
+  ...
+# Subtest: an entirely blocked stroke makes no payment and changes no saved state
+ok 55 - an entirely blocked stroke makes no payment and changes no saved state
+  ---
+  duration_ms: 0.9285
+  ...
+1..55
+# tests 55
+# suites 0
+# pass 55
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2368.8241

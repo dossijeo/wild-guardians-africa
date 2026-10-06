@@ -135,8 +135,20 @@
   ". Escape para regresar.": [
     "public/menu/native.js"
   ],
+  "../../content/manifests/audio-runtime.json": [
+    "src/rendering/asset-url.js"
+  ],
+  "../../content/manifests/image-runtime.json": [
+    "src/rendering/asset-url.js"
+  ],
+  "../../content/manifests/sfx-runtime.json": [
+    "src/rendering/asset-url.js"
+  ],
   "../../content/manifests/web-assets.json": [
     "src/rendering/asset-url.js"
+  ],
+  "../../music-cache-sw.js": [
+    "src/audio/music-disk-cache.js"
   ],
   "../audio/audio.js": [
     "src/app/main.js"
@@ -144,11 +156,19 @@
   "../audio/ui-audio.js": [
     "src/app/main.js"
   ],
-  "../persistence/snapshots.js": [
+  "../music-cache-sw.js": [
+    "src/audio/music-disk-cache.js"
+  ],
+  "../persistence/browser-saves.js": [
     "src/app/main.js"
+  ],
+  "../persistence/snapshots.js": [
+    "src/world/compute-hiring-routes.js",
+    "src/world/hiring-route-preparer.js"
   ],
   "../rendering/asset-url.js": [
     "src/app/main.js",
+    "src/audio/music-range-reader.js",
     "src/ui/guardian.js",
     "src/ui/screen-wake-lock.js",
     "src/ui/tutorial-hud-hand.js"
@@ -171,7 +191,8 @@
   ],
   "../simulation/animal-actions-data.js": [
     "src/rendering/animal-actions.js",
-    "src/rendering/attack-vfx.js"
+    "src/rendering/attack-vfx.js",
+    "src/world/compute-raid-entry.js"
   ],
   "../simulation/balance.js": [
     "src/app/main.js",
@@ -197,7 +218,8 @@
     "src/app/spell-placement.js",
     "src/rendering/tutorial-hand-target.js",
     "src/tutorial/action-pause.js",
-    "src/tutorial/controller.js"
+    "src/tutorial/controller.js",
+    "src/world/compute-hiring-routes.js"
   ],
   "../simulation/money.js": [
     "src/app/main.js",
@@ -206,9 +228,13 @@
   "../simulation/raid-notice.js": [
     "src/app/notices.js"
   ],
+  "../simulation/raids.js": [
+    "src/world/compute-raid-entry.js"
+  ],
   "../simulation/rules.js": [
     "src/app/main.js",
     "src/app/tool-label.js",
+    "src/audio/power-ready-audio.js",
     "src/audio/unlock-audio.js",
     "src/rendering/crop-batch.js",
     "src/rendering/farm-focus.js",
@@ -216,7 +242,8 @@
     "src/tutorial/controller.js",
     "src/tutorial/magic-reminders.js",
     "src/ui/build-permissions.js",
-    "src/ui/spell-cards.js"
+    "src/ui/spell-cards.js",
+    "src/world/compute-raid-entry.js"
   ],
   "../simulation/structure-presentation.js": [
     "src/rendering/walls.js"
@@ -233,6 +260,10 @@
   ],
   "../tutorial/controller.js": [
     "src/app/main.js"
+  ],
+  "../tutorial/guardian-copy.js": [
+    "src/app/main.js",
+    "src/ui/guardian.js"
   ],
   "../tutorial/messages.js": [
     "src/persistence/snapshots.js"
@@ -283,12 +314,22 @@
     "src/rendering/horizon.js",
     "src/simulation/raids.js"
   ],
+  "../world/boundary-gates.js": [
+    "src/simulation/game.js"
+  ],
   "../world/centers.js": [
     "src/rendering/attack-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/tutorial-hand-target.js",
     "src/simulation/game.js",
     "src/simulation/raids.js"
+  ],
+  "../world/farm-envelope.js": [
+    "src/audio/raid-arrival-audio.js",
+    "src/rendering/raid-camera.js"
+  ],
+  "../world/fluid-placement.js": [
+    "src/simulation/game.js"
   ],
   "../world/footprints.js": [
     "src/simulation/actor-motion.js",
@@ -301,11 +342,25 @@
     "src/simulation/gates.js"
   ],
   "../world/gate-passages.js": [
+    "src/simulation/game.js",
     "src/simulation/gates.js"
+  ],
+  "../world/hiring-route-preparer.js": [
+    "src/app/main.js"
+  ],
+  "../world/navigation-query-scope.js": [
+    "src/simulation/game.js"
   ],
   "../world/navigation.js": [
     "src/app/main.js",
     "src/rendering/scene.js"
+  ],
+  "../world/raid-entry-preparer.js": [
+    "src/rendering/scene.js"
+  ],
+  "../world/raid-navigation-warmth.js": [
+    "src/app/main.js",
+    "src/simulation/raids.js"
   ],
   "../world/terrain.js": [
     "src/rendering/asset-surface.js",
@@ -354,10 +409,14 @@
     "src/simulation/raids.js"
   ],
   "./animal-actions.js": [
+    "src/rendering/animal-preload.js",
     "src/rendering/scene.js"
   ],
   "./animal-audio.js": [
     "src/audio/audio.js"
+  ],
+  "./animal-preload.js": [
+    "src/rendering/scene.js"
   ],
   "./asset-clip.js": [
     "src/rendering/asset-lod.js",
@@ -409,6 +468,9 @@
   "./biome-material-source.js": [
     "src/rendering/african-toon.js"
   ],
+  "./boundary-faces.js": [
+    "src/world/boundary-gates.js"
+  ],
   "./budget.js": [
     "src/simulation/game.js",
     "src/simulation/rules.js"
@@ -444,6 +506,12 @@
   "./chunk-worker.js": [
     "src/rendering/chunk-stream.js"
   ],
+  "./compute-hiring-routes.js": [
+    "src/world/hiring-route-worker.js"
+  ],
+  "./compute-raid-entry.js": [
+    "src/world/raid-entry-worker.js"
+  ],
   "./contact-source.js": [
     "src/rendering/contacts.js"
   ],
@@ -468,6 +536,7 @@
     "src/rendering/african-toon.js",
     "src/rendering/asset-clip.js",
     "src/rendering/asset-surface.js",
+    "src/rendering/depth-capture.js",
     "src/rendering/obstruction.js",
     "src/rendering/standard-depth.js"
   ],
@@ -499,15 +568,31 @@
   "./farm-focus.js": [
     "src/rendering/scene.js"
   ],
+  "./fifo-eviction.js": [
+    "src/world/navigation.js",
+    "src/world/terrain.js"
+  ],
   "./fine-noise.js": [
     "src/rendering/african-toon.js"
+  ],
+  "./fixed-pose.js": [
+    "src/rendering/animal-actions.js",
+    "src/rendering/worker-actions.js"
   ],
   "./fluid-lighting-source.js": [
     "src/rendering/african-toon.js",
     "src/rendering/sky.js"
   ],
+  "./fluid-placement.js": [
+    "src/world/navigation.js"
+  ],
+  "./fluid-preload.js": [
+    "src/rendering/scene.js"
+  ],
   "./footprints.js": [
+    "src/world/boundary-gates.js",
     "src/world/centers.js",
+    "src/world/fluid-placement.js",
     "src/world/gate-passages.js",
     "src/world/navigation.js",
     "src/world/villages.js"
@@ -562,8 +647,21 @@
   "./hands.js": [
     "src/rendering/scene.js"
   ],
-  "./horizon-source.js": [
+  "./hiring-route-worker.js": [
+    "src/world/hiring-route-preparer.js"
+  ],
+  "./horizon-data.js": [
+    "src/rendering/horizon-worker.js",
     "src/rendering/horizon.js"
+  ],
+  "./horizon-generator.js": [
+    "src/rendering/horizon.js"
+  ],
+  "./horizon-source.js": [
+    "src/rendering/horizon-data.js"
+  ],
+  "./horizon-worker.js": [
+    "src/rendering/horizon-generator.js"
   ],
   "./horizon.js": [
     "src/rendering/scene.js"
@@ -613,6 +711,13 @@
   "./mud-patches.js": [
     "src/rendering/scene.js"
   ],
+  "./music-disk-cache.js": [
+    "src/audio/audio.js"
+  ],
+  "./music-load-queue.js": [
+    "src/audio/audio.js",
+    "src/audio/music-window-pool.js"
+  ],
   "./music-mixer.js": [
     "src/audio/audio.js",
     "src/audio/music-transport.js"
@@ -620,10 +725,24 @@
   "./music-policy.js": [
     "src/audio/audio.js",
     "src/audio/music-mixer.js",
-    "src/audio/music-transport.js"
+    "src/audio/music-transport.js",
+    "src/audio/start-window-music.js"
+  ],
+  "./music-range-reader.js": [
+    "src/audio/start-window-music.js"
+  ],
+  "./music-stream.js": [
+    "src/audio/audio.js"
   ],
   "./music-transport.js": [
-    "src/audio/audio.js"
+    "src/audio/audio.js",
+    "src/audio/music-window-transport.js"
+  ],
+  "./music-window-pool.js": [
+    "src/audio/start-window-music.js"
+  ],
+  "./music-window-transport.js": [
+    "src/audio/start-window-music.js"
   ],
   "./native-shadow-source.js": [
     "src/rendering/native-shadow.js"
@@ -634,6 +753,13 @@
   ],
   "./navigation-bounds.js": [
     "src/world/navigation.js"
+  ],
+  "./navigation-query-scope.js": [
+    "src/world/navigation.js"
+  ],
+  "./navigation.js": [
+    "src/world/compute-hiring-routes.js",
+    "src/world/compute-raid-entry.js"
   ],
   "./notices.js": [
     "src/app/main.js"
@@ -646,8 +772,31 @@
     "src/rendering/asset-lod.js",
     "src/rendering/scene.js"
   ],
+  "./opus-window-recipe.js": [
+    "src/audio/music-window-pool.js"
+  ],
+  "./power-ready-audio.js": [
+    "src/audio/audio.js"
+  ],
+  "./program-bindings.js": [
+    "src/rendering/scene.js"
+  ],
+  "./raid-arrival-audio.js": [
+    "src/audio/audio.js"
+  ],
   "./raid-camera.js": [
     "src/rendering/scene.js"
+  ],
+  "./raid-entry-data.js": [
+    "src/world/raid-entry-preparer.js"
+  ],
+  "./raid-entry-worker.js": [
+    "src/world/raid-entry-preparer.js"
+  ],
+  "./raid-navigation-warmth.js": [
+    "src/world/compute-hiring-routes.js",
+    "src/world/compute-raid-entry.js",
+    "src/world/navigation.js"
   ],
   "./raid-notice.js": [
     "src/simulation/raids.js"
@@ -679,6 +828,9 @@
   "./save-game.js": [
     "src/app/main.js"
   ],
+  "./screen-preload.js": [
+    "src/rendering/scene.js"
+  ],
   "./search-frontier.js": [
     "src/world/navigation.js"
   ],
@@ -704,6 +856,9 @@
   "./sky.js": [
     "src/rendering/scene.js"
   ],
+  "./snapshots.js": [
+    "src/persistence/browser-saves.js"
+  ],
   "./spell-placement.js": [
     "src/app/main.js"
   ],
@@ -712,6 +867,12 @@
   ],
   "./standard-depth.js": [
     "src/rendering/depth-capture.js"
+  ],
+  "./start-window-music.js": [
+    "src/audio/audio.js"
+  ],
+  "./step-ripples.js": [
+    "src/rendering/locomotion-vfx.js"
   ],
   "./structure-audio.js": [
     "src/audio/audio.js"
@@ -753,6 +914,9 @@
   "./tutorial-hand-target.js": [
     "src/rendering/scene.js"
   ],
+  "./tutorial-placement-focus.js": [
+    "src/rendering/scene.js"
+  ],
   "./unlock-audio.js": [
     "src/audio/audio.js"
   ],
@@ -765,6 +929,9 @@
     "src/rendering/vfx.js",
     "src/rendering/work-vfx.js"
   ],
+  "./vfx-preload.js": [
+    "src/rendering/scene.js"
+  ],
   "./vfx.js": [
     "src/rendering/scene.js"
   ],
@@ -775,10 +942,17 @@
     "src/rendering/scene.js"
   ],
   "./wall-layout-native.js": [
-    "src/world/wall-layout.js"
+    "src/world/wall-layout.js",
+    "src/world/wall-stroke-sampling.js"
+  ],
+  "./wall-layout.js": [
+    "src/world/boundary-gates.js"
   ],
   "./wall-stroke-preview.js": [
     "src/rendering/scene.js"
+  ],
+  "./wall-stroke-sampling.js": [
+    "src/world/wall-layout.js"
   ],
   "./walls-native.js": [
     "src/rendering/walls.js"
@@ -806,6 +980,9 @@
   "./work-audio.js": [
     "src/audio/audio.js"
   ],
+  "./work-target-index.js": [
+    "src/rendering/work-vfx.js"
+  ],
   "./work-vfx.js": [
     "src/rendering/scene.js"
   ],
@@ -814,6 +991,12 @@
   ],
   "./worker-audio.js": [
     "src/audio/audio.js"
+  ],
+  "./worker-entity-lookup.js": [
+    "src/simulation/game.js"
+  ],
+  "./worker-tool-visibility.js": [
+    "src/rendering/worker-actions.js"
   ],
   "./workforce.js": [
     "src/simulation/budget.js",
@@ -890,6 +1073,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  ".guide-content": [
+    "public/library/sfx/script-1.js"
+  ],
   ".health-preset": [
     "public/library/walls/script-2.js"
   ],
@@ -899,10 +1085,17 @@
   ".hiring-footer": [
     "src/app/main.js"
   ],
+  ".intro p": [
+    "public/library/sfx/script-1.js"
+  ],
   ".json": [
     "src/app/main.js",
     "src/audio/audio.js",
+    "src/audio/start-window-music.js",
     "src/rendering/scene.js"
+  ],
+  ".legend .right": [
+    "public/library/sfx/script-1.js"
   ],
   ".library-grid": [
     "src/app/main.js"
@@ -1263,6 +1456,10 @@
   "ATAQUES LOCALIZADOS": [
     "public/library/destruction/markup.html"
   ],
+  "Abre Cultivar: cada semilla es una promesa. Elige una y toca suelo libre junto al centro, donde señala mi mano. Al plantar pagas y nace el brote; crecerá tras la siembra y el primer riego del trabajador. No prometas más de lo que puedas cuidar; reserva monedas para contratar.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Abre este archivo en un navegador actualizado con WebGL2 y descompresión nativa (Chrome, Edge, Firefox o Safari).": [
     "public/menu/native.js"
   ],
@@ -1511,6 +1708,9 @@
   "Animal desconocido": [
     "src/simulation/rules.js"
   ],
+  "Animal guardado sin modelo:": [
+    "src/rendering/scene.js"
+  ],
   "AnimalLogicalHit": [
     "src/rendering/attack-vfx.js",
     "src/rendering/material-vfx.js",
@@ -1629,6 +1829,9 @@
   "Asignación conservada:": [
     "public/library/sfx/script-1.js"
   ],
+  "Asset collection is disposed": [
+    "src/rendering/assets.js"
+  ],
   "Asset estructural: primero crea una depresión en el campo de alturas; después coloca orilla y agua. No es un disco sobre terreno sin adaptar.": [
     "src/world/terrain.js"
   ],
@@ -1724,6 +1927,10 @@
   ],
   "Añadir una muestra con los ocho cultivos": [
     "public/library/crops/markup.html"
+  ],
+  "Aún quedan cultivos sin bendecir; Multiplicar está listo. Márcalos: aunque mi luz se apague, su próxima cosecha conservará el doble de valor.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
   ],
   "B": [
     "src/simulation/money.js"
@@ -1906,6 +2113,9 @@
   "Busca un sonido, escúchalo y descarga su MP3.": [
     "public/library/sfx/markup.html"
   ],
+  "Busca un sonido, escúchalo y descarga su Opus.": [
+    "public/library/sfx/script-1.js"
+  ],
   "Buscar por nombre, identificador o número": [
     "public/library/sfx/markup.html"
   ],
@@ -1963,6 +2173,9 @@
   ],
   "Cabecera HDR no válida.": [
     "src/rendering/sky-source.js"
+  ],
+  "Cached music file is truncated": [
+    "src/audio/music-range-reader.js"
   ],
   "Cada historia empieza con una semilla.": [
     "public/menu/index.html"
@@ -2038,13 +2251,15 @@
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Can_badge": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Canales y raíces": [
     "public/content/selector.json"
@@ -2176,6 +2391,10 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "Cayó el último centro; faltan monedas para que otro nazca.": [
+    "src/simulation/raids.js",
+    "src/tutorial/guardian-copy.js"
   ],
   "Cenizas": [
     "public/library/destruction/script-5.js",
@@ -2329,6 +2548,10 @@
   "Con Examinar, toca una pieza y pulsa Eliminar pieza. Funciona también con puertas y escombros; Deshacer recupera lo eliminado. Dos dedos desplazan y amplían. Con la mano, arrastra para girar. En ordenador: rueda para zoom, botón derecho para orbitar, Shift + arrastrar para desplazar.": [
     "public/library/walls/markup.html"
   ],
+  "Con Multiplicar bendigo durante 15 segundos los cultivos de su zona. Mi luz se apagará; su próxima cosecha seguirá valiendo el doble. Se recarga en 120 segundos desde el lanzamiento; cobrarás sólo al entregar las cajas.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Con caja": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
@@ -2362,11 +2585,15 @@
   "Confirmar poblado": [
     "src/app/main.js"
   ],
+  "Confía en esas manos. Siembran y riegan solas; cada cultivo tiene su ritmo y su paciencia ante la sed. Agotada esa paciencia, el crecimiento espera al riego. Maduro, ya no necesita agua.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Conjunto de piedras pequeñas tratado como un solo asset reutilizable.": [
     "src/world/terrain.js"
   ],
   "Conserva las últimas 30 monedas: las necesitarás para contratar mañana.": [
-    "src/simulation/budget.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Construcción desconocida": [
     "src/simulation/game.js"
@@ -2393,6 +2620,9 @@
   ],
   "Contenido de muestra para probar la navegación. No representa descubrimientos ni progreso de una partida.": [
     "public/menu/native.js"
+  ],
+  "Content-Range": [
+    "src/audio/music-range-reader.js"
   ],
   "Continuar": [
     "public/library/walls/markup.html",
@@ -2495,6 +2725,10 @@
     "src/simulation/balance.js"
   ],
   "Crecimiento acelera las plantas de su zona durante 30 segundos. No sustituye los riegos obligatorios ni permite madurar con agua pendiente. Se recarga en 90 segundos desde el lanzamiento; las pausas del juego congelan duración y recarga.": [
+    "src/tutorial/guardian-copy.js"
+  ],
+  "Crecimiento presta mi fuerza a las plantas de su zona: crecerán más deprisa durante 30 segundos. Mi magia no sustituye riegos ni madura plantas sedientas. Se recarga en 90 segundos desde el lanzamiento; al pausar, duración y recarga descansan.": [
+    "src/tutorial/guardian-copy.js",
     "src/tutorial/messages.js"
   ],
   "Crecimiento y transición": [
@@ -2660,6 +2894,9 @@
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "Decoded music window does not match its source index:": [
+    "src/audio/music-window-pool.js"
+  ],
   "Defensa": [
     "src/app/main.js",
     "src/rendering/vfx-native.js"
@@ -2668,7 +2905,7 @@
     "src/app/main.js"
   ],
   "Deja trabajar al equipo. Siembran y riegan automáticamente; cada cultivo tiene sus tiempos y tolerancia al agua. Cuando esa tolerancia se agota, el crecimiento espera al riego. Una planta madura ya no necesita agua.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Deja un poco de espacio entre las bases de los cultivos.": [
     "public/library/crops/script-4.js"
@@ -2697,6 +2934,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "Derivados con pérdida desde MP3 normalizados. Escucha, móvil físico y Tauri pendientes.": [
+    "public/library/sfx/script-1.js"
+  ],
   "Derrumbar": [
     "public/library/destruction/markup.html"
   ],
@@ -2709,8 +2949,14 @@
   "Descargar MP3": [
     "public/library/sfx/markup.html"
   ],
+  "Descargar Opus": [
+    "public/library/sfx/script-1.js"
+  ],
   "Descargar el MP3 actual": [
     "public/library/sfx/markup.html"
+  ],
+  "Descargar el Opus actual": [
+    "public/library/sfx/script-1.js"
   ],
   "Descargar los 126": [
     "public/library/sfx/markup.html"
@@ -2886,6 +3132,9 @@
   "El GLB necesita normales, UV e índices.": [
     "public/library/destruction/script-5.js"
   ],
+  "El almacenamiento de partidas está ocupado por otra ventana.": [
+    "src/persistence/browser-saves.js"
+  ],
   "El archivo de escena es demasiado grande.": [
     "public/library/walls/script-2.js"
   ],
@@ -2930,6 +3179,9 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "El edificio necesita suelo nivelado en toda su base": [
+    "src/world/navigation.js"
   ],
   "El ganadero": [
     "public/library/worker-older-male/markup.html"
@@ -2996,10 +3248,10 @@
     "public/menu/native.js"
   ],
   "El poblado necesita un nuevo comienzo": [
-    "src/app/main.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "El poblado no dispone del mínimo necesario para iniciar otra jornada.": [
-    "src/simulation/game.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "El poblado no tiene una salida transitable": [
     "src/simulation/game.js"
@@ -3016,11 +3268,15 @@
   "El santuario": [
     "public/menu/native.js"
   ],
+  "El sol vuelve, pero el poblado no puede costear otra jornada.": [
+    "src/simulation/game.js",
+    "src/tutorial/guardian-copy.js"
+  ],
   "El tiempo se detiene mientras escuchas al poblado.": [
     "src/app/main.js"
   ],
   "El último centro ha caído y no puedes financiar otro.": [
-    "src/simulation/raids.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Elegir": [
     "public/selector/native.js"
@@ -3151,6 +3407,10 @@
     "public/library/walls/markup.html",
     "public/library/walls/script-2.js"
   ],
+  "Escucha. Tras cien noches, el silencio ya es paz: la maldición se ha roto. Puedes cerrar esta historia… o seguir cultivando sin ataques y fundar nuevos poblados, conservando tu finca y cuanto has levantado.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Escudo": [
     "src/simulation/balance.js"
   ],
@@ -3217,6 +3477,10 @@
   ],
   "Estado visual independiente": [
     "src/rendering/vfx-native.js"
+  ],
+  "Estas tierras me conocen. Soy el Espíritu que las guarda. Al anochecer, una maldición agita a los animales. Echa raíces junto al poblado: levanta un centro, siembra; tu comunidad cuidará los cultivos.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
   ],
   "Este archivo necesita WebGL 2 y aceleración gráfica. Ábrelo en un navegador actualizado, no en una vista previa de archivos.": [
     "public/library/destruction/markup.html"
@@ -3372,6 +3636,7 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "Falta el modelo de": [
+    "src/rendering/animal-preload.js",
     "src/rendering/scene.js"
   ],
   "Falta la acción original": [
@@ -3388,8 +3653,16 @@
   "Faltan datos en el GLB.": [
     "public/library/destruction/script-5.js"
   ],
+  "Faltan recursos para alimentar otro mañana.": [
+    "src/app/main.js",
+    "src/tutorial/controller.js",
+    "src/tutorial/guardian-copy.js"
+  ],
   "Fibra": [
     "public/library/crops/script-4.js"
+  ],
+  "Ficha técnica · Opus": [
+    "public/library/sfx/script-1.js"
   ],
   "Fila RGBE no válida.": [
     "src/rendering/sky-source.js"
@@ -3504,6 +3777,18 @@
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "GPU preload cancelled": [
+    "src/rendering/screen-preload.js"
+  ],
+  "GPU preload fence failed": [
+    "src/rendering/screen-preload.js"
+  ],
+  "GPU preload fence unavailable": [
+    "src/rendering/screen-preload.js"
+  ],
+  "GPU preload timed out": [
+    "src/rendering/screen-preload.js"
+  ],
   "Ga Maamli": [
     "public/menu/native.js",
     "src/ui/menu-integration.js"
@@ -3609,6 +3894,9 @@
   "Grandma Amara / Amara mayor": [
     "public/library/worker-older-female/script-1.js"
   ],
+  "Ground load cancelled": [
+    "src/rendering/biome-ground.js"
+  ],
   "Grupo de grandes bloques. Se reserva espacio a su alrededor para reducir solapes entre elementos grandes.": [
     "src/world/terrain.js"
   ],
@@ -3699,16 +3987,16 @@
     "public/library/worker-young-male/script-1.js"
   ],
   "Has sobrevivido a cien noches y la maldición ha terminado. Esta misma finca queda en paz. Puedes cerrar la historia o seguir cultivando, sin ataques, y fundar nuevos poblados con tu explotación actual.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Has sobrevivido a cien noches. La tierra queda libre: puedes seguir cultivando y fundar nuevos poblados en paz.": [
-    "src/app/main.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Hasta la próxima": [
     "public/menu/native.js"
   ],
   "Hay cultivos creciendo y Crecimiento está disponible. Úsalo sobre la plantación para acelerar la próxima cosecha; el equipo seguirá atendiendo los riegos.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Hay piezas fuera de los límites permitidos.": [
     "public/library/walls/script-2.js"
@@ -3791,11 +4079,17 @@
   "Huella SHA-256 del MP3 normalizado:": [
     "public/library/sfx/script-1.js"
   ],
+  "Huella SHA-256 del Opus:": [
+    "public/library/sfx/script-1.js"
+  ],
   "Hueso / concha mate": [
     "src/rendering/surface-source.js"
   ],
   "Humo y polvo": [
     "public/library/destruction/markup.html"
+  ],
+  "Hz,": [
+    "src/audio/music-window-pool.js"
   ],
   "I": [
     "public/library/walls/markup.html"
@@ -3805,6 +4099,9 @@
   ],
   "ID:": [
     "public/library/sfx/script-1.js"
+  ],
+  "IFRAME": [
+    "src/ui/screen-wake-lock.js"
   ],
   "INPUT": [
     "public/library/crops/script-4.js",
@@ -3914,8 +4211,23 @@
   "Intro": [
     "public/selector/index.html"
   ],
+  "Invalid Opus copy range": [
+    "src/audio/opus-window-recipe.js"
+  ],
+  "Invalid Opus window header": [
+    "src/audio/opus-window-recipe.js"
+  ],
+  "Invalid Opus window recipe": [
+    "src/audio/opus-window-recipe.js"
+  ],
   "Invalid active terrain bounds": [
     "src/world/navigation.js"
+  ],
+  "Invalid horizon vertex buffers": [
+    "src/rendering/horizon-generator.js"
+  ],
+  "Invalid music byte window": [
+    "src/audio/music-range-reader.js"
   ],
   "Izquierda": [
     "public/library/worker-older-female/script-1.js",
@@ -4020,7 +4332,7 @@
     "public/menu/native.js"
   ],
   "La caja recogida viaja al centro. Espera su entrega: las monedas se cobran al llegar. Si una caja queda en el suelo, conserva su valor hasta que el equipo pueda recuperarla.": [
-    "src/tutorial/controller.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "La casa": [
     "public/menu/native.js"
@@ -4044,7 +4356,7 @@
     "src/simulation/game.js"
   ],
   "La contratación se abre automáticamente cuando termines de plantar. Puedes ajustar los cuatro perfiles al saldo disponible. El salario se cobra una sola vez al confirmar. Los trabajadores se reparten entre los centros y siguen las tareas por orden.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "La cultura define la arquitectura de tu poblado. Puedes combinar cualquier cultura con cualquier bioma. El ojo abre la ilustración completa.": [
     "public/selector/index.html"
@@ -4080,7 +4392,7 @@
     "src/simulation/game.js"
   ],
   "La maldición ha terminado": [
-    "src/app/main.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "La muralla queda dentro de un edificio": [
     "src/world/navigation.js"
@@ -4095,6 +4407,7 @@
     "public/library/crops/script-4.js"
   ],
   "La partida guardada pertenece a otra ranura.": [
+    "src/persistence/browser-saves.js",
     "src/persistence/snapshots.js"
   ],
   "La planta permanece hasta su recolección.": [
@@ -4110,7 +4423,7 @@
     "src/rendering/vfx-native.js"
   ],
   "La primera incursión llegará esta noche. Prepara las defensas desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "La reparación se canceló: fondos insuficientes al llegar.": [
     "src/simulation/game.js"
@@ -4127,11 +4440,19 @@
   "La sabana te espera.": [
     "public/menu/index.html"
   ],
+  "La tierra cumple su promesa. El equipo recoge por sí solo cada cultivo maduro y lleva su caja al centro; sólo al entregarla nacen las monedas.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "La tierra despierta": [
     "src/app/main.js"
   ],
   "La tierra liberada permite fundar otros poblados. Elige una cultura y revisa la ubicación completa antes de confirmar. Conservas saldo, construcciones y cultivos; el nuevo poblado participa en la distribución de trabajadores a partir del siguiente amanecer.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
+  ],
+  "La tierra respira libre": [
+    "src/app/main.js",
+    "src/tutorial/guardian-copy.js"
   ],
   "La transición no coincide con la malla original": [
     "public/library/crops/script-4.js",
@@ -4146,6 +4467,10 @@
   "Las 20 piezas sin peana": [
     "public/library/walls/markup.html"
   ],
+  "Las bestias pisan tus campos. Mi Escudo está listo: abre Magias y resguarda tus cultivos donde no haya animales.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Las futuras fichas mostrarán el momento de recoger cada cultivo.": [
     "public/menu/native.js"
   ],
@@ -4157,6 +4482,9 @@
     "public/library/worker-older-male/markup.html",
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
+  ],
+  "Las mediciones de LUFS, pico verdadero y forma de onda pertenecen al MP3 de origen. El ZIP conserva su auditoría y añade los hashes y tamaños de los Opus.": [
+    "public/library/sfx/script-1.js"
   ],
   "Las mesetas del horizonte dan profundidad al fondo ilustrado.": [
     "public/menu/native.js"
@@ -4234,6 +4562,10 @@
   "Leon": [
     "src/rendering/scene.js"
   ],
+  "Levanta un refugio, no una prisión. Esta noche llegará la primera incursión: en Construir, combina módulos y puertas dejando caminos libres. Los animales dañan cultivos y estructuras; pagarás las reparaciones cuando el trabajador llegue.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Leyendo": [
     "public/library/destruction/script-5.js"
   ],
@@ -4281,10 +4613,10 @@
     "src/ui/native-hud.js"
   ],
   "Los animales están en la finca y Escudo está disponible. Abre Magias y protege tus cultivos en una zona libre de animales.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Los animales han entrado en la finca. El equipo abandona sus tareas y huye hacia el poblado. La incursión termina cuando sale el último animal; después se reconstruyen las tareas de los cultivos que siguen vivos. Las reparaciones manuales interrumpidas deben pedirse de nuevo.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Los archivos del poblado": [
     "src/app/main.js"
@@ -4308,7 +4640,7 @@
     "src/ui/native-hud.js"
   ],
   "Los trabajadores recogen automáticamente los cultivos maduros. Cada cosecha se convierte en una caja que llevan al centro. Las monedas llegan al entregar la caja.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Luciérnagas": [
     "public/menu/native.js"
@@ -4354,6 +4686,9 @@
     "public/library/worker-older-male/markup.html",
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
+  ],
+  "MP3": [
+    "public/library/sfx/script-1.js"
   ],
   "MP3 · 128 kb/s · 44,1 kHz · estéreo": [
     "public/library/sfx/script-1.js"
@@ -4483,6 +4818,10 @@
     "public/library/crops/markup.html",
     "public/library/crops/script-4.js",
     "src/simulation/balance.js"
+  ],
+  "Mañana necesita manos: guarda tus últimas 30 monedas para contratar.": [
+    "src/simulation/budget.js",
+    "src/tutorial/guardian-copy.js"
   ],
   "Media": [
     "public/library/crops/markup.html",
@@ -4614,6 +4953,9 @@
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "Mud load cancelled": [
+    "src/rendering/mud-patches.js"
+  ],
   "Muestra": [
     "public/library/crops/markup.html"
   ],
@@ -4629,10 +4971,10 @@
     "src/simulation/balance.js"
   ],
   "Multiplicar está disponible y hay cultivos sin su beneficio. Aplícalo sobre ellos: su próxima cosecha valdrá el doble aunque la magia termine antes de recogerla.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Multiplicar marca durante 15 segundos los cultivos de su zona para duplicar su próxima cosecha, aunque se recoja después. La recarga empieza al lanzarlo y dura 120 segundos; no concede monedas antes de entregar las cajas.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Mundo de Wild Guardians Africa": [
     "src/app/main.js"
@@ -4658,8 +5000,26 @@
   "Musgum": [
     "public/content/selector.json"
   ],
+  "Music byte window is truncated": [
+    "src/audio/music-range-reader.js"
+  ],
   "Music context suspended while creating deck": [
     "src/audio/music-transport.js"
+  ],
+  "Music context suspended while scheduling a window": [
+    "src/audio/music-window-transport.js"
+  ],
+  "Music file is truncated": [
+    "src/audio/music-range-reader.js"
+  ],
+  "Music range response does not match its index": [
+    "src/audio/music-range-reader.js"
+  ],
+  "Music start is outside its source index": [
+    "src/audio/start-window-music.js"
+  ],
+  "Music windows require the validated source sample rate": [
+    "src/audio/music-window-pool.js"
   ],
   "Muy baja": [
     "public/menu/native.js",
@@ -4726,6 +5086,10 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "No confundas silencio con paz. Prepara la finca para otras incursiones: en Construir, une módulos y puertas sin cerrar caminos. Los animales dañan cultivos y estructuras; pagarás las reparaciones cuando llegue el trabajador.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "No disponible ahora": [
     "src/ui/spell-cards.js"
   ],
@@ -4753,6 +5117,10 @@
     "public/library/worker-young-female/markup.html",
     "public/library/worker-young-male/markup.html"
   ],
+  "No le pidas prisa a una herida. Dos golpes en esta incursión han incapacitado a un trabajador: hoy no volverá. Si lo contratas mañana, seguirá sanando y no correrá al trabajar; pasado mañana recuperará su movilidad habitual. La herida sigue a la persona, no al perfil.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "No local scene restored:": [
     "public/library/walls/script-2.js"
   ],
@@ -4763,8 +5131,7 @@
     "public/library/crops/script-4.js"
   ],
   "No quedan recursos suficientes para continuar.": [
-    "src/app/main.js",
-    "src/tutorial/controller.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "No se encontró una distribución inicial transitable; vuelve a generar la semilla.": [
     "src/world/villages.js"
@@ -4799,6 +5166,9 @@
   "No se pudieron generar todos los chunks": [
     "src/rendering/chunk-stream.js"
   ],
+  "No se pudieron leer las partidas.": [
+    "src/persistence/browser-saves.js"
+  ],
   "No se pudo abrir el santuario": [
     "public/menu/native.js"
   ],
@@ -4815,6 +5185,9 @@
     "public/library/crops/script-4.js"
   ],
   "No se pudo crear el ZIP. Los MP3 individuales siguen disponibles.": [
+    "public/library/sfx/script-1.js"
+  ],
+  "No se pudo crear el ZIP. Los Opus individuales siguen disponibles.": [
     "public/library/sfx/script-1.js"
   ],
   "No se pudo crear el búfer de iluminación.": [
@@ -4841,11 +5214,17 @@
   "No se pudo dibujar el mundo. Vuelve al menú para reintentarlo.": [
     "src/rendering/shader-failure.js"
   ],
+  "No se pudo eliminar la partida.": [
+    "src/persistence/browser-saves.js"
+  ],
   "No se pudo exportar:": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
+  ],
+  "No se pudo guardar la partida.": [
+    "src/persistence/browser-saves.js"
   ],
   "No se pudo guardar la partida:": [
     "src/app/save-game.js"
@@ -4867,6 +5246,12 @@
   ],
   "No se pudo reproducir. Prueba a descargar el MP3 o abrir el HTML en Chrome.": [
     "public/library/sfx/script-1.js"
+  ],
+  "No se pudo reproducir. Prueba a descargar el Opus o abrir el HTML en Chrome.": [
+    "public/library/sfx/script-1.js"
+  ],
+  "No se puede construir sobre agua o lava": [
+    "src/world/fluid-placement.js"
   ],
   "No se puede detener un colapso": [
     "public/library/walls/script-2.js"
@@ -4907,6 +5292,10 @@
     "public/selector/index.html",
     "public/selector/native.js"
   ],
+  "Nuevas raíces, la misma finca. Puedes fundar otro poblado en paz: elige cultura y revisa toda la ubicación antes de confirmar. Conservas monedas, construcciones y cultivos; el nuevo poblado se sumará al reparto de trabajadores al próximo amanecer.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Número original": [
     "public/library/sfx/markup.html"
   ],
@@ -4940,6 +5329,21 @@
   ],
   "Opción desconocida": [
     "public/menu/native.js"
+  ],
+  "Opus": [
+    "public/library/sfx/script-1.js"
+  ],
+  "Opus copy range exceeds window": [
+    "src/audio/opus-window-recipe.js"
+  ],
+  "Opus header exceeds window": [
+    "src/audio/opus-window-recipe.js"
+  ],
+  "Opus window recipe length mismatch": [
+    "src/audio/opus-window-recipe.js"
+  ],
+  "Opus · VBR 96 kb/s · 48 kHz · estéreo": [
+    "public/library/sfx/script-1.js"
   ],
   "Orbitar": [
     "public/library/destruction/markup.html"
@@ -4977,6 +5381,10 @@
   "Original v4 + Sunny Grandpa / Ganadero mayor": [
     "public/library/worker-older-male/script-1.js"
   ],
+  "Otra semilla, otro comienzo": [
+    "src/app/main.js",
+    "src/tutorial/guardian-copy.js"
+  ],
   "PARCELA LIBRE · PLANTAR:": [
     "public/library/crops/script-4.js"
   ],
@@ -4999,6 +5407,10 @@
   ],
   "PV de resistencia": [
     "public/library/walls/script-2.js"
+  ],
+  "Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.": [
+    "src/tutorial/controller.js",
+    "src/tutorial/guardian-copy.js"
   ],
   "Paisajes": [
     "public/menu/native.js"
@@ -5100,6 +5512,9 @@
     "src/simulation/workforce.js"
   ],
   "Pico verdadero": [
+    "public/library/sfx/script-1.js"
+  ],
+  "Pico verdadero del MP3 de origen": [
     "public/library/sfx/script-1.js"
   ],
   "Piedra": [
@@ -5262,7 +5677,7 @@
     "public/content/selector.json"
   ],
   "Prepara las defensas para las próximas incursiones desde Construir: combina módulos y puertas para proteger la finca y dejar pasos transitables. Los animales dañan cultivos y estructuras; las reparaciones se cobran cuando llega el trabajador.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Prepara tu primera aventura en la sabana.": [
     "public/menu/native.js"
@@ -5324,6 +5739,10 @@
   "Primero elige uno de los": [
     "public/selector/index.html"
   ],
+  "Primero, las vidas; después, la cosecha. Los animales han entrado: el equipo deja sus tareas y huye al poblado. La incursión terminará cuando salga el último; se reorganizarán los cuidados de los cultivos supervivientes. Las reparaciones manuales interrumpidas deberán solicitarse de nuevo.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Primeros impactos": [
     "public/library/destruction/script-5.js",
     "src/rendering/destruction-native.js"
@@ -5348,25 +5767,29 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
-    "src/rendering/worker-actions.js"
+    "src/rendering/worker-actions.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Prop_HarvestSack": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Prop_Hoe": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Prop_WateringCan": [
     "public/library/worker-older-female/script-1.js",
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
-    "public/library/worker-young-male/script-1.js"
+    "public/library/worker-young-male/script-1.js",
+    "src/rendering/worker-tool-visibility.js"
   ],
   "Protección": [
     "src/rendering/vfx-native.js"
@@ -5400,10 +5823,10 @@
     "public/library/walls/script-2.js"
   ],
   "Pulsa Construir y elige Centro de trabajo. Después coloca tu primer centro por 800 monedas donde señala la mano. Busca suelo libre junto al poblado. El centro organizará las tareas y recibirá las cajas de cosecha.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Pulsa Cultivar y elige una semilla. Después toca el suelo libre que señala la mano cerca del centro. Pagas la semilla al plantar y aparece el brote. Su crecimiento empieza cuando un trabajador completa la siembra y el primer riego. Planta lo que puedas cuidar; reserva monedas para contratar.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Pulso de repulsión": [
     "src/rendering/vfx-native.js"
@@ -5528,6 +5951,7 @@
     "public/library/walls/script-2.js"
   ],
   "Ranura inválida": [
+    "src/persistence/browser-saves.js",
     "src/persistence/snapshots.js"
   ],
   "Raíz": [
@@ -5693,6 +6117,9 @@
   "Reproducción en bucle": [
     "public/library/sfx/markup.html"
   ],
+  "Reproducción y descarga usan el mismo Opus. No se vuelve a normalizar ni recortar el audio.": [
+    "public/library/sfx/script-1.js"
+  ],
   "Reproduce una sola toma cada vez · Volumen coherente por función": [
     "public/library/sfx/markup.html"
   ],
@@ -5716,6 +6143,10 @@
   ],
   "Resistencia de": [
     "public/library/walls/script-2.js"
+  ],
+  "Resististe cien noches. La oscuridad ya no muerde: puedes seguir cultivando y fundar nuevos poblados en paz.": [
+    "src/app/main.js",
+    "src/tutorial/guardian-copy.js"
   ],
   "Resolución del mundo": [
     "public/menu/native.js",
@@ -6099,6 +6530,10 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "Sembrar es prometer; cuidar es cumplir. Tras plantar se abrirá sola la ventana para contratar. Ajusta los cuatro perfiles a tus monedas; pagarás una vez al confirmar. Los trabajadores se repartirán entre centros y atenderán cada tarea por turno.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Semilla": [
     "public/library/crops/script-4.js"
   ],
@@ -6174,6 +6609,9 @@
   "Skip Forward transferido al ganadero mayor desde el visor original. Se conserva su rebote y se suaviza la unión del bucle.": [
     "public/library/worker-older-male/script-1.js"
   ],
+  "Sky load cancelled": [
+    "src/rendering/sky.js"
+  ],
   "Slash curvo · Kenney": [
     "src/rendering/vfx-native.js"
   ],
@@ -6220,6 +6658,9 @@
     "src/app/main.js",
     "src/ui/menu-integration.js"
   ],
+  "Sonoridad del MP3 de origen": [
+    "public/library/sfx/script-1.js"
+  ],
   "Sonoridad final": [
     "public/library/sfx/script-1.js"
   ],
@@ -6228,7 +6669,7 @@
     "src/simulation/balance.js"
   ],
   "Soy el Espíritu que cuida estas tierras. Una maldición inquieta a los animales al caer el sol. Junto al poblado levantarás una finca: construiremos un centro, sembrarás y tu comunidad cuidará los cultivos.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Space": [
     "public/library/crops/script-4.js",
@@ -6263,6 +6704,12 @@
   "StructureHit": [
     "src/audio/audio.js",
     "src/simulation/raids.js"
+  ],
+  "StructureHit:first-center-hit": [
+    "src/audio/structure-audio.js"
+  ],
+  "StructureHit:wall-critical": [
+    "src/audio/structure-audio.js"
   ],
   "StructureRuined": [
     "src/simulation/game.js"
@@ -6334,6 +6781,10 @@
   ],
   "Tamaño: 15–55 cm": [
     "src/rendering/vfx-native.js"
+  ],
+  "Te presto mi Escudo. En Magias, invócalo donde no haya animales: 20 segundos de amparo. Podrás volver a llamarlo 90 segundos después de lanzarlo. No empuja animales ni repara edificios; las zonas mágicas no pueden solaparse.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
   ],
   "Techo general de −2 dBTP en los MP3 finales, más bajo para los sonidos discretos. Se ha aplicado limitación acotada solo cuando ayuda; los golpes muy breves pueden quedar por debajo de la referencia para no aplastarlos.": [
     "public/library/sfx/markup.html"
@@ -6428,6 +6879,10 @@
   ],
   "Tocón con raíces y sección de madera expuesta. Punto de origen apoyado en el terreno.": [
     "src/world/terrain.js"
+  ],
+  "Toda cosecha necesita un hogar. Elige Centro de trabajo en Construir: 800 monedas para alzarlo en suelo libre junto al poblado, donde señala mi mano. Desde allí se ordenarán las tareas; allí volverán las cajas de cosecha.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
   ],
   "Todas las categorías": [
     "public/library/sfx/markup.html"
@@ -6542,7 +6997,7 @@
     "public/selector/native.js"
   ],
   "Tu primera caja ha llegado al centro. Ya conoces el trabajo de la finca. Conserva monedas para la próxima jornada y escucha al poblado cuando aparezca algo nuevo.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Tu próxima aventura ya tiene nombre. Esta es la configuración que has preparado en el prototipo.": [
     "public/menu/native.js"
@@ -6561,11 +7016,18 @@
   "Tus ajustes de este prototipo se conservarán en este navegador.": [
     "public/menu/native.js"
   ],
+  "Tus brotes aún tienen camino. Crecimiento está listo: préstales mi fuerza y acerca la cosecha. El riego seguirá en manos del equipo.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
+  ],
   "Tus poblados": [
     "src/app/main.js"
   ],
   "Tutorial inválido": [
     "src/persistence/snapshots.js"
+  ],
+  "TutorialCompleted": [
+    "src/simulation/game.js"
   ],
   "TutorialMessageStarted": [
     "src/tutorial/controller.js"
@@ -6653,7 +7115,7 @@
     "src/rendering/vfx-native.js"
   ],
   "Un segundo golpe en la misma incursión ha incapacitado a un trabajador. No volverá al trabajo hoy. Si lo contratas mañana, estará recuperándose y no tendrá carrera laboral; en la jornada posterior recuperará su movilidad habitual. La lesión pertenece a esa persona, no a todo su perfil.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Un árbol o roca grande ocupa este terreno": [
     "src/world/navigation.js"
@@ -6672,6 +7134,12 @@
   ],
   "Una pequeña granja. Un mundo por proteger.": [
     "public/menu/index.html"
+  ],
+  "Unable to cache original music file": [
+    "src/audio/music-range-reader.js"
+  ],
+  "Unable to read original music window": [
+    "src/audio/music-range-reader.js"
   ],
   "Unrecognized ground noise recipe": [
     "src/rendering/fine-noise.js"
@@ -6948,6 +7416,8 @@
     "src/persistence/snapshots.js"
   ],
   "WallChainBuilt": [
+    "src/audio/audio.js",
+    "src/audio/structure-audio.js",
     "src/simulation/game.js"
   ],
   "WallRemoved": [
@@ -7011,6 +7481,9 @@
   "Wild Guardians · Nueva partida": [
     "public/selector/index.html"
   ],
+  "Wild Guardians · SFX Opus · 48 kHz · Estéreo · VBR 96 kb/s": [
+    "public/library/sfx/script-1.js"
+  ],
   "Wild Guardians · Selección final V12 · 44,1 kHz · Estéreo · MP3 128 kb/s": [
     "public/library/sfx/markup.html"
   ],
@@ -7025,6 +7498,9 @@
   ],
   "Wild_Guardians_Gameplay_B_Warm_Afternoon_Lab_V1_OFFLINE.html": [
     "src/audio/music-policy.js"
+  ],
+  "Wild_Guardians_SFX_Opus.zip": [
+    "public/library/sfx/script-1.js"
   ],
   "Wild_Guardians_SFX_V12_MP3.zip": [
     "public/library/sfx/script-1.js"
@@ -7042,13 +7518,16 @@
     "src/simulation/game.js"
   ],
   "Ya puedes usar Escudo desde Magias. Colócalo en una zona libre de animales: protege durante 20 segundos y se recarga en 90 segundos desde el lanzamiento. No empuja animales ni cura edificios. Las zonas mágicas no pueden solaparse.": [
-    "src/tutorial/messages.js"
+    "src/tutorial/guardian-copy.js"
   ],
   "Yuca": [
     "public/library/crops/script-4.js",
     "src/simulation/balance.js"
   ],
   "ZIP listo: 126 MP3 normalizados.": [
+    "public/library/sfx/script-1.js"
+  ],
+  "ZIP listo: 126 Opus.": [
     "public/library/sfx/script-1.js"
   ],
   "Zarzas": [
@@ -7443,6 +7922,9 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "anonymous": [
+    "src/audio/music-stream.js"
+  ],
   "app": [
     "public/selector/native.js"
   ],
@@ -7520,6 +8002,9 @@
   "audio/mpeg": [
     "public/library/sfx/script-1.js"
   ],
+  "audio/ogg": [
+    "public/library/sfx/script-1.js"
+  ],
   "aura": [
     "src/rendering/vfx-native.js"
   ],
@@ -7528,7 +8013,8 @@
     "public/library/worker-older-male/script-1.js",
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js",
-    "public/selector/native.js"
+    "public/selector/native.js",
+    "src/audio/music-stream.js"
   ],
   "autoSaveInput": [
     "public/library/crops/script-4.js"
@@ -7744,6 +8230,9 @@
     "src/persistence/snapshots.js",
     "src/rendering/vfx-native.js"
   ],
+  "boundary": [
+    "src/world/boundary-gates.js"
+  ],
   "bounds": [
     "src/world/center-geometries.js"
   ],
@@ -7902,6 +8391,7 @@
     "public/library/walls/script-2.js",
     "src/app/main.js",
     "src/app/tool-label.js",
+    "src/audio/structure-audio.js",
     "src/rendering/attack-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/tutorial-hand-target.js",
@@ -7928,6 +8418,9 @@
   "changing": [
     "src/audio/guardian-audio.js",
     "src/ui/guardian-lifecycle.js"
+  ],
+  "channels": [
+    "src/audio/music-window-pool.js"
   ],
   "charge": [
     "src/rendering/vfx-native.js"
@@ -8017,6 +8510,7 @@
     "public/selector/native.js"
   ],
   "closed": [
+    "src/app/main.js",
     "src/audio/guardian-audio.js",
     "src/rendering/hands-native.js",
     "src/rendering/hands.js",
@@ -8104,6 +8598,12 @@
     "public/menu/native.js",
     "src/app/main.js",
     "src/ui/menu-integration.js"
+  ],
+  "controllerchange": [
+    "src/audio/music-disk-cache.js"
+  ],
+  "conversion.csv": [
+    "public/library/sfx/script-1.js"
   ],
   "coordenada": [
     "src/rendering/hands-native.js"
@@ -8237,6 +8737,7 @@
     "src/audio/music-mixer.js",
     "src/audio/music-policy.js",
     "src/audio/music-transport.js",
+    "src/audio/start-window-music.js",
     "src/simulation/raids.js"
   ],
   "dayValue": [
@@ -8330,6 +8831,7 @@
   "desert": [
     "src/rendering/african-toon.js",
     "src/rendering/biome-material-source.js",
+    "src/rendering/horizon-data.js",
     "src/rendering/horizon.js",
     "src/world/navigation.js",
     "src/world/terrain.js"
@@ -8400,6 +8902,7 @@
   ],
   "dispose": [
     "src/rendering/african-toon.js",
+    "src/rendering/assets.js",
     "src/rendering/biome-ground.js",
     "src/rendering/standard-depth.js"
   ],
@@ -8553,6 +9056,7 @@
     "public/menu/native.js",
     "src/audio/animal-audio.js",
     "src/rendering/animal-actions.js",
+    "src/rendering/animal-preload.js",
     "src/rendering/locomotion-vfx.js",
     "src/simulation/raids.js"
   ],
@@ -8826,6 +9330,8 @@
     "public/library/walls/script-2.js",
     "src/rendering/walls-native.js",
     "src/rendering/walls.js",
+    "src/simulation/game.js",
+    "src/world/boundary-gates.js",
     "src/world/wall-layout-native.js",
     "src/world/wall-layout.js"
   ],
@@ -8891,6 +9397,7 @@
     "public/library/walls/markup.html"
   ],
   "gone": [
+    "src/audio/raid-arrival-audio.js",
     "src/rendering/raid-camera.js",
     "src/rendering/scene.js",
     "src/simulation/actor-motion.js",
@@ -8954,6 +9461,7 @@
     "src/ui/tutorial-hud-hand.js"
   ],
   "growth": [
+    "src/audio/power-ready-audio.js",
     "src/rendering/agriculture-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/vfx-native.js",
@@ -9058,6 +9566,7 @@
     "public/menu/native.js",
     "src/app/main.js",
     "src/app/resume-loaded-world.js",
+    "src/audio/audio.js",
     "src/audio/guardian-audio.js",
     "src/rendering/obstruction.js",
     "src/rendering/raid-camera.js",
@@ -9092,6 +9601,9 @@
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/ui/tutorial-hud-hand.js"
+  ],
+  "hiring-route-preview:": [
+    "src/world/compute-hiring-routes.js"
   ],
   "hiringAgriculturalNotice": [
     "src/app/main.js"
@@ -9255,7 +9767,8 @@
     "src/rendering/standard-depth.js"
   ],
   "iframe": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "illustrated-4.1.6": [
     "src/rendering/african-toon.js"
@@ -9319,14 +9832,14 @@
   "intact": [
     "src/persistence/snapshots.js",
     "src/rendering/attack-vfx.js",
-    "src/rendering/raid-camera.js",
     "src/rendering/walls.js",
     "src/simulation/defensive-groups.js",
     "src/simulation/game.js",
     "src/simulation/gates.js",
     "src/simulation/raids.js",
     "src/simulation/rules.js",
-    "src/tutorial/magic-reminders.js"
+    "src/tutorial/magic-reminders.js",
+    "src/world/farm-envelope.js"
   ],
   "intacto": [
     "public/library/walls/script-1.js",
@@ -9485,7 +9998,8 @@
     "public/library/worker-young-male/markup.html"
   ],
   "load": [
-    "src/app/main.js"
+    "src/app/main.js",
+    "src/ui/screen-wake-lock.js"
   ],
   "loadBar": [
     "public/library/crops/script-4.js"
@@ -9557,6 +10071,7 @@
     "src/tutorial/messages.js"
   ],
   "magic.shield": [
+    "src/app/notices.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
@@ -9624,6 +10139,7 @@
     "src/tutorial/messages.js"
   ],
   "mechanic.first-raid": [
+    "src/app/notices.js",
     "src/tutorial/controller.js",
     "src/tutorial/messages.js"
   ],
@@ -9647,12 +10163,14 @@
   "menu": [
     "src/app/main.js",
     "src/app/resume-loaded-world.js",
+    "src/audio/audio.js",
     "src/audio/ui-audio.js",
     "src/rendering/raid-camera.js",
     "src/simulation/game.js",
     "src/tutorial/controller.js",
     "src/ui/native-hud.js",
-    "src/ui/tutorial-hud-hand.js"
+    "src/ui/tutorial-hud-hand.js",
+    "src/world/compute-hiring-routes.js"
   ],
   "menuButton": [
     "src/app/main.js",
@@ -9745,7 +10263,10 @@
     "public/library/worker-young-male/markup.html"
   ],
   "module": [
-    "src/rendering/chunk-stream.js"
+    "src/rendering/chunk-stream.js",
+    "src/rendering/horizon-generator.js",
+    "src/world/hiring-route-preparer.js",
+    "src/world/raid-entry-preparer.js"
   ],
   "monedas": [
     "public/menu/native.js",
@@ -9782,6 +10303,7 @@
     "src/rendering/mud-patches.js"
   ],
   "multiply": [
+    "src/audio/power-ready-audio.js",
     "src/persistence/snapshots.js",
     "src/rendering/agriculture-vfx.js",
     "src/rendering/vfx-native.js",
@@ -9846,7 +10368,8 @@
     "src/rendering/native-shadow.js"
   ],
   "natural": [
-    "src/audio/music-transport.js"
+    "src/audio/music-transport.js",
+    "src/audio/music-window-transport.js"
   ],
   "nearest": [
     "public/selector/native.js"
@@ -9919,6 +10442,9 @@
   "normalizacion.csv": [
     "public/library/sfx/script-1.js"
   ],
+  "normalizacion_original.csv": [
+    "public/library/sfx/script-1.js"
+  ],
   "normalize(vToonLowNormal)": [
     "src/rendering/african-toon.js"
   ],
@@ -9961,7 +10487,8 @@
     "src/persistence/snapshots.js",
     "src/rendering/african-toon.js",
     "src/rendering/asset-url.js",
-    "src/rendering/shadow-cache.js"
+    "src/rendering/shadow-cache.js",
+    "src/world/navigation-query-scope.js"
   ],
   "observe": [
     "src/simulation/game.js",
@@ -10012,6 +10539,9 @@
   "options": [
     "public/menu/native.js",
     "src/ui/menu-integration.js"
+  ],
+  "opus": [
+    "public/library/sfx/script-1.js"
   ],
   "original": [
     "public/library/crops/script-4.js",
@@ -10077,7 +10607,8 @@
     "src/rendering/gate-articulation.js"
   ],
   "pending": [
-    "public/library/destruction/script-5.js"
+    "public/library/destruction/script-5.js",
+    "src/rendering/scene.js"
   ],
   "percentText": [
     "public/library/crops/script-4.js"
@@ -10293,6 +10824,9 @@
   "position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:25;background:#17261eee;color:white;padding:16px;border-radius:12px;pointer-events:none": [
     "src/app/main.js"
   ],
+  "position:fixed;bottom:0;left:0;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:0": [
+    "src/ui/screen-wake-lock.js"
+  ],
   "position:fixed;inset:60px 0 0;width:100%;height:calc(100dvh - 60px);border:0;background:#eee": [
     "src/app/main.js"
   ],
@@ -10320,8 +10854,14 @@
   "prev": [
     "public/library/sfx/script-1.js"
   ],
+  "preview-": [
+    "src/simulation/raids.js"
+  ],
   "previousArt": [
     "public/selector/native.js"
+  ],
+  "primary": [
+    "src/app/main.js"
   ],
   "primeras acciones ·": [
     "public/library/worker-older-female/markup.html",
@@ -10447,6 +10987,12 @@
     "src/ui/guardian-lifecycle.js",
     "src/ui/guardian.js"
   ],
+  "readonly": [
+    "src/persistence/browser-saves.js"
+  ],
+  "readwrite": [
+    "src/persistence/browser-saves.js"
+  ],
   "recolectado. La tierra vuelve a estar libre.": [
     "public/library/crops/script-4.js"
   ],
@@ -10519,6 +11065,7 @@
     "src/tutorial/messages.js"
   ],
   "reminder.shield": [
+    "src/app/notices.js",
     "src/tutorial/controller.js",
     "src/tutorial/magic-reminders.js",
     "src/tutorial/messages.js"
@@ -10601,6 +11148,7 @@
   ],
   "retreating": [
     "src/audio/animal-audio.js",
+    "src/audio/raid-arrival-audio.js",
     "src/rendering/animal-actions.js",
     "src/rendering/locomotion-vfx.js",
     "src/rendering/raid-camera.js",
@@ -10766,7 +11314,8 @@
     "src/simulation/locomotion-calibration.js"
   ],
   "running": [
-    "src/audio/audio.js"
+    "src/audio/audio.js",
+    "src/audio/start-window-music.js"
   ],
   "s": [
     "public/library/crops/script-4.js",
@@ -10821,6 +11370,9 @@
     "src/rendering/footsteps-data.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/locomotion-calibration.js"
+  ],
+  "samples,": [
+    "src/audio/music-window-pool.js"
   ],
   "savanna": [
     "src/rendering/african-toon.js",
@@ -10986,6 +11538,7 @@
   ],
   "shield": [
     "src/app/main.js",
+    "src/audio/power-ready-audio.js",
     "src/rendering/attack-vfx.js",
     "src/rendering/scene.js",
     "src/rendering/shield-vfx.js",
@@ -11057,6 +11610,12 @@
   ],
   "slash": [
     "src/rendering/vfx-native.js"
+  ],
+  "slotId": [
+    "src/persistence/browser-saves.js"
+  ],
+  "slots": [
+    "src/persistence/browser-saves.js"
   ],
   "small": [
     "public/library/crops/script-4.js"
@@ -11193,6 +11752,7 @@
     "src/rendering/vfx-native.js"
   ],
   "src": [
+    "src/audio/music-stream.js",
     "src/ui/native-hud.js",
     "src/ui/screen-wake-lock.js"
   ],
@@ -11240,6 +11800,9 @@
   "step": [
     "public/selector/native.js"
   ],
+  "stepAlpha": [
+    "src/rendering/step-ripples.js"
+  ],
   "stomp": [
     "src/rendering/vfx-native.js"
   ],
@@ -11252,6 +11815,8 @@
   ],
   "string": [
     "public/menu/native.js",
+    "src/audio/opus-window-recipe.js",
+    "src/persistence/browser-saves.js",
     "src/persistence/snapshots.js",
     "src/rendering/asset-url.js",
     "src/rendering/work-vfx.js",
@@ -11353,6 +11918,7 @@
     "public/library/worker-young-male/script-1.js",
     "src/rendering/african-toon.js",
     "src/rendering/animal-actions.js",
+    "src/rendering/animal-preload.js",
     "src/rendering/asset-clip.js",
     "src/rendering/asset-groups.js",
     "src/rendering/asset-lod.js",
@@ -11365,7 +11931,9 @@
     "src/rendering/buildings.js",
     "src/rendering/contacts.js",
     "src/rendering/crop-batch.js",
+    "src/rendering/depth-capture.js",
     "src/rendering/depth-recipes.js",
+    "src/rendering/fluid-preload.js",
     "src/rendering/hands.js",
     "src/rendering/horizon.js",
     "src/rendering/mud-patches.js",
@@ -11373,13 +11941,16 @@
     "src/rendering/obstruction.js",
     "src/rendering/render-quality.js",
     "src/rendering/scene.js",
+    "src/rendering/screen-preload.js",
     "src/rendering/shadow-cache.js",
     "src/rendering/shadow-camera.js",
     "src/rendering/sky.js",
     "src/rendering/spell-preview.js",
     "src/rendering/standard-depth.js",
+    "src/rendering/step-ripples.js",
     "src/rendering/terrain-camera.js",
     "src/rendering/terrain-geometry.js",
+    "src/rendering/vfx-preload.js",
     "src/rendering/vfx.js",
     "src/rendering/wall-stroke-preview.js",
     "src/rendering/walls.js",
@@ -11396,6 +11967,7 @@
     "src/rendering/assets.js"
   ],
   "three/addons/utils/SkeletonUtils.js": [
+    "src/rendering/animal-preload.js",
     "src/rendering/scene.js"
   ],
   "threshold": [
@@ -11474,6 +12046,12 @@
     "public/library/worker-young-female/script-1.js",
     "public/library/worker-young-male/script-1.js"
   ],
+  "traverse": [
+    "src/rendering/depth-capture.js"
+  ],
+  "traverseVisible": [
+    "src/rendering/depth-capture.js"
+  ],
   "trazar ·": [
     "public/library/walls/markup.html"
   ],
@@ -11511,6 +12089,7 @@
     "public/library/walls/script-2.js",
     "src/rendering/wall-stroke-preview.js",
     "src/ui/guardian.js",
+    "src/ui/screen-wake-lock.js",
     "src/ui/tutorial-hud-hand.js"
   ],
   "tu equipo": [
@@ -11757,6 +12336,8 @@
   "ui": [
     "src/audio/audio.js",
     "src/audio/guardian-audio.js",
+    "src/audio/power-ready-audio.js",
+    "src/audio/raid-arrival-audio.js",
     "src/audio/ui-audio.js",
     "src/audio/unlock-audio.js"
   ],
@@ -11768,8 +12349,11 @@
   ],
   "undefined": [
     "public/library/crops/script-4.js",
+    "src/audio/audio.js",
+    "src/audio/music-disk-cache.js",
     "src/rendering/asset-url.js",
-    "src/rendering/chunk-stream.js"
+    "src/rendering/chunk-stream.js",
+    "src/rendering/horizon-generator.js"
   ],
   "unlock": [
     "src/simulation/balance.js"
@@ -11996,6 +12580,7 @@
     "src/simulation/raids.js",
     "src/simulation/rules.js",
     "src/ui/build-permissions.js",
+    "src/world/boundary-gates.js",
     "src/world/navigation-bounds.js",
     "src/world/navigation.js",
     "src/world/wall-layout-native.js",
@@ -12024,6 +12609,7 @@
     "src/audio/audio.js",
     "src/rendering/footsteps-data.js",
     "src/rendering/vfx-native.js",
+    "src/rendering/vfx-preload.js",
     "src/simulation/animal-actions-data.js",
     "src/simulation/balance.js"
   ],
@@ -12037,6 +12623,7 @@
     "public/library/worker-young-male/script-1.js",
     "src/audio/ambient-audio.js",
     "src/audio/farm-contact-audio.js",
+    "src/audio/movement-audio.js",
     "src/audio/work-audio.js",
     "src/rendering/horizon.js",
     "src/rendering/scene.js",
@@ -12128,6 +12715,9 @@
   ],
   "width": [
     "src/rendering/hands-native.js"
+  ],
+  "wild-guardians-music-compressed-v1": [
+    "src/audio/music-range-reader.js"
   ],
   "wild-guardians:slot:": [
     "src/persistence/snapshots.js"
@@ -12339,6 +12929,10 @@
   ],
   "¿Vaciar la parcela?": [
     "public/library/crops/markup.html"
+  ],
+  "¿Ves? Ya conoces el lenguaje de la tierra. Tu primera caja está en el centro. Guarda monedas para mañana y escucha las nuevas enseñanzas del poblado.": [
+    "src/tutorial/guardian-copy.js",
+    "src/tutorial/messages.js"
   ],
   "Árbol de acento, menos frecuente. Mayor presencia visual y distribución ponderada.": [
     "src/world/terrain.js"

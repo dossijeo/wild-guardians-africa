@@ -145,9 +145,9 @@ export class TutorialController {
       return {id,...TUTORIAL_MESSAGES[id],...(id==='mechanic.defenses'&&afterRaid?{...DEFENSES_FOLLOWUP,variant:'after-raid'}:{}),blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};
     }
     if(s.result==='victory')return {id:'campaign.liberation',...TUTORIAL_MESSAGES['campaign.liberation'],blocking:false,result:true};
-    if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'No quedan recursos suficientes para continuar.',blocking:false,result:true};
+    if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'Faltan recursos para alimentar otro mañana.',blocking:false,result:true};
     if(s.day===1&&!t.basicSkipped&&t.step!=='done'){
-      if(t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'La caja recogida viaja al centro. Espera su entrega: las monedas se cobran al llegar. Si una caja queda en el suelo, conserva su valor hasta que el equipo pueda recuperarla.',blocking:false};
+      if(t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.',blocking:false};
       return {id:BASIC_MESSAGES[t.step],...TUTORIAL_MESSAGES[BASIC_MESSAGES[t.step]],blocking:false};
     }
     return null;

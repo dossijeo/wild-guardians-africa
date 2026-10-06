@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA · Spirit copy v2</title><script src="/i18n/loader.js"></script><style>body{margin:0;background:#b6c49b;font:14px system-ui}nav{position:relative;z-index:100;background:#fff9de;padding:10px}select{padding:8px;max-width:90vw}#report{white-space:pre-wrap;font-size:11px}</style><nav><label>Idioma <select data-language-select id="language"><option value="en">English</option><option value="es">Español</option></select></label><label>Mensaje <select id="copy" data-no-i18n></select></label><pre id="report" data-no-i18n></pre></nav><div id="guardian"></div><script type="module">
+import {NativeGuardian} from '../../src/ui/guardian.js';
+import {guardianCopy} from '../../src/tutorial/guardian-copy.js';
+import '../../src/ui/tutorial.css';
+await window.WildGuardiansLanguageReady;
+document.querySelector('#language').value=window.WildGuardiansLanguage.getLanguage();
+const data=await fetch('../../docs/reference/Wild_Guardians_Espiritu_ES_EN_v2.json').then(r=>r.json()),entries=Object.entries(data.es),select=document.querySelector('#copy'),report=document.querySelector('#report'),errors=[];
+entries.forEach(([old],index)=>select.add(new Option(`${index+1} · ${old.slice(0,60)}`,String(index))));
+const actor=new NativeGuardian(document.querySelector('#guardian'),error=>errors.push(String(error)));await actor.ready;
+function show(){const [old,replacement]=entries[Number(select.value)];actor.hide();actor.show({key:String(select.value),text:old,gesture:'speak',dismiss:()=>actor.hide()});report.textContent=JSON.stringify({index:Number(select.value),source:old,replacement:guardianCopy(old),matches:guardianCopy(old)===replacement,errors},null,2);}
+select.onchange=show;show();let last=performance.now();function frame(now){actor.update(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+addEventListener('pagehide',()=>actor.dispose(),{once:true});
+</script></html>
