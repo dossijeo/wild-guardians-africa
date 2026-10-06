@@ -75,3 +75,14 @@ A temporary Vite alias replaced only the GPU preparation helper, leaving the sou
 `savanna-cache-hold.json` adds a three-second stationary hold at 25 m. Readiness 1 occurs first at 10.203 s, with 115 of 261 near frames fully ready. Useful preparations: 32/28/28/23; cancelled: 76/73/74/75. This verifies that the handoff can settle when stationary; renewed motion still invalidates it. Counters are not a performance benchmark, and the duration/near-frame counts differ between these two paths.
 
 Next isolated check: scope render-generation invalidation to the tree species whose proof is being prepared. Currently replacement of any merged prop geometry invalidates all tree species; CPU batch records also reset when LOD packing changes. Neither cache-only result is accepted for gameplay activation.
+
+
+## Species-scoped preparation (89373e3 + temporary alias)
+
+The signature now includes only color renderables for the corresponding tree slot, material/geometry generations and render-origin/context revisions. Changes of unrelated props no longer cancel that species. CPU packing snapshots remain exact: obsolete packing is rejected rather than authorizing added/replaced trees. Eighteen isolated tests cover these invariants; a further owner-lifecycle check removes renderer context/texture listeners on biome disposal.
+
+`savanna-scoped-approach.json` repeats the original 20-second path with the same tree. Useful preparations 33/24/11/17, cancelled 3/3/1/5, rejected packing 0/0/0/0; 128 of 171 near frames fully ready, first at 8.235 s. `savanna-scoped-hold.json` adds the same three-second wait: 215 of 259 near frames ready, cancelled 3/3/1/4; one obsolete packing in slot 1 is correctly rejected. No game-state or GL errors. Cold/transient chunks still need preparation, and the initial fade interval is included in near-frame counts; these are not FPS results.
+
+`savanna-scoped-near-ready.png/json` explicitly records the selected tree at 25 m with readiness 1, 11.53 s into a longer hold. Native obstruction dithering remains enabled, so the screenshot is technical handoff evidence rather than finished horizon art. The low Savanna backdrop remains an acceptance counterexample.
+
+The serial full suite on the preceding runtime/base (main b93df1a integrated, before warm-cache and Tinify merge) completed **2632/2632 PASS**, no skips, 2447538 ms. After integrating main bccdd74 and the cache/signature changes: **164 targeted tests PASS**, 24 cache/signature/owner tests PASS, build PASS, web package **640 files / 399497252 bytes / 859 relative links / 20 runtime GLBs**. Those checks do not replace the remaining motion and biome visual acceptance.

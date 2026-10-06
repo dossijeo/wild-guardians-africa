@@ -1,3 +1,4 @@
+import {releaseNativeFarGpuCache} from '../../tools/experiments/prepare-native-far-gpu.js';
 import {createBiomeBackdrop} from './biome-backdrop.js';
 import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
@@ -14,7 +15,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain;
  let closed=false,backdrop=null,owner;
  const cancelled=()=>closed||world.disposed||world.loading.signal.aborted;
- const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;if(world.farVegetation===owner)world.farVegetation=null;};
+ const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;if(world.farVegetation===owner)world.farVegetation=null;};
  owner={update(){},dispose:release};world.farVegetation=owner;
  const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{

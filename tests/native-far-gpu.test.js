@@ -1,7 +1,9 @@
+import {nativeFarRenderSignature} from '../tools/experiments/native-far-render-signature.js';
+import {NativePreparedTreeCoverage} from '../tools/experiments/native-prepared-tree-coverage.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Scene,Group,Vector4} from 'three';
-import {prepareNativeFarGpu} from '../tools/experiments/prepare-native-far-gpu.js';
+import {Texture,Scene,Group,Vector4} from 'three';
+import {prepareNativeFarGpu,releaseNativeFarGpuCache} from '../tools/experiments/prepare-native-far-gpu.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -44,4 +46,52 @@ test('optional image decoding finishes before upload and cancellation prevents u
  const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{decodeImages:true,nextFrame:async()=>{}});
  assert.deepEqual(f.calls.slice(0,3),['decode','texture','compile']);assert.ok(result.textureUploads[0].decodeMs>=0);
  let cancelled=false;const g=fixture();await assert.rejects(prepareNativeFarGpu(g.renderer,g.root,g.scene,{},[{image:{decode:async()=>{cancelled=true;}}}],{decodeImages:true,cancelled:()=>cancelled}),/cancelled/);assert.deepEqual(g.calls,[]);
+});
+
+test('warm texture generations skip upload budgets but always compile, draw and fence new native packing',async()=>{
+ const f=fixture(),textures=[new Texture(),new Texture(),new Texture()];let frames=0;
+ const options={nextFrame:async()=>frames++};await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,options);const first=f.calls.filter(c=>c==='texture').length;
+ frames=0;const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,options);assert.equal(result.cachedTextures,3);assert.equal(result.textureBatches,0);assert.equal(frames,0);assert.equal(f.calls.filter(c=>c==='texture').length,first);assert.equal(f.calls.filter(c=>c==='compile').length,2);assert.equal(f.calls.filter(c=>c==='fence').length,2);
+ textures[0].needsUpdate=true;await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,options);assert.equal(f.calls.filter(c=>c==='texture').length,first+1);
+ textures[1].dispose();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,options);assert.equal(f.calls.filter(c=>c==='texture').length,first+2);
+ releaseNativeFarGpuCache(f.renderer);await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,options);assert.equal(f.calls.filter(c=>c==='texture').length,first+5);
+});
+test('context restoration invalidates warm texture budgets independently per renderer',async()=>{
+ const f=fixture(),g=fixture(),texture=new Texture();f.renderer.domElement=new EventTarget();
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});await prepareNativeFarGpu(g.renderer,g.root,g.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(f.calls.filter(c=>c==='texture').length,1);assert.equal(g.calls.filter(c=>c==='texture').length,1);
+ f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(f.calls.filter(c=>c==='texture').length,2);releaseNativeFarGpuCache(f.renderer);releaseNativeFarGpuCache(g.renderer);
+});
+
+test('shared image source changes require a new upload budget even without texture wrapper version change',async()=>{
+ const f=fixture(),texture=new Texture();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});const before=texture.version;texture.source.needsUpdate=true;assert.equal(texture.version,before);
+ const report=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(report.cachedTextures,0);assert.equal(report.textureUploads.length,1);releaseNativeFarGpuCache(f.renderer);
+});
+
+
+test('closing a renderer owner releases texture and context listeners, including after restoration',async()=>{
+ const f=fixture(),listeners=new Map();f.renderer.domElement={addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:(type,fn)=>{assert.equal(listeners.get(type),fn);listeners.delete(type);}};const texture=new Texture();
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(listeners.size,1);assert.equal(texture._listeners.dispose.length,1);
+ listeners.get('webglcontextrestored')();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(texture._listeners.dispose.length,1);
+ releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);assert.equal(texture._listeners.dispose.length,0);releaseNativeFarGpuCache(f.renderer);
+});
+test('a late cancelled request cannot create an owner after its cache was released',async()=>{
+ const f=fixture();let additions=0;f.renderer.domElement={addEventListener:()=>additions++,removeEventListener:()=>{}};releaseNativeFarGpuCache(f.renderer);
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[new Texture()],{cancelled:()=>true}),/cancelled/);assert.equal(additions,0);assert.deepEqual(f.calls,[]);
+});
+
+
+test('a cancelled generation keeps only uploads already completed for the next generation',async()=>{
+ const f=fixture(),textures=[new Texture(),new Texture()];let cancelled=false;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,{cancelled:()=>cancelled,nextFrame:async()=>{cancelled=true;}}),/cancelled/);assert.deepEqual(f.calls,['texture']);
+ const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,{nextFrame:async()=>{}});assert.equal(result.cachedTextures,1);assert.equal(result.textureUploads.length,1);assert.equal(f.calls.filter(c=>c==='texture').length,2);releaseNativeFarGpuCache(f.renderer);
+});
+test('a failed texture upload is never reused by a subsequent generation',async()=>{
+ const f=fixture(),texture=new Texture();f.renderer.initTexture=()=>{throw Error('Upload failed');};await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture]),/Upload failed/);
+ f.renderer.initTexture=()=>f.calls.push('texture');const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(result.cachedTextures,0);assert.equal(result.textureUploads.length,1);releaseNativeFarGpuCache(f.renderer);
+});
+
+test('context restoration invalidates a completed native tree proof before any handoff can reuse it',async()=>{
+ const f=fixture(),texture=new Texture();f.renderer.domElement=new EventTarget();const world={renderer:f.renderer,renderOrigin:{revision:0},assetGroups:{colors:new Map()}},native={revision:1,batches:new Map([[{}, {ids:new Set(['tree'])}]])},proof=new NativePreparedTreeCoverage(native,()=>nativeFarRenderSignature(world,0));
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});proof.complete(proof.capture());assert.equal(proof.has('tree'),true);const old=proof.capture();f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));proof.update();assert.equal(proof.has('tree'),false);assert.equal(proof.complete(old),0);
+ const current=proof.capture();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(proof.complete(current),1);assert.equal(proof.has('tree'),true);releaseNativeFarGpuCache(f.renderer);
 });

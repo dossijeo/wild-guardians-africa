@@ -1,3 +1,4 @@
+import {prepareNativeFarGpu} from '../tools/experiments/prepare-native-far-gpu.js';
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
 import {attachBiomeFarVegetation} from '../src/rendering/far-vegetation.js';
 const metadata={slot:0,localBase:[0,0,0],day:'./assets/day.webp',night:'./assets/night.webp'};
@@ -8,3 +9,11 @@ test('late prepared species is disposed after world close without double-releasi
 
 test('configured visual radius is reversible on disable/dispose and validated before resource loading',async()=>{const f=fixture();f.world.farResidentRange=3;const owner=await attachBiomeFarVegetation(f.world,{residentRange:1},f.services);owner.update(0);assert.equal(f.world.farResidentRange,1);owner.enabled=false;owner.update(0);assert.equal(f.world.farResidentRange,3);owner.enabled=true;owner.update(0);assert.equal(f.world.farResidentRange,1);owner.dispose();assert.equal(f.world.farResidentRange,3);const bad=fixture();await assert.rejects(attachBiomeFarVegetation(bad.world,{residentRange:0},bad.services),/radius/);assert.equal(bad.textures.length,0);assert.equal(bad.world.farVegetation,undefined);});
 test('visual-only radius retains loaded radius ownership and restores both preceding values',async()=>{const f=fixture();f.world.farResidentRange=2;f.world.farVisualRange=3;const owner=await attachBiomeFarVegetation(f.world,{visualRange:1},f.services);owner.update(0);assert.equal(f.world.farResidentRange,2);assert.equal(f.world.farVisualRange,1);owner.enabled=false;owner.update(0);assert.equal(f.world.farResidentRange,2);assert.equal(f.world.farVisualRange,3);owner.enabled=true;owner.update(0);owner.dispose();assert.equal(f.world.farVisualRange,3);});
+
+
+test('closing the biome owner releases native upload cache listeners before disposing its atlas textures',async()=>{
+ const f=fixture(),listeners=new Set(),gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,NO_ERROR:0,isContextLost:()=>false,fenceSync:()=>({}),flush(){},clientWaitSync:()=>2,deleteSync(){},getError:()=>0};
+ f.world.renderer={domElement:{addEventListener:(name,fn)=>listeners.add(fn),removeEventListener:(name,fn)=>listeners.delete(fn)},getContext:()=>gl,initTexture(){},compileAsync:async()=>{},autoClear:true,getViewport:v=>v.set(0,0,10,10),getScissor:v=>v.set(0,0,10,10),getScissorTest:()=>false,setViewport(){},setScissor(){},setScissorTest(){},render(){}};
+ const original=f.services.attachSpecies;f.services.attachSpecies=async(world,options)=>{await prepareNativeFarGpu(world.renderer,new THREE.Group(),world.scene,new THREE.PerspectiveCamera(),[options.texture,options.prelitAtlas.night],{nextFrame:async()=>{}});return original(world,options);};
+ const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(listeners.size,1);assert.equal(f.textures[0]._listeners.dispose.length,2);owner.dispose();assert.equal(listeners.size,0);assert.equal(f.textures[0]._listeners.dispose.length,1);assert.ok(f.textures.every(t=>t.releases===1));
+});
