@@ -137,6 +137,9 @@ export class WorldScene {
     this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
     await this.loadReady(this.hands.ready);
+    // A resumed save can be seconds away from a multi-animal raid. Prepare
+    // its complete pending group under the loading screen, then warm all rigs.
+    await this.loadReady(this.animalPreload.reserveGroup(state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[]));
     await this.loadReady(this.warmAnimalGpu());
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
