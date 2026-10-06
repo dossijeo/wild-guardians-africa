@@ -180,3 +180,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 
 
 [Recursos de precarga y cierre medidos](qa/preload-buffer-lifecycle/README.md): dos contactos nativos y pérdida real de contexto comprobados; 31 pruebas dirigidas. La preparación libera 98.852 bytes solicitados de buffers en ambas muestras. El saldo tras cierre (2,56/4,18 MB) excluye la liberación implícita del contexto y no acredita una fuga ni RAM total. Pendientes propietarios de prototipos/texturas/cachés, orden de limpieza, ciclos e interrupciones, memoria física/móvil y coste de arranque sin sonda. Runtime sin cambios. Campaña congelada de margen sigue viva al día 75, todavía sin resultado terminal.
+
+
+[Limpieza de prototipos y cachés corregida](qa/asset-owner-close/README.md): Assets registra los recursos empaquetados y texturas, libera cargas tardías y vacía sus cachés; el mundo cierra cropBatch y assets antes del contexto. Tres contactos nativos dejan cero buffers observados/geometrías y cachés antes de perder contexto; nueve campos lógicos de dos recorridos coinciden con baseline. 83 pruebas/build correctos. Pendientes atribuir cuatro texturas/tres programas restantes, cancelación independiente de NativeSky.load, ciclos completos y RAM física/móvil. Campaña congelada de margen viva al día 76, sin resultado terminal.

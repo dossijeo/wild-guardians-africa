@@ -1,0 +1,193 @@
+{
+  "parentCommit": "d19b34396b5f2c6da44b895bbfe8b3bd365619be",
+  "sources": [
+    "src/rendering/assets.js",
+    "src/rendering/scene.js",
+    "tests/browser/animal-preload.html",
+    "tests/assets-lifecycle.test.js"
+  ],
+  "cases": [
+    {
+      "case": "canyon",
+      "rawSha256": "710d050baee713554654bf9efcb61d1c004aeb9fb6ce2e63f85f4403d3a4cd6a",
+      "beforeContextLoss": {
+        "stage": "before-context-loss",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": false,
+        "buffers": {
+          "requests": 999,
+          "requestedBytes": 61841296,
+          "replacedBytes": 0,
+          "deletedBytes": 61841296,
+          "liveBytes": 0,
+          "peakBytes": 44571528,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      },
+      "final": {
+        "stage": "after-context-loss-event",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": true,
+        "buffers": {
+          "requests": 999,
+          "requestedBytes": 61841296,
+          "replacedBytes": 0,
+          "deletedBytes": 61841296,
+          "liveBytes": 0,
+          "peakBytes": 44571528,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      },
+      "domainFieldsEqualToBaseline": {
+        "steps": true,
+        "heldFrames": true,
+        "spawnSpecies": true,
+        "simulatedSeconds": true,
+        "centerHpBefore": true,
+        "centerHpAfter": true,
+        "firstHit": true,
+        "logicalHits": true,
+        "actors": true
+      }
+    },
+    {
+      "case": "savanna",
+      "rawSha256": "3619f8d0c028522097fcaa093ac8232d7acbad171ef62fa5188bde7b5e0bc8bb",
+      "beforeContextLoss": {
+        "stage": "before-context-loss",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": false,
+        "buffers": {
+          "requests": 1918,
+          "requestedBytes": 81387664,
+          "replacedBytes": 0,
+          "deletedBytes": 81387664,
+          "liveBytes": 0,
+          "peakBytes": 62755344,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      },
+      "final": {
+        "stage": "after-context-loss-event",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": true,
+        "buffers": {
+          "requests": 1918,
+          "requestedBytes": 81387664,
+          "replacedBytes": 0,
+          "deletedBytes": 81387664,
+          "liveBytes": 0,
+          "peakBytes": 62755344,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      },
+      "domainFieldsEqualToBaseline": {
+        "steps": true,
+        "heldFrames": true,
+        "spawnSpecies": true,
+        "simulatedSeconds": true,
+        "centerHpBefore": true,
+        "centerHpAfter": true,
+        "firstHit": true,
+        "logicalHits": true,
+        "actors": true
+      }
+    },
+    {
+      "case": "mangrove",
+      "rawSha256": "ba5786301df7eaff39053f8f8d46f42fa376b01e7c29edfd59e2fea3461941a2",
+      "beforeContextLoss": {
+        "stage": "before-context-loss",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": false,
+        "buffers": {
+          "requests": 1201,
+          "requestedBytes": 65006934,
+          "replacedBytes": 0,
+          "deletedBytes": 65006934,
+          "liveBytes": 0,
+          "peakBytes": 61300738,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      },
+      "final": {
+        "stage": "after-context-loss-event",
+        "assets": {
+          "cached": 0,
+          "modelSources": 0,
+          "ownedResources": 0
+        },
+        "contextLost": true,
+        "buffers": {
+          "requests": 1201,
+          "requestedBytes": 65006934,
+          "replacedBytes": 0,
+          "deletedBytes": 65006934,
+          "liveBytes": 0,
+          "peakBytes": 61300738,
+          "unattributed": 0,
+          "liveBuffers": 0,
+          "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+        },
+        "geometries": 0,
+        "textures": 4,
+        "programs": 3
+      }
+    }
+  ],
+  "files": {
+    "animal-preload.html.txt": "f1cf349b43c792a700445ab909dc5b83870cf6bf7629272aadf3f12453bb69b9",
+    "assets-lifecycle.test.js.txt": "8e3b6592ac759ccbe05802a19ff75434042f213500b2489c087919b7d631d615",
+    "assets.js.txt": "86f3ccfecf8fbeccf728e20b9163f6d5259936ca3ebe6b5b9dd5baa89e470ca7",
+    "canyon.json.gz": "774c84dcb78e60321f12d35cf8b5c65ffc0e1e799cc2cd2f1cfcf6c0ed18b0f4",
+    "mangrove.json.gz": "05712cb96d15e8cd4ac13c69cab52a732c74a7695985fa448711bbb2232b1cde",
+    "savanna.json.gz": "14c3e2736101078a65fd6ad74dc250cafbf4de1749126024e1499f864727c9af",
+    "scene.js.txt": "1a35be4fc053a6ed8c958a24299daecfda213eb44c790dbad2e6f9d5c67ae70c"
+  },
+  "limits": "Requested buffer bookkeeping, not physical GPU/RAM bytes. Native close/contact checks in three selected biomes, Mapungubwe/media. Four textures and three programs remain in Three counters; context loss confirmed. Does not prove complete JS collection or phone memory."
+}
