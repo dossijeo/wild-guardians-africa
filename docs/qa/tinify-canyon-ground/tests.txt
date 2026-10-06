@@ -1,0 +1,237 @@
+TAP version 13
+# (node:41368) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: exact alpha is checked independently from lossy RGB color changes
+ok 1 - exact alpha is checked independently from lossy RGB color changes
+  ---
+  duration_ms: 24.4492
+  ...
+# Subtest: detects one changed alpha sample even when RGB colors are identical
+ok 2 - detects one changed alpha sample even when RGB colors are identical
+  ---
+  duration_ms: 10.2316
+  ...
+# Subtest: grayscale is normalized explicitly into RGB before alpha comparison
+ok 3 - grayscale is normalized explicitly into RGB before alpha comparison
+  ---
+  duration_ms: 9.9413
+  ...
+# Subtest: changed dimensions produce no invented color/alpha score
+ok 4 - changed dimensions produce no invented color/alpha score
+  ---
+  duration_ms: 56.3214
+  ...
+# (node:20980) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy and WebP texture references preserve normal, packed data and color roles
+ok 5 - legacy and WebP texture references preserve normal, packed data and color roles
+  ---
+  duration_ms: 5.9117
+  ...
+# Subtest: a shared color/normal map is treated as data even when color usage is found first
+ok 6 - a shared color/normal map is treated as data even when color usage is found first
+  ---
+  duration_ms: 0.4551
+  ...
+# Subtest: material extension colors and clearcoat normals are classified through extension nesting
+ok 7 - material extension colors and clearcoat normals are classified through extension nesting
+  ---
+  duration_ms: 0.5571
+  ...
+# Subtest: unreferenced image cannot be automatically sent through lossy color optimization
+ok 8 - unreferenced image cannot be automatically sent through lossy color optimization
+  ---
+  duration_ms: 0.3009
+  ...
+# Subtest: mangrove secondary mud maps retain their data roles and shared files retain both references
+ok 9 - mangrove secondary mud maps retain their data roles and shared files retain both references
+  ---
+  duration_ms: 0.9768
+  ...
+# Subtest: native biome atlas descriptors distinguish base color from normal and metallic roughness
+ok 10 - native biome atlas descriptors distinguish base color from normal and metallic roughness
+  ---
+  duration_ms: 0.4821
+  ...
+# Subtest: native village texture slots and photos retain their explicit semantic roles
+ok 11 - native village texture slots and photos retain their explicit semantic roles
+  ---
+  duration_ms: 2.0743
+  ...
+# Subtest: wall art and VFX thumbnails are color, but sprite atlas stays conservative data
+ok 12 - wall art and VFX thumbnails are color, but sprite atlas stays conservative data
+  ---
+  duration_ms: 1.2409
+  ...
+# Subtest: menu ground alpha mask cannot be mistaken for display-color art
+ok 13 - menu ground alpha mask cannot be mistaken for display-color art
+  ---
+  duration_ms: 0.4667
+  ...
+# (node:23060) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Image variant assets/37c2daf23efce6481a5308acab8c1c9b372e7711024cf77bc5db02a10a33d359.webp retains dimensions/alpha and resolves in every public context
+ok 14 - Image variant assets/37c2daf23efce6481a5308acab8c1c9b372e7711024cf77bc5db02a10a33d359.webp retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 191.877
+  ...
+# Subtest: Image variant assets/a4b7f0c0d5bb4ec2de72b1f0d45a7fe2e59b3361046c566371966b0fa15f9943.webp retains dimensions/alpha and resolves in every public context
+ok 15 - Image variant assets/a4b7f0c0d5bb4ec2de72b1f0d45a7fe2e59b3361046c566371966b0fa15f9943.webp retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 234.784
+  ...
+# Subtest: Image variant assets/91b249bed15bc5cc260e041d4eb01bb7b5c3b5c12da0ec141ef2e1249c59910e.png retains dimensions/alpha and resolves in every public context
+ok 16 - Image variant assets/91b249bed15bc5cc260e041d4eb01bb7b5c3b5c12da0ec141ef2e1249c59910e.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 186.0281
+  ...
+# Subtest: Image variant assets/2502b692dd9b29d3dba37d7c44a9593e89d572ac910c2d2521098760a926116e.png retains dimensions/alpha and resolves in every public context
+ok 17 - Image variant assets/2502b692dd9b29d3dba37d7c44a9593e89d572ac910c2d2521098760a926116e.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 768.483
+  ...
+# Subtest: Image variant assets/adebd99c2709a835e017947f6e878121e0a8de35097a1d04e320a6cafcea1d83.png retains dimensions/alpha and resolves in every public context
+ok 18 - Image variant assets/adebd99c2709a835e017947f6e878121e0a8de35097a1d04e320a6cafcea1d83.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 688.666
+  ...
+# Subtest: Image variant assets/53b89cf6d0c9e5f09da189626d86fccb5d84c3742d465534e4c2205dc39e3122.png retains dimensions/alpha and resolves in every public context
+ok 19 - Image variant assets/53b89cf6d0c9e5f09da189626d86fccb5d84c3742d465534e4c2205dc39e3122.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 206.5306
+  ...
+# Subtest: Image variant assets/6c61d4c1c8f58c9d3a12e72e17683197710f5088513285a68bb054d181dd138e.png retains dimensions/alpha and resolves in every public context
+ok 20 - Image variant assets/6c61d4c1c8f58c9d3a12e72e17683197710f5088513285a68bb054d181dd138e.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 194.2768
+  ...
+# Subtest: Image variant assets/72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f.png retains dimensions/alpha and resolves in every public context
+ok 21 - Image variant assets/72472a81bc5a18a0591a7dcf91772c16e60cd03ca606d51b2d7c890cfbaeff5f.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 195.4671
+  ...
+# Subtest: Image variant assets/96af421dd7bb0b13d4daa4564ea9ddf572d7cb31a827420e955bf626cfc9c2c3.png retains dimensions/alpha and resolves in every public context
+ok 22 - Image variant assets/96af421dd7bb0b13d4daa4564ea9ddf572d7cb31a827420e955bf626cfc9c2c3.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 182.446
+  ...
+# Subtest: Image variant assets/fb526f1a1ee9f29784a8d10cec660a051ad0bc2256f4c4dd5bf17fcc65d19467.png retains dimensions/alpha and resolves in every public context
+ok 23 - Image variant assets/fb526f1a1ee9f29784a8d10cec660a051ad0bc2256f4c4dd5bf17fcc65d19467.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 186.3355
+  ...
+# Subtest: Image variant assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png retains dimensions/alpha and resolves in every public context
+ok 24 - Image variant assets/c082908e08a10d89823c6d12be53e56cd96b67013b0845993f21aad264351926.png retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 129.3276
+  ...
+# Subtest: Image variant assets/9943235b3605983c3890ad20c266441dcbd35f161e0da7e1b3ffb3529dd9cd3f.jpg retains dimensions/alpha and resolves in every public context
+ok 25 - Image variant assets/9943235b3605983c3890ad20c266441dcbd35f161e0da7e1b3ffb3529dd9cd3f.jpg retains dimensions/alpha and resolves in every public context
+  ---
+  duration_ms: 99.8424
+  ...
+# (node:7732) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lossless data conversion preserves independent RGB channels, dimensions and all opaque alpha samples
+ok 26 - lossless data conversion preserves independent RGB channels, dimensions and all opaque alpha samples
+  ---
+  duration_ms: 50.0317
+  ...
+# Subtest: data comparison rejects one changed channel even if image dimensions and visible alpha match
+ok 27 - data comparison rejects one changed channel even if image dimensions and visible alpha match
+  ---
+  duration_ms: 6.362
+  ...
+# Subtest: 16-bit PNG is rejected instead of silently truncating data
+ok 28 - 16-bit PNG is rejected instead of silently truncating data
+  ---
+  duration_ms: 5.0793
+  ...
+# Subtest: profiles, orientation, animation and unsupported channel layouts need review
+ok 29 - profiles, orientation, animation and unsupported channel layouts need review
+  ---
+  duration_ms: 0.7046
+  ...
+# Subtest: grayscale mask conversion replicates each exact scalar into RGB and keeps opaque alpha
+ok 30 - grayscale mask conversion replicates each exact scalar into RGB and keeps opaque alpha
+  ---
+  duration_ms: 45.1227
+  ...
+# (node:38120) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ordinary RGBA8 color images pass with actual dimensions and transparency
+ok 31 - ordinary RGBA8 color images pass with actual dimensions and transparency
+  ---
+  duration_ms: 88.5224
+  ...
+# Subtest: data, mixed roles, unknown and undistributed files cannot reach an upload
+ok 32 - data, mixed roles, unknown and undistributed files cannot reach an upload
+  ---
+  duration_ms: 11.8521
+  ...
+# Subtest: profiled JPEG needs explicit color review before an upload is attempted
+ok 33 - profiled JPEG needs explicit color review before an upload is attempted
+  ---
+  duration_ms: 17.1331
+  ...
+# Subtest: 16-bit PNG cannot be silently reduced to eight bits by color optimization
+ok 34 - 16-bit PNG cannot be silently reduced to eight bits by color optimization
+  ---
+  duration_ms: 40.1631
+  ...
+# Subtest: oriented image cannot be uploaded before reviewing its placement
+ok 35 - oriented image cannot be uploaded before reviewing its placement
+  ---
+  duration_ms: 119.9207
+  ...
+# Subtest: stale hashes and metadata are rejected even with a valid color classification
+ok 36 - stale hashes and metadata are rejected even with a valid color classification
+  ---
+  duration_ms: 120.3862
+  ...
+# (node:31796) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: converts once, publishes no credential/location and reuses the verified disk result across clients
+ok 37 - converts once, publishes no credential/location and reuses the verified disk result across clients
+  ---
+  duration_ms: 528.5026
+  ...
+# Subtest: simultaneous requests for identical bytes share one upload and one output
+ok 38 - simultaneous requests for identical bytes share one upload and one output
+  ---
+  duration_ms: 50.4666
+  ...
+# Subtest: already WebP requests download optimization without an unnecessary conversion operation
+ok 39 - already WebP requests download optimization without an unnecessary conversion operation
+  ---
+  duration_ms: 11.741
+  ...
+# Subtest: failed output resumes the known upload and never exposes provider error bodies or the secret
+ok 40 - failed output resumes the known upload and never exposes provider error bodies or the secret
+  ---
+  duration_ms: 21.5923
+  ...
+# Subtest: rejects hostile upload locations without sending an authenticated request to another host
+ok 41 - rejects hostile upload locations without sending an authenticated request to another host
+  ---
+  duration_ms: 17.1859
+  ...
+# Subtest: rejects corrupted disk outputs and non-WebP provider output
+ok 42 - rejects corrupted disk outputs and non-WebP provider output
+  ---
+  duration_ms: 60.0409
+  ...
+# Subtest: network exception text cannot echo the authorization value
+ok 43 - network exception text cannot echo the authorization value
+  ---
+  duration_ms: 8.7079
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4153.6171
