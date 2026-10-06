@@ -351,11 +351,10 @@
       "id": "build_wood",
       "filename": "031_build_wood.mp3",
       "sha256": "09c3ba040284ac4e4c90e5baf8fc123dc32850c0b4f3a0e030a7a3fdb15ca1b6",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "WallChainBuilt:wall:empalizada"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Textura sonora de obra de madera; alternativa por material."
     },
     {
@@ -363,11 +362,10 @@
       "id": "build_stone",
       "filename": "032_build_stone.mp3",
       "sha256": "8336442c759b84ee549c6d882890b073ffe0ade4e2031123a71a709de9634176",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "WallChainBuilt:wall:piedra"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Textura sonora de obra de piedra; alternativa por material."
     },
     {
@@ -375,11 +373,11 @@
       "id": "build_adobe",
       "filename": "033_build_adobe.mp3",
       "sha256": "08be9e6f5024829198c4a903c3b366013feff2399c91cb9a414e1487407830d9",
-      "status": "reserved",
+      "status": "connected",
       "destination": [
-        "sfx-library-preview"
+        "WallChainBuilt:wall:adobe",
+        "WallChainBuilt:wall:reforzado"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
       "planned_trigger": "Textura sonora de obra de adobe; alternativa por material."
     },
     {

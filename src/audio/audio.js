@@ -4,7 +4,7 @@ import {WorkerAudio} from './worker-audio.js';
 import {FarmContactAudio} from './farm-contact-audio.js';
 import {RaidArrivalAudio} from './raid-arrival-audio.js';
 import {AnimalAudio,ANIMAL_SOUND_ROUTES} from './animal-audio.js';
-import {structureHitSound,structureAlertSound,structureDetailSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
+import {wallBuildSound,structureHitSound,structureAlertSound,structureDetailSound,STRUCTURE_CONTACT_FAMILY} from './structure-audio.js';
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
 import {MovementAudio} from './movement-audio.js';
@@ -182,8 +182,10 @@ export class AudioSystem {
     for(let index=start;index<events.length;index++){
       const event=events[index];if(this.seen.has(event.id))continue;this.seen.add(event.id);
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
-      const id=event.type==='StructureHit'?structureHitSound(event,state):eventSound[event.type];
-      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
+      const id=event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
+      const requested=this.context?.currentTime??0,generation=this.generation;
+      const constructionOptions=event.type==='WallChainBuilt'?{family:'construction-place',isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}:{};
+      if(id)this.sound(id,{...eventAudioOptions(event,id,state,listener),...constructionOptions,...(event.type==='StructureHit'?{family:STRUCTURE_CONTACT_FAMILY}:{})}).catch(()=>{});
       const alert=event.type==='StructureHit'?structureAlertSound(event):eventAlertSound[event.type];
       if(alert&&!(alerts??=new Set()).has(alert)){alerts.add(alert);const requested=this.context?.currentTime??0,generation=this.generation;
         this.sound(alert,{bus:'ui',family:alert==='ui_objective_complete'?'tutorial-complete':alert==='game_farmer_hurt'?'worker-danger':'structure-danger',emitter:alert==='ui_objective_complete'?'ui:tutorial':alert==='game_farmer_hurt'?'ui:worker-danger':'ui:structure-danger',gain:1,
@@ -196,7 +198,7 @@ export class AudioSystem {
           isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&
             !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
       }
-      const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});
+      const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),...constructionOptions,family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});
     }
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
     if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));

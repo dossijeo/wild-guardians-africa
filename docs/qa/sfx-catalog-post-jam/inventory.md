@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **85**. Sin asignar en gameplay: **41**.
+Asignados: **88**. Sin asignar en gameplay: **38**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -36,20 +36,20 @@ Asignados: **85**. Sin asignar en gameplay: **41**.
 | 028 | farm_crop_interact · Interacción genérica con cultivo | Pendiente | Interacción ligera con vegetación; variante contextual de agricultura. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 029 | build_place · Colocar elemento / edificio | Asignado | Confirmación de una colocación válida; nunca al mover el fantasma. | src/audio/audio.js:19 → PlacementCommitted; src/audio/audio.js:19 → WallChainBuilt |
 | 030 | build_tool_hit · Golpe de herramienta | Pendiente | Contacto de herramienta de construcción/reparación cuando exista en la animación. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 031 | build_wood · Construcción · madera | Pendiente | Textura sonora de obra de madera; alternativa por material. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 032 | build_stone · Construcción · piedra | Pendiente | Textura sonora de obra de piedra; alternativa por material. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 033 | build_adobe · Construcción · adobe / barro | Pendiente | Textura sonora de obra de adobe; alternativa por material. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 031 | build_wood · Construcción · madera | Asignado | Textura sonora de obra de madera; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: empalizada |
+| 032 | build_stone · Construcción · piedra | Asignado | Textura sonora de obra de piedra; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: piedra |
+| 033 | build_adobe · Construcción · adobe / barro | Asignado | Textura sonora de obra de adobe; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: adobe; src/audio/structure-audio.js:1 → WallChainBuilt: reforzado |
 | 034 | build_complete · Construcción terminada | Asignado | Construcción confirmada y terminada; no cobrar aquí una segunda vez. | src/audio/audio.js:20 → PlacementCommitted (extra contact/completion); src/audio/audio.js:20 → WallChainBuilt (extra contact/completion); src/audio/audio.js:20 → VillageFounded (extra contact/completion) |
 | 035 | build_repair · Reparación | Asignado | Reparación ejecutada tras comprobar y descontar el coste al llegar. | src/audio/audio.js:19 → RepairApplied |
 | 036 | build_demolish_manual · Demolición voluntaria | Asignado | Eliminación manual permitida de una defensa; no decide reembolsos ni costes. | src/audio/audio.js:19 → WallRemoved |
-| 037 | wall_hit_thorns · Impacto · zarzas | Asignado | Impacto lógico en zarzas. | src/audio/structure-audio.js:1 → StructureHit: zarzas |
-| 038 | wall_hit_wood · Impacto · madera | Asignado | Impacto lógico en madera. | src/audio/structure-audio.js:1 → StructureHit: empalizada |
-| 039 | wall_hit_stone · Impacto · piedra | Asignado | Impacto lógico en piedra. | src/audio/structure-audio.js:1 → StructureHit: piedra |
-| 040 | wall_hit_adobe · Impacto · adobe | Asignado | Impacto lógico en adobe. | src/audio/structure-audio.js:1 → StructureHit: adobe |
-| 041 | wall_hit_reinforced_adobe · Impacto · adobe reforzado | Asignado | Impacto lógico en adobe reforzado. | src/audio/structure-audio.js:1 → StructureHit: reforzado |
+| 037 | wall_hit_thorns · Impacto · zarzas | Asignado | Impacto lógico en zarzas. | src/audio/structure-audio.js:5 → StructureHit: zarzas |
+| 038 | wall_hit_wood · Impacto · madera | Asignado | Impacto lógico en madera. | src/audio/structure-audio.js:5 → StructureHit: empalizada |
+| 039 | wall_hit_stone · Impacto · piedra | Asignado | Impacto lógico en piedra. | src/audio/structure-audio.js:5 → StructureHit: piedra |
+| 040 | wall_hit_adobe · Impacto · adobe | Asignado | Impacto lógico en adobe. | src/audio/structure-audio.js:5 → StructureHit: adobe |
+| 041 | wall_hit_reinforced_adobe · Impacto · adobe reforzado | Asignado | Impacto lógico en adobe reforzado. | src/audio/structure-audio.js:5 → StructureHit: reforzado |
 | 042 | wall_crack_small · Pequeñas grietas | Pendiente | Pequeña rotura en contacto válido; no se reproduce como daño autónomo. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 043 | wall_debris_small · Desprendimiento de fragmentos | Pendiente | Caída de fragmentos decorativos; limitar voces simultáneas. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 044 | wall_structural_creak · Crujido estructural | Asignado | Crujido al alcanzar daño estructural alto; disparador de estado, no continuo. | src/audio/structure-audio.js:11 → StructureHit:wall-critical (world detail) |
+| 044 | wall_structural_creak · Crujido estructural | Asignado | Crujido al alcanzar daño estructural alto; disparador de estado, no continuo. | src/audio/structure-audio.js:15 → StructureHit:wall-critical (world detail) |
 | 045 | wall_collapse_full · Colapso completo | Asignado | Colapso estructural iniciado por el motor de destrucción; una vez por colapso. | src/audio/audio.js:19 → StructureRuined |
 | 046 | wall_debris_ground · Fragmentos cayendo al suelo | Pendiente | Contacto final de restos con el suelo; presentación del colapso. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 047 | beast_step_light · Pasos ligeros | Asignado | Apoyos de bestia ligera; marcadores de animación. | src/audio/movement-audio.js:6 → MovementAudio.update: observed moving native foot contact |
@@ -126,8 +126,8 @@ Asignados: **85**. Sin asignar en gameplay: **41**.
 | 118 | eco_big_reward · Recompensa importante | Pendiente | Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 119 | game_attack_alert · Alerta de ataque | Asignado | Comienzo global de incursión; un aviso por grupo, no uno por animal. | src/audio/audio.js:19 → RaidSpawned |
 | 120 | game_enemy_detected · Enemigo detectado | Asignado | Detección/localización de enemigo; variante local, sin repetir el aviso global. | src/audio/raid-arrival-audio.js:2 → RaidArrivalAudio.update: first observed physical farm entry per raid |
-| 121 | game_building_attacked · Edificio bajo ataque | Asignado | Centro/edificio bajo ataque; limitar recurrencia por estructura. | src/audio/structure-audio.js:3 → StructureHit:first-center-hit |
-| 122 | game_wall_critical · Muralla crítica | Asignado | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | src/audio/structure-audio.js:3 → StructureHit:wall-critical |
+| 121 | game_building_attacked · Edificio bajo ataque | Asignado | Centro/edificio bajo ataque; limitar recurrencia por estructura. | src/audio/structure-audio.js:7 → StructureHit:first-center-hit |
+| 122 | game_wall_critical · Muralla crítica | Asignado | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | src/audio/structure-audio.js:7 → StructureHit:wall-critical |
 | 123 | game_farmer_hurt · Granjero herido | Asignado | Trabajador lesionado; aviso agrupable y enlazable a posición. | src/audio/audio.js:21 → WorkerIncapacitated (grouped gameplay warning) |
 | 124 | game_attack_over · Ataque terminado | Asignado | Fin de incursión al retirarse el último animal. | src/audio/audio.js:19 → RaidEnded |
 | 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:19 → CampaignWon |
