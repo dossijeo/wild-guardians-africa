@@ -41,7 +41,10 @@ export class Navigation {
     const result=[];
     const minX=Math.floor((x-radius+24)/48),maxX=Math.floor((x+radius+24)/48);
     const minZ=Math.floor((z-radius+24)/48),maxZ=Math.floor((z+radius+24)/48);
-    for(let cz=minZ;cz<=maxZ;cz++)for(let cx=minX;cx<=maxX;cx++)for(const list of this.chunk(cx,cz).instances)for(const p of list)if(distance(p,{x,z})<radius+8&&!this.suppressed.has(p.id))result.push(p);
+    const reach=radius+8,point={x,z};
+    // Exact axis rejection avoids expensive norms for distant props. Keep the
+    // original strict circular test and procedural order for every candidate.
+    for(let cz=minZ;cz<=maxZ;cz++)for(let cx=minX;cx<=maxX;cx++)for(const list of this.chunk(cx,cz).instances)for(const p of list)if(Math.abs(p.x-x)<reach&&Math.abs(p.z-z)<reach&&distance(p,point)<reach&&!this.suppressed.has(p.id))result.push(p);
     return result;
   }
   setState(state) {
