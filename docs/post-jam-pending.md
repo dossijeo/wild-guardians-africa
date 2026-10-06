@@ -191,3 +191,6 @@ Estado: registrado y pendiente de integración POST-JAM. JSON original guardado 
 [Cancelación de fases del mundo protegida](qa/world-phase-cancel/README.md): barreras tras esperas, JSON privado abortable, clones de suelo/barro protegidos y cachés de plantillas/poblados sin resultados tardíos. Cuatro checkpoints nativos y carga normal Manglares; 38 pruebas/build. Pendientes GPU/chunks, ciclos, contadores residuales y RAM/móvil.
 
 [Campaña con defensa pagada fallida](qa/paid-defense-failure-ee25c8c/README.md): sesión 7678/PID 36076 terminó con exit 1, incursión sin finalizar noche 39 en revisión congelada ee25c8c. Estado y procedencia preservados; reproducir sobre main antes de atribuir/afirmar corrección. El informe de victoria inicialmente localizado era histórico dba3b69/PID 39712 y no pertenece a esta ejecución. La campaña de margen PID 20608 sigue viva; último estado observado día 79.
+
+
+[Densidad lejana decreciente experimental](qa/far-vegetation-density/README.md): selección determinista por ID/semilla, fade progresivo antes de zona fiel y comparación nativa de ocho lotes. Fondo más abierto y menores medianas GPU en este visor; pendiente integración procedural, movimiento, bruma y móvil. Sigue fuera de gameplay.

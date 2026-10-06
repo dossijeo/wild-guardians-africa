@@ -1,0 +1,58 @@
+{
+  "realLighting": true,
+  "representation": "lod",
+  "farDensity": {
+    "enabled": true,
+    "start": 100,
+    "end": 240,
+    "minimum": 0.15,
+    "band": 0.04
+  },
+  "transition": [
+    40,
+    60
+  ],
+  "phase": "mediodía",
+  "nightAmount": 0,
+  "materialType": "MeshStandardMaterial",
+  "night": false,
+  "held": false,
+  "ready": 1,
+  "angularBlend": true,
+  "camera": [
+    0,
+    10,
+    25
+  ],
+  "firstTree": {
+    "id": "prototype-tree-0",
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0,
+    "scale": 1,
+    "distance": 25,
+    "atlas": {
+      "first": 0,
+      "second": 1,
+      "blend": 0,
+      "nearest": 0
+    },
+    "right": {
+      "x": 1,
+      "y": 0,
+      "z": 0
+    },
+    "impostorVisibility": 0
+  },
+  "drawCalls": 3,
+  "triangles": 40742,
+  "modelCount": 4,
+  "impostorCount": 1008,
+  "selection": {
+    "selectionScans": 4,
+    "matrixUploads": 2
+  },
+  "webglError": 0,
+  "errors": []
+}

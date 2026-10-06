@@ -195,3 +195,6 @@ La perspectiva atmosférica reduce contraste/saturación e integra los colores c
 - Repetir cámara y seed: misma selección, sin cambios aleatorios entre frames ni parpadeo al variar ligeramente la distancia.
 - Verificar categorías: elementos pequeños retirados antes, siluetas importantes presentes, backdrop inaccesible separado del mundo fiel.
 - Registrar imágenes y CPU/GPU/RAM/tamaño en cada nivel, incluida la bruma/blur y el overdraw, antes de adoptar la composición.
+
+
+[Densidad lejana decreciente experimental](qa/far-vegetation-density/README.md): selección determinista por ID/semilla, fade progresivo antes de zona fiel y comparación nativa de ocho lotes. Fondo más abierto y menores medianas GPU en este visor; pendiente integración procedural, movimiento, bruma y móvil. Sigue fuera de gameplay.

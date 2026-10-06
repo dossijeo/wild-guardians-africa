@@ -1,5 +1,16 @@
 // Experimental math shared by the isolated atlas/3D prototype, not gameplay.
 const TAU=Math.PI*2;
+export function treeDensityRank(id,seed=0){
+ let hash=(2166136261^seed)>>>0;
+ for(const character of String(id))hash=Math.imul(hash^character.codePointAt(0),16777619)>>>0;
+ hash^=hash>>>16;hash=Math.imul(hash,0x7feb352d);hash^=hash>>>15;hash=Math.imul(hash,0x846ca68b);hash^=hash>>>16;
+ return (hash>>>0)/4294967296;
+}
+export function farDensityFade(distance,rank,{start=100,end=240,minimum=.15,band=.04}={}){
+ if(!(end>start)||minimum<0||minimum>1||!(band>0)||rank<0||rank>=1)throw Error('Invalid far density parameters');
+ const t=Math.max(0,Math.min(1,(distance-start)/(end-start))),density=1-(1-minimum)*t*t*(3-2*t);
+ return Math.max(0,Math.min(1,(density+band-rank)/band));
+}
 export function atlasViews(camera,base,yaw,views=8){
  const angle=((Math.atan2(camera.x-base.x,camera.z-base.z)-yaw)%TAU+TAU)%TAU,index=angle/TAU*views,first=Math.floor(index)%views;
  return {first,second:(first+1)%views,blend:index-Math.floor(index),nearest:Math.round(index)%views};
