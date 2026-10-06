@@ -245,3 +245,6 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 
 
 [Recetas alpha y localización de píxeles](qa/surface-alpha-mip-recipe/README.md): compartido sesgo mip nativo del follaje y separadas claves de shader para superficies sólidas/follaje. 41 pruebas/build y candidatos nativos de la misma cara/instancia. La discrepancia de tres píxeles persiste: no se atribuye a estos defectos ni se activa alpha especializado. Pendientes cobertura efectiva y aceptación visual amplia de variantes.
+
+
+[Caché experimental de recetas de cultivo](qa/crop-stage-sample-cache/README.md): buffers equivalentes, pero coste CPU mixto en ABBA sintético; candidato archivado y producción sin modificar. Pendiente reducir coste activo y comprobar memoria/frametime antes de adoptarlo.
