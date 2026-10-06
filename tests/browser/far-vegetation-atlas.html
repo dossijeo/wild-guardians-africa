@@ -8,22 +8,23 @@ import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {atlasElevationFrame} from '../../tools/experiments/atlas-elevation-frame.js';
 import {Assets,json} from '../../src/rendering/assets.js';
 const params=new URLSearchParams(location.search),bakeMode=params.get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
+const biome=params.get('biome')??'savanna',slot=Number(params.get('slot')??0),gameBiome={savanna:'sabana',grand_river:'gran-rio',mangrove:'manglares',volcanoes:'volcanes',canyons:'gran-canon',desert:'desierto'}[biome];if(!gameBiome||!Number.isInteger(slot)||slot<0||slot>(biome==='canyons'?1:3))throw Error('Invalid offline tree selection');
 const bakedLod=Number(params.get('lod')??0);if(!Number.isInteger(bakedLod)||bakedLod<0||bakedLod>2)throw Error('Invalid atlas LOD');
 const rotationViews=prelitBake&&params.get('rotations')==='8'?8:1,cameraViews=prelitBake&&params.get('views')==='16'?16:8,viewResolution=params.get('resolution')==='128'?128:256,atlasWidth=cameraViews*viewResolution,atlasHeight=rotationViews*viewResolution;
 let renderer,mesh,material,scene,metadata,prototypes=[];
 try{
- const pack=await json('/content/biome-savanna.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(0,1)}),source=levels[0][bakedLod],geometry=source.geometry,frameGeometry=levels[0][0].geometry,position=frameGeometry.getAttribute('position'),box=frameGeometry.boundingBox,height=box.max.y-box.min.y;
+ const pack=await json('/content/biome-'+biome+'.json'),levels=await assets.biome({...pack,assets:pack.assets.slice(slot,slot+1)}),source=levels[0][bakedLod],geometry=source.geometry,frameGeometry=levels[0][0].geometry,position=frameGeometry.getAttribute('position'),box=frameGeometry.boundingBox,height=box.max.y-box.min.y;
  prototypes=levels;
  const low=[];for(let i=0;i<position.count;i++)if(position.getY(i)<=box.min.y+height*.015)low.push([position.getX(i),position.getZ(i)]);
  const base=[(Math.min(...low.map(p=>p[0]))+Math.max(...low.map(p=>p[0])))/2,box.min.y,(Math.min(...low.map(p=>p[1]))+Math.max(...low.map(p=>p[1])))/2];
  let halfWidth=0;for(let view=0;view<8;view++){const angle=view*Math.PI/4,c=Math.cos(angle),s=Math.sin(angle);for(let i=0;i<position.count;i++)halfWidth=Math.max(halfWidth,Math.abs((position.getX(i)-base[0])*c-(position.getZ(i)-base[2])*s));}
  const width=halfWidth*2*1.08,elevation=atlasElevationFrame(position,base,height,Number(params.get('elevation')??0),cameraViews),frameHeight=elevation.impostorHeight;
- metadata={experimental:true,species:'Acacia paraguas',biome:'sabana',slot:0,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:elevation.baseV,elevation,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},bakedLod,framingLod:0,sourceVertices:geometry.getAttribute('position').count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
+ metadata={experimental:true,species:pack.assets[slot].name,biome:gameBiome,packBiome:biome,slot,views:cameraViews,viewResolution,atlasWidth,atlasHeight,rotationViews,rotationsDegrees:Array.from({length:rotationViews},(_,i)=>i*360/rotationViews),anglesDegrees:Array.from({length:cameraViews},(_,i)=>i*360/cameraViews),localBase:base,impostorWidth:width,impostorHeight:frameHeight,baseV:elevation.baseV,elevation,sourceBounds:{min:box.min.toArray(),max:box.max.toArray()},bakedLod,framingLod:0,sourceVertices:geometry.getAttribute('position').count,sourceTriangles:geometry.index.count/3,lighting:'Unlit original base color and factor; no directional light, normal bake or time-of-day variants',errors};
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);renderer.setSize(viewResolution,viewResolution);renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
  material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
  if(normalBake||prelitBake){
   material.dispose();material=source.material.clone();material.userData={...source.material.userData};material.onBeforeCompile=source.material.onBeforeCompile;material.customProgramCacheKey=()=>source.material.customProgramCacheKey()+'|offline-atlas-'+bakeMode;
-  const sun=new THREE.DirectionalLight();sun.position.set(-30,55,25);toon.update(bakeMode==='night'?1:0,sun,'sabana');toon.material(material);
+  const sun=new THREE.DirectionalLight();sun.position.set(-30,55,25);toon.update(bakeMode==='night'?1:0,sun,gameBiome);toon.material(material);
   if(normalBake){
   const previous=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{previous.call(material,shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','outgoingLight=normalize(toonN)*.5+.5;\n#include <opaque_fragment>').replace('#include <colorspace_fragment>','').replace('#include <tonemapping_fragment>','');};
   renderer.debug.onShaderError=()=>errors.push('Normal atlas shader failed');
@@ -31,7 +32,7 @@ try{
   document.querySelector('h1').textContent='Atlas offline de normales · Acacia de Sabana';document.querySelector('#download').download='savanna-acacia-normals-8views.png';
   }else{
    metadata.lighting='Native AfricanToon and source material, baked '+bakeMode;metadata.bakedPhase=bakeMode;metadata.nightAmount=bakeMode==='night'?1:0;metadata.sunPosition=[-30,55,25];metadata.sourceYaw=rotationViews===1?0:null;metadata.rowMeaning='Tree world yaw relative to fixed sun; columns are camera angles relative to that tree';metadata.colorEncoding='sRGB display color, native shader grading; no runtime normal atlas';
-   renderer.debug.onShaderError=()=>errors.push('Prelit atlas shader failed');document.querySelector('h1').textContent='Atlas offline precocinado · '+bakeMode;document.querySelector('#download').download='savanna-acacia-'+bakeMode+'-'+cameraViews+'views'+(rotationViews>1?'-rotations8':'')+'.png';
+   renderer.debug.onShaderError=()=>errors.push('Prelit atlas shader failed');document.querySelector('h1').textContent='Atlas offline precocinado · '+bakeMode;document.querySelector('#download').download=biome+'-tree-'+slot+'-'+bakeMode+'-'+cameraViews+'views'+(rotationViews>1?'-rotations8':'')+'.png';
   }
  }
 
