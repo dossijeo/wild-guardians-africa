@@ -73,3 +73,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 
 [Continuación de tres fincas avanzadas reales comparada](qa/late-farm-worker-lookups/README.md): 12.201–20.443 cultivos históricos, contratación pagada y recorridos físicos preservados; mediana de simular 100 ms reducida aproximadamente 39/45/38 %. Muestras individuales y estados completos en nueve checkpoints por caso. No acredita FPS, móvil o campañas actuales de cien noches.
+
+
+[Destino de paseo optimizado](qa/idle-anchor-history/README.md): las plantas vivas evitan calcular distancias a cultivos históricos; respuestas iguales en tres fincas archivadas y 15.600 pasos nativos completos equivalentes. Medianas aisladas de cien consultas: 165→53 / 197→70 / 258→70 ms. Sin evidencia de FPS o ahorro cuando no hay plantas vivas.

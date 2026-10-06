@@ -412,14 +412,18 @@ function completeTask(s,w,t,target,nav) {
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
 export function idleFarmAnchor(s,worker,center){
-  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
-  for(const plant of s.plants){
-    if(plant.centerId!==worker.centerId)continue;
-    const distance=dist(plant,worker);
-    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
-    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
+  let plant=null,distance=Infinity;
+  // Living crops always win, even when a harvested crop is nearer. Defer the
+  // historical fallback so growing farms do not measure every old crop per idle
+  // worker. Both passes retain the same distance/ID ordering; no persistent cache.
+  for(let phase=0;phase<2;phase++){
+    for(const candidate of s.plants){
+      if(candidate.centerId!==worker.centerId||phase===0&&!candidate.alive)continue;
+      const next=dist(candidate,worker);
+      if(next<distance||next===distance&&candidate.id.localeCompare(plant.id)<0){plant=candidate;distance=next;}
+    }
+    if(plant)break;
   }
-  const plant=live??planted;
   // Keep the cultivated area as the idle anchor after its last harvest too.
   if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};

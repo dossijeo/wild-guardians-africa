@@ -1,0 +1,430 @@
+TAP version 13
+# Subtest: QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+ok 1 - QA-058: all four profiles release an unfinished walking reservation exactly at shift end
+  ---
+  duration_ms: 509.7007
+  ...
+# Subtest: QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+ok 2 - QA-059: all four profiles finish committed physical first care after shift end then refuse the next task
+  ---
+  duration_ms: 425.0913
+  ...
+# Subtest: QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+ok 3 - QA-056/057: actual raid cancellation and end rebuild only live needs and logically requested harvest
+  ---
+  duration_ms: 195.7394
+  ...
+# Subtest: QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+ok 4 - QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then physical pickups and reload settle both crates once
+  ---
+  duration_ms: 285.3462
+  ...
+# Subtest: QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+ok 5 - QA-062/063: ordinary urgency exhausts physical running metres without changing assignments and next hire restores reserve
+  ---
+  duration_ms: 159.9612
+  ...
+# Subtest: QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+ok 6 - QA-063: two versus three queued tasks changes running but equal living plant weights keep staff quotas equal
+  ---
+  duration_ms: 2.9538
+  ...
+# Subtest: QA-047/048: actual paid workers reserve FIFO by nearest free colleague and never duplicate plant/crate owners
+ok 7 - QA-047/048: actual paid workers reserve FIFO by nearest free colleague and never duplicate plant/crate owners
+  ---
+  duration_ms: 538.321
+  ...
+# Subtest: QA-060/061: olderMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 8 - QA-060/061: olderMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 141.5433
+  ...
+# Subtest: QA-060/061: olderFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 9 - QA-060/061: olderFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 106.0902
+  ...
+# Subtest: QA-060/061: youngMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 10 - QA-060/061: youngMale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 58.4435
+  ...
+# Subtest: QA-060/061: youngFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+ok 11 - QA-060/061: youngFemale ambient rest/watch/walk stays local and a real planting command interrupts without teleporting
+  ---
+  duration_ms: 30.8543
+  ...
+# Subtest: QA-053: mapungubwe a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 12 - QA-053: mapungubwe a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 233.5529
+  ...
+# Subtest: QA-053: saheliana a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 13 - QA-053: saheliana a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 215.8774
+  ...
+# Subtest: QA-053: suajili a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 14 - QA-053: suajili a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 173.5199
+  ...
+# Subtest: QA-053: musgum a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 15 - QA-053: musgum a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 158.8449
+  ...
+# Subtest: QA-053: etiope a lost-center pool returns to a surviving local center after a physical raid, without another wage
+ok 16 - QA-053: etiope a lost-center pool returns to a surviving local center after a physical raid, without another wage
+  ---
+  duration_ms: 117.0222
+  ...
+# Subtest: QA-054/055: mapungubwe displaced staff physically go home and a saved replacement recovers the same paid people
+ok 17 - QA-054/055: mapungubwe displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 27.7144
+  ...
+# Subtest: QA-054/055: saheliana displaced staff physically go home and a saved replacement recovers the same paid people
+ok 18 - QA-054/055: saheliana displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 24.6224
+  ...
+# Subtest: QA-054/055: suajili displaced staff physically go home and a saved replacement recovers the same paid people
+ok 19 - QA-054/055: suajili displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 32.6283
+  ...
+# Subtest: QA-054/055: musgum displaced staff physically go home and a saved replacement recovers the same paid people
+ok 20 - QA-054/055: musgum displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 31.9955
+  ...
+# Subtest: QA-054/055: etiope displaced staff physically go home and a saved replacement recovers the same paid people
+ok 21 - QA-054/055: etiope displaced staff physically go home and a saved replacement recovers the same paid people
+  ---
+  duration_ms: 23.5657
+  ...
+# Subtest: QA-054: mapungubwe an available center in a foreign village never steals displaced contracts
+ok 22 - QA-054: mapungubwe an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 159.1464
+  ...
+# Subtest: QA-054: saheliana an available center in a foreign village never steals displaced contracts
+ok 23 - QA-054: saheliana an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 234.2069
+  ...
+# Subtest: QA-054: suajili an available center in a foreign village never steals displaced contracts
+ok 24 - QA-054: suajili an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 145.8657
+  ...
+# Subtest: QA-054: musgum an available center in a foreign village never steals displaced contracts
+ok 25 - QA-054: musgum an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 129.2108
+  ...
+# Subtest: QA-054: etiope an available center in a foreign village never steals displaced contracts
+ok 26 - QA-054: etiope an available center in a foreign village never steals displaced contracts
+  ---
+  duration_ms: 122.2066
+  ...
+# Subtest: maturity schedules harvest without a player command or immediate income
+ok 27 - maturity schedules harvest without a player command or immediate income
+  ---
+  duration_ms: 13.9061
+  ...
+# Subtest: an already ripe saved plant schedules itself after load and queue reconstruction
+ok 28 - an already ripe saved plant schedules itself after load and queue reconstruction
+  ---
+  duration_ms: 2.3706
+  ...
+# Subtest: automatic orders survive attack cancellation and regenerate only for living ripe plants
+ok 29 - automatic orders survive attack cancellation and regenerate only for living ripe plants
+  ---
+  duration_ms: 0.7696
+  ...
+# Subtest: a paid worker collects and delivers automatically, settling income once
+ok 30 - a paid worker collects and delivers automatically, settling income once
+  ---
+  duration_ms: 9.9043
+  ...
+# Subtest: Raid destruction reassigns only displaced employees locally without another wage
+ok 31 - Raid destruction reassigns only displaced employees locally without another wage
+  ---
+  duration_ms: 30.5985
+  ...
+# Subtest: Returning and already home displaced workers remain recoverable by a new center after reload
+ok 32 - Returning and already home displaced workers remain recoverable by a new center after reload
+  ---
+  duration_ms: 16.1441
+  ...
+# Subtest: Rebuilt center recovers displaced contracts while surviving staff keep assignments
+ok 33 - Rebuilt center recovers displaced contracts while surviving staff keep assignments
+  ---
+  duration_ms: 1.5898
+  ...
+# Subtest: Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+ok 34 - Worker arrival reconstructs a ruined center and recovers its displaced staff without rebalance
+  ---
+  duration_ms: 5.8451
+  ...
+# Subtest: Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+ok 35 - Recovery excludes incapacitated, expired, shift-ended and foreign-village workers
+  ---
+  duration_ms: 2.5107
+  ...
+# Subtest: New construction during an active attack cannot recall fleeing employees
+ok 36 - New construction during an active attack cannot recall fleeing employees
+  ---
+  duration_ms: 1.064
+  ...
+# Subtest: Living farm anchors do not read historical coordinates; mutations affect the next query
+ok 37 - Living farm anchors do not read historical coordinates; mutations affect the next query
+  ---
+  duration_ms: 2.553
+  ...
+# Subtest: All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+ok 38 - All four native profiles alternate Idle and Alert and occasionally walk inside eight metres without running
+  ---
+  duration_ms: 131.5205
+  ...
+# Subtest: FIFO assignment interrupts an ambient route immediately without losing a reservation
+ok 39 - FIFO assignment interrupts an ambient route immediately without losing a reservation
+  ---
+  duration_ms: 1.5226
+  ...
+# Subtest: Unreachable or nonlocal detours never become ambient movement
+ok 40 - Unreachable or nonlocal detours never become ambient movement
+  ---
+  duration_ms: 5.714
+  ...
+# Subtest: A changed navigation version invalidates a blocked paseo before moving
+ok 41 - A changed navigation version invalidates a blocked paseo before moving
+  ---
+  duration_ms: 0.6837
+  ...
+# Subtest: Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+ok 42 - Waiting in a village has a real anchor and freezes/resumes identically across pause and save
+  ---
+  duration_ms: 76.8273
+  ...
+# Subtest: A waiting employee returns physically at shift end and does not prolong the contract
+ok 43 - A waiting employee returns physically at shift end and does not prolong the contract
+  ---
+  duration_ms: 75.9769
+  ...
+# Subtest: Receiving queued work prevents even one extra ambient step
+ok 44 - Receiving queued work prevents even one extra ambient step
+  ---
+  duration_ms: 25.8044
+  ...
+# Subtest: Ambient paths stay inside the local radius and original terrain/building footprints
+ok 45 - Ambient paths stay inside the local radius and original terrain/building footprints
+  ---
+  duration_ms: 1075.9651
+  ...
+# Subtest: after the final paid harvest the idle worker returns to the cultivated area, with physical paths and identical saved replay
+ok 46 - after the final paid harvest the idle worker returns to the cultivated area, with physical paths and identical saved replay
+  ---
+  duration_ms: 211.0478
+  ...
+# Subtest: Mandatory hiring refuses closing and replacement until confirmed, while a result can supersede it
+ok 47 - Mandatory hiring refuses closing and replacement until confirmed, while a result can supersede it
+  ---
+  duration_ms: 41.0442
+  ...
+# Subtest: Optional panels still replace one another and close normally
+ok 48 - Optional panels still replace one another and close normally
+  ---
+  duration_ms: 0.3637
+  ...
+# Subtest: Dawn hiring replaces ordinary panels once, without reopening or replacing a result
+ok 49 - Dawn hiring replaces ordinary panels once, without reopening or replacing a result
+  ---
+  duration_ms: 45.8823
+  ...
+# Subtest: A dismissed instruction stays closed while its real action is pending, including after reload
+ok 50 - A dismissed instruction stays closed while its real action is pending, including after reload
+  ---
+  duration_ms: 3.3675
+  ...
+# Subtest: A shallow incline or interior bump cannot leave a work-center floor floating
+ok 51 - A shallow incline or interior bump cannot leave a work-center floor floating
+  ---
+  duration_ms: 9.2698
+  ...
+# Subtest: World hints never ask for manual harvesting or follow idle work or deliveries
+ok 52 - World hints never ask for manual harvesting or follow idle work or deliveries
+  ---
+  duration_ms: 0.6539
+  ...
+# Subtest: Actual running displacement exceeds walking by over two times; stopped fleeing actors stay idle
+ok 53 - Actual running displacement exceeds walking by over two times; stopped fleeing actors stay idle
+  ---
+  duration_ms: 1.1064
+  ...
+# Subtest: New campaigns have 1500 coins and tutorial readings never pause the running clock
+ok 54 - New campaigns have 1500 coins and tutorial readings never pause the running clock
+  ---
+  duration_ms: 2.7235
+  ...
+# Subtest: The tool expires ten seconds after its last successful placement
+ok 55 - The tool expires ten seconds after its last successful placement
+  ---
+  duration_ms: 0.4917
+  ...
+# Subtest: The salary reserve rejects purchases before any debit, permitting exactly 30 to remain
+ok 56 - The salary reserve rejects purchases before any debit, permitting exactly 30 to remain
+  ---
+  duration_ms: 1.0576
+  ...
+# Subtest: Idle farm anchors use a nearby living plot and a three metre roaming radius
+ok 57 - Idle farm anchors use a nearby living plot and a three metre roaming radius
+  ---
+  duration_ms: 0.561
+  ...
+# Subtest: An unreachable idle farm anchor backs off route searches instead of retrying each frame
+ok 58 - An unreachable idle farm anchor backs off route searches instead of retrying each frame
+  ---
+  duration_ms: 0.9956
+  ...
+# Subtest: farm idle anchors prefer living plants, exclude other centers and break equal distances consistently
+ok 59 - farm idle anchors prefer living plants, exclude other centers and break equal distances consistently
+  ---
+  duration_ms: 30.18
+  ...
+# Subtest: large historical farm keeps identical FIFO reservations for crops, loose crates and repairs
+ok 60 - large historical farm keeps identical FIFO reservations for crops, loose crates and repairs
+  ---
+  duration_ms: 762.0839
+  ...
+# Subtest: reachable nearest employee requires only one route query; blocked nearest candidates fall through in order
+ok 61 - reachable nearest employee requires only one route query; blocked nearest candidates fall through in order
+  ---
+  duration_ms: 1.3319
+  ...
+# Subtest: no idle eligible employee preserves missing-target and reserved flags without querying routes
+ok 62 - no idle eligible employee preserves missing-target and reserved flags without querying routes
+  ---
+  duration_ms: 0.9849
+  ...
+# Subtest: nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility
+ok 63 - nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility
+  ---
+  duration_ms: 311.0772
+  ...
+# Subtest: busy historical farms clear only existing unreserved targets in one collection pass
+ok 64 - busy historical farms clear only existing unreserved targets in one collection pass
+  ---
+  duration_ms: 2231.5404
+  ...
+# Subtest: busy farms with no blocked task avoid all historical entity collections
+ok 65 - busy farms with no blocked task avoid all historical entity collections
+  ---
+  duration_ms: 0.5653
+  ...
+# Subtest: youngMale: Three loads and applies every native action to its real rig
+ok 66 - youngMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 560.8878
+  ...
+# Subtest: olderMale: Three loads and applies every native action to its real rig
+ok 67 - olderMale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 357.6258
+  ...
+# Subtest: olderFemale: Three loads and applies every native action to its real rig
+ok 68 - olderFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 229.2769
+  ...
+# Subtest: youngFemale: Three loads and applies every native action to its real rig
+ok 69 - youngFemale: Three loads and applies every native action to its real rig
+  ---
+  duration_ms: 235.2757
+  ...
+# Subtest: youngMale: native action tracks are finite and preserve their last key
+ok 70 - youngMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 89.3341
+  ...
+# Subtest: olderMale: native action tracks are finite and preserve their last key
+ok 71 - olderMale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 49.099
+  ...
+# Subtest: olderFemale: native action tracks are finite and preserve their last key
+ok 72 - olderFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 44.532
+  ...
+# Subtest: youngFemale: native action tracks are finite and preserve their last key
+ok 73 - youngFemale: native action tracks are finite and preserve their last key
+  ---
+  duration_ms: 56.3901
+  ...
+# Subtest: Combined initial work shows planting followed by first watering for both age speeds
+ok 74 - Combined initial work shows planting followed by first watering for both age speeds
+  ---
+  duration_ms: 0.8545
+  ...
+# Subtest: Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+ok 75 - Incapacitation retreats using slowed Run; first hit holds the native Fall instead
+  ---
+  duration_ms: 0.5344
+  ...
+# Subtest: Carrying uses the original crate and idle uses the supplied resting pose
+ok 76 - Carrying uses the original crate and idle uses the supplied resting pose
+  ---
+  duration_ms: 0.4031
+  ...
+# Subtest: youngMale: cached water emitter follows the actual animated nozzle holes
+ok 77 - youngMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 232.9964
+  ...
+# Subtest: olderMale: cached water emitter follows the actual animated nozzle holes
+ok 78 - olderMale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 194.9313
+  ...
+# Subtest: olderFemale: cached water emitter follows the actual animated nozzle holes
+ok 79 - olderFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 184.917
+  ...
+# Subtest: youngFemale: cached water emitter follows the actual animated nozzle holes
+ok 80 - youngFemale: cached water emitter follows the actual animated nozzle holes
+  ---
+  duration_ms: 168.3182
+  ...
+# Subtest: Prepared nozzle paths reject missing, malformed and non-finite samples
+ok 81 - Prepared nozzle paths reject missing, malformed and non-finite samples
+  ---
+  duration_ms: 1.6893
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task
+ok 82 - new paid contract walks directly towards the first FIFO task
+  ---
+  duration_ms: 46.9636
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task after reload
+ok 83 - new paid contract walks directly towards the first FIFO task after reload
+  ---
+  duration_ms: 13.3144
+  ...
+# Subtest: raid survivors keep their deliberate return to the centre and do not become new contracts
+ok 84 - raid survivors keep their deliberate return to the centre and do not become new contracts
+  ---
+  duration_ms: 7.651
+  ...
+1..84
+# tests 84
+# suites 0
+# pass 84
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3837.8798

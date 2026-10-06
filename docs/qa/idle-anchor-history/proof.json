@@ -1,0 +1,25 @@
+{
+  "referenceHead": "726157f",
+  "referenceGameSha256": "620e1b5e10b84827fb8c361710e174193b389f244f43024599550692665d2e61",
+  "sourceHashes": {
+    "src/simulation/game.js": "c0c8534f2cc76d04ab568607d10685b67210d3f674a7d99fe8ead67bfa645905",
+    "tests/idle-anchor-history.test.js": "0a57165dc2e8810611a44f0005cbaa3d9aa9e825030d436d3feeb9eda1619998",
+    "tools/benchmark_idle_farm_anchor.mjs": "73833e77d5a01aa7ae43b6cd4ae8e41441978c5d26aa399505bea9473edca31f",
+    "tools/check_navigation_query_reuse.mjs": "41664ffbcb3a5f602f9e62b9cad5ba0deb2e788001cd5711ffc85c4a5c2acfa2"
+  },
+  "checks": {
+    "tests": 84,
+    "nativeFullStateSteps": 15600,
+    "pathSearchesEqual": true,
+    "buildExitCode": 0,
+    "benchmarkExitCode": 0
+  },
+  "resultHashes": {
+    "benchmark.json": "72e2e38e8f2e49896781af0a7380232f07931cf05339cc8840d6ae4294e845aa",
+    "build.log.gz": "8ca22e7b047262b8b88409719fb27513960c7b5a9eafc3ba68201a6723150395",
+    "native-equivalence.json": "210b26aa0d137b164ca798d252748c9ccf1f5d3dec356525edaf3bc6a03de486",
+    "README.md": "f3835b9140a6d39a670390cccf2ccea79599bb28de3556c33f0e6fd077278de7",
+    "tests.tap": "425d0958dbc7346bae35403bbfc84313b25abaa9dae0283608188b0295c74bbe"
+  },
+  "limits": "Idle anchor operation only. Three unmodified historical snapshots with diagnostic worker positions; no real idle workforce, renderer, phone, RAM or current 100-night balance acceptance."
+}
