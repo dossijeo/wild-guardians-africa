@@ -331,9 +331,8 @@ export class Navigation {
   segmentClear(start,end,radius,ignore,worker) {
     // Repeated A* searches share exact directed grid edges. Geometry remains
     // unchanged until setState invalidates both navigation caches.
-    const grid=[start.x,start.z,end.x,end.z].every(Number.isInteger);
-    const from=`${start.x},${start.z}`,to=`${end.x},${end.z}`;
-    const key=grid?`${from}|${to}:${radius}:${ignore}:${worker}`:null;
+    const grid=Number.isInteger(start.x)&&Number.isInteger(start.z)&&Number.isInteger(end.x)&&Number.isInteger(end.z);
+    const key=grid?`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}`:null;
     if(key&&this.segmentCache.has(key))return this.segmentCache.get(key);
     const result=this.testSegmentClear(start,end,radius,ignore,worker);
     if(key){if(this.segmentCache.size>=100000)this.segmentCache.clear();this.segmentCache.set(key,result);}
