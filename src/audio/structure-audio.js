@@ -12,10 +12,16 @@ export function structureAlertSound(event){
     return STRUCTURE_ALERT_SOUNDS['StructureHit:wall-critical'];
   return null;
 }
-export const STRUCTURE_DETAIL_SOUNDS=Object.freeze({'StructureHit:wall-critical':'wall_structural_creak'});
-export function structureDetailSound(event){
+export const STRUCTURE_DETAIL_SOUNDS=Object.freeze({'StructureHit:wall-critical':'wall_structural_creak','StructureHit:first-masonry-damage':'wall_crack_small'});
+export function structureDetailSound(event,state){
   const hit=event?.structureHit;
-  return hit?.kind==='wall'&&hit.previousHp>hit.hp&&hit.previousHp>hit.criticalThreshold&&hit.hp<=hit.criticalThreshold?STRUCTURE_DETAIL_SOUNDS['StructureHit:wall-critical']:null;
+  if(hit?.kind!=='wall'||!(hit.previousHp>hit.hp))return null;
+  if(hit.previousHp>hit.criticalThreshold&&hit.hp<=hit.criticalThreshold)return STRUCTURE_DETAIL_SOUNDS['StructureHit:wall-critical'];
+  // The intact-to-damaged morph starts at the first real loss of HP. Wood and
+  // thorns retain their own contact sounds; masonry alone adds the small crack.
+  if(!(hit.maxHp>0)||hit.previousHp!==hit.maxHp||!(hit.hp>0))return null;
+  const target=state?.structures?.find(structure=>structure.id===event.targetId);
+  return target?.kind==='wall'&&['piedra','adobe','reforzado'].includes(target.material)?STRUCTURE_DETAIL_SOUNDS['StructureHit:first-masonry-damage']:null;
 }
 export function structureHitSound(event,state){
   const target=state?.structures?.find(structure=>structure.id===event.targetId);

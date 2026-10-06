@@ -193,7 +193,7 @@ export class AudioSystem {
           isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&(this.context.currentTime-requested)<=.5&&
             !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
       }
-      const detail=event.type==='StructureHit'&&structureDetailSound(event);
+      const detail=event.type==='StructureHit'&&structureDetailSound(event,state);
       if(detail){const requested=this.context?.currentTime??0,generation=this.generation;
         this.sound(detail,{...eventAudioOptions({...event,animalId:undefined,presentation:Number.isFinite(event.structureHit.x)&&Number.isFinite(event.structureHit.z)?event.structureHit:event.presentation},detail,state,listener),family:'structure-detail',emitter:event.targetId,
           isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&

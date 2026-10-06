@@ -1,0 +1,14 @@
+{
+  "base": "a5b2750",
+  "sources": {
+    "tests/browser/depth-submission-state.js": "ffd498445fa9277015216b48485311dbae9a16418591ddffbdc9af83b4beee0a",
+    "tests/browser/depth-capture.html": "41c9934a2fc833c6af545d52f515083d3737531a52fdd0a0d2a5a64b075cddcd",
+    "tests/depth-submission-state.test.js": "9298b59f3b5ad11cf4888a2d7d39cb035850b3708a741c4f807d5c91b51843b4"
+  },
+  "unitCommand": "node --test tests/depth-submission-state.test.js tests/depth-comparison-summary.test.js",
+  "unitTests": 6,
+  "unitPassed": 6,
+  "unitFailed": 0,
+  "nativeExecution": "not obtained: two browser webview attachment timeouts; browser2 tab inventory empty",
+  "scope": "QA observer and unit regressions only. No new native submission trace, render performance or cause attribution."
+}

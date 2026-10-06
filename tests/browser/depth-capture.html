@@ -18,6 +18,7 @@ import {AlphaDepthExperiment} from './alpha-depth-experiment.js';
 import {SinglePassAlphaDepth} from './single-pass-alpha-depth.js';
 import {DepthReadback} from './depth-readback.js';
 import {summarizeDepthComparisons} from './depth-comparison-summary.js';
+import {captureDepthSubmissionState,compareDepthSubmissionState} from './depth-submission-state.js';
 import {withDepthCaptureMaterials} from '../../src/rendering/depth-capture.js';
 import {renderOriginBounds,withRenderOrigin} from '../../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials as beforeCompatibility} from './depth-capture-before-compatibility.js';
@@ -126,16 +127,16 @@ async function comparePreparation(kind){
   const sequence=nativeComparison?[['N1',false,false],['N2',false,false],['G',false,true],['B1',true,true],['B2',true,true],['N3',false,false]]:[['A1',false,true],['A2',false,true],['B1',true,true],['B2',true,true],['A3',false,true]];
   for(const [label,enabled,optimized] of sequence){
    world.destructionPass.optimizedDepth=optimized;
-   if(kind==='empty')world.destructionPass.nonEmptyDepthOnly=enabled;else if(singleComparison)singleAlpha.setEnabled(enabled);else alphaExperiment.setEnabled(enabled);await nextFrame();world.render(0);
+   if(kind==='empty')world.destructionPass.nonEmptyDepthOnly=enabled;else if(singleComparison)singleAlpha.setEnabled(enabled);else alphaExperiment.setEnabled(enabled);await nextFrame();const submissionState=captureDepthSubmissionState(world,()=>world.render(0));
    const color=new Uint8Array(world.canvas.width*world.canvas.height*4);gl.readPixels(0,0,world.canvas.width,world.canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,color);
    const depth=alphaReadback.read(world.destructionPass.smokeDepth.depthTexture,world.canvas.width,world.canvas.height);
    if(gl.getError()!==gl.NO_ERROR)throw Error('Alpha readback WebGL error');if(serialize(state)!==before)throw Error('Alpha comparison changed logical state');
-   frames.push({label,enabled,optimized,color,depth,cameraInput:{eye:world.camera.position.toArray(),target:world.controls.target.toArray(),quaternion:world.camera.quaternion.toArray(),view:world.camera.matrixWorldInverse.elements.slice(),projection:world.camera.projectionMatrix.elements.slice(),origin:[world.renderOrigin.x,world.renderOrigin.z]},preparation:{...world.destructionPass.depthCaptureStats}});
+   frames.push({label,enabled,optimized,color,depth,submissionState,cameraInput:{eye:world.camera.position.toArray(),target:world.controls.target.toArray(),quaternion:world.camera.quaternion.toArray(),view:world.camera.matrixWorldInverse.elements.slice(),projection:world.camera.projectionMatrix.elements.slice(),origin:[world.renderOrigin.x,world.renderOrigin.z]},preparation:{...world.destructionPass.depthCaptureStats}});
   }
   const pairs=nativeComparison?[[0,1],[1,2],[2,3],[1,3],[3,4],[4,5],[1,5]]:[[0,1],[1,2],[2,3],[3,4],[1,4]];
-  const comparisons=pairs.map(([a,b])=>({pair:frames[a].label+'/'+frames[b].label,color:diff(frames[a].color,frames[b].color),depth:diff(frames[a].depth,frames[b].depth,true)}));
+  const comparisons=pairs.map(([a,b])=>({pair:frames[a].label+'/'+frames[b].label,color:diff(frames[a].color,frames[b].color),depth:diff(frames[a].depth,frames[b].depth,true),depthSubmissionState:compareDepthSubmissionState(frames[a].submissionState,frames[b].submissionState)}));
   if(comparisons.some(c=>!c.depth.nonUniformPixels))throw Error('Constant depth cannot prove equivalence');
-  result={kind,frames:frames.map(({color,depth,...frame})=>frame),mode:nativeComparison?'native-full-vs-guarded-vs-single-pass-alpha':kind==='empty'?'prepare-all-vs-known-empty-skipped':singleComparison?'current-depth-vs-single-pass-alpha':'current-depth-vs-QA-stock-alpha',scope:nativeComparison?'Six fixed-clock native world renders: full native N/N, production guard G, single-traversal alpha B/B, native N. Direct final color and packed actual depth attachment; no GPU/all-biome/mobile acceptance.':'Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.',...summarizeDepthComparisons(comparisons),comparisons,alphaApplications:singleComparison?singleAlpha.applications:alphaExperiment.applications,logicalStateUnchanged:true,width:world.canvas.width,height:world.canvas.height};
+  result={kind,frames:frames.map(({color,depth,submissionState,...frame})=>({...frame,depthSubmissionDraws:submissionState.length})),mode:nativeComparison?'native-full-vs-guarded-vs-single-pass-alpha':kind==='empty'?'prepare-all-vs-known-empty-skipped':singleComparison?'current-depth-vs-single-pass-alpha':'current-depth-vs-QA-stock-alpha',scope:nativeComparison?'Six fixed-clock native world renders: full native N/N, production guard G, single-traversal alpha B/B, native N. Direct final color and packed actual depth attachment; no GPU/all-biome/mobile acceptance.':'Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.',...summarizeDepthComparisons(comparisons),comparisons,alphaApplications:singleComparison?singleAlpha.applications:alphaExperiment.applications,logicalStateUnchanged:true,width:world.canvas.width,height:world.canvas.height};
  }catch(e){showError(e);}finally{singleAlpha.setEnabled(false);alphaExperiment.setEnabled(false);world.destructionPass.nonEmptyDepthOnly=previousEmpty;world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}
 }
 document.querySelector('#damage').onclick=()=>{hitStructure(state.structures[0],40);world.render(0);status();};
