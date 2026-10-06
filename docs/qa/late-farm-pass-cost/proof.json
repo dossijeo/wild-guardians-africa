@@ -1,0 +1,24 @@
+{
+  "base": "2c2190bae8473f868526d6a5762a929fbc9c183b",
+  "compressedBytes": 41559,
+  "uncompressedBytes": 656559,
+  "compressedSha256": "6da19c37da7ffcd986936779c34b66fb9d71acfe9c0ad16f543fef59a396464e",
+  "uncompressedSha256": "12dd52c85b6d23cf7879c2275798de82ea0a530c4fefc7f2b3e22a51267e6da6",
+  "gzipMtime": 0,
+  "sources": {
+    "tests/browser/render-pass-timer.js": "eff4fd2596a6c2b8c81c5010b9e6332dabf45752b33009cbc120c671cf1a228f",
+    "tests/browser/late-farm-render.html": "c172574d708396b94f88588e108a048666f44f4b3b6a91cbf6f889fc592e7b30",
+    "tests/browser/gpu-timer.js": "a59cf9c7419810d687ffd91a9c88d9efc4693a4a5489a7351b994ce1d1100a4b",
+    "tests/render-pass-timer.test.js": "7b89c43f2427c9bb372563f5295bcd3112bcea5329127a9c0f6eb953855d15d8",
+    "src/rendering/scene.js": "9497356deb5343d768abcc9337f262b78588a9c6f627d15955f4ea52593e4887",
+    "src/rendering/buildings.js": "1223b88afefaa4dd5a21e6ac150da56f4c208ad8afb2521a0d195e49093fccd0",
+    "src/rendering/native-shadow.js": "3fadd82d2e4dd37b25d07d99539302ae661ce92ae62636ad93665741d5729aa8",
+    "src/rendering/depth-capture.js": "68ba7b06c02b000eb13f40d189442ffb7b5dff94bb31620de06e1b2058057900",
+    "src/rendering/standard-depth.js": "7e3bf8084eb74d52e47bab8b670a6e21689f9c79185e5cb3e7d0c565bbcc0e6c"
+  },
+  "screenshotSha256": "de3030267053d679f7b762d85f15339df81db723210cd484a5dd663c2fc61cbb",
+  "reconciledFrames": 200,
+  "gpuSegmentSumMedianMs": 63.391637,
+  "gpuSegmentSumMeanMs": 63.608878745,
+  "scope": "Diagnostic queries cover native renderer.render segments, not the entire WorldScene.render or RAF. Queries perturb timing. Per-frame draw counts reconcile; no candidate performance comparison."
+}

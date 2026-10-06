@@ -128,3 +128,6 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 - Contemplar cámara/objetivo dentro de volúmenes, streaming, construcción/destrucción, Volver/continuar/incursiones y gestos rápidos/simultáneos.
 
 Estado: registrado y pendiente de implementación; abordarlo cuando sea posible sin desplazar prioridades actuales.
+
+
+[Coste GPU atribuido por pases en finca avanzada](qa/late-farm-pass-cost/README.md): 200 frames y 1.800 queries completas, 13 pruebas dirigidas; contadores reconciliados y mismo estado lógico final. Medianas GPU: dibujo final ~37,6 ms, profundidad VFX ~16,3 ms, sombras ~8,3 ms, cielo ~1,0 ms. Instrumentación QA, sin optimización aplicada/FPS general; siguiente prioridad: categorías/materiales del dibujo y profundidad conservando siluetas y efectos.
