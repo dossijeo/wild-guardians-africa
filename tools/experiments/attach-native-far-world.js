@@ -4,7 +4,8 @@ import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
 import {prepareNativeFarGpu} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
-import {Fog,Frustum,Matrix4} from 'three';
+import {skyNight} from '../../src/rendering/sky.js';
+import {Fog,Frustum,Matrix4,Color} from 'three';
 import {attachNativeFarGround} from './native-far-ground.js';
 
 // Explicit QA opt-in. Atlas resources remain owned by the caller.
@@ -20,7 +21,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
  const stats={regions:0,nativePreparations:0,stalePreparations:0,errors};
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[0])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
- const fog=new Fog('#b5d9e8',160,380);
+ const fog=new Fog('#b5d9e8',160,380),fogDay=new Color('#b5d9e8'),fogNight=new Color('#263747');
  const layer=new NativeFarLayer({scene:world.scene,source:world.prototypes[0][0],texture,metadata,treesOnly:false,attachData:(p,data)=>attachNativeFarGround(p,data.ground,world),options:{toon:world.toon,prelitAtlas,start,end,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);
   await prepareNativeFarGpu(world.renderer,candidate.impostors,world.scene,world.camera,[texture,prelitAtlas.day,prelitAtlas.night],{cancelled});
@@ -46,7 +47,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   }).finally(()=>busy=false);
  }
  const adapter={layer,stats,enabled:true,update(dt){
-  if(closed)return;world.scene.fog=fog;layer.current?.prototype.updateGroundBounds();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
+  if(closed)return;fog.color.copy(fogDay).lerp(fogNight,skyNight(world.state));world.scene.fog=fog;layer.current?.prototype.updateGroundBounds();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&frustum.intersectsBox(nativeChunkBounds(group))));
   coverage.update(visible);prepared.update();schedulePreparation();
