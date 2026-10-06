@@ -11,6 +11,7 @@ import {createFarImpostorPrototype} from '../../tools/experiments/far-impostor-p
 import {modelOrigin} from '../../tools/experiments/far-impostor-math.js';
 import {NativeTreeCoverage} from '../../tools/experiments/native-tree-coverage.js';
 import {NativeFarCoverage} from '../../tools/experiments/native-far-coverage.js';
+import {prepareNativeFarGpu} from '../../tools/experiments/prepare-native-far-gpu.js';
 import {FarTreeTransitions} from '../../tools/experiments/far-tree-transitions.js';
 const canvas=document.querySelector('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:true}),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,500),assets=new Assets(),toon=new AfricanToon(),errors=[],status=document.querySelector('#status'),report=document.querySelector('#report');
 renderer.setPixelRatio(1);renderer.debug.onShaderError=()=>errors.push('Shader compilation failed');scene.background=new THREE.Color('#b5d9e8');scene.fog=new THREE.Fog('#b5d9e8',30,300);camera.position.set(0,10,25);camera.lookAt(0,3,0);
@@ -20,7 +21,7 @@ try{
  const metadata=await json('/docs/qa/far-vegetation-atlas/acacia.json'),pack=await json('/content/biome-savanna.json');levels=(await assets.biome({...pack,assets:pack.assets.slice(0,1)}))[0];for(const source of levels)toon.material(source.material);
  const loader=new THREE.TextureLoader(),texture=await loader.loadAsync('../../docs/qa/far-vegetation-atlas/savanna-acacia-8views.webp'),prelit={day:await loader.loadAsync('../../docs/qa/far-prelit-128/day.webp'),night:await loader.loadAsync('../../docs/qa/far-prelit-128/night.webp'),views:8,rotations:8,resolution:128},tree={id:'native-acacia',x:0,y:0,z:0,yaw:0,scale:1};
  prototype=createFarImpostorPrototype(levels[0],texture,metadata,[tree],{toon,prelitAtlas:prelit});scene.add(prototype.impostors);
- const origin=modelOrigin(tree,metadata.localBase,0,1),instance={...tree,...origin,sx:1,sy:1,sz:1};group=new THREE.Group();group.userData.nativeChunkOrigin=[0,0];createAssetLod(group,levels,[instance],{group:0},0);chunks.set('0,0',group);scene.add(group);groups=new NativeAssetGroups(scene);
+ const origin=modelOrigin(tree,metadata.localBase,0,1),instance={...tree,...origin,sx:1,sy:1,sz:1};group=new THREE.Group();group.userData.nativeChunkOrigin=[0,0];createAssetLod(group,levels,[instance],{group:0},0);chunks.set('0,0',group);scene.add(group);groups=new NativeAssetGroups(scene);groups.root.removeFromParent();
  coverage=new NativeTreeCoverage();fade=new NativeFarCoverage(metadata.localBase);controller=new FarTreeTransitions();controller.bind(prototype,[tree]);
  ground=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshBasicMaterial({color:'#979b61'}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;scene.add(ground);
  document.querySelector('#prepare').disabled=false;document.querySelector('#hide').disabled=false;
@@ -29,8 +30,8 @@ try{
  document.querySelector('#prepare').onclick=async()=>{
   document.querySelector('#prepare').disabled=true;gpuReady=false;controller.setCoverage(coverage,false);const begin=performance.now();status.textContent='Preparando recursos GPU…';
   try{
-   const textures=new Set([texture,prelit.day,prelit.night]);for(const source of levels)for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);for(const t of textures)renderer.initTexture(t);preparedTextures=textures.size;
-   await renderer.compileAsync(scene,camera);if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;gpuReady=true;controller.setCoverage(coverage,true);
+   const textures=new Set([texture,prelit.day,prelit.night]);for(const source of levels)for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);preparedTextures=textures.size;
+   await prepareNativeFarGpu(renderer,groups.root,scene,camera,textures,{cancelled:()=>dead});if(dead)return;if(errors.length||renderer.getContext().getError())throw Error('GPU preparation failed');prepareMs=performance.now()-begin;scene.add(groups.root);gpuReady=true;controller.setCoverage(coverage,true);
   }catch(error){errors.push(String(error));status.textContent='Error de preparación';}
  };
  function frame(now){if(dead)return;const dt=Math.min(.05,(now-last)/1000);last=now;if(canvas.width!==innerWidth||canvas.height!==innerHeight){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
