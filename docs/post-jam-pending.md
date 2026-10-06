@@ -39,6 +39,8 @@ Siguiente variante integrada: [suelo de Gran Cañón](qa/tinify-canyon-ground/RE
 
 Siguiente lote integrado: [cuatro retratos de contratación Tinify](qa/tinify-worker-portraits/README.md), alpha/dimensiones conservados, 50 pruebas y comparación nativa; 47.575 bytes menos de paquete. Preflight actualizado: 93 imágenes de color elegibles, 53 que requieren revisión y dieciséis variantes integradas. No acredita RAM/FPS ni aceptación móvil/Tauri.
 
+Último lote: [seis atlas de color de props de bioma](qa/tinify-biome-atlases/README.md), doce comparaciones nativas día/noche y 22 variantes cargadas desde ruta anidada. Ahorro neto de paquete: 6.056.158 bytes; 87 imágenes de color y 53 de revisión siguen pendientes. No acredita mejora de RAM/FPS ni aceptación móvil/Tauri.
+
 ## Vegetación lejana mediante impostores (pedido el 5 de octubre de 2026)
 
 - Seguir los 25 puntos de [Wild Guardians — Far Vegetation Impostor System](far-vegetation-impostor-system.md).

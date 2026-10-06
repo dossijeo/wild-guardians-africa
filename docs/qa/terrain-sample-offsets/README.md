@@ -9,3 +9,5 @@ La comparación diferencial reproduce 4.320 consultas sobre seis campos procedur
 Validación: 78 pruebas de vecinos, límites, épocas, segmentos, reutilización, puertas/incursiones; otras 78 pruebas de fluidos, colocación, retirada y poblado/pisadas del Gran Cañón. Build correcto y paquete web: 587 archivos, 388.155.440 bytes, 859 enlaces relativos y veinte GLB. No cambian assets ni balance.
 
 Reproducción: `node tools/experiments/terrain-sample-offsets.mjs <referencia-a1db5d7> <candidato-nuevo>`; luego `node tools/experiments/compare-terrain-samples.mjs <referencia> <candidato>`. Medidas, comparación y logs conservados en esta carpeta; gzip mtime cero. La CI completa de la nueva implementación sigue pendiente del push; la CI de a1db5d7 ya terminó correctamente.
+
+CI 37411804046 de 9a8df7e terminada con success: suite completa, verificadores, build y paquete. Metadatos y log completo conservados.
