@@ -1,12 +1,12 @@
-<!doctype html><html lang="es"><meta charset="utf-8"><title>QA Ã‚Â· MontaÃƒÂ±as HQ</title>
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Montañas HQ</title>
 <style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:fixed;z-index:2;top:0;left:0;background:#fff9de;padding:10px;max-width:350px;max-height:86vh;overflow:auto}pre{font-size:10px;white-space:pre-wrap}button,select,input{padding:6px}#show{position:fixed;z-index:3;top:8px;left:8px}</style>
-<button id="show" hidden>Mostrar controles</button><header><b>MontaÃƒÂ±as HQ Ã‚Â· mundo real</b>
-<p><label>Fase <select id="phase"><option value="day">DÃƒÂ­a</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
+<button id="show" hidden>Mostrar controles</button><header><b>Montañas HQ · mundo real</b>
+<p><label>Fase <select id="phase"><option value="day">Día</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
 <label>Fondo <select id="mode"><option value="hq">HQ reflejado</option><option value="original">Original</option></select></label></p>
 <p><label>Azimut <input id="yaw" type="number" min="0" max="360" step="5" value="0"></label></p>
 <p><label>Elevación desde cámara inicial (m) <input id="elevation" type="number" min="0" max="600" step="20" value="4"></label></p>
 <p><label><input id="lod-debug" type="checkbox"> Diagnóstico LOD solicitado</label><br><small>Azul/verde &lt;4 · naranja 4–5 (posible mip5) · magenta ≥5. Huella por derivadas, no consulta al driver.</small></p>
-<button id="turn" disabled>Girar 45Ã‚Â°</button><button id="rotation" disabled>Validar giro 360Ã‚Â°</button><button id="move" disabled>Desplazar 20 m</button>
+<button id="turn" disabled>Girar 45°</button><button id="rotation" disabled>Validar giro 360°</button><button id="move" disabled>Desplazar 20 m</button>
 <button id="hide">Ocultar controles</button><button id="export" disabled>Exportar recibo</button><button id="close" disabled>Cerrar mundo</button><pre id="report">Preparando metadatos</pre><pre id="full-report" hidden></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
@@ -65,7 +65,7 @@ try{
  lodMaterial=new THREE.ShaderMaterial({vertexShader:normalMaterial.vertexShader,fragmentShader:mountainLodDiagnosticFragment(normalMaterial.fragmentShader),uniforms:{...normalMaterial.uniforms,uBackdropDebugSize:{value:new THREE.Vector2()}},side:normalMaterial.side,depthWrite:normalMaterial.depthWrite,toneMapped:normalMaterial.toneMapped,transparent:normalMaterial.transparent});
  originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
  mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/(arcPilot?1:2));
- if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent=arcCells===4?'Cuatro siluetas distintas Ã‚Â· valles abiertos':'Arco diagnÃƒÂ³stico (1 silueta, 3 celdas vacÃƒÂ­as)';}
+ if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent=arcCells===4?'Cuatro siluetas distintas · valles abiertos':'Arco diagnóstico (1 silueta, 3 celdas vacías)';}
  eye=world.camera.position.clone();nativeEye=eye.toArray();document.querySelector('#elevation').value=cameraElevation;document.querySelector('#lod-debug').checked=params.get('lod-debug')==='1';world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
  ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
