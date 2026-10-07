@@ -55,3 +55,21 @@ test('actual ended preserves uncompleted center and planting actions, their hand
  voice.play(record,()=>tutorial.dismiss({automatic:true}));audio.onended();assert.equal(state.plants.length,0);assert.equal(state.tutorial.step,'plant');assert(state.tutorial.guideAfterAuto.includes('basic.plant'));assert.equal(tutorialHudHandTarget(state,null),'[data-menu="grow"]');
  voice.dispose();
 });
+
+test('a delayed play resolution cannot cancel recovery after media starts waiting',async()=>{
+ const media=new FakeAudio();let resolvePlay;media.playPromise=new Promise(resolve=>{resolvePlay=resolve;});
+ const voice=new SpiritVoice({create:()=>media,timeout:8});let ended=0;
+ voice.play(record,()=>ended++);media.onwaiting();resolvePlay();await Promise.resolve();
+ await new Promise(resolve=>setTimeout(resolve,20));
+ assert.equal(voice.status,'fallback');assert.equal(ended,0);
+ assert(media.paused&&media.released);voice.dispose();
+});
+
+test('playing after waiting cancels recovery and advances only on actual ended',async()=>{
+ const media=new FakeAudio();let resolvePlay;media.playPromise=new Promise(resolve=>{resolvePlay=resolve;});
+ const voice=new SpiritVoice({create:()=>media,timeout:8});let ended=0;
+ voice.play(record,()=>ended++);media.onstalled();resolvePlay();await Promise.resolve();media.onplaying();
+ await new Promise(resolve=>setTimeout(resolve,20));
+ assert.equal(voice.status,'playing');assert.equal(ended,0);assert(!media.released);
+ media.onended();assert.equal(ended,1);assert.equal(voice.status,'ended');voice.dispose();
+});
