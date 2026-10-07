@@ -6,6 +6,20 @@ test('decorative backdrop follows authored terrain height with bounded parallax 
  world.camera.position.set(10000,90,-10000);owner.update();assert.ok(Math.abs(owner.root.position.x-10000)<=30);assert.ok(Math.abs(owner.root.position.z+10000)<=30);assert.equal(owner.root.position.y,1500);assert.equal(owner.root.rotation.x,0);assert.equal(owner.root.rotation.z,0);assert.equal(mesh.material.uniforms.uBackdropNight,world.toon.uniforms.uNight);
  owner.dispose();owner.dispose();assert.equal(world.scene.children.length,0);assert.equal(geometryReleases,1);assert.equal(materialReleases,1);assert.equal(textureReleases,0);texture.dispose();
 });
+test('mountain arcs keep their terrain datum across canyon cliffs, reverse pan and camera elevation',()=>{
+ let samples=0;const texture=new THREE.Texture(),world={scene:new THREE.Scene(),camera:{position:new THREE.Vector3(-39.7,95.49,0)},nav:{config:{biome:'canyons'},field:{surface:x=>{samples++;return x< -30?2.8738:21.8464;}}},toon:{uniforms:{uNight:{value:0}}}};
+ const arc={angle:0,height:130,aspect:4,baseY:-35,baseline:0,uv:[0,0,1,1]},owner=createBiomeBackdrop(world,texture,{arcLayout:[arc]});
+ owner.update();const initial=owner.root.position.clone();
+ for(const x of [-19.7,-39.7,-19.7,-39.7])for(const y of [95.49,175.49,275.49]){world.camera.position.set(x,y,0);owner.update();assert.equal(owner.root.position.y,2.8738);assert.ok(Math.abs(owner.root.position.x-x)<=30);}
+ assert.equal(samples,1);assert.equal(owner.root.position.x,initial.x);assert.equal(owner.root.rotation.x,0);assert.equal(owner.root.rotation.z,0);
+ owner.dispose();world.camera.position.x=0;owner.update();assert.equal(samples,1);texture.dispose();
+ const badWorld={...world,scene:new THREE.Scene()},badTexture=new THREE.Texture();assert.throws(()=>createBiomeBackdrop(badWorld,badTexture,{stableAltitude:'yes'}),/altitude/);assert.equal(badWorld.scene.children.length,0);assert.equal(badTexture.colorSpace,THREE.NoColorSpace);
+});
+test('new and resumed mountain arcs share the first persisted village altitude despite different camera sites',()=>{
+ const world=x=>({state:{villages:[{x:12,z:8}]},scene:new THREE.Scene(),camera:{position:new THREE.Vector3(x,90,0)},nav:{config:{biome:'canyons'},field:{surface:(x,z)=>x*.1+z*.2}},toon:{uniforms:{uNight:{value:0}}}});
+ const texture=new THREE.Texture(),arc={angle:0,height:130,aspect:4,baseY:-35,baseline:0,uv:[0,0,1,1]},a=createBiomeBackdrop(world(-39),texture,{arcLayout:[arc]}),b=createBiomeBackdrop(world(900),texture,{arcLayout:[arc]});
+ a.update();b.update();assert.equal(a.root.position.y,12*.1+8*.2);assert.equal(b.root.position.y,a.root.position.y);a.dispose();b.dispose();texture.dispose();
+});
 test('invalid backdrop fog mix rejects before mutating the scene or texture',()=>{
  const world={nav:{config:{biome:'savanna'}},scene:new THREE.Scene()},texture=new THREE.Texture();assert.throws(()=>createBiomeBackdrop(world,texture,{fogMix:1.01}),/fog mix/);assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
 });
@@ -20,4 +34,33 @@ test('optional backdrop base grading preserves one atlas/draw and rejects unsafe
  for(const options of [{fogBaseMix:NaN},{fogBaseMix:.1},{fogBaseMix:1.1},{nightTint:[1,2,0]},{nightTint:[1,1]},{nightTint:null}])assert.throws(()=>createBiomeBackdrop(world,texture,options),/backdrop/);
  assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
  const owner=createBiomeBackdrop(world,texture,{fogBaseMix:1,nightTint:[.08,.10,.12]}),mesh=owner.root.children[0];assert.equal(owner.root.children.length,1);assert.equal(Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length,1);assert.match(mesh.material.fragmentShader,/\(1\.-vBackdropUv.y\)\*\(1\.-vBackdropUv.y\)/);owner.dispose();texture.dispose();
+});
+test('mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry',()=>{
+ const world=()=>({scene:new THREE.Scene(),camera:{position:new THREE.Vector3()},nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:{uniforms:{uNight:{value:0}}}});
+ const a=createBiomeBackdrop(world(),new THREE.Texture()),texture=new THREE.Texture(),b=createBiomeBackdrop(world(),texture,{mirrored:true});
+ const am=a.root.children[0],bm=b.root.children[0],uv=bm.geometry.attributes.uv;
+ assert.equal(texture.wrapS,THREE.MirroredRepeatWrapping);
+ assert.equal(Math.min(...Array.from({length:uv.count},(_,i)=>uv.getX(i))),0);
+ assert.equal(Math.max(...Array.from({length:uv.count},(_,i)=>uv.getX(i))),2);
+ assert.deepEqual(bm.geometry.attributes.position.array,am.geometry.attributes.position.array);
+ assert.equal(bm.geometry.index.count,am.geometry.index.count);
+ assert.equal(bm.material.fragmentShader,am.material.fragmentShader);assert.equal(bm.material.vertexShader,am.material.vertexShader);
+ assert.equal(Object.values(bm.material.uniforms).filter(u=>u.value?.isTexture).length,1);
+ // The sampler reflects around u=1 and u=2; colors/alpha share the same join.
+ const mirrored=u=>1-Math.abs(((u%2)+2)%2-1);
+ for(const edge of [1,2])for(const delta of [.001,.01,.1])assert.ok(Math.abs(mirrored(edge-delta)-mirrored(edge+delta))<1e-12);
+ a.dispose();b.dispose();am.material.uniforms.uBackdropAtlas.value.dispose();texture.dispose();
+});
+test('optional proportionate arcs retain shared day/night fog, one sample and idempotent borrowed texture ownership',()=>{
+ const world={scene:new THREE.Scene(),camera:{position:new THREE.Vector3()},nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:{uniforms:{uNight:{value:0}}}},texture=new THREE.Texture();
+ const arc={angle:0,height:110,aspect:4,baseY:-35,baseline:0,uv:[.015625,.515625,.484375,.984375]};
+ for(const options of [{arcLayout:false},{arcLayout:[]},{arcLayout:[arc],mirrored:true}])assert.throws(()=>createBiomeBackdrop(world,texture,options),/mountain arcs?|Mountain arcs/i);
+ assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
+ let released=0;texture.addEventListener('dispose',()=>released++);
+ const owner=createBiomeBackdrop(world,texture,{arcLayout:[arc],fogBaseMix:1}),mesh=owner.root.children[0];
+ assert.equal(mesh.position.y,0);assert.equal(owner.root.children.length,1);assert.equal(mesh.geometry.groups.length,0);
+ assert.equal((mesh.material.fragmentShader.match(/texture2D\(/g)||[]).length,1);
+ assert.match(mesh.material.fragmentShader,/\(1\.-vBackdropHeight\)/);assert.doesNotMatch(mesh.material.fragmentShader,/\(1\.-vBackdropUv.y\)/);
+ assert.equal(mesh.material.uniforms.uBackdropNight,world.toon.uniforms.uNight);
+ owner.dispose();owner.dispose();assert.equal(released,0);texture.dispose();
 });

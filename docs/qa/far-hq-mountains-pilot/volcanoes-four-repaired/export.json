@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "dimensions": [
+    2048,
+    512
+  ],
+  "tileDimensions": [
+    960,
+    240
+  ],
+  "padding": [
+    32,
+    8
+  ],
+  "bytes": 718398,
+  "atlasSha256": "ce51252c27c05f7446edf83e039c9163b753f044eddb94f42608aa5ce1670d5b",
+  "versions": {
+    "sharp": "0.35.5",
+    "vips": "8.18.7",
+    "webp": "1.6.0"
+  },
+  "limit": "Four populated candidate cells; native composition and cross-variant mip filtering still pending.",
+  "sourceAssets": [
+    {
+      "cell": 0,
+      "source": "assets-source/far-backdrops-hq/volcanoes-isolated-v4.png",
+      "sourceSha256": "7c4911a3f6fd9c2479a37353908cd2f0f7f3c25012e4132a7ca9703ed8d7b415",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.515625,
+        0.484375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 1,
+      "source": "assets-source/far-backdrops-hq/volcanoes-ridge-b-v2.png",
+      "sourceSha256": "6bcb0817d9b6476ca5159d4d04a75a83b941b29c99617090e3907a5a4fc2aa17",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.515625,
+        0.984375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 2,
+      "source": "assets-source/far-backdrops-hq/volcanoes-ridge-c-v2.png",
+      "sourceSha256": "84e507086405be101f1d612445cf928d0d89bbeee3ad1dd58b6385e8ec64d1af",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.015625,
+        0.484375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 3,
+      "source": "assets-source/far-backdrops-hq/volcanoes-ridge-d-v2.png",
+      "sourceSha256": "ced2fab0295fa2ce1d53963352a53da27431e2d9c43cf38075219a27410d7dff",
+      "rightPadding": 1,
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.015625,
+        0.984375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    }
+  ],
+  "assets": [
+    {
+      "biome": "volcanoes",
+      "file": "atlas.webp"
+    }
+  ]
+}
