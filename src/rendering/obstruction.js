@@ -43,7 +43,7 @@ export function obstructionMaterial(material){
 const obstructionCaches=new WeakMap();
 export function updateObstructions(chunks,camera,target,dt,{enabled=true,distance=7,snap=false}={}){
   const inputs=[...camera.position.toArray(),...target.toArray(),camera.fov,camera.aspect,distance,enabled];
-  let frame;
+  let frame,fadeOut,fadeIn;
   const stats={hidden:0,fading:0,affected:0};dt=Math.max(0,Math.min(.12,dt));
   for(const group of chunks.values()){
    const batches=group.userData?.lodBatches??[];
@@ -60,8 +60,10 @@ export function updateObstructions(chunks,camera,target,dt,{enabled=true,distanc
     if(cache.settled){for(const key of ['hidden','fading','affected'])stats[key]+=cache.stats[key];continue;}
     let dirty=false,settled=true;const counts={hidden:0,fading:0,affected:0};
     for(let i=0;i<fade.records.length;i++){
-      const desired=cache.desired[i],old=fade.attribute.array[i],rate=desired<old?16:7;
-      let value=snap||fade.fresh?desired:old+(desired-old)*(1-Math.exp(-dt*rate));
+      const desired=cache.desired[i],old=fade.attribute.array[i];
+      // Two authored rates per frame, independent of prop count. Compute lazily:
+      // fresh/snapped populations and settled scenes need no exponential at all.
+      let value=snap||fade.fresh?desired:old+(desired-old)*(desired<old?(fadeOut??=1-Math.exp(-dt*16)):(fadeIn??=1-Math.exp(-dt*7)));
       if(Math.abs(value-desired)<.008)value=desired;if(value<.002)value=0;if(value>.998)value=1;
       if(Math.abs(value-old)>.0001){fade.attribute.array[i]=value;dirty=true;}
       if(value!==(desired<.002?0:desired>.998?1:desired))settled=false;
