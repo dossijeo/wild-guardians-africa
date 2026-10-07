@@ -66,3 +66,17 @@ test('missing physical chunk bridges with retained uploaded identity without wea
  epoch++;assert.equal(standbyCoverageReady(t.id,args),false);epoch--;
  f.sources[0].material.version++;assert.equal(standbyCoverageReady(t.id,args),false);f.close();
 });
+
+
+test('zero-fade tail is not submitted and returns without changing prepared packing',async()=>{
+ const f=fixture(),near=tree('near',5),middle=tree('middle',30),far=tree('far',80);
+ f.owner.request([descriptor(far),descriptor(middle),descriptor(near)],{x:0,z:0});await settled(f.owner);
+ const bank=f.owner.active,mesh=bank.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(mesh.instanceMatrix.array),revision=f.owner.revision;
+ assert.deepEqual(bank.rows[0].map(d=>d.id),['near','middle','far']);
+ const trees=new Map([near,middle,far].map(t=>[t.id,t])),state=()=>({ready:1,enabled:true});
+ f.owner.update({x:0,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,2);assert.equal(f.owner.stats.rendered,2);
+ f.owner.update({x:80,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,3);assert.equal(f.owner.has('far',far),true);
+ f.owner.update({x:300,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,0);assert.equal(mesh.visible,false);
+ assert.equal(mesh.instanceMatrix.version,version);assert.deepEqual(Array.from(mesh.instanceMatrix.array),matrices);assert.equal(f.owner.revision,revision);
+ assert.equal(f.owner.has('near',near,new Set(['near'])),false);f.close();
+});

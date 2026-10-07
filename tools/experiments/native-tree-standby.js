@@ -46,6 +46,9 @@ export class NativeTreeStandby {
    // lose the tree's fractional placement through a global Float32 translation.
    bank.root.position.set(Math.round(camera.x/48)*48,0,Math.round(camera.z/48)*48);
    bank.entries=wanted;bank.rows=this.sources.map(()=>[]);for(const d of wanted.values())bank.rows[d.level].push(d);
+   // Keep prepared packing immutable, with near entries first. Trailing
+   // zero-fade entries can then be excluded by count without matrix uploads.
+   for(const rows of bank.rows)rows.sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
    for(const [level,mesh] of bank.meshes.entries()){const rows=bank.rows[level];mesh.count=rows.length;mesh.visible=rows.length>0;for(const [i,d] of rows.entries()){const offset=i*16;mesh.instanceMatrix.array.set(d.matrix,offset);mesh.instanceMatrix.array[offset+12]=d.matrix[12]-bank.root.position.x;mesh.instanceMatrix.array[offset+14]=d.matrix[14]-bank.root.position.z;}mesh.instanceMatrix.needsUpdate=true;mesh.geometry.attributes.nativeVisibility.array.fill(0);mesh.geometry.attributes.nativeVisibility.needsUpdate=true;}
    await this.prepare(bank.root,()=>this.closed);if(this.closed)break;
    this.active?.root.removeFromParent();this.active=bank;this.scene.add(bank.root);this.revision++;this.stats.preparations++;this.stats.trees=wanted.size;
@@ -55,12 +58,12 @@ export class NativeTreeStandby {
  }
  update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1){
   let rendered=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){
-   const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1,live=0;
+   const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1,live=0,lastLive=-1;
    for(const [i,d] of this.active.rows[level].entries()){
     const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround(!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),this.start,this.end,state.ready)):0);
-    if(value>0){live++;rendered++;}if(attribute.array[i]!==value){attribute.array[i]=value;first=Math.min(first,i);last=i;}
+    if(value>0){live++;rendered++;lastLive=i;}if(attribute.array[i]!==value){attribute.array[i]=value;first=Math.min(first,i);last=i;}
    }
-   mesh.visible=live>0;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
+   mesh.visible=live>0;mesh.count=lastLive+1;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   }this.stats.rendered=rendered;
  }
  release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();}}
