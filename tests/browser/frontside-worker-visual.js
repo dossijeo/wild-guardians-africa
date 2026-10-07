@@ -99,10 +99,16 @@ async function campaign(){
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
   const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
   camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(radius*3));camera.lookAt(center);camera.updateMatrixWorld();
-  const shadowPixels=[];let shadowDifference=null;
+  const shadowPixels=[];let shadowDifference=null;const originalControls=[];
   for(let side=0;side<2;side++){const rig=rigs[side];rigs.forEach((r,i)=>r.model.visible=i===side);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[side]);
    if(rig.sun.shadow.map){const map=rig.sun.shadow.map,packed=new Uint8Array(map.width*map.height*4);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,packed);shadowPixels[side]=packed;}
-   if(side===0&&!report.samples.length){report.unchangedOriginalControls=[];for(let capture=0;capture<3;capture++){const repeat=new Uint8Array(pixels[0].length);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);let different=0,max=0;for(let i=0;i<repeat.length;i++){if(repeat[i]!==pixels[0][i])different++;max=Math.max(max,Math.abs(repeat[i]-pixels[0][i]));}report.unchangedOriginalControls.push({differentBytes:different,maxByteDifference:max});if(different)throw Error('Unchanged control has raster noise; no threshold interpretation');}}
+   if(side===0){for(let capture=0;capture<3;capture++){
+    const repeat=new Uint8Array(pixels[0].length);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);let different=0,max=0;
+    for(let i=0;i<repeat.length;i++){if(repeat[i]!==pixels[0][i])different++;max=Math.max(max,Math.abs(repeat[i]-pixels[0][i]));}
+    originalControls.push({differentBytes:different,maxByteDifference:max});if(!report.samples.length)report.unchangedOriginalControls=originalControls;
+    if(different){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,reason:'Unchanged original raster noise; affected comparison not interpreted'};
+     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Unchanged control has raster noise; no threshold interpretation');}
+   }}
    }
   if(shadowPixels.length===2){let different=0,max=0,maxDepth=0,changedTexels=0;const changed=[];
    // Match r180 packing.glsl.js UnpackFactors4. A large packed byte delta
@@ -117,7 +123,7 @@ async function campaign(){
    for(let channel=0;channel<3;channel++){const delta=Math.abs(linear[pixels[0][offset+channel]]-linear[pixels[1][offset+channel]]);if(delta>.03)rgbMask[pixel]=1;error+=delta;channels++;maxError=Math.max(maxError,delta);tileError[tile]+=delta;tileChannels[tile]++;hist[Math.min(255,Math.ceil(delta*255))]++;}}
   let cumulative=0,p99=0;for(let i=0;i<hist.length;i++){cumulative+=hist[i];if(cumulative>=channels*.99){p99=i/255;break;}}
   const occupied=Array.from(tileError,(sum,i)=>tileChannels[i]?sum/tileChannels[i]:0),sample={biome,night,clip:clipName,fraction,azimuth,elevation,alphaIoU:intersection/Math.max(union,1),missingFraction:missing/Math.max(original,1),addedFraction:added/Math.max(original,1),linearRgbMae:error/Math.max(channels,1),p99Approx:p99,maxError,maxTileMae:Math.max(...occupied),originalPixels:original,missingPixels:missing,addedPixels:added};
-  sample.rgbOutlierRegions=regions(rgbMask,size);sample.missingRegions=regions(missingMask,size,originalAlpha);sample.shadowPackedDifference=shadowDifference;sample.alphaDistanceGate=alphaDistanceGate(pixels[0],pixels[1],size);
+  sample.rgbOutlierRegions=regions(rgbMask,size);sample.missingRegions=regions(missingMask,size,originalAlpha);sample.shadowPackedDifference=shadowDifference;sample.alphaDistanceGate=alphaDistanceGate(pixels[0],pixels[1],size);sample.unchangedOriginalControls=originalControls;
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
   sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
   if(!sample.passes){failed=true;break campaignLoop;}

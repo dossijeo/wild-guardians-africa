@@ -357,3 +357,20 @@ yet, no shadowFront approval and no GPU benchmark.
 Before screening the body-wall proposal, independent version3 reserves times
 .3125/.8125, elevations35/65 and azimuths33.75/123.75/213.75/303.75. Repeating
 version2 diagnoses its repair only. Version3 retains all existing quality gates.
+
+Can-wall version2 diagnosis now has IoU1/0missing/0added, RGB MAE .000002206,
+tileMAE .001130 and2changed shadow texels (max32.18micrometers). Version3
+reaches3samples; the third (.3125/213.75/35) has IoU1 and0alpha differences,
+but tileMAE .016203 exceeds .01. Its packed shadows differ in3texels with max
+241.29micrometers, which needs depth correspondence before interpretation.
+Only the first view had unchanged-source repeat controls in that campaign,
+so the later color rejection is retained as provisional evidence, not a
+conclusion of geometry causality. No gate is approved from these captures.
+
+The separate shadowFront screen aborted at the first unchanged-original
+repeat because its raster differed, saving no candidate comparison. This
+invalidates that screen. The fixture now repeats3original controls at EVERY
+sample and saves an explicit invalid-control report before aborting, retaining
+any earlier samples. Further isolation needs same-view source twins and
+noShadows controls; neither a noisy original nor tiny global MAE permits
+relaxing the regional gates. No GPU timing or promotion has occurred.

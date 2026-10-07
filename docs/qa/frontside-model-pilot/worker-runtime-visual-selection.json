@@ -5,7 +5,7 @@
   "source": "worker-actions.youngMale runtime web",
   "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
   "candidateSide": "FrontSide accessories; existing FrontSide body retained",
-  "maxSamples": 1,
+  "maxSamples": 16,
   "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
   "shadowsEnabled": true,
   "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
@@ -14,90 +14,425 @@
       "biome": "sabana",
       "night": 0,
       "clip": "Water",
-      "fraction": 0.375,
-      "azimuth": 11.25,
-      "elevation": 40,
-      "alphaIoU": 0.9987410826689047,
-      "missingFraction": 0.001258917331095258,
+      "fraction": 0.3125,
+      "azimuth": 33.75,
+      "elevation": 35,
+      "alphaIoU": 1,
+      "missingFraction": 0,
       "addedFraction": 0,
-      "linearRgbMae": 0.0002113408252803671,
+      "linearRgbMae": 0.0000016065219284053477,
       "p99Approx": 0,
-      "maxError": 0.44520118832588196,
-      "maxTileMae": 0.0645771737229855,
-      "originalPixels": 128682,
-      "missingPixels": 162,
+      "maxError": 0.14437338709831238,
+      "maxTileMae": 0.00044340448221191764,
+      "originalPixels": 135170,
+      "missingPixels": 0,
       "addedPixels": 0,
       "rgbOutlierRegions": [
         {
-          "pixels": 162,
-          "diameterUpperBound": 23.3238075793812,
-          "bounds": [
-            373,
-            455,
-            385,
-            475
-          ],
-          "classification": "rgb"
-        },
-        {
           "pixels": 1,
           "diameterUpperBound": 0,
           "bounds": [
-            382,
-            342,
-            382,
-            342
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            393,
-            450,
-            393,
-            450
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            356,
-            473,
-            356,
-            473
+            434,
+            497,
+            434,
+            497
           ],
           "classification": "rgb"
         }
       ],
-      "missingRegions": [
-        {
-          "pixels": 162,
-          "diameterUpperBound": 23.3238075793812,
-          "bounds": [
-            373,
-            455,
-            385,
-            475
-          ],
-          "classification": "interior"
-        }
-      ],
+      "missingRegions": [],
       "shadowPackedDifference": {
-        "differentBytes": 0,
-        "maxByteDifference": 0,
-        "changedTexels": 0,
-        "maxWorldDepthDelta": 0,
-        "changed": []
+        "differentBytes": 4,
+        "maxByteDifference": 128,
+        "changedTexels": 3,
+        "maxWorldDepthDelta": 0.0002412910087473463,
+        "changed": [
+          {
+            "x": 511,
+            "y": 514,
+            "originalDepth": 0.4430798292160034,
+            "candidateDepth": 0.4430798888206482,
+            "worldDepthDelta": 0.0000321805477142334
+          },
+          {
+            "x": 512,
+            "y": 514,
+            "originalDepth": 0.443048357963562,
+            "candidateDepth": 0.44304838788275624,
+            "worldDepthDelta": 0.000016153372966520863
+          },
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340288639068604,
+            "candidateDepth": 0.44340243947272207,
+            "worldDepthDelta": 0.0002412910087473463
+          }
+        ]
       },
       "alphaDistanceGate": {
         "radiusPixels": 1,
-        "missingBeyondOnePixel": 117,
+        "missingBeyondOnePixel": 0,
         "addedBeyondOnePixel": 0,
-        "passes": false
+        "passes": true
+      },
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.3125,
+      "azimuth": 123.75,
+      "elevation": 35,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.0000017124449422486218,
+      "p99Approx": 0,
+      "maxError": 0.26928944885730743,
+      "maxTileMae": 0.006052905746868679,
+      "originalPixels": 123713,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            442,
+            497,
+            442,
+            497
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 4,
+        "maxByteDifference": 128,
+        "changedTexels": 3,
+        "maxWorldDepthDelta": 0.0002412910087473463,
+        "changed": [
+          {
+            "x": 511,
+            "y": 514,
+            "originalDepth": 0.4430798292160034,
+            "candidateDepth": 0.4430798888206482,
+            "worldDepthDelta": 0.0000321805477142334
+          },
+          {
+            "x": 512,
+            "y": 514,
+            "originalDepth": 0.443048357963562,
+            "candidateDepth": 0.44304838788275624,
+            "worldDepthDelta": 0.000016153372966520863
+          },
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340288639068604,
+            "candidateDepth": 0.44340243947272207,
+            "worldDepthDelta": 0.0002412910087473463
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.3125,
+      "azimuth": 213.75,
+      "elevation": 35,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.000008248791942270193,
+      "p99Approx": 0,
+      "maxError": 0.3962237387895584,
+      "maxTileMae": 0.01620295478238,
+      "originalPixels": 143052,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            675,
+            448,
+            675,
+            448
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            619,
+            464,
+            619,
+            464
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            616,
+            465,
+            616,
+            465
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            613,
+            466,
+            613,
+            466
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            610,
+            467,
+            610,
+            467
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            607,
+            468,
+            607,
+            468
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            633,
+            497,
+            633,
+            497
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 4,
+        "maxByteDifference": 128,
+        "changedTexels": 3,
+        "maxWorldDepthDelta": 0.0002412910087473463,
+        "changed": [
+          {
+            "x": 511,
+            "y": 514,
+            "originalDepth": 0.4430798292160034,
+            "candidateDepth": 0.4430798888206482,
+            "worldDepthDelta": 0.0000321805477142334
+          },
+          {
+            "x": 512,
+            "y": 514,
+            "originalDepth": 0.443048357963562,
+            "candidateDepth": 0.44304838788275624,
+            "worldDepthDelta": 0.000016153372966520863
+          },
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340288639068604,
+            "candidateDepth": 0.44340243947272207,
+            "worldDepthDelta": 0.0002412910087473463
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
       },
       "toolStates": [
         [
@@ -187,13 +522,13 @@
   "candidateReceipt": {
     "category": "youngMale",
     "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
-    "archivePath": ".cache/frontside-model-pilot/candidates/archive/54dc88d860b7f33cfd150d8500c86c7d5cb47f3789a3f2d8123b9e01711a2345.glb",
-    "sourceCandidateSha256": "60d1e4b9c59bd8a1d366a5d188fa88f837ed9b12ab812b99e04b3c74cbfdb20f",
-    "bytes": 5238104,
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd.glb",
+    "sourceCandidateSha256": "dec153352c2eebda633408b47f7f0a33b972ebe58bfd0413a9ab95ca007516bf",
+    "bytes": 5241864,
     "baselineRuntimeBytes": 5612688,
-    "growthPercent": -6.6738788972413925,
+    "growthPercent": -6.606887822733065,
     "prunedUnusedAccessors": 633,
-    "sha256": "54dc88d860b7f33cfd150d8500c86c7d5cb47f3789a3f2d8123b9e01711a2345",
+    "sha256": "ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd",
     "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
     "status": "NOT_APPROVED"
   },
@@ -418,45 +753,35 @@
     }
   ],
   "shadowPackedDifference": {
-    "differentBytes": 0,
-    "maxByteDifference": 0,
-    "changedTexels": 0,
-    "maxWorldDepthDelta": 0,
-    "changed": []
+    "differentBytes": 4,
+    "maxByteDifference": 128,
+    "changedTexels": 3,
+    "maxWorldDepthDelta": 0.0002412910087473463,
+    "changed": [
+      {
+        "x": 511,
+        "y": 514,
+        "originalDepth": 0.4430798292160034,
+        "candidateDepth": 0.4430798888206482,
+        "worldDepthDelta": 0.0000321805477142334
+      },
+      {
+        "x": 512,
+        "y": 514,
+        "originalDepth": 0.443048357963562,
+        "candidateDepth": 0.44304838788275624,
+        "worldDepthDelta": 0.000016153372966520863
+      },
+      {
+        "x": 512,
+        "y": 515,
+        "originalDepth": 0.44340288639068604,
+        "candidateDepth": 0.44340243947272207,
+        "worldDepthDelta": 0.0002412910087473463
+      }
+    ]
   },
   "failed": true,
-  "missingTriangleProvenance": [
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 84,
-      "backFacing": true,
-      "pixels": 53
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 85,
-      "backFacing": true,
-      "pixels": 53
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 82,
-      "backFacing": true,
-      "pixels": 22
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 83,
-      "backFacing": true,
-      "pixels": 21
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 86,
-      "backFacing": true,
-      "pixels": 13
-    }
-  ],
   "sourceTwin": false,
   "originalShadowDiagnostic": false,
   "frontShadow": false,
@@ -465,6 +790,6 @@
   "requestedClips": [
     "Water"
   ],
-  "withheldVersion": 2,
+  "withheldVersion": 3,
   "capture": "worker-runtime-visual-last-frame.png"
 }
