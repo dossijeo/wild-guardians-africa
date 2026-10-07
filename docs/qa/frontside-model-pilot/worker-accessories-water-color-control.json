@@ -1,0 +1,270 @@
+{
+  "status": "VISUAL_SCREEN_NOT_APPROVED",
+  "resolution": 1024,
+  "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
+  "source": "worker-actions.youngMale runtime web",
+  "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
+  "candidateSide": "FrontSide accessories; existing FrontSide body retained",
+  "maxSamples": 1,
+  "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
+  "shadowsEnabled": true,
+  "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
+  "samples": [
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.125,
+      "azimuth": 22.5,
+      "elevation": 25,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0,
+      "p99Approx": 0,
+      "maxError": 0,
+      "maxTileMae": 0,
+      "originalPixels": 124749,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [],
+      "missingRegions": [],
+      "passes": true
+    }
+  ],
+  "limitations": [
+    "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required."
+  ],
+  "originalWorldPath": "WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon",
+  "originalEffectiveMaterials": [
+    {
+      "mesh": "Mesh0",
+      "material": "BakedMaterial",
+      "side": 0,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 1,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "material": "Esmalte verde azulado",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_2",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_3",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_4",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_5",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_6",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_7",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_8",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_9",
+      "material": "Cantos de madera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_10",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_11",
+      "material": "Manzanas verdes",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_12",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_13",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_14",
+      "material": "Tomates maduros",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_15",
+      "material": "Naranjas",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_16",
+      "material": "Lona de algodón",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_17",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_18",
+      "material": "Costuras de lona",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_19",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_20",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_21",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_22",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_23",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_24",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    }
+  ],
+  "unchangedOriginalControls": [
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    }
+  ],
+  "shadowPackedDifference": {
+    "differentBytes": 0,
+    "maxByteDifference": 0,
+    "changedTexels": 0,
+    "maxWorldDepthDelta": 0,
+    "changed": []
+  },
+  "failed": false,
+  "sourceTwin": false,
+  "originalShadowDiagnostic": false,
+  "frontShadow": false,
+  "sharedPersistentShadowHook": true,
+  "clipFilter": "Water",
+  "capture": "worker-runtime-visual-last-frame.png",
+  "excludedFromAccessoryQA": "Fixture data identity changed after Idle initialization and kept tool hidden; use only original body material side evidence."
+}

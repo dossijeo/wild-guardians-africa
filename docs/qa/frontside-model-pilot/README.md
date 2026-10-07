@@ -232,3 +232,21 @@ UV or regional-driver seams. The watering-can first geometry differs: exact
 need local inspection. Worker body has four exact coincident-triangle groups,
 which are retained because its existing FrontSide contract already culls.
 The interface audit is diagnostic; counts alone approve no topology change.
+
+Corrected actual-world material screen confirms Mesh0 side0 (FrontSide), null
+shadowSide and effective PCF depth side1 (BackSide) after Assets/World actor and
+AfricanToon. A fixture identity bug was also excluded: replacing World actor's
+data object after Idle initialization loses the tool-visibility WeakMap record
+and keeps the watering can hidden. The earlier zero-error Water capture is
+explicitly excluded from accessory QA. The fixture now retains the original
+actor data/mixer identity and records visibility/scales on both sides.
+
+With Water fraction .125, held-out azimuth22.5/elevation25 and the regadera
+visible/scale1 in both models, the corrected accessory candidate has identical
+packed shadow maps (0changed texels). It fails the fixed color/region screen:
+alphaIoU .999842,22missing pixels, global linear RGB MAE .000022923 but max
+occupied tile MAE .013929 and largest RGB outlier region22pixels. Three unchanged
+original repeats are byte-exact. This is the first valid accessory rejection;
+tiny global errors do not override regional defects. The256px training selector
+now needs refinement at1024 and separate withheld views/poses, preserving budgets.
+No thresholds were relaxed, no GPU timing or full shadowFront approval exists.

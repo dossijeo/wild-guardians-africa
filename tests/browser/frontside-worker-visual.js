@@ -22,6 +22,7 @@ document.querySelector('#run').onclick=async()=>{document.querySelector('#run').
 async function campaign(){
  const size=1024;renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
+ const clipFilter=options.get('clip');if(clipFilter&&!['Idle','Water','Carry_Crate','Fall'].includes(clipFilter))throw Error('Unknown screen clip');
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
  const library=await fetch('/content/worker-actions.json').then(r=>r.json());
  const sourceAssets=new Assets();
@@ -29,11 +30,12 @@ async function campaign(){
  const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
  // Exercise the actual WorldScene.actor/updateActor path, including skeleton
  // cloning, action setup and tool visibility, without starting a second renderer.
+ const actorData=[];
  for(let i=0;i<2;i++){
   const sourceWorld=Object.create(WorldScene.prototype),sourceRoot=new THREE.Object3D(),entity={id:'frontside-worker-'+i,profile:'youngMale',status:'idle',x:0,z:0};
   const effectiveLibrary={...library,youngMale:{...library.youngMale,url:urls[i]}};
   Object.assign(sourceWorld,{state:{tasks:[],elapsed:0},objects:new Map([[entity.id,sourceRoot]]),mixers:new Map(),workerLibraries:effectiveLibrary,assets:sourceAssets});
-  await sourceWorld.actor(entity,'worker');models[i].scene=sourceWorld.mixers.get(entity.id).model;
+  await sourceWorld.actor(entity,'worker');actorData[i]=sourceWorld.mixers.get(entity.id);models[i].scene=actorData[i].model;
  }
  const originalIndexCounts=new Map();models[0].scene.traverse(mesh=>{if(mesh.isMesh)originalIndexCounts.set(mesh.name,mesh.geometry.index.count);});
  const sky=new NativeSky();await sky.load();const rigs=[];
@@ -46,7 +48,9 @@ async function campaign(){
   models[i].scene.traverse(mesh=>{if(!mesh.isMesh)return;mesh.castShadow=mesh.receiveShadow=true;if(i===1&&!sourceTwin&&mesh.material.side===THREE.DoubleSide){mesh.material=mesh.material.clone();mesh.material.side=positiveControl?THREE.DoubleSide:THREE.FrontSide;mesh.material.shadowSide=frontShadow?THREE.FrontSide:THREE.DoubleSide;
    if(originalShadow){const count=originalIndexCounts.get(mesh.name);if(count===undefined)throw Error('Missing original geometry correspondence '+mesh.name);mesh.onBeforeShadow=()=>mesh.geometry.setDrawRange(0,count);mesh.onAfterShadow=()=>mesh.geometry.setDrawRange(0,Infinity);}
   }});
-  scene.add(models[i].scene);rigs.push({scene,toon,registry,sun,ambient,release,model:models[i].scene,mixer:new THREE.AnimationMixer(models[i].scene),clips:models[i].animations});
+  // Preserve the WorldScene data identity: syncWorkerToolVisibility's WeakMap
+  // stores authored visibility there, before Idle temporarily hides tools.
+  scene.add(models[i].scene);rigs.push(Object.assign(actorData[i],{scene,toon,registry,sun,ambient,release}));
  }
  const camera=new THREE.PerspectiveCamera(42,1,.01,100),linear=new Float32Array(256);for(let i=0;i<256;i++){const v=i/255;linear[i]=v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
@@ -55,7 +59,7 @@ async function campaign(){
  report.candidateSide=sourceTwin?'Original twin control':positiveControl?'Original effective sides retained':'FrontSide accessories; existing FrontSide body retained';
  report.shadowSide=frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
  let failed=false;
- campaignLoop: for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of ['Idle','Water','Carry_Crate','Fall'])for(const fraction of [.125,.625])for(const elevation of [25,55])for(const azimuth of [22.5,67.5,157.5,247.5]){
+ campaignLoop: for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of clipFilter?[clipFilter]:['Idle','Water','Carry_Crate','Fall'])for(const fraction of [.125,.625])for(const elevation of [25,55])for(const azimuth of [22.5,67.5,157.5,247.5]){
   if(cancelled)throw Error('Cancelled');
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
   const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
@@ -79,6 +83,7 @@ async function campaign(){
   let cumulative=0,p99=0;for(let i=0;i<hist.length;i++){cumulative+=hist[i];if(cumulative>=channels*.99){p99=i/255;break;}}
   const occupied=Array.from(tileError,(sum,i)=>tileChannels[i]?sum/tileChannels[i]:0),sample={biome,night,clip:clipName,fraction,azimuth,elevation,alphaIoU:intersection/Math.max(union,1),missingFraction:missing/Math.max(original,1),addedFraction:added/Math.max(original,1),linearRgbMae:error/Math.max(channels,1),p99Approx:p99,maxError,maxTileMae:Math.max(...occupied),originalPixels:original,missingPixels:missing,addedPixels:added};
   sample.rgbOutlierRegions=regions(rgbMask,size);sample.missingRegions=regions(missingMask,size,originalAlpha);
+  sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
   sample.passes=sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
   if(!sample.passes){failed=true;break campaignLoop;}
   if(report.samples.length>=maxSamples)break campaignLoop;
@@ -87,7 +92,7 @@ async function campaign(){
  // Break nested campaign after failure by retaining only the first failure;
  // the early screen is rejection evidence and does not need a passing sweep.
  report.failed=failed;
- report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;
+ report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.
  const comparison=document.createElement('canvas');comparison.width=size*3;comparison.height=size;const ctx=comparison.getContext('2d');
