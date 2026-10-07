@@ -1,0 +1,15 @@
+# Native building color candidate review
+
+The hash-guarded color comparator now accepts `culture=suajili|etiope|mapungubwe|saheliana|musgum`. It obtains the actual descriptor from `public/content/destruction.json`, checks its original identity and candidate quality receipt, hashes both GLBs before loading, and constructs both houses with the production `Assets.building`, `NativeBuilding` and `BuildingDestructionPass`. It does not substitute the stock GLTF material for the native destruction shader. Source-derived candidate textures remain outside runtime.
+
+The damage button cycles intact, 35% and 65% damage. Both houses retain the same descriptor, native seed, geometry, frozen elapsed time and damage. Only the selected house and its opening mask render; the QA opening-pass cache is explicitly invalidated when comparing representations. Day/night modifies actual sun, ambient and native night uniforms. The floor is flat QA geometry without HDR, world generation, economics or gameplay.
+
+## Mapungubwe checkpoint
+
+Temporary native tab 675 completed 24 screenshots (twelve reference/candidate pairs): front/opposite view, day/night and all three damage states. Every screenshot was visually inspected; no obvious additional motif, color, roof/wall seam or damage-edge artifact was found at this framing. The color is lossy and is not pixel-identical. The report panel conceals a small part of the lowest foreground pillar, so this does not establish every texel's visual appearance. Damage effects are frozen and the review does not establish collapse or repair behavior.
+
+`mapungubwe/screenshot-pairs.json` verifies equal camera, target, damage, light, view and both GLB identity receipts for each pair, and records the image hashes. Six completed readback reports contain 72 pairs, all with zero WebGL and fixture errors; warning/error console logs are empty. The six biome labels repeat this fixture's lighting comparison: NativeBuilding's material does not use those labels. They are not evidence for six full biome scenes or independent biome palettes. Channel differences are byte units (0–255), not normalized percentages. Tab 675 was closed after archiving.
+
+This candidate's numerical gate passed earlier with PSNR 32.93 dB, alpha unchanged, decoded geometry/animation byte-exact and no new conformance errors. Its potential GLB saving is 545,644 bytes. It is not installed: other cultures, closer inspection, collapse/repair, full-world appearance, build/package and device acceptance remain separate gates. No RAM, CPU, GPU or frametime improvement is claimed.
+
+Reproduce: `/tests/browser/embedded-color-pilot.html?culture=mapungubwe&pilot=fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb-1`, using the archived batch's model-specific candidate cache. Stale runtime or candidate hashes are rejected before rendering. The edited inline module passed `node --check` and executed successfully in the native browser. Existing worker and beast branches retain their identity guards and pose controllers; their prior screenshots describe their respective earlier fixture versions.
