@@ -1,6 +1,6 @@
 // Encode only disabled pilot candidates. Reuse accepted runtime texture bytes;
 // preserve accessor lanes and no vertex/index reordering (same codec as runtime).
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,access} from 'node:fs/promises';
 import {MeshoptEncoder} from 'meshoptimizer';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {readGlb,writeGlb} from './glb-container.mjs';
@@ -48,6 +48,9 @@ for(const receipt of receipts){
  json.buffers=[{byteLength:length},{byteLength:bin.length,extensions:{EXT_meshopt_compression:{fallback:true}}}];
  const packed=new Uint8Array(length);for(const chunk of chunks)packed.set(chunk.bytes,chunk.offset);
  const bytes=writeGlb(json,packed),path=receipt.candidate.replace('.glb','-web.glb');await writeFile(path,bytes);
- output.push({category:receipt.category,path,bytes:bytes.length,baselineRuntimeBytes:record.afterBytes,growthPercent:100*(bytes.length/record.afterBytes-1),prunedUnusedAccessors:oldAccessorCount-json.accessors.length,sha256:createHash('sha256').update(bytes).digest('hex'),codec:'Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap',status:'NOT_APPROVED'});
+ const sha256=createHash('sha256').update(bytes).digest('hex'),archivePath='.cache/frontside-model-pilot/candidates/archive/'+sha256+'.glb';await mkdir('.cache/frontside-model-pilot/candidates/archive',{recursive:true});
+ let exists=true;try{await access(archivePath);}catch{exists=false;}
+ if(exists){if(!Buffer.from(await readFile(archivePath)).equals(Buffer.from(bytes)))throw Error('Archive hash collision');}else await writeFile(archivePath,bytes);
+ output.push({category:receipt.category,path,archivePath,sourceCandidateSha256:receipt.candidateSha256,bytes:bytes.length,baselineRuntimeBytes:record.afterBytes,growthPercent:100*(bytes.length/record.afterBytes-1),prunedUnusedAccessors:oldAccessorCount-json.accessors.length,sha256,codec:'Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap',status:'NOT_APPROVED'});
 }
 await writeFile('docs/qa/frontside-model-pilot/packed-candidate-receipts.json',JSON.stringify(output,null,2)+'\n');console.log(JSON.stringify(output));

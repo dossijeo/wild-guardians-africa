@@ -17,6 +17,24 @@ function regions(mask,width,originalAlpha){
   }out.push({pixels:tail,diameterUpperBound:Math.hypot(maxX-minX,maxY-minY),bounds:[minX,minY,maxX,maxY],classification:originalAlpha?(contour?'contour':'interior'):'rgb'});
  }return out.sort((a,b)=>b.pixels-a.pixels);
 }
+function mapMissingToSource(renderer,rig,camera,pixels,size){
+ const saved=[],descriptors=[];let nextId=1;
+ rig.model.traverse(mesh=>{if(!mesh.isMesh)return;const originalGeometry=mesh.geometry,originalMaterial=mesh.material;
+  const geometry=originalGeometry.index?originalGeometry.toNonIndexed():originalGeometry.clone(),count=geometry.getAttribute('position').count,ids=new Float32Array(count),start=nextId;
+  for(let i=0;i<count;i++)ids[i]=start+Math.floor(i/3);nextId+=count/3;geometry.setAttribute('sourceTriangleId',new THREE.BufferAttribute(ids,1));
+  const material=originalMaterial.clone(),compile=originalMaterial.onBeforeCompile;
+  material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.vertexShader='attribute float sourceTriangleId;varying float vSourceTriangleId;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() { vSourceTriangleId=sourceTriangleId;');shader.fragmentShader='precision highp float;varying float vSourceTriangleId;void main(){float id=floor(vSourceTriangleId+.5);gl_FragColor=vec4(mod(id,256.),mod(floor(id/256.),256.),floor(id/65536.),gl_FrontFacing?255.:128.)/255.;}';};
+  material.customProgramCacheKey=()=> 'frontside-source-triangle-map-'+originalMaterial.side;material.toneMapped=false;mesh.geometry=geometry;mesh.material=material;
+  saved.push({mesh,originalGeometry,originalMaterial,geometry,material});descriptors.push({start,end:nextId,mesh:mesh.name});
+ });
+ const previousShadow=renderer.shadowMap.enabled,previousColor=renderer.outputColorSpace,found=new Map();
+ try{renderer.shadowMap.enabled=false;renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.render(rig.scene,camera);const ids=new Uint8Array(size*size*4),gl=renderer.getContext();gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,ids);
+  for(let i=0;i<ids.length;i+=4){if(!pixels[0][i+3]||pixels[1][i+3])continue;const id=ids[i]+256*ids[i+1]+65536*ids[i+2],descriptor=descriptors.find(d=>id>=d.start&&id<d.end);if(!descriptor)throw Error('Missing triangle provenance at pixel '+i/4);
+   const key=descriptor.mesh+':'+(id-descriptor.start);if(!found.has(key))found.set(key,{mesh:descriptor.mesh,face:id-descriptor.start,backFacing:ids[i+3]===128,pixels:0});found.get(key).pixels++;
+  }
+ }finally{renderer.shadowMap.enabled=previousShadow;renderer.outputColorSpace=previousColor;for(const s of saved){s.mesh.geometry=s.originalGeometry;s.mesh.material=s.originalMaterial;s.geometry.dispose();s.material.dispose();}}
+ return [...found.values()].sort((a,b)=>b.pixels-a.pixels);
+}
 document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();renderer?.forceContextLoss();status.textContent+='\nGPU liberada';};
 document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await campaign();}catch(error){status.textContent=error.stack;renderer?.dispose();renderer?.forceContextLoss();}};
 async function campaign(){
@@ -94,6 +112,7 @@ async function campaign(){
  // Break nested campaign after failure by retaining only the first failure;
  // the early screen is rejection evidence and does not need a passing sweep.
  report.failed=failed;
+ if(failed&&options.has('mapMissing')){rigs.forEach((rig,i)=>rig.model.visible=i===0);report.missingTriangleProvenance=mapMissingToSource(renderer,rigs[0],camera,pixels,size);}
  report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.

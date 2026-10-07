@@ -267,3 +267,35 @@ This rejected view may guide diagnosis; it must not be reused as independent
 held-out evidence after adapting to its result. Map missing pixels to original
 faces/interfaces and repair a coherent thin component, retaining independent
 new views/poses and the unchanged quantitative thresholds.
+
+Missing-pixel ID provenance isolates eight back-facing spout faces. Exact
+positional components of the first watering-can geometry are body280faces and
+spout440faces. `frontside_component_audit.py` reconstructs this diagnosis from
+source hash plus recorded ID evidence. The localized rigid spout proposal adds
+an inward wall0.05mm from authored outer normals, reverses its440faces, and
+joins20physical rim edges with40new flat-normal triangles. Source outer
+positions, indices, UVs, materials, parent hierarchy and watering path remain
+exact. Whole worker adds819faces (+1.953%) and1.840% active geometry; this is
+not indiscriminate whole-worker reversal. Candidate packed SHA256
+54dc88d860b7f33cfd150d8500c86c7d5cb47f3789a3f2d8123b9e01711a2345.
+
+Blender4.5.9 headless (`frontside_blender_shell_probe.py`) inspects only those
+outer/inner/rim triangles with candidate-face provenance. Exact float32 physical
+interfaces have460vertices/920faces, zero boundary/non-manifold/inconsistent
+winding/degenerate faces and no non-adjacent BVH overlap pairs. This uses exact
+positional identity, no tolerance, and never exports or welds candidate UV or
+skin vertices. Blender remove_doubles at an extremely small1e-9 tolerance did
+not reconstruct all equivalent interfaces, so its partial result is not used
+as closure evidence. The exact graph independently agrees with Blender.
+Topology alone approves nothing; all map/visual/depth and GPU gates remain.
+Decoded contract verification and Validator are unchanged (473inherited errors,
+124warnings). `frontside_worker_normals.py` locates all473zero-normal vertices
+in9accessories; those require separate local reconstruction, not arbitrary
+normalization or blanket recalculation.
+
+Candidate generation now supports `--training-profile 256|1024` and opt-in
+`--local-spout-shell`. Every raw and runtime candidate is retained in immutable
+SHA256-named files under ignored candidates/archive; crop bridge sidecars are
+archived with the raw candidate hash. The256/1024 source-preserving candidates
+were rebuilt and their original hashes reproduced. Fixed serving aliases point
+to the latest disabled experiment, never an activated production asset.
