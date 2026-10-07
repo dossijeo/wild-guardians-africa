@@ -160,3 +160,11 @@ test('a restored context cannot accept compilation started in an earlier resourc
  assert.equal(texture._listeners.dispose.length,1);assert.equal(nativeFarGpuRevision(f.renderer),2);
  f.restored();releaseNativeFarGpuCache(f.renderer);
 });
+
+
+test('a real draw fault is not reclassified when ownership changes during that failing draw',async()=>{
+ const f=fixture();let cancelled=false;
+ f.renderer.render=()=>{cancelled=true;throw Error('Draw failed during invalidation');};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cancelled:()=>cancelled}),error=>!(error instanceof NativeFarGpuCancelled)&&error.message==='Draw failed during invalidation');
+ f.restored();releaseNativeFarGpuCache(f.renderer);
+});
