@@ -58,3 +58,8 @@ test('logical native prewarm stays opt-in and invalid options allocate no atlas'
 test('seed changes invalidate the whole far owner and release borrowed preparations once',async()=>{
  const f=fixture();f.world.state={seed:'one'};const owner=await attachBiomeFarVegetation(f.world,{logicalStandbyPreload:true},f.services);owner.update(0);f.world.state.seed='two';owner.update(0);assert.equal(f.world.farVegetation,null);assert.ok(f.textures.every(t=>t.releases===1));assert.ok(f.controllers.every(c=>c.disposed));owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
 });
+
+test('texture storage estimates use loaded atlas dimensions rather than a uniform species size',async()=>{
+ const f=fixture();const original=f.services.loadTexture;let calls=0;f.services.loadTexture=async(...args)=>{const texture=await original(...args);texture.image=calls++<2?{width:2048,height:1024}:{width:2048,height:512};return texture;};
+ const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(owner.stats.estimatedAtlasTextureBytes,2*2048*1024*4*4/3);assert.equal(owner.stats.estimatedBackdropTextureBytes,2048*512*4*4/3);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});

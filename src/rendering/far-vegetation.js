@@ -6,6 +6,9 @@ import {json} from './assets.js';
 import {farAtmosphere} from './far-atmosphere.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
+// RGBA8 plus mip estimate from loaded dimensions; this is not driver RAM.
+const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;return (image?.width??width)*(image?.height??height)*4*4/3;};
+
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
 export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,...options}={},services={}){
@@ -36,7 +39,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
   backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint});
-  owner={enabled:true,adapters,stats:{logicalStandbyPreload,species:species.length,estimatedAtlasTextureBytes:species.length*2*1024*1024*4*4/3,estimatedBackdropTextureBytes:2048*512*4*4/3,errors:[]},update(dt){
+  owner={enabled:true,adapters,stats:{logicalStandbyPreload,species:species.length,estimatedAtlasTextureBytes:results.reduce((sum,{value:{metadata,day,night}})=>sum+textureStorageEstimate(day,metadata.atlasWidth??1024,metadata.atlasHeight??1024)+textureStorageEstimate(night,metadata.atlasWidth??1024,metadata.atlasHeight??1024),0),estimatedBackdropTextureBytes:textureStorageEstimate(backdropTexture,2048,512),errors:[]},update(dt){
    if(cancelled()){release();return;}world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.farVisualRange=this.enabled&&visualRange!==null?visualRange:previousVisual;world.farPreserveTerrain=this.enabled&&visualRange!==null?preserveTerrain:previousPreserve;world.farPropTransitionDistance=this.enabled&&visualRange!==null&&preserveTerrain?end+transitionMargin:previousTransition;world.farPropTransitionSlots=this.enabled&&visualRange!==null&&preserveTerrain?transitionSlots:previousSlots;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
    for(const adapter of adapters){adapter.enabled=this.enabled;adapter.update(dt);}
    if(!this.enabled)world.scene.fog=previousFog;
