@@ -319,3 +319,17 @@ both neighboring transition buffers. It changes only the isolated selector,
 not the production bridge builder, faceLabels or candidate geometry. A new
 pair-specific selection and byte budget are required before building that
 alternative; the current union candidate remains rejected by the pilot budget.
+
+Local-wall packed candidate54dc88d8 was tested through the real World actor path
+on Intel UHD Graphics/D3D11. The diagnosis Water .125/azimuth22.5/elevation25
+now has IoU1, zero missing/added pixels, linear RGB MAE9.2785e-9 and identical
+packed shadows. This confirms only the diagnosed spout repair. The first
+independent version2 sample (Water .375/azimuth11.25/elevation40, Sabana daytime)
+rejects: IoU .998741,162missing interior pixels in one region (diameter23.32px),
+117pixels exceed the bidirectional1px distance gate, tileMAE .064577 and RGB
+outlier region162pixels. Packed shadows still match, and all three unchanged
+source repeats are exact. No thresholds changed. That rejected sample can now
+guide face provenance, but is no longer independent for any subsequent repair.
+Named JSON and source/candidate/difference triptychs retain both results.
+EXT_disjoint_timer_query_webgl2 is available; no GPU timing has been run and
+quality gates still prevent promotion or an adaptation PR.

@@ -5,7 +5,7 @@
   "source": "worker-actions.youngMale runtime web",
   "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
   "candidateSide": "FrontSide accessories; existing FrontSide body retained",
-  "maxSamples": 1,
+  "maxSamples": 16,
   "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
   "shadowsEnabled": true,
   "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
@@ -14,45 +14,91 @@
       "biome": "sabana",
       "night": 0,
       "clip": "Water",
-      "fraction": 0.125,
-      "azimuth": 22.5,
-      "elevation": 25,
-      "alphaIoU": 0.9998494817872963,
-      "missingFraction": 0.00015051821270373715,
+      "fraction": 0.375,
+      "azimuth": 11.25,
+      "elevation": 40,
+      "alphaIoU": 0.9987410826689047,
+      "missingFraction": 0.001258917331095258,
       "addedFraction": 0,
-      "linearRgbMae": 0.000018775435219352655,
+      "linearRgbMae": 0.0002113408252803671,
       "p99Approx": 0,
-      "maxError": 0.2462013214826584,
-      "maxTileMae": 0.013147290842607618,
-      "originalPixels": 139518,
-      "missingPixels": 21,
+      "maxError": 0.44520118832588196,
+      "maxTileMae": 0.0645771737229855,
+      "originalPixels": 128682,
+      "missingPixels": 162,
       "addedPixels": 0,
       "rgbOutlierRegions": [
         {
-          "pixels": 21,
-          "diameterUpperBound": 11.6619037896906,
+          "pixels": 162,
+          "diameterUpperBound": 23.3238075793812,
           "bounds": [
-            361,
-            397,
-            367,
-            407
+            373,
+            455,
+            385,
+            475
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            382,
+            342,
+            382,
+            342
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            393,
+            450,
+            393,
+            450
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            356,
+            473,
+            356,
+            473
           ],
           "classification": "rgb"
         }
       ],
       "missingRegions": [
         {
-          "pixels": 21,
-          "diameterUpperBound": 11.6619037896906,
+          "pixels": 162,
+          "diameterUpperBound": 23.3238075793812,
           "bounds": [
-            361,
-            397,
-            367,
-            407
+            373,
+            455,
+            385,
+            475
           ],
           "classification": "interior"
         }
       ],
+      "shadowPackedDifference": {
+        "differentBytes": 0,
+        "maxByteDifference": 0,
+        "changedTexels": 0,
+        "maxWorldDepthDelta": 0,
+        "changed": []
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 117,
+        "addedBeyondOnePixel": 0,
+        "passes": false
+      },
       "toolStates": [
         [
           {
@@ -141,17 +187,20 @@
   "candidateReceipt": {
     "category": "youngMale",
     "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
-    "archivePath": ".cache/frontside-model-pilot/candidates/archive/c0dc53887366e1a7acf3152704993052911c8ea79a7b67b94a09c604d47702af.glb",
-    "sourceCandidateSha256": "58e709bceeb681d8be749213ecb9fe1bb627ccd161e3cc26627e09a37c69392a",
-    "bytes": 5231420,
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/54dc88d860b7f33cfd150d8500c86c7d5cb47f3789a3f2d8123b9e01711a2345.glb",
+    "sourceCandidateSha256": "60d1e4b9c59bd8a1d366a5d188fa88f837ed9b12ab812b99e04b3c74cbfdb20f",
+    "bytes": 5238104,
     "baselineRuntimeBytes": 5612688,
-    "growthPercent": -6.792966222245022,
+    "growthPercent": -6.6738788972413925,
     "prunedUnusedAccessors": 633,
-    "sha256": "c0dc53887366e1a7acf3152704993052911c8ea79a7b67b94a09c604d47702af",
+    "sha256": "54dc88d860b7f33cfd150d8500c86c7d5cb47f3789a3f2d8123b9e01711a2345",
     "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
     "status": "NOT_APPROVED"
   },
   "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timerQueryAvailable": true,
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
   "originalEffectiveMaterials": [
     {
       "mesh": "Mesh0",
@@ -376,60 +425,14 @@
     "changed": []
   },
   "failed": true,
-  "missingTriangleProvenance": [
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 520,
-      "backFacing": true,
-      "pixels": 6
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 559,
-      "backFacing": true,
-      "pixels": 5
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 521,
-      "backFacing": true,
-      "pixels": 2
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 579,
-      "backFacing": true,
-      "pixels": 2
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 578,
-      "backFacing": true,
-      "pixels": 2
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 598,
-      "backFacing": true,
-      "pixels": 2
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 539,
-      "backFacing": true,
-      "pixels": 1
-    },
-    {
-      "mesh": "Prop_WateringCan_geometry_1",
-      "face": 558,
-      "backFacing": true,
-      "pixels": 1
-    }
-  ],
   "sourceTwin": false,
   "originalShadowDiagnostic": false,
   "frontShadow": false,
   "sharedPersistentShadowHook": true,
   "clipFilter": "Water",
+  "requestedClips": [
+    "Water"
+  ],
+  "withheldVersion": 2,
   "capture": "worker-runtime-visual-last-frame.png"
 }
