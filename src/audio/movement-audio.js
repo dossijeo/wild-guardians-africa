@@ -1,5 +1,5 @@
 import {FOOTSTEPS} from '../rendering/footsteps-data.js';
-import {movingPose,crossedFootsteps} from '../rendering/locomotion-vfx.js';
+import {movingPose,crossedFootsteps} from '../rendering/locomotion-contact.js';
 
 // Surfaces without a corresponding traversable runtime surface remain catalog
 // variants. Callers can provide an authoritative local surface resolver.

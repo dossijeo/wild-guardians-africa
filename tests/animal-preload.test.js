@@ -3,6 +3,15 @@ import assert from 'node:assert/strict';
 import {Group,Mesh,BoxGeometry,MeshStandardMaterial,AnimationClip,VectorKeyframeTrack,SkinnedMesh,Skeleton,Bone,AnimationMixer} from 'three';
 import {AnimalPreload,releaseActorRig} from '../src/rendering/animal-preload.js';
 function source(){const scene=new Group();scene.add(new Mesh(new BoxGeometry(),new MeshStandardMaterial()));return {scene,animations:['Walking','Running'].map(name=>new AnimationClip(name,1,[new VectorKeyframeTrack('.position',[0,1],[0,0,0,0,0,0])]))};}
+
+test('late callers on a disposed pool never resolve descriptors, fetch models or create rigs',async()=>{
+ let descriptors=0,downloads=0,creations=0;
+ const pool=new AnimalPreload({model:async()=>{downloads++;return source();}},()=>{descriptors++;return {url:'animal.glb'};});
+ pool.create=()=>{creations++;throw Error('Dead pool must not create');};pool.dispose();
+ assert.deepEqual(await Promise.all([pool.warm('lion'),pool.take('rhino'),pool.warm('unknown'),pool.take('unknown')]),[null,null,null,null]);
+ assert.equal(await pool.reserveGroup(['lion']),false);assert.deepEqual(await pool.spares(),[]);
+ assert.deepEqual({descriptors,downloads,creations},{descriptors:0,downloads:0,creations:0});assert.equal(pool.entries.size,0);
+});
 test('preload deduplicates concurrent downloads and hands the warmed rig to the first animal',async()=>{
  const gltf=source();let downloads=0;const pool=new AnimalPreload({model:async()=>{downloads++;return gltf;}},()=>({url:'animal.glb'}));
  const [first,second]=await Promise.all([pool.warm('warthog'),pool.warm('warthog')]);

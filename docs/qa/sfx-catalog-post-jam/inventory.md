@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **92**. Sin asignar en gameplay: **34**.
+Asignados: **94**. Sin asignar en gameplay: **32**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -30,34 +30,34 @@ Asignados: **92**. Sin asignar en gameplay: **34**.
 | 022 | farm_water_soil · Agua golpeando tierra | Asignado | Contacto de agua con tierra; conservar exactamente la asignación 022 aprobada. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 023 | farm_harvest_pick · Recoger cultivo | Asignado | Contacto de recogida de una planta madura. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 024 | farm_plant_pull · Arrancar planta | Asignado | Extracción de raíz/planta en cosecha; alternativa por especie, no segundo ingreso. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
-| 025 | farm_crop_to_crate · Colocar cosecha en caja | Asignado | Depósito de producto en la caja durante la cadena de cosecha. | src/audio/audio.js:20 → CropPicked |
-| 026 | farm_crate_move · Caja de fruta moviéndose | Asignado | Levantar/dejar una caja; una toma por acción, no por fotograma. | src/audio/audio.js:20 → CrateDropped |
+| 025 | farm_crop_to_crate · Colocar cosecha en caja | Asignado | Depósito de producto en la caja durante la cadena de cosecha. | src/audio/audio.js:21 → CropPicked |
+| 026 | farm_crate_move · Caja de fruta moviéndose | Asignado | Levantar/dejar una caja; una toma por acción, no por fotograma. | src/audio/audio.js:21 → CrateDropped |
 | 027 | farm_sack_handle · Saco manipulándose | Pendiente | Reserva de manejo de saco; no hay un objeto saco jugable aprobado. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 028 | farm_crop_interact · Interacción genérica con cultivo | Pendiente | Interacción ligera con vegetación; variante contextual de agricultura. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 029 | build_place · Colocar elemento / edificio | Asignado | Confirmación de una colocación válida; nunca al mover el fantasma. | src/audio/audio.js:20 → PlacementCommitted; src/audio/audio.js:20 → WallChainBuilt |
-| 030 | build_tool_hit · Golpe de herramienta | Pendiente | Contacto de herramienta de construcción/reparación cuando exista en la animación. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 029 | build_place · Colocar elemento / edificio | Asignado | Confirmación de una colocación válida; nunca al mover el fantasma. | src/audio/audio.js:21 → PlacementCommitted; src/audio/audio.js:21 → WallChainBuilt |
+| 030 | build_tool_hit · Golpe de herramienta | Pendiente | Contacto de herramienta de construcción/reparación cuando exista en la animación. | Current FIFO repairs execute and charge immediately on worker arrival; Game.tick completes both walking and legacy acting repair tasks before a Dig presentation frame. workerPose contains a Dig mapping but no live repair contact reaches it. Four paid profile probes confirm zero acting frames. Retain 030 rather than adding an inaudible tool or changing repair duration; see docs/qa/repair-contact-reservation/README.md. |
 | 031 | build_wood · Construcción · madera | Asignado | Textura sonora de obra de madera; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: empalizada |
 | 032 | build_stone · Construcción · piedra | Asignado | Textura sonora de obra de piedra; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: piedra |
 | 033 | build_adobe · Construcción · adobe / barro | Asignado | Textura sonora de obra de adobe; alternativa por material. | src/audio/structure-audio.js:1 → WallChainBuilt: adobe; src/audio/structure-audio.js:1 → WallChainBuilt: reforzado |
-| 034 | build_complete · Construcción terminada | Asignado | Construcción confirmada y terminada; no cobrar aquí una segunda vez. | src/audio/audio.js:21 → PlacementCommitted (extra contact/completion); src/audio/audio.js:21 → WallChainBuilt (extra contact/completion); src/audio/audio.js:21 → VillageFounded (extra contact/completion) |
-| 035 | build_repair · Reparación | Asignado | Reparación ejecutada tras comprobar y descontar el coste al llegar. | src/audio/audio.js:20 → RepairApplied |
-| 036 | build_demolish_manual · Demolición voluntaria | Asignado | Eliminación manual permitida de una defensa; no decide reembolsos ni costes. | src/audio/audio.js:20 → WallRemoved |
+| 034 | build_complete · Construcción terminada | Asignado | Construcción confirmada y terminada; no cobrar aquí una segunda vez. | src/audio/audio.js:22 → PlacementCommitted (extra contact/completion); src/audio/audio.js:22 → WallChainBuilt (extra contact/completion); src/audio/audio.js:22 → VillageFounded (extra contact/completion) |
+| 035 | build_repair · Reparación | Asignado | Reparación ejecutada tras comprobar y descontar el coste al llegar. | src/audio/audio.js:21 → RepairApplied |
+| 036 | build_demolish_manual · Demolición voluntaria | Asignado | Eliminación manual permitida de una defensa; no decide reembolsos ni costes. | src/audio/audio.js:21 → WallRemoved |
 | 037 | wall_hit_thorns · Impacto · zarzas | Asignado | Impacto lógico en zarzas. | src/audio/structure-audio.js:5 → StructureHit: zarzas |
 | 038 | wall_hit_wood · Impacto · madera | Asignado | Impacto lógico en madera. | src/audio/structure-audio.js:5 → StructureHit: empalizada |
 | 039 | wall_hit_stone · Impacto · piedra | Asignado | Impacto lógico en piedra. | src/audio/structure-audio.js:5 → StructureHit: piedra |
 | 040 | wall_hit_adobe · Impacto · adobe | Asignado | Impacto lógico en adobe. | src/audio/structure-audio.js:5 → StructureHit: adobe |
 | 041 | wall_hit_reinforced_adobe · Impacto · adobe reforzado | Asignado | Impacto lógico en adobe reforzado. | src/audio/structure-audio.js:5 → StructureHit: reforzado |
 | 042 | wall_crack_small · Pequeñas grietas | Asignado | Pequeña rotura en contacto válido; no se reproduce como daño autónomo. | src/audio/structure-audio.js:15 → StructureHit:first-masonry-damage (world detail) |
-| 043 | wall_debris_small · Desprendimiento de fragmentos | Pendiente | Caída de fragmentos decorativos; limitar voces simultáneas. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 043 | wall_debris_small · Desprendimiento de fragmentos | Asignado | Caída de fragmentos decorativos; limitar voces simultáneas. | src/audio/destruction-audio.js:1 → Native building fragments: debrisEmitted (observed particle batch) |
 | 044 | wall_structural_creak · Crujido estructural | Asignado | Crujido al alcanzar daño estructural alto; disparador de estado, no continuo. | src/audio/structure-audio.js:15 → StructureHit:wall-critical (world detail) |
-| 045 | wall_collapse_full · Colapso completo | Asignado | Colapso estructural iniciado por el motor de destrucción; una vez por colapso. | src/audio/audio.js:20 → StructureRuined |
-| 046 | wall_debris_ground · Fragmentos cayendo al suelo | Pendiente | Contacto final de restos con el suelo; presentación del colapso. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 045 | wall_collapse_full · Colapso completo | Asignado | Colapso estructural iniciado por el motor de destrucción; una vez por colapso. | src/audio/audio.js:21 → StructureRuined |
+| 046 | wall_debris_ground · Fragmentos cayendo al suelo | Asignado | Contacto final de restos con el suelo; presentación del colapso. | src/audio/destruction-audio.js:1 → Native building fragments: groundContacts (observed particle batch) |
 | 047 | beast_step_light · Pasos ligeros | Asignado | Apoyos de bestia ligera; marcadores de animación. | src/audio/movement-audio.js:6 → MovementAudio.update: observed moving native foot contact |
 | 048 | beast_step_heavy · Pasos pesados | Asignado | Apoyos de bestia pesada; marcadores de animación. | src/audio/movement-audio.js:6 → MovementAudio.update: observed moving native foot contact |
 | 049 | beast_charge · Carrera / carga | Pendiente | Carga genérica; alternativa cuando no se usa la carga específica de la especie. | Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase. |
 | 050 | beast_attack · Ataque | Pendiente | Ataque genérico; alternativa a la toma específica, no repetición de daño. | Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase. |
-| 051 | beast_hit_structure · Impacto contra estructura | Asignado | Contacto de bestia contra estructura; combinar con material solo si la mezcla lo necesita. | src/audio/audio.js:20 → StructureHit |
-| 052 | beast_hit_character · Impacto contra personaje | Asignado | Contacto de bestia contra trabajador; una agresión lógica. | src/audio/audio.js:21 → WorkerHit (extra contact/completion); src/audio/audio.js:21 → WorkerIncapacitated (extra contact/completion) |
+| 051 | beast_hit_structure · Impacto contra estructura | Asignado | Contacto de bestia contra estructura; combinar con material solo si la mezcla lo necesita. | src/audio/audio.js:21 → StructureHit |
+| 052 | beast_hit_character · Impacto contra personaje | Asignado | Contacto de bestia contra trabajador; una agresión lógica. | src/audio/audio.js:22 → WorkerHit (extra contact/completion); src/audio/audio.js:22 → WorkerIncapacitated (extra contact/completion) |
 | 053 | beast_take_damage · Recibir daño | Pendiente | Reserva: recibir daño animal no tiene sistema de salud ofensivo acreditado. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 054 | beast_vocal_neutral · Vocalización neutra | Pendiente | Vocalización animal neutra genérica; alternativa, baja frecuencia. | Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase. |
 | 055 | beast_vocal_aggressive · Vocalización agresiva | Pendiente | Vocalización agresiva genérica; alternativa a la especie. | Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase. |
@@ -91,8 +91,8 @@ Asignados: **92**. Sin asignar en gameplay: **34**.
 | 083 | npc_work_effort · Esfuerzo trabajando | Asignado | Esfuerzo breve al trabajar; cadencia limitada por trabajador y cámara. | src/audio/worker-audio.js:1 → WorkerAudio.update: observed assignment/work/flight reaction |
 | 084 | npc_danger_react · Reacción al peligro | Asignado | Reacción al peligro al entrar en huida; no repetir en cada evaluación de IA. | src/audio/worker-audio.js:1 → WorkerAudio.update: observed assignment/work/flight reaction |
 | 085 | npc_flee_shout · Grito breve al huir | Asignado | Grito de huida contenido; mantener su normalización y limitar multitud. | src/audio/worker-audio.js:1 → WorkerAudio.update: observed assignment/work/flight reaction |
-| 086 | npc_hit · Recibir golpe | Asignado | Recepción de un golpe por un trabajador. | src/audio/audio.js:20 → WorkerHit |
-| 087 | npc_fall · Caída | Asignado | Caída del trabajador, ligada a la transición de lesión. | src/audio/audio.js:20 → WorkerIncapacitated |
+| 086 | npc_hit · Recibir golpe | Asignado | Recepción de un golpe por un trabajador. | src/audio/audio.js:21 → WorkerHit |
+| 087 | npc_fall · Caída | Asignado | Caída del trabajador, ligada a la transición de lesión. | src/audio/audio.js:21 → WorkerIncapacitated |
 | 088 | npc_acknowledge · Confirmación vocal discreta | Asignado | Acuse de tarea/reacción breve de NPC; no usar todos a la vez tras contratación. | src/audio/worker-audio.js:1 → WorkerAudio.update: observed assignment/work/flight reaction |
 | 089 | spirit_appear · Aparición | Asignado | Entrada del avatar del Espíritu o presencia narrativa; sin entidad física nueva. | src/audio/guardian-audio.js:1 → GuardianAudio.observe: actual rendered portrait lifecycle |
 | 090 | spirit_disappear · Desaparición | Asignado | Salida del avatar; conservar toma y detalle final aprobados. | src/audio/guardian-audio.js:1 → GuardianAudio.observe: actual rendered portrait lifecycle |
@@ -103,34 +103,34 @@ Asignados: **92**. Sin asignar en gameplay: **34**.
 | 095 | spirit_drop · Soltar | Pendiente | Soltar una previsualización; no equivale todavía a una compra. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 096 | spirit_valid · Acción válida | Pendiente | Colocación/interacción válida; feedback distinto de pago. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 097 | spirit_invalid · Acción inválida | Pendiente | Colocación/interacción no válida; limitar repetición mientras permanece inválida. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 098 | spirit_power_activate · Poder activado | Asignado | Activación de una de las tres magias; VFX/poder deciden el evento. | src/audio/audio.js:20 → SpellActivated |
+| 098 | spirit_power_activate · Poder activado | Asignado | Activación de una de las tres magias; VFX/poder deciden el evento. | src/audio/audio.js:21 → SpellActivated |
 | 099 | spirit_power_charge · Poder cargándose | Asignado | Preparación o disponibilidad de magia; variante de presentación, no alarga la activación. | src/audio/power-ready-audio.js:2 → PowerReadyAudio.update: observed positive cooldown reaching zero |
-| 100 | spirit_tutorial_cue · Tutorial / indicación especial | Asignado | Entrada de explicación del tutorial, sin avance automático de texto. | src/audio/audio.js:20 → TutorialMessageStarted |
-| 101 | ui_click · Click | Asignado | Clic UI genérico cuando no se utiliza otra confirmación específica. | src/audio/audio.js:20 → HarvestRequested |
+| 100 | spirit_tutorial_cue · Tutorial / indicación especial | Asignado | Entrada de explicación del tutorial, sin avance automático de texto. | src/audio/audio.js:21 → TutorialMessageStarted |
+| 101 | ui_click · Click | Asignado | Clic UI genérico cuando no se utiliza otra confirmación específica. | src/audio/audio.js:21 → HarvestRequested |
 | 102 | ui_panel_open · Abrir panel | Asignado | Abrir panel. | src/audio/ui-audio.js:1 → ui-surface-transition |
 | 103 | ui_panel_close · Cerrar panel | Asignado | Cerrar panel. | src/audio/ui-audio.js:1 → ui-surface-transition |
 | 104 | ui_tab · Cambiar pestaña | Asignado | Cambiar pestaña/selección del menú. | src/audio/ui-audio.js:1 → ui-surface-transition |
-| 105 | ui_buy · Comprar | Asignado | Compra aceptada; alternativa a eco_spend, sin doble cargo. | src/audio/audio.js:20 → CropPlaced |
+| 105 | ui_buy · Comprar | Asignado | Compra aceptada; alternativa a eco_spend, sin doble cargo. | src/audio/audio.js:21 → CropPlaced |
 | 106 | ui_sell · Vender | Pendiente | Venta/ingreso al entregar caja; alternativa a eco_crop_sold, no comercio adicional. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 107 | ui_error · Error | Asignado | Error, fondos insuficientes o comando no permitido; aviso no invasivo. | src/audio/ui-audio.js:1 → ui-command-error |
-| 108 | ui_confirm · Confirmación | Asignado | Confirmación válida de modal, distinta de una simulación de compra. | src/audio/audio.js:20 → HiringConfirmed |
-| 109 | ui_objective_complete · Objetivo completado | Asignado | Paso/tutorial u objetivo realmente completado; no crea misiones nuevas. | src/audio/audio.js:22 → TutorialCompleted (grouped gameplay warning) |
+| 108 | ui_confirm · Confirmación | Asignado | Confirmación válida de modal, distinta de una simulación de compra. | src/audio/audio.js:21 → HiringConfirmed |
+| 109 | ui_objective_complete · Objetivo completado | Asignado | Paso/tutorial u objetivo realmente completado; no crea misiones nuevas. | src/audio/audio.js:23 → TutorialCompleted (grouped gameplay warning) |
 | 110 | ui_reward · Recompensa | Pendiente | Feedback de recompensa narrativa ya existente; reserva si no hay evento que lo justifique. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 111 | ui_unlock · Desbloqueo | Asignado | Desbloqueo de magia o postgame. | src/audio/audio.js:20 → PostgameStarted; src/audio/unlock-audio.js:3 → UnlockAudio.update: newly reached permanent magic milestone |
+| 111 | ui_unlock · Desbloqueo | Asignado | Desbloqueo de magia o postgame. | src/audio/audio.js:21 → PostgameStarted; src/audio/unlock-audio.js:3 → UnlockAudio.update: newly reached permanent magic milestone |
 | 112 | ui_pause · Pausa | Asignado | Pausa solicitada por el jugador. | src/audio/ui-audio.js:1 → ui-user-pause-transition |
 | 113 | ui_resume · Volver al juego | Asignado | Reanudar cuando ya no queden motivos de pausa. | src/audio/ui-audio.js:1 → ui-user-pause-transition |
 | 114 | eco_gain · Ganar recurso | Pendiente | Ingreso real de dinero; alternativa a sonidos específicos de venta. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 115 | eco_spend · Gastar recurso | Pendiente | Gasto real; alternativa a compra específica, nunca al solicitar reparación. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 116 | eco_crop_sold · Cosecha vendida | Asignado | Caja entregada en centro y cosecha contabilizada. | src/audio/audio.js:20 → CrateDelivered |
+| 116 | eco_crop_sold · Cosecha vendida | Asignado | Caja entregada en centro y cosecha contabilizada. | src/audio/audio.js:21 → CrateDelivered |
 | 117 | eco_item_pickup · Objeto recogido | Asignado | Recogida física de caja/producto; no suma dinero. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 118 | eco_big_reward · Recompensa importante | Pendiente | Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
-| 119 | game_attack_alert · Alerta de ataque | Asignado | Comienzo global de incursión; un aviso por grupo, no uno por animal. | src/audio/audio.js:20 → RaidSpawned |
+| 119 | game_attack_alert · Alerta de ataque | Asignado | Comienzo global de incursión; un aviso por grupo, no uno por animal. | src/audio/audio.js:21 → RaidSpawned |
 | 120 | game_enemy_detected · Enemigo detectado | Asignado | Detección/localización de enemigo; variante local, sin repetir el aviso global. | src/audio/raid-arrival-audio.js:2 → RaidArrivalAudio.update: first observed physical farm entry per raid |
 | 121 | game_building_attacked · Edificio bajo ataque | Asignado | Centro/edificio bajo ataque; limitar recurrencia por estructura. | src/audio/structure-audio.js:7 → StructureHit:first-center-hit |
 | 122 | game_wall_critical · Muralla crítica | Asignado | Muralla crítica; una transición/aviso agrupado, no cada fotograma. | src/audio/structure-audio.js:7 → StructureHit:wall-critical |
-| 123 | game_farmer_hurt · Granjero herido | Asignado | Trabajador lesionado; aviso agrupable y enlazable a posición. | src/audio/audio.js:22 → WorkerIncapacitated (grouped gameplay warning) |
-| 124 | game_attack_over · Ataque terminado | Asignado | Fin de incursión al retirarse el último animal. | src/audio/audio.js:20 → RaidEnded |
-| 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:20 → CampaignWon |
-| 126 | game_major_loss · Derrota / pérdida importante | Asignado | Game Over o pérdida importante confirmada; evitar repetir al mostrar y guardar el resultado. | src/audio/audio.js:20 → GameOver |
+| 123 | game_farmer_hurt · Granjero herido | Asignado | Trabajador lesionado; aviso agrupable y enlazable a posición. | src/audio/audio.js:23 → WorkerIncapacitated (grouped gameplay warning) |
+| 124 | game_attack_over · Ataque terminado | Asignado | Fin de incursión al retirarse el último animal. | src/audio/audio.js:21 → RaidEnded |
+| 125 | game_victory · Victoria / objetivo completado | Asignado | Victoria al completar la noche 100. | src/audio/audio.js:21 → CampaignWon |
+| 126 | game_major_loss · Derrota / pérdida importante | Asignado | Game Over o pérdida importante confirmada; evitar repetir al mostrar y guardar el resultado. | src/audio/audio.js:21 → GameOver |
 
 Las alternativas y reservas restantes requieren su contexto correcto. No se crean lluvia, salud de animales, sacos o recompensas monetarias para que suenen tomas reservadas. Los usos compatibles pendientes deben recibir implementación y pruebas antes de cerrar la tarea.

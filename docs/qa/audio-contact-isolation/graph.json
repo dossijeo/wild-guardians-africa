@@ -1,0 +1,356 @@
+{
+  "baseline": "bfb65e6",
+  "scope": "Static single-line ESM import/reexport graph, including JSON; original baseline from Git, not runtime downloads, RAM or frametime.",
+  "before": {
+    "modules": {
+      "src/audio/audio.js": {
+        "bytes": 24657,
+        "sha256": "4374b96f6a8758f1ee290485d0f6946ba23be4da40b813e545fc59a2228533f8"
+      },
+      "src/audio/power-ready-audio.js": {
+        "bytes": 1794,
+        "sha256": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77"
+      },
+      "src/simulation/rules.js": {
+        "bytes": 3551,
+        "sha256": "c8eef0a28deafe1914ba8720850f361afac44fd93402d743564f6c52797a4c13"
+      },
+      "src/simulation/budget.js": {
+        "bytes": 799,
+        "sha256": "fe3625b889baed5955f334101bab86eb474d3487fb0ce71b08c04bf0db442648"
+      },
+      "src/simulation/money.js": {
+        "bytes": 1725,
+        "sha256": "0cf2a87db4be687b2b79a5dee3dc176cba8d29ffd4e70d33c39221614633d651"
+      },
+      "src/simulation/workforce.js": {
+        "bytes": 3387,
+        "sha256": "acebcf4d0ad4d1b55db513e1ac59a9cc755b5b98b9ff046fad72b7617fdb62f9"
+      },
+      "src/simulation/balance.js": {
+        "bytes": 9500,
+        "sha256": "11ea583de3879ce45187c073952a6c48343baf9238ae2d2d4ce5fd08ea67d2af"
+      },
+      "src/simulation/structure-presentation.js": {
+        "bytes": 802,
+        "sha256": "a6f1a4464b612ae433dae8cc60e5af002434b0b1a6ff12806688ce787db40fb4"
+      },
+      "src/audio/destruction-audio.js": {
+        "bytes": 432,
+        "sha256": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec"
+      },
+      "src/audio/unlock-audio.js": {
+        "bytes": 2172,
+        "sha256": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c"
+      },
+      "src/audio/guardian-audio.js": {
+        "bytes": 1793,
+        "sha256": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8"
+      },
+      "src/audio/worker-audio.js": {
+        "bytes": 5298,
+        "sha256": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4"
+      },
+      "src/audio/farm-contact-audio.js": {
+        "bytes": 5954,
+        "sha256": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700"
+      },
+      "src/audio/farm-actions-data.js": {
+        "bytes": 5105,
+        "sha256": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560"
+      },
+      "src/simulation/crops.js": {
+        "bytes": 2498,
+        "sha256": "da02aa0cd1404ba5fd372f721c7a0353978dcc0e8e80c1b7f9f7e8eb710d0fd5"
+      },
+      "src/audio/raid-arrival-audio.js": {
+        "bytes": 2103,
+        "sha256": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7"
+      },
+      "src/world/farm-envelope.js": {
+        "bytes": 485,
+        "sha256": "6a5f1fd9d8df4c69b77e8e84be02e7517886a9ca02b9790d4a178b1a5bd563c6"
+      },
+      "src/audio/animal-audio.js": {
+        "bytes": 4371,
+        "sha256": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9"
+      },
+      "src/audio/structure-audio.js": {
+        "bytes": 2257,
+        "sha256": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21"
+      },
+      "src/audio/work-audio.js": {
+        "bytes": 2689,
+        "sha256": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37"
+      },
+      "src/audio/ambient-audio.js": {
+        "bytes": 3266,
+        "sha256": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8"
+      },
+      "src/audio/movement-audio.js": {
+        "bytes": 3735,
+        "sha256": "5b4d3047fc6d2adec9acaebdc13e45bebbad12b5850961563dc67bcea8241eb7"
+      },
+      "src/rendering/footsteps-data.js": {
+        "bytes": 27846,
+        "sha256": "9e861fef77c65cd909930657e88e7b0e72f09b1631d3d49eaeb04dc78506e467"
+      },
+      "src/rendering/locomotion-vfx.js": {
+        "bytes": 4516,
+        "sha256": "f6b8869de5068e73a7464370656bce4433f4944a165a276b17145fd191b727e2"
+      },
+      "src/rendering/step-ripples.js": {
+        "bytes": 2457,
+        "sha256": "53e2c0e2d933cf3395d552fa88c03dd6956bb553fedf7ea752320ae9d1fc3af0"
+      },
+      "src/rendering/vfx-native.js": {
+        "bytes": 52157,
+        "sha256": "abf38e604a91454343fe4f2f1d0afe36a366d4b9cbcdfaeb97c0764ef069b61a"
+      },
+      "src/rendering/asset-fetch.js": {
+        "bytes": 540,
+        "sha256": "482ad6677394289ed8fcddcdde996cf9baf6e8e986227133eb2f9e20419cff52"
+      },
+      "src/rendering/asset-url.js": {
+        "bytes": 1208,
+        "sha256": "0a074dab43353d45a026ddf73e9c89c05d13269463589c42d050c60a93a8700d"
+      },
+      "content/manifests/web-assets.json": {
+        "bytes": 35760,
+        "sha256": "7c12ac1dac2f2c7b58908621b0060b1bfba05dbb8b00201c5132920901372873"
+      },
+      "content/manifests/audio-runtime.json": {
+        "bytes": 12029,
+        "sha256": "9f5ccf21f5cf1c596286bc85c4b9cb8ab4ebfed628237c093752de3e6a31e783"
+      },
+      "content/manifests/sfx-runtime.json": {
+        "bytes": 81806,
+        "sha256": "a07b7891b47581c2acc8e0a63a007a6bac0a26b358a162723d64543e20d20258"
+      },
+      "content/manifests/image-runtime.json": {
+        "bytes": 30122,
+        "sha256": "dd6ad3361d0cd9bc7cd811152bf6d75e900c21effdf5b7ea85cb5946a0267372"
+      },
+      "src/audio/music-policy.js": {
+        "bytes": 3977,
+        "sha256": "7be642794e96f63352943801a432ae6a77577cbd830870e3bc53020289e22d7e"
+      },
+      "src/audio/music-mixer.js": {
+        "bytes": 5812,
+        "sha256": "d455f91a3e180214a56865886447244b72e48e4d5e4d46c7468efd11cacfab2b"
+      },
+      "src/audio/music-transport.js": {
+        "bytes": 6249,
+        "sha256": "7290b935bfc8d3c49ebc970c111a489cbd125106d8f30509df318495bee64ab1"
+      },
+      "src/audio/music-load-queue.js": {
+        "bytes": 803,
+        "sha256": "32fd558b5a95a1495c387e99cdf335d6361cd6a70a7e702da2754ee05b78db46"
+      },
+      "src/audio/music-stream.js": {
+        "bytes": 1050,
+        "sha256": "f539aae18edef4e1f0fde8ed5d7bb4816217c950f88ece1e68b48f95d06d1735"
+      },
+      "src/audio/music-disk-cache.js": {
+        "bytes": 1039,
+        "sha256": "08254986b5cd0796ba7d1eb368e774f77e815df39d9983b45df0b870168741e9"
+      },
+      "src/audio/start-window-music.js": {
+        "bytes": 1567,
+        "sha256": "7c0400baedcbcd9391fbb64ffc272f5a674b589308489cbdd181df2756952bf3"
+      },
+      "src/audio/music-window-pool.js": {
+        "bytes": 3255,
+        "sha256": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7"
+      },
+      "src/audio/opus-window-recipe.js": {
+        "bytes": 1306,
+        "sha256": "d14a3e960f4df218c52cffcb383484569984f2bb3145e428c2ad7daa0f30576a"
+      },
+      "src/audio/music-window-transport.js": {
+        "bytes": 5871,
+        "sha256": "9bb65ad7236c8135386b04398311398d57abaaefad1eedfc8fb64b6f862c75f7"
+      },
+      "src/audio/music-range-reader.js": {
+        "bytes": 2591,
+        "sha256": "7be7b2d77b2d9a060da4d975625cbbc4cc043793ef6c6ff0f5b4a20764551a6c"
+      }
+    },
+    "count": 43,
+    "bytes": 370334,
+    "external": [
+      "three"
+    ]
+  },
+  "after": {
+    "modules": {
+      "src/audio/audio.js": {
+        "bytes": 24657,
+        "sha256": "4374b96f6a8758f1ee290485d0f6946ba23be4da40b813e545fc59a2228533f8"
+      },
+      "src/audio/power-ready-audio.js": {
+        "bytes": 1794,
+        "sha256": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77"
+      },
+      "src/simulation/rules.js": {
+        "bytes": 3551,
+        "sha256": "c8eef0a28deafe1914ba8720850f361afac44fd93402d743564f6c52797a4c13"
+      },
+      "src/simulation/budget.js": {
+        "bytes": 799,
+        "sha256": "fe3625b889baed5955f334101bab86eb474d3487fb0ce71b08c04bf0db442648"
+      },
+      "src/simulation/money.js": {
+        "bytes": 1725,
+        "sha256": "0cf2a87db4be687b2b79a5dee3dc176cba8d29ffd4e70d33c39221614633d651"
+      },
+      "src/simulation/workforce.js": {
+        "bytes": 3387,
+        "sha256": "acebcf4d0ad4d1b55db513e1ac59a9cc755b5b98b9ff046fad72b7617fdb62f9"
+      },
+      "src/simulation/balance.js": {
+        "bytes": 9500,
+        "sha256": "11ea583de3879ce45187c073952a6c48343baf9238ae2d2d4ce5fd08ea67d2af"
+      },
+      "src/simulation/structure-presentation.js": {
+        "bytes": 802,
+        "sha256": "a6f1a4464b612ae433dae8cc60e5af002434b0b1a6ff12806688ce787db40fb4"
+      },
+      "src/audio/destruction-audio.js": {
+        "bytes": 432,
+        "sha256": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec"
+      },
+      "src/audio/unlock-audio.js": {
+        "bytes": 2172,
+        "sha256": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c"
+      },
+      "src/audio/guardian-audio.js": {
+        "bytes": 1793,
+        "sha256": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8"
+      },
+      "src/audio/worker-audio.js": {
+        "bytes": 5298,
+        "sha256": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4"
+      },
+      "src/audio/farm-contact-audio.js": {
+        "bytes": 5954,
+        "sha256": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700"
+      },
+      "src/audio/farm-actions-data.js": {
+        "bytes": 5105,
+        "sha256": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560"
+      },
+      "src/simulation/crops.js": {
+        "bytes": 2498,
+        "sha256": "da02aa0cd1404ba5fd372f721c7a0353978dcc0e8e80c1b7f9f7e8eb710d0fd5"
+      },
+      "src/audio/raid-arrival-audio.js": {
+        "bytes": 2103,
+        "sha256": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7"
+      },
+      "src/world/farm-envelope.js": {
+        "bytes": 485,
+        "sha256": "6a5f1fd9d8df4c69b77e8e84be02e7517886a9ca02b9790d4a178b1a5bd563c6"
+      },
+      "src/audio/animal-audio.js": {
+        "bytes": 4371,
+        "sha256": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9"
+      },
+      "src/audio/structure-audio.js": {
+        "bytes": 2257,
+        "sha256": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21"
+      },
+      "src/audio/work-audio.js": {
+        "bytes": 2689,
+        "sha256": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37"
+      },
+      "src/audio/ambient-audio.js": {
+        "bytes": 3266,
+        "sha256": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8"
+      },
+      "src/audio/movement-audio.js": {
+        "bytes": 3739,
+        "sha256": "52439fae0d1dd7c30a59bf5ae6074bd17fa38fd3ed1349f0f24c0911dbee1669"
+      },
+      "src/rendering/footsteps-data.js": {
+        "bytes": 27846,
+        "sha256": "9e861fef77c65cd909930657e88e7b0e72f09b1631d3d49eaeb04dc78506e467"
+      },
+      "src/rendering/locomotion-contact.js": {
+        "bytes": 1229,
+        "sha256": "7bb834c9a38f24df8b98697e178c163e6b85913b532530bbf219502e02bcf4c4"
+      },
+      "src/rendering/asset-fetch.js": {
+        "bytes": 540,
+        "sha256": "482ad6677394289ed8fcddcdde996cf9baf6e8e986227133eb2f9e20419cff52"
+      },
+      "src/rendering/asset-url.js": {
+        "bytes": 1208,
+        "sha256": "0a074dab43353d45a026ddf73e9c89c05d13269463589c42d050c60a93a8700d"
+      },
+      "content/manifests/web-assets.json": {
+        "bytes": 35760,
+        "sha256": "7c12ac1dac2f2c7b58908621b0060b1bfba05dbb8b00201c5132920901372873"
+      },
+      "content/manifests/audio-runtime.json": {
+        "bytes": 12029,
+        "sha256": "9f5ccf21f5cf1c596286bc85c4b9cb8ab4ebfed628237c093752de3e6a31e783"
+      },
+      "content/manifests/sfx-runtime.json": {
+        "bytes": 81806,
+        "sha256": "a07b7891b47581c2acc8e0a63a007a6bac0a26b358a162723d64543e20d20258"
+      },
+      "content/manifests/image-runtime.json": {
+        "bytes": 30122,
+        "sha256": "dd6ad3361d0cd9bc7cd811152bf6d75e900c21effdf5b7ea85cb5946a0267372"
+      },
+      "src/audio/music-policy.js": {
+        "bytes": 3977,
+        "sha256": "7be642794e96f63352943801a432ae6a77577cbd830870e3bc53020289e22d7e"
+      },
+      "src/audio/music-mixer.js": {
+        "bytes": 5812,
+        "sha256": "d455f91a3e180214a56865886447244b72e48e4d5e4d46c7468efd11cacfab2b"
+      },
+      "src/audio/music-transport.js": {
+        "bytes": 6249,
+        "sha256": "7290b935bfc8d3c49ebc970c111a489cbd125106d8f30509df318495bee64ab1"
+      },
+      "src/audio/music-load-queue.js": {
+        "bytes": 803,
+        "sha256": "32fd558b5a95a1495c387e99cdf335d6361cd6a70a7e702da2754ee05b78db46"
+      },
+      "src/audio/music-stream.js": {
+        "bytes": 1050,
+        "sha256": "f539aae18edef4e1f0fde8ed5d7bb4816217c950f88ece1e68b48f95d06d1735"
+      },
+      "src/audio/music-disk-cache.js": {
+        "bytes": 1039,
+        "sha256": "08254986b5cd0796ba7d1eb368e774f77e815df39d9983b45df0b870168741e9"
+      },
+      "src/audio/start-window-music.js": {
+        "bytes": 1567,
+        "sha256": "7c0400baedcbcd9391fbb64ffc272f5a674b589308489cbdd181df2756952bf3"
+      },
+      "src/audio/music-window-pool.js": {
+        "bytes": 3255,
+        "sha256": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7"
+      },
+      "src/audio/opus-window-recipe.js": {
+        "bytes": 1306,
+        "sha256": "d14a3e960f4df218c52cffcb383484569984f2bb3145e428c2ad7daa0f30576a"
+      },
+      "src/audio/music-window-transport.js": {
+        "bytes": 5871,
+        "sha256": "9bb65ad7236c8135386b04398311398d57abaaefad1eedfc8fb64b6f862c75f7"
+      },
+      "src/audio/music-range-reader.js": {
+        "bytes": 2591,
+        "sha256": "7be7b2d77b2d9a060da4d975625cbbc4cc043793ef6c6ff0f5b4a20764551a6c"
+      }
+    },
+    "count": 41,
+    "bytes": 312437,
+    "external": []
+  }
+}

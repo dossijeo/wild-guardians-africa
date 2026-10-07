@@ -1,0 +1,21 @@
+{
+  "files": 1,
+  "scripts": 1,
+  "failures": [
+    {
+      "file": ".cache/debris-before-syntax-fix.html",
+      "index": 1,
+      "sha256": "d1413797b24de8ee05cdf4dbd6c1a4799be376af1be9d38174384c0b01ff5ba1",
+      "passed": false,
+      "error": "[stdin]:16\r\n const kernel={hitSites:Array.from({length:8},()=>({p:[0,1,0],n:[0,1,0],birth:.5,maxRadius:0})),fx=createNativeDestructionEffects(kernel,{seed:123});\r\n                                                                                                                                                    ^\r\n\r\nSyntaxError: Unexpected token ';'\r\n    at checkSyntax (node:internal/main/check_syntax:75:5)\r\n    at node:internal/main/check_syntax:45:5\r\n    at Socket.<anonymous> (node:internal/process/execution:224:5)\r\n    at Socket.emit (node:events:530:35)\r\n    at endReadableNT (node:internal/streams/readable:1696:12)\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)\r\n\r\nNode.js v20.11.0\r\n"
+    }
+  ],
+  "rows": [
+    {
+      "file": ".cache/debris-before-syntax-fix.html",
+      "index": 1,
+      "sha256": "d1413797b24de8ee05cdf4dbd6c1a4799be376af1be9d38174384c0b01ff5ba1",
+      "passed": false
+    }
+  ]
+}

@@ -34,6 +34,7 @@ jobs:
       - run: npm run verify:audio-runtime
       - run: npm run verify:plan
       - run: npm run verify:balance
+      - run: npm run verify:browser-syntax
       - run: npm test
       - run: npm run build
       - run: npm run test:web-package

@@ -14,6 +14,7 @@ export function releaseActorRig(rig){
 export class AnimalPreload {
   constructor(assets,descriptors){this.assets=assets;this.descriptors=descriptors;this.entries=new Map();this.disposed=false;this.reserveGeneration=0;}
   async warm(species){
+    if(this.disposed)return null;
     if(!this.entries.has(species)){
       const descriptor=this.descriptors(species);
       if(!descriptor)throw Error('Falta el modelo de '+species);
@@ -39,6 +40,7 @@ export class AnimalPreload {
     return rig;
   }
   async take(species){
+    if(this.disposed)return null;
     const entry=await this.warm(species);if(this.disposed)return null;
     entry.target=Math.max(0,entry.target-1);
     const rig=entry.spare??entry.additional.shift()??this.create(species,entry);entry.spare=null;return rig;

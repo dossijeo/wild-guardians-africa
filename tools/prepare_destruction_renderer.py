@@ -90,6 +90,10 @@ export function createNativeDestructionEffects(kernel,building,{contactFloor=nul
  };
 }
 '''
+# Observe emissions and first floor contacts without changing native RNG/physics.
+effects = effects.replace('stats={particles:0},holes=', 'stats={particles:0,debrisEmitted:0,groundContacts:0},holes=')
+effects = effects.replace('if(debris.length>=340)return;const r=rand()', 'if(debris.length>=340)return;stats.debrisEmitted++;const r=rand()')
+effects = effects.replace('if(p.p[1]<floor){p.p[1]=floor;', 'if(p.p[1]<floor){if(p.bounces===0)stats.groundContacts++;p.p[1]=floor;')
 effects_target = root/'src/rendering/destruction-effects-native.js'
 effects_target.write_text(effects,encoding='utf-8',newline='\n')
 inventory = json.loads((root/'content/manifests/assets.json').read_text(encoding='utf-8'))

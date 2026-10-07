@@ -1,4 +1,5 @@
 import {POWER_READY_SOUND_IDS} from '../src/audio/power-ready-audio.js';
+import {DESTRUCTION_SOUND_ROUTES} from '../src/audio/destruction-audio.js';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
@@ -36,6 +37,7 @@ for(const [material,id] of Object.entries(WALL_BUILD_SOUNDS))add(id,'src/audio/s
 for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))add(id,'src/audio/structure-audio.js','export const WALL_HIT_SOUNDS','StructureHit: '+material);
 for(const [trigger,id] of Object.entries(STRUCTURE_ALERT_SOUNDS))add(id,'src/audio/structure-audio.js','export const STRUCTURE_ALERT_SOUNDS',trigger);
 for(const [trigger,id] of Object.entries(STRUCTURE_DETAIL_SOUNDS))add(id,'src/audio/structure-audio.js','export const STRUCTURE_DETAIL_SOUNDS',trigger+' (world detail)');
+for(const [trigger,id] of Object.entries(DESTRUCTION_SOUND_ROUTES))add(id,'src/audio/destruction-audio.js','export const DESTRUCTION_SOUND_ROUTES','Native building fragments: '+trigger+' (observed particle batch)');
 for(const [species,routes] of Object.entries(ANIMAL_SOUND_ROUTES))for(const [phase,id] of Object.entries(routes))add(id,'src/audio/animal-audio.js','export const ANIMAL_SOUND_ROUTES',species+': '+phase);
 for(const [file,selector,ids,trigger] of [
  ['ambient-audio','AMBIENT_SOUND_IDS',AMBIENT_SOUND_IDS,'AmbientAudio.update: local day/night/hydrology layer'],
