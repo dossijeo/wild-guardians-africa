@@ -48,3 +48,28 @@ test('overflowing transforms leave the original sphere intact so the caller can 
  b.scale.setScalar(1e308);mesh.updateMatrixWorld(true);
  assert.equal(updateSkinEnvelopeSphere(mesh,envelope),false);assert.ok(mesh.boundingSphere.equals(before));
 });
+
+test('weighted groups contain tiny, repeated and bin-boundary influences across moving poses',()=>{
+ const geometry=new BufferGeometry(),positions=[],indices=[],weights=[];
+ // Deliberately correlate positions with weights: interval arithmetic must
+ // remain conservative when several vertices share a group but not a pose.
+ for(let i=0;i<192;i++){
+  positions.push(Math.sin(i*1.7)*8,Math.cos(i*.37)*5,i%11-5);
+  indices.push(i%4,(i+1)%4,i%4,(i+2)%4);
+  const boundary=(i%8)/8,epsilon=i%2?1e-7:-1e-7;
+  weights.push(Math.max(0,boundary+epsilon),1e-8,(i%7)/20,i%9===0?0:.25);
+ }
+ geometry.setAttribute('position',new Float32BufferAttribute(positions,3));
+ geometry.setAttribute('skinIndex',new Uint16BufferAttribute(indices,4));
+ geometry.setAttribute('skinWeight',new Float32BufferAttribute(weights,4));
+ const bones=Array.from({length:4},()=>new Bone());
+ const mesh=new SkinnedMesh(geometry),root=new Group();
+ for(const [i,bone] of bones.entries()){bone.position.set(i*.7,i*.4,-i*.2);mesh.add(bone);}
+ mesh.bind(new Skeleton(bones));root.add(mesh);
+ const envelope=prepareSkinEnvelope(mesh);assert.ok(envelope);assert.ok(envelope.groups.length>8);
+ for(let pose=0;pose<24;pose++){
+  root.position.set(4800+pose*100,10,-7200);root.rotation.set(.2,pose*.17,-.1);root.scale.set(1.2,.8,1.1);
+  bones.forEach((bone,i)=>{bone.rotation.set(pose*.03*i,pose*.11,-pose*.07);bone.position.x=i*.7+Math.sin(pose+i)*4;});
+  root.updateMatrixWorld(true);assert.ok(updateSkinEnvelopeSphere(mesh,envelope));contains(mesh);
+ }
+});
