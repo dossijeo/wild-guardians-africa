@@ -1,0 +1,222 @@
+TAP version 13
+# Subtest: camera volumes retain all five native center scales, pivots and collapse envelopes
+ok 1 - camera volumes retain all five native center scales, pivots and collapse envelopes
+  ---
+  duration_ms: 31.3947
+  ...
+# Subtest: auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+ok 2 - auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+  ---
+  duration_ms: 33.4362
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 3 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 6700.5532
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 4 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 8.1472
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 5 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 4.9788
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 6 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 10.4765
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 7 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 28.9822
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 8 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 27.9937
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 9 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.6678
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 10 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 163.0058
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 11 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 2.0821
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 12 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 83.4193
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 13 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 19.2777
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 14 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 10.4908
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 15 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 6.9668
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 16 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 57.246
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 17 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.7483
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 18 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 6.7428
+  ...
+# Subtest: model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+ok 19 - model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+  ---
+  duration_ms: 8.1135
+  ...
+# Subtest: unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+ok 20 - unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+  ---
+  duration_ms: 1.0483
+  ...
+# Subtest: indexed sweeps match direct sweeps through negative cells, corners and roofs
+ok 21 - indexed sweeps match direct sweeps through negative cells, corners and roofs
+  ---
+  duration_ms: 62.8663
+  ...
+# Subtest: descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+ok 22 - descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+  ---
+  duration_ms: 1.1276
+  ...
+# Subtest: large volumes and long queries use bounded fallback without losing collisions
+ok 23 - large volumes and long queries use bounded fallback without losing collisions
+  ---
+  duration_ms: 0.4559
+  ...
+# Subtest: local queries exclude distant buildings and cleanup releases all owned descriptors
+ok 24 - local queries exclude distant buildings and cleanup releases all owned descriptors
+  ---
+  duration_ms: 14.4843
+  ...
+# Subtest: invalid updates preserve the previous valid descriptor
+ok 25 - invalid updates preserve the previous valid descriptor
+  ---
+  duration_ms: 0.7392
+  ...
+# Subtest: coordinates beyond safe integer grid addressing use bounded fallback
+ok 26 - coordinates beyond safe integer grid addressing use bounded fallback
+  ---
+  duration_ms: 0.5308
+  ...
+# Subtest: oriented finite volumes preserve collision fractions and world-space normals
+ok 27 - oriented finite volumes preserve collision fractions and world-space normals
+  ---
+  duration_ms: 6.4838
+  ...
+# Subtest: rotated narrow house permits empty corners of its conservative world bounds
+ok 28 - rotated narrow house permits empty corners of its conservative world bounds
+  ---
+  duration_ms: 1.2189
+  ...
+# Subtest: index uses rotated bounds and removes their memberships when rotation changes
+ok 29 - index uses rotated bounds and removes their memberships when rotation changes
+  ---
+  duration_ms: 2.167
+  ...
+# Subtest: indexed and direct oriented sweeps agree for a rotated multi-house settlement
+ok 30 - indexed and direct oriented sweeps agree for a rotated multi-house settlement
+  ---
+  duration_ms: 93.08
+  ...
+# Subtest: invalid rotation cannot replace an existing valid volume
+ok 31 - invalid rotation cannot replace an existing valid volume
+  ---
+  duration_ms: 1.201
+  ...
+# Subtest: fast movement cannot tunnel through a finite building
+ok 32 - fast movement cannot tunnel through a finite building
+  ---
+  duration_ms: 4.2975
+  ...
+# Subtest: overflight is allowed above the finite roof, and a descent detects that roof
+ok 33 - overflight is allowed above the finite roof, and a descent detects that roof
+  ---
+  duration_ms: 0.4414
+  ...
+# Subtest: rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+ok 34 - rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+  ---
+  duration_ms: 0.356
+  ...
+# Subtest: starting inside a newly loaded volume returns a finite nearest exit direction
+ok 35 - starting inside a newly loaded volume returns a finite nearest exit direction
+  ---
+  duration_ms: 0.2916
+  ...
+# Subtest: stationary safe camera and outward movement remain unobstructed
+ok 36 - stationary safe camera and outward movement remain unobstructed
+  ---
+  duration_ms: 0.3966
+  ...
+# Subtest: selection uses the nearest obstacle rather than collection order
+ok 37 - selection uses the nearest obstacle rather than collection order
+  ---
+  duration_ms: 0.4103
+  ...
+# Subtest: zero radius ray and tangent sphere contact are included
+ok 38 - zero radius ray and tangent sphere contact are included
+  ---
+  duration_ms: 0.5834
+  ...
+# Subtest: translated buildings and camera trajectories preserve the collision fraction
+ok 39 - translated buildings and camera trajectories preserve the collision fraction
+  ---
+  duration_ms: 2.8156
+  ...
+# Subtest: invalid geometry and radii are rejected
+ok 40 - invalid geometry and radii are rejected
+  ---
+  duration_ms: 1.6313
+  ...
+# Subtest: seeded trajectories agree with an independent convex-distance oracle
+ok 41 - seeded trajectories agree with an independent convex-distance oracle
+  ---
+  duration_ms: 94.5488
+  ...
+# (node:48460) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five village loaders bound every indexed unit without copying or restricting its shared geometry
+ok 42 - five village loaders bound every indexed unit without copying or restricting its shared geometry
+  ---
+  duration_ms: 15418.9886
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16053.2648

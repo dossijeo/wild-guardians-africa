@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: indexed sweeps match direct sweeps through negative cells, corners and roofs
+ok 1 - indexed sweeps match direct sweeps through negative cells, corners and roofs
+  ---
+  duration_ms: 70.658
+  ...
+# Subtest: descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+ok 2 - descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+  ---
+  duration_ms: 1.0287
+  ...
+# Subtest: large volumes and long queries use bounded fallback without losing collisions
+ok 3 - large volumes and long queries use bounded fallback without losing collisions
+  ---
+  duration_ms: 0.4864
+  ...
+# Subtest: local queries exclude distant buildings and cleanup releases all owned descriptors
+ok 4 - local queries exclude distant buildings and cleanup releases all owned descriptors
+  ---
+  duration_ms: 14.3596
+  ...
+# Subtest: invalid updates preserve the previous valid descriptor
+ok 5 - invalid updates preserve the previous valid descriptor
+  ---
+  duration_ms: 0.8518
+  ...
+# Subtest: coordinates beyond safe integer grid addressing use bounded fallback
+ok 6 - coordinates beyond safe integer grid addressing use bounded fallback
+  ---
+  duration_ms: 0.562
+  ...
+# Subtest: oriented finite volumes preserve collision fractions and world-space normals
+ok 7 - oriented finite volumes preserve collision fractions and world-space normals
+  ---
+  duration_ms: 4.3948
+  ...
+# Subtest: rotated narrow house permits empty corners of its conservative world bounds
+ok 8 - rotated narrow house permits empty corners of its conservative world bounds
+  ---
+  duration_ms: 1.4233
+  ...
+# Subtest: index uses rotated bounds and removes their memberships when rotation changes
+ok 9 - index uses rotated bounds and removes their memberships when rotation changes
+  ---
+  duration_ms: 2.7381
+  ...
+# Subtest: indexed and direct oriented sweeps agree for a rotated multi-house settlement
+ok 10 - indexed and direct oriented sweeps agree for a rotated multi-house settlement
+  ---
+  duration_ms: 113.0212
+  ...
+# Subtest: invalid rotation cannot replace an existing valid volume
+ok 11 - invalid rotation cannot replace an existing valid volume
+  ---
+  duration_ms: 1.1613
+  ...
+# Subtest: fast movement cannot tunnel through a finite building
+ok 12 - fast movement cannot tunnel through a finite building
+  ---
+  duration_ms: 4.3784
+  ...
+# Subtest: overflight is allowed above the finite roof, and a descent detects that roof
+ok 13 - overflight is allowed above the finite roof, and a descent detects that roof
+  ---
+  duration_ms: 0.4226
+  ...
+# Subtest: rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+ok 14 - rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+  ---
+  duration_ms: 0.3522
+  ...
+# Subtest: starting inside a newly loaded volume returns a finite nearest exit direction
+ok 15 - starting inside a newly loaded volume returns a finite nearest exit direction
+  ---
+  duration_ms: 0.2802
+  ...
+# Subtest: stationary safe camera and outward movement remain unobstructed
+ok 16 - stationary safe camera and outward movement remain unobstructed
+  ---
+  duration_ms: 0.3665
+  ...
+# Subtest: selection uses the nearest obstacle rather than collection order
+ok 17 - selection uses the nearest obstacle rather than collection order
+  ---
+  duration_ms: 0.3663
+  ...
+# Subtest: zero radius ray and tangent sphere contact are included
+ok 18 - zero radius ray and tangent sphere contact are included
+  ---
+  duration_ms: 0.6044
+  ...
+# Subtest: translated buildings and camera trajectories preserve the collision fraction
+ok 19 - translated buildings and camera trajectories preserve the collision fraction
+  ---
+  duration_ms: 0.374
+  ...
+# Subtest: invalid geometry and radii are rejected
+ok 20 - invalid geometry and radii are rejected
+  ---
+  duration_ms: 0.7772
+  ...
+# Subtest: seeded trajectories agree with an independent convex-distance oracle
+ok 21 - seeded trajectories agree with an independent convex-distance oracle
+  ---
+  duration_ms: 101.1489
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 479.1139

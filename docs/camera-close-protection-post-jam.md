@@ -36,3 +36,7 @@ No exigir libertad para posiciones desde las que el asset deja de funcionar visu
 - Registrar capturas/recorridos para categorías, culturas/escalas relevantes y móvil físico; medir CPU/GPU/frametime antes/después. No acreditar toda la tarea con una sola casa o un test geométrico aislado.
 
 La [cámara cercana del diagnóstico de cultivos](qa/crop-frustum-prototype/NEAR.md) ilustra un encuadre centrado en el edificio con gran ampliación. Es contexto del problema, no prueba de esta protección ni un ajuste aprobado de distancias.
+
+## Estado de implementación
+
+Primera base geométrica e índice espacial preparados y verificados: [evidencias y límites](qa/camera-volume-foundation/README.md). Aún no están conectados a la cámara del juego. Siguen pendientes los volúmenes de los modelos reales, la corrección suave de controles y toda la aceptación visual y móvil descrita arriba.
