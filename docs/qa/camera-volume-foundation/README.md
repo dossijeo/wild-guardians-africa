@@ -2,6 +2,8 @@
 
 This is the first foundation for the independent POST-JAM camera protection task. **It is not connected to the gameplay camera yet.** These results do not establish soft collision, visual exclusion distances or acceptance on real buildings/mobile devices.
 
+The initial evidence below describes commit `cff76ab`. A subsequent oriented-volume extension supports an optional finite `yaw` in radians, about the center of the supplied box. Bounds specify the unrotated world-coordinate box; positive yaw follows Three.js Y rotation. The spatial index stores conservative rotated X/Z bounds but tests contact against the oriented box, preserving empty corners and roof overflight. [Rotation test output](rotation-tests.txt) records 21 passing tests, including all 16 original cases and five new oriented/index cases. [Extension source hashes](rotation-source-hashes.json) identify that revision's inputs. Actual model-volume extraction and controller integration remain pending.
+
 ## Geometry and ownership
 
 `camera-volume-sweep.js` computes first contact of a swept sphere with a finite axis-aligned box. Rounded corners permit safe diagonal views that an inflated box would reject. The finite roof allows overflight. Initial overlap returns a deterministic nearest exit normal; moving the camera out of overlap remains controller work.

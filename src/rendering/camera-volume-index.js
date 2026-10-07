@@ -16,7 +16,16 @@ export class CameraVolumeIndex {
  }
  set(id,volume){
   if(volume.min.length!==3||volume.max.length!==3||volume.min.some((x,i)=>!Number.isFinite(x)||!Number.isFinite(volume.max[i])||x>volume.max[i]))throw Error('Invalid camera exclusion volume');
-  const box={id,min:volume.min.slice(),max:volume.max.slice()},keys=this.keys(this.range(box.min[0],box.min[2],box.max[0],box.max[2]));
+  if(volume.yaw!==undefined&&!Number.isFinite(volume.yaw))throw Error('Invalid camera exclusion rotation');
+  const box={id,min:volume.min.slice(),max:volume.max.slice()};
+  let minX=box.min[0],minZ=box.min[2],maxX=box.max[0],maxZ=box.max[2];
+  if(volume.yaw!==undefined){
+   box.yaw=volume.yaw;
+   const x=(minX+maxX)/2,z=(minZ+maxZ)/2,hx=(maxX-minX)/2,hz=(maxZ-minZ)/2,c=Math.abs(Math.cos(box.yaw)),s=Math.abs(Math.sin(box.yaw));
+   const extentX=c*hx+s*hz,extentZ=s*hx+c*hz;
+   minX=x-extentX;maxX=x+extentX;minZ=z-extentZ;maxZ=z+extentZ;
+  }
+  const keys=this.keys(this.range(minX,minZ,maxX,maxZ));
   this.delete(id);this.records.set(id,box);
   if(keys===null)this.large.add(box);
   else for(const key of keys){let bucket=this.cells.get(key);if(!bucket)this.cells.set(key,bucket=new Set());bucket.add(box);}

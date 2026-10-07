@@ -19,6 +19,17 @@ function contact(start,delta,t,box){
  return {id:box.id,fraction:t,point,normal};
 }
 export function sweepCameraVolume(start,end,box,radius=0){
+ if(box.yaw!==undefined){
+  if(!Number.isFinite(box.yaw))throw new Error('Invalid camera exclusion rotation');
+  const center=box.min.map((x,i)=>(x+box.max[i])/2),c=Math.cos(box.yaw),s=Math.sin(box.yaw);
+  // Three.js positive Y rotation maps local +X toward world -Z.
+  const local=p=>{const x=p[0]-center[0],z=p[2]-center[2];return [center[0]+c*x-s*z,p[1],center[2]+s*x+c*z];};
+  const hit=sweepCameraVolume(local(start),local(end),{id:box.id,min:box.min,max:box.max},radius);
+  if(!hit)return null;
+  const rotate=v=>[c*v[0]+s*v[2],v[1],-s*v[0]+c*v[2]];
+  const relative=rotate(hit.point.map((x,i)=>x-center[i]));
+  hit.point=relative.map((x,i)=>x+center[i]);hit.normal=rotate(hit.normal);return hit;
+ }
  if(!Number.isFinite(radius)||radius<0||axes.some(i=>!Number.isFinite(start[i])||!Number.isFinite(end[i])||!Number.isFinite(box.min[i])||!Number.isFinite(box.max[i])||box.min[i]>box.max[i]))throw new Error('Invalid camera exclusion sweep');
  const delta=end.map((x,i)=>x-start[i]);
  // Cheap conservative broad phase, followed by the rounded-box exact test.
