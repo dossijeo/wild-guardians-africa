@@ -5,7 +5,7 @@
   "source": "worker-actions.youngMale runtime web",
   "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
   "candidateSide": "FrontSide accessories; existing FrontSide body retained",
-  "maxSamples": 16,
+  "maxSamples": 1,
   "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
   "shadowsEnabled": true,
   "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
@@ -425,6 +425,38 @@
     "changed": []
   },
   "failed": true,
+  "missingTriangleProvenance": [
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "face": 84,
+      "backFacing": true,
+      "pixels": 53
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "face": 85,
+      "backFacing": true,
+      "pixels": 53
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "face": 82,
+      "backFacing": true,
+      "pixels": 22
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "face": 83,
+      "backFacing": true,
+      "pixels": 21
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "face": 86,
+      "backFacing": true,
+      "pixels": 13
+    }
+  ],
   "sourceTwin": false,
   "originalShadowDiagnostic": false,
   "frontShadow": false,

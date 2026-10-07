@@ -14,7 +14,7 @@ def encode(doc,binary):
     return struct.pack('<III',0x46546c67,2,28+len(text)+len(binary))+struct.pack('<II',len(text),0x4e4f534a)+text+struct.pack('<II',len(binary),0x004e4942)+binary
 
 selection=json.loads((ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-selection.json').read_text())
-parser=argparse.ArgumentParser();parser.add_argument('--training-profile',choices=['auto','256','1024'],default='auto');parser.add_argument('--local-spout-shell',action='store_true');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--training-profile',choices=['auto','256','1024'],default='auto');parser.add_argument('--local-spout-shell',action='store_true');parser.add_argument('--local-can-shell',action='store_true');args=parser.parse_args()
 high_resolution=ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-worker1024-selection.json'
 if args.training_profile=='1024' and not high_resolution.exists():raise FileNotFoundError(high_resolution)
 if args.training_profile!='256' and high_resolution.exists():
@@ -49,12 +49,21 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
             skipped.append(dict(name=name,reason='Already FrontSide in runtime source; retain geometry and default shadowSide',selectedFacesDiscarded=len(chosen)))
             continue
         shell=None
-        if args.local_spout_shell and name=='Prop_WateringCan_geometry_1':
+        if (args.local_spout_shell or args.local_can_shell) and name=='Prop_WateringCan_geometry_1':
             assert 'skin' not in node and not p.get('targets'),'Rigid-only local shell proposal'
             component=json.loads((ROOT/'docs/qa/frontside-model-pilot/watering-can-components.json').read_text())
             shell_faces=next(c['faces'] for c in component['components'] if c['containsMissing'])
+            if args.local_can_shell:shell_faces=[f for c in component['components'] for f in c['faces']]
             source_position=accessor(doc,bin_source,p['attributes']['POSITION']);source_normal=accessor(doc,bin_source,p['attributes']['NORMAL'])
+            # Preserve authored zero-area source faces in their original prefix,
+            # but never duplicate them into the physical inner wall or rim.
+            areas=np.linalg.norm(np.cross(source_position[indices[shell_faces,1]]-source_position[indices[shell_faces,0]],source_position[indices[shell_faces,2]]-source_position[indices[shell_faces,0]]),axis=1)*.5
+            excluded=[f for f,a in zip(shell_faces,areas) if a<=1e-12]
+            shell_faces=[f for f,a in zip(shell_faces,areas) if a>1e-12]
+            chosen.difference_update(excluded)
             shell=propose_shell(source_position,source_normal,indices,shell_faces)
+            shell['excludedOriginalDegenerateFaces']=excluded
+            shell['componentScope']='Can body and spout' if args.local_can_shell else 'Spout only'
             chosen.update(shell_faces)
             (ROOT/'docs/qa/frontside-model-pilot/local-spout-shell-proposal.json').write_text(json.dumps(shell,indent=2)+'\n')
         faces=np.asarray(sorted(chosen),dtype=np.int64);assert faces.max()<len(indices)

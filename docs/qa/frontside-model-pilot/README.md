@@ -333,3 +333,23 @@ guide face provenance, but is no longer independent for any subsequent repair.
 Named JSON and source/candidate/difference triptychs retain both results.
 EXT_disjoint_timer_query_webgl2 is available; no GPU timing has been run and
 quality gates still prevent promotion or an adaptation PR.
+
+Version2 missing-pixel provenance identifies authored can-body faces82–86,
+all back-facing (53+53+22+21+13pixels). The opt-in `--local-can-shell` proposal
+therefore adds a coherent body wall as well as the spout wall:692nondegenerate
+inner faces,96rim faces,0.05mm inward thickness. The28authored zero-area outer
+faces remain in the source prefix but are never duplicated. Whole-worker cost
+is+2.247%triangles and+2.242%active geometry; packed SHA256
+ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd.
+The prior spout-only candidate/diagnostic is retained separately.
+
+Blender exact positional analysis reports1480active shell faces,0non-manifold,
+0inconsistent winding and0degenerate faces. Twelve exact boundary edges lie
+at the authored rotational seam, whose z0/negative z endpoints differ around
+2e-17m; coordinates are recorded, and no quantized closure is substituted for
+this exact result. All non-adjacent overlap pairs map to intersections already
+present at the authored body/spout attachment; none lacks an authored source
+pair. That classification does not establish geometric or visual acceptance.
+Nodes/skin and all12clips/440056sampler bytes remain exact; Validator counts
+remain473inherited errors/124warnings. This new proposal has no visual screen
+yet, no shadowFront approval and no GPU benchmark.
