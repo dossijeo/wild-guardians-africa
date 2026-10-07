@@ -15,3 +15,9 @@ test('decorative fog uses the shared atmosphere palette through the day/night tr
  owner.update();assert.equal(fog.getHexString(),'b3b5c0');world.toon.uniforms.uNight.value=.5;owner.update();assert.ok(fog.equals(new THREE.Color('#b3b5c0').lerp(new THREE.Color('#3f4140'),.5)));
  world.toon.uniforms.uNight.value=1;owner.update();assert.equal(fog.getHexString(),'3f4140');owner.dispose();texture.dispose();
 });
+test('optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation',()=>{
+ const world={scene:new THREE.Scene(),camera:{position:new THREE.Vector3()},nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:{uniforms:{uNight:{value:0}}}},texture=new THREE.Texture();
+ for(const options of [{fogBaseMix:NaN},{fogBaseMix:.1},{fogBaseMix:1.1},{nightTint:[1,2,0]},{nightTint:[1,1]},{nightTint:null}])assert.throws(()=>createBiomeBackdrop(world,texture,options),/backdrop/);
+ assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
+ const owner=createBiomeBackdrop(world,texture,{fogBaseMix:1,nightTint:[.08,.10,.12]}),mesh=owner.root.children[0];assert.equal(owner.root.children.length,1);assert.equal(Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length,1);assert.match(mesh.material.fragmentShader,/\(1\.-vBackdropUv.y\)\*\(1\.-vBackdropUv.y\)/);owner.dispose();texture.dispose();
+});

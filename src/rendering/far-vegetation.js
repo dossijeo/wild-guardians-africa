@@ -33,7 +33,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
-  backdrop=makeBackdrop(world,backdropTexture,atmosphere);
+  backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint});
   owner={enabled:true,adapters,stats:{species:species.length,estimatedAtlasTextureBytes:species.length*2*1024*1024*4*4/3,estimatedBackdropTextureBytes:2048*512*4*4/3,errors:[]},update(dt){
    if(closed)return;world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.farVisualRange=this.enabled&&visualRange!==null?visualRange:previousVisual;world.farPreserveTerrain=this.enabled&&visualRange!==null?preserveTerrain:previousPreserve;world.farPropTransitionDistance=this.enabled&&visualRange!==null&&preserveTerrain?end+transitionMargin:previousTransition;world.farPropTransitionSlots=this.enabled&&visualRange!==null&&preserveTerrain?transitionSlots:previousSlots;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
    for(const adapter of adapters){adapter.enabled=this.enabled;adapter.update(dt);}
