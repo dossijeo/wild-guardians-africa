@@ -9,6 +9,7 @@ import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
 import {RaidEntryPreparer} from '../world/raid-entry-preparer.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
+import {updateSkinEnvelopeSphere} from './skin-envelope.js';
 import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 import {farmHomeFocus} from './farm-focus.js';
 import {createWateringEmitter} from './watering-emitter.js';
@@ -120,7 +121,7 @@ export class WorldScene {
     await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));
     [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
     this.warmedAnimals=new Set();
-    this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])));
+    this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
     this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
     await this.loadReady(this.warmAnimalModels(Object.keys(animalSources)));
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
@@ -322,7 +323,7 @@ export class WorldScene {
     // Initialize bones before a pointer raycast or an offscreen first render
     // can cache a sphere from the cloned source's stale world transforms.
     this.updateActor(entity,0,type);root.updateMatrixWorld(true);
-    model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.computeBoundingSphere();});
+    model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
   }
   wateringSource(id,time,effect){
     const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);
