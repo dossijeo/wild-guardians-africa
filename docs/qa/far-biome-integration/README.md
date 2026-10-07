@@ -334,3 +334,16 @@ After correctness recovery is demonstrated, the offline Gran Río skyline now pl
 Native river-raised-relief-day/night captures match the previous camera exactly and report errors/WebGL0. The skyline is higher but still reads as broad bands: five rounded ridges span too large an angle. This candidate is not final art acceptance. A subsequent offline composition uses16 irregular narrower crests with8px profile sampling and varying amplitude; same atlas size/cylinder/material, nine focused tests pass. Its native views are still pending.
 
 The river-crests-day/night native captures (43c9b9c) retain exactly the prior camera, biome, seed and atmosphere, with errors/WebGL/console0. Several visible crests/valleys replace the broad near-horizontal bands. The washed day tint and subdued night tint remain consistent with the foreground. This is basic composition acceptance for this view; angular/high-camera coverage and combined GPU cost are still pending. Texture size33,572 bytes, unchanged decoded dimensions/material recipe.
+
+### Gran Río combined ABBA (0d2efd1, main e06b76b integrated)
+
+Gran Río/media, Mapungubwe, seed712, paused daytime, camera[76.70247532024266,27.37682490650652,30.57367599590944], CSS1280×720/world1600×900. Exact gameplay terrain/picking25chunks is preserved. A is native representation; B is tree-only40–60m handoff, retained banks, distant impostors,30–300m soft atmosphere and current decorative crests. Each lot has45 warmup/120 measured frames.
+
+| Lot | A1 | B1 | B2 | A2 |
+|---|---:|---:|---:|---:|
+| GPU p50 ms |22.307552|20.243437|20.836301|22.013020|
+| Render CPU p50 ms |7.3|6.9|7.0|6.8|
+| Calls |55|49|49|55|
+| Triangles |467501|394866|394866|467501|
+
+All480 GPU samples resolve with no disjoint, discard, query overflow, foreign-query skip, allocation failure, pending sample or context loss. State is unchanged, document never hidden and nested/GL/console errors0. Both B medians are below both A medians; A drift is about1.3%, B difference about2.9%. This supports a local GPU-time reduction in this view, without asserting a universal FPS gain. CPU p50/cadence are mixed and do not demonstrate CPU savings. Previously active parent CPU campaigns/full-suite work continued; no other3D scene, new own CPU job or diagnostic wrapper ran during these lots. The native image/report are river-crests-media-abba.png/json. Allocation estimates remain separate from GPU timer evidence.
