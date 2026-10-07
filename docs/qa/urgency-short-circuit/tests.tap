@@ -1,0 +1,75 @@
+TAP version 13
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 1 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 383.0697
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 2 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 1.371
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 3 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.6121
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 4 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 1.3088
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 5 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.8945
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 6 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 6.2615
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 7 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 5.7905
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 8 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 13.2167
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 9 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 483.6563
+  ...
+# Subtest: urgent query stops only after strict matching-task threshold and remains live on the next query
+ok 10 - urgent query stops only after strict matching-task threshold and remains live on the next query
+  ---
+  duration_ms: 3.9612
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task
+ok 11 - new paid contract walks directly towards the first FIFO task
+  ---
+  duration_ms: 36.4311
+  ...
+# Subtest: new paid contract walks directly towards the first FIFO task after reload
+ok 12 - new paid contract walks directly towards the first FIFO task after reload
+  ---
+  duration_ms: 23.4201
+  ...
+# Subtest: raid survivors keep their deliberate return to the centre and do not become new contracts
+ok 13 - raid survivors keep their deliberate return to the centre and do not become new contracts
+  ---
+  duration_ms: 9.2991
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1665.6755
