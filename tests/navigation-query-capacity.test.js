@@ -14,12 +14,13 @@ test('native walk queries survive capacity pressure without losing true or false
   for(let dz=-8;dz<8;dz++)for(let dx=-8;dx<8;dx++){
     const args=[Math.round(c.x)+dx,Math.round(c.z)+dz,.28,null,true];
     const expected=raw(...args);assert.equal(nav.walkable(...args),expected);
-    results.push({args,expected});assert.equal(nav.walkCache.size,50000);
+    results.push({args,expected});
   }
   assert.ok(results.some(r=>r.expected)&&results.some(r=>!r.expected));
   const misses=calls;
   for(const {args,expected} of results)assert.equal(nav.walkable(...args),expected);
   assert.equal(calls,misses,'recent results are reused across capacity insertions');
+  assert.equal(nav.walkCache.size,50000);
   assert.equal(nav.walkCache.has('pressure-0'),false);
   assert.equal(nav.walkCache.has('pressure-49999'),true);
   nav.setState(s);assert.equal(nav.walkCache.size,0);

@@ -47,3 +47,17 @@ also check true/false reuse, directed/radius/ignore/worker separation, fractiona
 queries and refilling after `setState`. Build passes (266 modules; existing large
 bundle warning). Web package passes: 695 files, 398,302,278 bytes, 859 relative
 links and 20 runtime GLBs. No mobile or rendered-farm performance claim follows.
+
+## Regression sensitivity
+
+`node tools/check_query_cache_capacity_regression.mjs` reconstructs just the
+two old capacity policies and runs the native capacity tests against them.
+Expected outcome: exit 1, two failed tests, fractional query test still passing.
+The walk test first checks reuse before its final size assertion: the old policy
+recomputes one recently inserted answer (257 misses versus 256), independently
+of tightening the old 50,001-entry allowance. The segment policy clears the
+cache and retains only five entries instead of 100,000. Both regressions pass
+against production, with the fractional test also passing (3/3).
+Raw positive/negative TAP logs are preserved as gzip, with hashes in
+`regression-logs.json`; `regression.json` binds the generated reference/tests.
+These intentional failures are diagnostic evidence, not failures in main.
