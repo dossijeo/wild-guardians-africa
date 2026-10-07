@@ -14,12 +14,14 @@ for(const spec of B.walls)test(`${spec.id}: a long visible native stroke stops a
  Game.buildWallChain(s,'release',spec.id,points,nav,{maxPieces:draft.maxPieces});assert.equal(s.structures.filter(p=>p.kind==='wall').length,3);assert.equal(numberOf(s.ledger.balance),30+spec.cost-1);assert.equal(Game.buildWallChain(s,'release',spec.id,points,nav,{maxPieces:3}),false);
 });
 test('real pointer release builds immediately without a confirmation step; pointer cancellation never spends',()=>{
+ for(const lastMove of [100,40,null]){
  const s=fixture(110),handlers=new Map(),canvas={addEventListener:(n,fn)=>handlers.set(n,fn),removeEventListener(){},setPointerCapture(){},releasePointerCapture(){}};let visible=[],rays=0;
  const drawing=new WallDrawing(canvas,{screenSpace:true,point:e=>{rays++;return {x:e.clientX,z:e.clientY};},tap:()=>{},preview:p=>visible=p,stroke:p=>Game.buildWallChain(s,'release','adobe',p,nav,{maxPieces:Game.wallCapacity(s,'adobe')})});drawing.setEnabled(true);
  const event=(name,x)=>handlers.get(name)({pointerId:1,button:0,clientX:x,clientY:0,preventDefault(){},stopImmediatePropagation(){}});
- event('pointerdown',0);event('pointermove',100);assert.equal(visible.at(-1)[0],100);assert.equal(rays,0);assert.equal(numberOf(s.ledger.balance),110);assert.equal(s.structures.length,1);
- event('pointerup',100);assert.equal(rays,2);assert.equal(s.structures.length,3);assert.equal(numberOf(s.ledger.balance),40);assert.deepEqual(visible,[]);
+ event('pointerdown',0);if(lastMove!==null)event('pointermove',lastMove);assert.equal(visible.at(-1)[0],lastMove??0);assert.equal(rays,0);assert.equal(numberOf(s.ledger.balance),110);assert.equal(s.structures.length,1);
+ event('pointerup',100);assert.equal(rays,lastMove===40?3:2);assert.equal(s.structures.length,3);assert.equal(numberOf(s.ledger.balance),40);assert.deepEqual(visible,[]);
  event('pointerdown',20);event('pointermove',40);event('pointercancel',40);assert.equal(s.structures.length,3);assert.equal(numberOf(s.ledger.balance),40);drawing.dispose();
+ }
 });
 test('existing modules do not spend the new stroke budget twice',()=>{
  const s=fixture(1000);Game.buildWallChain(s,'old','zarzas',[[0,0],[4,0]],nav,{smooth:false,snap:false});s.ledger.balance=rational(80);
