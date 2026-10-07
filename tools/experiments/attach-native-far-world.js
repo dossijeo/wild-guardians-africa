@@ -4,7 +4,7 @@ import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
-import {prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision} from './prepare-native-far-gpu.js';
+import {prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
 import {skyNight} from '../../src/rendering/sky.js';
 import {Fog,Frustum,Matrix4,Color} from 'three';
@@ -44,7 +44,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   catch(error){if(!closed){lastRequested=null;errors.push(String(error));}}
  }
  function schedulePreparation(){
-  if(closed||busy||!coverage.counts.size||[...coverage.counts.keys()].every(id=>prepared.has(id)))return;
+  if(closed||busy||nativeFarGpuContextLost(world.renderer)||!coverage.counts.size||[...coverage.counts.keys()].every(id=>prepared.has(id)))return;
   busy=true;stats.preparationAttempts++;
   // Native merged batches are updated later in the synchronous render call.
   Promise.resolve().then(async()=>{

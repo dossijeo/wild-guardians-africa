@@ -3,7 +3,7 @@ import {NativePreparedTreeCoverage} from '../tools/experiments/native-prepared-t
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Texture,Scene,Group,Vector4,Mesh} from 'three';
-import {prepareNativeFarGpu,releaseNativeFarGpuCache} from '../tools/experiments/prepare-native-far-gpu.js';
+import {prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -86,7 +86,7 @@ test('shared image source changes require a new upload budget even without textu
 
 test('closing a renderer owner releases texture and context listeners, including after restoration',async()=>{
  const f=fixture(),listeners=new Map();f.renderer.domElement={addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:(type,fn)=>{assert.equal(listeners.get(type),fn);listeners.delete(type);}};const texture=new Texture();
- await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(listeners.size,1);assert.equal(texture._listeners.dispose.length,1);
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(listeners.size,2);assert.equal(texture._listeners.dispose.length,1);
  listeners.get('webglcontextrestored')();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(texture._listeners.dispose.length,1);
  releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);assert.equal(texture._listeners.dispose.length,0);releaseNativeFarGpuCache(f.renderer);
 });
@@ -110,4 +110,12 @@ test('context restoration invalidates a completed native tree proof before any h
  const f=fixture(),texture=new Texture();f.renderer.domElement=new EventTarget();const world={renderer:f.renderer,renderOrigin:{revision:0},assetGroups:{colors:new Map()}},native={revision:1,batches:new Map([[{}, {ids:new Set(['tree'])}]])},proof=new NativePreparedTreeCoverage(native,()=>nativeFarRenderSignature(world,0));
  await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});proof.complete(proof.capture());assert.equal(proof.has('tree'),true);const old=proof.capture();f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));proof.update();assert.equal(proof.has('tree'),false);assert.equal(proof.complete(old),0);
  const current=proof.capture();await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(proof.complete(current),1);assert.equal(proof.has('tree'),true);releaseNativeFarGpuCache(f.renderer);
+});
+
+test('loss invalidates an in-flight fence generation and clears warm texture ownership before restoration',async()=>{
+ const f=fixture(),texture=new Texture();f.renderer.domElement=new EventTarget();let lost=false;f.renderer.getContext().isContextLost=()=>lost;
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{lost=true;f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));}});
+ await assert.rejects(pending,/cancelled/);assert.equal(nativeFarGpuContextLost(f.renderer),true);assert.equal(nativeFarGpuRevision(f.renderer),1);assert.equal(f.calls.at(-1),'delete');f.restored();
+ lost=false;f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));assert.equal(nativeFarGpuContextLost(f.renderer),false);assert.equal(nativeFarGpuRevision(f.renderer),2);
+ const recovered=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(recovered.cachedTextures,0);assert.equal(recovered.textureUploads.length,1);releaseNativeFarGpuCache(f.renderer);
 });

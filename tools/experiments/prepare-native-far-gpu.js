@@ -4,11 +4,14 @@ import {Vector4} from 'three';
 const textureCaches=new WeakMap();
 function textureCache(renderer){
  let entry=textureCaches.get(renderer);if(entry)return entry;
- entry={textures:new WeakMap(),handlers:new Map(),epoch:0,restore:null};entry.restore=()=>{entry.textures=new WeakMap();entry.epoch++;};
- renderer.domElement?.addEventListener?.('webglcontextrestored',entry.restore);textureCaches.set(renderer,entry);return entry;
+ entry={textures:new WeakMap(),handlers:new Map(),epoch:0,contextLost:false,restore:null,lost:null};
+ entry.lost=()=>{entry.contextLost=true;entry.textures=new WeakMap();entry.epoch++;};
+ entry.restore=()=>{entry.contextLost=false;entry.textures=new WeakMap();entry.epoch++;};
+ renderer.domElement?.addEventListener?.('webglcontextlost',entry.lost);renderer.domElement?.addEventListener?.('webglcontextrestored',entry.restore);textureCaches.set(renderer,entry);return entry;
 }
+export function nativeFarGpuContextLost(renderer){return textureCaches.get(renderer)?.contextLost??false;}
 export function nativeFarGpuRevision(renderer){return textureCaches.get(renderer)?.epoch??0;}
-export function releaseNativeFarGpuCache(renderer){const entry=textureCaches.get(renderer);if(!entry)return;renderer.domElement?.removeEventListener?.('webglcontextrestored',entry.restore);for(const [texture,handler] of entry.handlers)texture.removeEventListener?.('dispose',handler);entry.handlers.clear();entry.textures=new WeakMap();textureCaches.delete(renderer);}
+export function releaseNativeFarGpuCache(renderer){const entry=textureCaches.get(renderer);if(!entry)return;renderer.domElement?.removeEventListener?.('webglcontextlost',entry.lost);renderer.domElement?.removeEventListener?.('webglcontextrestored',entry.restore);for(const [texture,handler] of entry.handlers)texture.removeEventListener?.('dispose',handler);entry.handlers.clear();entry.textures=new WeakMap();textureCaches.delete(renderer);}
 function rememberTexture(entry,texture){
  if(!entry.handlers.has(texture)){const disposed=()=>{entry.textures.delete(texture);entry.handlers.delete(texture);texture.removeEventListener?.('dispose',disposed);};entry.handlers.set(texture,disposed);texture.addEventListener?.('dispose',disposed);}
  entry.textures.set(texture,{version:texture.version??0,sourceVersion:texture.source?.version??0});

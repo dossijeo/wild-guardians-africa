@@ -292,3 +292,9 @@ Slot1 night orbit:774/818 transition frames fully prepared; slot2 dusk lateral:7
 ### Final selected species route (c4e851b)
 
 Canyon slot0, low quality/night orbit, completes1068/1124 fully prepared transition frames, zero selected descents and errors0, unchanged state. Its 0 nearby declines are all outside the physical frustum, with residency/orders intact. Combined with earlier Canyon1, all22 species slots in the six biomes now have a complete selected-tree motion route. This is not an exhaustive phase/quality/culture Cartesian matrix, final horizon-art approval, native context-loss acceptance, or universal FPS evidence.
+
+The current native context-loss fixture adds explicit `WEBGL_lose_context` controls and suspends rendering only during actual context loss, preserving simulation state. It records loss/restore events separately; it neither clears accumulated error diagnostics nor bypasses GPU readiness. Normal game files are unchanged. Native recovery acceptance will be reported with before/after resource proofs and a completed post-restore path.
+
+### Native context recovery (4464c3f + QA controls)
+
+`savanna-native-context-recovery.json/png` records actual `WEBGL_lose_context` loss and restoration, unchanged state and errors/WebGL0. All four species repeat native preparations and texture uploads; the completed subsequent approach is272/272 fully prepared transition frames, zero descents. This trial loses context after initial preparation; it does not itself demonstrate cancellation during a live fence. The follow-up revision invalidates texture/native-proof epochs on loss as well as restoration, avoids scheduling new preparations while the context is lost, and releases both owned event listeners on close. A unit test injects loss during a pending fence, proves cleanup/cancellation and then a new upload after restoration;34 targeted tests pass. Native evidence must be repeated on this follow-up revision.
