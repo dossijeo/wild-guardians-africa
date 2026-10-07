@@ -7,6 +7,7 @@ import {simulateIntensiveFarm,auditIntensiveFarm} from './check_intensive_farm.m
 import {summarizeIntensiveFarm} from './summarize_intensive_farm.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
+import {createIntensiveHeartbeat} from './intensive-heartbeat.mjs';
 
 export function runIntensiveMatrix({days=100,seed=712,profile='olderFemale',output,onCase=()=>{}}={}) {
   if(!Number.isSafeInteger(days)||days<1||days>100)throw Error('Days must be an integer from 1 to 100');
@@ -18,8 +19,9 @@ export function runIntensiveMatrix({days=100,seed=712,profile='olderFemale',outp
   save();
   for(const biome of BIOMES)for(const culture of CULTURES) {
     const row={biome,culture,status:'running'};matrix.cases.push(row);save();
+    const heartbeat=createIntensiveHeartbeat();
     try {
-      const result=simulateIntensiveFarm({days,seed,biome,culture,profile,mixed:true});
+      const result=simulateIntensiveFarm({days,seed,biome,culture,profile,mixed:true,onTick:state=>{const live=heartbeat(state);if(live){row.live=live;save();}},onDay:day=>{row.lastDay=day;save();}});
       const {state,nav,...report}=result,key=biome+'-'+culture;
       // Preserve even a defeated result before asserting responsible survival.
       writeFileSync(new URL(key+'-state.json',output),serialize(state));

@@ -1,0 +1,25 @@
+TAP version 13
+# Subtest: heartbeat emits at wall-time boundaries without polling state between them or catching up in bursts
+ok 1 - heartbeat emits at wall-time boundaries without polling state between them or catching up in bursts
+  ---
+  duration_ms: 6.3088
+  ...
+# Subtest: heartbeat preserves the full input and previously emitted snapshots after live gameplay changes
+ok 2 - heartbeat preserves the full input and previously emitted snapshots after live gameplay changes
+  ---
+  duration_ms: 2.8311
+  ...
+# Subtest: heartbeat bounds animal detail while retaining complete population and status counts
+ok 3 - heartbeat bounds animal detail while retaining complete population and status counts
+  ---
+  duration_ms: 1.5191
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 253.1492
