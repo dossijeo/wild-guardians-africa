@@ -1,0 +1,52 @@
+{
+  "origin": "http://127.0.0.1:5191",
+  "checks": [
+    {
+      "name": "Existing localStorage save loads unchanged",
+      "passed": true
+    },
+    {
+      "name": "Existing save appears once in continue list",
+      "passed": true
+    },
+    {
+      "name": "Migration commits before removing legacy copies",
+      "passed": true
+    },
+    {
+      "name": "Damaged primary recovers pre-migration day one backup",
+      "passed": true
+    },
+    {
+      "name": "Wrong-slot primary is rejected and older backup retained",
+      "passed": true
+    },
+    {
+      "name": "Queued autosaves capture invocation state and commit in order",
+      "passed": true
+    },
+    {
+      "name": "Queued save backup is first captured day",
+      "passed": true
+    },
+    {
+      "name": "Aborted native transaction reports failure without success notice",
+      "passed": true
+    },
+    {
+      "name": "Aborted transaction retains last committed day",
+      "passed": true
+    },
+    {
+      "name": "Recovery and failed writes leave another slot unchanged",
+      "passed": true
+    },
+    {
+      "name": "Deleting a slot removes primary and backup",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "status": "passed",
+  "temporarySlotsRemaining": 0
+}

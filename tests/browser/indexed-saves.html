@@ -48,6 +48,13 @@ button.onclick=async()=>{
   const saved=await saveGame(queued,repo,{confirm:true,onError:error=>errors.push(error)});repo.open=open;
   check('Aborted native transaction reports failure without success notice',saved===false&&errors.length===1&&!queued.messages.some(row=>row.text==='Partida guardada.'));
   check('Aborted transaction retains last committed day',(await repo.load(queued.slotId)).day===3);
+  const external=serialize(queued);
+  await edit(queued.slotId,record=>({...record,primary:external}));
+  queued.day=5;await repo.save(queued);
+  await edit(queued.slotId,record=>({...record,primary:'corrupt'}));
+  check('Externally written valid primary becomes the next recovery copy',(await repo.load(queued.slotId)).day===4);
+  queued.time=-1;let invalid=false;try{await repo.save(queued);}catch{invalid=true;}queued.time=0;
+  check('Cached saves still reject an invalid new gameplay state without replacing recovery',invalid&&(await repo.load(queued.slotId)).day===4);
   check('Recovery and failed writes leave another slot unchanged',serialize(await repo.load(other.slotId))===otherText);
   await repo.delete(queued.slotId);let deleted=false;try{await repo.load(queued.slotId);}catch{deleted=true;}
   check('Deleting a slot removes primary and backup',deleted&&!(await repo.list()).some(row=>row.slotId===queued.slotId));

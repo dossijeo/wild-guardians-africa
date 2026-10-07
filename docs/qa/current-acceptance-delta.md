@@ -2,7 +2,7 @@
 
 ## Evidencia incremental del 7 de octubre
 
-- [Validación repetida de guardados](save-primary-cache/README.md): respaldo idéntico y 19 pruebas dirigidas; una única copia durable evita volver a analizar la primaria si sus bytes coinciden exactamente. Las muestras grandes tienen deriva CPU y la caché retiene una cadena adicional. No acredita porcentaje estable, latencia IndexedDB nativa, FPS o móvil.
+- [Validación repetida de guardados](save-primary-cache/README.md): respaldo idéntico, 19 pruebas dirigidas y 13 controles de recuperación con IndexedDB real en localhost. Una única copia durable evita volver a analizar la primaria si sus bytes coinciden exactamente. Las muestras grandes tienen deriva CPU y la caché retiene una cadena adicional. No acredita porcentaje estable, latencia de fincas grandes, FPS o móvil.
 
 - [Reservas de animales cerradas](animal-preload-disposed/README.md): llamadas tardías a warm/take no inician nuevas cargas; 39 pruebas, build y paquete correctos. No acredita ausencia de tirones en móvil ni recuperación de contexto WebGL.
 
