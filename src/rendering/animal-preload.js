@@ -1,6 +1,7 @@
 import {AnimationMixer} from 'three';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from './animal-actions.js';
+import {prepareSkinEnvelope,updateSkinEnvelopeSphere} from './skin-envelope.js';
 
 export function releaseActorRig(rig){
   if(!rig)return;rig.mixer.stopAllAction();rig.mixer.uncacheRoot(rig.model);
@@ -12,7 +13,7 @@ export function releaseActorRig(rig){
 // and mixer. Keep a baseline spare per species and reserves bounded by the
 // upcoming group. New reserves are prepared one per frame, never in a burst.
 export class AnimalPreload {
-  constructor(assets,descriptors){this.assets=assets;this.descriptors=descriptors;this.entries=new Map();this.disposed=false;this.reserveGeneration=0;}
+  constructor(assets,descriptors,{skinEnvelope=false}={}){this.assets=assets;this.descriptors=descriptors;this.skinEnvelope=skinEnvelope;this.entries=new Map();this.disposed=false;this.reserveGeneration=0;}
   async warm(species){
     if(this.disposed)return null;
     if(!this.entries.has(species)){
@@ -36,7 +37,12 @@ export class AnimalPreload {
     for(const clip of rig.clips)rig.mixer.clipAction(clip);
     applyAnimalPose(rig,{species,status:'entering',motionPhase:0},0);
     model.updateMatrixWorld(true);
-    model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.computeBoundingSphere();});
+    if(this.skinEnvelope)rig.skinEnvelopes=new Map();
+    model.traverse(mesh=>{if(mesh.isSkinnedMesh){
+      const envelope=this.skinEnvelope?prepareSkinEnvelope(mesh):null;
+      if(envelope)rig.skinEnvelopes.set(mesh,envelope);
+      if(!updateSkinEnvelopeSphere(mesh,envelope))mesh.computeBoundingSphere();
+    }});
     return rig;
   }
   async take(species){

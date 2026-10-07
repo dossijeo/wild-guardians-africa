@@ -291,3 +291,5 @@ Estado: integrado en main mediante [PR #5](https://github.com/dossijeo/wild-guar
 
 
 [Candidato de posiciones de lote de cultivos descartado](qa/crop-origin-update-candidate/README.md): evita sets de 72 meshes con origen estable, pero ocho lotes CPU A/B/B/A de 128 y 1200 plantas muestran beneficio mixto y p95 mayor durante crecimiento heterogéneo grande. Buffers iguales y ocho pruebas de subida correctas; producción sin cambios. Pendiente optimización del trabajo activo con evidencia integrada, GPU y móvil.
+
+[Reembolso de muralla — SFX 114](qa/wall-refund-audio/README.md): ingreso sonoro únicamente tras una devolución positiva confirmada; conserva demolición, sin duplicar ventas ni modificar el saldo. 31 pruebas dirigidas, build y verificación de los 126 Opus. Catálogo actualizado: 95 asignados/31 reservados; escucha y aceptación móvil pendientes.

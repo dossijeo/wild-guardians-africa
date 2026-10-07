@@ -3,6 +3,7 @@ import {pathToFileURL} from 'node:url';
 import {simulateIntensiveFarm,auditIntensiveFarm} from './check_intensive_farm.mjs';
 import {summarizeIntensiveFarm} from './summarize_intensive_farm.mjs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
+import {createIntensiveHeartbeat} from './intensive-heartbeat.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {BIOMES,CULTURES} from '../src/simulation/game.js';
 
@@ -14,8 +15,9 @@ const provenance=intensiveRunProvenance(process.argv.slice(2)),row={biome,cultur
 const save=()=>writeFileSync(new URL(key+'-status.json',output),JSON.stringify(row,null,2)+'\n');
 save();
 let lastState=null;
+const heartbeat=createIntensiveHeartbeat();
 try {
-  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onTick:state=>{lastState=state;},onDay:day=>{row.lastDay=day;save();}});
+  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onTick:state=>{lastState=state;const live=heartbeat(state);if(live){row.live=live;save();}},onDay:day=>{row.lastDay=day;save();}});
   const {state,nav,...report}=result;
   writeFileSync(new URL(key+'-state.json',output),serialize(state));
   writeFileSync(new URL(key+'-report.json',output),JSON.stringify({...report,provenance},null,2)+'\n');

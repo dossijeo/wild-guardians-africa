@@ -64,6 +64,9 @@ export class GameScreenWakeLock {
       this.sentinel=sentinel;sentinel.addEventListener('release',()=>{
         if(this.sentinel!==sentinel)return;
         this.sentinel=null;
+        // The grant is complete, even if its promise cleanup is still queued.
+        // Do not let that stale pending marker suppress immediate recovery.
+        if(this.pending===pending)this.pending=null;
         // A released sentinel cannot be reused. Recover without requiring the
         // player to touch the screen while watching an incursion or a tutorial.
         queueMicrotask(()=>this.request());

@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {MOVEMENT_SOUND_IDS} from '../src/audio/movement-audio.js';
-import {AudioSystem,eventSound,eventExtraSound,eventAlertSound,SFX_LIMITS} from '../src/audio/audio.js';
+import {AudioSystem,eventSound,eventExtraSound,eventAlertSound,eventRefundSound,SFX_LIMITS} from '../src/audio/audio.js';
 import {simulateOpening} from '../tools/check_opening.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));
@@ -36,6 +36,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   assert.equal(route.filename,item.filename);assert.equal(route.number,item.number);assert.ok(route.planned_trigger);
   const events=[...Object.keys(eventSound).filter(e=>eventSound[e]===item.id),...Object.keys(eventExtraSound).filter(e=>eventExtraSound[e]===item.id)];
   if(events.length){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[...events,...(FARM_CONTACT_IDS.includes(item.id)?['native-farm-contact']:[]),...(UNLOCK_SOUND_IDS.includes(item.id)?['native-magic-unlock']:[])]);assert.equal(item.loop,false);}
+  else if(Object.values(eventRefundSound).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['WallRemoved:positive-refund']);assert.equal(item.loop,false);}
   else if(Object.values(eventAlertSound).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,Object.keys(eventAlertSound).filter(type=>eventAlertSound[type]===item.id).map(type=>type+'-grouped-ui-warning'));assert.equal(item.loop,false);}
   else if(POWER_READY_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-magic-cooldown-ready']);assert.equal(item.loop,false);}
   else if(item.id==='game_enemy_detected'){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-raid-farm-arrival']);assert.equal(item.loop,false);}
