@@ -1,0 +1,118 @@
+{
+  "date": "2026-10-07T22:03:23.934505+00:00",
+  "captureCommit": "da824a1e",
+  "sourceSha256": {
+    "tests/browser/hq-mountain-horizon.html": "f0784429fa45a7e5d460c8c27e580548be51dc53a4d2d57132cb11967b9f31bd",
+    "tests/browser/mountain-lod-diagnostic.js": "39670e93aa42c1136470704b0c71ab894657d44b37647e6e1141dc3507bcd8b6",
+    "src/rendering/mountain-arcs.js": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+    "src/rendering/mountain-arc-composition.js": "c7d1d9c5bc9a743a08cb1141d8c55ba552c960fb1a76b5252b69167ade16365d",
+    "src/rendering/biome-backdrop.js": "bc0a9bd802b9425291ae5280d94ab81801ba0d3ff19f5b724b09ec3641c53016"
+  },
+  "atlases": {
+    "desert": {
+      "bytes": 839410,
+      "sha256": "cf78ca8f99dafa06eadd83139d560da598deae8a21426d2f7da61bfb03c0ccdb",
+      "sourceLayoutSha256": "6d8ca54cae037be597843a6ac498ebcbd145579afd597c3fd6453ce0500694be"
+    },
+    "canyons": {
+      "bytes": 692894,
+      "sha256": "e0c5daa5693fcd2358d639a3e12fd6af3daafcf8a339b8665417b719fc7cdd4e",
+      "sourceLayoutSha256": "94ce9fea813ef14193d807fdc36dd52fe6ecc1b9cdf5288cd08aa0a3c2f6fa5a"
+    }
+  },
+  "files": {
+    "desert-four-day.json": {
+      "rawSha256": "e37a97e5189dea27c02788fdd2b4d22e2f91e4739321c7313b5fff4911437208",
+      "gzipSha256": "60e8ff19317e6fe7f625603e0a58f75bbebf1ae03992e9252c7a3852e916ee04",
+      "poses": 73
+    },
+    "desert-four-night.json": {
+      "rawSha256": "c389d50fd3c750ef29331fb3607665ce8c4a5948de6d2e0dc5c5b2ed910f11fb",
+      "gzipSha256": "ecc52e41fa46d87d8c5ccaf63518006ef2fdc2b1386f80b26d2f80174b5910c5",
+      "poses": 73
+    },
+    "desert-four-day-0.png": {
+      "bytes": 42377,
+      "sha256": "4103c163309bcb6cdc41f9b7379f92452a71ba4622254b9fe971dacfc888fe4a"
+    },
+    "desert-four-day-185.png": {
+      "bytes": 48146,
+      "sha256": "0a89a73828c41ca0bfdb113a26a86be657801f9dbff09cc2eb7410f4da25f2c0"
+    },
+    "desert-four-day-275.png": {
+      "bytes": 40256,
+      "sha256": "ed8a92e83f1f78f495344bc060eca4ce6c749d7dfa8a09234096021b9271c1ad"
+    },
+    "desert-four-day-95.png": {
+      "bytes": 38345,
+      "sha256": "54ba1e4288b399a2b2955dd5df30f9e6446537d3a05b1e0b89985c613cf022aa"
+    },
+    "desert-four-night-0.png": {
+      "bytes": 32588,
+      "sha256": "71186143f033502cd8ce09fb22af947540788ee99d76f73037d88aa6896bf62b"
+    },
+    "desert-four-night-185.png": {
+      "bytes": 40301,
+      "sha256": "12653447fd6ab34865a665c8c9d0bd9decda8630bdd57cb89983fcbd7119183a"
+    },
+    "desert-four-night-275.png": {
+      "bytes": 33742,
+      "sha256": "0666c10dea56e592ab674c2043bd6a2a3de5f3f15e183c6d88f20092983fd047"
+    },
+    "desert-four-night-95.png": {
+      "bytes": 31318,
+      "sha256": "39c732739ff1aa55a37b7bebd19d633fda593ca022726b969acb4ad41e4116c0"
+    },
+    "canyons-four-day.json": {
+      "rawSha256": "74bd41aef4801452d714b86753b2515cfa42367cb85294d69f9953f263dca160",
+      "gzipSha256": "212b3dab7014941c9838999994d7d6a5b1260529c6b429670de3166feb3d8208",
+      "poses": 73
+    },
+    "canyons-four-night.json": {
+      "rawSha256": "11792cd18a35886a850b0b2e4fd960c688549e1a9d489be8aac442804c567565",
+      "gzipSha256": "e37a7cb2d088c19709496d8fbb6c14d37aa7686d10cd72e625363135ac9441a0",
+      "poses": 73
+    },
+    "canyons-four-day-0.png": {
+      "bytes": 40964,
+      "sha256": "39fe70fcbe520fad5e1e529354d384a3c7f8f62572c3ec8be1504bc923befccd"
+    },
+    "canyons-four-day-185.png": {
+      "bytes": 35904,
+      "sha256": "9b152ed0ad7fb2285b821f5b40e906ee0a76c784dd036bd773d21eb6d5d9651a"
+    },
+    "canyons-four-day-275.png": {
+      "bytes": 24157,
+      "sha256": "c5f9d256c79fd3070de4aa68b1a7d9e9aca44cae34a7d0329c0ae7765ccf6a32"
+    },
+    "canyons-four-day-95.png": {
+      "bytes": 26709,
+      "sha256": "c76a9ed18865e654c6845cd1a84dd29c5d81fd3fdc4c050936a7f390f597421a"
+    },
+    "canyons-four-night-0.png": {
+      "bytes": 30903,
+      "sha256": "1efdff41cd647532d942962209304f62337310f1dfb1a3d3bf4270bb870c7fbb"
+    },
+    "canyons-four-night-185.png": {
+      "bytes": 27518,
+      "sha256": "61b90a9833786e21acf4241dbc992a79e9395fc51827f46ecb4da37a648a5974"
+    },
+    "canyons-four-night-275.png": {
+      "bytes": 20351,
+      "sha256": "7f777d2daa741e8027e7c586cf0c713bb836108083d66bbf6e68d591ffda51c1"
+    },
+    "canyons-four-night-95.png": {
+      "bytes": 22410,
+      "sha256": "d11f63724f6303ac4b4625e4847e180821b357050f30fc66392fa6cf9d25ed5e"
+    },
+    "canyons-move-day.json": {
+      "rawSha256": "187e382e6d1f95dc9438c1da153b4cb69160f933c1517ee49f66aa43ceea7042",
+      "scope": "single static displacement snapshot; not unchanged-state rotation receipt"
+    },
+    "canyons-move-day.png": {
+      "bytes": 42720,
+      "sha256": "d1feea24663dbf87a4d0668fe88eee116c9bd2684190820c9bfc1b6455110087"
+    }
+  },
+  "poses": 292
+}
