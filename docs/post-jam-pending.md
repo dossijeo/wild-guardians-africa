@@ -1,5 +1,11 @@
 # Tareas pendientes posteriores a la Jam
 
+[Piloto de montañas HQ con arcos](qa/hq-mountain-arc-pilot/README.md):
+Sabana conserva proporciones y elimina simetría por espejo. La mezcla existente
+de bruma en la base mejora el contacto; bajar 30 m recorta laderas y se descarta.
+Dos giros nativos sin errores, vistas diurnas/nocturnas y negativos conservados.
+Continuar composición de cuatro siluetas antes de los demás biomas; no activado.
+
 [Campaña Sabana/Saheliana: cien noches archivadas](qa/intensive-sabana-saheliana-e461b550/README.md):
 segundo caso terminal de la matriz congelada, ocho especies, contratación y
 entregas físicas diarias; contabilidad y resumen completos reconciliados.
