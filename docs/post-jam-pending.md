@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas de horizonte HQ generadas](../assets-source/far-backdrops-hq/README.md):
+seis candidatos imagegen por bioma, fuentes originales y prompts conservados.
+Relieve natural sin facetas low poly. Antes de sustituir los fondos: corregir
+costura 360°, reencuadrar Desierto sin recortar picos, exportar WebP a presupuesto
+equivalente y comprobar alpha/mips, escala, bruma y luz día/noche en el juego.
+No están activados; generación de fuentes no equivale a aceptación integrada.
+
 [Filtro topológico para caras traseras](qa/mesh-sidedness-audit/README.md): 406 entradas de props/poblados, cinco controles sintéticos; cuatro candidatos pequeños y ningún prop válido en todos sus LODs según el filtro conservador. No se modifica `DoubleSide` ni se consideran rotos los modelos rechazados. Pendientes imagen/sombras por categoría y beneficio medido; priorizar dibujo/shader/profundidad antes que un cambio global no acreditado.
 
 [Índice de cultivos comprobado en finca renderizada](qa/active-crops-rendered/README.md): 800 muestras y queries, estado/eventos/rutas/envíos idénticos. CPU simulación mediana 2,1–2,2 a 0,95–1,0 ms; RAF permanece ~70 ms y render sigue dominante. Framebuffer 1600×900, distinto del ensayo anterior de audio; no comparar absolutos entre ellos. Próxima prioridad: coste de dibujo/materiales/pases y fincas actuales mayores, sin atribuir mejora general de FPS a este ahorro.
