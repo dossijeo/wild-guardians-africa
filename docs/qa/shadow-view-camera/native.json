@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "120 view poses/projections reuse the shadow",
+      "passed": true,
+      "draws": 0,
+      "hits": 120
+    },
+    {
+      "name": "orbit preserves packed depth",
+      "passed": true,
+      "differentBytes": 0,
+      "sha256": "73e6ae1712efc1b2be0490530526644ebdf4134b41f731ee0717cca207847e62"
+    },
+    {
+      "name": "forced redraw matches cached orbit depth",
+      "passed": true,
+      "differentBytes": 0
+    },
+    {
+      "name": "alpha-to-coverage redraws and changes depth",
+      "passed": true,
+      "differentBytes": 9497
+    },
+    {
+      "name": "alpha cutoff cache agrees with forced depth",
+      "passed": true
+    },
+    {
+      "name": "layer selection redraws and changes depth",
+      "passed": true,
+      "differentBytes": 6335
+    },
+    {
+      "name": "light movement redraws and changes depth",
+      "passed": true,
+      "differentBytes": 15297
+    },
+    {
+      "name": "moved light agrees with forced depth",
+      "passed": true
+    },
+    {
+      "name": "WebGL is clean",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "stats": {
+    "draws": 7,
+    "hits": 121,
+    "untracked": 0
+  },
+  "device": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+  },
+  "scope": "Real WebGL depth readback of isolated standard casters; not full-world GPU timing, custom destruction or physical mobile acceptance."
+}

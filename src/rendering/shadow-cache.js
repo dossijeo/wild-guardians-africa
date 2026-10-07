@@ -37,7 +37,7 @@ export function shadowSnapshot(renderer, light, scene, camera) {
   }
   function material(material) {
     put(material); put(material.visible); put(material.side); put(material.shadowSide);
-    put(material.alphaTest); put(material.alphaHash); put(material.opacity);
+    put(material.alphaTest); put(material.alphaToCoverage); put(material.alphaHash); put(material.opacity);
     put(material.displacementScale); put(material.displacementBias); put(material.wireframe);
     put(material.clipShadows); put(material.clipIntersection);
     input(material.clippingPlanes?.map(p => [p.normal.x, p.normal.y, p.normal.z, p.constant]) || []);
@@ -49,7 +49,9 @@ export function shadowSnapshot(renderer, light, scene, camera) {
     put(scene); put(shadow.map); put(shadow.map?.width); put(shadow.map?.height); put(shadow.map?.depthTexture); put(renderer.shadowMap.type);
     put(renderer.localClippingEnabled); input(renderer.clippingPlanes?.map(p => [p.normal.x, p.normal.y, p.normal.z, p.constant]) || []);
     input(shadow.mapSize); input(shadow.camera.projectionMatrix); input(shadow.camera.matrixWorldInverse);
-    put(camera.layers.mask); input(camera.projectionMatrix); input(camera.matrixWorldInverse);
+    // Three uses the view camera only for layer selection in the depth pass.
+    // Light-camera matrices and declared depth/callback inputs are tracked below.
+    put(camera.layers.mask);
     scene.traverseVisible(object => {
       if (!object.castShadow || !object.layers.test(camera.layers) || (!object.isMesh && !object.isLine && !object.isPoints)) return;
       if (!object.isMesh) throw new Error('Untracked line/point shadow');

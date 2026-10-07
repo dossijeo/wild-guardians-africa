@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>QA shadow cache view camera</title>
+<style>body{font:14px system-ui;background:#fff9ed}canvas{width:640px;height:360px}pre{white-space:pre-wrap}</style>
+<button id="run">Run native depth comparison</button><pre id="result">Ready. Isolated WebGL fixture; no game saves.</pre><canvas id="world"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {createNativeShadowUniforms,installNativeShadow} from '../../src/rendering/native-shadow.js';
+const output=document.querySelector('#result'),button=document.querySelector('#run'),errors=[];
+addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const originalError=console.error;console.error=(...args)=>{errors.push(args.join(' '));originalError(...args);};
+button.onclick=async()=>{
+ button.disabled=true;const checks=[];let renderer,release,light,scene,alpha;
+ try{
+  renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#world'),antialias:false});renderer.setSize(640,360,false);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  scene=new THREE.Scene();scene.background=new THREE.Color(0xd9e4ef);scene.add(new THREE.AmbientLight(0xffffff,.4));
+  light=new THREE.DirectionalLight(0xffffff,2);light.castShadow=true;light.position.set(3,8,5);light.shadow.mapSize.set(256,256);
+  Object.assign(light.shadow.camera,{left:-5,right:5,bottom:-5,top:5,near:.1,far:30});light.shadow.camera.updateProjectionMatrix();scene.add(light,light.target);
+  const camera=new THREE.PerspectiveCamera(50,640/360,.1,100);camera.position.set(7,6,9);camera.lookAt(0,0,0);
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(12,12),new THREE.MeshStandardMaterial({color:0xa8b778}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+  alpha=new THREE.DataTexture(new Uint8Array([64,64,64,255,192,192,192,255,64,64,64,255,192,192,192,255]),2,2);alpha.magFilter=alpha.minFilter=THREE.NearestFilter;alpha.needsUpdate=true;
+  const caster=new THREE.Mesh(new THREE.PlaneGeometry(3,3),new THREE.MeshStandardMaterial({color:0xa26140,side:THREE.DoubleSide,alphaMap:alpha}));caster.position.set(-1,1.2,0);caster.rotation.x=-Math.PI/2;caster.castShadow=true;scene.add(caster);
+  const box=new THREE.Mesh(new THREE.BoxGeometry(1,2,1),new THREE.MeshStandardMaterial({color:0x856746}));box.position.set(2,1,0);box.castShadow=true;box.layers.set(2);scene.add(box);
+  release=installNativeShadow(renderer,light,createNativeShadowUniforms());
+  const draw=()=>{scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);renderer.render(scene,camera);};
+  const read=()=>{const data=new Uint8Array(256*256*4);renderer.readRenderTargetPixels(light.shadow.map,0,0,256,256,data);return data;};
+  const compare=(a,b)=>{let differentBytes=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])differentBytes++;return differentBytes;};
+  const check=(name,passed,detail={})=>{checks.push({name,passed,...detail});if(!passed)throw Error(name+' failed');};
+  const hash=async data=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),v=>v.toString(16).padStart(2,'0')).join('');
+  draw();draw();const initial=read(),before={...release.cache.stats};
+  for(let i=0;i<120;i++){const angle=i/120*Math.PI*2;camera.position.set(Math.cos(angle)*10,4+i/120*3,Math.sin(angle)*10);camera.lookAt(0,0,0);camera.fov=35+i%30;camera.updateProjectionMatrix();draw();}
+  const orbit=read();check('120 view poses/projections reuse the shadow',release.cache.stats.draws===before.draws&&release.cache.stats.hits-before.hits===120,{draws:release.cache.stats.draws-before.draws,hits:release.cache.stats.hits-before.hits});
+  check('orbit preserves packed depth',compare(initial,orbit)===0,{differentBytes:compare(initial,orbit),sha256:await hash(orbit)});
+  renderer.shadowMap.needsUpdate=true;draw();const forced=read();check('forced redraw matches cached orbit depth',compare(orbit,forced)===0,{differentBytes:compare(orbit,forced)});
+  let draws=release.cache.stats.draws;caster.material.alphaToCoverage=true;draw();const cut=read();check('alpha-to-coverage redraws and changes depth',release.cache.stats.draws===draws+1&&compare(forced,cut)>0,{differentBytes:compare(forced,cut)});
+  renderer.shadowMap.needsUpdate=true;draw();check('alpha cutoff cache agrees with forced depth',compare(cut,read())===0);
+  draws=release.cache.stats.draws;camera.layers.enable(2);draw();const layers=read();check('layer selection redraws and changes depth',release.cache.stats.draws===draws+1&&compare(cut,layers)>0,{differentBytes:compare(cut,layers)});
+  draws=release.cache.stats.draws;light.position.x+=1;draw();const moved=read();check('light movement redraws and changes depth',release.cache.stats.draws===draws+1&&compare(layers,moved)>0,{differentBytes:compare(layers,moved)});
+  renderer.shadowMap.needsUpdate=true;draw();check('moved light agrees with forced depth',compare(moved,read())===0);
+  check('WebGL is clean',renderer.getContext().getError()===0&&errors.length===0,{errors:[...errors]});
+  output.textContent=JSON.stringify({passed:true,checks,stats:release.cache.stats,device:{userAgent:navigator.userAgent},scope:'Real WebGL depth readback of isolated standard casters; not full-world GPU timing, custom destruction or physical mobile acceptance.'},null,2);
+ }catch(e){output.textContent=JSON.stringify({passed:false,checks,error:String(e.stack??e),errors},null,2);}
+ finally{release?.();light?.shadow.map?.dispose();scene?.traverse(o=>{o.geometry?.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])m?.dispose();});alpha?.dispose();renderer?.dispose();button.disabled=false;}
+};
+</script></html>
