@@ -9,6 +9,7 @@ import {installNativeShadow} from '../../src/rendering/native-shadow.js';
 import {configureShadowCamera,updateShadowCamera} from '../../src/rendering/shadow-camera.js';
 import {indexBridgeGeometry,reverseIndexedState,patchReverseDerivativeFrame} from '../../tools/lib/frontside-indexed-bridge.mjs';
 import {regions,alphaDistanceGate,accumulateControlEnvelope,controlEnvelopeMetrics} from '../../tools/lib/frontside-visual-metrics.mjs';
+import {mapColorProvenance} from '../../tools/lib/frontside-color-provenance.mjs';
 const status=document.querySelector('#status'),size=1024,linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let renderer,cancelled=false;
 document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();renderer?.forceContextLoss();status.textContent+='\nGPU liberada';};
 document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await run();}catch(e){status.textContent=e.stack;renderer?.dispose();renderer?.forceContextLoss();}};
@@ -57,6 +58,8 @@ async function run(){
   const comparisons=[1,2,3].map(arm=>({arm,...colorMetrics(pixels[0],pixels[arm],envelope)}));report.samples.push({growth,clock,biome,night,elevation,azimuth,controls,comparisons,phase:rigs[0].batch.sample('maiz',growth*cropSpec('maiz').growth_seconds).phase});status.textContent=`${report.samples.length} vistas: indexed=${comparisons[0].passes}, sinXY=${comparisons[1].passes}, conXY=${comparisons[2].passes}`;
   if(!comparisons[0].passes||!comparisons[2].passes||report.samples.length>=limit)break campaign;await new Promise(requestAnimationFrame);
  }
- if(report.samples.length&&!report.invalidControl){const canvas=document.createElement('canvas');canvas.width=size*4;canvas.height=size;const ctx=canvas.getContext('2d');for(let arm=0;arm<4;arm++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(pixels[arm].subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);}report.capturePng=canvas.toDataURL('image/png');}
+ if(report.samples.length&&!report.invalidControl){const canvas=document.createElement('canvas');canvas.width=size*4;canvas.height=size;const ctx=canvas.getContext('2d');for(let arm=0;arm<4;arm++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(pixels[arm].subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);}report.capturePng=canvas.toDataURL('image/png');
+  if(options.has('mapRgb')){report.rgbFaceProvenance=[];for(const arm of [0,3]){rigs.forEach((r,i)=>r.group.visible=i===arm);report.rgbFaceProvenance.push({arm,faces:mapColorProvenance(renderer,rigs[arm].group,scene,camera,pixels[0],pixels[3],size)});}}
+ }
  await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
 }

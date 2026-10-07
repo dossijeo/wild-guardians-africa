@@ -562,3 +562,18 @@ the uncompensated arm is diagnostic, never an acceptance reference. Color
 shadows retain DoubleSide; Front shadow/depth/ground-mask gates remain pending.
 Resource counts include all geometry attributes/index buffers, report original
 and indexed controls separately, and cannot waive the declared triangle gate.
+
+First maize mature screen retained2views (wind1.75, Sabana/day, elevation32.5,
+azimuth26.25/116.25). Both indexed DoubleSide controls are byte-exact with
+original; all3source repeats in both views are exact. Both FrontSide variants
+have IoU1/zero alpha differences. Uncompensated tile MAE .083289/.050239
+rejects, while XY compensation lowers first tile to .005557 (screen PASS),
+but second tile stays .050239 (screen FAIL, largest RGB region2pixels).
+Global MAE1.84e-5 cannot override that local failure. The proposal remains
+rejected. A later face-ID diagnostic may localize the residual; it cannot
+turn a guided view into independent acceptance. Four-arm PNG/report archived.
+
+Conditions correction: root subsequently confirmed CPU campaigns27148/49032
+were live and advancing, not frozen; the earlier reservation message carried
+stale CPU state. No GPU timings were run, and no performance conclusion is
+drawn from this campaign. Tab29/context were closed before root's HQ window.
