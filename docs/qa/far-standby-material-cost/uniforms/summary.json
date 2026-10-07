@@ -1,0 +1,354 @@
+{
+  "source": "8fee8114",
+  "runtime": "aed394ff",
+  "modes": {
+    "basic": {
+      "sha256": "3535863ad2ff53afe83f072e78ac68243e8b95bce1494c275f1c95bd8da00200",
+      "instances": 15,
+      "passed": true,
+      "nativeShaderProofApplicable": false,
+      "draws": [
+        {
+          "slot": 0,
+          "count": 6,
+          "shader": {
+            "materialType": "MeshBasicMaterial",
+            "materialName": "QA-standby-basic",
+            "materialUuid": "e051a5ca-1fea-4003-b4b5-e9489a18c933",
+            "uniforms": {
+              "uFineNoise": {
+                "active": false,
+                "value": null
+              },
+              "uNight": {
+                "active": false,
+                "value": null
+              },
+              "uNativeEnvEnabled": {
+                "active": false,
+                "value": null
+              },
+              "uEnvEndpoints": {
+                "active": false,
+                "value": null
+              }
+            }
+          }
+        },
+        {
+          "slot": 1,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshBasicMaterial",
+            "materialName": "QA-standby-basic",
+            "materialUuid": "4122218c-4876-4363-a96f-f5f7a50eac70",
+            "uniforms": {
+              "uFineNoise": {
+                "active": false,
+                "value": null
+              },
+              "uNight": {
+                "active": false,
+                "value": null
+              },
+              "uNativeEnvEnabled": {
+                "active": false,
+                "value": null
+              },
+              "uEnvEndpoints": {
+                "active": false,
+                "value": null
+              }
+            }
+          }
+        },
+        {
+          "slot": 2,
+          "count": 7,
+          "shader": {
+            "materialType": "MeshBasicMaterial",
+            "materialName": "QA-standby-basic",
+            "materialUuid": "8ca8c2f1-1a5b-422c-bd1a-5de399c74334",
+            "uniforms": {
+              "uFineNoise": {
+                "active": false,
+                "value": null
+              },
+              "uNight": {
+                "active": false,
+                "value": null
+              },
+              "uNativeEnvEnabled": {
+                "active": false,
+                "value": null
+              },
+              "uEnvEndpoints": {
+                "active": false,
+                "value": null
+              }
+            }
+          }
+        },
+        {
+          "slot": 3,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshBasicMaterial",
+            "materialName": "QA-standby-basic",
+            "materialUuid": "1517ef97-4a7e-4007-8499-83e22d1ca834",
+            "uniforms": {
+              "uFineNoise": {
+                "active": false,
+                "value": null
+              },
+              "uNight": {
+                "active": false,
+                "value": null
+              },
+              "uNativeEnvEnabled": {
+                "active": false,
+                "value": null
+              },
+              "uEnvEndpoints": {
+                "active": false,
+                "value": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "no-noise": {
+      "sha256": "6347d95ddb6278332558263b981123b7e01a11160ceb5b3c1dfe9bdb0755c3b8",
+      "instances": 15,
+      "passed": true,
+      "nativeShaderProofApplicable": false,
+      "draws": [
+        {
+          "slot": 0,
+          "count": 6,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "QA-standby-no-noise",
+            "materialUuid": "ead24b45-448e-441e-b10b-0b63af144162",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 0
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 1,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "QA-standby-no-noise",
+            "materialUuid": "7811a1c3-d10e-4555-a865-043c75d2cb8f",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 0
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 2,
+          "count": 7,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "QA-standby-no-noise",
+            "materialUuid": "670c00cd-bb04-425e-85fe-feddbf80dae4",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 0
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 3,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "QA-standby-no-noise",
+            "materialUuid": "ec12b6d3-bc27-46b3-858c-a759e5fd38c3",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 0
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "native": {
+      "sha256": "fd8e3fe3c6b4c0fa3625d622ea4a10ece9458337fcaf4721b9b7d2955e480527",
+      "instances": 15,
+      "passed": true,
+      "nativeShaderProofApplicable": true,
+      "draws": [
+        {
+          "slot": 0,
+          "count": 6,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "",
+            "materialUuid": "7d2617a1-7557-42e0-b591-db015b748266",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 1
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 1,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "",
+            "materialUuid": "b92dac96-428b-4080-aa80-b3068843b1e2",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 1
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 2,
+          "count": 7,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "",
+            "materialUuid": "5e59364c-34fc-4dfe-8d4a-9b02061e47ed",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 1
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        },
+        {
+          "slot": 3,
+          "count": 1,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "",
+            "materialUuid": "50291401-78fb-4d77-a967-3e1e0544f3e2",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 1
+              },
+              "uNight": {
+                "active": true,
+                "value": 1
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
