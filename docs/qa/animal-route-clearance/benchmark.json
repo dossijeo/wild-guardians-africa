@@ -1,0 +1,72 @@
+{
+  "scope": "Six alternating pairs of 125 native walkTo steps (12.5 simulated seconds) on the recorded night39 stationary-body route regression. Setup, deserialization and hashes excluded. CPU diagnostic only; not GPU, frametime, phone or whole campaign.",
+  "referenceCommit": "75918f8",
+  "referenceGameSha256": "8440c18d626487c7a87d8645964d35538288590250c7b261db4744e3c638b3a8",
+  "candidateHashes": {
+    "src/simulation/game.js": "8be493ae7fdc60856fbfcb7b6daace9ef12a6f7dc9c778f6dd79db065f2d12e9",
+    "src/simulation/animal-route-clearance.js": "24a827107cbb65c34d0bbd1178ffc12e5ff4f9e7557ccfaf35a3071ea5a781b6"
+  },
+  "inputSha256": "519397543f334919e5bd3aac104b4abc0b194b0371f7abe2dd8cb8030ca81053",
+  "samples": [
+    {
+      "reference": {
+        "milliseconds": 405.7350999999999,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "candidate": {
+        "milliseconds": 266.4825000000001,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    },
+    {
+      "candidate": {
+        "milliseconds": 221.85680000000002,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "reference": {
+        "milliseconds": 189.50850000000037,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    },
+    {
+      "reference": {
+        "milliseconds": 200.83179999999993,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "candidate": {
+        "milliseconds": 212.47109999999975,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    },
+    {
+      "candidate": {
+        "milliseconds": 239.9998999999998,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "reference": {
+        "milliseconds": 216.98490000000038,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    },
+    {
+      "reference": {
+        "milliseconds": 179.69759999999997,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "candidate": {
+        "milliseconds": 220.84599999999955,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    },
+    {
+      "candidate": {
+        "milliseconds": 199.1832000000004,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      },
+      "reference": {
+        "milliseconds": 185.9314000000004,
+        "actorSha256": "989a91f3363c5d2de206f7f18b43b238cf1a5d36ee0707765027b6f455c7fa12"
+      }
+    }
+  ]
+}
