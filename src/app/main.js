@@ -156,7 +156,7 @@ function onPick({entityId,point}) {
     } else {closeSurface();selection=entityId;}
   });
 }
-function hideHudPanel(){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close();}}
+function hideHudPanel({silent=false}={}){document.querySelector('#panel').replaceChildren();if(surfaces.active==='panel'){surfaces.close();uiAudio.close({silent});}}
 function buildWallStroke(points){
   if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
   const maxPieces=Game.wallCapacity(state,tool.material);if(!maxPieces){uiAudio.error({force:true});error(RESERVE_MESSAGE,{silent:true});return;}
@@ -175,7 +175,7 @@ function toolPanel(type) {
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
   document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
   document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{armTool({kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked});hideHudPanel();updateUI(true);});
-  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{if(el.disabled)return;armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel();updateUI(true);});
+  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{if(el.disabled)return;armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel({silent:true});uiAudio.selectSpell(el.dataset.spell);updateUI(true);});
 }
 function showHudPanel(title,body){
  if(!openSurface('panel',title))return false;

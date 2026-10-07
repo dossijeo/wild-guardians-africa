@@ -1,0 +1,117 @@
+{
+  "scope": "V8 sampled CPU inside production tickScoped in archived215plant/18paidworker case; includes initial assignment then59ticks. Background tests active; inclusive function totals overlap and are not FPS/GPU measurements.",
+  "tickSamples": 992,
+  "sampledUs": 1160515,
+  "topInclusive": [
+    {
+      "functionName": "(anonymous) · game.js",
+      "microseconds": 1731297,
+      "percent": 149.18350904555305
+    },
+    {
+      "functionName": "tickScoped · game.js",
+      "microseconds": 1160515,
+      "percent": 100
+    },
+    {
+      "functionName": "withNavigationQueries · navigation-query-scope.js",
+      "microseconds": 1160515,
+      "percent": 100
+    },
+    {
+      "functionName": "tick · game.js",
+      "microseconds": 1160515,
+      "percent": 100
+    },
+    {
+      "functionName": "(anonymous) · profile.mjs",
+      "microseconds": 1160515,
+      "percent": 100
+    },
+    {
+      "functionName": "(root) · ",
+      "microseconds": 1160515,
+      "percent": 100
+    },
+    {
+      "functionName": "updateWorkers · game.js",
+      "microseconds": 1033427,
+      "percent": 89.0489997975037
+    },
+    {
+      "functionName": "reserveAvailableTasks · game.js",
+      "microseconds": 603933,
+      "percent": 52.0400856516288
+    },
+    {
+      "functionName": "reserveTasks · tasks.js",
+      "microseconds": 601835,
+      "percent": 51.85930384355222
+    },
+    {
+      "functionName": "(anonymous) · tasks.js",
+      "microseconds": 598622,
+      "percent": 51.58244400115466
+    },
+    {
+      "functionName": "path · navigation.js",
+      "microseconds": 567676,
+      "percent": 48.915869247704684
+    },
+    {
+      "functionName": "findPath · navigation.js",
+      "microseconds": 540161,
+      "percent": 46.54493910031322
+    },
+    {
+      "functionName": "findPathSteps · navigation.js",
+      "microseconds": 523272,
+      "percent": 45.08963692843263
+    },
+    {
+      "functionName": "(anonymous) · worker-entity-lookup.js",
+      "microseconds": 339163,
+      "percent": 29.225214667626012
+    },
+    {
+      "functionName": "segmentClear · navigation.js",
+      "microseconds": 303800,
+      "percent": 26.17803302843996
+    },
+    {
+      "functionName": "testSegmentClear · navigation.js",
+      "microseconds": 286506,
+      "percent": 24.687832557097497
+    },
+    {
+      "functionName": "propsAt · navigation.js",
+      "microseconds": 203062,
+      "percent": 17.497576506981815
+    },
+    {
+      "functionName": "terrainValid · navigation.js",
+      "microseconds": 193026,
+      "percent": 16.632788029452442
+    },
+    {
+      "functionName": "chunk · navigation.js",
+      "microseconds": 191462,
+      "percent": 16.498020275481146
+    },
+    {
+      "functionName": "scatterWorld · terrain.js",
+      "microseconds": 187272,
+      "percent": 16.13697367117185
+    },
+    {
+      "functionName": "walkable · navigation.js",
+      "microseconds": 181033,
+      "percent": 15.599367522177653
+    },
+    {
+      "functionName": "accepted · terrain.js",
+      "microseconds": 180837,
+      "percent": 15.582478468610919
+    }
+  ]
+}
