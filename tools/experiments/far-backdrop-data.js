@@ -2,13 +2,14 @@
 export const backdropBiomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
 const colors={savanna:['#afa6a7','#b8a69c','#b19c82'],grand_river:['#96aaa0','#80988c','#759080'],mangrove:['#9db2ab','#8ca49a','#7d978b'],volcanoes:['#989b9c','#888e90','#727e82'],canyons:['#bfaa9c','#ae958b','#9d827a'],desert:['#c4b69d','#b2a28d','#a39381']};
 function random(seed){return()=>{seed=Math.imul(seed^seed>>>15,1|seed);seed^=seed+Math.imul(seed^seed>>>7,61|seed);return ((seed^seed>>>14)>>>0)/4294967296;};}
-export function backdropProfile(biome,layer){
+export function backdropProfile(biome,layer,{savannaRidges=7}={}){
+ if(!Number.isInteger(savannaRidges)||savannaRidges<7||savannaRidges>32)throw Error('Invalid savanna ridge count');
  const index=backdropBiomes.indexOf(biome);if(index<0||!Number.isInteger(layer)||layer<0||layer>2)throw Error('Invalid backdrop profile');
  const step=(biome==='savanna'||biome==='grand_river')?8:16,r=random(1471+index*193+layer*277),jitter=Array.from({length:2048/step},()=>r()*7),points=[];
  // Broad separated ridges and short mesa caps, independently composed per layer.
  // Avoid three phase-aligned sine waves that read as parallel horizontal bands.
  const riverRidges=biome==='grand_river'?Array.from({length:16},(_,i)=>({center:(i+.1+r()*.8)*2048/16,width:70+r()*70,height:185+r()*145-layer*14})):null;
- const ridges=biome==='savanna'?Array.from({length:7},(_,i)=>({center:(i+.15+r()*.7)*2048/7,width:125+r()*110,height:105+r()*95-layer*12,cap:.10+r()*.17})):null;
+ const ridges=biome==='savanna'?Array.from({length:savannaRidges},(_,i)=>({center:(i+.15+r()*.7)*2048/savannaRidges,width:(125+r()*110)*7/savannaRidges,height:105+r()*95-layer*12,cap:.10+r()*.17})):null;
  for(let x=0;x<=2048;x+=step){const wrap=x%2048;let height;
   if(ridges){let relief=0;for(const ridge of ridges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,ridge.height*(p<ridge.cap?1:Math.max(0,1-(p-ridge.cap)/(1-ridge.cap))));}height=315+layer*42-relief+Math.sin(wrap*Math.PI*2/2048*(5+layer)) * 3;}
   else if(riverRidges){let relief=0;for(const ridge of riverRidges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,p<1?ridge.height*(1+Math.cos(p*Math.PI))*.5:0);}height=345+layer*35-relief;}
@@ -19,8 +20,8 @@ export function backdropProfile(biome,layer){
  }
  return points;
 }
-export function backdropSvg(biome){const paths=Array.from({length:3},(_,layer)=>{
- const profile=backdropProfile(biome,layer),base=`<path d="M 0,512 L ${profile.map(p=>p.join(',')).join(' L ')} L 2048,512 Z" fill="${colors[biome][layer]}"/>`;
+export function backdropSvg(biome,options={}){const paths=Array.from({length:3},(_,layer)=>{
+ const profile=backdropProfile(biome,layer,options),base=`<path d="M 0,512 L ${profile.map(p=>p.join(',')).join(' L ')} L 2048,512 Z" fill="${colors[biome][layer]}"/>`;
  if(biome!=='savanna')return base;
  // Low contrast relief is baked offline. Every facet follows its actual skyline
  // segment before descending into the opaque body: no clipping masks or holes.

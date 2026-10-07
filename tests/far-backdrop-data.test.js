@@ -30,3 +30,13 @@ test('river skyline uses independent broad rolling relief without parallel low b
  // Rounded hills have gradual adjacent changes; no isolated thin vertical peaks.
  assert.ok(a.slice(1).every((p,i)=>Math.abs(p[1]-a[i][1])<64));
 });
+
+test('offline ridge-count experiment preserves default atlases and periodic bounds',async()=>{
+ assert.equal(backdropSvg('savanna'),backdropSvg('savanna',{savannaRidges:7}));
+ assert.notEqual(backdropSvg('savanna'),backdropSvg('savanna',{savannaRidges:18}));
+ for(const invalid of [6,33,18.5,NaN])assert.throws(()=>backdropSvg('savanna',{savannaRidges:invalid}),/ridge count/);
+ for(let layer=0;layer<3;layer++){const p=backdropProfile('savanna',layer,{savannaRidges:18});assert.equal(p[0][1],p.at(-1)[1]);assert.ok(p.every(([,y])=>y>0&&y<512));}
+ const expected=await sharp(Buffer.from(backdropSvg('savanna',{savannaRidges:18}))).webp({lossless:true,effort:4}).toBuffer();
+ assert.deepEqual(await fs.readFile('docs/qa/far-backdrop-ridges-pilot/savanna-ridges18.webp'),expected);
+ const image=await sharp(expected).metadata();assert.equal(image.width,2048);assert.equal(image.height,512);assert.equal(image.hasAlpha,true);
+});
