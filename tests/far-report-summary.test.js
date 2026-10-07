@@ -16,3 +16,9 @@ test('QA report supports idle and incomplete sequence without adding graphics or
 });
 
 test('selected-species audit also projects counts without duplicating full drop traces',()=>{const audit={observations:50,descents:3,offscreenBoundsDescents:2,potentiallyVisibleDescents:1,unknownDescents:0,drops:[{id:'a'},{id:'b'},{id:'c'}],nonOffscreenDrops:[{id:'b'}],omissions:[]},input={motion:{selectedSpeciesNear:audit},sequence:{results:[{motion:{selectedSpeciesNear:audit}}]}};const out=compactFarReport(input);assert.equal(out.motion.selectedSpeciesNear.descents,3);assert.equal(out.motion.selectedSpeciesNear.potentiallyVisibleDescents,1);assert.equal(out.motion.selectedSpeciesNear.detailedDropCount,3);assert.equal(out.motion.selectedSpeciesNear.drops,undefined);assert.equal(out.sequence.results[0].motion.selectedSpeciesNear.nonOffscreenDropCount,1);assert.equal(input.motion.selectedSpeciesNear.drops.length,3);});
+
+
+test('timing display retains totals without repeatedly serializing full draw and transform traces',()=>{
+ const submissionState={draws:[{matrix:new Array(16).fill(1)}],breakdown:{totals:{calls:1,triangles:2},rows:[{pass:'screen',calls:1}],objects:[{name:'expensive'}]},limit:'CPU only'},input={submissionState,benchmark:{lots:[{enabled:true,cpu:{p50:1},submissionState,drawContext:{chunks:['a']}}]}};
+ const original=JSON.stringify(input),out=compactFarReport(input);assert.equal(JSON.stringify(input),original);assert.equal(out.submissionState.drawCount,1);assert.equal(out.submissionState.draws,undefined);assert.deepEqual(out.benchmark.lots[0].submissionState.totals,{calls:1,triangles:2});assert.equal(out.benchmark.lots[0].drawContext,undefined);assert.equal(out.benchmark.lots[0].cpu.p50,1);
+});
