@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-10-07T17:21:39.415850+00:00",
+  "session": 34387,
+  "terminalExitCode": 0,
+  "command": [
+    "npm",
+    "test"
+  ],
+  "testedHead": "bc1b750fdcbaa27edb4a06ff6187fa8bc7b5dc35",
+  "observedHead": "7b7cf946018b875372d87691cbcb032c6cee07fa",
+  "tests": 2816,
+  "pass": 2816,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "todo": 0,
+  "durationMs": 1426774.7321,
+  "runtimeHashesRechecked": 295,
+  "changedRuntimeSources": [],
+  "trackedPathsChangedAfterLaunch": [
+    "docs/post-jam-pending.md",
+    "docs/qa/mesh-sidedness-audit/README.md",
+    "docs/qa/mesh-sidedness-audit/report.json.gz",
+    "docs/qa/mesh-sidedness-audit/summary.json",
+    "docs/qa/noise-volume-spatial/README.md",
+    "docs/qa/noise-volume-spatial/report.json",
+    "tools/audit_mesh_sidedness.mjs",
+    "tools/audit_noise_volume.mjs"
+  ],
+  "logBytes": 694562,
+  "logSha256": "d33bb704279b55cf1bbddce328956f12f653130c6b9495dd8a7e55c73e919787",
+  "compressedLogSha256": "2793930248c16cf252f9bb8e65eb374f13a2b9d39ed11f19d0dcbad8fd8eb907",
+  "scope": "Terminal local Node test suite; not browser/mobile/Tauri acceptance or the complete intensive 30-case 100-night matrix. Launch provenance was captured shortly after launch, not an exact launch timestamp."
+}
