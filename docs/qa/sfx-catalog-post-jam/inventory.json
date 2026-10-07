@@ -3,7 +3,7 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "4fce465b152cfeffb3597e6039e87d0da1282277b6c91f7879144bae24d5cf3a",
+    "public/content/sfx-routing.json": "2f40166e298e1285a6628b72723f7dce4261bf5f9110143be7f9c22aaaec75ae",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "46e7668b6e8e144bf24d418a7029099aad211415a14c0d168345acd9df2120e5",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
@@ -743,7 +743,7 @@
       "plannedAction": "Contacto de herramienta de construcción/reparación cuando exista en la animación.",
       "runtimeStatus": "unassigned",
       "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "pendingContext": "Current FIFO repairs execute and charge immediately on worker arrival; Game.tick completes both walking and legacy acting repair tasks before a Dig presentation frame. workerPose contains a Dig mapping but no live repair contact reaches it. Four paid profile probes confirm zero acting frames. Retain 030 rather than adding an inaudible tool or changing repair duration; see docs/qa/repair-contact-reservation/README.md.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {

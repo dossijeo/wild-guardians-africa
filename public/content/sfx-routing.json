@@ -342,7 +342,7 @@
       "destination": [
         "sfx-library-preview"
       ],
-      "reservation_reason": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "reservation_reason": "Current FIFO repairs execute and charge immediately on worker arrival; Game.tick completes both walking and legacy acting repair tasks before a Dig presentation frame. workerPose contains a Dig mapping but no live repair contact reaches it. Four paid profile probes confirm zero acting frames. Retain 030 rather than adding an inaudible tool or changing repair duration; see docs/qa/repair-contact-reservation/README.md.",
       "planned_trigger": "Contacto de herramienta de construcción/reparación cuando exista en la animación."
     },
     {
