@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Campaña Sabana/Saheliana: cien noches archivadas](qa/intensive-sabana-saheliana-e461b550/README.md):
+segundo caso terminal de la matriz congelada, ocho especies, contratación y
+entregas físicas diarias; contabilidad y resumen completos reconciliados.
+25,40 % de jornada sin acciones sigue siendo un asunto de diseño. Los hashes
+prueban fuentes congeladas e461b550; el HEAD ambiental del hijo no identifica
+su código. No es replay de main ni cierre de la matriz de treinta casos.
+
 [Montañas HQ: primera integración visual rechazada](qa/hq-mountain-sabana-negative/README.md):
 Sabana carga y gira día/noche sin errores, pero el empalme por reflejo produce
 simetría artificial. Conservar fuentes/evidencia y terminar una composición
