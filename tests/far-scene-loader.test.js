@@ -62,3 +62,15 @@ test('regional color grid transfers from worker without changing native tree pop
   const actual=messages[0].data,plain=buildFarSceneData({...request,colorMapStep:null});assert.deepEqual(actual,buildFarSceneData(request));assert.deepEqual(actual.trees,plain.trees);assert.deepEqual(actual.ground.positions,plain.ground.positions);assert.deepEqual(actual.ground.indices,plain.ground.indices);assert.equal(actual.ground.nx,4);assert.equal(actual.ground.colorMap.width,33);assert.deepEqual(messages[1].lengths,[0,0,0,0]);
  }finally{await worker.terminate();}
 });
+
+
+test('mapped average palette executes in the real worker without changing geometry, IDs or water coverage',async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8')),palette=JSON.parse(await readFile(new URL('../docs/qa/far-ground-native-palette-pilot/palette.json',import.meta.url),'utf8'));
+ const request={config:{seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)},profile:pack.profile,treeBounds:{minX:-48,maxX:48,minZ:-48,maxZ:48},groundBounds:{minX:-64,maxX:64,minZ:-64,maxZ:64},step:32,colorMapStep:4,waterSurface:true,groundWash:0,groundPalette:palette};
+ const worker=new Worker(new URL('./fixtures/far-scene-worker-node.mjs',import.meta.url));
+ try{
+  const messages=await new Promise((resolve,reject)=>{const received=[];worker.on('error',reject);worker.on('message',v=>{received.push(v);if(received.length===2)resolve(received);});worker.postMessage(request);});
+  const actual=messages[0].data,plain=buildFarSceneData({...request,groundPalette:null});assert.deepEqual(actual,buildFarSceneData(request));assert.deepEqual(actual.trees,plain.trees);assert.deepEqual(actual.ground.positions,plain.ground.positions);assert.deepEqual(actual.ground.indices,plain.ground.indices);assert.notDeepEqual(actual.ground.colorMap.data,plain.ground.colorMap.data);for(let i=3;i<actual.ground.colorMap.data.length;i+=4)assert.equal(actual.ground.colorMap.data[i],plain.ground.colorMap.data[i]);assert.deepEqual(messages[1].lengths,[0,0,0,0]);
+  assert.throws(()=>buildFarSceneData({...request,config:{...request.config,biome:'canyons'}}),/only supports/);assert.throws(()=>buildFarSceneData({...request,groundPalette:{}}),/palette/);
+ }finally{await worker.terminate();}
+});
