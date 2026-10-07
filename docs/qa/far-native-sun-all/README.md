@@ -9,3 +9,9 @@ All phases use actual NATIVE_LIGHT_DIRECTION multiplied by240: [-193.08041382469
 The bake retains its existing no-native-shadow recipe; it does not add dynamic world self-shadow to the offline atlas. The separate self-shadow counterexample remains documented. Full moving-camera/biome/day-night acceptance and current performance remain pending. OFF in normal gameplay.
 
 verification.json stores checks/hashes; bake-metadata.json.gz stores44 native reports. verification-script.cjs reproduces the conversion comparison using the locally retained PNGs and previous WebP sources; its old-alpha/color baseline must be retained before replacing assets. Historical baked source differs from later QA phase controls only, not its renderer/geometry/shader.
+
+## Sabana routes on 78f1c94
+
+Approach, orbit and lateral full20s QA paths completed with state unchanged, target drops0, render/GL errors0. All observed global descents are preserved and classified in sabana-routes-summary.json. Arrival day/night images use same139m camera. The initial clock control was restored before the approach ended; unlike the older mixed-phase run, logical state equality is valid. Counts include pausedholding frames, not a fixed-duration FPS measure. This covers Acacia paraguas slot0/medium; it is not six-biome or global visual acceptance.
+
+The audit records at most64 global descents. Approach and orbit hit this cap; their classified records all have native bounds outside the frustum, but later unrecorded descents are not classified by this report. Lateral records54. This cap is a remaining QA limitation, not evidence that the full world has zero visible drops.
