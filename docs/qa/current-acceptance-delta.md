@@ -1,5 +1,13 @@
 # Alcance de aceptación de las revisiones actuales
 
+## Evidencia incremental del 7 de octubre
+
+- [Validate Game bc2f0aa](validation-bc2f0aa/README.md): resultado terminal correcto, 2711 tests, build, paquete y subida del ZIP directo. Corresponde a ese SHA; no acredita HEAD posterior.
+- [Transporte de audio independiente](audio-fetch-isolation/README.md) y [contactos independientes](audio-contact-isolation/README.md): AudioSystem deja de incorporar los cargadores GLB y Three por sus imports estáticos. Pruebas dirigidas y build correctos; reducción del grafo de fuentes, sin medición de ahorro RAM o frametime.
+- [Fragmentos con audio](destruction-audio/README.md): SFX 043/046 vinculados a emisión y primer contacto real de lotes de fragmentos. Catálogo actual: 94 asignados y 32 pendientes. La reproducción nativa completa de esta fixture sigue sin acreditar; su error inicial de sintaxis fue corregido y se añadió un [gate de scripts de navegador](browser-script-syntax/README.md).
+- [Comparación de sombras en mundo nativo](shadow-world-current/README.md): profundidad idéntica en 36 poses por variante; el color no es idéntico y los controles también varían. No declarar equivalencia visual completa ni ganancia de FPS.
+
+
 Esta página reúne evidencia incremental, incluida la revisión `d3dac6d`; el informe original inspeccionaba `e87dc25`. Los ensayos conservan sus revisiones particulares y no se atribuyen a HEAD posterior por conservarse sus archivos. El registro original de 159 casos mantiene la base `44f5c7b`, las notas históricas y los límites de cada ensayo. Sus 156 estados verified y tres partial no equivalen a aceptación completa de todas las revisiones posteriores. Comprobar la existencia de archivos enlazados no acredita su contenido ni su vigencia.
 
 ## Evidencia posterior contrastada el 6 de octubre
