@@ -16,7 +16,7 @@ document.querySelector('#run').onclick=async()=>{document.querySelector('#run').
   assert(source,'Cue rechazado: '+id);const row={id,gain:options.gain,emitter:options.emitter,family:options.family,started:true,ended:false};rows.push(row);
   return new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('No ended: '+id)),20000);source.addEventListener('ended',()=>{clearTimeout(timeout);row.ended=true;resolve();},{once:true});});
  });pending.push(work);return work;};
- const kernel={hitSites:Array.from({length:8},()=>({p:[0,1,0],n:[0,1,0],birth:.5,maxRadius:0})),fx=createNativeDestructionEffects(kernel,{seed:123});
+ const kernel={hitSites:Array.from({length:8},()=>({p:[0,1,0],n:[0,1,0],birth:.5,maxRadius:0})),radiusAt:()=>1},fx=createNativeDestructionEffects(kernel,{seed:123});
  const state={pauses:[]},entity={id:'qa-fragments',x:0,z:0},options={state,listener:{x:48,z:0}};
  fx.initialize(.8);fx.burst([0,1,0],[0,1,0],.5);audio.destructionCue({debrisEmitted:fx.stats.debrisEmitted},entity,options);
  let contactSeen=false;const started=performance.now();

@@ -9,6 +9,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests",
     "verify:assets": "python tools/verify_assets.py",
+    "verify:browser-syntax": "node tools/check_browser_script_syntax.mjs",
     "verify:plan": "python docs/plan/verificar_reglas.py",
     "verify:balance": "python tools/generate_balance.py --check",
     "assets:compress": "node tools/compress_web_assets.mjs",
