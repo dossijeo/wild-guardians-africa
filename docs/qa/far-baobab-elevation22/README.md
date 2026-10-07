@@ -1,0 +1,9 @@
+# Baobab elevation 22-degree isolation — pending native acceptance
+
+Only Sabana slot 2 is rebaked: native LOD2, LOD0 framing, fixed native sun, 8 camera views × 8 world rotations × 128 px cells, day/night. This is a QA-only replacement selected by `atlas-elevation=22`; public atlases and gameplay defaults are unchanged. It replaces one atlas pair with another of identical dimensions, not an additional resident pair. Framing height/baseV are recomputed by atlasElevationFrame so the logical trunk pivot remains fixed.
+
+Both offline renders returned GL0, empty errors and empty warning/error logs. Lossless WebP preserves every alpha byte and RGB at nonzero alpha. RGB under alpha zero changes as explicitly counted in pixel-equivalence.json; this is not whole-RGBA equality. The source vertex/triangle counts remain 2529/1247. Four framing tests and 137 browser scripts pass. Camera comparisons, movement and cost remain pending; do not infer acceptance from the successful bake.
+
+The original horneador does not load NativeSky. This alone does not justify adding HDR: nativeAssetMaterial gives the tree artBounds, and AfricanToon replaces the earlier toon/environment result with artLighting416. That final illustrated recipe uses directional light, biome palette, night phase, normals, contact and shadow coverage, without an HDR lookup or fine procedural noise. The native GPU diagnostic showed the uniforms existed; existence is not proof of contribution to the final color. No environment or shader change has been made on this hypothesis.
+
+Reproduce offline: tests/browser/far-vegetation-atlas.html?biome=savanna&slot=2&bake=day&rotations=8&resolution=128&lod=2&elevation=22&native-sun=1 (repeat bake=night). Native comparison must hold focus-height=32.24962524394025 to avoid moving the camera with the changed frame height.

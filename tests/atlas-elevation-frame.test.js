@@ -23,3 +23,14 @@ test('invalid capture angles and dimensions are rejected',()=>{
  for(const angle of [-1,46,NaN])assert.throws(()=>atlasElevationFrame(positions,[0,0,0],1,angle));
  assert.throws(()=>atlasElevationFrame(positions,[0,0,0],0,8));
 });
+test('22-degree pilot keeps projected framing and the bottom pivot consistent',()=>{
+ const positions=new Float32BufferAttribute([-4,0,-3,4,0,3,-3,10,2,4,7,-2],3),base=[.27,0,.027],angle=22*Math.PI/180;
+ const frame=atlasElevationFrame(positions,base,10,22);
+ assert.ok(Math.abs(frame.projectedBottom+frame.baseV*frame.impostorHeight*Math.cos(angle))<1e-12);
+ for(let view=0;view<8;view++)for(let i=0;i<positions.count;i++){
+  const yaw=view*Math.PI/4,up=(positions.getY(i)-base[1])*Math.cos(angle)-((positions.getX(i)-base[0])*Math.sin(yaw)+(positions.getZ(i)-base[2])*Math.cos(yaw))*Math.sin(angle);
+  const uv=(up-frame.projectedBottom)/(frame.projectedTop-frame.projectedBottom);
+  assert.ok(uv>0&&uv<1);
+  assert.ok(Math.abs((uv-frame.baseV)*frame.impostorHeight*Math.cos(angle)-up)<1e-12);
+ }
+});
