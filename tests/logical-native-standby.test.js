@@ -1,5 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {Object3D} from 'three';
 import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from '../tools/experiments/logical-native-standby.js';
+import {attachNativeFarWorld} from '../tools/experiments/attach-native-far-world.js';
 import {standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
 const metadata={impostorHeight:12,sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
 const tree=(id,x)=>({id,x:x+1,y:2,z:0,origin:{x,y:1,z:0},yaw:.62,sx:1.2,sy:.9,sz:1.3});
@@ -50,4 +51,9 @@ test('size exception rejects malformed authored dimensions and thresholds',()=>{
  const args=options({preloadBounds:[0,-10,80,10]});
  for(const minimumHeight of [0,-1,NaN,Infinity])assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,preloadHeightPolicy:{minimumHeight}}),/height policy/);
  assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,metadata:{...metadata,impostorHeight:NaN},preloadHeightPolicy:{minimumHeight:24}}),/dimensions/);
+});
+
+
+test('size preload option requires authored size policy and enabled logical preparation before allocation',async()=>{
+ for(const extra of [{logicalSizePreload:1},{logicalSizePreload:true},{logicalSizePreload:true,logicalStandbyPreload:true},{logicalSizePreload:true,transitionHeight:{minimumHeight:24,start:200,end:240}}])await assert.rejects(attachNativeFarWorld({},extra),/logical size preload/);
 });
