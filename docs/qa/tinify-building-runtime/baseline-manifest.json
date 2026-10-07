@@ -1,10 +1,16 @@
 {
+  "version": 1,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "textures": "EXT_texture_webp (default color quality 90, ORM 95, normals lossless, alpha 100, max 2048; reviewed color overrides in embedded-color-recipes.json)",
   "records": [
     {
       "source": "assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
-      "geometryBytes": 2558194,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "sourceSha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+      "runtimeSha256": "a06493cff79cda564436bab54fffabc83a73ae463741aecb216db84110a121d9",
+      "beforeBytes": 19143664,
+      "afterBytes": 7047972,
+      "compressedViews": 2085,
       "images": [
         {
           "index": 0,
@@ -22,10 +28,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -46,10 +49,7 @@
             "provider": "Tinify",
             "outputSha256": "b5c516cd6a486d1676b3a51964bde1286c10699d08913f245c6b64f2c2d96255",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 5.482772680025476,
-          "psnr": 33.35079880721272,
-          "maxChannelError": 100
+          }
         },
         {
           "index": 2,
@@ -67,24 +67,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.4405400644421427,
-          "psnr": 40.381084778184395,
-          "maxChannelError": 64
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 473,
-        "decodedErrors": 473,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
-      "geometryBytes": 2562250,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+      "runtimeSha256": "79f91a6c4e6be5ddf4872ef3421dcc53efe49ed3b8c9fe0d288358ab35a7a18c",
+      "beforeBytes": 27893128,
+      "afterBytes": 5612688,
+      "compressedViews": 2085,
       "images": [
         {
           "index": 0,
@@ -102,10 +98,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -126,10 +119,7 @@
             "provider": "Tinify",
             "outputSha256": "238b47bd87be099e16bc7a7aa420d3e992958603833f370df842b24fc3b40227",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 3.6186097701534923,
-          "psnr": 36.95996857987645,
-          "maxChannelError": 77
+          }
         },
         {
           "index": 2,
@@ -147,24 +137,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.671502665552714,
-          "psnr": 39.5956913717518,
-          "maxChannelError": 64
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 473,
-        "decodedErrors": 473,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
-      "geometryBytes": 845132,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "sourceSha256": "3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7",
+      "runtimeSha256": "17b726c16ac0dad0cf3350df9cb816d70bede0905c01a998ead9bf4e6a35e6fb",
+      "beforeBytes": 12293584,
+      "afterBytes": 7428644,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -182,15 +168,12 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
           "beforeBytes": 3533653,
-          "afterBytes": 448566,
+          "afterBytes": 900932,
           "before": [
             2048,
             2048
@@ -200,16 +183,10 @@
             2048
           ],
           "alpha": false,
+          "quality": 90,
           "lossless": false,
           "role": "color",
-          "encoding": {
-            "provider": "Tinify",
-            "outputSha256": "e4ac5b9ef242482ba96ad19ab4e37b5d08415fa647a906c07172869a9e536520",
-            "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.58997775700595,
-          "psnr": 34.89459198958087,
-          "maxChannelError": 47
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -227,24 +204,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 1.151222640550139,
-          "psnr": 46.907617167152864,
-          "maxChannelError": 28
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
-      "geometryBytes": 2958234,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "sourceSha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+      "runtimeSha256": "7be0a9295777dcc84620402d56603ace7564d1ae09cc433a51c5495732a0348f",
+      "beforeBytes": 19341308,
+      "afterBytes": 7294972,
+      "compressedViews": 2085,
       "images": [
         {
           "index": 0,
@@ -262,10 +235,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -286,10 +256,7 @@
             "provider": "Tinify",
             "outputSha256": "d0cf6c7e902fa0d9f67b8c56773c548d8cfe89b180ada7948081e73a4f49d07b",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.485749763892847,
-          "psnr": 35.0941027497842,
-          "maxChannelError": 73
+          }
         },
         {
           "index": 2,
@@ -307,24 +274,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.8622679537209135,
-          "psnr": 38.99659784497579,
-          "maxChannelError": 111
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 473,
-        "decodedErrors": 473,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
-      "geometryBytes": 1766610,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "sourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+      "runtimeSha256": "761ac8a51726a992c0f79f8c8c9218140e519ec07dbae6ee90fb93a21ee27080",
+      "beforeBytes": 20926120,
+      "afterBytes": 6980244,
+      "compressedViews": 355,
       "images": [
         {
           "index": 0,
@@ -342,10 +305,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -366,10 +326,7 @@
             "provider": "Tinify",
             "outputSha256": "b1c14244c110b027b3e750aaa0febc2633359c7e4d1c7b7f53e15eb1e5568d31",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.512385181787308,
-          "psnr": 35.04268032115539,
-          "maxChannelError": 54
+          }
         },
         {
           "index": 2,
@@ -387,24 +344,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 3.061307467316744,
-          "psnr": 38.41266459168775,
-          "maxChannelError": 123
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
-      "geometryBytes": 777068,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "sourceSha256": "6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309",
+      "runtimeSha256": "4bb83ba28b6150477a54074f2510441c78961a4de0c41617555448589ab075d8",
+      "beforeBytes": 22194836,
+      "afterBytes": 7367468,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -422,15 +375,12 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
           "beforeBytes": 5917951,
-          "afterBytes": 344528,
+          "afterBytes": 801410,
           "before": [
             2048,
             2048
@@ -440,16 +390,10 @@
             2048
           ],
           "alpha": false,
+          "quality": 90,
           "lossless": false,
           "role": "color",
-          "encoding": {
-            "provider": "Tinify",
-            "outputSha256": "a0e4abff9ca1815c04bc16be4a81ec792003a55bf62593d91ed33d6d007445c6",
-            "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 5.7925020434173335,
-          "psnr": 32.87347969532243,
-          "maxChannelError": 107
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -467,24 +411,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.0645028610277416,
-          "psnr": 41.834493827383554,
-          "maxChannelError": 97
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
-      "geometryBytes": 5758064,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "sourceSha256": "6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c",
+      "runtimeSha256": "43dad829c3ee254bbb4bf225d816742d6b6c46365e645a07098fb6739904e5e7",
+      "beforeBytes": 17251608,
+      "afterBytes": 12862816,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -502,10 +442,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -523,10 +460,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 4.008816846657548,
-          "psnr": 36.070479312319186,
-          "maxChannelError": 77
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -544,24 +478,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.421835819050506,
-          "psnr": 40.44790964589289,
-          "maxChannelError": 69
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
-      "geometryBytes": 2106310,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "sourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+      "runtimeSha256": "79b28cda47e5a2ac427986eef9b58f0942d914c9c6f804e939714e43c938a2fa",
+      "beforeBytes": 18302772,
+      "afterBytes": 6401848,
+      "compressedViews": 551,
       "images": [
         {
           "index": 0,
@@ -579,10 +509,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -603,10 +530,7 @@
             "provider": "Tinify",
             "outputSha256": "43b75b11fbb613876777920e93cb8fb7db1eaa7ddce45e44ee97a0844b13f6a7",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 3.541335430737338,
-          "psnr": 37.147462318255876,
-          "maxChannelError": 54
+          }
         },
         {
           "index": 2,
@@ -624,24 +548,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.7190871924818834,
-          "psnr": 39.44234092359627,
-          "maxChannelError": 72
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
-      "geometryBytes": 1938904,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "sourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+      "runtimeSha256": "378bfb0220e0d9a095fbff24ca964b5ce14542fcbbed29ef0168d1bb1dbf2df9",
+      "beforeBytes": 18055192,
+      "afterBytes": 5970792,
+      "compressedViews": 550,
       "images": [
         {
           "index": 0,
@@ -659,10 +579,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -683,10 +600,7 @@
             "provider": "Tinify",
             "outputSha256": "db4c0b8f6517aa172cdb186ff3f3d34896148bc36ceb9ae7dcd23a199663560f",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 3.1593562914517337,
-          "psnr": 38.138831497755056,
-          "maxChannelError": 50
+          }
         },
         {
           "index": 2,
@@ -704,24 +618,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.690673433075416,
-          "psnr": 39.533583795505024,
-          "maxChannelError": 68
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
-      "geometryBytes": 1896130,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "sourceSha256": "9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e",
+      "runtimeSha256": "37e5e1a9ea4cb1199153bb0f1b99383fa815129c032771765b031bdb06128a6a",
+      "beforeBytes": 17965476,
+      "afterBytes": 6522992,
+      "compressedViews": 597,
       "images": [
         {
           "index": 0,
@@ -739,10 +649,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -760,10 +667,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 2.7942420457895865,
-          "psnr": 39.20552314220831,
-          "maxChannelError": 51
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -781,24 +685,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.8622679537209135,
-          "psnr": 38.99659784497579,
-          "maxChannelError": 111
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
-      "geometryBytes": 1500146,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "sourceSha256": "a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c",
+      "runtimeSha256": "ae99c2797b29a5cba6936ade1f8085845f26e4004c9b1ae89cb42a5f320ad97f",
+      "beforeBytes": 26517228,
+      "afterBytes": 4679128,
+      "compressedViews": 597,
       "images": [
         {
           "index": 0,
@@ -816,10 +716,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -837,10 +734,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 2.3554005441654278,
-          "psnr": 40.68950818762531,
-          "maxChannelError": 65
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -858,24 +752,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.671502665552714,
-          "psnr": 39.5956913717518,
-          "maxChannelError": 64
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
-      "geometryBytes": 1558006,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "sourceSha256": "b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76",
+      "runtimeSha256": "030feeedf0d6b38299ea65740ce90b9c029eb7c545d887456618d9916ec2d2c6",
+      "beforeBytes": 18859292,
+      "afterBytes": 6541988,
+      "compressedViews": 597,
       "images": [
         {
           "index": 0,
@@ -893,10 +783,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -914,10 +801,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 2.631832434676086,
-          "psnr": 39.725638911452876,
-          "maxChannelError": 51
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -935,24 +819,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.3845449851169396,
-          "psnr": 40.58269320996605,
-          "maxChannelError": 74
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
-      "geometryBytes": 2211438,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "sourceSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82",
+      "runtimeSha256": "fef49f65b7c78486a88d1bccb0bf8fa4a645cf9c1952c378233f8e32de7b7ed1",
+      "beforeBytes": 40225776,
+      "afterBytes": 7123932,
+      "compressedViews": 551,
       "images": [
         {
           "index": 0,
@@ -970,10 +850,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -994,10 +871,7 @@
             "provider": "Tinify",
             "outputSha256": "a6facaf00bd224962b08c2bc6612382b78914215fbaa540d3b7933a0f6806199",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.725516320667223,
-          "psnr": 34.641818259853906,
-          "maxChannelError": 55
+          }
         },
         {
           "index": 2,
@@ -1015,24 +889,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 3.404859276438939,
-          "psnr": 37.48882026595843,
-          "maxChannelError": 94
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
-      "geometryBytes": 7207582,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+      "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+      "beforeBytes": 17895972,
+      "afterBytes": 13626668,
+      "compressedViews": 160,
       "images": [
         {
           "index": 0,
@@ -1050,10 +920,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -1071,10 +938,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 4.679307543274854,
-          "psnr": 34.72717181379929,
-          "maxChannelError": 75
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -1092,10 +956,7 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.6622588166318866,
-          "psnr": 39.625798129323286,
-          "maxChannelError": 72
+          "alphaQuality": 100
         },
         {
           "index": 3,
@@ -1113,10 +974,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 4,
@@ -1134,10 +992,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 4.349255464496057,
-          "psnr": 35.36250525273948,
-          "maxChannelError": 53
+          "alphaQuality": 100
         },
         {
           "index": 5,
@@ -1155,24 +1010,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.83659216520358,
-          "psnr": 39.074865628284535,
-          "maxChannelError": 77
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
-      "geometryBytes": 2691410,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "sourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+      "runtimeSha256": "a0fec1e4402299e0b58b3b551881d513cc2b799d26b17bbf12aac5eca67c78be",
+      "beforeBytes": 31550764,
+      "afterBytes": 6927276,
+      "compressedViews": 1521,
       "images": [
         {
           "index": 0,
@@ -1190,10 +1041,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -1214,10 +1062,7 @@
             "provider": "Tinify",
             "outputSha256": "ac003e756ca0aada4c5a59a31b24f8b897dba9954867d612ca9e175c152ada99",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 2.9808030647175054,
-          "psnr": 38.644137927219646,
-          "maxChannelError": 66
+          }
         },
         {
           "index": 2,
@@ -1235,24 +1080,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.675400443719777,
-          "psnr": 39.583027713444196,
-          "maxChannelError": 108
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 1,
-        "decodedErrors": 1,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
-      "geometryBytes": 1496090,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "sourceSha256": "db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd",
+      "runtimeSha256": "e8bd2583ed61dc2f98ca94606c9f377a07b791ed4f381738ad1cea93adb8541d",
+      "beforeBytes": 17767816,
+      "afterBytes": 6257516,
+      "compressedViews": 597,
       "images": [
         {
           "index": 0,
@@ -1270,10 +1111,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -1291,10 +1129,7 @@
           "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 3.8049286668651825,
-          "psnr": 36.523873224272485,
-          "maxChannelError": 91
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -1312,24 +1147,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.4405400644421427,
-          "psnr": 40.381084778184395,
-          "maxChannelError": 64
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
-      "geometryBytes": 2620110,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "sourceSha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+      "runtimeSha256": "fe9a0cc1a2c9676ba0fadfca640466f62d65067f41c0bad514130cee063916eb",
+      "beforeBytes": 20235172,
+      "afterBytes": 7327748,
+      "compressedViews": 2085,
       "images": [
         {
           "index": 0,
@@ -1347,10 +1178,7 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
@@ -1371,10 +1199,7 @@
             "provider": "Tinify",
             "outputSha256": "0010340050c01951d904a902954a40b5fc483f5aef9a47e7166f8d708c668ddd",
             "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.258594294176922,
-          "psnr": 35.54547825117146,
-          "maxChannelError": 67
+          }
         },
         {
           "index": 2,
@@ -1392,24 +1217,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.3845449851169396,
-          "psnr": 40.58269320996605,
-          "maxChannelError": 74
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 473,
-        "decodedErrors": 473,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
-      "geometryBytes": 758054,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "sourceSha256": "eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9",
+      "runtimeSha256": "38c2dc736d3588ddbb0fcbc2927eb4ce901b315baa6e529a5ac195caac96c008",
+      "beforeBytes": 20211084,
+      "afterBytes": 6533740,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -1427,15 +1248,12 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
           "beforeBytes": 5858034,
-          "afterBytes": 318262,
+          "afterBytes": 677318,
           "before": [
             2048,
             2048
@@ -1445,16 +1263,10 @@
             2048
           ],
           "alpha": false,
+          "quality": 90,
           "lossless": false,
           "role": "color",
-          "encoding": {
-            "provider": "Tinify",
-            "outputSha256": "a03c0e28ce2ea6dc382b201e48fddf6bcfad86d064588a94306c4f5feb73be40",
-            "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 4.933771480078305,
-          "psnr": 34.26722300491303,
-          "maxChannelError": 98
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -1472,24 +1284,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.668391598675509,
-          "psnr": 39.60581231620213,
-          "maxChannelError": 91
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
-      "geometryBytes": 890884,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "sourceSha256": "f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f",
+      "runtimeSha256": "e446e902525cafed908e55bd4ef359bf30f93c39e4aa96db5cdecc271bece00e",
+      "beforeBytes": 22362516,
+      "afterBytes": 7814792,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -1507,15 +1315,12 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
           "beforeBytes": 6449654,
-          "afterBytes": 433786,
+          "afterBytes": 876434,
           "before": [
             2048,
             2048
@@ -1525,16 +1330,10 @@
             2048
           ],
           "alpha": false,
+          "quality": 90,
           "lossless": false,
           "role": "color",
-          "encoding": {
-            "provider": "Tinify",
-            "outputSha256": "68266763c8da5e30941306d1ccb29a962b19496c70b7d74d905080e9dd30e1d5",
-            "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 5.096498984058156,
-          "psnr": 33.98536476917354,
-          "maxChannelError": 75
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -1552,24 +1351,20 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 2.4178288285255167,
-          "psnr": 40.46229257858266,
-          "maxChannelError": 85
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     },
     {
       "source": "assets/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
-      "geometryBytes": 532536,
-      "geometryMaxError": 0,
-      "animationMaxError": 0,
+      "runtime": "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "sourceSha256": "fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb",
+      "runtimeSha256": "377a2ac673a78c000a473aac6aa3730db13017e59d38d9de6532b2bbb215d73e",
+      "beforeBytes": 23317344,
+      "afterBytes": 7435732,
+      "compressedViews": 4,
       "images": [
         {
           "index": 0,
@@ -1587,15 +1382,12 @@
           "quality": 95,
           "lossless": true,
           "role": "normal",
-          "alphaQuality": 100,
-          "rmse": 0,
-          "psnr": null,
-          "maxChannelError": 0
+          "alphaQuality": 100
         },
         {
           "index": 1,
           "beforeBytes": 7076302,
-          "afterBytes": 546546,
+          "afterBytes": 1092188,
           "before": [
             2048,
             2048
@@ -1605,16 +1397,10 @@
             2048
           ],
           "alpha": false,
+          "quality": 90,
           "lossless": false,
           "role": "color",
-          "encoding": {
-            "provider": "Tinify",
-            "outputSha256": "c48a4c7acbe702e5980965255752b63110fb4fb3b6aefd56895cf1b5723df817",
-            "recipe": "content/manifests/embedded-color-recipes.json"
-          },
-          "rmse": 5.757604773823236,
-          "psnr": 32.92596661332495,
-          "maxChannelError": 69
+          "alphaQuality": 100
         },
         {
           "index": 2,
@@ -1632,18 +1418,11 @@
           "quality": 95,
           "lossless": false,
           "role": "data",
-          "alphaQuality": 100,
-          "rmse": 3.0137619430324336,
-          "psnr": 38.54862472017882,
-          "maxChannelError": 85
+          "alphaQuality": 100
         }
       ],
-      "validation": {
-        "originalErrors": 0,
-        "decodedErrors": 0,
-        "newErrors": []
-      },
-      "errors": []
+      "geometryTolerance": 0,
+      "animationTolerance": 0
     }
   ]
 }
