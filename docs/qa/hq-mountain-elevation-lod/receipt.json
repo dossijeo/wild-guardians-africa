@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-07T21:36:08.271088+00:00",
+  "captureHarnessCommit": "aab1a134",
+  "branchHeadAtArchive": "a9b94ae30acdb53c282890a9666bcf70327527fc",
+  "sources": {
+    "tests/browser/hq-mountain-horizon.html": "1e888a9e9dc1c282fc3d5900bdf1fd14c2e858012875a5d35be473eba31b4598",
+    "tests/browser/mountain-lod-diagnostic.js": "39670e93aa42c1136470704b0c71ab894657d44b37647e6e1141dc3507bcd8b6",
+    "src/rendering/mountain-arcs.js": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+    "src/rendering/mountain-arc-composition.js": "24f2334e55ad4a13967dbe6a9aa082ce33f2af96a151ed1fa2711bf662814b87"
+  },
+  "atlases": {
+    "hq-arc-pilot-canyons": {
+      "bytes": 172020,
+      "sha256": "f4d47ef6c2299b45e9457d5ae39efc42d608de48db0edba35b8fbc9a6c1e7811",
+      "layoutSha256": "74da09940b557931d16d3008c38c1c4bfc7db7c6f2a778fa346bd6ef12093909"
+    },
+    "hq-arc-four": {
+      "bytes": 787504,
+      "sha256": "151312cc3dec8bf2bca0d2791fb6db10808b5d212042a904453614886aa19666",
+      "layoutSha256": "0dc3993532be265b3488bd881d75272e2bbdc76af2e2f5b24772ca8ef918d7f1"
+    }
+  },
+  "files": {
+    "canyon-elevated-day.json": {
+      "rawSha256": "fbf47cb69094191fd6cdfcb01c5a17672341d1284bb25fc7777255dc4a008f05",
+      "gzipSha256": "6a6dbb4b3e78695f92cec40cd9c7ac862e1651b974ead8f6396e0f54243246c0",
+      "gzipBytes": 2411,
+      "poses": 73,
+      "phase": "day",
+      "elevation": 180,
+      "drawingBuffer": [
+        1600,
+        900
+      ],
+      "viewport": [
+        1280,
+        720,
+        1.25
+      ]
+    },
+    "canyon-elevated-night.json": {
+      "rawSha256": "800b342caf3fa5a5898446b2775836f0a8863998de54678a78c9545b8189cd92",
+      "gzipSha256": "c407bb82d08c5712eb137801551f7f889e78feac52170851d45f861d4af90443",
+      "gzipBytes": 2420,
+      "poses": 73,
+      "phase": "night",
+      "elevation": 180,
+      "drawingBuffer": [
+        1600,
+        900
+      ],
+      "viewport": [
+        1280,
+        720,
+        1.25
+      ]
+    },
+    "canyon-intermediate-day.json": {
+      "rawSha256": "62bf02cfa412bf77ee687beeccf65c58d0dcb118d30632f1104e75cef56d1b30",
+      "gzipSha256": "30a94a8a93df66bc6016f211ae5556448927e48dac9d026519cdbb1bc9652a76",
+      "gzipBytes": 2508,
+      "poses": 73,
+      "phase": "day",
+      "elevation": 80,
+      "drawingBuffer": [
+        1600,
+        900
+      ],
+      "viewport": [
+        1280,
+        720,
+        1.25
+      ]
+    },
+    "canyon-intermediate-night.json": {
+      "rawSha256": "a965a0bd68dac258b1b4b9902d893aae8c6a795e2df4414cced9e0df0c18021a",
+      "gzipSha256": "df8999d548569c116ac395f3fc28ca017f6fbd266eeb50eabf2cd4cb75bfcdbe",
+      "gzipBytes": 2470,
+      "poses": 73,
+      "phase": "night",
+      "elevation": 80,
+      "drawingBuffer": [
+        1600,
+        900
+      ],
+      "viewport": [
+        1280,
+        720,
+        1.25
+      ]
+    },
+    "sabana-lod-native.json": {
+      "rawSha256": "068178cdebcbdca28f0a63c1de90fe46c104ff52c44c3522a33c4bc106be52d9",
+      "gzipSha256": "8f9f04ad2f2d334ae0604fb2baae891cd21e5ea7574894a13d6e872dd4930a33",
+      "gzipBytes": 2880,
+      "poses": 73,
+      "phase": "day",
+      "elevation": 4,
+      "drawingBuffer": [
+        1600,
+        900
+      ],
+      "viewport": [
+        1280,
+        720,
+        1.25
+      ]
+    },
+    "sabana-lod-small.json": {
+      "rawSha256": "a6ebd32441894f10626f0a3a463e1df419bee2aeefbbaf0743d37c4f51ce0ca3",
+      "gzipSha256": "c252b2534d591df06f60e7d03a9a08c5f5a1355e6e49add579b59d8e6c42493f",
+      "gzipBytes": 2832,
+      "poses": 73,
+      "phase": "day",
+      "elevation": 4,
+      "drawingBuffer": [
+        320,
+        180
+      ],
+      "viewport": [
+        320,
+        180,
+        1.0000000149011612
+      ]
+    },
+    "canyon-elevated-day.png": {
+      "bytes": 29814,
+      "sha256": "065578ed1cfd2b83e4a3fb7a6a382462d7fb048e6ad0d36002886ce9b880e589"
+    },
+    "canyon-elevated-night.png": {
+      "bytes": 19332,
+      "sha256": "6323774932b1e84906944c7b31c15d5256f93bcb2c65ae5338b57a823d9f69d2"
+    },
+    "canyon-intermediate-day.png": {
+      "bytes": 40960,
+      "sha256": "098ba6b9e361c6f351fed89119b2f566e487720fc634697b56ab9b720dff518e"
+    },
+    "canyon-intermediate-night.png": {
+      "bytes": 30746,
+      "sha256": "cab8e4bfa2939561d9f69fa46f599cdc78cd1b625d14b452e18b1b118b8c7d09"
+    },
+    "sabana-lod-0.png": {
+      "bytes": 128499,
+      "sha256": "f9dccbffb321e0e65eb23d5c9cad93788c073928472938fdc91e542ab4eefbac"
+    },
+    "sabana-lod-185.png": {
+      "bytes": 102321,
+      "sha256": "eb57b77374fbb73b328f89453a0c327989d59008f8fe77c04839bd103f268fd6"
+    },
+    "sabana-lod-275.png": {
+      "bytes": 105519,
+      "sha256": "89fc9385bbb7f9bceff752d95ab21f47952cb14e80159055b0d6dc49284ac8b3"
+    },
+    "sabana-lod-95.png": {
+      "bytes": 111506,
+      "sha256": "e3006ae81686104cf80c9d6ccb40609344b5d46ae34eda15b6d3340a605ce4b9"
+    },
+    "sabana-lod-small-0.png": {
+      "bytes": 12449,
+      "sha256": "60e18ece2fc1a3866b9572b51ac75d1a526ac258bcf0eba1b03e743cff1f14f3"
+    },
+    "sabana-lod-small-185.png": {
+      "bytes": 9905,
+      "sha256": "492fa4f277f0a87bcd80983b51aee207394e479a7b7aa20cb11fd741b33dfeac"
+    },
+    "sabana-lod-small-275.png": {
+      "bytes": 11197,
+      "sha256": "e6dd926a4d8a239fba1c7a76023d84186ee7038e234b24302d538baaa704291f"
+    },
+    "sabana-lod-small-95.png": {
+      "bytes": 10665,
+      "sha256": "88b361cf94bdbff27944423c090e7fcc55b4bc326d402ed40dafa4bbe7db6866"
+    }
+  },
+  "totalPoses": 438
+}
