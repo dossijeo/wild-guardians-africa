@@ -22,6 +22,7 @@ export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementC
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const eventAlertSound=Object.freeze({WorkerIncapacitated:'game_farmer_hurt',TutorialCompleted:'ui_objective_complete'});
 export const eventRefundSound=Object.freeze({WallRemoved:'eco_gain'});
+export const eventSpendSound=Object.freeze({HiringConfirmed:'eco_spend'});
 export const SFX_LIMITS=Object.freeze({total:20,perFamily:4,perEmitter:2});
 export const soundPriority=id=>/^(step_|run_surface_set|beast_step_)/.test(id)?0:['game_victory','game_major_loss'].includes(id)?4:['game_attack_alert','game_enemy_detected','game_building_attacked','game_wall_critical','game_farmer_hurt','npc_fall'].includes(id)?3:['spirit_tutorial_cue','spirit_power_activate','game_attack_over','beast_hit_character'].includes(id)?2:1;
 export const soundBus=id=>id.startsWith('amb_')?'ambient':/^(ui_|game_|eco_|spirit_tutorial)/.test(id)?'ui':'world';
@@ -222,6 +223,10 @@ export class AudioSystem {
       const extra=eventExtraSound[event.type];if(extra)this.sound(extra,{...eventAudioOptions(event,extra,state,listener),...constructionOptions,family:extra==='beast_hit_character'?'beast-worker-contact':'construction-complete'}).catch(()=>{});
       const refund=eventRefundSound[event.type];
       if(refund&&Number.isFinite(event.refund)&&event.refund>0)this.sound(refund,{bus:'ui',family:'economic-refund',emitter:'ui:refund',
+        isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&
+          !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
+      const spend=eventSpendSound[event.type];
+      if(spend&&Number.isFinite(event.cost)&&event.cost>0)this.sound(spend,{bus:'ui',family:'economic-spend',emitter:'ui:payroll',
         isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&
           !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
     }

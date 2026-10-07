@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **95**. Sin asignar en gameplay: **31**.
+Asignados: **96**. Sin asignar en gameplay: **30**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -120,7 +120,7 @@ Asignados: **95**. Sin asignar en gameplay: **31**.
 | 112 | ui_pause · Pausa | Asignado | Pausa solicitada por el jugador. | src/audio/ui-audio.js:1 → ui-user-pause-transition |
 | 113 | ui_resume · Volver al juego | Asignado | Reanudar cuando ya no queden motivos de pausa. | src/audio/ui-audio.js:1 → ui-user-pause-transition |
 | 114 | eco_gain · Ganar recurso | Asignado | Ingreso real de dinero; alternativa a sonidos específicos de venta. | src/audio/audio.js:24 → WallRemoved (positive committed refund only) |
-| 115 | eco_spend · Gastar recurso | Pendiente | Gasto real; alternativa a compra específica, nunca al solicitar reparación. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 115 | eco_spend · Gastar recurso | Asignado | Gasto real; alternativa a compra específica, nunca al solicitar reparación. | src/audio/audio.js:25 → HiringConfirmed (positive committed payroll only) |
 | 116 | eco_crop_sold · Cosecha vendida | Asignado | Caja entregada en centro y cosecha contabilizada. | src/audio/audio.js:21 → CrateDelivered |
 | 117 | eco_item_pickup · Objeto recogido | Asignado | Recogida física de caja/producto; no suma dinero. | src/audio/farm-contact-audio.js:4 → FarmContactAudio.update: native initial/water/harvest/crate contact |
 | 118 | eco_big_reward · Recompensa importante | Pendiente | Reserva de gran recompensa monetaria: victoria no concede una cifra de dinero aprobada. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
