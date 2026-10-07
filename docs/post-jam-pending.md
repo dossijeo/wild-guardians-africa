@@ -34,6 +34,8 @@ Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/R
 
 ## Imágenes WebP y Tinify (pedido el 5 de octubre de 2026)
 
+Estado embebido actual: [lote completo preparado](qa/embedded-color-batch-preparation/README.md). Las cinco bestias tienen sus colores revisados instalados; quedan 16 colores con entradas PNG sin pérdida preparadas desde originales y 42 normales/datos para revisión específica. Los PNG intermedios están en caché, fuera del paquete. Treinta pruebas correctas; todavía no hay conversiones nuevas ni ahorro adicional en esta entrega.
+
 Estado actual contrastado: [preflight cd31d6b](qa/image-current-preflight/README.md). Cero imágenes distribuidas sin clasificación; 79 archivos de color elegibles, 43 de revisión específica y 40 variantes integradas. Las 63 imágenes embebidas siguen fuera del preflight independiente. 60 pruebas correctas; inventario y selección actuales archivados. Las cifras siguientes describen entregas históricas y no deben sumarse ni usarse como estado actual.
 
 [Repacker de color embebido](qa/web-glb-image-repack/README.md): sustituciones de longitud distinta en los veinte GLB conservan bytes Meshopt, metadata de skins/animaciones y todas las imágenes no modificadas. 66 pruebas correctas. Herramienta offline; pendiente convertir desde originales, actualizar manifiestos y validar assets antes de distribuirlos. No hay ahorro nuevo ni assets modificados en esta entrega.
