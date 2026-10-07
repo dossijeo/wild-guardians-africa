@@ -51,3 +51,14 @@ test('overlapping regional scenes keep identical native tree IDs and transforms'
  for(const tree of a.trees)if(byId.has(tree.id)){assert.deepEqual(byId.get(tree.id),tree);shared++;}
  assert.ok(shared>40);assert.equal(new Set(b.trees.map(t=>t.id)).size,b.trees.length);
 });
+
+
+test('regional color grid transfers from worker without changing native tree population or coarse contact data',async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
+ const request={config:{seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)},profile:pack.profile,treeBounds:{minX:-48,maxX:48,minZ:-48,maxZ:48},groundBounds:{minX:-64,maxX:64,minZ:-64,maxZ:64},step:32,colorMapStep:4,waterSurface:true};
+ const worker=new Worker(new URL('./fixtures/far-scene-worker-node.mjs',import.meta.url));
+ try{
+  const messages=await new Promise((resolve,reject)=>{const received=[];worker.on('error',reject);worker.on('message',v=>{received.push(v);if(received.length===2)resolve(received);});worker.postMessage(request);});
+  const actual=messages[0].data,plain=buildFarSceneData({...request,colorMapStep:null});assert.deepEqual(actual,buildFarSceneData(request));assert.deepEqual(actual.trees,plain.trees);assert.deepEqual(actual.ground.positions,plain.ground.positions);assert.deepEqual(actual.ground.indices,plain.ground.indices);assert.equal(actual.ground.nx,4);assert.equal(actual.ground.colorMap.width,33);assert.deepEqual(messages[1].lengths,[0,0,0,0]);
+ }finally{await worker.terminate();}
+});

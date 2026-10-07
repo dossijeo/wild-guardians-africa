@@ -1,12 +1,16 @@
+import {farGroundColorUvs} from './far-ground-color-map.js';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
 // Low-detail ground belongs to the regional layer. Discard the live resident
 // rectangle so the two surfaces never overlap or compete in the depth buffer.
 export function attachNativeFarGround(candidate,data,world,{simplified=false}={}){
- const mapped=!!world.biomeGround&&!simplified,colors=mapped?data.colors:Float32Array.from(data.colors,c=>c<=.04045?c*.0773993808:Math.pow((c+.055)*.9478672986,2.4));
+ const mapped=!!world.biomeGround&&!simplified,colors=mapped||data.colorMap?data.colors:Float32Array.from(data.colors,c=>c<=.04045?c*.0773993808:Math.pow((c+.055)*.9478672986,2.4));
+ if(data.colorMap&&mapped)throw Error('Color-map ground requires the simplified recipe');
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
- const bounds={value:new THREE.Vector4()},origin=world.toon.uniforms.uWorldOrigin,material=mapped?nativeGroundMaterial('muy_baja'):new THREE.MeshBasicMaterial({vertexColors:true,fog:true,toneMapped:false});
+ let colorMap=null;
+ if(data.colorMap){const map=data.colorMap;colorMap=new THREE.DataTexture(map.data,map.width,map.height,THREE.RGBAFormat);colorMap.colorSpace=THREE.SRGBColorSpace;colorMap.magFilter=THREE.LinearFilter;colorMap.minFilter=THREE.LinearMipmapLinearFilter;colorMap.generateMipmaps=true;colorMap.needsUpdate=true;geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,map),2));candidate.farGroundTextures=[colorMap];}
+ const bounds={value:new THREE.Vector4()},origin=world.toon.uniforms.uWorldOrigin,material=mapped?nativeGroundMaterial('muy_baja'):new THREE.MeshBasicMaterial({vertexColors:!colorMap,map:colorMap,fog:true,toneMapped:false});
  let farToon=null;
  if(mapped){
   geometry.computeVertexNormals();
@@ -25,13 +29,14 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false}={}
   shader.vertexShader='varying vec2 vFarGroundXZ;uniform float uFarGroundNight;\n'+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('#include <worldpos_vertex>','#include <worldpos_vertex>\nvFarGroundXZ=(modelMatrix*vec4(transformed,1.)).xz;');
   // Approximate fixed-light night grading per vertex: no terrain noise, normals
-  // or extra fragment texture reads. Original daytime colors remain intact.
-  if(!mapped)shader.vertexShader=shader.vertexShader.replace('#include <color_vertex>','#include <color_vertex>\nvColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');
+  // or extra fragment texture reads for the original vertex-color path.
+  if(!mapped&&!colorMap)shader.vertexShader=shader.vertexShader.replace('#include <color_vertex>','#include <color_vertex>\nvColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');
+  if(colorMap){shader.uniforms.uFarGroundNight=world.toon.uniforms.uNight;shader.fragmentShader='uniform float uFarGroundNight;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\ndiffuseColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');}
   shader.fragmentShader='varying vec2 vFarGroundXZ;uniform vec4 uFarNearBounds;uniform vec2 uFarGroundOrigin;\n'+shader.fragmentShader;
   shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nvec2 farGroundXZ=vFarGroundXZ+uFarGroundOrigin;if(farGroundXZ.x>=uFarNearBounds.x&&farGroundXZ.y>=uFarNearBounds.y&&farGroundXZ.x<=uFarNearBounds.z&&farGroundXZ.y<=uFarNearBounds.w)discard;');
  };
- material.customProgramCacheKey=()=> 'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
+ material.customProgramCacheKey=()=> colorMap?'far-ground-color-map-v1':'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
  const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  candidate.updateGroundBounds=()=>bounds.value.set(...world.nearBounds);
- candidate.updateGroundBounds();const dispose=candidate.dispose;candidate.dispose=options=>{mesh.removeFromParent();geometry.dispose();material.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
+ candidate.updateGroundBounds();let disposed=false;const dispose=candidate.dispose;candidate.dispose=options=>{if(disposed)return;disposed=true;mesh.removeFromParent();geometry.dispose();material.dispose();colorMap?.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
 }
