@@ -1,0 +1,30 @@
+{
+  "candidate": "19424f6360d0216f7dbe062725bc2c7329ae5d1a",
+  "reviewedFiles": [
+    "tools/experiments/far-impostor-math.js",
+    "tools/experiments/far-impostor-prototype.js",
+    "tests/far-tree-importance.test.js"
+  ],
+  "tests": {
+    "command": "node --test tests/far-tree-importance.test.js",
+    "passed": 2,
+    "failed": 0
+  },
+  "finding": "Tree rank is weighted by authored height once during instancing. No shader text or rank uploads change during camera updates.",
+  "visual": {
+    "path": "docs/qa/far-density-shape-review/density-motion-3.png",
+    "sha256": "7ff77f61847ceda17a90112cf511bb0bf25ce8ea3fe23eb3d55e929b345bd6ec",
+    "finding": "Dither remains visibly apparent on a background tree near screen x690 y110. Agent asked to identify that tree and verify fade/fog beyond the initial baobab."
+  },
+  "limits": [
+    "No new GPU or CPU timing measurement",
+    "Not universal visual acceptance",
+    "No PR or merge approval",
+    "Far feature remains opt-in outside normal main gameplay"
+  ],
+  "hashes": {
+    "tools/experiments/far-impostor-math.js": "9575804704d42e4a0929687b5efa5563b0284d9d9b20255edfbdd1cff1b63a2a",
+    "tools/experiments/far-impostor-prototype.js": "9e83797b4aeb54ceb12e34bf3ea7d3da2cd2e703799ef5d307d380c229874b3d",
+    "tests/far-tree-importance.test.js": "b379d11afd47310688a1b05b478049f6445ff1049938c49934409d7b3acb9a04"
+  }
+}
