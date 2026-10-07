@@ -577,3 +577,13 @@ Conditions correction: root subsequently confirmed CPU campaigns27148/49032
 were live and advancing, not frozen; the earlier reservation message carried
 stale CPU state. No GPU timings were run, and no performance conclusion is
 drawn from this campaign. Tab29/context were closed before root's HQ window.
+
+Prepared diagnostic `sourceNormalPath` leaves repaired reverse-normal bits
+in geometry, restores the authored object normal before interpolation, then
+emulates the source fragment normalize/faceDirection path using the existing
+reverse flag. Material.side and GL culling remain FrontSide; the fragment
+DOUBLE_SIDED define only retains source normal/TBN behavior. This tests whether
+the changed interpolation/normalization path explains residuals; it is not
+an attribution or a passing result. Source/candidate face provenance can be
+captured afterward. Guided mature views remain diagnosis, not independent
+acceptance, and the direct-XY rejection is retained regardless of the outcome.

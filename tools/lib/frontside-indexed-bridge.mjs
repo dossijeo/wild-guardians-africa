@@ -1,7 +1,7 @@
 // QA-only candidate builder. Production crop-batch does not import this module.
 import * as THREE from 'three';
 const fields={position:3,normal:3,uv:2,aRoot:3,aPeerRoot:3,aSpin:4,aPart:4};
-export function patchReverseDerivativeFrame(material,bridge=false){
+export function patchReverseDerivativeFrame(material,bridge=false,sourceNormalPath=false){
  const compile=material.onBeforeCompile,cache=material.customProgramCacheKey;
  material.onBeforeCompile=function(shader,renderer){
   compile.call(this,shader,renderer);
@@ -9,6 +9,19 @@ export function patchReverseDerivativeFrame(material,bridge=false){
   shader.vertexShader=(bridge?'':'attribute float aQaReverse;\n')+'varying float vQaReverse;\n'+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('void main() {',`void main() { vQaReverse=${bridge?'aPart.w':'aQaReverse'};`);
   shader.fragmentShader='varying float vQaReverse;\n'+shader.fragmentShader;
+  if(sourceNormalPath){
+   // Keep repaired, negative reverse normals in the geometry, but restore the
+   // authored normal before interpolation, then emulate source DoubleSide's
+   // exact normalize/faceDirection path in the fragment. This isolates whether
+   // changing the interpolation/normalization path explains the residual.
+   if(!shader.vertexShader.includes('#include <defaultnormal_vertex>'))throw Error('Missing source normal interpolation contract');
+   shader.vertexShader=shader.vertexShader.replace('#include <defaultnormal_vertex>','if(vQaReverse>.5)objectNormal=-objectNormal;\n#include <defaultnormal_vertex>');
+   shader.fragmentShader='#ifndef DOUBLE_SIDED\n#define DOUBLE_SIDED\n#endif\n'+shader.fragmentShader;
+   const chunk=THREE.ShaderChunk.normal_fragment_begin;
+   const marker='float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;';if(!chunk.includes(marker))throw Error('Unexpected Three faceDirection contract');
+   shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',chunk.replace(marker,'float faceDirection = (vQaReverse>.5 ? -1.0 : 1.0) * (gl_FrontFacing ? 1.0 : -1.0);'));
+   return;
+  }
   shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',`#include <normal_fragment_begin>
 // Actual crop states/bridges omit authored tangents. Match DoubleSide's XY
 // frame inversion after deriving from the already reversed shading normal.
@@ -19,7 +32,7 @@ export function patchReverseDerivativeFrame(material,bridge=false){
  if(vQaReverse>.5){tbn2[0]*=-1.;tbn2[1]*=-1.;}
 #endif`);
  };
- material.customProgramCacheKey=function(){return cache.call(this)+'|qa-reverse-derivative-frame-v1|'+(bridge?'bridge':'state');};
+ material.customProgramCacheKey=function(){return cache.call(this)+'|qa-reverse-derivative-frame-v1|'+(bridge?'bridge':'state')+'|'+(sourceNormalPath?'source-normal-path':'direct-xy');};
 }
 export function reverseIndexedState(geometry,faces){
  if(!geometry.index||geometry.getAttribute('tangent')||Object.keys(geometry.morphAttributes).length)throw Error('Expected indexed derivative-frame crop state without morphs');
