@@ -23,7 +23,7 @@ import {WORLD_RESOLUTIONS,worldResolution,applyWorldResolution} from './world-re
 import {renderCommandFeedback} from '../ui/command-feedback.js';
 import {BALANCE as B} from '../simulation/balance.js';
 import * as Game from '../simulation/game.js';
-import {PROFILES,hiringCost} from '../simulation/workforce.js';
+import {PROFILES} from '../simulation/workforce.js';
 import {formatMoney,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
@@ -34,6 +34,7 @@ import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {assetUrl} from '../rendering/asset-url.js';
 import {createFrameImageLoader} from '../ui/frame-image-loader.js';
+import {hiringConfirmation} from '../ui/hiring-confirmation.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 import {NativeGuardian} from '../ui/guardian.js';
@@ -340,12 +341,12 @@ function hiringDialog(centerId=null) {
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
     if(!additional)state.hiringSelection={...selection};
-    try {const cost=hiringCost(selection,additional?{time:state.time}:{}),available=numberOf(state.ledger.balance);document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=cost>available;document.querySelector('#hireBudgetMessage').textContent=cost>available?'Reduce la plantilla para ajustarla al saldo.':'El salario se cobra una sola vez al confirmar.';if(cost<=available)routes.update(state,selection,centerId);else routes.cancel();}
+    try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;if(canConfirm)routes.update(state,selection,centerId);else routes.cancel();}
     catch(e){routes.cancel();document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{const prepared=routes.take(state,selection,centerId);const hired=additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);if(hired!==false&&prepared)warmRaidNavigation(nav,prepared.warmth);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;const prepared=routes.take(state,selection,centerId);const hired=additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);if(hired!==false&&prepared)warmRaidNavigation(nav,prepared.warmth);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
   paintPanelFrame(modal,stage,'No se ha podido cargar el marco de contratación.');
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
