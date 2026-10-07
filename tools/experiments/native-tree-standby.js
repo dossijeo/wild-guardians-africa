@@ -52,6 +52,8 @@ export class NativeTreeStandby {
    for(const rows of bank.rows)rows.sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
    for(const [level,mesh] of bank.meshes.entries()){const rows=bank.rows[level];mesh.count=rows.length;mesh.visible=rows.length>0;for(const [i,d] of rows.entries()){const offset=i*16;mesh.instanceMatrix.array.set(d.matrix,offset);mesh.instanceMatrix.array[offset+12]=d.matrix[12]-bank.root.position.x;mesh.instanceMatrix.array[offset+14]=d.matrix[14]-bank.root.position.z;}mesh.instanceMatrix.needsUpdate=true;mesh.geometry.attributes.nativeVisibility.array.fill(0);mesh.geometry.attributes.nativeVisibility.needsUpdate=true;}
    await this.prepare(bank.root,()=>this.closed);if(this.closed)break;
+   // A generation may change between the preparation promise and adoption.
+   if([...wanted.values()].some(d=>d.resource!==this.sourceKey(d.level)))throw new NativeFarGpuCancelled('resources-changed');
    this.active?.root.removeFromParent();this.active=bank;this.scene.add(bank.root);this.revision++;this.stats.preparations++;this.stats.trees=wanted.size;
    this.stats.estimatedOwnedGpuBytes=this.banks.filter(Boolean).reduce((sum,b)=>sum+b.meshes.reduce((n,m)=>n+m.instanceMatrix.array.byteLength+(m.geometry.index?.array.byteLength??0)+Object.values(m.geometry.attributes).reduce((v,a)=>v+a.array.byteLength,0),0),0);
   }}catch(error){if(!this.closed){if(error instanceof NativeFarGpuCancelled)this.stats.cancelledPreparations++;else{this.stats.errors.push(String(error));this.onError(error);}}}

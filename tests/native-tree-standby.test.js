@@ -99,3 +99,13 @@ test('ordinary preparation faults remain errors and never replace the accepted b
  f.owner.request([descriptor(tree('b',2))],{x:0,z:0});await settled(f.owner);
  assert.equal(f.owner.active,bank);assert.equal(reported,fault);assert.match(f.owner.stats.errors[0],/0x502/);assert.equal(f.owner.stats.cancelledPreparations,0);f.close();
 });
+
+
+test('a completed promise from an old epoch never adopts over the existing bank',async()=>{
+ const f=fixture(),a=tree(),b=tree('b',2);let epoch=0,finish;f.owner.resourceRevision=()=>epoch;
+ f.owner.request([descriptor(a)],{x:0,z:0});await settled(f.owner);const previous=f.owner.active,revision=f.owner.revision;
+ f.owner.prepare=()=>new Promise(resolve=>finish=resolve);f.owner.request([descriptor(b)],{x:0,z:0});epoch++;finish();await settled(f.owner);
+ assert.equal(f.owner.active,previous);assert.equal(f.owner.revision,revision);assert.equal(f.owner.has('b',b),false);assert.equal(f.owner.has('a',a),false);
+ assert.equal(f.owner.stats.cancelledPreparations,1);assert.deepEqual(f.owner.stats.errors,[]);assert.equal(f.scene.children.length,1);
+ f.owner.prepare=async()=>{};f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.has('b',b),true);f.close();
+});
