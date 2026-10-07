@@ -15,3 +15,11 @@ test('native-backed impostors allocate no duplicate 3D resources and preserve pe
  p.dispose({disposeTexture:false});assert.equal(sourceDisposed,0);assert.equal(textureDisposed,0);
  geometry.dispose();material.dispose();texture.dispose();
 });
+
+test('horizontal atlas base generates float operands for GLSL',()=>{
+ const geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial(),texture=new THREE.Texture();
+ const p=createFarImpostorPrototype({geometry,material},texture,{impostorWidth:2,impostorHeight:3,baseV:0,localBase:[0,0,0]},[{id:'tree',x:0,y:0,z:0,yaw:0,scale:1}],{nativeModels:false});
+ assert.match(p.impostors.material.vertexShader,/uv.y-0\.0/);
+ assert.doesNotMatch(p.impostors.material.vertexShader,/uv.y-0\)/);
+ p.dispose();geometry.dispose();material.dispose();
+});
