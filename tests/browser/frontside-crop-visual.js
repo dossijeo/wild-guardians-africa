@@ -30,10 +30,10 @@ async function run(){
  const scene=new THREE.Scene(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(scene,toon),sky=new NativeSky();await sky.load();toon.environment(sky.environmentTextures,sky.uniforms.uSkyYaw);
  const sun=new THREE.DirectionalLight('#ffe2a8',3),ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);updateShadowCamera(sun,new THREE.Vector3());scene.add(sun,sun.target,ambient);
  const release=installNativeShadow(renderer,sun,toon.shadowUniforms);release.cache.enabled=false;
- const rigs=[],resourceRows=[];
+ const rigs=[],resourceRows=[],ownedCandidateGeometries=[];
  for(let arm=0;arm<4;arm++){
-  const group=new THREE.Group();const batch=createCropBatch(group,renderer,gltf,data,2);let sourceTriangles=0,candidateTriangles=0,bytes=0;
-  group.traverse(mesh=>{if(!mesh.isMesh)return;const match=mesh.name.match(/^puente_(.+)_(\d+)_(\d+)$/);let changed=false;
+  const group=new THREE.Group();const batch=createCropBatch(group,renderer,gltf,data,2),speciesBudgets={};let sourceTriangles=0,candidateTriangles=0,bytes=0;
+  group.traverse(mesh=>{if(!mesh.isMesh)return;const match=mesh.name.match(/^puente_(.+)_(\d+)_(\d+)$/),originalGeometry=mesh.geometry,originalFaceCount=(originalGeometry.index?.count??originalGeometry.getAttribute('position').count)/3,species=match?match[1]:sourceModels.find(m=>m.name===mesh.name).userData.crop;let changed=false;
    if(match){const source=sourceModels.find(m=>m.userData.crop===match[1]&&m.userData.stage===Number(match[2])),ai=source.userData.cropIndex*5+Number(match[2])-1,bi=ai+1;
     const pair=data.pairs.find(p=>p.a===ai&&p.b===bi),keys=[];for(const [role,model] of [[0,ai],[1,bi]]){const indices=sourceModels[model].geometry.index.array;for(let f=0;f<data.models[model].faces;f++)for(let c=0;c<3;c++)keys.push([role,indices[f*3+c],data.models[model].faceLabels[f]]);}
     sourceTriangles+=keys.length/3;
@@ -42,9 +42,11 @@ async function run(){
     if(arm>1){const faces=new Set(selection.selected[mesh.name]??[]);for(const entry of selection.selected.bridgeSource??[]){const [m,f]=entry.split(':').map(Number);if(m===index)faces.add(f);}if(faces.size){mesh.geometry=reverseIndexedState(mesh.geometry,[...faces].sort((a,b)=>a-b));changed=true;}}
    }
    if(arm>1&&changed){const material=mesh.material.clone();material.onBeforeCompile=mesh.material.onBeforeCompile;material.customProgramCacheKey=mesh.material.customProgramCacheKey;material.side=THREE.FrontSide;material.shadowSide=THREE.DoubleSide;if(arm===3)patchReverseDerivativeFrame(material,!!match,sourceNormalPath);mesh.material=material;}
-   candidateTriangles+=(mesh.geometry.index?.count??mesh.geometry.getAttribute('position').count)/3;
-   bytes+=Object.values(mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(mesh.geometry.index?.array.byteLength??0);mesh.castShadow=mesh.receiveShadow=true;
-  });scene.add(group);rigs.push({group,batch});resourceRows.push({arm,sourceTriangles,candidateTriangles,triGrowthPercent:100*(candidateTriangles/sourceTriangles-1),geometryAttributeAndIndexBytes:bytes});
+   if(mesh.geometry!==originalGeometry)ownedCandidateGeometries.push(mesh.geometry);
+   const candidateFaceCount=(mesh.geometry.index?.count??mesh.geometry.getAttribute('position').count)/3,meshBytes=Object.values(mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(mesh.geometry.index?.array.byteLength??0)+mesh.instanceMatrix.array.byteLength;
+   candidateTriangles+=candidateFaceCount;bytes+=meshBytes;const speciesRow=speciesBudgets[species]??={sourceTriangles:0,candidateTriangles:0,geometryAndInstanceBufferBytes:0};speciesRow.sourceTriangles+=originalFaceCount;speciesRow.candidateTriangles+=candidateFaceCount;speciesRow.geometryAndInstanceBufferBytes+=meshBytes;mesh.castShadow=mesh.receiveShadow=true;
+  });for(const row of Object.values(speciesBudgets))row.triGrowthPercent=100*(row.candidateTriangles/row.sourceTriangles-1);
+  scene.add(group);rigs.push({group,batch});resourceRows.push({arm,sourceTriangles,candidateTriangles,triGrowthPercent:100*(candidateTriangles/sourceTriangles-1),geometryAndInstanceBufferBytes:bytes,speciesBudgets});
  }
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',cropVisual:true,metricPolicyVersion:2,source:url,sourceNormalPath,arms:['original DoubleSide','indexed DoubleSide','selective FrontSide uncompensated',sourceNormalPath?'selective FrontSide source-normal-path':'selective FrontSide XY compensated'],resolution:size,contextAttributes:gl.getContextAttributes(),resources:resourceRows,samples:[],limitations:['Maize pilot only; no category approval or GPU timing.','Color shadows retain DoubleSide; shadowFront/depth/ground masks are separate gates.','Actual source growth/bridge shaders and web textures; indexed source isolates indexing from culling.','Candidate resource gates remain unchanged; rendered quality cannot waive triangle budget.']};
  const transitionWidth=Math.min(.34,2/(.25*cropSpec('maiz').growth_seconds)),bridgeGrowths=[.25,.5,.75].map(t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t));
@@ -61,5 +63,5 @@ async function run(){
  if(report.samples.length&&!report.invalidControl){const canvas=document.createElement('canvas');canvas.width=size*4;canvas.height=size;const ctx=canvas.getContext('2d');for(let arm=0;arm<4;arm++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(pixels[arm].subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);}report.capturePng=canvas.toDataURL('image/png');
   if(options.has('mapRgb')){report.rgbFaceProvenance=[];for(const arm of [0,3]){rigs.forEach((r,i)=>r.group.visible=i===arm);report.rgbFaceProvenance.push({arm,faces:mapColorProvenance(renderer,rigs[arm].group,scene,camera,pixels[0],pixels[3],size)});}}
  }
- await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
+ await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const geo of ownedCandidateGeometries)geo.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
 }

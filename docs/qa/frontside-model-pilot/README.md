@@ -587,3 +587,10 @@ the changed interpolation/normalization path explains residuals; it is not
 an attribution or a passing result. Source/candidate face provenance can be
 captured afterward. Guided mature views remain diagnosis, not independent
 acceptance, and the direct-XY rejection is retained regardless of the outcome.
+
+Subsequent crop reports additionally count instanceMatrix buffers and break
+resources down by species, avoiding an all8species aggregate masking a pilot
+increase. The first mature report's geometry-only counts are retained with
+their original field name; they excluded those matrices. QA-created indexed
+geometries are explicitly disposed in addition to CropBatch's original owned
+geometries. These are fixture/accounting corrections, not rendering approval.
