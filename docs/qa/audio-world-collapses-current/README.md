@@ -33,7 +33,10 @@ heredada de la antigua cosecha manual; revisar esa asignación para el gatillo
 automático. Esta prueba tampoco acepta ataques individuales de cada especie,
 audio perceptual, móvil, carga en frío o balance de una noche natural.
 
-`final.png` conserva la escena y su estado visible. `provenance.json` identifica
-runtime/fixture; `hashes.json` identifica capturas e informes. El gate de133
+`final.png` conserva el estado visible de la prueba, pero el canvas está vacío
+en esa captura final. No acredita la imagen de los modelos/colapsos. La fixture
+renderiza entre pasos y no mantiene un render continuo al quedar detenida;
+falta comprobar la causa y capturar el mundo antes de aceptar su aspecto visual.
+`provenance.json` identifica runtime/fixture; `hashes.json` identifica capturas e informes. El gate de133
 scripts de134 páginas pasó tras el cambio. No se alteró la fixture ajena
 `tests/browser/audio-world-phases.html`.
