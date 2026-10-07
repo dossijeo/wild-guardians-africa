@@ -55,7 +55,14 @@ export function installNoiseSpatialReview(getWorld,volume){
         result.rows.push({mode,index:i,sha256,cameraMatrix:world.camera.matrixWorld.elements.slice(),calls:frame.calls,triangles:frame.triangles,difference:previous?compareNoisePixels(previous.pixels,frame.pixels,frame.width,frame.height):null});
         previous=frame;publish();element('status').textContent=`Repetición ${mode} ${i+1}/12`;
       }
-      result.completed=true;result.logicalStateUnchanged=JSON.stringify(world.state)===before;publish();element('status').textContent='Diagnóstico terminado · revisar controles y transición de ruta';
+      // Read exactly the same freshly rendered buffer synchronously: no RAF,
+      // hash promise, shader draw or scene update between these readbacks.
+      // This distinguishes readback variability from actual rendering changes.
+      world.render(0);const reads=Array.from({length:12},()=>capture(world));
+      for(let i=0;i<reads.length;i++){
+        const frame=reads[i];result.rows.push({mode:'same-buffer-read',index:i,sha256:await hash(frame.pixels),calls:frame.calls,triangles:frame.triangles,difference:i?compareNoisePixels(reads[0].pixels,frame.pixels,frame.width,frame.height):null});
+      }
+      result.completed=true;result.logicalStateUnchanged=JSON.stringify(world.state)===before;publish();element('status').textContent='Diagnóstico terminado · revisar controles, lectura y transición de ruta';
     }catch(error){result??={rows:[],errors:[]};result.errors.push(String(error.stack??error));publish();element('status').textContent='Error diagnóstico · revisar informe';}
     finally{if(world&&updateCamera)world.updateCamera=updateCamera;unlock();busy=false;}
   };
