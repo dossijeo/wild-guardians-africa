@@ -16,14 +16,15 @@ export class SpiritVoice {
   play(record,onEnded){
     this.stop();if(!record){this.state('fallback');return;}
     const ticket=this.ticket,current=()=>ticket===this.ticket&&this.audio===audio;
-    let audio;
+    let audio,waiting=false;
     const fallback=()=>{if(current()){this.stop();this.state('fallback');}};
     try{audio=this.create(this.url(record.path));this.audio=audio;audio.preload='auto';audio.volume=this.volume();this.state('loading');
       audio.onended=()=>{if(!current())return;this.stop();this.state('ended');onEnded?.();};audio.onerror=fallback;
-      audio.onwaiting=audio.onstalled=()=>{if(current()){clearTimeout(this.timer);this.timer=setTimeout(fallback,this.timeout);}};
-      audio.onplaying=()=>{if(current()){clearTimeout(this.timer);this.state('playing');}};
+      audio.onwaiting=audio.onstalled=()=>{if(current()){waiting=true;clearTimeout(this.timer);this.timer=setTimeout(fallback,this.timeout);}};
+      audio.onplaying=()=>{if(current()){waiting=false;clearTimeout(this.timer);this.state('playing');}};
       this.timer=setTimeout(fallback,this.timeout);
-      Promise.resolve(audio.play()).then(()=>{if(!current())return;clearTimeout(this.timer);this.state('playing');},fallback);
+      // A queued play resolution does not prove playback recovered after waiting.
+      Promise.resolve(audio.play()).then(()=>{if(!current()||waiting)return;clearTimeout(this.timer);this.state('playing');},fallback);
     }catch{if(audio)fallback();else this.state('fallback');}
   }
   get active(){return ['loading','playing'].includes(this.status);}

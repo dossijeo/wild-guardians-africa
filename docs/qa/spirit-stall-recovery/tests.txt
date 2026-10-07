@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 1 - original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 18.8028
+  ...
+# Subtest: original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 2 - original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 6.749
+  ...
+# Subtest: late portrait asset load still has one genuine entry when first rendered during reading
+ok 3 - late portrait asset load still has one genuine entry when first rendered during reading
+  ---
+  duration_ms: 1.3467
+  ...
+# Subtest: reopening during farewell or outro supersedes the old withdrawal
+ok 4 - reopening during farewell or outro supersedes the old withdrawal
+  ---
+  duration_ms: 7.0398
+  ...
+# Subtest: immediate hiding from intro cancels every owned source and pending request
+ok 5 - immediate hiding from intro cancels every owned source and pending request
+  ---
+  duration_ms: 2.157
+  ...
+# Subtest: immediate hiding from reading cancels every owned source and pending request
+ok 6 - immediate hiding from reading cancels every owned source and pending request
+  ---
+  duration_ms: 4.2372
+  ...
+# Subtest: immediate hiding from outro cancels every owned source and pending request
+ok 7 - immediate hiding from outro cancels every owned source and pending request
+  ---
+  duration_ms: 1.3752
+  ...
+# Subtest: immediate hiding from closed cancels every owned source and pending request
+ok 8 - immediate hiding from closed cancels every owned source and pending request
+  ---
+  duration_ms: 1.1566
+  ...
+# Subtest: hidden invalidates a pending withdrawal decode
+ok 9 - hidden invalidates a pending withdrawal decode
+  ---
+  duration_ms: 1.305
+  ...
+# Subtest: disposed invalidates a pending withdrawal decode
+ok 10 - disposed invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.6136
+  ...
+# Subtest: reentry invalidates a pending withdrawal decode
+ok 11 - reentry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.3418
+  ...
+# Subtest: expiry invalidates a pending withdrawal decode
+ok 12 - expiry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.8657
+  ...
+# Subtest: suspend invalidates a pending withdrawal decode
+ok 13 - suspend invalidates a pending withdrawal decode
+  ---
+  duration_ms: 10.0063
+  ...
+# Subtest: a normal closed portrait still accepts its timely pending exit tail
+ok 14 - a normal closed portrait still accepts its timely pending exit tail
+  ---
+  duration_ms: 3.3643
+  ...
+# Subtest: suspension cancels voices and silently seeds the unchanged portrait on resume
+ok 15 - suspension cancels voices and silently seeds the unchanged portrait on resume
+  ---
+  duration_ms: 1.0583
+  ...
+# Subtest: presentation callback failures do not form a per-frame retry loop
+ok 16 - presentation callback failures do not form a per-frame retry loop
+  ---
+  duration_ms: 0.7582
+  ...
+# Subtest: portrait cues use the UI bus and avatar emitter without a fictitious world position
+ok 17 - portrait cues use the UI bus and avatar emitter without a fictitious world position
+  ---
+  duration_ms: 1.1184
+  ...
+# (node:24800) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+ok 18 - 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+  ---
+  duration_ms: 226.38
+  ...
+# Subtest: replacement stops/releases old media immediately and ignores stale ended and play promises
+ok 19 - replacement stops/releases old media immediately and ignores stale ended and play promises
+  ---
+  duration_ms: 2.0961
+  ...
+# Subtest: blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+ok 20 - blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+  ---
+  duration_ms: 80.8521
+  ...
+# Subtest: actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+ok 21 - actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+  ---
+  duration_ms: 8.3503
+  ...
+# Subtest: a delayed play resolution cannot cancel recovery after media starts waiting
+ok 22 - a delayed play resolution cannot cancel recovery after media starts waiting
+  ---
+  duration_ms: 22.0558
+  ...
+# Subtest: playing after waiting cancels recovery and advances only on actual ended
+ok 23 - playing after waiting cancels recovery and advances only on actual ended
+  ---
+  duration_ms: 39.7986
+  ...
+# (node:41388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completing placement immediately advances the visible text and hand without acknowledging the old instruction
+ok 24 - completing placement immediately advances the visible text and hand without acknowledging the old instruction
+  ---
+  duration_ms: 18.0972
+  ...
+# Subtest: actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+ok 25 - actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+  ---
+  duration_ms: 87.7395
+  ...
+# Subtest: reload preserves unfinished instructions but advances instructions whose actions already completed
+ok 26 - reload preserves unfinished instructions but advances instructions whose actions already completed
+  ---
+  duration_ms: 3.1392
+  ...
+# (node:37572) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HUD then world guidance stops the clock through center and seed placement, without blocking commands
+ok 27 - HUD then world guidance stops the clock through center and seed placement, without blocking commands
+  ---
+  duration_ms: 22.7689
+  ...
+# Subtest: informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+ok 28 - informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+  ---
+  duration_ms: 4.2097
+  ...
+# Subtest: absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+ok 29 - absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+  ---
+  duration_ms: 14.1293
+  ...
+# Subtest: loading clears presentation-only pauses and reconstructs them from current actionable guidance
+ok 30 - loading clears presentation-only pauses and reconstructs them from current actionable guidance
+  ---
+  duration_ms: 2.3187
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 959.0445
