@@ -9,6 +9,20 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const cache=path.join(root,'.cache');
 const script=fileURLToPath(new URL('../tools/prepare_mountain_arc_pilot.mjs',import.meta.url));
 const contractPath='assets-source/far-backdrops-hq/single-export-contract.json';
+test('repaired volcano atlas is byte-exact through the pinned exporter including its odd-width source padding',()=>{
+ fs.mkdirSync(cache,{recursive:true});const output=fs.mkdtempSync(path.join(cache,'hq-volcano-repro-'));
+ try{
+  const contract=JSON.parse(fs.readFileSync(path.join(root,'assets-source/far-backdrops-hq/volcanoes-four-export-contract.json'),'utf8'));
+  assert.equal(contract.sources[3].rightPadding,1);
+  const result=spawnSync(process.execPath,[fileURLToPath(new URL('../tools/prepare_mountain_arc_four.mjs',import.meta.url)),output,'volcanoes'],{cwd:root,encoding:'utf8',timeout:30000});
+  assert.equal(result.error,undefined);assert.equal(result.status,0,result.stderr);
+  const receipt=JSON.parse(fs.readFileSync(path.join(output,'export.json'),'utf8'));
+  assert.equal(receipt.atlasSha256,contract.outputSha256);assert.equal(receipt.bytes,contract.outputBytes);
+  assert.deepEqual(receipt.sourceAssets[3].crop,{left:0,top:181,width:2172,height:543});assert.equal(receipt.sourceAssets[3].rightPadding,1);
+ }finally{
+  const relative=path.relative(cache,output);assert.ok(relative.startsWith('hq-volcano-repro-')&&!relative.includes(path.sep)&&!path.isAbsolute(relative));fs.rmSync(output,{recursive:true,force:true});
+ }
+});
 
 function rejectedBeforeWrite(mutate,expected,{four=false}={}){
  fs.mkdirSync(cache,{recursive:true});
