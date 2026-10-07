@@ -5,6 +5,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
+import {animalRouteClearance} from './animal-route-clearance.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
@@ -371,15 +372,19 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       for(const margin of [16,32,64]){w.path=nav.path(w,routeVia,w.radius??.28,ignore,worker,margin);if(w.path)break;}
       if(w.path)w.path.push({x:destination.x,z:destination.z});
     }
+    if(!w.path&&expandRoute&&!worker)w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  const clear=prepareActorMotion(s,w,nav,worker);
+  const dynamicClear=prepareActorMotion(s,w,nav,worker);
+  const routeClearance=worker?null:animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
+  const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+  if(routeClearance?.blocked()){w.path=null;return false;}
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {
