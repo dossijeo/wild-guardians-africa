@@ -6,11 +6,25 @@ import * as THREE from 'three';
 import {Assets,json,bytes} from '/src/rendering/assets.js';
 import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
 import {applyWorkerPose} from '/src/rendering/worker-actions.js';
-import {NativeBuilding,BuildingDestructionPass} from '/src/rendering/buildings.js';
+import {NativeBuilding,BuildingDestructionPass,centerVisualDamage} from '/src/rendering/buildings.js';
+import {COLLAPSE_SECONDS} from '/src/rendering/destruction-native.js';
 import {AfricanToon} from '/src/rendering/african-toon.js';
 import {installNativeShadow} from '/src/rendering/native-shadow.js';
 import {installShaderFailureGuard} from '/src/rendering/shader-failure.js';
 const query=new URLSearchParams(location.search),culture=query.get('culture'),profile=query.get('profile'),species=query.get('species')??'warthog',pilotKey=query.get('pilot')??'cc989532921ae705b8dcce30d3df7d0a52b3326bdfa7c8736270c23a28086ba0-1';
+const lifecycle=query.get('lifecycle')==='1';
+if(lifecycle&&!culture)throw Error('Lifecycle review requires a native building');
+const lifecycleSteps=[
+ {name:'initial',status:'intact',hp:600,collapseRemaining:0,elapsed:0},
+ {name:'damaged',status:'intact',hp:210,collapseRemaining:0,elapsed:1},
+ {name:'repaired',status:'intact',hp:600,collapseRemaining:0,elapsed:2},
+ {name:'collapse-start',status:'collapsing',hp:0,collapseRemaining:COLLAPSE_SECONDS,elapsed:3},
+ {name:'collapse-middle',status:'collapsing',hp:0,collapseRemaining:COLLAPSE_SECONDS/2,elapsed:3+COLLAPSE_SECONDS/2},
+ {name:'ruined',status:'ruined',hp:0,collapseRemaining:0,elapsed:3+COLLAPSE_SECONDS},
+ {name:'ruined-settled',status:'ruined',hp:0,collapseRemaining:0,elapsed:5+COLLAPSE_SECONDS},
+ {name:'rebuilt',status:'intact',hp:600,collapseRemaining:0,elapsed:6+COLLAPSE_SECONDS},
+];
+let lifecycleStep=0;
 const workerNames={olderMale:'Trabajador mayor',olderFemale:'Trabajadora mayor',youngMale:'Trabajador joven',youngFemale:'Trabajadora joven'};
 const speciesNames={warthog:'Facóquero',hyena:'Hiena',buffalo:'Búfalo',lion:'León',rhino:'Rinoceronte'};
 const speciesFiles={warthog:'cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869',hyena:'7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25',buffalo:'88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b',lion:'5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b',rhino:'b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82'};
@@ -24,10 +38,10 @@ const ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);scene.add(sun,sun
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
 let selected=0,night=false,biome='sabana',frame,ready=false,comparison,viewAngle=0,receiptProof,damage=0;
 const buildingPass=culture?new BuildingDestructionPass(renderer,sun,ambient):null,buildingTemplates=[];
-if(culture){const button=document.createElement('button');button.id='damage';button.disabled=true;button.textContent='Daño: 0 / 35 / 65 %';document.querySelector('#compare').after(button);button.onclick=()=>{damage=damage===0?.35:damage===.35?.65:0;show();};}
+if(culture){const button=document.createElement('button');button.id=lifecycle?'lifecycle':'damage';button.disabled=true;button.textContent=lifecycle?'Siguiente estado del edificio':'Daño: 0 / 35 / 65 %';document.querySelector('#compare').after(button);button.onclick=()=>{if(lifecycle){lifecycleStep=(lifecycleStep+1)%lifecycleSteps.length;damage=centerVisualDamage({...lifecycleSteps[lifecycleStep],maxHp:600});}else damage=damage===0?.35:damage===.35?.65:0;show();};}
 const target=new THREE.WebGLRenderTarget(Math.max(1,innerWidth),Math.max(1,innerHeight));target.texture.colorSpace=THREE.SRGBColorSpace;
 const status=document.querySelector('#status'),report=document.querySelector('#report');
-function state(){return {ready,species:profile||culture?null:species,profile,culture,pilotKey,selected:selected?'candidate':'baseline',night,biome,viewAngle,damage:culture?damage:null,pose:culture?'NativeBuilding frozen damage':profile?'Walk_Skip .55':'Walking .55',resolution:[target.width,target.height],camera:camera.position.toArray(),cameraTarget:cameraTarget.toArray(),receiptProof,errors,rows,comparison,scope:'Native compressed GLB, production material and fixed light, frozen pose/damage and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
+function state(){return {ready,species:profile||culture?null:species,profile,culture,pilotKey,selected:selected?'candidate':'baseline',night,biome,viewAngle,damage:culture?damage:null,pose:culture?'NativeBuilding frozen damage':profile?'Walk_Skip .55':'Walking .55',...(lifecycle?{lifecycle:lifecycleSteps[lifecycleStep],nativeStates:actors.map(({model})=>({damage:model.damage,outer:model.outer.visible,inner:model.inner.visible,ash:model.ash.visible,smoke:model.effects.native.smoke.length,debris:model.effects.native.debris.length,effectTime:model.effects.native.time,ashAge:model.uniforms.uAshAge.value}))}:{}),resolution:[target.width,target.height],camera:camera.position.toArray(),cameraTarget:cameraTarget.toArray(),receiptProof,errors,rows,comparison,scope:'Native compressed GLB, production material and fixed light, frozen pose/damage and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
 const paint=()=>{report.textContent=JSON.stringify(state(),null,2);};
 function syncViewport(){
  if(innerWidth<=0||innerHeight<=0)return false;
@@ -37,8 +51,8 @@ function syncViewport(){
 function render(destination=null){
  if(!syncViewport())throw Error('Viewport unavailable; refusing an empty comparison');
  actors.forEach((actor,i)=>actor.model.visible=i===selected);sun.intensity=3-2.6*Number(night);ambient.intensity=2-.9*Number(night);scene.background=new THREE.Color(night?'#171f2e':'#e7ddc6');toon.update(night,sun,biome);
- if(buildingPass){buildingPass.night=Number(night);actors.forEach((actor,i)=>{actor.model.update({...actor.entity,hp:600*(1-damage)},0);actor.model.opening.visible=i===selected&&damage>.015;});buildingPass.key='';buildingPass.render(camera,scene);}
- renderer.setRenderTarget(destination);renderer.render(scene,camera);if(guard.current)throw guard.current;const error=renderer.getContext().getError();if(error)throw Error('GL error '+error);
+ if(buildingPass){buildingPass.night=Number(night);actors.forEach((actor,i)=>{const step=lifecycle?lifecycleSteps[lifecycleStep]:null;actor.model.update(step?{...actor.entity,...step}:{...actor.entity,hp:600*(1-damage)},step?.elapsed??0);actor.model.opening.visible=i===selected&&actor.model.damage>.015&&actor.model.damage<.9998;if(lifecycle)actor.model.effects.smoke.visible=i===selected&&actor.model.effects.native.smoke.length>0;});buildingPass.key='';buildingPass.render(camera,scene);}
+ renderer.setRenderTarget(destination);renderer.render(scene,camera);if(lifecycle)buildingPass.renderSmoke(camera,scene);if(guard.current)throw guard.current;const error=renderer.getContext().getError();if(error)throw Error('GL error '+error);
 }
 function show(){render();paint();status.textContent=(selected?'Candidata':'Runtime')+' · '+biome+' · '+(night?'noche':'día');}
 function present(){try{if(ready)render();frame=requestAnimationFrame(present);}catch(error){errors.push(error.message);paint();status.textContent='Error';}}
@@ -52,7 +66,7 @@ document.querySelector('#compare').onclick=async()=>{
    for(selected=0;selected<2;selected++){render(target);const rgba=new Uint8Array(target.width*target.height*4);renderer.readRenderTargetPixels(target,0,0,target.width,target.height,rgba);pixels.push(rgba);}
    let changedPixels=0,sum=0,max=0;for(let i=0;i<pixels[0].length;i+=4){let changed=false;for(let c=0;c<3;c++){const delta=Math.abs(pixels[0][i+c]-pixels[1][i+c]);sum+=delta;max=Math.max(max,delta);changed||=delta!==0;}if(changed)changedPixels++;}
    const glError=renderer.getContext().getError();if(glError)throw Error('Readback GL error '+glError);selected=1;
-   rows.push({biome,night,...(culture?{damage}:{}),changedPixels,rgbMeanAbsoluteDifference:sum/(target.width*target.height*3),maxRgbDifference:max,glError});paint();await new Promise(resolve=>setTimeout(resolve,0));
+   rows.push({biome,night,...(culture?{damage}:{}),...(lifecycle?{lifecycle:lifecycleSteps[lifecycleStep].name}:{}),changedPixels,rgbMeanAbsoluteDifference:sum/(target.width*target.height*3),maxRgbDifference:max,glError});paint();await new Promise(resolve=>setTimeout(resolve,0));
   }
   selected=1;biome='sabana';night=false;comparison='finished';show();
  }catch(error){errors.push(error.message);comparison='failed';paint();status.textContent='Error';}finally{renderer.setRenderTarget(null);button.disabled=false;}
