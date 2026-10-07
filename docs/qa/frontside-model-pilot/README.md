@@ -396,3 +396,20 @@ issue from still-unselected accessory back surfaces. Map/color-aware local
 solutions must preserve the physical wall and the fixed quality thresholds;
 the current candidate remains rejected. `mapRgb` retains both mesh/face maps
 and the preceding PBR comparison rather than accepting ID visibility alone.
+
+The next disabled proposal is opt-in `--continuous-inner-rim`: rim geometry,
+thickness and UVs remain unchanged; only its new shading normals/tangents
+continue the authored inner-wall frame instead of introducing a flat shading
+seam. This is an artist-normal proposal, not a geometric closure substitute;
+all outer/source attributes remain exact, and all views must verify its look.
+`--rgb-selected-backs` additionally includes the2exposed nozzle/handle source
+faces from recorded provenance, not blanket reverses of those components.
+The component audit locates the handle face in448faces (0degenerate/0opposed
+normals,48exact boundary edges) and the nozzle in120faces (40inherited
+degenerates/0opposed normals). Those counts do not approve either component.
+
+Packed candidate SHA256 e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a48e9c145b:
++2.252%whole-worker triangles,+2.252%active geometry,5243228packed bytes.
+Nodes/skin/all12clips remain exact; Validator remains473/124. Blender can-wall
+geometry analysis is unchanged, including the exact seam/attachment diagnosis.
+This proposal has no visual approval, shadowFront approval or GPU timing.

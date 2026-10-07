@@ -14,7 +14,14 @@ def encode(doc,binary):
     return struct.pack('<III',0x46546c67,2,28+len(text)+len(binary))+struct.pack('<II',len(text),0x4e4f534a)+text+struct.pack('<II',len(binary),0x004e4942)+binary
 
 selection=json.loads((ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-selection.json').read_text())
-parser=argparse.ArgumentParser();parser.add_argument('--training-profile',choices=['auto','256','1024'],default='auto');parser.add_argument('--local-spout-shell',action='store_true');parser.add_argument('--local-can-shell',action='store_true');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--training-profile',choices=['auto','256','1024'],default='auto');parser.add_argument('--local-spout-shell',action='store_true');parser.add_argument('--local-can-shell',action='store_true');parser.add_argument('--continuous-inner-rim',action='store_true');parser.add_argument('--rgb-selected-backs',action='store_true');args=parser.parse_args()
+assert not args.continuous_inner_rim or args.local_spout_shell or args.local_can_shell
+rgb_backs={}
+if args.rgb_selected_backs:
+    color_provenance=json.loads((ROOT/'docs/qa/frontside-model-pilot/youngMale-can-wall-water-v3-rgb-provenance.json').read_text())
+    for face in next(p['faces'] for p in color_provenance['rgbTriangleProvenance'] if p['side']=='source'):
+        assert face['backFacing']
+        rgb_backs.setdefault(face['mesh'],set()).add(face['face'])
 high_resolution=ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-worker1024-selection.json'
 if args.training_profile=='1024' and not high_resolution.exists():raise FileNotFoundError(high_resolution)
 if args.training_profile!='256' and high_resolution.exists():
@@ -41,6 +48,7 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
         if 'mesh' not in node:continue
         name=node.get('name');key=name if category=='crops' else 'worker/'+str(name)
         chosen=set(selection['selected'].get(key,[]))
+        if category!='crops':chosen.update(rgb_backs.get(name,[]))
         extras=node.get('extras',{});model_index=extras.get('cropIndex',-1)*5+extras.get('stage',0)-1
         if category=='crops':chosen.update(int(item.split(':')[1]) for item in selection['selected'].get('bridgeSource',[]) if int(item.split(':')[0])==model_index)
         if not chosen:continue
@@ -64,6 +72,7 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
             shell=propose_shell(source_position,source_normal,indices,shell_faces)
             shell['excludedOriginalDegenerateFaces']=excluded
             shell['componentScope']='Can body and spout' if args.local_can_shell else 'Spout only'
+            shell['rimShading']='Authored inner-wall normal/tangent continuity' if args.continuous_inner_rim else 'Flat geometric rim'
             chosen.update(shell_faces)
             (ROOT/'docs/qa/frontside-model-pilot/local-spout-shell-proposal.json').write_text(json.dumps(shell,indent=2)+'\n')
         faces=np.asarray(sorted(chosen),dtype=np.int64);assert faces.max()<len(indices)
@@ -85,8 +94,8 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
             if semantic=='TANGENT':extra*=-1
             caps=values[cap_sources].copy()
             if shell and semantic=='POSITION':caps=np.array([v for cap in shell['caps'] for v in cap['positions']],dtype=values.dtype)
-            if shell and semantic=='NORMAL':caps=np.repeat(np.array([cap['normal'] for cap in shell['caps']],dtype=values.dtype),3,axis=0)
-            if shell and semantic=='TANGENT':caps=np.repeat(np.array([cap['tangent'] for cap in shell['caps']],dtype=values.dtype),3,axis=0)
+            if shell and semantic=='NORMAL':caps=-values[cap_sources] if args.continuous_inner_rim else np.repeat(np.array([cap['normal'] for cap in shell['caps']],dtype=values.dtype),3,axis=0)
+            if shell and semantic=='TANGENT':caps=-values[cap_sources] if args.continuous_inner_rim else np.repeat(np.array([cap['tangent'] for cap in shell['caps']],dtype=values.dtype),3,axis=0)
             expanded=np.concatenate([values,extra,caps]);assert np.array_equal(expanded[:len(values)],values)
             if semantic in ('JOINTS_0','WEIGHTS_0','TEXCOORD_0'):assert np.array_equal(extra,values[source_vertices])
             p['attributes'][semantic]=append(expanded,doc['accessors'][aid],34962)
