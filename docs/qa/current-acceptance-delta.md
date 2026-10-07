@@ -2,6 +2,8 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Validación repetida de guardados](save-primary-cache/README.md): respaldo idéntico y 19 pruebas dirigidas; una única copia durable evita volver a analizar la primaria si sus bytes coinciden exactamente. Las muestras grandes tienen deriva CPU y la caché retiene una cadena adicional. No acredita porcentaje estable, latencia IndexedDB nativa, FPS o móvil.
+
 - [Reservas de animales cerradas](animal-preload-disposed/README.md): llamadas tardías a warm/take no inician nuevas cargas; 39 pruebas, build y paquete correctos. No acredita ausencia de tirones en móvil ni recuperación de contexto WebGL.
 
 - [Windows 016872d](windows-016872d/README.md): ejecutable/instalador generados, smoke WebView2 correcto y 300177,1 ms de minimización real sin cambio de la proyección comprobada. Restauración mantiene pausa del menú y reanuda sin recuperar tiempo oculto. No acredita móvil físico ni HEAD posterior; Validate Game de ese SHA falló por la expectativa de routing reparada posteriormente.

@@ -1,0 +1,117 @@
+{
+  "baseline": "c18d119",
+  "sourceSha256": "1115d48b8c0a9ef9663788838797ffd782a46c71aff6706653d025418aa819bb",
+  "scope": "Actual repository save and snapshot validation with in-memory transaction double; excludes native IndexedDB I/O, browser/GPU/FPS and mobile. Archived snapshots, not current 100-night acceptance. Three campaign processes running in background. Upper bound assumes two-byte string storage, not measured heap.",
+  "results": [
+    {
+      "file": "docs/qa/large-farm/reloaded-snapshot.json",
+      "fixtureSha256": "00b3da5199c729a0a7cb991d38b4df3b9052f867973d3a65ba1a9ba2ea386ec6",
+      "fixtureBytes": 343323,
+      "day": 101,
+      "plants": 600,
+      "crates": 0,
+      "beforeParseCalls": 8,
+      "afterParseCalls": 3,
+      "identicalPrimaryAndBackup": true,
+      "retainedStringCodeUnits": 343331,
+      "retainedStringUpperBoundBytes": 686662,
+      "samples": [
+        {
+          "name": "before",
+          "totalMs": 182.71939999999995,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 99.58249999999998,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 77.67680000000007,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 177.5713999999998,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 165.3347000000001,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 66.56799999999998,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 73.6268,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 164.6735000000001,
+          "saves": 10
+        }
+      ]
+    },
+    {
+      "file": "docs/qa/intensive-mixed-100/state.json",
+      "fixtureSha256": "a0c6c1cded47ff065f0db76cd8e3dff8b23732bb47559d45f9961cc9e3be4d3f",
+      "fixtureBytes": 7265559,
+      "day": 101,
+      "plants": 12486,
+      "crates": 11935,
+      "beforeParseCalls": 8,
+      "afterParseCalls": 3,
+      "identicalPrimaryAndBackup": true,
+      "retainedStringCodeUnits": 7265556,
+      "retainedStringUpperBoundBytes": 14531112,
+      "samples": [
+        {
+          "name": "before",
+          "totalMs": 4478.1446000000005,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 1994.3705999999984,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 2075.744099999998,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 4364.560599999997,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 6698.340400000001,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 5988.7384999999995,
+          "saves": 10
+        },
+        {
+          "name": "after",
+          "totalMs": 4569.0432999999975,
+          "saves": 10
+        },
+        {
+          "name": "before",
+          "totalMs": 11155.622499999998,
+          "saves": 10
+        }
+      ]
+    }
+  ]
+}
