@@ -42,7 +42,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
-  backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
+  backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
   owner={enabled:true,adapters,configureQuality(quality){
    if(closed||!options.qualityDriven)return false;
    const next=farVegetationProfile({quality,biome:world.nav.config.biome});

@@ -21,3 +21,19 @@ test('optional backdrop base grading preserves one atlas/draw and rejects unsafe
  assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
  const owner=createBiomeBackdrop(world,texture,{fogBaseMix:1,nightTint:[.08,.10,.12]}),mesh=owner.root.children[0];assert.equal(owner.root.children.length,1);assert.equal(Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length,1);assert.match(mesh.material.fragmentShader,/\(1\.-vBackdropUv.y\)\*\(1\.-vBackdropUv.y\)/);owner.dispose();texture.dispose();
 });
+test('mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry',()=>{
+ const world=()=>({scene:new THREE.Scene(),camera:{position:new THREE.Vector3()},nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:{uniforms:{uNight:{value:0}}}});
+ const a=createBiomeBackdrop(world(),new THREE.Texture()),texture=new THREE.Texture(),b=createBiomeBackdrop(world(),texture,{mirrored:true});
+ const am=a.root.children[0],bm=b.root.children[0],uv=bm.geometry.attributes.uv;
+ assert.equal(texture.wrapS,THREE.MirroredRepeatWrapping);
+ assert.equal(Math.min(...Array.from({length:uv.count},(_,i)=>uv.getX(i))),0);
+ assert.equal(Math.max(...Array.from({length:uv.count},(_,i)=>uv.getX(i))),2);
+ assert.deepEqual(bm.geometry.attributes.position.array,am.geometry.attributes.position.array);
+ assert.equal(bm.geometry.index.count,am.geometry.index.count);
+ assert.equal(bm.material.fragmentShader,am.material.fragmentShader);assert.equal(bm.material.vertexShader,am.material.vertexShader);
+ assert.equal(Object.values(bm.material.uniforms).filter(u=>u.value?.isTexture).length,1);
+ // The sampler reflects around u=1 and u=2; colors/alpha share the same join.
+ const mirrored=u=>1-Math.abs(((u%2)+2)%2-1);
+ for(const edge of [1,2])for(const delta of [.001,.01,.1])assert.ok(Math.abs(mirrored(edge-delta)-mirrored(edge+delta))<1e-12);
+ a.dispose();b.dispose();am.material.uniforms.uBackdropAtlas.value.dispose();texture.dispose();
+});
