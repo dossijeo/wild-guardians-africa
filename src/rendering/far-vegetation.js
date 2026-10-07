@@ -7,15 +7,16 @@ import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-wo
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
+ if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
  const loader=new TextureLoader(),loadManifest=services.loadManifest??json,loadTexture=services.loadTexture??(path=>loader.loadAsync(path)),attachSpecies=services.attachSpecies??attachNativeFarWorld,makeBackdrop=services.makeBackdrop??createBiomeBackdrop;
- const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain;
+ const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain,previousTransition=world.farPropTransitionDistance;
  let closed=false,backdrop=null,owner;
  const cancelled=()=>closed||world.disposed||world.loading.signal.aborted;
- const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;if(world.farVegetation===owner)world.farVegetation=null;};
+ const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;world.farPropTransitionDistance=previousTransition;if(world.farVegetation===owner)world.farVegetation=null;};
  owner={update(){},dispose:release};world.farVegetation=owner;
  const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{
@@ -31,7 +32,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
   backdrop=makeBackdrop(world,backdropTexture);
   owner={enabled:true,adapters,stats:{species:species.length,estimatedAtlasTextureBytes:species.length*2*1024*1024*4*4/3,estimatedBackdropTextureBytes:2048*512*4*4/3,errors:[]},update(dt){
-   if(closed)return;world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.farVisualRange=this.enabled&&visualRange!==null?visualRange:previousVisual;world.farPreserveTerrain=this.enabled&&visualRange!==null?preserveTerrain:previousPreserve;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
+   if(closed)return;world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.farVisualRange=this.enabled&&visualRange!==null?visualRange:previousVisual;world.farPreserveTerrain=this.enabled&&visualRange!==null?preserveTerrain:previousPreserve;world.farPropTransitionDistance=this.enabled&&visualRange!==null&&preserveTerrain?end+transitionMargin:previousTransition;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
    for(const adapter of adapters){adapter.enabled=this.enabled;adapter.update(dt);}
    if(!this.enabled)world.scene.fog=previousFog;
   },dispose:release};
