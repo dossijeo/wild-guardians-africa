@@ -242,3 +242,7 @@ The species selector repeats native motion without reloading atlas resources:
 All paths preserve state/errors0. All-near declines10/0/11 retain native orders/residency and havefrustum=false. Slot0 was exercised in the previous medium-quality paths, so all four Manglares slots now have native motion evidence, across different phases/qualities/revisions rather than a complete Cartesian matrix.
 
 `mangroves-high-visible-suppression.json` removes a nearby prepared native tree through logical suppression: ID0:6:5 is suppressed, its native occurrences become0 and its remaining impostor state isenabled=false. `mangroves-high-native-close.json` then closes the owner: state equality and owner removal pass, counters218geometries/72textures become194/62, and the retained-bank owned allocation estimate before release is10,496,916bytes. Counter changes are affected by native grouping restoration; do not present them as measured total memory reclaimed.
+
+## Very-low quality Sabana slot1 (ffdda6c)
+
+`savanna-very-low-slot1-night-orbit.json/png` exercises the baobab atlas through a complete night orbit with the soft atmosphere in the lowest profile:656/691 fully ready transition frames, zero selected descents, identical logical state and errors0. All13 nearby-tree declines retain residency/orders and are outside the frustum. This validates one additional species/profile/phase only; slots2/3 in this profile remain pending. The final PNG illustrates that route rather than exact per-angle atlas matching.
