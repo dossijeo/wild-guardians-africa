@@ -1,0 +1,96 @@
+TAP version 13
+# (node:44452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: authored camera route drives native controls, preserves simulation and restores damping
+ok 1 - authored camera route drives native controls, preserves simulation and restores damping
+  ---
+  duration_ms: 163.8442
+  ...
+# (node:3396) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 2 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 5.942
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 3 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.583
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 4 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 1.5018
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 5 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 1.357
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 6 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 7.0155
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 7 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 20.881
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 8 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 70.92
+  ...
+# (node:41324) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 9 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 76.6224
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 10 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 4.624
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 11 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 20.4006
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 12 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 1248.568
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 13 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 2.432
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 14 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.6112
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 15 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 24.1833
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 16 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 4.2124
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2585.3283
