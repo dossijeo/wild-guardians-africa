@@ -31,7 +31,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false}={}
   shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nvec2 farGroundXZ=vFarGroundXZ+uFarGroundOrigin;if(farGroundXZ.x>=uFarNearBounds.x&&farGroundXZ.y>=uFarNearBounds.y&&farGroundXZ.x<=uFarNearBounds.z&&farGroundXZ.y<=uFarNearBounds.w)discard;');
  };
  material.customProgramCacheKey=()=> 'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
- const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
+ const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  candidate.updateGroundBounds=()=>bounds.value.set(...world.nearBounds);
  candidate.updateGroundBounds();const dispose=candidate.dispose;candidate.dispose=options=>{mesh.removeFromParent();geometry.dispose();material.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
 }
