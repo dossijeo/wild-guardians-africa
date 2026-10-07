@@ -200,6 +200,23 @@ export class Navigation {
     if(result)rememberNavigationQuery(this,key,result);
     return result;
   }
+  propOverlapExitPath(start,end,radius,ignore=null,worker=false) {
+    const props=this.propsAt(start.x,start.z,radius+4).filter(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&distance(start,p)<(p.radius??1.5)+radius);
+    if(!props.length)return null;
+    // Recover an already overlapping body by walking out, never by moving its
+    // position instantaneously or disabling collision for its remaining route.
+    for(const prop of props){
+      const angle=Math.atan2(start.x-prop.x,start.z-prop.z),reach=(prop.radius??1.5)+radius+.02;
+      for(let i=0;i<32;i++){
+        const offset=(i%2?-1:1)*Math.ceil(i/2)*Math.PI/16;
+        const point={x:prop.x+Math.sin(angle+offset)*reach,z:prop.z+Math.cos(angle+offset)*reach};
+        if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.testSegmentClear(start,point,radius,ignore,worker,true))continue;
+        const tail=this.path(point,end,radius,ignore,worker,32);
+        if(tail)return [point,...tail];
+      }
+    }
+    return null;
+  }
   smoothPath(start,path,radius,ignore,worker){
     const route=[];let anchor=start,index=0;
     while(index<path.length){
@@ -349,7 +366,7 @@ export class Navigation {
     }
     return true;
   }
-  testSegmentClear(start,end,radius,ignore,worker) {
+  testSegmentClear(start,end,radius,ignore,worker,escapeProps=false) {
     for(const obstacle of this.obstacles){
       if(obstacle.id===ignore||worker&&obstacle.kind==='shield')continue;
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
@@ -364,7 +381,15 @@ export class Navigation {
       }else if(edgeDistance(start,end,obstacle.x,obstacle.z)<obstacle.radius+radius)return false;
     }
     const midpoint={x:(start.x+end.x)/2,z:(start.z+end.z)/2};
-    if(this.propsAt(midpoint.x,midpoint.z,distance(start,end)/2+radius+4).some(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&edgeDistance(start,end,p.x,p.z)<(p.radius??1.5)+radius))return false;
+    if(this.propsAt(midpoint.x,midpoint.z,distance(start,end)/2+radius+4).some(p=>{
+      if(!(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18))return false;
+      const reach=(p.radius??1.5)+radius;
+      if(edgeDistance(start,end,p.x,p.z)>=reach)return false;
+      // An escape must increase clearance continuously for every overlapping
+      // prop. New overlaps, inward movement and crossings remain forbidden.
+      return !(escapeProps&&distance(start,p)<reach&&
+        (start.x-p.x)*(end.x-start.x)+(start.z-p.z)*(end.z-start.z)>=0);
+    }))return false;
     const steps=Math.max(1,Math.ceil(distance(start,end)/.25));
     for(let i=0;i<=steps;i++)if(!this.terrainValid(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius,worker))return false;
     return true;

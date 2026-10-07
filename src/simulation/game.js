@@ -371,6 +371,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       for(const margin of [16,32,64]){w.path=nav.path(w,routeVia,w.radius??.28,ignore,worker,margin);if(w.path)break;}
       if(w.path)w.path.push({x:destination.x,z:destination.z});
     }
+    if(!w.path&&expandRoute&&!worker)w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
