@@ -1,0 +1,30 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA voces completas</title>
+<style>body{font:16px system-ui;background:#18231e;color:#eee;padding:20px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>54 voces completas · medios nativos</h1><p>Salida silenciada. Reproduce cada pista hasta su ended natural y comprueba una sola continuación. No evalúa la mezcla ni la interpretación de voz.</p><button id="run">Reproducir las 54 completas</button><output id="status">Preparado</output><pre id="report"></pre>
+<script type="module">
+import {SpiritVoice} from '/src/audio/spirit-voice.js';import {assetUrl} from '/src/rendering/asset-url.js';import manifest from '/content/manifests/spirit-voices.json' with {type:'json'};
+const rows=[],errors=[];let voice;
+const paint=result=>{document.querySelector('#report').textContent=JSON.stringify(result??{completed:rows.length,total:manifest.records.length,rows,errors},null,2);};
+const until=async (predicate,timeout=15000)=>{const deadline=performance.now()+timeout;while(!predicate()){if(performance.now()>deadline)throw Error('Media deadline exceeded');await new Promise(resolve=>setTimeout(resolve,25));}};
+const check=(condition,message)=>{if(!condition)throw Error(message);};
+addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+document.querySelector('#run').onclick=async()=>{
+ const button=document.querySelector('#run');button.disabled=true;rows.length=errors.length=0;document.querySelector('#status').textContent='Comprobando';
+ try{
+  let advances=0;voice=new SpiritVoice({url:assetUrl,create:url=>{const audio=new Audio(url);audio.muted=true;return audio;}});
+  for(const record of manifest.records){
+   voice.play(record,()=>advances++);const media=voice.audio;
+   await until(()=>voice.status==='fallback'||voice.status==='playing'&&Number.isFinite(media.duration)&&media.currentTime>=.05);
+   check(voice.status==='playing',record.id+' failed playback');
+   const row={id:record.id,language:record.language,duration:media.duration,position:media.currentTime,readyState:media.readyState,rate:media.playbackRate,source:media.currentSrc,advancesBeforeStop:advances};
+   document.querySelector('#status').textContent=record.id+' · reproduciendo hasta el final';
+   await until(()=>voice.status==='ended'||voice.status==='fallback',Math.ceil(media.duration*1000)+15000);
+   check(voice.status==='ended'&&advances===rows.length+1,record.id+' did not finish exactly once');row.finishedByEnded=true;row.advancesBeforeStop=advances;
+   voice.stop();row.pausedAfterStop=media.paused;row.sourceAttributeAfterStop=media.getAttribute('src');row.voiceAfterStop=voice.status;row.advancesAfterStop=advances;
+   check(row.pausedAfterStop&&row.sourceAttributeAfterStop===null&&row.voiceAfterStop==='idle'&&advances===rows.length+1,'Unexpected advance or retained source');rows.push(row);paint();
+  }
+  const natural={clipsCompleted:advances};
+  check(!errors.length,'Page errors');paint({ok:true,total:rows.length,rows,natural,errors});document.querySelector('#status').textContent='54/54 correctas';
+ }catch(error){errors.push(error.message);paint({ok:false,total:rows.length,rows,errors});document.querySelector('#status').textContent='Error';}finally{voice?.dispose();button.disabled=false;}
+};addEventListener('pagehide',()=>voice?.dispose());
+</script></html>
