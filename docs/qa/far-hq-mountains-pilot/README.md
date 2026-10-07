@@ -74,3 +74,43 @@ separate asymmetrical mountain silhouettes on proportionate horizon arcs,
 with joins in low/open atmospheric areas and a shared atlas/material. This
 candidate has not yet been generated, integrated or accepted. Public assets
 and default wrapping remain unchanged.
+
+## Proportionate arc diagnostic, v3
+
+The isolated-source pilot is now available at the native harness with
+`?biome=sabana&arcs=1`. It is one mountain ridge, not a completed 360° panorama.
+Three of four atlas cells are deliberately empty. The original comparison
+control is disabled for this diagnostic; the mirrored reference remains
+available by omitting `arcs=1`.
+
+`savanna-isolated-v1.png` has 343 visible saturation outliers at alpha ≥90
+(69 after tile reduction). Its attempted cleanup v2 worsened that count to
+1,380 and was rejected. Both sources and exact prompts are retained. The new
+v3 artwork continues its apron past the bottom canvas edge instead of drawing
+a flat outline. It has zero visible saturation outliers at the same cutoff.
+It is still awaiting native artistic acceptance.
+
+```sh
+node tools/prepare_mountain_arc_pilot.mjs
+node tools/audit_hq_backdrop_mips.mjs .cache/hq-arc-pilot
+node --test tests/mountain-arcs.test.js tests/biome-backdrop.test.js tests/far-vegetation-ownership.test.js
+```
+
+`arc-v3/export.json` records the source/export hashes and recipe. A 960×240
+image occupies the top-left 1024×256 cell of a 2048×512 atlas, with 32 px
+horizontal and 8 px vertical padding. The 440 m wide arc on radius 430 m
+spans 58.63°; its 110 m frame preserves the 4:1 artwork ratio. Its authored
+foot is anchored at -35 m, with the same bounded parallax and shared global
+fog/night inputs. All arcs can batch into one geometry, material and sampler;
+there are no shadows, colliders or procedural world IDs for decoration.
+
+The optional arc shader uses local frame height for fog grading rather than
+the atlas cell coordinate. Normal gameplay still has no arc layout and retains
+the prior cylinder/shader path. The renderer borrows the atlas from the existing
+far owner. Twenty-eight directed tests pass; 145 browser fixtures pass syntax.
+
+The CPU reference has no visible saturation outliers across all twelve mip
+levels, but only one cell is populated. This does **not** prove absence of
+cross-variant bleed in a completed four-cell atlas. Four variants, native
+mips/borders/base, open composition under rotation/translation, all six biomes
+and controlled cost remain pending. None of these sources replace public assets.

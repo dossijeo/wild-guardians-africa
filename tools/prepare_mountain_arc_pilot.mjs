@@ -1,0 +1,18 @@
+import fs from 'node:fs/promises';
+import sharp from 'sharp';
+import {createHash} from 'node:crypto';
+import {hqBackdropCrop} from './experiments/hq-backdrop-frame.js';
+const source='assets-source/far-backdrops-hq/savanna-isolated-v3.png';
+const output=process.argv[2]??'.cache/hq-arc-pilot';
+const original=await fs.readFile(source),decoded=await sharp(original).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+const crop=hqBackdropCrop(decoded.data,decoded.info.width,decoded.info.height);
+const tile=await sharp(original).extract(crop).resize(960,240,{kernel:'lanczos3'}).png().toBuffer();
+const atlas=await sharp({create:{width:2048,height:512,channels:4,background:{r:0,g:0,b:0,alpha:0}}}).composite([{input:tile,left:32,top:8}]).webp({lossless:true,effort:6}).toBuffer();
+let lowest=-1;for(let y=0;y<decoded.info.height;y++)for(let x=0;x<decoded.info.width;x++)if(decoded.data[(y*decoded.info.width+x)*4+3]>=90)lowest=Math.max(lowest,y);
+const baseline=(crop.height-(lowest-crop.top))/crop.height;
+const layout=[{angle:0,height:110,aspect:4,baseY:-35,baseline,uv:[32/2048,264/512,992/2048,504/512]}];
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+await fs.mkdir(output,{recursive:true});await fs.writeFile(output+'/atlas.webp',atlas);
+await fs.writeFile(output+'/layout.json',JSON.stringify(layout,null,2)+'\n');
+await fs.writeFile(output+'/export.json',JSON.stringify({assets:[{biome:'savanna',file:'atlas.webp'}],limit:'Single populated padded cell; does not validate cross-variant bleed for a completed atlas.'},null,2)+'\n');
+console.log(JSON.stringify({source,sourceSha256:hash(original),atlasSha256:hash(atlas),bytes:atlas.length,crop,dimensions:[2048,512],tileDimensions:[960,240],padding:[32,8],layout,limit:'Single silhouette pilot, other three cells empty. Not a completed 360 degree composition; v3 source has zero RGB saturation outliers above 160 at alpha >=90, native filtering remains under review.'},null,2));

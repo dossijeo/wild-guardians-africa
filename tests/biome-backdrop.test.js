@@ -37,3 +37,16 @@ test('mirrored panorama joins both cylinder ends with identical texels and no ad
  for(const edge of [1,2])for(const delta of [.001,.01,.1])assert.ok(Math.abs(mirrored(edge-delta)-mirrored(edge+delta))<1e-12);
  a.dispose();b.dispose();am.material.uniforms.uBackdropAtlas.value.dispose();texture.dispose();
 });
+test('optional proportionate arcs retain shared day/night fog, one sample and idempotent borrowed texture ownership',()=>{
+ const world={scene:new THREE.Scene(),camera:{position:new THREE.Vector3()},nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:{uniforms:{uNight:{value:0}}}},texture=new THREE.Texture();
+ const arc={angle:0,height:110,aspect:4,baseY:-35,baseline:0,uv:[.015625,.515625,.484375,.984375]};
+ for(const options of [{arcLayout:false},{arcLayout:[]},{arcLayout:[arc],mirrored:true}])assert.throws(()=>createBiomeBackdrop(world,texture,options),/mountain arcs?|Mountain arcs/i);
+ assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
+ let released=0;texture.addEventListener('dispose',()=>released++);
+ const owner=createBiomeBackdrop(world,texture,{arcLayout:[arc],fogBaseMix:1}),mesh=owner.root.children[0];
+ assert.equal(mesh.position.y,0);assert.equal(owner.root.children.length,1);assert.equal(mesh.geometry.groups.length,0);
+ assert.equal((mesh.material.fragmentShader.match(/texture2D\(/g)||[]).length,1);
+ assert.match(mesh.material.fragmentShader,/\(1\.-vBackdropHeight\)/);assert.doesNotMatch(mesh.material.fragmentShader,/\(1\.-vBackdropUv.y\)/);
+ assert.equal(mesh.material.uniforms.uBackdropNight,world.toon.uniforms.uNight);
+ owner.dispose();owner.dispose();assert.equal(released,0);texture.dispose();
+});

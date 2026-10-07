@@ -6,7 +6,7 @@ const decode=x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4;
 const encode=x=>x<=.0031308?x*12.92:1.055*x**(1/2.4)-.055;
 const assets=[];
 for(const asset of exports.assets){
- const {data,info}=await sharp(directory+'/'+asset.biome+'-backdrop.webp').ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ const {data,info}=await sharp(directory+'/'+(asset.file??asset.biome+'-backdrop.webp')).ensureAlpha().raw().toBuffer({resolveWithObject:true});
  let width=info.width,height=info.height,linear=Float64Array.from(data,(value,i)=>i%4===3?value/255:decode(value/255));
  const levels=[];
  for(let level=0;;level++){

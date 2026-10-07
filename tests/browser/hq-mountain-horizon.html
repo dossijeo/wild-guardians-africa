@@ -16,20 +16,20 @@ import {attachBiomeFarVegetation} from '../../src/rendering/far-vegetation.js';
 import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',errors=[],rows=[];
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',errors=[],rows=[];
 let world,originalTexture,hqTexture,mesh,state,eye,closed=false,ready=false,running=false,receipt=null;
 const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 function snapshot(){
  const direction=world.camera.getWorldDirection(new THREE.Vector3());
- return {biome,culture,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
+ return {biome,culture,arcPilot,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?'/.cache/hq-arc-pilot/atlas.webp':document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
 }
 function draw(){
  if(!ready||closed)return;
  const mode=document.querySelector('#mode').value,angle=Number(document.querySelector('#yaw').value)*Math.PI/180;
  state.time=document.querySelector('#phase').value==='night'?305:document.querySelector('#phase').value==='dusk'?300+Math.log(2)/2.4:180;
  mesh.material.uniforms.uBackdropAtlas.value=mode==='hq'?hqTexture:originalTexture;
- const uv=mesh.geometry.attributes.uv,factor=mode==='hq'?2:1;
+ const uv=mesh.geometry.attributes.uv,factor=arcPilot?1:mode==='hq'?2:1;
  for(let i=0;i<uv.count;i++)uv.setX(i,mesh.geometry.userData.originalU[i]*factor);
  uv.needsUpdate=true;
  world.camera.position.copy(eye);world.controls.target.set(eye.x+Math.sin(angle)*100,eye.y-6,eye.z+Math.cos(angle)*100);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.render(0);
@@ -46,11 +46,14 @@ try{
  world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=error=>errors.push(String(error));world.qualitySetting('media');world.onChunkProgress=p=>report.textContent=JSON.stringify({loading:'native world',chunks:p,errors});
  await world.load(state,nav,payload);
  const loader=new THREE.TextureLoader();
- await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:true},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
+ if(arcPilot&&biome!=='sabana')throw Error('Mountain arc pilot currently only supports Sabana');
+ const backdropArcLayout=arcPilot?await json('/.cache/hq-arc-pilot/layout.json'):null;
+ await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?'/.cache/hq-arc-pilot/atlas.webp':`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  await prepareInitialFarWorld(world);
  mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];hqTexture=mesh.material.uniforms.uBackdropAtlas.value;
  originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
- mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/2);
+ mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/(arcPilot?1:2));
+ if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent='Arco diagnóstico (1 silueta, 3 celdas vacías)';}
  eye=world.camera.position.clone();eye.y+=4;world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
  ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
