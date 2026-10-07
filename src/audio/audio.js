@@ -10,7 +10,7 @@ import {wallBuildSound,structureHitSound,structureAlertSound,structureDetailSoun
 import {WorkAudio} from './work-audio.js';
 import {AmbientAudio} from './ambient-audio.js';
 import {MovementAudio} from './movement-audio.js';
-import {json,bytes} from '../rendering/assets.js';
+import {json,bytes} from '../rendering/asset-fetch.js';
 import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';

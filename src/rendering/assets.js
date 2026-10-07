@@ -1,13 +1,12 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
-import {assetUrl,resolveAssetValues} from './asset-url.js';
+import {assetUrl} from './asset-url.js';
+import {json,bytes} from './asset-fetch.js';
+export {json,bytes} from './asset-fetch.js';
 import {prepareNativeBuilding} from './buildings.js';
 import {nativeAssetMaterial} from './asset-surface.js';
 import {computeTangents} from './surface-source.js';
-const fetchAsset=(url,options)=>options===undefined?fetch(assetUrl(url)):fetch(assetUrl(url),options);
-export const json=async (url,options)=>{const response=await fetchAsset(url,options);if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return resolveAssetValues(await response.json());};
-export const bytes=async (url,options)=>{const response=await fetchAsset(url,options);if(!response.ok)throw new Error(`No se pudo cargar ${url}`);return response.arrayBuffer();};
 export class Assets {
   constructor(){this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
   assertOpen(){if(this.modelsDisposed)throw new Error('Asset collection is disposed');}
