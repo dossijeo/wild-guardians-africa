@@ -10,6 +10,7 @@ import {SearchFrontier} from './search-frontier.js';
 import {evictOldest} from './fifo-eviction.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
+import {wallCollisionFrame,wallCollisionPolygon} from './wall-collision-frame.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -130,10 +131,9 @@ export class Navigation {
       if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
       if(o.kind==='wall'){
-        const dx=x-o.x,dz=z-o.z,c=Math.cos(o.yaw??0),s=Math.sin(o.yaw??0);
+        const {c,s,width,depth}=wallCollisionFrame(o),dx=x-o.x,dz=z-o.z;
         const localX=dx*c-dz*s,localZ=dx*s+dz*c;
-        const scale=o.gate?(o.material==='reforzado'?1.6:['adobe','piedra'].includes(o.material)?1.4:1):1,width=1.09*(o.baseScaleX??1)*scale;
-        return Math.abs(localX)<width+radius&&Math.abs(localZ)<.22*scale+radius;
+        return Math.abs(localX)<width+radius&&Math.abs(localZ)<depth+radius;
       }
       if(o.footprint)return footprintDistance(o.footprint,x,z)<radius;
       return distance(o,point)<o.radius+radius;
@@ -372,9 +372,7 @@ export class Navigation {
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
       if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
       if(obstacle.kind==='wall'){
-        const scale=obstacle.gate?(obstacle.material==='reforzado'?1.6:['adobe','piedra'].includes(obstacle.material)?1.4:1):1,width=1.09*(obstacle.baseScaleX??1)*scale+radius;
-        const depth=.22*scale+radius,c=Math.cos(obstacle.yaw??0),s=Math.sin(obstacle.yaw??0);
-        const polygon=[[-width,-depth],[width,-depth],[width,depth],[-width,depth]].map(([x,z])=>({x:obstacle.x+x*c+z*s,z:obstacle.z-x*s+z*c}));
+        const polygon=wallCollisionPolygon(obstacle,radius);
         if(sweptFootprintDistance(start,end,polygon)<1e-9)return false;
       }else if(obstacle.footprint){
         if(sweptFootprintDistance(start,end,obstacle.footprint)<radius)return false;

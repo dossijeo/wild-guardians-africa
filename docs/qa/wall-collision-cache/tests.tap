@@ -1,0 +1,430 @@
+TAP version 13
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 318.5585
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 23.1501
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 2914.6825
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 93.2352
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 43.4925
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 2351.3708
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 27.7224
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 12.1215
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 21.1534
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 26.6545
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 23.1214
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 26.2011
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 6.2415
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 26.9251
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 13.4694
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 12.0404
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 20.2478
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 15.5694
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 11.0507
+  ...
+# Subtest: paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+ok 20 - paid planting on cleared native ground preserves static caches, route epoch semantics and fresh-navigator routes
+  ---
+  duration_ms: 1773.0151
+  ...
+# Subtest: real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+ok 21 - real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+  ---
+  duration_ms: 1276.7524
+  ...
+# Subtest: a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+ok 22 - a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+  ---
+  duration_ms: 1092.408
+  ...
+# Subtest: crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+ok 23 - crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+  ---
+  duration_ms: 951.5728
+  ...
+# Subtest: Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+ok 24 - Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+  ---
+  duration_ms: 2.8361
+  ...
+# Subtest: Every closed native leaf preserves total source surface area, bounds and regional pivots
+ok 25 - Every closed native leaf preserves total source surface area, bounds and regional pivots
+  ---
+  duration_ms: 3667.0394
+  ...
+# Subtest: Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+ok 26 - Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+  ---
+  duration_ms: 1484.0411
+  ...
+# Subtest: Full original gate geometry leaves a swept controller corridor when the leaf is open
+ok 27 - Full original gate geometry leaves a swept controller corridor when the leaf is open
+  ---
+  duration_ms: 1132.2814
+  ...
+# Subtest: Production mesh applies opening changes without changing health, opacity or the closed source bridge
+ok 28 - Production mesh applies opening changes without changing health, opacity or the closed source bridge
+  ---
+  duration_ms: 1168.3652
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 29 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 1036.8782
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 30 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 81.1374
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 31 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 1.0254
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 32 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 1.0232
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 33 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.467
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 34 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 474.5968
+  ...
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 35 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 9.3468
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 36 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.8111
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 37 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 1.4988
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 38 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.9038
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 39 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.7409
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 40 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 93.8472
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 41 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 1566.0555
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 42 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 10.7486
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 43 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 108.5034
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 44 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.4721
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 45 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 749.5977
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 46 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 642.1496
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 47 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 392.6042
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 48 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 424.5259
+  ...
+# Subtest: Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+ok 49 - Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+  ---
+  duration_ms: 444.8251
+  ...
+# Subtest: Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+ok 50 - Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+  ---
+  duration_ms: 1.0223
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 51 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 583.6997
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 52 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 5.6264
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 53 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 204.8016
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 54 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 10.3689
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 55 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 1.7291
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 56 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.7296
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 57 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 6.8212
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 58 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 196.24
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 59 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 2792.1834
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 60 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.3026
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 61 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 2.5457
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 62 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 2.5426
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 63 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 6.9406
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 64 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 1.1793
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 65 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 411.4741
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 66 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 79.1409
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 67 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.8814
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 68 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.8957
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 69 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.5243
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 70 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.7097
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 71 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 2.0667
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 72 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.445
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 73 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5842
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 74 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.355
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 75 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5201
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 76 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 2.6356
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 77 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 8.2585
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 78 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.6942
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 79 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 4.1171
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 80 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 3.3349
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 81 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.9982
+  ...
+# Subtest: cached wall polygons exactly retain original corners and swept collision decisions
+ok 82 - cached wall polygons exactly retain original corners and swept collision decisions
+  ---
+  duration_ms: 335.6051
+  ...
+# Subtest: editing every geometry input invalidates cached wall geometry; gate pose does not change rigid animal envelope
+ok 83 - editing every geometry input invalidates cached wall geometry; gate pose does not change rigid animal envelope
+  ---
+  duration_ms: 1.047
+  ...
+# Subtest: arbitrary radii cannot accumulate an unbounded per-wall polygon cache
+ok 84 - arbitrary radii cannot accumulate an unbounded per-wall polygon cache
+  ---
+  duration_ms: 3.7665
+  ...
+1..84
+# tests 84
+# suites 0
+# pass 84
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8994.1797
