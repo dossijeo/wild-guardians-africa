@@ -704,3 +704,14 @@ first failure or invalid control; neither is retried to seek exact controls.
 Remaining12clip/culture/biome/maps/shadow-ground/GPU gates stay required.
 Subsequent worker report CPU conditions come from an explicit campaign query
 instead of stale hardcoded frozen49032/39340. Historical reports are retained.
+
+Limited first-draw workerV6 Water .40625, Sabana/day, elevation37.5 and
+azimuth54.375/144.375: both samples pass local color/alpha, worst tile
+.0010471/0,0missing pixels and3exact source controls per sample. Effective
+accessories use colorFront+shadowFront while original body retains its
+existing colorFront/defaultPcfBack. Each packed shadow has1changed texel,
+maximum32.18micrometres world depth; this is not a ground-shadow mask gate.
+Original/candidate Water tool visibility/scales match (can visible, other
+tools hidden by the original action); no accessories were pruned. Captured
+CPU27148/49032 active, no GPUtiming. Two samples are limited evidence, not
+complete profileV6/12clips/cultures/biomes/shadows/category acceptance.
