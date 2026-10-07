@@ -47,16 +47,24 @@ export function installNoiseSpatialReview(getWorld,volume){
       result={scope:'Native authored WorldScene visual QA, analytic versus periodic R8 volume within the same QA-wrapped shader program. Twenty views, three light phases, fixed elapsed and A/A/B/B/A per view. This does not prove fallback pixel equivalence to the unmodified production shader. Shader differences intentionally permitted; metrics are descriptive, no quality gate, GPU/CPU benchmark, mobile or gameplay acceptance.',biome:world.state.biome,culture:world.state.culture,seed:world.state.seed,quality:world.quality,textureBytes:volume.texture.image.data.byteLength,rows:[],errors:[],completed:false};publish();
       for(const phase of Object.keys(phaseTimes))for(const pose of poses){
         await setPose(world,pose,phase);
-        const before=JSON.stringify(world.state),frames=[];
-        for(const [label,enabled] of [['A1',0],['A2',0],['B1',1],['B2',1],['A3',0]]){
-          volume.uniforms.uFineNoiseVolumeEnabled.value=enabled;
-          await raf();world.render(0);const frame=capture(world);
-          assert(JSON.stringify(world.state)===before,'Render changed logical state');
-          frames.push({label,enabled,...frame,sha256:await hash(frame.pixels)});
-        }
+        const before=JSON.stringify(world.state),frames=[],updateCamera=world.updateCamera;
+        // Resolve terrain/orbit protection once above, then keep the effective
+        // eye exactly fixed while comparing shaders. Re-solving spherical orbit
+        // coordinates is presentation work, not part of this shader experiment.
+        // Preserve actual per-frame matrices for diagnosis; don't hide any other
+        // animation, lighting, shadow or material variation behind this control.
+        world.updateCamera=()=>{};
+        try{
+          for(const [label,enabled] of [['A1',0],['A2',0],['B1',1],['B2',1],['A3',0]]){
+            volume.uniforms.uFineNoiseVolumeEnabled.value=enabled;
+            await raf();world.render(0);const frame=capture(world);
+            assert(JSON.stringify(world.state)===before,'Render changed logical state');
+            frames.push({label,enabled,...frame,camera:world.camera.position.toArray(),target:world.controls.target.toArray(),cameraMatrix:world.camera.matrixWorld.elements.slice(),sha256:await hash(frame.pixels)});
+          }
+        }finally{world.updateCamera=updateCamera;}
         const {width,height}=frames[0];assert(frames.every(frame=>frame.width===width&&frame.height===height),'Viewport changed during comparison');
         const comparisons=[[0,1],[1,2],[2,3],[3,4],[1,4]].map(([a,b])=>({from:frames[a].label,to:frames[b].label,...compareNoisePixels(frames[a].pixels,frames[b].pixels,width,height)}));
-        result.rows.push({pose,phase,night:world.toon.uniforms.uNight.value,elapsed:world.state.elapsed,camera:world.camera.position.toArray(),target:world.controls.target.toArray(),renderOrigin:{x:world.renderOrigin.x,z:world.renderOrigin.z},width,height,stateSha256:await hash(new TextEncoder().encode(before)),frames:frames.map(({pixels,...frame})=>frame),comparisons});
+        result.rows.push({pose,phase,fixedEffectiveCamera:true,night:world.toon.uniforms.uNight.value,elapsed:world.state.elapsed,camera:world.camera.position.toArray(),target:world.controls.target.toArray(),renderOrigin:{x:world.renderOrigin.x,z:world.renderOrigin.z},width,height,stateSha256:await hash(new TextEncoder().encode(before)),frames:frames.map(({pixels,...frame})=>frame),comparisons});
         element('status').textContent=`${result.rows.length}/60 · ${phase} · ${pose.id}`;publish();
       }
       world.state.time=saved.time;assert(JSON.stringify(world.state)===original,'QA changed state beyond explicit temporary light phase');
