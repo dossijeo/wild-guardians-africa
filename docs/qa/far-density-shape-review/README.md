@@ -13,3 +13,15 @@ Seventeen directed mathematical, static-upload, native-only, readiness and layer
 Files candidate-night/native-night retain the initial exact A/B. diagnosed-night contains the full expanded visible-object probe. importance-day/night are candidate screenshots/reports. Browser CSS1280×720; no timing benchmark during these captures. Parent’s muted HTMLAudio playback test was running without WebGL.
 
 Native20s baobab-slot orbit on19424f6 completes with unchanged state,238/247 near frames prepared and zero target/transition descents. The broader audit records3,917 observations/3,094 prepared and ten other-tree readiness descents; every stored physical diagnostic reports frustum=false, no omissions. Thus these counters do not establish on-screen gaps, but are preserved rather than removed from the audit. errors/WebGL0. The selected orbit tree differs from the168m baobab density counterexample; this traversal validates nearby handoff under the changed static packing, not that object’s distant thinning.
+
+## Broader counterexample: small acacia, camera-aligned diagnosis
+
+The eight density-motion captures are a moving-camera observation series, not exact report/pixel alignment. Captures6/7 have only transient chunk-loading reports and are not valid full diagnostics. An offline procedural projection narrowed the candidate to acacia irregular0:-3:5, but the first report showed coverage1 while the screenshot showed stippling; movement between reads made that attribution incomplete.
+
+The QA fixture now supports pause-at=13.2 and an explicit pause/resume control. With the camera held at[-43.49710893312456,17.708301721455364,191.85039633264967], exact probe+PNG identify0:-3:5 at120.008913m,8.816716m tall, projected center[695.866,96.231], sprite mix1, density coverage0.6903984 and native color0. Its rank0.9124893 is unaffected by size weighting. This confirms size weighting alone does not conceal early density removal of other objects.
+
+7026224 tested an extra density-dependent atmosphere factor in the existing fog mix (no new texture read or varying, but extra arithmetic). density-fog-day-13p2 is the exact A/B: the object becomes gray, but stippling remains conspicuous against less fogged soil. The candidate is REJECTED and reverted byc3b6034. These files must not be presented as visual approval or current shader behavior.
+
+The subsequent d7fa2c6 candidate keeps the faithful intermediate distribution until180m, reduces density180–280m and removes selected far silhouettes280–330m. The60m model threshold remains unchanged. No extra shader arithmetic is retained. Distances are configurable. Thirteen focused ownership/static-density tests pass; actual comparison and combined GPU cost remain pending. Wider faithful coverage can increase fragment work.
+
+Frozen cea4305 build/package/web-assets/audio validators pass:694files/403444981bytes/859relative links/20runtimeGLBs. The full suite is still running on its immutable archive and must not be described as complete. It predates the new thinning distances; later QA controls are also outside that snapshot.
