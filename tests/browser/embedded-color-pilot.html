@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA color embebido Tinify</title>
 <style>body{margin:0;font:14px system-ui;background:#e7ddc6}header{position:absolute;z-index:2;background:#fff9ed;padding:8px;max-width:95vw}button{padding:8px}#report{position:fixed;bottom:0;left:0;background:#fff9ed;font-size:11px;max-height:90px;max-width:95vw;overflow:auto;margin:0}canvas{display:block;width:100vw;height:100vh}</style>
-<header><span id="model-name">Facóquero</span>: runtime actual / candidata Tinify desde PNG original. Pose congelada, luz nativa fija y suelo QA; sin HDR ni simulación.<br><button id="baseline" disabled>Runtime actual</button><button id="candidate" disabled>Candidata Tinify</button><button id="night" disabled>Día / noche</button><button id="compare" disabled>Comparar seis paletas día/noche</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas id="view"></canvas>
+<header><span id="model-name">Facóquero</span>: runtime actual / candidata Tinify desde PNG original. Pose congelada, luz nativa fija y suelo QA; sin HDR ni simulación.<br><button id="baseline" disabled>Runtime actual</button><button id="candidate" disabled>Candidata Tinify</button><button id="night" disabled>Día / noche</button><button id="orbit" disabled>Vista opuesta</button><button id="compare" disabled>Comparar seis paletas día/noche</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas id="view"></canvas>
 <script type="module">
 import * as THREE from 'three';
 import {Assets,json,bytes} from '/src/rendering/assets.js';
@@ -15,14 +15,14 @@ if(!Object.hasOwn(speciesNames,species)||!/^([a-f0-9]{64})-\d+$/.test(pilotKey))
 document.querySelector('#model-name').textContent=speciesNames[species];
 const directory='/.cache/tinify-embedded-pilot/'+pilotKey+'/',assets=new Assets(),actors=[],errors=[],rows=[];
 const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100);camera.position.set(2.9,2.1,4.8);camera.lookAt(0,1.05,0);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100),cameraTarget=new THREE.Vector3(0,1.05,0);camera.position.set(2.9,2.1,4.8);camera.lookAt(cameraTarget);
 const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-.82,.52,.31).multiplyScalar(240);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:.1,far:500});
 const ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);scene.add(sun,sun.target,ambient);const toon=new AfricanToon(),releaseShadow=installNativeShadow(renderer,sun,toon.shadowUniforms),guard=installShaderFailureGuard(renderer);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-let selected=0,night=false,biome='sabana',frame,ready=false,comparison;
+let selected=0,night=false,biome='sabana',frame,ready=false,comparison,viewAngle=0;
 const target=new THREE.WebGLRenderTarget(innerWidth,innerHeight);target.texture.colorSpace=THREE.SRGBColorSpace;
 const status=document.querySelector('#status'),report=document.querySelector('#report');
-function state(){return {ready,species,pilotKey,selected:selected?'candidate':'baseline',night,biome,pose:'Walking .55',resolution:[target.width,target.height],errors,rows,comparison,scope:'Native compressed GLB, production toon palettes and fixed light, frozen pose and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
+function state(){return {ready,species,pilotKey,selected:selected?'candidate':'baseline',night,biome,viewAngle,pose:'Walking .55',resolution:[target.width,target.height],errors,rows,comparison,scope:'Native compressed GLB, production toon palettes and fixed light, frozen pose and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
 const paint=()=>{report.textContent=JSON.stringify(state(),null,2);};
 function render(destination=null){
  actors.forEach((actor,i)=>actor.model.visible=i===selected);sun.intensity=3-2.6*Number(night);ambient.intensity=2-.9*Number(night);scene.background=new THREE.Color(night?'#171f2e':'#e7ddc6');toon.update(night,sun,biome);
@@ -31,6 +31,7 @@ function render(destination=null){
 function show(){render();paint();status.textContent=(selected?'Candidata':'Runtime')+' · '+biome+' · '+(night?'noche':'día');}
 function present(){try{if(ready)render();frame=requestAnimationFrame(present);}catch(error){errors.push(error.message);paint();status.textContent='Error';}}
 document.querySelector('#baseline').onclick=()=>{selected=0;show();};document.querySelector('#candidate').onclick=()=>{selected=1;show();};document.querySelector('#night').onclick=()=>{night=!night;show();};
+document.querySelector('#orbit').onclick=()=>{viewAngle=(viewAngle+180)%360;camera.position.sub(cameraTarget).applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI).add(cameraTarget);camera.lookAt(cameraTarget);show();};
 document.querySelector('#compare').onclick=async()=>{
  const button=document.querySelector('#compare');button.disabled=true;try{
   rows.length=0;for(const nextBiome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'])for(const nextNight of [false,true]){
@@ -55,7 +56,7 @@ try{
  }
  if(species!=='warthog'){
   const box=new THREE.Box3().setFromObject(actors[0].model),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
-  const distance=Math.max(size.y,size.x/camera.aspect,size.z)*1.65;camera.position.copy(center).add(new THREE.Vector3(.52,.30,.84).normalize().multiplyScalar(distance));camera.lookAt(center);
+  const distance=Math.max(size.y,size.x/camera.aspect,size.z)*1.95;cameraTarget.copy(center);camera.position.copy(center).add(new THREE.Vector3(.52,.30,.84).normalize().multiplyScalar(distance));camera.lookAt(center);
  }
  ready=true;document.querySelectorAll('button').forEach(button=>button.disabled=false);show();frame=requestAnimationFrame(present);
 }catch(error){errors.push(error.message);paint();status.textContent='Error: '+error.message;}

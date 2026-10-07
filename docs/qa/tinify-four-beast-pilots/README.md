@@ -39,8 +39,34 @@ Use `summary.json` for each species/pilot key. The fixture validates the selecte
 species, restricts the local key format, checks receipt/model correspondence and
 verifies both model hashes before rendering. It fits the new species to the same
 camera for its baseline/candidate pair. The old facóquero framing is retained.
-Its script passes syntax checking; no native run of these four new selections is
-claimed at this checkpoint.
+Its script passes syntax checking. The subsequent partial native hyena review is
+archived in `native/hyena/`; the other three selections still await native review.
+
+## Partial native hyena review
+
+Eight actual 1280 x 720 browser JPEG captures preserve the baseline/candidate
+pairs in day/night, from the initial and opposite camera views. The final camera
+fit uses 1.95 times the animated bounding dimensions so the header does not hide
+the crest. Both variants use the same framing, frozen Walking .55 pose, production
+toon material and fixed world light. Inspection found no obvious loss of face,
+fur, spots or ornament detail at this framing; the lossy output is not identical.
+
+`native/hyena/front-comparison.json` is a terminal 12-row comparison, covering six
+biome uniform configurations in day/night, with no GL or recorded fixture errors.
+These are palette configurations on a flat QA floor, not six complete biome scenes.
+Full-frame pixel differences include background and cannot establish texture-only
+quality or gameplay performance.
+
+The opposite-view screenshots were saved, but its terminal numeric report and
+console log were not archived before temporary tab 651 closed. Those checks must
+be repeated. Attempts to open a replacement tab failed to attach the browser
+webview; the tab inventory was empty and the local server remained listening.
+No inferred back-view pass or empty-console claim is made. The file hashes and
+fixture hash are recorded in `native/hyena/provenance.json`; module syntax was
+independently checked after the opposite-view and framing edits.
+
+None of these four candidate models is installed yet. Remaining native evidence
+and the offline rebuild/build/package gates are required before adoption.
 
 Next: inspect baseline/candidate close views in day/night, preserve native reports
 and console warnings, then accept only adequate variants through offline recipes
