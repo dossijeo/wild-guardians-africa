@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
-import {modelOrigin,NearTreeSelection,treeDensityRank} from './far-impostor-math.js';
-export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true}={}){
+import {modelOrigin,NearTreeSelection,treeDensityRank,treeImportanceRank} from './far-impostor-math.js';
+export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true,importanceHeight=16,importanceMaxBoost=4}={}){
  const hasNormals=!!toon&&!!normalAtlas,rotationViews=prelitAtlas?.rotations??1,prelitViews=prelitAtlas?.views??8,prelitResolution=prelitAtlas?.resolution??256;
  const uniforms={uAtlas:{value:texture},uStart:{value:start},uEnd:{value:end},uReady:{value:1},uFarOrigin:{value:new THREE.Vector2()},uBlend:{value:1},uDensityEnabled:{value:0},uDensityRange:{value:new THREE.Vector2(100,240)},uDensityMinimum:{value:.15},uDensityBand:{value:.04},uDistanceFadeRange:{value:new THREE.Vector2(1e8,1e9)},uSize:{value:new THREE.Vector2(metadata.impostorWidth,metadata.impostorHeight)},uLighting:{value:new THREE.Color(1,1,1)},...THREE.UniformsUtils.clone(THREE.UniformsLib.fog)};
  if(toon)Object.assign(uniforms,impostorLightingUniforms(toon,source));
@@ -11,7 +11,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  const attrs=(geometry,count)=>{for(const [name,size] of [['aTreeBase',3],['aTreeYaw',1],['aTreeScale',3],['aTreeRank',1]])geometry.setAttribute(name,new THREE.InstancedBufferAttribute(new Float32Array(count*size),size));};
  const readyAttribute=count=>new THREE.InstancedBufferAttribute(new Float32Array(count).fill(1),1).setUsage(THREE.DynamicDrawUsage);
  const plane=new THREE.PlaneGeometry(1,1),geometry=new THREE.InstancedBufferGeometry();geometry.index=plane.index;geometry.attributes=plane.attributes;attrs(geometry,trees.length);geometry.instanceCount=trees.length;geometry.setAttribute('aTreeReady',readyAttribute(trees.length));
- for(const [i,t] of trees.entries()){geometry.attributes.aTreeBase.setXYZ(i,t.x,t.y,t.z);geometry.attributes.aTreeYaw.setX(i,t.yaw);geometry.attributes.aTreeScale.setXYZ(i,t.sx??t.scale,t.sy??t.scale,t.sz??t.scale);geometry.attributes.aTreeRank.setX(i,treeDensityRank(t.id,seed));}
+ for(const [i,t] of trees.entries()){geometry.attributes.aTreeBase.setXYZ(i,t.x,t.y,t.z);geometry.attributes.aTreeYaw.setX(i,t.yaw);geometry.attributes.aTreeScale.setXYZ(i,t.sx??t.scale,t.sy??t.scale,t.sz??t.scale);geometry.attributes.aTreeRank.setX(i,treeImportanceRank(treeDensityRank(t.id,seed),metadata.impostorHeight*(t.sy??t.scale),{referenceHeight:importanceHeight,maximumBoost:importanceMaxBoost}));}
  texture.colorSpace=THREE.SRGBColorSpace;texture.premultiplyAlpha=true;texture.generateMipmaps=true;
  const material=new THREE.ShaderMaterial({uniforms,fog:true,side:THREE.DoubleSide,vertexShader:`attribute vec3 aTreeBase;attribute float aTreeYaw,aTreeRank,aTreeReady;attribute vec3 aTreeScale;uniform vec2 uDensityRange,uDistanceFadeRange;uniform float uDensityEnabled,uDensityMinimum,uDensityBand;uniform vec2 uSize;uniform float uStart,uEnd,uReady;uniform vec2 uFarOrigin;varying vec2 vUv;varying float vView,vMix,vDensityFade;
  ${rotationViews>1?'varying float vPrelitRotation;':''}

@@ -6,6 +6,11 @@ export function treeDensityRank(id,seed=0){
  hash^=hash>>>16;hash=Math.imul(hash,0x7feb352d);hash^=hash>>>15;hash=Math.imul(hash,0x846ca68b);hash^=hash>>>16;
  return (hash>>>0)/4294967296;
 }
+// Static importance weighting: preserve large silhouettes without adding shader work.
+export function treeImportanceRank(rank,height,{referenceHeight=16,maximumBoost=4}={}){
+ if(!Number.isFinite(rank)||rank<0||rank>=1||!Number.isFinite(height)||height<0||!Number.isFinite(referenceHeight)||referenceHeight<=0||!Number.isFinite(maximumBoost)||maximumBoost<1)throw Error('Invalid tree importance parameters');
+ return rank/Math.max(1,Math.min(maximumBoost,height/referenceHeight));
+}
 export function farDensityFade(distance,rank,{start=100,end=240,minimum=.15,band=.04}={}){
  if(!(end>start)||minimum<0||minimum>1||!(band>0)||rank<0||rank>=1)throw Error('Invalid far density parameters');
  const t=Math.max(0,Math.min(1,(distance-start)/(end-start))),density=1-(1-minimum)*t*t*(3-2*t);
