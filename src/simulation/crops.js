@@ -17,15 +17,16 @@ export function advancePlant(p,seconds,growthMagic=false) {
   const spec=cropSpec(p.species), tolerance=spec.derived_tolerance_seconds*(1+(p.toleranceBonus??0));
   let left=seconds;
   while(left>1e-9) {
-    const due=p.water.filter(w=>w.status==='due');
-    const magic=growthMagic && due.length===0;
+    let dueCount=0,remainingTolerance=Infinity;
+    for(const water of p.water)if(water.status==='due'){dueCount++;remainingTolerance=Math.min(remainingTolerance,tolerance-water.wait);}
+    const magic=growthMagic && dueCount===0;
     const rate=magic?1.5:1;
     const next=p.water.find(w=>w.status==='future');
     const untilCheckpoint=next?Math.max(0,(next.at-p.growth)/rate):Infinity;
-    const untilDry=due.length?Math.max(0,Math.min(...due.map(w=>tolerance-w.wait))):Infinity;
+    const untilDry=dueCount?Math.max(0,remainingTolerance):Infinity;
     if(untilDry<=1e-9) return;
     const step=Math.min(left,untilCheckpoint,untilDry,(spec.growth_seconds-p.growth)/rate);
-    due.forEach(w=>w.wait+=step);
+    if(dueCount)for(const water of p.water)if(water.status==='due')water.wait+=step;
     p.growth+=step*rate;left-=step;
     if(next && p.growth>=next.at-1e-9) {
       if(magic)satisfyWater(p,next,true);else next.status='due';

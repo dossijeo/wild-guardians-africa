@@ -1,0 +1,365 @@
+{
+  "scope": "Six native biomes, responsible mixed-crop first day through ordinary commands, paid labour and physical deliveries. Exact final snapshots and sampled full-state traces against frozen reference. No 100-night, visual, GPU or performance claim.",
+  "referenceRoot": "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\qa-crop-water-scan\\integrated-reference",
+  "cases": [
+    {
+      "biome": "sabana",
+      "ticks": 380,
+      "checkpoints": 8,
+      "traceSha256": "8e1c50edc670cd2d83847812d7ac43e96f3eaecb2e42c4004b268a65027ccd7a",
+      "finalSha256": "488ad0c8c544d6915de275a71b671972f6f49b68f39febbeb04402fedb8330e6",
+      "completedNights": 1,
+      "money": 401,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 111,
+        "HiringConfirmed": 2,
+        "WaterSatisfied": 136,
+        "CropMatured": 48,
+        "HarvestRequested": 48,
+        "CropPicked": 40,
+        "CrateDelivered": 40,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "SpellActivated": 1,
+        "AnimalLogicalHit": 2,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 401,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 210,
+          "maintenanceReserve": 100,
+          "pendingTasks": 49,
+          "planted": 110,
+          "delivered": 40,
+          "destroyed": 0,
+          "living": 71,
+          "centerHp": [
+            600
+          ],
+          "actions": 112,
+          "longestIdle": 127,
+          "idle": {
+            "budget": 170,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 24,
+            "night": 275
+          },
+          "result": null,
+          "additionalStaff": 1,
+          "additionalWages": 4
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "ticks": 380,
+      "checkpoints": 8,
+      "traceSha256": "39c8bfc4beb2eba3417b423e66c4b38be1d1cd43a89115df1321534993cda911",
+      "finalSha256": "744cca1dbb195667ea8448f9ad87e7c081cff9f27f9e801cc80bc6e52c5435c3",
+      "completedNights": 1,
+      "money": 401,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 111,
+        "HiringConfirmed": 2,
+        "WaterSatisfied": 136,
+        "CropMatured": 48,
+        "HarvestRequested": 48,
+        "CropPicked": 40,
+        "CrateDelivered": 40,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "SpellActivated": 1,
+        "AnimalLogicalHit": 2,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 401,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 210,
+          "maintenanceReserve": 100,
+          "pendingTasks": 49,
+          "planted": 110,
+          "delivered": 40,
+          "destroyed": 0,
+          "living": 71,
+          "centerHp": [
+            600
+          ],
+          "actions": 112,
+          "longestIdle": 127,
+          "idle": {
+            "budget": 170,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 24,
+            "night": 275
+          },
+          "result": null,
+          "additionalStaff": 1,
+          "additionalWages": 4
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "ticks": 366,
+      "checkpoints": 8,
+      "traceSha256": "c96ed34cb7d3d79cb336e36059e0f1b07be3d40c60bd764397159c798f77ede5",
+      "finalSha256": "cd3dc8288aa35dc8e57b59a6fc6aa3336c768f6476897ab706b03f6dfa72f35f",
+      "completedNights": 1,
+      "money": 401,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 111,
+        "HiringConfirmed": 2,
+        "WaterSatisfied": 136,
+        "CropMatured": 48,
+        "HarvestRequested": 48,
+        "CropPicked": 40,
+        "CrateDelivered": 40,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "CropHit": 2,
+        "AnimalLogicalHit": 2,
+        "CropDestroyed": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 401,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 210,
+          "maintenanceReserve": 100,
+          "pendingTasks": 48,
+          "planted": 110,
+          "delivered": 40,
+          "destroyed": 1,
+          "living": 70,
+          "centerHp": [
+            600
+          ],
+          "actions": 111,
+          "longestIdle": 127,
+          "idle": {
+            "budget": 170,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 7,
+            "night": 295
+          },
+          "result": null,
+          "additionalStaff": 1,
+          "additionalWages": 4
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "ticks": 380,
+      "checkpoints": 8,
+      "traceSha256": "7fa29055549608aa4b6f76df5eb48a7131a599ba6fe1999eabb0d68b62bcd4c7",
+      "finalSha256": "944809086df25b62dced1dc748c8b92ec2dedb00d0b846c20d581002f6044326",
+      "completedNights": 1,
+      "money": 401,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 111,
+        "HiringConfirmed": 2,
+        "WaterSatisfied": 136,
+        "CropMatured": 48,
+        "HarvestRequested": 48,
+        "CropPicked": 40,
+        "CrateDelivered": 40,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "SpellActivated": 1,
+        "AnimalLogicalHit": 2,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 401,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 210,
+          "maintenanceReserve": 100,
+          "pendingTasks": 49,
+          "planted": 110,
+          "delivered": 40,
+          "destroyed": 0,
+          "living": 71,
+          "centerHp": [
+            600
+          ],
+          "actions": 112,
+          "longestIdle": 127,
+          "idle": {
+            "budget": 170,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 24,
+            "night": 275
+          },
+          "result": null,
+          "additionalStaff": 1,
+          "additionalWages": 4
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "ticks": 379,
+      "checkpoints": 8,
+      "traceSha256": "3a4b153e7adaf65ea76a87c6de1e61d8b99df9e7df4b3d4e756686f5f9289eae",
+      "finalSha256": "99ec41f920da285528df63bd843a049dde181608eed9c537e3391688e5ed632b",
+      "completedNights": 1,
+      "money": 328,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 89,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 117,
+        "CropMatured": 48,
+        "HarvestRequested": 48,
+        "CropPicked": 23,
+        "CrateDelivered": 23,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "SpellActivated": 1,
+        "AnimalLogicalHit": 2,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 328,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 180,
+          "maintenanceReserve": 100,
+          "pendingTasks": 48,
+          "planted": 88,
+          "delivered": 23,
+          "destroyed": 0,
+          "living": 66,
+          "centerHp": [
+            600
+          ],
+          "actions": 89,
+          "longestIdle": 144,
+          "idle": {
+            "budget": 192,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 22,
+            "night": 280
+          },
+          "result": null,
+          "additionalStaff": 0,
+          "additionalWages": 0
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "ticks": 366,
+      "checkpoints": 8,
+      "traceSha256": "1b0a9189fd9912a45d9100dec911a2c9c4fbdb75888b1a100d8002f4a5e2bf77",
+      "finalSha256": "e3a2b5f515fdd4162f269c4d2bd1697867589b3a72faa547d350d602a5243921",
+      "completedNights": 1,
+      "money": 306,
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 78,
+        "HiringConfirmed": 1,
+        "WaterSatisfied": 88,
+        "CropMatured": 40,
+        "HarvestRequested": 40,
+        "CropPicked": 16,
+        "CrateDelivered": 16,
+        "TutorialCompleted": 1,
+        "NightStarted": 1,
+        "RaidSpawned": 1,
+        "CropHit": 2,
+        "AnimalLogicalHit": 2,
+        "CropDestroyed": 1,
+        "AnimalRetreating": 1,
+        "RaidEnded": 1,
+        "Dawn": 1
+      },
+      "daily": [
+        {
+          "day": 1,
+          "before": 515,
+          "money": 306,
+          "staff": 6,
+          "wages": 180,
+          "nextLabourReserve": 180,
+          "maintenanceReserve": 100,
+          "pendingTasks": 61,
+          "planted": 77,
+          "delivered": 16,
+          "destroyed": 1,
+          "living": 61,
+          "centerHp": [
+            600
+          ],
+          "actions": 77,
+          "longestIdle": 173,
+          "idle": {
+            "budget": 203,
+            "space": 0,
+            "shift-end": 20,
+            "incursion": 7,
+            "night": 295
+          },
+          "result": null,
+          "additionalStaff": 0,
+          "additionalWages": 0
+        }
+      ]
+    }
+  ],
+  "postRunSourceAudit": {
+    "onlyChangedSource": [
+      "src/simulation/crops.js"
+    ],
+    "candidateCommit": "015f9e5",
+    "referenceCropsCommit": "312a2ca",
+    "referenceCropsSha256": "e49a8dfc611ff1c1945d17b41ba4f9580503463fffbe1cdd6e493d428c87267e",
+    "candidateCropsSha256": "da02aa0cd1404ba5fd372f721c7a0353978dcc0e8e80c1b7f9f7e8eb710d0fd5"
+  }
+}
