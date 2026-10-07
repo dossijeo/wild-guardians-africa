@@ -594,3 +594,32 @@ increase. The first mature report's geometry-only counts are retained with
 their original field name; they excluded those matrices. QA-created indexed
 geometries are explicitly disposed in addition to CropBatch's original owned
 geometries. These are fixture/accounting corrections, not rendering approval.
+
+The source-normal-path mature diagnosis exactly reproduces the prior direct-XY
+metrics; changing that path did not resolve the residual. RGB face mapping
+locates several source Back faces not in the existing256px selection, including
+202/113/1387/131/483/266/3221. Source Front faces also occur in outliers; this
+does not identify a unique cause. Maize's actual fixture budget is33,272source
+triangles versus42,530candidate (+27.825%),6,169,226B original versus4,248,080B
+indexed source and5,722,980B candidate (including MAX_PLANTS=2instances).
+Lower payload does not override the proposed10%triangle gate; no approval.
+
+First real morph bridge sample (growth .7306481481481482, stage3-to4, wind1.75,
+Sabana/day, elevation32.5/azimuth26.25) has3exact source controls and exact
+indexed DoubleSide color/alpha. Both candidate variants miss9pixels, largest
+missing region5pixels; uncompensated tile .043837/region247, compensated tile
+.032855/region30 also reject. Original Front bridge face4587 appears among
+color outliers alongside Back1337/2027/1355. All evidence/captures retained.
+Neither the morph color gate nor interior-hole gate passed.
+
+An opt-in QA ordering diagnosis `interleaveReverses` keeps source attribute
+prefix bits intact and forward triangles in their exact relative order, but
+places each selected reverse immediately after its own forward face instead
+of appending all reverses last. This tests possible depth-priority changes at
+coincident/near-coincident interfaces. It does NOT preserve the raw index
+prefix; each emitted face carries explicit qaTriangleSourceFaces provenance,
+and a6th helper test reconstructs forward UV/organ/position/normal bits in
+original order. Source GLB/bridge faceLabels stay untouched: CropBatch builds
+original bridges before this QA-only layout change. A production candidate
+would require its own fully verified faceLabels/index mapping reconstruction.
+No causal claim or quality approval is made before this diagnostic is drawn.

@@ -22,7 +22,7 @@ function colorMetrics(a,b,envelope){
  out.passes=out.alphaIoU>=.9995&&out.missingFraction<=.00025&&out.addedFraction<=.0005&&out.alphaDistanceGate.passes&&out.linearRgbMae<=.002&&out.p99Approx<=.015&&out.maxTileMae<=.01&&!out.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2)&&!out.rgbOutlierRegions.some(r=>r.pixels>16);return out;
 }
 async function run(){
- const options=new URLSearchParams(location.search),limit=Number(options.get('limit')??16),bridgeOnly=options.has('bridgeOnly'),sourceNormalPath=options.has('sourceNormalPath');
+ const options=new URLSearchParams(location.search),limit=Number(options.get('limit')??16),bridgeOnly=options.has('bridgeOnly'),sourceNormalPath=options.has('sourceNormalPath'),interleaveReverses=options.has('interleaveReverses');
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.querySelector('#view').append(renderer.domElement);
  const gl=renderer.getContext(),sourceAssets=new Assets(),manifest=await fetch('/content/models.json').then(r=>r.json()),url=manifest.find(m=>m.source.includes('Cultivos')).url;
  const [gltf,data,selection,pairSelection]=await Promise.all([sourceAssets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-selection.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-crop-pairs-selection.json').then(r=>r.json())]);
@@ -37,9 +37,9 @@ async function run(){
    if(match){const source=sourceModels.find(m=>m.userData.crop===match[1]&&m.userData.stage===Number(match[2])),ai=source.userData.cropIndex*5+Number(match[2])-1,bi=ai+1;
     const pair=data.pairs.find(p=>p.a===ai&&p.b===bi),keys=[];for(const [role,model] of [[0,ai],[1,bi]]){const indices=sourceModels[model].geometry.index.array;for(let f=0;f<data.models[model].faces;f++)for(let c=0;c<3;c++)keys.push([role,indices[f*3+c],data.models[model].faceLabels[f]]);}
     sourceTriangles+=keys.length/3;
-    if(arm>0){const faces=arm>1?(pairSelection.selected[`bridgeSource/${ai}-${bi}`]??[]).map(s=>{const [m,f]=s.split(':').map(Number);return m===ai?f:data.models[ai].faces+f;}):[];const result=indexBridgeGeometry(mesh.geometry,keys,faces);mesh.geometry=result.geometry;changed=faces.length>0;}
+    if(arm>0){const faces=arm>1?(pairSelection.selected[`bridgeSource/${ai}-${bi}`]??[]).map(s=>{const [m,f]=s.split(':').map(Number);return m===ai?f:data.models[ai].faces+f;}):[];const result=indexBridgeGeometry(mesh.geometry,keys,faces,interleaveReverses&&arm>1);mesh.geometry=result.geometry;changed=faces.length>0;}
    }else{const source=sourceModels.find(m=>m.name===mesh.name),meta=source.userData,index=meta.cropIndex*5+meta.stage-1;sourceTriangles+=mesh.geometry.index.count/3;
-    if(arm>1){const faces=new Set(selection.selected[mesh.name]??[]);for(const entry of selection.selected.bridgeSource??[]){const [m,f]=entry.split(':').map(Number);if(m===index)faces.add(f);}if(faces.size){mesh.geometry=reverseIndexedState(mesh.geometry,[...faces].sort((a,b)=>a-b));changed=true;}}
+    if(arm>1){const faces=new Set(selection.selected[mesh.name]??[]);for(const entry of selection.selected.bridgeSource??[]){const [m,f]=entry.split(':').map(Number);if(m===index)faces.add(f);}if(faces.size){mesh.geometry=reverseIndexedState(mesh.geometry,[...faces].sort((a,b)=>a-b),interleaveReverses);changed=true;}}
    }
    if(arm>1&&changed){const material=mesh.material.clone();material.onBeforeCompile=mesh.material.onBeforeCompile;material.customProgramCacheKey=mesh.material.customProgramCacheKey;material.side=THREE.FrontSide;material.shadowSide=THREE.DoubleSide;if(arm===3)patchReverseDerivativeFrame(material,!!match,sourceNormalPath);mesh.material=material;}
    if(mesh.geometry!==originalGeometry)ownedCandidateGeometries.push(mesh.geometry);
@@ -49,6 +49,7 @@ async function run(){
   scene.add(group);rigs.push({group,batch});resourceRows.push({arm,sourceTriangles,candidateTriangles,triGrowthPercent:100*(candidateTriangles/sourceTriangles-1),geometryAndInstanceBufferBytes:bytes,speciesBudgets});
  }
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',cropVisual:true,metricPolicyVersion:2,source:url,sourceNormalPath,arms:['original DoubleSide','indexed DoubleSide','selective FrontSide uncompensated',sourceNormalPath?'selective FrontSide source-normal-path':'selective FrontSide XY compensated'],resolution:size,contextAttributes:gl.getContextAttributes(),resources:resourceRows,samples:[],limitations:['Maize pilot only; no category approval or GPU timing.','Color shadows retain DoubleSide; shadowFront/depth/ground masks are separate gates.','Actual source growth/bridge shaders and web textures; indexed source isolates indexing from culling.','Candidate resource gates remain unchanged; rendered quality cannot waive triangle budget.']};
+ report.interleaveReverses=interleaveReverses;
  const transitionWidth=Math.min(.34,2/(.25*cropSpec('maiz').growth_seconds)),bridgeGrowths=[.25,.5,.75].map(t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t));
  const camera=new THREE.PerspectiveCamera(35,1,.01,100),pixels=Array.from({length:4},()=>new Uint8Array(size*size*4)),growths=bridgeOnly?bridgeGrowths:[1,...bridgeGrowths,.065,.27,.53,.78];let stop=false;
  campaign:for(const growth of growths)for(const clock of [1.75,4.125])for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const elevation of [32.5,62.5])for(const azimuth of [26.25,116.25,206.25,296.25]){

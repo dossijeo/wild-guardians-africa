@@ -51,3 +51,13 @@ test('frame patch retains preceding material hook and rejects incompatible shade
  assert.equal(invoked,1);assert.ok(shader.vertexShader.includes('// native crop hook'));assert.ok(shader.vertexShader.includes('vQaReverse=aPart.w'));
  assert.ok(material.customProgramCacheKey().startsWith('native-crop|'));assert.throws(()=>material.onBeforeCompile({vertexShader:'void main() { }',fragmentShader:'void main(){}'},null),/shader contract/);
 });
+test('interleaving preserves original relative face priority and reconstructs every driver/UV bit',()=>{
+ const {geo,keys}=fixture(),result=indexBridgeGeometry(geo,keys,[0],true),candidate=result.geometry;
+ assert.deepEqual(result.triangleSourceFaces,[0,0,1]);assert.deepEqual(candidate.userData.qaTriangleSourceFaces,[0,0,1]);
+ let forwardFace=0;for(let f=0;f<candidate.index.count/3;f++){
+  const vertex=candidate.index.getX(f*3);if(candidate.getAttribute('aPart').getW(vertex)===1)continue;
+  for(const [name,attribute] of Object.entries(geo.attributes)){if(attribute.isInstancedBufferAttribute)continue;const bits=new Uint32Array(attribute.array.buffer),restored=new Uint32Array(candidate.getAttribute(name).array.buffer);
+   for(let corner=0;corner<3;corner++)for(let c=0;c<attribute.itemSize;c++)assert.equal(restored[candidate.index.getX(f*3+corner)*attribute.itemSize+c],bits[(forwardFace*3+corner)*attribute.itemSize+c]);
+  }forwardFace++;
+ }assert.equal(forwardFace,2);assert.equal(geo.index,null);
+});

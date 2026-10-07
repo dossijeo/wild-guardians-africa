@@ -34,7 +34,7 @@ export function patchReverseDerivativeFrame(material,bridge=false,sourceNormalPa
  };
  material.customProgramCacheKey=function(){return cache.call(this)+'|qa-reverse-derivative-frame-v1|'+(bridge?'bridge':'state')+'|'+(sourceNormalPath?'source-normal-path':'direct-xy');};
 }
-export function reverseIndexedState(geometry,faces){
+export function reverseIndexedState(geometry,faces,interleave=false){
  if(!geometry.index||geometry.getAttribute('tangent')||Object.keys(geometry.morphAttributes).length)throw Error('Expected indexed derivative-frame crop state without morphs');
  const count=geometry.getAttribute('position').count,index=geometry.index.array,chosen=new Set(faces);
  if(chosen.size!==faces.length||faces.some(f=>!Number.isInteger(f)||f<0||f>=index.length/3))throw Error('Invalid state reverse faces');
@@ -48,10 +48,24 @@ export function reverseIndexedState(geometry,faces){
  }
  const flag=new Float32Array(count+extra.length);flag.fill(1,count);result.setAttribute('aQaReverse',new THREE.BufferAttribute(flag,1));
  const indices=Array.from(index);for(const face of faces)for(const corner of [0,2,1])indices.push(lookup.get(index[face*3+corner]));
- result.setIndex(new THREE.BufferAttribute(count+extra.length<=65536?Uint16Array.from(indices):Uint32Array.from(indices),1));
+ const provenance=[...Array(index.length/3).keys(),...faces],layout=orderedTriangleLayout(indices,provenance,index.length/3,faces,interleave);
+ result.setIndex(new THREE.BufferAttribute(count+extra.length<=65536?Uint16Array.from(layout.indices):Uint32Array.from(layout.indices),1));
+ result.userData.qaTriangleSourceFaces=layout.provenance;
  return result;
 }
-export function indexBridgeGeometry(geometry,sourceKeys,reverseFaces=[]){
+function orderedTriangleLayout(indices,provenance,sourceTriangles,faces,interleave){
+ if(!interleave)return{indices,provenance};
+ const reverseOffsets=new Map(faces.map((face,i)=>[face,sourceTriangles+i])),out=[],mapping=[];
+ for(let face=0;face<sourceTriangles;face++){
+  out.push(...indices.slice(face*3,face*3+3));mapping.push(provenance[face]);
+  if(reverseOffsets.has(face)){const offset=reverseOffsets.get(face);out.push(...indices.slice(offset*3,offset*3+3));mapping.push(provenance[offset]);}
+ }
+ // The forward triangles, filtered by the known reverse entries, remain in
+ // original order. Every new triangle has explicit original face provenance.
+ if(out.length!==indices.length)throw Error('Interleaved face mapping differs');
+ return{indices:out,provenance:mapping};
+}
+export function indexBridgeGeometry(geometry,sourceKeys,reverseFaces=[],interleave=false){
  if(geometry.index)throw Error('Expected original unindexed bridge');
  const count=geometry.getAttribute('position').count;
  if(count%3||sourceKeys.length!==count)throw Error('Bridge provenance dimensions differ');
@@ -96,7 +110,10 @@ export function indexBridgeGeometry(geometry,sourceKeys,reverseFaces=[]){
  for(const {name,size,bits} of attributes){const restored=result.getAttribute(name).array,restoredBits=new Uint32Array(restored.buffer);
   for(let source=0;source<count;source++)for(let c=0;c<size;c++)if(restoredBits[indices[source]*size+c]!==bits[source*size+c])throw Error('Source attribute reconstruction differs');
  }
+ const layout=orderedTriangleLayout(indices,[...Array(count/3).keys(),...reverseFaces],count/3,reverseFaces,interleave);
+ if(interleave)result.setIndex(new THREE.BufferAttribute(vertices.length<=65536?Uint16Array.from(layout.indices):Uint32Array.from(layout.indices),1));
+ result.userData.qaTriangleSourceFaces=layout.provenance;
  return{geometry:result,sourceVertices:count,indexedVertices:vertices.length,sourceTriangles:count/3,reverseTriangles:reverseFaces.length,
   // Triangle provenance remains source prefix plus reversed selected face IDs.
-  triangleSourceFaces:[...Array(count/3).keys(),...reverseFaces],normalMapCompensationRequired:true};
+  triangleSourceFaces:layout.provenance,normalMapCompensationRequired:true};
 }
