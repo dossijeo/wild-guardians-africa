@@ -1,0 +1,148 @@
+TAP version 13
+# (node:30144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: quiet frames do not revisit IDs or allocate a replacement deduplication set
+ok 1 - quiet frames do not revisit IDs or allocate a replacement deduplication set
+  ---
+  duration_ms: 6.4481
+  ...
+# Subtest: actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+ok 2 - actual Game.emit rolling history delivers each new fact once beyond the deduplication cap
+  ---
+  duration_ms: 48.0255
+  ...
+# Subtest: losing the old anchor falls back to processing the complete available history
+ok 3 - losing the old anchor falls back to processing the complete available history
+  ---
+  duration_ms: 21.9264
+  ...
+# Subtest: replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+ok 4 - replacement, copies, reordering, truncation and empty histories preserve ID deduplication
+  ---
+  duration_ms: 1.4121
+  ...
+# Subtest: remember seeds the cursor silently and a restored history only plays subsequent events
+ok 5 - remember seeds the cursor silently and a restored history only plays subsequent events
+  ---
+  duration_ms: 0.4057
+  ...
+# Subtest: music-only and global audio stops do not replay processed event history
+ok 6 - music-only and global audio stops do not replay processed event history
+  ---
+  duration_ms: 0.5454
+  ...
+# Subtest: unknown event types and repeated undefined IDs retain the existing dispatcher contract
+ok 7 - unknown event types and repeated undefined IDs retain the existing dispatcher contract
+  ---
+  duration_ms: 0.2946
+  ...
+# Subtest: failed asynchronous playback is consumed once while following events still dispatch
+ok 8 - failed asynchronous playback is consumed once while following events still dispatch
+  ---
+  duration_ms: 29.7771
+  ...
+# Subtest: all logical audio routes keep their original selection when histories roll
+ok 9 - all logical audio routes keep their original selection when histories roll
+  ---
+  duration_ms: 10.4884
+  ...
+# (node:28932) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 10 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 153.0458
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 11 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.8003
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 12 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 2.6944
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 13 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 0.3622
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 14 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 1623.5524
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 15 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 13.0021
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 16 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 12.5527
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 17 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 11.2685
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 18 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 13.5969
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 19 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 9.9685
+  ...
+# (node:44996) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual initial and proportional mid-day payroll cue once after payment, without audio altering gameplay
+ok 20 - actual initial and proportional mid-day payroll cue once after payment, without audio altering gameplay
+  ---
+  duration_ms: 20.1146
+  ...
+# Subtest: empty contracts and duplicate/rejected commands never produce a new spending cue
+ok 21 - empty contracts and duplicate/rejected commands never produce a new spending cue
+  ---
+  duration_ms: 3.2844
+  ...
+# Subtest: delayed payroll cues expire on blocking pauses, suspension, disposal and deadline
+ok 22 - delayed payroll cues expire on blocking pauses, suspension, disposal and deadline
+  ---
+  duration_ms: 0.9992
+  ...
+# (node:45940) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paid wall refund at 0 damage cues income once without changing the ledger
+ok 23 - paid wall refund at 0 damage cues income once without changing the ledger
+  ---
+  duration_ms: 46.2189
+  ...
+# Subtest: paid wall refund at 0.4 damage cues income once without changing the ledger
+ok 24 - paid wall refund at 0.4 damage cues income once without changing the ledger
+  ---
+  duration_ms: 5.965
+  ...
+# Subtest: zero, missing and invalid refunds do not cue income; crop sale keeps its specific sound
+ok 25 - zero, missing and invalid refunds do not cue income; crop sale keeps its specific sound
+  ---
+  duration_ms: 0.7554
+  ...
+# Subtest: pending refund decoding expires on pause, deadline and disposal
+ok 26 - pending refund decoding expires on pause, deadline and disposal
+  ---
+  duration_ms: 1.2167
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2366.1772

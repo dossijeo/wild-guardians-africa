@@ -3,12 +3,12 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "0e083b123f2de29623abd127ac9692444b3f010f1dcc9585087be3bb8c9dccc8",
+    "public/content/sfx-routing.json": "c77a8f64483f3d36f52d0593b5381461d490be895fda8daf1c1711d8985e63f1",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "46e7668b6e8e144bf24d418a7029099aad211415a14c0d168345acd9df2120e5",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
-    "src/audio/audio.js": "d971d65575cba60f334aad3a0ed39b267301cca536e2a80c5f990f2f635d1348",
+    "src/audio/audio.js": "0cec796e5fe698b1cc192fe75a545a953cfea11ce33126f3ea6c93bc317eafbb",
     "src/audio/destruction-audio.js": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec",
     "src/audio/farm-contact-audio.js": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700",
     "src/audio/guardian-audio.js": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
@@ -24,8 +24,8 @@
     "src/simulation/raids.js": "49ebd8d619f4c32719b543e8c9c46c9ea8a0ba973c92c2b6234a1cb22ab909f0"
   },
   "total": 126,
-  "assigned": 95,
-  "unassigned": 31,
+  "assigned": 96,
+  "unassigned": 30,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -138,8 +138,7 @@
       "spirit_drop",
       "spirit_valid",
       "spirit_invalid",
-      "ui_sell",
-      "eco_spend"
+      "ui_sell"
     ],
     "Alternativa / contextual / assigned": [
       "farm_seeds_drop",
@@ -157,6 +156,7 @@
       "ui_buy",
       "ui_objective_complete",
       "eco_gain",
+      "eco_spend",
       "eco_item_pickup",
       "game_enemy_detected",
       "game_building_attacked",
@@ -2425,10 +2425,16 @@
       "sha256": "06ef0d5110f552b0b15d9bcad1d4c142b5848a22b843da24f02a7a4f3be99904",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Gasto real; alternativa a compra específica, nunca al solicitar reparación.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 25,
+          "trigger": "HiringConfirmed (positive committed payroll only)"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 116,
