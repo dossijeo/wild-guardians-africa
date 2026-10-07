@@ -1,17 +1,23 @@
 import {Vector4} from 'three';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
-const textureCaches=new WeakMap();
+const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
+// A closed attachment cannot resurrect cache resources through a late callback.
+// Weak texture keys retain no world, renderer or event listener.
+export function registerNativeFarTextureOwner(texture,signal){
+ const previous=textureOwnerSignals.get(texture);if(previous&&previous!==signal)throw Error('Far atlas already belongs to another owner');
+ textureOwnerSignals.set(texture,signal);
+}
 function textureCache(renderer){
  let entry=textureCaches.get(renderer);if(entry)return entry;
- entry={textures:new WeakMap(),handlers:new Map(),epoch:0,contextLost:false,restore:null,lost:null};
+ entry={textures:new WeakMap(),handlers:new Map(),epoch:0,contextLost:false,released:false,restore:null,lost:null};
  entry.lost=()=>{entry.contextLost=true;entry.textures=new WeakMap();entry.epoch++;};
  entry.restore=()=>{entry.contextLost=false;entry.textures=new WeakMap();entry.epoch++;};
  renderer.domElement?.addEventListener?.('webglcontextlost',entry.lost);renderer.domElement?.addEventListener?.('webglcontextrestored',entry.restore);textureCaches.set(renderer,entry);return entry;
 }
 export function nativeFarGpuContextLost(renderer){return textureCaches.get(renderer)?.contextLost??false;}
 export function nativeFarGpuRevision(renderer){return textureCaches.get(renderer)?.epoch??0;}
-export function releaseNativeFarGpuCache(renderer){const entry=textureCaches.get(renderer);if(!entry)return;renderer.domElement?.removeEventListener?.('webglcontextlost',entry.lost);renderer.domElement?.removeEventListener?.('webglcontextrestored',entry.restore);for(const [texture,handler] of entry.handlers)texture.removeEventListener?.('dispose',handler);entry.handlers.clear();entry.textures=new WeakMap();textureCaches.delete(renderer);}
+export function releaseNativeFarGpuCache(renderer){const entry=textureCaches.get(renderer);if(!entry)return;entry.released=true;renderer.domElement?.removeEventListener?.('webglcontextlost',entry.lost);renderer.domElement?.removeEventListener?.('webglcontextrestored',entry.restore);for(const [texture,handler] of entry.handlers)texture.removeEventListener?.('dispose',handler);entry.handlers.clear();entry.textures=new WeakMap();textureCaches.delete(renderer);}
 function rememberTexture(entry,texture){
  if(!entry.handlers.has(texture)){const disposed=()=>{entry.textures.delete(texture);entry.handlers.delete(texture);texture.removeEventListener?.('dispose',disposed);};entry.handlers.set(texture,disposed);texture.addEventListener?.('dispose',disposed);}
  entry.textures.set(texture,{version:texture.version??0,sourceVersion:texture.source?.version??0});
@@ -21,16 +27,16 @@ function rememberTexture(entry,texture){
 // the completed fence to their exact packing and renderable generation.
 export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false}={}){
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
- const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
- const check=()=>{if(cancelled()||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
+ const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
+ const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted)||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
  const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
- check();checkErrors('before preparation');const cache=textureCache(renderer),pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
+ check();checkErrors('before preparation');cache=textureCache(renderer);const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
   for(let first=0;first<pending.length;first+=texturesPerFrame){
    check();const start=performance.now(),end=Math.min(pending.length,first+texturesPerFrame);
    for(let i=first;i<end;i++){
     check();const texture=pending[i],image=texture.image,decodeStart=performance.now();
-    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);checkErrors('after texture upload');rememberTexture(cache,texture);
+    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);check();checkErrors('after texture upload');rememberTexture(cache,texture);
     textureUploads.push({index:unique.indexOf(texture),width:image?.width??null,height:image?.height??null,imageType:image?.constructor?.name??null,mipmaps:!!texture.generateMipmaps,colorSpace:texture.colorSpace??null,decodeMs,cpuMs:performance.now()-before});
    }
    textureBatches++;maxTextureBatchCount=Math.max(maxTextureBatchCount,end-first);maxTextureBatchMs=Math.max(maxTextureBatchMs,performance.now()-start);

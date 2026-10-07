@@ -26,3 +26,16 @@ test('closing the biome owner releases native upload cache listeners before disp
  const original=f.services.attachSpecies;f.services.attachSpecies=async(world,options)=>{await prepareNativeFarGpu(world.renderer,new THREE.Group(),world.scene,new THREE.PerspectiveCamera(),[options.texture,options.prelitAtlas.night],{nextFrame:async()=>{}});return original(world,options);};
  const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(listeners.size,2);assert.equal(f.textures[0]._listeners.dispose.length,2);owner.dispose();assert.equal(listeners.size,0);assert.equal(f.textures[0]._listeners.dispose.length,1);assert.ok(f.textures.every(t=>t.releases===1));
 });
+
+function gpuFixture(f){
+ const listeners=new Set(),gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,NO_ERROR:0,isContextLost:()=>false,fenceSync:()=>({}),flush(){},clientWaitSync:()=>2,deleteSync(){},getError:()=>0};
+ f.world.renderer={domElement:{addEventListener:(name,fn)=>listeners.add(fn),removeEventListener:(name,fn)=>listeners.delete(fn)},getContext:()=>gl,initTexture(){},compileAsync:async()=>{},autoClear:true,getViewport:v=>v.set(0,0,10,10),getScissor:v=>v.set(0,0,10,10),getScissorTest:()=>false,setViewport(){},setScissor(){},setScissorTest(){},render(){}};return listeners;
+}
+for(const replaceOwner of [false,true])test('late GPU callback cannot resurrect closed owner or disturb replacement '+replaceOwner,async()=>{
+ const f=fixture(),listeners=gpuFixture(f);let proceed,started;const barrier=new Promise(r=>proceed=r),entered=new Promise(r=>started=r),original=f.services.attachSpecies;
+ f.services.attachSpecies=async(world,options)=>{started();await barrier;await prepareNativeFarGpu(world.renderer,new THREE.Group(),world.scene,new THREE.PerspectiveCamera(),[options.texture,options.prelitAtlas.night],{nextFrame:async()=>{}});return original(world,options);};
+ const pending=attachBiomeFarVegetation(f.world,{},f.services);await entered;f.world.farVegetation.dispose();assert.equal(listeners.size,0);let replacement;
+ if(replaceOwner){f.services.attachSpecies=async(world,options)=>{await prepareNativeFarGpu(world.renderer,new THREE.Group(),world.scene,new THREE.PerspectiveCamera(),[options.texture,options.prelitAtlas.night],{nextFrame:async()=>{}});return original(world,options);};replacement=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(listeners.size,2);}
+ proceed();await assert.rejects(pending,/cancelled/);assert.equal(f.world.disposed,false);assert.equal(f.world.farVegetation,replacement??null);assert.equal(listeners.size,replaceOwner?2:0);assert.ok(f.textures.slice(0,2).every(t=>t.releases===1&&t._listeners.dispose.length===1));
+ if(replacement){replacement.update(0);assert.equal(f.world.assetGroups.omitZeroColor,true);replacement.dispose();assert.equal(listeners.size,0);}assert.ok(f.textures.every(t=>t.releases===1));
+});

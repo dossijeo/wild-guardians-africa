@@ -134,3 +134,13 @@ test('opt-in diagnostic upload-draw faults preserve renderer cleanup and report 
  const f=fixture();let code=0;const render=f.renderer.render;f.renderer.render=()=>{render();code=0x502;};f.renderer.getContext().getError=()=>code;
  await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{diagnoseErrors:true}),/0x502 \(after upload draw\)/);f.restored();assert.equal(f.calls.at(-1),'restore');releaseNativeFarGpuCache(f.renderer);
 });
+
+test('release during initTexture prevents late texture handler registration',async()=>{
+ const f=fixture(),listeners=new Set(),texture=new Texture();f.renderer.domElement={addEventListener:(name,fn)=>listeners.add(fn),removeEventListener:(name,fn)=>listeners.delete(fn)};f.renderer.initTexture=()=>releaseNativeFarGpuCache(f.renderer);
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}}),/cancelled/);assert.equal(listeners.size,0);assert.equal(texture._listeners?.dispose?.length??0,0);assert.ok(!f.calls.includes('compile'));
+});
+test('released in-flight compile cannot adopt or release a replacement cache',async()=>{
+ const f=fixture(),listeners=new Set(),oldTexture=new Texture(),newTexture=new Texture();f.renderer.domElement={addEventListener:(name,fn)=>listeners.add(fn),removeEventListener:(name,fn)=>listeners.delete(fn)};let complete;f.renderer.compileAsync=()=>new Promise(r=>complete=r);
+ const old=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[oldTexture],{nextFrame:async()=>{}});releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);f.renderer.compileAsync=async()=>{};
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[newTexture],{nextFrame:async()=>{}});complete();await assert.rejects(old,/cancelled/);assert.equal(listeners.size,2);assert.equal(oldTexture._listeners.dispose.length,0);assert.equal(newTexture._listeners.dispose.length,1);releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);
+});

@@ -1,4 +1,4 @@
-import {releaseNativeFarGpuCache} from '../../tools/experiments/prepare-native-far-gpu.js';
+import {releaseNativeFarGpuCache,registerNativeFarTextureOwner} from '../../tools/experiments/prepare-native-far-gpu.js';
 import {createBiomeBackdrop} from './biome-backdrop.js';
 import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
@@ -15,12 +15,12 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
  const loader=new TextureLoader(),loadManifest=services.loadManifest??json,loadTexture=services.loadTexture??(path=>loader.loadAsync(path)),attachSpecies=services.attachSpecies??attachNativeFarWorld,makeBackdrop=services.makeBackdrop??createBiomeBackdrop;
- const textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain,previousTransition=world.farPropTransitionDistance,previousSlots=world.farPropTransitionSlots;
+ const ownership=new AbortController(),textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain,previousTransition=world.farPropTransitionDistance,previousSlots=world.farPropTransitionSlots;
  let closed=false,backdrop=null,owner;
  const cancelled=()=>closed||world.disposed||world.loading.signal.aborted;
- const release=()=>{if(closed)return;closed=true;backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;world.farPropTransitionDistance=previousTransition;world.farPropTransitionSlots=previousSlots;if(world.farVegetation===owner)world.farVegetation=null;};
+ const release=()=>{if(closed)return;closed=true;ownership.abort();backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;world.farPropTransitionDistance=previousTransition;world.farPropTransitionSlots=previousSlots;if(world.farVegetation===owner)world.farVegetation=null;};
  owner={update(){},dispose:release};world.farVegetation=owner;
- const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
+ const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));registerNativeFarTextureOwner(texture,ownership.signal);if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{
   const manifest=await loadManifest('/content/far-vegetation.json',{signal:world.loading.signal}),species=manifest.biomes[world.nav.config.biome];
   if(cancelled())throw Error('Far vegetation attachment cancelled');if(!species?.length)throw Error('Missing biome impostors');
@@ -29,7 +29,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;
-   const adapter=await attachSpecies(world,{groundStep:16,densityStart:end+30,densityEnd:240,densityMinimum:.04,fadeStart:240,fadeEnd:330,...options,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
+   const adapter=await attachSpecies(world,{groundStep:16,densityStart:end+30,densityEnd:240,densityMinimum:.04,fadeStart:240,fadeEnd:330,...options,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
