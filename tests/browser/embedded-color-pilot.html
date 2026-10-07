@@ -1,0 +1,63 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA color embebido Tinify</title>
+<style>body{margin:0;font:14px system-ui;background:#e7ddc6}header{position:absolute;z-index:2;background:#fff9ed;padding:8px;max-width:95vw}button{padding:8px}#report{position:fixed;bottom:0;left:0;background:#fff9ed;font-size:11px;max-height:90px;max-width:95vw;overflow:auto;margin:0}canvas{display:block;width:100vw;height:100vh}</style>
+<header><span id="model-name">Facóquero</span>: runtime actual / candidata Tinify desde PNG original. Pose congelada, luz nativa fija y suelo QA; sin HDR ni simulación.<br><button id="baseline" disabled>Runtime actual</button><button id="candidate" disabled>Candidata Tinify</button><button id="night" disabled>Día / noche</button><button id="compare" disabled>Comparar seis paletas día/noche</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas id="view"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {Assets,json,bytes} from '/src/rendering/assets.js';
+import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
+import {AfricanToon} from '/src/rendering/african-toon.js';
+import {installNativeShadow} from '/src/rendering/native-shadow.js';
+import {installShaderFailureGuard} from '/src/rendering/shader-failure.js';
+const query=new URLSearchParams(location.search),species=query.get('species')??'warthog',pilotKey=query.get('pilot')??'cc989532921ae705b8dcce30d3df7d0a52b3326bdfa7c8736270c23a28086ba0-1';
+const speciesNames={warthog:'Facóquero',hyena:'Hiena',buffalo:'Búfalo',lion:'León',rhino:'Rinoceronte'};
+const speciesFiles={warthog:'cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869',hyena:'7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25',buffalo:'88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b',lion:'5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b',rhino:'b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82'};
+if(!Object.hasOwn(speciesNames,species)||!/^([a-f0-9]{64})-\d+$/.test(pilotKey))throw Error('Invalid local pilot selection');
+document.querySelector('#model-name').textContent=speciesNames[species];
+const directory='/.cache/tinify-embedded-pilot/'+pilotKey+'/',assets=new Assets(),actors=[],errors=[],rows=[];
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100);camera.position.set(2.9,2.1,4.8);camera.lookAt(0,1.05,0);
+const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-.82,.52,.31).multiplyScalar(240);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:.1,far:500});
+const ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);scene.add(sun,sun.target,ambient);const toon=new AfricanToon(),releaseShadow=installNativeShadow(renderer,sun,toon.shadowUniforms),guard=installShaderFailureGuard(renderer);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+let selected=0,night=false,biome='sabana',frame,ready=false,comparison;
+const target=new THREE.WebGLRenderTarget(innerWidth,innerHeight);target.texture.colorSpace=THREE.SRGBColorSpace;
+const status=document.querySelector('#status'),report=document.querySelector('#report');
+function state(){return {ready,species,pilotKey,selected:selected?'candidate':'baseline',night,biome,pose:'Walking .55',resolution:[target.width,target.height],errors,rows,comparison,scope:'Native compressed GLB, production toon palettes and fixed light, frozen pose and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
+const paint=()=>{report.textContent=JSON.stringify(state(),null,2);};
+function render(destination=null){
+ actors.forEach((actor,i)=>actor.model.visible=i===selected);sun.intensity=3-2.6*Number(night);ambient.intensity=2-.9*Number(night);scene.background=new THREE.Color(night?'#171f2e':'#e7ddc6');toon.update(night,sun,biome);
+ renderer.setRenderTarget(destination);renderer.render(scene,camera);if(guard.current)throw guard.current;const error=renderer.getContext().getError();if(error)throw Error('GL error '+error);
+}
+function show(){render();paint();status.textContent=(selected?'Candidata':'Runtime')+' · '+biome+' · '+(night?'noche':'día');}
+function present(){try{if(ready)render();frame=requestAnimationFrame(present);}catch(error){errors.push(error.message);paint();status.textContent='Error';}}
+document.querySelector('#baseline').onclick=()=>{selected=0;show();};document.querySelector('#candidate').onclick=()=>{selected=1;show();};document.querySelector('#night').onclick=()=>{night=!night;show();};
+document.querySelector('#compare').onclick=async()=>{
+ const button=document.querySelector('#compare');button.disabled=true;try{
+  rows.length=0;for(const nextBiome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'])for(const nextNight of [false,true]){
+   biome=nextBiome;night=nextNight;const pixels=[];
+   for(selected=0;selected<2;selected++){render(target);const rgba=new Uint8Array(target.width*target.height*4);renderer.readRenderTargetPixels(target,0,0,target.width,target.height,rgba);pixels.push(rgba);}
+   let changedPixels=0,sum=0,max=0;for(let i=0;i<pixels[0].length;i+=4){let changed=false;for(let c=0;c<3;c++){const delta=Math.abs(pixels[0][i+c]-pixels[1][i+c]);sum+=delta;max=Math.max(max,delta);changed||=delta!==0;}if(changed)changedPixels++;}
+   const glError=renderer.getContext().getError();if(glError)throw Error('Readback GL error '+glError);selected=1;
+   rows.push({biome,night,changedPixels,rgbMeanAbsoluteDifference:sum/(target.width*target.height*3),maxRgbDifference:max,glError});paint();await new Promise(resolve=>setTimeout(resolve,0));
+  }
+  selected=1;biome='sabana';night=false;comparison='finished';show();
+ }catch(error){errors.push(error.message);comparison='failed';paint();status.textContent='Error';}finally{renderer.setRenderTarget(null);button.disabled=false;}
+};
+try{
+ const pilot=await json(directory+'report.json');
+ if(!pilot.runtimePath.endsWith(speciesFiles[species]+'.glb'))throw Error('Pilot receipt does not match selected species');
+ const digest=async url=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await bytes(url))),byte=>byte.toString(16).padStart(2,'0')).join('');
+ const hashes=await Promise.all([digest(pilot.runtimePath),digest(directory+'candidate.glb')]);
+ if(hashes[0]!==pilot.runtimeGlbSha256||hashes[1]!==pilot.candidateGlbSha256)throw Error('Pilot baseline/candidate changed; regenerate the receipt or use its frozen source. Refusing a stale A/B comparison.');
+ for(const url of [pilot.runtimePath,directory+'candidate.glb']){
+  const gltf=await assets.model(url),model=prepareAnimalModel(gltf.scene,species);model.scale.setScalar(1);scene.add(model);toon.apply(model);model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
+  const actor={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)};applyAnimalPose(actor,{species,status:'walking',motionPhase:actor.clips.find(clip=>clip.name==='Walking').duration*.55},0);actors.push(actor);
+ }
+ if(species!=='warthog'){
+  const box=new THREE.Box3().setFromObject(actors[0].model),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
+  const distance=Math.max(size.y,size.x/camera.aspect,size.z)*1.65;camera.position.copy(center).add(new THREE.Vector3(.52,.30,.84).normalize().multiplyScalar(distance));camera.lookAt(center);
+ }
+ ready=true;document.querySelectorAll('button').forEach(button=>button.disabled=false);show();frame=requestAnimationFrame(present);
+}catch(error){errors.push(error.message);paint();status.textContent='Error: '+error.message;}
+addEventListener('pagehide',()=>{cancelAnimationFrame(frame);for(const actor of actors){actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.model);actor.model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.skeleton.dispose();});}releaseShadow();sun.shadow.dispose();floor.geometry.dispose();floor.material.dispose();target.dispose();assets.disposeModels();renderer.dispose();renderer.forceContextLoss();});
+</script></html>

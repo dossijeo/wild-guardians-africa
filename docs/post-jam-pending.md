@@ -36,6 +36,10 @@ Estado actual contrastado: [preflight cd31d6b](qa/image-current-preflight/README
 
 [Repacker de color embebido](qa/web-glb-image-repack/README.md): sustituciones de longitud distinta en los veinte GLB conservan bytes Meshopt, metadata de skins/animaciones y todas las imágenes no modificadas. 66 pruebas correctas. Herramienta offline; pendiente convertir desde originales, actualizar manifiestos y validar assets antes de distribuirlos. No hay ahorro nuevo ni assets modificados en esta entrega.
 
+[Piloto embebido del facóquero](qa/tinify-embedded-color-pilot/README.md): Tinify desde PNG original, 2048×2048 intactos, 165.424 bytes de ahorro potencial, alpha sin cambios y geometría descodificada idéntica. Gate independiente con PSNR 38,64 dB; doce pares nativos y cuatro capturas cercanas día/noche revisadas. Candidata aún fuera del runtime: falta receta de reconstrucción aceptada, instalación/manifiesto y build/paquete. No acredita ahorro RAM/GPU ni aceptación móvil.
+
+Resultado posterior: [facóquero integrado](qa/tinify-embedded-color-runtime/README.md), con receta offline, reconstrucción real de veinte GLB (diecinueve idénticos), 17 pruebas, verificador completo, build y ZIP directo correctos. Ahorro efectivo del asset: 165.424 bytes. Continúa pendiente optimizar los demás colores embebidos y ampliar la aceptación móvil/rendimiento; la nota de piloto anterior conserva su estado histórico.
+
 - Inventariar todas las imágenes del juego, incluidas HUD, menús, retratos, texturas y referencias internas de modelos; convertirlas a WebP y optimizarlas mediante la API de Tinify.
 - Seguir la [referencia HTTP oficial](https://tinify.com/developers/reference/http): subida por HTTPS a `/shrink` y conversión con `convert.type: image/webp`. Controlar cuota, errores y reintentos; reutilizar resultados por hash para evitar conversiones repetidas.
 - Usar la credencial facilitada por el usuario mediante configuración privada o variable `TINIFY_API_KEY`; nunca incluirla en Git, assets del navegador, capturas, informes ni logs.

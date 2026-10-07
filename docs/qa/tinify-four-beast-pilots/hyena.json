@@ -1,0 +1,79 @@
+{
+  "runtimePath": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+  "sourcePath": "assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+  "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+  "originalGlbSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+  "runtimeGlbSha256": "82099f8c681ad28e68e45bdf32d943011a1bd49b7011f5158f017903285bcf9c",
+  "imageIndex": 1,
+  "originalImageSha256": "092d68e172b85f8f54433ed4af61aeb09bdda4020e213764160d5c3da6730734",
+  "originalImageBytes": 4903282,
+  "originalDimensions": [
+    2048,
+    2048
+  ],
+  "runtimeImageSha256": "6d2b741fdf69b6228048e76a39f0bf6aa0c36d540718849a5559c10d4c8c3545",
+  "runtimeImageBytes": 482658,
+  "runtimeDimensions": [
+    2048,
+    2048
+  ],
+  "uploadSha256": "cdbd12c74407c09d17ef5a91e19d383fd36c2ce12d06c8c570b555af13bf8f4b",
+  "uploadBytes": 6222728,
+  "references": [
+    {
+      "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+      "role": "color"
+    }
+  ],
+  "provider": "Tinify",
+  "sourceSha256": "cdbd12c74407c09d17ef5a91e19d383fd36c2ce12d06c8c570b555af13bf8f4b",
+  "sourceBytes": 6222728,
+  "outputSha256": "43b75b11fbb613876777920e93cb8fb7db1eaa7ddce45e44ee97a0844b13f6a7",
+  "outputBytes": 217998,
+  "sourceFormat": "png",
+  "outputFormat": "webp",
+  "compressionCount": "38",
+  "reused": false,
+  "originalComparison": {
+    "dimensionsMatch": true,
+    "alphaDifferences": 0,
+    "maxAlphaDifference": 0,
+    "rgbMeanAbsoluteDifference": 2.1556431452433267,
+    "maxRgbDifference": 54
+  },
+  "runtimeComparison": {
+    "dimensionsMatch": true,
+    "alphaDifferences": 0,
+    "maxAlphaDifference": 0,
+    "rgbMeanAbsoluteDifference": 1.9108788967132568,
+    "maxRgbDifference": 41
+  },
+  "candidateVerification": {
+    "originalSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+    "runtimeSha256": "82099f8c681ad28e68e45bdf32d943011a1bd49b7011f5158f017903285bcf9c",
+    "candidateSha256": "79b28cda47e5a2ac427986eef9b58f0942d914c9c6f804e939714e43c938a2fa",
+    "imageIndex": 1,
+    "decodedGeometryViews": 551,
+    "decodedGeometryBytes": 2106310,
+    "decodedGeometryMaxError": 0,
+    "otherImagesByteExact": 2,
+    "alphaDifferences": 0,
+    "rmse": 3.541335430737338,
+    "psnr": 37.147462318255876,
+    "colorPixelsExact": false,
+    "maxRgbDifference": 54,
+    "decodedBaselineErrors": 0,
+    "decodedCandidateErrors": 0,
+    "baselineErrors": [],
+    "candidateErrors": [],
+    "newErrors": [],
+    "scope": "Offline decoded geometry, metadata, alpha, color error and conformance. Native appearance/loading, build/package and performance acceptance remain separate."
+  },
+  "savedImageBytes": 264660,
+  "beforeGlbBytes": 6666508,
+  "candidateGlbBytes": 6401848,
+  "savedRuntimeBytes": 264660,
+  "candidateGlbSha256": "79b28cda47e5a2ac427986eef9b58f0942d914c9c6f804e939714e43c938a2fa",
+  "acceptedForRuntime": false,
+  "scope": "Actual Tinify pilot from original embedded color at existing runtime resolution. Candidate GLB only; no distributed asset/manifest changed. Requires native visual and package acceptance; not RAM/GPU/frametime evidence."
+}
