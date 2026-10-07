@@ -16,19 +16,20 @@ import {attachBiomeFarVegetation} from '../../src/rendering/far-vegetation.js';
 import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',errors=[],rows=[];
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcShift=Number(params.get('arc-shift')??0),errors=[],rows=[];
 let world,originalTexture,hqTexture,mesh,state,eye,closed=false,ready=false,running=false,receipt=null;
 const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 function snapshot(){
  const direction=world.camera.getWorldDirection(new THREE.Vector3());
- return {biome,culture,arcPilot,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?'/.cache/hq-arc-pilot/atlas.webp':document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
+ return {biome,culture,arcPilot,arcShift:arcPilot?arcShift:null,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?'/.cache/hq-arc-pilot/atlas.webp':document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
 }
 function draw(){
  if(!ready||closed)return;
  const mode=document.querySelector('#mode').value,angle=Number(document.querySelector('#yaw').value)*Math.PI/180;
  state.time=document.querySelector('#phase').value==='night'?305:document.querySelector('#phase').value==='dusk'?300+Math.log(2)/2.4:180;
  mesh.material.uniforms.uBackdropAtlas.value=mode==='hq'?hqTexture:originalTexture;
+ if(arcPilot)mesh.position.y=arcShift;
  const uv=mesh.geometry.attributes.uv,factor=arcPilot?1:mode==='hq'?2:1;
  for(let i=0;i<uv.count;i++)uv.setX(i,mesh.geometry.userData.originalU[i]*factor);
  uv.needsUpdate=true;
@@ -40,6 +41,7 @@ document.querySelector('#hide').onclick=()=>{document.querySelector('header').hi
 document.querySelector('#show').onclick=()=>{document.querySelector('header').hidden=false;document.querySelector('#show').hidden=true;};
 try{
  if(!BIOME_IDS[biome])throw Error('Invalid QA biome');
+ if(!Number.isFinite(arcShift)||arcShift< -200||arcShift>100)throw Error('Invalid QA mountain foot shift');
  const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture),nav=new Navigation(712,biome,pack.profile);
  state=Game.newGame({seed:712,biome,culture});const site=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);state.time=180;state.tutorial.step='done';Game.pause(state,'qa');nav.setState(state);
@@ -57,9 +59,9 @@ try{
  eye=world.camera.position.clone();eye.y+=4;world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
  ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
- for(const id of ['phase','mode','yaw'])document.querySelector('#'+id).addEventListener('input',draw);
- document.querySelector('#turn').onclick=()=>{document.querySelector('#yaw').value=(Number(document.querySelector('#yaw').value)+45)%360;draw();};
- document.querySelector('#move').onclick=()=>{eye.x+=20;draw();};
+ for(const id of ['phase','mode','yaw'])document.querySelector('#'+id).addEventListener('input',()=>{receipt=null;draw();});
+ document.querySelector('#turn').onclick=()=>{receipt=null;document.querySelector('#yaw').value=(Number(document.querySelector('#yaw').value)+45)%360;draw();};
+ document.querySelector('#move').onclick=()=>{receipt=null;eye.x+=20;draw();};
  document.querySelector('#rotation').onclick=async()=>{
   if(running)return;running=true;const before=JSON.stringify(state),start=rows.length;
   for(let yaw=0;yaw<=360&&!closed;yaw+=5){document.querySelector('#yaw').value=yaw;draw();await frame();await frame();rows.push(snapshot());report.textContent=JSON.stringify({running:true,completed:rows.length-start,yaw,phase:document.querySelector('#phase').value,errors});}

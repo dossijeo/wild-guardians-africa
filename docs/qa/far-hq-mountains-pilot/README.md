@@ -114,3 +114,23 @@ levels, but only one cell is populated. This does **not** prove absence of
 cross-variant bleed in a completed four-cell atlas. Four variants, native
 mips/borders/base, open composition under rotation/translation, all six biomes
 and controlled cost remain pending. None of these sources replace public assets.
+
+Root's first native arc review is preserved under `arc-v3/native`: day and
+night each completed 73 yaw poses with unchanged paused state and no JS/GL
+errors. Examined views have much better proportions and no evident mirrored
+symmetry or chromatic fringe. The horizontal foot remains visibly cut above
+the grey horizon band in day/night/dusk and at yaw 25° or after a 20 m lateral
+move. This is pending integration, not artistic acceptance.
+
+The file labelled `dusk-receipt.json.gz` actually contains the prior **day**
+rotation. The first export button retained an old receipt after phase changes;
+the dusk screenshot is retained but those 73 rows do not test dusk. The harness
+now clears a completed receipt on manual phase/mode/yaw/move changes, exporting
+the current snapshot until another rotation completes.
+
+`arcs=1&arc-shift=-30` is a diagnostic that translates the same geometry down
+30 m to place the foot behind existing near ground, preserving mountain aspect,
+height, atlas and shader. Its shift is explicit in each snapshot. It is awaiting
+native review and is not proof of all camera heights or distant ground coverage.
+The existing NativeHorizon supplies only canyon/desert terrain, so this Sabana
+foot problem cannot assume a distant native ground mesh underneath it.
