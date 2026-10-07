@@ -308,3 +308,7 @@ The fresh `river-native-context-recovery.json` after f150ee3 has a clean top-lev
 ### Recovery candidate regression validation (main4c4a9df integrated)
 
 156 directed far/terrain-camera/shadow/native-GPU tests pass. The initial run caught one ownership assertion still expecting a single context listener; it now verifies the two owned loss/restoration listeners and their complete removal. Build and web package pass (694 files / 403,540,993 bytes, 859 relative links,20 runtime GLBs). Current QA reports aggregate nested species/standby errors into the main error list, and ABBA rejects such errors before setting done=true; two focused tests cover this previously missed diagnostic. This does not resolve the outstanding native0x502 acceptance or establish new GPU performance.
+
+### Disposal diagnostics (not recovery acceptance)
+
+The optional QA trace preserves and reports WebGL errors. Gran Río low and medium still fail after shadow-hook restoration. Stage diagnostics identify 0x502 before native preparation; the disposal trace records deleteBuffer/deleteVertexArray callbacks from old Three geometry listeners and deleteTexture from old material listeners after context restoration. The 64 retained records and 830 omitted rows are bounded diagnostics, not a benchmark. No recovery acceptance or performance comparison is claimed. The trace and stage probes are opt-in and block ABBA while enabled.

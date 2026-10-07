@@ -125,3 +125,12 @@ test('nonzero WebGL error rejects the native proof with its original code and re
  await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}}),/Native GPU preparation error 0x502/);
  assert.equal(f.calls.at(-1),'delete');f.restored();releaseNativeFarGpuCache(f.renderer);
 });
+
+test('opt-in diagnostics distinguish pre-existing GL faults before uploading or drawing',async()=>{
+ const f=fixture();f.renderer.getContext().getError=()=>0x502;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{diagnoseErrors:true}),/0x502 \(before preparation\)/);assert.deepEqual(f.calls,[]);releaseNativeFarGpuCache(f.renderer);
+});
+test('opt-in diagnostic upload-draw faults preserve renderer cleanup and report the failing stage',async()=>{
+ const f=fixture();let code=0;const render=f.renderer.render;f.renderer.render=()=>{render();code=0x502;};f.renderer.getContext().getError=()=>code;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{diagnoseErrors:true}),/0x502 \(after upload draw\)/);f.restored();assert.equal(f.calls.at(-1),'restore');releaseNativeFarGpuCache(f.renderer);
+});

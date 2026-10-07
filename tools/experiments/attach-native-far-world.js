@@ -33,7 +33,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);
   await prepareNativeFarGpu(world.renderer,candidate.impostors,world.scene,world.camera,[texture,prelitAtlas.day,prelitAtlas.night],{cancelled:()=>cancelled()||world.disposed});
  }});
- const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,resourceRevision:()=>nativeFarGpuRevision(world.renderer),onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cancelled:()=>cancelled()||closed||world.disposed})});
+ const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,resourceRevision:()=>nativeFarGpuRevision(world.renderer),onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cancelled:()=>cancelled()||closed||world.disposed,diagnoseErrors:world.farGpuDiagnostics===true})});
  const standbyAvailable=(id,suppressed)=>standbyCoverageReady(id,{coverage,standby,nativeTree:nativeReferences.get(id)?.tree,logicalTree:layer.current?.treeById.get(id),suppressed});
  const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision;},has(id,suppressed){return prepared.has(id,suppressed)||standbyAvailable(id,suppressed);}};
  let referencesRevision=-1;const nativeReferences=new Map();
@@ -52,7 +52,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
    const snapshot=prepared.capture(),cancelled=()=>closed||world.disposed||snapshot.signature!==signature();
    standby.request(frozenEntries(snapshot),world.camera.position);
    try{
-    const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled});
+    const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled,diagnoseErrors:world.farGpuDiagnostics===true});
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
    }catch(error){if(!closed){if(cancelled())stats.stalePreparations++;else errors.push(String(error));}}
   }).finally(()=>busy=false);

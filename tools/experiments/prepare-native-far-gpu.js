@@ -19,31 +19,32 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false}={}){
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
- check();const cache=textureCache(renderer),pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
+ const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
+ check();checkErrors('before preparation');const cache=textureCache(renderer),pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
   for(let first=0;first<pending.length;first+=texturesPerFrame){
    check();const start=performance.now(),end=Math.min(pending.length,first+texturesPerFrame);
    for(let i=first;i<end;i++){
     check();const texture=pending[i],image=texture.image,decodeStart=performance.now();
-    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);rememberTexture(cache,texture);
+    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);checkErrors('after texture upload');rememberTexture(cache,texture);
     textureUploads.push({index:unique.indexOf(texture),width:image?.width??null,height:image?.height??null,imageType:image?.constructor?.name??null,mipmaps:!!texture.generateMipmaps,colorSpace:texture.colorSpace??null,decodeMs,cpuMs:performance.now()-before});
    }
    textureBatches++;maxTextureBatchCount=Math.max(maxTextureBatchCount,end-first);maxTextureBatchMs=Math.max(maxTextureBatchMs,performance.now()-start);
    if(end<pending.length)await nextFrame();
   }
   check();
-  await renderer.compileAsync(root,camera,scene);check();
+  await renderer.compileAsync(root,camera,scene);check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.
   const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,parent=root.parent,culled=[];
   // Scope this mutation to the synchronous upload draw. Other species may be
   // awaiting compilation concurrently; none may inherit another one's flags.
-  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);}
+  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
