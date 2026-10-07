@@ -353,3 +353,7 @@ pair. That classification does not establish geometric or visual acceptance.
 Nodes/skin and all12clips/440056sampler bytes remain exact; Validator counts
 remain473inherited errors/124warnings. This new proposal has no visual screen
 yet, no shadowFront approval and no GPU benchmark.
+
+Before screening the body-wall proposal, independent version3 reserves times
+.3125/.8125, elevations35/65 and azimuths33.75/123.75/213.75/303.75. Repeating
+version2 diagnoses its repair only. Version3 retains all existing quality gates.
