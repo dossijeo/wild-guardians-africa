@@ -303,6 +303,8 @@ Estado: integrado en main mediante [PR #5](https://github.com/dossijeo/wild-guar
 
 [Pago de jornales — SFX 115](qa/payroll-audio/README.md): gasto sonoro tras contratación inicial o proporcional confirmada con coste positivo; vacías, rechazadas e históricas no producen gasto. 26 pruebas dirigidas, build, paquete y hashes de los 126 sonidos correctos. Catálogo actual: 96 asignados/30 reservados. Reproducción nativa, escucha y aceptación móvil pendientes.
 
+[Toque guiado del HUD — SFX 093](qa/sfx-guided-hud-touch/README.md): asignado a Construir/Cultivar cuando la mano 2D indica realmente ese botón, una vez por acción y partida. 35 pruebas dirigidas, reproducción nativa Opus silenciada y build/paquete correctos. Catálogo vigente: 97 asignados/29 reservados. Pendientes escucha/mezcla física y aceptación del contexto guiado en el juego completo.
+
 ## Decisión de integración de impostores — 7 de octubre de 2026
 
 El usuario ha revisado los benchmarks y acepta el sobrecoste observado como proporcionado a los sprites añadidos. Se avanza a un perfil integrado con una ligera reducción configurable de distancia 3D, comprobando el coste conjunto. El delta del piloto a 220 m ya no bloquea por sí solo la implementación. Conservar zona cercana exacta, transición fiel por identidad/escala y precarga, densidad determinista decreciente en zona muy lejana y backdrop/bruma que mantengan el paisaje abierto. El primer perfil integrado es Sabana; su evidencia no acredita otros biomas. Revisiones visuales y regresiones siguen necesarias, sin exigir eliminar todo el sobrecoste aceptado. Subagente en rama aparte, PR y revisión/merge posterior según autorización existente.

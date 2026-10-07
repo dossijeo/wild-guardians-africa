@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>SFX 093 · toque guiado</title>
+<style>body{font:18px system-ui;background:#173a2a;color:#eee;padding:24px}button{padding:14px}pre{white-space:pre-wrap}</style>
+<h1>SFX 093 · toque guiado del HUD</h1><p>Prueba aislada de despacho y reproducción nativa silenciada. No acredita mezcla audible ni un recorrido completo del juego.</p>
+<button id="run">Verificar toque guiado</button><pre id="report">Preparado</pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {UiAudio} from '../../src/audio/ui-audio.js';
+document.querySelector('#run').onclick=async()=>{
+ const report=document.querySelector('#report');let audio;
+ try{
+  audio=new AudioSystem({music:0,sfx:0});await audio.unlock();
+  const bank=await audio.sfxBank(),item=bank.items.find(item=>item.id==='spirit_touch');
+  const buffer=await audio.buffer(item.audio.url),calls=[],pending=[];
+  const ui=new UiAudio((id,options)=>{const promise=audio.sound(id,options);calls.push({id,bus:options.bus,emitter:options.emitter});pending.push(promise);return promise;});
+  const ordinary=ui.guidedTouch('build');const unsupported=ui.guidedTouch('magic',{guided:true});
+  const build=ui.guidedTouch('build',{guided:true}),repeat=ui.guidedTouch('build',{guided:true}),grow=ui.guidedTouch('grow',{guided:true});
+  const sources=await Promise.all(pending);
+  if(ordinary||unsupported||!build||repeat||!grow||calls.length!==2||sources.some(source=>!source))throw Error('Unexpected guided cue dispatch or playback');
+  audio.stop();await audio.context.close();
+  report.textContent=JSON.stringify({ok:true,codec:bank.runtimeCodec,number:item.number,url:item.audio.url,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,decodedSamples:buffer.length,requests:calls,sourcesStarted:sources.length,ordinaryRejected:!ordinary,unsupportedRejected:!unsupported,repeatedRejected:!repeat,voicesAfterStop:audio.voices.size,context:audio.context.state,precached:true,silenced:true},null,2);
+ }catch(error){audio?.dispose();report.textContent='ERROR: '+error.message;}
+};
+</script></html>

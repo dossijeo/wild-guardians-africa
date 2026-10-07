@@ -19,7 +19,7 @@ test('audio failure cannot throw into a successful interface or game action',asy
  for(const play of [()=>{throw Error('device');},()=>Promise.reject(Error('decode'))]){const ui=new UiAudio(play);ui.surface('panel');ui.error();ui.pause([],['menu']);ui.close();await new Promise(done=>setImmediate(done));}
 });
 test('all transition cues retain original one-shot IDs from the supplied bank',()=>{
- const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,7);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
+ const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,8);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
 });
 
 
@@ -46,4 +46,25 @@ test('magic selection uses original 092 instead of panel closure and expires sup
 
 test('opening another surface cancels pending magic selection before late decoding',()=>{
  const f=fixture();f.ui.selectSpell('growth');const selection=f.calls.at(-1);assert.equal(selection.options.isCurrent(),true);f.ui.surface('panel','cultivos');assert.equal(selection.options.isCurrent(),false);assert.equal(f.calls.at(-1).options.isCurrent(),true);
+});
+
+test('guided HUD touch is exclusive to the two indicated actions, once per game',()=>{
+ const f=fixture();
+ for(const action of ['build','grow','magic','home'])assert.equal(f.ui.guidedTouch(action),false);
+ assert.equal(f.ui.guidedTouch('magic',{guided:true}),false);
+ for(const action of ['build','grow']){
+  assert.equal(f.ui.guidedTouch(action,{guided:true}),true);
+  assert.equal(f.ui.guidedTouch(action,{guided:true}),false);
+ }
+ assert.deepEqual(f.calls.map(c=>c.id),['spirit_touch','spirit_touch']);
+ assert.ok(f.calls.every(c=>c.options.bus==='ui'&&c.options.emitter==='ui:guided-hud'));
+ f.ui.reset();assert.equal(f.ui.guidedTouch('build',{guided:true}),true);
+});
+test('guided touch expires on panel replacement, scene reset and late decode',()=>{
+ const f=fixture();f.ui.surface('panel','build');f.ui.guidedTouch('build',{guided:true});
+ const first=f.calls.at(-1);assert.equal(first.options.isCurrent(),true);
+ f.ui.close();assert.equal(first.options.isCurrent(),false);
+ f.ui.guidedTouch('grow',{guided:true});const second=f.calls.at(-1);
+ f.time(.501);assert.equal(second.options.isCurrent(),false);
+ f.ui.reset();assert.equal(second.options.isCurrent(),false);
 });
