@@ -119,3 +119,9 @@ test('loss invalidates an in-flight fence generation and clears warm texture own
  lost=false;f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));assert.equal(nativeFarGpuContextLost(f.renderer),false);assert.equal(nativeFarGpuRevision(f.renderer),2);
  const recovered=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(recovered.cachedTextures,0);assert.equal(recovered.textureUploads.length,1);releaseNativeFarGpuCache(f.renderer);
 });
+
+test('nonzero WebGL error rejects the native proof with its original code and releases the fence',async()=>{
+ const f=fixture();f.renderer.getContext().getError=()=>0x502;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}}),/Native GPU preparation error 0x502/);
+ assert.equal(f.calls.at(-1),'delete');f.restored();releaseNativeFarGpuCache(f.renderer);
+});

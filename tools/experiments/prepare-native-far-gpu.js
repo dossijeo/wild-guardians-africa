@@ -47,7 +47,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
-  if(gl.getError()!==gl.NO_ERROR)throw Error('Native GPU preparation error');
+  const errorCode=gl.getError();if(errorCode!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+errorCode.toString(16));
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
  }finally{if(sync)gl.deleteSync(sync);}
 }
