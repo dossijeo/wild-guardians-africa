@@ -34,6 +34,8 @@ Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/R
 
 Estado actual contrastado: [preflight cd31d6b](qa/image-current-preflight/README.md). Cero imágenes distribuidas sin clasificación; 79 archivos de color elegibles, 43 de revisión específica y 40 variantes integradas. Las 63 imágenes embebidas siguen fuera del preflight independiente. 60 pruebas correctas; inventario y selección actuales archivados. Las cifras siguientes describen entregas históricas y no deben sumarse ni usarse como estado actual.
 
+[Repacker de color embebido](qa/web-glb-image-repack/README.md): sustituciones de longitud distinta en los veinte GLB conservan bytes Meshopt, metadata de skins/animaciones y todas las imágenes no modificadas. 66 pruebas correctas. Herramienta offline; pendiente convertir desde originales, actualizar manifiestos y validar assets antes de distribuirlos. No hay ahorro nuevo ni assets modificados en esta entrega.
+
 - Inventariar todas las imágenes del juego, incluidas HUD, menús, retratos, texturas y referencias internas de modelos; convertirlas a WebP y optimizarlas mediante la API de Tinify.
 - Seguir la [referencia HTTP oficial](https://tinify.com/developers/reference/http): subida por HTTPS a `/shrink` y conversión con `convert.type: image/webp`. Controlar cuota, errores y reintentos; reutilizar resultados por hash para evitar conversiones repetidas.
 - Usar la credencial facilitada por el usuario mediante configuración privada o variable `TINIFY_API_KEY`; nunca incluirla en Git, assets del navegador, capturas, informes ni logs.

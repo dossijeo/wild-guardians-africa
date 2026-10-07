@@ -1,0 +1,11 @@
+# Sustitución de color embebido sin recomprimir Meshopt
+
+Base de modelos y producción: `4e1756f8691997252a1ee63758c6703321bfce82`. `tools/repack_web_glb_images.mjs` añade una operación offline para sustituir imágenes WebP de color en los GLB runtime de dos buffers auditados. No modifica los archivos distribuidos, solicita credenciales ni llama a Tinify. No es todavía una conversión o ahorro de espacio.
+
+La operación consulta todos los usos GLTF de la imagen, incluidos materiales con extensiones. Rechaza normales, datos, usos mixtos/desconocidos, dimensiones distintas, animación de imagen, perfiles/orientaciones no admitidos y cambios de alpha. Copia directamente los bloques Meshopt originales a sus nuevas posiciones físicas. Conserva todos los campos de geometría, accesores, skins, huesos, clips, materiales y referencias de textura; no descodifica ni recodifica geometría. Rechaza formatos de almacenamiento o extensiones con offsets no revisados.
+
+Los 20 GLB reales pasan una sustitución de longitud distinta: se añade a su primera imagen de color un chunk RIFF JUNK válido que no cambia los píxeles. Los nuevos offsets de bloques comprimidos difieren; sus bytes y toda la metadata ajena a posiciones/tamaños físicos siguen idénticos. Las normales y las otras imágenes también conservan sus bytes. El modelo nativo de dos materiales verifica ambas sustituciones con un Map en orden inverso. Una fixture pequeña comprueba igualdad de píxeles y rechazo de transparencia alterada, uso mixto, dimensiones/formato incorrectos, almacenamiento compartido y rangos inválidos.
+
+`tests.txt.gz` conserva 66 pruebas correctas: seis casos del repacker y las regresiones de roles, política Tinify y variantes runtime. Cero fallos, cancelaciones u omisiones. `provenance.json` y `hashes.json` fijan las fuentes y los veinte modelos utilizados.
+
+La siguiente fase deberá convertir desde las imágenes originales, respetar las dimensiones runtime previstas, comparar tamaño/calidad, utilizar este repacker, actualizar el manifiesto y validar carga/render nativos antes de sustituir assets. Esta herramienta no demuestra aceptación visual de texturas Tinify, soporte móvil/Windows o reducción de RAM/GPU/frametime. Los mapas de normales/datos requieren un proceso separado que preserve sus valores.
