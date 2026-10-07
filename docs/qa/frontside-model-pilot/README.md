@@ -250,3 +250,20 @@ original repeats are byte-exact. This is the first valid accessory rejection;
 tiny global errors do not override regional defects. The256px training selector
 now needs refinement at1024 and separate withheld views/poses, preserving budgets.
 No thresholds were relaxed, no GPU timing or full shadowFront approval exists.
+
+The1024px selector now preserves existing worker material sides (body FrontSide)
+and uses the actual paused fixed-pose sampler and stable tool-visibility record.
+It covers60poses/1440views and selects11 accessory meshes. The reconstructed
+candidate appends482faces, +1.150% of whole-worker triangles and +1.161% active
+geometry. Packed5231420 bytes, SHA256
+c0dc53887366e1a7acf3152704993052911c8ea79a7b67b94a09c604d47702af.
+Decoded contracts remain exact and Validator still reports473 inherited errors,
+124warnings; no additional normal-unit errors.
+
+The repeated held-out Water screen still rejects21interior missing pixels
+(diameter11.66px), tileMAE .013147 and RGB region21pixels, with identical shadow
+maps. Refining resolution alone therefore does not solve angular occlusion gaps.
+This rejected view may guide diagnosis; it must not be reused as independent
+held-out evidence after adapting to its result. Map missing pixels to original
+faces/interfaces and repair a coherent thin component, retaining independent
+new views/poses and the unchanged quantitative thresholds.
