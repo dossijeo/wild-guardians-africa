@@ -1,0 +1,308 @@
+TAP version 13
+# (node:42884) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: switching while music fetches discards eight queued old stems and skips obsolete decoding
+ok 1 - switching while music fetches discards eight queued old stems and skips obsolete decoding
+  ---
+  duration_ms: 21.8467
+  ...
+# Subtest: already running music decodes share the two-job limit with the replacement pack
+ok 2 - already running music decodes share the two-job limit with the replacement pack
+  ---
+  duration_ms: 8.836
+  ...
+# Subtest: a cancelled music fetch is evicted without poisoning a later request for the same URL
+ok 3 - a cancelled music fetch is evicted without poisoning a later request for the same URL
+  ---
+  duration_ms: 2.4929
+  ...
+# Subtest: leaving during menu JSON cannot start or decode stale music
+ok 4 - leaving during menu JSON cannot start or decode stale music
+  ---
+  duration_ms: 2.4526
+  ...
+# Subtest: leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+ok 5 - leaving during audio unlock cannot stop the newly selected scene or fetch old menu
+  ---
+  duration_ms: 0.4938
+  ...
+# Subtest: late pack A loading and rejection cannot start A or stop the newer B stems
+ok 6 - late pack A loading and rejection cannot start A or stop the newer B stems
+  ---
+  duration_ms: 2.667
+  ...
+# Subtest: failed network and failed decoder caches are evicted and one later request can retry
+ok 7 - failed network and failed decoder caches are evicted and one later request can retry
+  ---
+  duration_ms: 2.6242
+  ...
+# Subtest: failed SFX catalogue is coalesced, released and retryable
+ok 8 - failed SFX catalogue is coalesced, released and retryable
+  ---
+  duration_ms: 1.9539
+  ...
+# Subtest: failed stem allows same-day retry and partial playback start is cleaned up
+ok 9 - failed stem allows same-day retry and partial playback start is cleaned up
+  ---
+  duration_ms: 2.3662
+  ...
+# Subtest: suspending during decode does not falsely mark an inaudible pack as playing
+ok 10 - suspending during decode does not falsely mark an inaudible pack as playing
+  ---
+  duration_ms: 2.6349
+  ...
+# Subtest: twenty menu enter/exit cycles release all source and volume nodes
+ok 11 - twenty menu enter/exit cycles release all source and volume nodes
+  ---
+  duration_ms: 4.3498
+  ...
+# Subtest: a rejected resume leaves audio idle and the next gesture can unlock the same context
+ok 12 - a rejected resume leaves audio idle and the next gesture can unlock the same context
+  ---
+  duration_ms: 0.573
+  ...
+# Subtest: pack switching preserves active world/UI/ambient voices and pending SFX decode
+ok 13 - pack switching preserves active world/UI/ambient voices and pending SFX decode
+  ---
+  duration_ms: 3.1747
+  ...
+# Subtest: decoded pack cache retains only current music and preserves reusable SFX
+ok 14 - decoded pack cache retains only current music and preserves reusable SFX
+  ---
+  duration_ms: 0.8858
+  ...
+# Subtest: automatic daily selection coalesces frames, changes without a gesture and preserves results
+ok 15 - automatic daily selection coalesces frames, changes without a gesture and preserves results
+  ---
+  duration_ms: 2.6789
+  ...
+# Subtest: automatic retry is bounded and a failed pack does not stop world effects
+ok 16 - automatic retry is bounded and a failed pack does not stop world effects
+  ---
+  duration_ms: 1.6409
+  ...
+# Subtest: old menu JSON and old decoded music cannot survive a music-only transition
+ok 17 - old menu JSON and old decoded music cannot survive a music-only transition
+  ---
+  duration_ms: 1.4834
+  ...
+# Subtest: music transport failure releases only music and retains pending result feedback
+ok 18 - music transport failure releases only music and retains pending result feedback
+  ---
+  duration_ms: 0.8478
+  ...
+# Subtest: repeated menu gestures share one pending load and preserve the active original player
+ok 19 - repeated menu gestures share one pending load and preserve the active original player
+  ---
+  duration_ms: 1.8213
+  ...
+# Subtest: a failed menu request is retryable without retaining a false active player
+ok 20 - a failed menu request is retryable without retaining a false active player
+  ---
+  duration_ms: 0.869
+  ...
+# (node:44156) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a: a partial splice failure releases both decks without throwing into simulation and can retry
+ok 21 - a: a partial splice failure releases both decks without throwing into simulation and can retry
+  ---
+  duration_ms: 19.4966
+  ...
+# Subtest: a: each of the three registered edges preserves exact destination and shared offsets
+ok 22 - a: each of the three registered edges preserves exact destination and shared offsets
+  ---
+  duration_ms: 11.4391
+  ...
+# Subtest: a: all natural sections reuse the original ten stems; global return crossfades together
+ok 23 - a: all natural sections reuse the original ten stems; global return crossfades together
+  ---
+  duration_ms: 10.7573
+  ...
+# Subtest: a: only its registered branches move together with native preroll and cooldown
+ok 24 - a: only its registered branches move together with native preroll and cooldown
+  ---
+  duration_ms: 10.2572
+  ...
+# Subtest: a: stop during prepared wrap releases both decks and all gain nodes
+ok 25 - a: stop during prepared wrap releases both decks and all gain nodes
+  ---
+  duration_ms: 1.9378
+  ...
+# Subtest: a: late callback preserves recording instead of a late branch; at end it restarts cleanly
+ok 26 - a: late callback preserves recording instead of a late branch; at end it restarts cleanly
+  ---
+  duration_ms: 2.2664
+  ...
+# Subtest: b: a partial splice failure releases both decks without throwing into simulation and can retry
+ok 27 - b: a partial splice failure releases both decks without throwing into simulation and can retry
+  ---
+  duration_ms: 2.4504
+  ...
+# Subtest: b: each of the three registered edges preserves exact destination and shared offsets
+ok 28 - b: each of the three registered edges preserves exact destination and shared offsets
+  ---
+  duration_ms: 4.8551
+  ...
+# Subtest: b: all natural sections reuse the original ten stems; global return crossfades together
+ok 29 - b: all natural sections reuse the original ten stems; global return crossfades together
+  ---
+  duration_ms: 6.4675
+  ...
+# Subtest: b: only its registered branches move together with native preroll and cooldown
+ok 30 - b: only its registered branches move together with native preroll and cooldown
+  ---
+  duration_ms: 7.4928
+  ...
+# Subtest: b: stop during prepared wrap releases both decks and all gain nodes
+ok 31 - b: stop during prepared wrap releases both decks and all gain nodes
+  ---
+  duration_ms: 4.8816
+  ...
+# Subtest: b: late callback preserves recording instead of a late branch; at end it restarts cleanly
+ok 32 - b: late callback preserves recording instead of a late branch; at end it restarts cleanly
+  ---
+  duration_ms: 1.381
+  ...
+# (node:40452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: production gameplay selects short windows, keeps silent tracks logical and releases old pack PCM
+ok 33 - production gameplay selects short windows, keeps silent tracks logical and releases old pack PCM
+  ---
+  duration_ms: 15.574
+  ...
+# Subtest: a scene change during initial loading primes the new audible group before starting its clock
+ok 34 - a scene change during initial loading primes the new audible group before starting its clock
+  ---
+  duration_ms: 12.0301
+  ...
+# Subtest: replacing a pack skips obsolete queued windows and shares the global two-job decoder limit
+ok 35 - replacing a pack skips obsolete queued windows and shares the global two-job decoder limit
+  ---
+  duration_ms: 5.5608
+  ...
+# Subtest: leaving or suspending during a short decode cannot start stale music or retain its windows
+ok 36 - leaving or suspending during a short decode cannot start stale music or retain its windows
+  ---
+  duration_ms: 8.7481
+  ...
+# Subtest: an unvalidated sample rate preserves the original source transport
+ok 37 - an unvalidated sample rate preserves the original source transport
+  ---
+  duration_ms: 3.1898
+  ...
+# Subtest: native 44.1 kHz gameplay decodes only audible windows and never reads full PCM tracks
+ok 38 - native 44.1 kHz gameplay decodes only audible windows and never reads full PCM tracks
+  ---
+  duration_ms: 3.2397
+  ...
+# Subtest: only the requested audible stems and short byte ranges are read and decoded
+ok 39 - only the requested audible stems and short byte ranges are read and decoded
+  ---
+  duration_ms: 5.126
+  ...
+# Subtest: duplicate prefetches coalesce and failed decoding is retryable
+ok 40 - duplicate prefetches coalesce and failed decoding is retryable
+  ---
+  duration_ms: 2.1433
+  ...
+# Subtest: evicting an in-flight range prevents obsolete PCM decoding
+ok 41 - evicting an in-flight range prevents obsolete PCM decoding
+  ---
+  duration_ms: 33.5861
+  ...
+# Subtest: decodes already in progress do not reappear after window eviction or disposal
+ok 42 - decodes already in progress do not reappear after window eviction or disposal
+  ---
+  duration_ms: 3.9868
+  ...
+# Subtest: invalid decoder lengths, channels and unvalidated resampling cannot silently shift the music clock
+ok 43 - invalid decoder lengths, channels and unvalidated resampling cannot silently shift the music clock
+  ---
+  duration_ms: 1.1649
+  ...
+# Subtest: native resampling requires an explicitly supported rate and globally aligned range origins
+ok 44 - native resampling requires an explicitly supported rate and globally aligned range origins
+  ---
+  duration_ms: 1.5712
+  ...
+# (node:36988) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a: silent stems have no PCM and every window uses the shared source position
+ok 45 - a: silent stems have no PCM and every window uses the shared source position
+  ---
+  duration_ms: 252.7051
+  ...
+# Subtest: a: all original registered edges retain target, preroll and shared deck fade
+ok 46 - a: all original registered edges retain target, preroll and shared deck fade
+  ---
+  duration_ms: 498.2602
+  ...
+# Subtest: a: wrap and natural section navigation preserve the original transport
+ok 47 - a: wrap and natural section navigation preserve the original transport
+  ---
+  duration_ms: 202.0679
+  ...
+# Subtest: b: silent stems have no PCM and every window uses the shared source position
+ok 48 - b: silent stems have no PCM and every window uses the shared source position
+  ---
+  duration_ms: 170.9857
+  ...
+# Subtest: b: all original registered edges retain target, preroll and shared deck fade
+ok 49 - b: all original registered edges retain target, preroll and shared deck fade
+  ---
+  duration_ms: 419.8271
+  ...
+# Subtest: b: wrap and natural section navigation preserve the original transport
+ok 50 - b: wrap and natural section navigation preserve the original transport
+  ---
+  duration_ms: 167.1767
+  ...
+# Subtest: a logical silent layer is loaded at the current position before its scheduled entrance
+ok 51 - a logical silent layer is loaded at the current position before its scheduled entrance
+  ---
+  duration_ms: 164.5684
+  ...
+# Subtest: fractional offsets join adjacent windows on the same native sample without a gap
+ok 52 - fractional offsets join adjacent windows on the same native sample without a gap
+  ---
+  duration_ms: 98.8127
+  ...
+# Subtest: logical track gains have the original immediate level before future automation
+ok 53 - logical track gains have the original immediate level before future automation
+  ---
+  duration_ms: 2.5206
+  ...
+# Subtest: delayed silent-layer entrances join the current clock without starting from zero
+ok 54 - delayed silent-layer entrances join the current clock without starting from zero
+  ---
+  duration_ms: 56.5008
+  ...
+# Subtest: a missed window deadline skips expired audio and recovers in phase with bounded PCM
+ok 55 - a missed window deadline skips expired audio and recovers in phase with bounded PCM
+  ---
+  duration_ms: 117.5538
+  ...
+# Subtest: a wrap rounded a fraction below its start never passes a negative offset to native WebAudio
+ok 56 - a wrap rounded a fraction below its start never passes a negative offset to native WebAudio
+  ---
+  duration_ms: 3.4092
+  ...
+# Subtest: a: stopping suspended music releases native buffer references before ended
+ok 57 - a: stopping suspended music releases native buffer references before ended
+  ---
+  duration_ms: 2.6159
+  ...
+# Subtest: b: stopping suspended music releases native buffer references before ended
+ok 58 - b: stopping suspended music releases native buffer references before ended
+  ---
+  duration_ms: 2.1838
+  ...
+1..58
+# tests 58
+# suites 0
+# pass 58
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2685.8117

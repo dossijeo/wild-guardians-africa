@@ -1,0 +1,37 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA cierre musical suspendido</title>
+<style>body{font:16px system-ui;padding:24px;background:#17231e;color:#eee}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Cierre musical suspendido · WebAudio real</h1><p>Buffers sintéticos silenciosos: comprueba referencias, no ahorro físico de RAM ni calidad del audio.</p>
+<button id="run">Comprobar ambos bancos</button><pre id="report">Preparado</pre>
+<script type="module">
+import {AudioSystem} from '/src/audio/audio.js';
+import {MusicWindowPool} from '/src/audio/music-window-pool.js';
+import {MusicWindowTransport} from '/src/audio/music-window-transport.js';
+import {MUSIC_POLICIES} from '/src/audio/music-policy.js';
+const report=document.querySelector('#report');
+document.querySelector('#run').onclick=async()=>{
+ const results=[];report.textContent='Comprobando';
+ try{
+ for(const pack of ['a','b']){
+  const audio=new AudioSystem({music:0,sfx:0});await audio.unlock();
+  try{
+   const [bank,index]=await Promise.all([fetch('/content/music-'+pack+'.json').then(r=>r.json()),fetch('/content/music-windows-'+pack+'.json').then(r=>r.json())]);
+   const pool=new MusicWindowPool(index,{readRange:async(url,start)=>({url,start}),decode:async({url,start})=>{
+    const track=index.tracks.find(t=>t.url===url),entry=track.windows.find(w=>w.startByte===start);
+    return audio.context.createBuffer(2,entry.decodedSamples,index.sampleRate);
+   }});audio.musicWindowPool=pool;audio.musicScene='day';
+   await Promise.all(bank.tracks.filter((t,i)=>MUSIC_POLICIES[pack].levels.day[i]>0).map(t=>pool.load(t.id,0)));
+   const transport=new MusicWindowTransport(audio,pack,bank,bank.tracks.map(track=>({track})),{random:()=>1});audio.transport=transport;
+   transport.pump(audio.context.currentTime);
+   const sources=[...audio.active],bytes=pool.pcmBytes();
+   await audio.context.suspend();
+   const pausePreserves=sources.length>0&&sources.every(s=>s.buffer!==null);
+   audio.stopMusic();
+   const immediatelyReleased=sources.every(s=>s.buffer===null),activeAfter=audio.active.length,pcmAfter=pool.pcmBytes();
+   await audio.context.resume();await new Promise(resolve=>setTimeout(resolve,50));
+   results.push({pack,nativeContext:true,sampleRate:audio.context.sampleRate,sources:sources.length,pcmBefore:bytes,pausePreserves,immediatelyReleased,activeAfter,pcmAfter,afterEndedReleased:sources.every(s=>s.buffer===null)});
+  }finally{audio.dispose();}
+ }
+ report.textContent=JSON.stringify({ok:results.every(r=>r.pausePreserves&&r.immediatelyReleased&&r.activeAfter===0&&r.pcmAfter===0&&r.afterEndedReleased),results},null,2);
+ }catch(error){report.textContent=JSON.stringify({ok:false,error:error.message,results},null,2);}
+};
+</script></html>
