@@ -49,7 +49,8 @@ async function campaign(){
    await new Promise(requestAnimationFrame);
   }
   for(const id of selected){const d=descriptors.find(d=>id>=d.start&&id<d.end);if(!d)throw Error('Unknown face ID '+id);const face=d.sourceFaces?.[id-d.start]??id-d.start;const key=d.name;
-   (report.selected[key]??=new Set()).add(face);}
+   (report.selected[key]??=new Set()).add(face);
+   if(key.startsWith('bridgeSource/'))(report.selected.bridgeSource??=new Set()).add(face);}
   report.cases.push({label,selectedIds:selected.size,backPixels});status.textContent=`${report.cases.length} estados completados: ${label}\nReversos visibles ${selected.size}. Sin timings GPU.`;
  };
  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
@@ -59,7 +60,7 @@ async function campaign(){
  const batch=createCropBatch(scene,renderer,crops,bridges,2);
  scene.traverse(mesh=>{if(!mesh.isMesh)return;let faces=null,name=mesh.name;
   if(name.startsWith('puente_')){const [,species,a,b]=name.split('_'),meta=crops.scene.children.find(n=>n.userData.crop===species&&n.userData.stage===Number(a))?.userData;
-   if(meta){const ai=meta.cropIndex*5+Number(a)-1,bi=ai+1;faces=[...Array(bridges.models[ai].faces).keys()].map(i=>`${ai}:${i}`).concat([...Array(bridges.models[bi].faces).keys()].map(i=>`${bi}:${i}`));name='bridgeSource';}}
+   if(meta){const ai=meta.cropIndex*5+Number(a)-1,bi=ai+1;faces=[...Array(bridges.models[ai].faces).keys()].map(i=>`${ai}:${i}`).concat([...Array(bridges.models[bi].faces).keys()].map(i=>`${bi}:${i}`));name=`bridgeSource/${ai}-${bi}`;}}
   patch(mesh,name,faces);
  });
  for(const species of workerOnly?[]:['maiz','platano']){

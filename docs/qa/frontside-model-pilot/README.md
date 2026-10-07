@@ -311,3 +311,11 @@ radius1 neighborhoods (diagonal neighbors exceed1pixel), retaining the stricter
 interior/outlier gates. `allClips` requests all12 names from the authoritative
 action manifest; the short four-clip screen remains only an early rejection
 screen. These prepared controls are not evidence that a visual or GPU gate passed.
+
+The crop ID selector now additionally preserves selections per bridge pair as
+`bridgeSource/a-b`, while retaining the previous union for reproducibility.
+This prepares an alternative to duplicating every selected state reverse into
+both neighboring transition buffers. It changes only the isolated selector,
+not the production bridge builder, faceLabels or candidate geometry. A new
+pair-specific selection and byte budget are required before building that
+alternative; the current union candidate remains rejected by the pilot budget.
