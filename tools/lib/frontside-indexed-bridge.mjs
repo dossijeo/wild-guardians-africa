@@ -1,6 +1,43 @@
 // QA-only candidate builder. Production crop-batch does not import this module.
 import * as THREE from 'three';
 const fields={position:3,normal:3,uv:2,aRoot:3,aPeerRoot:3,aSpin:4,aPart:4};
+export function patchReverseDerivativeFrame(material,bridge=false){
+ const compile=material.onBeforeCompile,cache=material.customProgramCacheKey;
+ material.onBeforeCompile=function(shader,renderer){
+  compile.call(this,shader,renderer);
+  if(!shader.vertexShader.includes('void main() {')||!shader.fragmentShader.includes('#include <normal_fragment_begin>'))throw Error('Unexpected normal-frame shader contract');
+  shader.vertexShader=(bridge?'':'attribute float aQaReverse;\n')+'varying float vQaReverse;\n'+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('void main() {',`void main() { vQaReverse=${bridge?'aPart.w':'aQaReverse'};`);
+  shader.fragmentShader='varying float vQaReverse;\n'+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',`#include <normal_fragment_begin>
+// Actual crop states/bridges omit authored tangents. Match DoubleSide's XY
+// frame inversion after deriving from the already reversed shading normal.
+#if defined(USE_NORMALMAP_TANGENTSPACE) || defined(USE_CLEARCOAT_NORMALMAP) || defined(USE_ANISOTROPY)
+ if(vQaReverse>.5){tbn[0]*=-1.;tbn[1]*=-1.;}
+#endif
+#ifdef USE_CLEARCOAT_NORMALMAP
+ if(vQaReverse>.5){tbn2[0]*=-1.;tbn2[1]*=-1.;}
+#endif`);
+ };
+ material.customProgramCacheKey=function(){return cache.call(this)+'|qa-reverse-derivative-frame-v1|'+(bridge?'bridge':'state');};
+}
+export function reverseIndexedState(geometry,faces){
+ if(!geometry.index||geometry.getAttribute('tangent')||Object.keys(geometry.morphAttributes).length)throw Error('Expected indexed derivative-frame crop state without morphs');
+ const count=geometry.getAttribute('position').count,index=geometry.index.array,chosen=new Set(faces);
+ if(chosen.size!==faces.length||faces.some(f=>!Number.isInteger(f)||f<0||f>=index.length/3))throw Error('Invalid state reverse faces');
+ const extra=[...new Set(faces.flatMap(f=>Array.from(index.slice(f*3,f*3+3))))].sort((a,b)=>a-b),lookup=new Map(extra.map((v,i)=>[v,count+i])),result=geometry.clone();
+ for(const [name,attribute] of Object.entries(geometry.attributes)){
+  if(attribute.isInstancedBufferAttribute){result.setAttribute(name,attribute);continue;}
+  if(attribute.isInterleavedBufferAttribute||!(attribute.array instanceof Float32Array))throw Error('Unexpected crop state attribute '+name);
+  const size=attribute.itemSize,array=new Float32Array((count+extra.length)*size),bits=new Uint32Array(array.buffer),source=new Uint32Array(attribute.array.buffer,attribute.array.byteOffset,attribute.array.length);bits.set(source);
+  extra.forEach((v,i)=>{for(let c=0;c<size;c++)bits[(count+i)*size+c]=source[v*size+c];if(name==='normal')for(let c=0;c<size;c++)array[(count+i)*size+c]=-array[(count+i)*size+c];});
+  result.setAttribute(name,new THREE.BufferAttribute(array,size,attribute.normalized));
+ }
+ const flag=new Float32Array(count+extra.length);flag.fill(1,count);result.setAttribute('aQaReverse',new THREE.BufferAttribute(flag,1));
+ const indices=Array.from(index);for(const face of faces)for(const corner of [0,2,1])indices.push(lookup.get(index[face*3+corner]));
+ result.setIndex(new THREE.BufferAttribute(count+extra.length<=65536?Uint16Array.from(indices):Uint32Array.from(indices),1));
+ return result;
+}
 export function indexBridgeGeometry(geometry,sourceKeys,reverseFaces=[]){
  if(geometry.index)throw Error('Expected original unindexed bridge');
  const count=geometry.getAttribute('position').count;

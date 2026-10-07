@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {indexBridgeGeometry} from '../tools/lib/frontside-indexed-bridge.mjs';
+import {indexBridgeGeometry,reverseIndexedState,patchReverseDerivativeFrame} from '../tools/lib/frontside-indexed-bridge.mjs';
 function fixture(){
  const geo=new THREE.BufferGeometry(),keys=[[0,0,2],[0,1,2],[0,2,2],[0,0,2],[0,2,2],[0,3,2]];
  for(const [name,size] of Object.entries({position:3,normal:3,uv:2,aRoot:3,aPeerRoot:3,aSpin:4,aPart:4})){
@@ -30,4 +30,24 @@ test('different organ labels never merge and contradictory provenance rejects',(
 });
 test('invalid or duplicate reverse faces reject before candidate construction',()=>{
  const {geo,keys}=fixture();assert.throws(()=>indexBridgeGeometry(geo,keys,[2]),/Invalid reverse/);assert.throws(()=>indexBridgeGeometry(geo,keys,[0,0]),/Invalid reverse/);
+});
+test('indexed-state reverses preserve original UV/index prefix and live growth attribute',()=>{
+ const {geo}=fixture();geo.setIndex([0,1,2,3,4,5]);geo.setAttribute('iGrowth',geo.getAttribute('iBridge'));
+ const candidate=reverseIndexedState(geo,[1]);assert.deepEqual(Array.from(candidate.index.array.slice(0,6)),[0,1,2,3,4,5]);
+ assert.equal(candidate.getAttribute('iGrowth'),geo.getAttribute('iGrowth'));assert.equal(candidate.index.count,9);
+ for(let corner=0;corner<3;corner++){
+  const source=[3,5,4][corner],target=candidate.index.getX(6+corner);
+  assert.equal(candidate.getAttribute('normal').getY(target),-geo.getAttribute('normal').getY(source));
+  assert.equal(candidate.getAttribute('uv').getX(target),geo.getAttribute('uv').getX(source));
+  assert.equal(candidate.getAttribute('aQaReverse').getX(target),1);
+ }
+ geo.setAttribute('tangent',new THREE.BufferAttribute(new Float32Array(24),4));assert.throws(()=>reverseIndexedState(geo,[0]),/derivative-frame/);
+});
+test('frame patch retains preceding material hook and rejects incompatible shaders',()=>{
+ const material=new THREE.MeshStandardMaterial();let invoked=0;
+ material.onBeforeCompile=shader=>{invoked++;shader.vertexShader='// native crop hook\n'+shader.vertexShader;};
+ material.customProgramCacheKey=()=> 'native-crop';patchReverseDerivativeFrame(material,true);
+ const shader={vertexShader:'void main() { }',fragmentShader:'#include <normal_fragment_begin>\n#include <normal_fragment_maps>'};material.onBeforeCompile(shader,null);
+ assert.equal(invoked,1);assert.ok(shader.vertexShader.includes('// native crop hook'));assert.ok(shader.vertexShader.includes('vQaReverse=aPart.w'));
+ assert.ok(material.customProgramCacheKey().startsWith('native-crop|'));assert.throws(()=>material.onBeforeCompile({vertexShader:'void main() { }',fragmentShader:'void main(){}'},null),/shader contract/);
 });

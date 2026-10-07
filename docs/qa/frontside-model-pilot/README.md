@@ -540,3 +540,25 @@ call to nonexistent toon.dispose raised; the catch disposed the renderer,
 the tab was closed and the call removed offline, without repeating the draw.
 `controlDiagnosis` requires sourceTwin and explicitly exits before candidate
 comparison; `mapControl` can map source-only nominal outliers when present.
+
+Prepared maize fixture (before measurements) uses4separate arms: original
+DoubleSide, conservatively indexed DoubleSide, indexed/selective FrontSide
+without frame compensation, and the same candidate with frame XY compensation.
+The last two use identical geometry/selection. CropBatch's actual procedural
+growth/bridge hooks, packed source textures, AfricanToon/environment/native
+shadow are retained. Candidate states use explicit per-vertex aQaReverse
+(4bytes/vertex, counted); bridges use existing aPart.w. The QA frame patch
+flips derived tbn XY only on appended reverses, retains preceding shader hooks
+and cache identity, and guards normal/clearcoat/anisotropy frame declarations.
+Five helper tests pass; no rendered equivalence is claimed yet.
+
+First screen reserves1024px, maize mature state first (or explicit bridgeOnly
+three interior samples of stage3-to4 using the real morph window), wind clocks
+1.75/4.125, Sabana/Manglares and night0/.5/1, elevations32.5/62.5, azimuths
+26.25/116.25/206.25/296.25. It uses policy2/source3controls for every sample,
+all prior quality gates, and separate fixed crop artifact routes. Default16
+samples are a pilot screen only. Indexed source must also pass equivalence;
+the uncompensated arm is diagnostic, never an acceptance reference. Color
+shadows retain DoubleSide; Front shadow/depth/ground-mask gates remain pending.
+Resource counts include all geometry attributes/index buffers, report original
+and indexed controls separately, and cannot waive the declared triangle gate.
