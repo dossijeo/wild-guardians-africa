@@ -19,5 +19,11 @@ read-only check parsed the actual profile from PR #7, source `32d546c1`, and
 matched all six public files against their hashes and byte counts. Both policy
 gates reject every candidate. `native-contracts.json` preserves those results.
 No image was converted, uploaded or aliased; no size/FPS improvement is claimed.
-The full inventory on main must be rerun after the HQ PR is merged, since main
-does not yet contain the generated mountain profile/assets at this checkpoint.
+
+Post-merge verification on runtime `68447e149019be082d7b9815e475fc42edd5588b`
+completed on 2026-10-08: all six distributed HQ atlases have the expected
+`color-atlas` role, encoded contracts, dimensions, alpha and exact hashes.
+The inventory has zero errors and zero unparsed inline images. Fifty other
+distributed images remain unclassified and conservatively require exact pixels;
+this verification does not complete their review or authorize conversion.
+See [the integration receipt](../hq-main-integration/README.md).
