@@ -20,13 +20,13 @@ libvips 8.18.7, libwebp 1.6.0. Generation checks every output before writing any
 candidate file. The encoder uses lossless WebP effort 6 after a top-only crop
 and proportional Lanczos3 reduction. All originals remain preserved.
 
-The 2172Ã—724 sources lose only the transparent top 181 rows, producing a
-2172Ã—543 crop before reduction to 2048Ã—512. The original Desert image is
+The 2172Ãƒâ€”724 sources lose only the transparent top 181 rows, producing a
+2172Ãƒâ€”543 crop before reduction to 2048Ãƒâ€”512. The original Desert image is
 deliberately rejected: its crop would cut 52 pixels at the runtime alpha cutoff.
 `desert-v2.png` is an imagegen edit that reframes the peaks without stretching;
 its complete prompt is preserved in `desert-v2-edit.json`.
 
-Six lossless exports total 6,040,574 bytes. One active 2048Ã—512 RGBA texture
+Six lossless exports total 6,040,574 bytes. One active 2048Ãƒâ€”512 RGBA texture
 with mipmaps requires approximately 5.33 MiB, the same dimensional allocation
 as the existing backdrop. WebP bytes do not measure resident GPU memory.
 The QA comparison also loads the original texture, so its additional allocation
@@ -45,14 +45,14 @@ must be inspected during a full rotation. Normal API default remains false.
 
 `directed-tests.txt`: 28 tests passed, covering framing, unchanged cylinder
 geometry, mirrored UV seams, shader/sample count and owner cancellation.
-`cpu-mips.json`: read-only linear box-filter reference through 1Ã—1, with zero
+`cpu-mips.json`: read-only linear box-filter reference through 1Ãƒâ€”1, with zero
 visible saturation outliers above 160 RGB range and zero base pixels below
 the shader cutoff at every level. Real GPU filtering can differ.
 
 The native harness is `tests/browser/hq-mountain-horizon.html`, with URL
 `?biome=sabana` (also gran-rio, manglares, volcanes, gran-canon, desierto).
 It compares original/HQ in fixed camera poses, offers day/dusk/night, a 73-pose
-360Â° rotation and a 20 m lateral parallax step. Export exposes a DOM receipt;
+360Ã‚Â° rotation and a 20 m lateral parallax step. Export exposes a DOM receipt;
 closing disposes the world and the separately borrowed comparison texture.
 It renders paused state and uploads QA UV changes, so it is **not** a valid
 frametime benchmark. Native six-biome receipts, visual acceptance and a
@@ -63,9 +63,9 @@ controlled cost comparison are still pending.
 Root reviewed the fixed-eye Sabana harness at this branch's `f6083dd1` and
 archived 73 yaw poses each for day and night, plus four screenshots, in
 `savanna-mirror-counterexample`. The native world loads without JS or GL
-errors and the artwork adds detail. Nevertheless, yaw 180Â° exposes an
+errors and the artwork adds detail. Nevertheless, yaw 180Ã‚Â° exposes an
 exactly bilateral mesa with repeated wings; a similar reflection is apparent
-at yaw 0Â°. This is a visual rejection of mirroring, despite continuous edge
+at yaw 0Ã‚Â°. This is a visual rejection of mirroring, despite continuous edge
 sampling. It does not approve the other five biomes.
 
 The geometry also stretches each 4:1 panorama across half of a radius-430 m
@@ -78,12 +78,12 @@ and default wrapping remain unchanged.
 ## Proportionate arc diagnostic, v3
 
 The isolated-source pilot is now available at the native harness with
-`?biome=sabana&arcs=1`. It is one mountain ridge, not a completed 360Â° panorama.
+`?biome=sabana&arcs=1`. It is one mountain ridge, not a completed 360Ã‚Â° panorama.
 Three of four atlas cells are deliberately empty. The original comparison
 control is disabled for this diagnostic; the mirrored reference remains
 available by omitting `arcs=1`.
 
-`savanna-isolated-v1.png` has 343 visible saturation outliers at alpha â‰¥90
+`savanna-isolated-v1.png` has 343 visible saturation outliers at alpha Ã¢â€°Â¥90
 (69 after tile reduction). Its attempted cleanup v2 worsened that count to
 1,380 and was rejected. Both sources and exact prompts are retained. The new
 v3 artwork continues its apron past the bottom canvas edge instead of drawing
@@ -96,10 +96,10 @@ node tools/audit_hq_backdrop_mips.mjs .cache/hq-arc-pilot
 node --test tests/mountain-arcs.test.js tests/biome-backdrop.test.js tests/far-vegetation-ownership.test.js
 ```
 
-`arc-v3/export.json` records the source/export hashes and recipe. A 960Ã—240
-image occupies the top-left 1024Ã—256 cell of a 2048Ã—512 atlas, with 32 px
+`arc-v3/export.json` records the source/export hashes and recipe. A 960Ãƒâ€”240
+image occupies the top-left 1024Ãƒâ€”256 cell of a 2048Ãƒâ€”512 atlas, with 32 px
 horizontal and 8 px vertical padding. The 440 m wide arc on radius 430 m
-spans 58.63Â°; its 110 m frame preserves the 4:1 artwork ratio. Its authored
+spans 58.63Ã‚Â°; its 110 m frame preserves the 4:1 artwork ratio. Its authored
 foot is anchored at -35 m, with the same bounded parallax and shared global
 fog/night inputs. All arcs can batch into one geometry, material and sampler;
 there are no shadows, colliders or procedural world IDs for decoration.
@@ -119,7 +119,7 @@ Root's first native arc review is preserved under `arc-v3/native`: day and
 night each completed 73 yaw poses with unchanged paused state and no JS/GL
 errors. Examined views have much better proportions and no evident mirrored
 symmetry or chromatic fringe. The horizontal foot remains visibly cut above
-the grey horizon band in day/night/dusk and at yaw 25Â° or after a 20 m lateral
+the grey horizon band in day/night/dusk and at yaw 25Ã‚Â° or after a 20 m lateral
 move. This is pending integration, not artistic acceptance.
 
 The file labelled `dusk-receipt.json.gz` actually contains the prior **day**
@@ -148,17 +148,17 @@ is the selected direction for the next pilot, not final approval of one cell.
 The four-cell Sabana candidate uses four distinct imagegen sources, with exact
 prompts retained beside each PNG. `node tools/prepare_mountain_arc_four.mjs`
 produces `.cache/hq-arc-four/{atlas.webp,cells.json,export.json}`. The current
-atlas is 2048×512, 787504 bytes, SHA-256
+atlas is 2048Ã—512, 787504 bytes, SHA-256
 `151312cc3dec8bf2bca0d2791fb6db10808b5d212042a904453614886aa19666`.
 Sharp 0.35.5 / vips 8.18.7 / WebP 1.6.0 resize a safe top crop uniformly to
-960×240, then place each cutout in a 1024×256 cell with 32×8 transparent padding.
-All four sources have zero visible chromatic outliers at alpha ≥90. Their
+960Ã—240, then place each cutout in a 1024Ã—256 cell with 32Ã—8 transparent padding.
+All four sources have zero visible chromatic outliers at alpha â‰¥90. Their
 baseline reaches the canvas edge; the native far ground/base fog must hide
 this contact naturally. Transparent ends are not assumed from the prompt.
 
 `node tools/audit_mountain_atlas_bleed.mjs` performs read-only CPU box-mip
-alpha provenance, sampled bilinearly on a 41×41 grid per actual UV rectangle.
-Levels 0–4 have no foreign visible contribution. Mixing starts at level 5
+alpha provenance, sampled bilinearly on a 41Ã—41 grid per actual UV rectangle.
+Levels 0â€“4 have no foreign visible contribution. Mixing starts at level 5
 (6/5/0/0 samples) and grows at coarser levels. This is a retained counterexample,
 not GPU filtering acceptance; the colour-outlier audit alone cannot prove no
 cross-variant bleed. A QA-only no-mip LinearFilter comparison is available to
@@ -170,4 +170,10 @@ Append `&arc-no-mips=1` for the filter comparison. Both use one batched mesh,
 96 triangles and one atlas sampler. Four arcs retain exact image aspect 4:1,
 with deterministic decorative seed rotation and broad open valleys. Neither
 variant replaces public assets or enables arcs in gameplay. Native day/night,
-360° movement, alpha/filtering and cost acceptance remain pending.
+360Â° movement, alpha/filtering and cost acceptance remain pending.
+
+The four-cell exporter now checks every source SHA, pinned encoder versions and
+reviewed output SHA/length before writing any output. Its tracked contract is
+`assets-source/far-backdrops-hq/savanna-four-export-contract.json`. A second
+export to `.cache/hq-arc-four-repro` reproduced all 787504 bytes exactly. The
+public atlas and runtime profile remain unchanged.
