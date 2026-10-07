@@ -413,3 +413,11 @@ Packed candidate SHA256 e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a4
 Nodes/skin/all12clips remain exact; Validator remains473/124. Blender can-wall
 geometry analysis is unchanged, including the exact seam/attachment diagnosis.
 This proposal has no visual approval, shadowFront approval or GPU timing.
+
+`cropPairsOnly` selects only the two representative species and writes a
+separate `runtime-visibility-crop-pairs-selection.json`; it preserves the old
+combined worker/crop selector artifact for reproducibility. The pair-budget
+script prefers that separate provenance when present, and otherwise exits
+PENDING_PAIR_SELECTION instead of fabricating a saving. The isolated server
+was restarted for that explicit artifact route. No production state, bridge,
+compression or worker manifest changed.

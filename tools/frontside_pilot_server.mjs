@@ -6,7 +6,7 @@ const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:t
     if(req.method!=='POST'){res.statusCode=405;res.end();return;}
     try{let body='';for await(const chunk of req){body+=chunk;if(body.length>20_000_000)throw Error('Report limit');}
       const report=JSON.parse(body);if(!['SELECTION_ONLY_NOT_APPROVED','VISUAL_SCREEN_NOT_APPROVED'].includes(report.status))throw Error('Unexpected report');
-      const prefix=report.status==='SELECTION_ONLY_NOT_APPROVED'?(report.workerOnly?'runtime-visibility-worker1024':'runtime-visibility'):'worker-runtime-visual';
+      const prefix=report.status==='SELECTION_ONLY_NOT_APPROVED'?(report.cropOnly?'runtime-visibility-crop-pairs':report.workerOnly?'runtime-visibility-worker1024':'runtime-visibility'):'worker-runtime-visual';
       await mkdir('docs/qa/frontside-model-pilot',{recursive:true});
       if(report.capturePng){if(!/^data:image\/png;base64,/.test(report.capturePng))throw Error('Invalid capture');
         await writeFile('docs/qa/frontside-model-pilot/'+prefix+'-last-frame.png',Buffer.from(report.capturePng.split(',')[1],'base64'));

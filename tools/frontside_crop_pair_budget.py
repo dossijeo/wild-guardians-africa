@@ -7,7 +7,8 @@ import json,sys
 sys.dont_write_bytecode=True
 from frontside_model_pilot import ROOT
 
-selection=json.loads((ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-selection.json').read_text())
+pair_selection=ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-crop-pairs-selection.json'
+selection=json.loads((pair_selection if pair_selection.exists() else ROOT/'docs/qa/frontside-model-pilot/runtime-visibility-selection.json').read_text())
 bridges=json.loads((ROOT/'public/content/crop-bridges.json').read_text())
 current=json.loads((ROOT/'docs/qa/frontside-model-pilot/crop-runtime-buffer-estimate.json').read_text())
 pair_keys=[k for k in selection['selected'] if k.startswith('bridgeSource/')]

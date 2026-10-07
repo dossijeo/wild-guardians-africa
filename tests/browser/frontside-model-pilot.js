@@ -12,11 +12,13 @@ document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();
 run.onclick=async()=>{run.disabled=true;cancelled=false;try{await campaign();}catch(error){status.textContent=error.stack;run.disabled=false;}};
 async function campaign(){
  renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(256,256);renderer.setPixelRatio(1);renderer.setClearColor(0,0);document.querySelector('#view').replaceChildren(renderer.domElement);
- const workerOnly=new URLSearchParams(location.search).has('worker1024'),size=workerOnly?1024:256;
+ const options=new URLSearchParams(location.search),workerOnly=options.has('worker1024'),cropOnly=options.has('cropPairsOnly'),size=workerOnly?1024:256;
+ if(workerOnly&&cropOnly)throw Error('Choose either worker1024 or cropPairsOnly');
  renderer.setSize(size,size);
  const gl=renderer.getContext(),extension=gl.getExtension('WEBGL_debug_renderer_info');
  const report={status:'SELECTION_ONLY_NOT_APPROVED',three:THREE.REVISION,resolution:size,workerOnly,fragment:'RGBA triangle IDs; alpha255 front-facing/128 back-facing; linear target, no tone/color transform',camera:'Orthographic 8 azimuths ×3 elevations (-15,25,85), local box fit',gpu:extension?gl.getParameter(extension.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),cpuContext:'49032/39340 frozen. Far58872 finished at worker1024 rerun. No GPU timing/performance claim.',cases:[],selected:{},limitations:['Visibility selection only; real color/maps/shadows and1024px held-out views remain required.','No animation/bridge acceptance is inferred.']};
  const target=new THREE.WebGLRenderTarget(size,size,{format:THREE.RGBAFormat,type:THREE.UnsignedByteType,depthBuffer:true});
+ report.cropOnly=cropOnly;
  const pixels=new Uint8Array(size*size*4),camera=new THREE.OrthographicCamera(-1,1,1,-1,.01,100);
  let nextId=1;const descriptors=[];
  const patch=(mesh,sourceName,sourceFaces=null,respectAuthoredSide=false)=>{
@@ -72,12 +74,14 @@ async function campaign(){
  }
  batch.dispose();
  }
+ if(!cropOnly){
  const workers=await fetch('/content/worker-actions.json').then(r=>r.json()),worker=await loader.loadAsync(assetUrl(workers.youngMale.url)),workerScene=new THREE.Scene();workerScene.add(worker.scene);
  worker.scene.traverse(mesh=>{if(mesh.isMesh)patch(mesh,'worker/'+mesh.name,null,true);});
  const mixer=new THREE.AnimationMixer(worker.scene);const data={model:worker.scene,mixer};
  for(const clip of worker.animations)for(const fraction of [0,.25,.5,.75,1]){
   mixer.stopAllAction();const action=mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();action.clampWhenFinished=true;action.paused=true;data.action=action;sampleFixedPose(data,clip.duration*fraction,true);syncWorkerToolVisibility(data,true);worker.scene.updateMatrixWorld(true);
   const box=new THREE.Box3().setFromObject(worker.scene),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5;await select(workerScene,center,radius,`worker/${clip.name}/${fraction}`);
+ }
  }
  report.descriptors=descriptors.map(d=>({name:d.name,start:d.start,end:d.end,effectiveSide:d.effectiveSide}));for(const [name,faces] of Object.entries(report.selected))report.selected[name]=[...faces].sort((a,b)=>typeof a==='number'?a-b:String(a).localeCompare(String(b)));
  report.capturePng=renderer.domElement.toDataURL('image/png');
