@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-10-07T17:35:03.453886+00:00",
+  "baselineHead": "411dc028",
+  "sourceHashes": {
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "src/simulation/tasks.js": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+    "src/simulation/worker-entity-lookup.js": "92f303ea81663edf061c689a7ece00f504969c9b1b050c479230c7800884cd8a",
+    "src/simulation/active-crops.js": "64e8fab6f86309ddc629c48238aa5826c2cd12cf28fd9e433fc80a1e82cbce52",
+    "tools/compare_idle_crop_index.mjs": "22de038c532a3bb2ab170117157090eea9b04a2835941cf45c318670d68705f5",
+    "tools/compare_task_target_index.mjs": "0817e995931f7aff4a639e436b76049df48b5d321c533064cd63d1bf04d3a7fb"
+  },
+  "terminalSessions": {
+    "idleCoverageProbe": {
+      "id": 47147,
+      "exitCode": 0
+    },
+    "taskMangrove": {
+      "id": 7741,
+      "exitCode": 0
+    },
+    "taskRiver": {
+      "id": 45343,
+      "exitCode": 0
+    },
+    "taskSavanna": {
+      "id": 61395,
+      "exitCode": 0
+    }
+  },
+  "syntaxChecks": {
+    "tools/compare_idle_crop_index.mjs": 0,
+    "tools/compare_task_target_index.mjs": 0
+  },
+  "scope": "Independent QA tools only; neither candidate imported or activated in production. Existing runtime full suite remains valid; no timing overlap with the impostor combined benchmark."
+}
