@@ -29,7 +29,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;
-   const adapter=await attachSpecies(world,{groundStep:16,densityStart:end+30,densityEnd:240,densityMinimum:.04,fadeStart:240,fadeEnd:330,...options,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
+   const adapter=await attachSpecies(world,{groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
