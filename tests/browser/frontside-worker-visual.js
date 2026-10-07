@@ -52,8 +52,9 @@ async function campaign(){
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
- const withheldVersion=options.has('withheldV3')?3:options.has('withheldV2')?2:1;
- const fractions=withheldVersion===3?[.3125,.8125]:withheldVersion===2?[.375,.875]:[.125,.625],elevations=withheldVersion===3?[35,65]:withheldVersion===2?[40,70]:[25,55],azimuths=withheldVersion===3?[33.75,123.75,213.75,303.75]:withheldVersion===2?[11.25,101.25,191.25,281.25]:[22.5,67.5,157.5,247.5];
+ const withheldVersion=options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
+ const views={1:{fractions:[.125,.625],elevations:[25,55],azimuths:[22.5,67.5,157.5,247.5]},2:{fractions:[.375,.875],elevations:[40,70],azimuths:[11.25,101.25,191.25,281.25]},3:{fractions:[.3125,.8125],elevations:[35,65],azimuths:[33.75,123.75,213.75,303.75]},4:{fractions:[.1875,.6875],elevations:[30,60],azimuths:[18.75,108.75,198.75,288.75]}};
+ const {fractions,elevations,azimuths}=views[withheldVersion];
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
  const library=await fetch('/content/worker-actions.json').then(r=>r.json());
  const allClipNames=Object.keys(library.youngMale.actions);if(clipFilter&&!allClipNames.includes(clipFilter))throw Error('Unknown screen clip');

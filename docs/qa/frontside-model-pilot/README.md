@@ -432,3 +432,26 @@ face (aPart.w is an unused existing lane), and verify diagnostic map/color
 captures through the real shader before approval. No such compensation is
 activated or claimed tested yet. Indexed candidates already reverse the
 authored tangent XYZ and handedness; bridge reconstruction is a separate gate.
+
+Continuous-rim candidate e554227b now passes the previously rejected diagnosis
+(Water .3125/213.75/35, noShadows): IoU1/0alpha differences, MAE9.502e-7,
+tileMAE .001674, max RGB error .053117,5isolated RGB outlier pixels and3exact
+unchanged-original repeats. No thresholds changed. The2nozzle/handle pixels
+are resolved; remaining tiny rim differences fit the declared screen. Because
+this view guided the proposal, this is repair verification only, not acceptance
+or independent evidence. New poses/views, all clips/maps/shadows and GPU gates
+remain required.
+
+Separate crop pair selection covers36growth/transition states at256px. The
+selected8pilot bridge pairs use10,199,640original bytes; union reverses require
+13,243,296bytes and pair-filtered reverses estimate12,939,696bytes (+26.864%
+from source). Pair filtering saves303,600bytes (~2.3%of union bridge bytes),
+which is modest. It has no map/visibility approval or timing, and does not
+resolve the proposed pilot budget by itself. This is evidence about the
+pair-filter alternative, not proof that all geometric approaches are inviable.
+
+Before any further color capture of e554227b, independent version4 reserves
+times .1875/.6875, elevations30/60 and azimuths18.75/108.75/198.75/288.75,
+distinct from prior selection/diagnosis and unchanged gates. The source is
+repeated3times in each sample. Water may be screened first, but all12clips,
+attachments, day/night/cultures/biomes/maps/shadows and GPU gates remain.

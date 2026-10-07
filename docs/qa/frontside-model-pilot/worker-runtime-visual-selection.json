@@ -20,25 +20,14 @@
       "alphaIoU": 1,
       "missingFraction": 0,
       "addedFraction": 0,
-      "linearRgbMae": 0.000008248791942270193,
+      "linearRgbMae": 9.501698668055371e-7,
       "p99Approx": 0,
-      "maxError": 0.3962237387895584,
-      "maxTileMae": 0.01620295478238,
+      "maxError": 0.053116604685783386,
+      "maxTileMae": 0.0016737498342990875,
       "originalPixels": 143052,
       "missingPixels": 0,
       "addedPixels": 0,
       "rgbOutlierRegions": [
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            675,
-            448,
-            675,
-            448
-          ],
-          "classification": "rgb"
-        },
         {
           "pixels": 1,
           "diameterUpperBound": 0,
@@ -91,17 +80,6 @@
             468,
             607,
             468
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            633,
-            497,
-            633,
-            497
           ],
           "classification": "rgb"
         }
@@ -206,7 +184,7 @@
           }
         ]
       ],
-      "passes": false
+      "passes": true
     }
   ],
   "limitations": [
@@ -216,13 +194,13 @@
   "candidateReceipt": {
     "category": "youngMale",
     "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
-    "archivePath": ".cache/frontside-model-pilot/candidates/archive/ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd.glb",
-    "sourceCandidateSha256": "dec153352c2eebda633408b47f7f0a33b972ebe58bfd0413a9ab95ca007516bf",
-    "bytes": 5241864,
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a48e9c145b.glb",
+    "sourceCandidateSha256": "e7db32838f66fc14a23a9216af3c65d28b02205f14866c31092ea2fcb99cf5c0",
+    "bytes": 5243228,
     "baselineRuntimeBytes": 5612688,
-    "growthPercent": -6.606887822733065,
+    "growthPercent": -6.582585741448666,
     "prunedUnusedAccessors": 633,
-    "sha256": "ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd",
+    "sha256": "e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a48e9c145b",
     "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
     "status": "NOT_APPROVED"
   },
@@ -447,85 +425,7 @@
       "maxByteDifference": 0
     }
   ],
-  "failed": true,
-  "rgbTriangleProvenance": [
-    {
-      "side": "source",
-      "faces": [
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 235,
-          "backFacing": true,
-          "pixels": 3
-        },
-        {
-          "mesh": "Can_Nozzle_geometry_3",
-          "face": 106,
-          "backFacing": true,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 237,
-          "backFacing": true,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 233,
-          "backFacing": true,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_2",
-          "face": 1208,
-          "backFacing": true,
-          "pixels": 1
-        }
-      ]
-    },
-    {
-      "side": "candidate",
-      "faces": [
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 1423,
-          "backFacing": false,
-          "pixels": 2
-        },
-        {
-          "mesh": "Can_Nozzle_geometry_3",
-          "face": 67,
-          "backFacing": false,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 1424,
-          "backFacing": false,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 1422,
-          "backFacing": false,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_1",
-          "face": 1420,
-          "backFacing": false,
-          "pixels": 1
-        },
-        {
-          "mesh": "Prop_WateringCan_geometry_2",
-          "face": 1207,
-          "backFacing": false,
-          "pixels": 1
-        }
-      ]
-    }
-  ],
+  "failed": false,
   "sourceTwin": false,
   "originalShadowDiagnostic": false,
   "frontShadow": false,
