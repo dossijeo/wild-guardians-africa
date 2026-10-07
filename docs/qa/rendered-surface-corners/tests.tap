@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: independent mud conforms to actual terrain triangles in signed chunks without inverted faces
+ok 1 - independent mud conforms to actual terrain triangles in signed chunks without inverted faces
+  ---
+  duration_ms: 723.1201
+  ...
+# Subtest: mud clipping preserves a crossing triangle and rejects disjoint outlines
+ok 2 - mud clipping preserves a crossing triangle and rejects disjoint outlines
+  ---
+  duration_ms: 1.2829
+  ...
+# Subtest: mud creates no objects in other biomes, open water or the protected village clearing
+ok 3 - mud creates no objects in other biomes, open water or the protected village clearing
+  ---
+  duration_ms: 2.2164
+  ...
+# Subtest: rendered triangle sampling queries only its three actual corners on signed cells and the diagonal
+ok 4 - rendered triangle sampling queries only its three actual corners on signed cells and the diagonal
+  ---
+  duration_ms: 3.7781
+  ...
+# Subtest: savanna: three-corner rendering sample is exactly equal to the original on native terrain
+ok 5 - savanna: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 101.8731
+  ...
+# Subtest: grand_river: three-corner rendering sample is exactly equal to the original on native terrain
+ok 6 - grand_river: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 46.7489
+  ...
+# Subtest: mangrove: three-corner rendering sample is exactly equal to the original on native terrain
+ok 7 - mangrove: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 34.7862
+  ...
+# Subtest: volcanoes: three-corner rendering sample is exactly equal to the original on native terrain
+ok 8 - volcanoes: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 64.1819
+  ...
+# Subtest: canyons: three-corner rendering sample is exactly equal to the original on native terrain
+ok 9 - canyons: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 53.3543
+  ...
+# Subtest: desert: three-corner rendering sample is exactly equal to the original on native terrain
+ok 10 - desert: three-corner rendering sample is exactly equal to the original on native terrain
+  ---
+  duration_ms: 52.8779
+  ...
+# Subtest: native ground vertices, colors and normals match original lab in every biome and negative chunks
+ok 11 - native ground vertices, colors and normals match original lab in every biome and negative chunks
+  ---
+  duration_ms: 5196.7306
+  ...
+# Subtest: visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+ok 12 - visual effects and debris support agree with raycast on native one-unit cells and chunk seams
+  ---
+  duration_ms: 609.1763
+  ...
+# Subtest: native RGB vertex palette is converted once before lighting in both quality material types
+ok 13 - native RGB vertex palette is converted once before lighting in both quality material types
+  ---
+  duration_ms: 3.4949
+  ...
+# Subtest: shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+ok 14 - shield domes and agricultural ribbons query global terrain and preserve their local vertices while projection is rebased
+  ---
+  duration_ms: 329.8261
+  ...
+# Subtest: non-acting workers and repair dust do not index historical tasks or crops
+ok 15 - non-acting workers and repair dust do not index historical tasks or crops
+  ---
+  duration_ms: 2.9778
+  ...
+# Subtest: missing tasks skip target history; active plans see same-length target replacements immediately
+ok 16 - missing tasks skip target history; active plans see same-length target replacements immediately
+  ---
+  duration_ms: 1.3714
+  ...
+# Subtest: Initial planting and first water track the four original profile speeds in separate phases
+ok 17 - Initial planting and first water track the four original profile speeds in separate phases
+  ---
+  duration_ms: 0.8572
+  ...
+# Subtest: Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+ok 18 - Paid legal work presents native dig, water and harvest without changing state, including pause and reload
+  ---
+  duration_ms: 569.349
+  ...
+# Subtest: Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+ok 19 - Cancelling a task immediately releases its VFX and leaves no static ribbon or private resources
+  ---
+  duration_ms: 25.3189
+  ...
+# Subtest: Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+ok 20 - Visual floor sampling matches the exact rendered triangle and diagonal across negative chunk seams
+  ---
+  duration_ms: 0.7506
+  ...
+# Subtest: Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+ok 21 - Committed arrival repair emits one native dust burst at its service point, stable through duplicate presentation, pause and reload
+  ---
+  duration_ms: 129.7813
+  ...
+# Subtest: Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+ok 22 - Repair dust ignores old, future, failed or malformed presentation instead of resurrecting historical callbacks
+  ---
+  duration_ms: 0.4643
+  ...
+# Subtest: Work manager attaches the worker emitter to the actual native water effect
+ok 23 - Work manager attaches the worker emitter to the actual native water effect
+  ---
+  duration_ms: 43.952
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7049.8193

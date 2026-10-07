@@ -1,0 +1,1246 @@
+{
+  "reference": "eb9857bf",
+  "baselineSourceSha256": "13ba3b9cd65a596547db4989470b4f71e424a90bd22982f3cbada0131b9b9ad0",
+  "candidateSourceSha256": "a818d56f862efc03229ee5c99c49e8a9d9d9424f14451fc187e622a0fb95a9c7",
+  "warmupPairs": 2,
+  "measuredPairs": 12,
+  "queriesPerBatch": 12000,
+  "checks": [
+    {
+      "biome": "savanna",
+      "points": 1200,
+      "exact": true
+    },
+    {
+      "biome": "grand_river",
+      "points": 1200,
+      "exact": true
+    },
+    {
+      "biome": "mangrove",
+      "points": 1200,
+      "exact": true
+    },
+    {
+      "biome": "volcanoes",
+      "points": 1200,
+      "exact": true
+    },
+    {
+      "biome": "canyons",
+      "points": 1200,
+      "exact": true
+    },
+    {
+      "biome": "desert",
+      "points": 1200,
+      "exact": true
+    }
+  ],
+  "summary": {
+    "savanna": {
+      "reference": {
+        "medianMs": 24.20494999999994
+      },
+      "candidate": {
+        "medianMs": 18.283150000000006
+      }
+    },
+    "grand_river": {
+      "reference": {
+        "medianMs": 21.137749999999983
+      },
+      "candidate": {
+        "medianMs": 16.30824999999993
+      }
+    },
+    "mangrove": {
+      "reference": {
+        "medianMs": 24.9674500000001
+      },
+      "candidate": {
+        "medianMs": 17.124000000000137
+      }
+    },
+    "volcanoes": {
+      "reference": {
+        "medianMs": 19.584550000000036
+      },
+      "candidate": {
+        "medianMs": 16.96725000000015
+      }
+    },
+    "canyons": {
+      "reference": {
+        "medianMs": 20.17619999999988
+      },
+      "candidate": {
+        "medianMs": 16.491850000000113
+      }
+    },
+    "desert": {
+      "reference": {
+        "medianMs": 19.808899999999767
+      },
+      "candidate": {
+        "medianMs": 15.679150000000163
+      }
+    }
+  },
+  "checksum": 19301679.58176346,
+  "rows": [
+    {
+      "biome": "savanna",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 24.207599999999957,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 20.259400000000028,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 28.924300000000017,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 26.289600000000007,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 28.53649999999999,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 17.952799999999968,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 23.08639999999997,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 30.527800000000013,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 27.765700000000038,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 21.33789999999999,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 18.613500000000045,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 22.425200000000018,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 21.739199999999983,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 17.722099999999955,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 16.108299999999986,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 19.80830000000003,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 24.202299999999923,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 17.2654,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 17.17719999999997,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 20.243299999999977,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 21.29460000000006,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 14.961300000000051,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 24.71029999999996,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "savanna",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 36.75529999999992,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 30.401700000000005,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 20.3592000000001,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 24.526299999999992,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 19.79320000000007,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 20.03710000000001,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 15.72869999999989,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 13.81899999999996,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 21.25019999999995,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 21.025300000000016,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 16.71069999999986,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 15.547900000000027,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 20.07569999999987,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 23.4532999999999,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 15.9058,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 17.19230000000016,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 21.90210000000002,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 24.2813000000001,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 16.998499999999922,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 17.59400000000005,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 21.50299999999993,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 20.730899999999792,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 15.553900000000112,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 15.130699999999933,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "grand_river",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 20.526200000000017,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 37.0021999999999,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 16.845000000000027,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 17.04910000000018,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 20.494500000000016,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 24.738900000000058,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 17.198900000000094,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 15.239700000000084,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 25.835199999999986,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 25.51240000000007,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 16.359500000000025,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 16.662500000000136,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 24.52189999999996,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 26.928900000000112,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 23.900100000000066,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 15.877099999999928,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 21.725599999999986,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 24.472999999999956,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 22.331199999999853,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 22.14319999999998,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 26.32860000000005,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 25.19600000000014,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 17.618099999999913,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 18.109600000000228,
+      "queries": 36000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "mangrove",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 21.225700000000415,
+      "queries": 48000,
+      "sum": 39839.99999999696
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 21.539200000000164,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 18.46279999999979,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 20.812999999999647,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 23.684099999999944,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 22.48140000000012,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 18.446800000000167,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 18.76909999999998,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 24.414000000000215,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 18.030499999999847,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 16.672599999999875,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 15.967799999999897,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 18.63059999999996,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 19.371599999999944,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 15.767499999999927,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 14.893599999999878,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 19.764200000000073,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 21.32420000000002,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 17.88269999999966,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 17.261900000000423,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 17.552799999999934,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 19.142899999999827,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 14.455599999999777,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 11.431099999999788,
+      "queries": 36000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "volcanoes",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 19.404899999999998,
+      "queries": 48000,
+      "sum": 61168.560910581975
+    },
+    {
+      "biome": "canyons",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 23.08040000000028,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 14.977100000000064,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 14.736399999999776,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 18.99509999999964,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 19.664200000000164,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 20.664099999999962,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 17.97340000000031,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 26.996599999999944,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 20.167500000000018,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 15.813699999999699,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 14.754899999999907,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 16.95550000000003,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 16.586399999999685,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 16.88259999999991,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 16.313900000000103,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 19.375,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 20.184899999999743,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 15.074600000000373,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 16.669800000000123,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 20.604499999999916,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 20.496999999999844,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 24.345000000000255,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 16.730299999999716,
+      "queries": 36000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "canyons",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 27.541099999999915,
+      "queries": 48000,
+      "sum": 327760.3986389086
+    },
+    {
+      "biome": "desert",
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 18.465200000000095,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 0,
+      "mode": "candidate",
+      "ms": 13.160600000000159,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 1,
+      "mode": "candidate",
+      "ms": 13.098300000000108,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 19.610099999999875,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 22.632900000000063,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 2,
+      "mode": "candidate",
+      "ms": 15.450400000000172,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 3,
+      "mode": "candidate",
+      "ms": 16.56140000000005,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 19.440799999999854,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 18.416099999999915,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 4,
+      "mode": "candidate",
+      "ms": 16.170000000000073,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 5,
+      "mode": "candidate",
+      "ms": 15.341899999999896,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 21.7195999999999,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 20.00769999999966,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 6,
+      "mode": "candidate",
+      "ms": 16.74409999999989,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 7,
+      "mode": "candidate",
+      "ms": 16.567499999999654,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 20.353200000000015,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 20.08789999999999,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 8,
+      "mode": "candidate",
+      "ms": 12.21160000000009,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 9,
+      "mode": "candidate",
+      "ms": 16.070500000000266,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 18.914099999999962,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 20.994700000000194,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 10,
+      "mode": "candidate",
+      "ms": 15.907900000000154,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 11,
+      "mode": "candidate",
+      "ms": 14.768000000000029,
+      "queries": 36000,
+      "sum": 138239.61797804534
+    },
+    {
+      "biome": "desert",
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 18.984100000000126,
+      "queries": 48000,
+      "sum": 138239.61797804534
+    }
+  ],
+  "scope": "CPU-only exact native terrain queries, warm lattice cache, six biomes/seed712, alternating pairs. Query counter wraps both arms. Four long-running campaigns remain active. Not GPU, integrated frametime, memory or mobile evidence."
+}
