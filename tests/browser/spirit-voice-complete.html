@@ -3,8 +3,11 @@
 <h1>54 voces completas · medios nativos</h1><p>Salida silenciada. Reproduce cada pista hasta su ended natural y comprueba una sola continuación. No evalúa la mezcla ni la interpretación de voz.</p><button id="run">Reproducir las 54 completas</button><output id="status">Preparado</output><pre id="report"></pre>
 <script type="module">
 import {SpiritVoice} from '/src/audio/spirit-voice.js';import {assetUrl} from '/src/rendering/asset-url.js';import manifest from '/content/manifests/spirit-voices.json' with {type:'json'};
-const rows=[],errors=[];let voice;
-const paint=result=>{document.querySelector('#report').textContent=JSON.stringify(result??{completed:rows.length,total:manifest.records.length,rows,errors},null,2);};
+const selected=manifest.records.slice(Math.max(0,Number(new URL(location.href).searchParams.get('start'))||0));
+document.querySelector('h1').textContent=selected.length+' voces completas · medios nativos';document.querySelector('#run').textContent='Reproducir las '+selected.length+' completas';
+const rows=[],errors=[];let voice,activeRecord,events=[],startedAt;
+const diagnostic=()=>({id:activeRecord?.id,status:voice?.status,elapsed:startedAt==null?null:(performance.now()-startedAt)/1000,media:voice?.audio?{currentTime:voice.audio.currentTime,duration:voice.audio.duration,paused:voice.audio.paused,ended:voice.audio.ended,readyState:voice.audio.readyState,networkState:voice.audio.networkState,error:voice.audio.error?.code??null}:null,events});
+const paint=result=>{document.querySelector('#report').textContent=JSON.stringify(result??{completed:rows.length,total:selected.length,rows,errors},null,2);};
 const until=async (predicate,timeout=15000)=>{const deadline=performance.now()+timeout;while(!predicate()){if(performance.now()>deadline)throw Error('Media deadline exceeded');await new Promise(resolve=>setTimeout(resolve,25));}};
 const check=(condition,message)=>{if(!condition)throw Error(message);};
 addEventListener('error',e=>errors.push(String(e.error??e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
@@ -12,8 +15,10 @@ document.querySelector('#run').onclick=async()=>{
  const button=document.querySelector('#run');button.disabled=true;rows.length=errors.length=0;document.querySelector('#status').textContent='Comprobando';
  try{
   let advances=0;voice=new SpiritVoice({url:assetUrl,create:url=>{const audio=new Audio(url);audio.muted=true;return audio;}});
-  for(const record of manifest.records){
+  for(const record of manifest.records.slice(Math.max(0,Number(new URL(location.href).searchParams.get('start'))||0))){
+   activeRecord=record;events=[];startedAt=performance.now();
    voice.play(record,()=>advances++);const media=voice.audio;
+   for(const type of ['loadstart','loadedmetadata','canplay','playing','waiting','stalled','pause','ended','error'])media.addEventListener(type,()=>{events.push({type,elapsed:(performance.now()-startedAt)/1000,position:media.currentTime,readyState:media.readyState,status:voice.status});if(events.length>100)events.shift();});
    await until(()=>voice.status==='fallback'||voice.status==='playing'&&Number.isFinite(media.duration)&&media.currentTime>=.05);
    check(voice.status==='playing',record.id+' failed playback');
    const row={id:record.id,language:record.language,duration:media.duration,position:media.currentTime,readyState:media.readyState,rate:media.playbackRate,source:media.currentSrc,advancesBeforeStop:advances};
@@ -24,7 +29,7 @@ document.querySelector('#run').onclick=async()=>{
    check(row.pausedAfterStop&&row.sourceAttributeAfterStop===null&&row.voiceAfterStop==='idle'&&advances===rows.length+1,'Unexpected advance or retained source');rows.push(row);paint();
   }
   const natural={clipsCompleted:advances};
-  check(!errors.length,'Page errors');paint({ok:true,total:rows.length,rows,natural,errors});document.querySelector('#status').textContent='54/54 correctas';
- }catch(error){errors.push(error.message);paint({ok:false,total:rows.length,rows,errors});document.querySelector('#status').textContent='Error';}finally{voice?.dispose();button.disabled=false;}
+  check(!errors.length,'Page errors');paint({ok:true,total:rows.length,rows,natural,errors});document.querySelector('#status').textContent=rows.length+'/'+selected.length+' correctas';
+ }catch(error){errors.push(error.message);paint({ok:false,total:rows.length,rows,errors,diagnostic:diagnostic()});document.querySelector('#status').textContent='Error';}finally{voice?.dispose();button.disabled=false;}
 };addEventListener('pagehide',()=>voice?.dispose());
 </script></html>
