@@ -3,7 +3,7 @@ import {farAtmosphere} from './far-atmosphere.js';
 import {createMountainArcGeometry} from './mountain-arcs.js';
 // Decorative biome silhouettes intentionally have no procedural-world identity.
 // They sit beyond faithful vegetation and move with a small, bounded parallax.
-export function createBiomeBackdrop(world,texture,{radius=430,height=null,parallax=.03,fogMix=null,fogBaseMix=null,mirrored=false,arcLayout=null,nightTint=[.187675676,.302022472,.661818182],fogDayColor='#b5d9e8',fogNightColor='#263747'}={}){
+export function createBiomeBackdrop(world,texture,{radius=430,height=null,parallax=.03,fogMix=null,fogBaseMix=null,mirrored=false,arcLayout=null,stableAltitude=arcLayout!==null,nightTint=[.187675676,.302022472,.661818182],fogDayColor='#b5d9e8',fogNightColor='#263747'}={}){
  farAtmosphere({fogDayColor,fogNightColor});
  if(![radius,parallax].every(Number.isFinite)||radius<=0||parallax<0||parallax>1)throw Error('Invalid biome backdrop settings');
  if(typeof mirrored!=='boolean')throw Error('Invalid biome backdrop wrapping');
@@ -16,6 +16,11 @@ export function createBiomeBackdrop(world,texture,{radius=430,height=null,parall
  if(!Array.isArray(nightTint)||nightTint.length!==3||!nightTint.every(v=>Number.isFinite(v)&&v>=0&&v<=1))throw Error('Invalid biome backdrop night tint');
  if(arcLayout!==null&&!Array.isArray(arcLayout))throw Error('Invalid mountain arc layout');
  if(arcLayout&&mirrored)throw Error('Mountain arcs cannot mirror their atlas');
+ if(typeof stableAltitude!=='boolean')throw Error('Invalid backdrop altitude policy');
+ // Distant decorative mountains must not ride the cliff beneath a moving
+ // camera. Keep the initial terrain datum; vertical orbit/zoom never changes it.
+ const altitude=stableAltitude?world.nav.field.surface(world.camera.position.x,world.camera.position.z):null;
+ if(stableAltitude&&!Number.isFinite(altitude))throw Error('Invalid backdrop altitude');
  const geometry=arcLayout?createMountainArcGeometry(radius,arcLayout):new THREE.CylinderGeometry(radius,radius,height,64,1,true);
  texture.colorSpace=THREE.SRGBColorSpace;texture.generateMipmaps=true;
  if(mirrored){texture.wrapS=THREE.MirroredRepeatWrapping;texture.needsUpdate=true;}
@@ -30,5 +35,5 @@ export function createBiomeBackdrop(world,texture,{radius=430,height=null,parall
  geometries.push(geometry);const mesh=new THREE.Mesh(geometry,material);mesh.position.y=arcLayout?0:height/2-35;mesh.renderOrder=-1000;root.add(mesh);
  root.name='biome-2d-backdrop';world.scene.add(root);let closed=false;
  const fogDay=new THREE.Color(fogDayColor),fogNight=new THREE.Color(fogNightColor);
- return {root,update(){if(closed)return;root.position.set(world.camera.position.x-Math.tanh((world.camera.position.x-anchor.x)/1000)*1000*parallax,world.nav.field.surface(world.camera.position.x,world.camera.position.z),world.camera.position.z-Math.tanh((world.camera.position.z-anchor.z)/1000)*1000*parallax);uniforms.uBackdropFog.value.copy(fogDay).lerp(fogNight,world.toon.uniforms.uNight.value);},dispose(){if(closed)return;closed=true;root.removeFromParent();for(const geometry of geometries)geometry.dispose();material.dispose();}};
+ return {root,update(){if(closed)return;root.position.set(world.camera.position.x-Math.tanh((world.camera.position.x-anchor.x)/1000)*1000*parallax,altitude??world.nav.field.surface(world.camera.position.x,world.camera.position.z),world.camera.position.z-Math.tanh((world.camera.position.z-anchor.z)/1000)*1000*parallax);uniforms.uBackdropFog.value.copy(fogDay).lerp(fogNight,world.toon.uniforms.uNight.value);},dispose(){if(closed)return;closed=true;root.removeFromParent();for(const geometry of geometries)geometry.dispose();material.dispose();}};
 }
