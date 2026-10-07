@@ -272,3 +272,6 @@ Estado: integrado en main mediante [PR #5](https://github.com/dossijeo/wild-guar
 
 
 [Recogida física de caja — SFX 117](qa/sfx-crate-pickup/README.md): contacto nativo de tarea crate, separado del SFX 026 al caer y del ingreso al entregar. 67 pruebas/build/paquete correctos; fixture de navegador con decodificación Opus, caída/recogida/entrega única y limpieza. Catálogo actual: 91 asignados/35 pendientes. Prueba silenciada y sin mundo 3D; escucha/mezcla y aceptación móvil pendientes.
+
+
+[Cosecha y primera noche en el juego real](qa/game-harvest-first-night/README.md): continuación Sabana/Mapungubwe, tarea automática al madurar con saldo sin ingresar, entrega única posterior, facóquero visible con autocentrado y recordatorio de escudo sin toast duplicado. Amanecer día2 con contratación automática y cuatro retratos visibles. 13 pruebas/build/paquete; diagnóstico solo DEV. No acredita visualmente todo el transporte, protección con escudo, Gran Cañón, móvil físico ni campaña intensiva.
