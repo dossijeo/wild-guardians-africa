@@ -14,7 +14,7 @@ function recover(record,slotId) {
 export class BrowserSaveRepository {
   constructor(storage,{database=globalThis.indexedDB,name='wild-guardians-saves'}={}) {
     this.legacy=new SaveRepository(storage);this.database=database;this.name=name;
-    this.connection=null;this.pending=Promise.resolve();
+    this.connection=null;this.pending=Promise.resolve();this.lastCommitted=null;
   }
   open() {
     if(!this.connection)this.connection=new Promise((resolve,reject)=>{
@@ -23,7 +23,7 @@ export class BrowserSaveRepository {
       request.onerror=()=>{this.connection=null;reject(request.error);};
       request.onblocked=()=>{this.connection=null;reject(Error('El almacenamiento de partidas está ocupado por otra ventana.'));};
       request.onsuccess=()=>{
-        const db=request.result;db.onversionchange=()=>{db.close();this.connection=null;};resolve(db);
+        const db=request.result;db.onversionchange=()=>{db.close();this.connection=null;this.lastCommitted=null;};resolve(db);
       };
     });
     return this.connection;
@@ -52,13 +52,21 @@ export class BrowserSaveRepository {
         const tx=db.transaction('slots','readwrite'),store=tx.objectStore('slots'),request=store.get(slotId);
         request.onsuccess=()=>{
           let backup=request.result?.backup;
-          try{snapshot(request.result?.primary,slotId);backup=request.result.primary;}catch{/* Keep a valid older recovery copy. */}
+          // Only the exact bytes already validated and durably written by this
+          // repository can bypass parsing. Other tabs and corrupt copies still
+          // take the complete validation path. Retain at most one snapshot.
+          const previous=request.result?.primary;
+          try{
+            if(this.lastCommitted?.slotId!==slotId||this.lastCommitted.text!==previous)snapshot(previous,slotId);
+            backup=previous;
+          }catch{/* Keep a valid older recovery copy. */}
           if(!backup)try{backup=serialize(this.legacy.load(slotId));}catch{/* New slot. */}
           store.put({slotId,primary:text,backup});
         };
         tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error??Error('No se pudo guardar la partida.'));
         tx.onerror=()=>{};
       });
+      this.lastCommitted={slotId,text};
       // Only clean up the old backend after the durable transaction completed.
       try{this.legacy.delete(slotId);}catch{/* The committed IndexedDB copy has priority. */}
     });
@@ -86,6 +94,7 @@ export class BrowserSaveRepository {
         const tx=db.transaction('slots','readwrite');tx.objectStore('slots').delete(slotId);
         tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error??Error('No se pudo eliminar la partida.'));tx.onerror=()=>{};
       });
+      if(this.lastCommitted?.slotId===slotId)this.lastCommitted=null;
       this.legacy.delete(slotId);
     });
   }
