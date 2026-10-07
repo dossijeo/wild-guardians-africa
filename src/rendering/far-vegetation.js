@@ -3,12 +3,14 @@ import {createBiomeBackdrop} from './biome-backdrop.js';
 import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
+import {farAtmosphere} from './far-atmosphere.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
 export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
+ farAtmosphere(options);
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');

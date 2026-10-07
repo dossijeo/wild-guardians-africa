@@ -9,9 +9,11 @@ import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
 import {skyNight} from '../../src/rendering/sky.js';
 import {Fog,Frustum,Matrix4,Color} from 'three';
 import {attachNativeFarGround} from './native-far-ground.js';
+import {farAtmosphere} from '../../src/rendering/far-atmosphere.js';
 
 // Explicit QA opt-in. Atlas resources remain owned by the caller.
-export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,bakedOnly=false,groundTreeBases=null,groundStep=8,start=100,end=140,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,fadeStart=280,fadeEnd=330}){
+export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,bakedOnly=false,groundTreeBases=null,groundStep=8,start=100,end=140,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380}){
+ farAtmosphere({fogStart,fogEnd});
  if(![densityStart,densityEnd,densityMinimum,fadeStart,fadeEnd].every(Number.isFinite)||densityStart<end||densityEnd<=densityStart||densityMinimum<0||densityMinimum>1||fadeStart<densityEnd||fadeEnd<=fadeStart||fadeEnd>treeHalf-64)throw Error('Invalid native far landscape distances');
  if(!Number.isInteger(slot)||slot<0||slot>3||world.nav.config.biome==='canyons'&&slot>1)throw Error('Invalid native far species slot');
  if(ownsWorld&&world.farVegetation)throw Error('Far layer already attached');
@@ -24,7 +26,7 @@ export async function attachNativeFarWorld(world,{metadata,texture,prelitAtlas,s
  const stats={regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,errors};
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
- const fog=new Fog('#b5d9e8',160,380),fogDay=new Color('#b5d9e8'),fogNight=new Color('#263747');
+ const fog=new Fog('#b5d9e8',fogStart,fogEnd),fogDay=new Color('#b5d9e8'),fogNight=new Color('#263747');
  const layer=new NativeFarLayer({scene:world.scene,source:world.prototypes[slot][0],texture,metadata,treesOnly:!includeGround,selectTrees:trees=>trees.filter(t=>t.slot===slot),attachData:(p,data)=>{if(data.ground)attachNativeFarGround(p,data.ground,world);},options:{toon:bakedOnly?null:world.toon,prelitAtlas,start,end,slot,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
   if(bakedOnly)candidate.uniforms.uNight=world.toon.uniforms.uNight;
   candidate.uniforms.uDensityEnabled.value=1;candidate.uniforms.uDensityRange.value.set(densityStart,densityEnd);candidate.uniforms.uDensityMinimum.value=densityMinimum;candidate.uniforms.uDistanceFadeRange.value.set(fadeStart,fadeEnd);
