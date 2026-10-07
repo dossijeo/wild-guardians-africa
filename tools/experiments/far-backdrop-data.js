@@ -17,4 +17,15 @@ export function backdropProfile(biome,layer){
  }
  return points;
 }
-export function backdropSvg(biome){const paths=Array.from({length:3},(_,layer)=>`<path d="M 0,512 L ${backdropProfile(biome,layer).map(p=>p.join(',')).join(' L ')} L 2048,512 Z" fill="${colors[biome][layer]}"/>`);return `<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="512" viewBox="0 0 2048 512">${paths.join('')}</svg>`;}
+export function backdropSvg(biome){const paths=Array.from({length:3},(_,layer)=>{
+ const profile=backdropProfile(biome,layer),base=`<path d="M 0,512 L ${profile.map(p=>p.join(',')).join(' L ')} L 2048,512 Z" fill="${colors[biome][layer]}"/>`;
+ if(biome!=='savanna')return base;
+ // Low contrast relief is baked offline. Every facet follows its actual skyline
+ // segment before descending into the opaque body: no clipping masks or holes.
+ const facets=[];
+ for(let start=0;start<profile.length-1;start+=16){const contour=profile.slice(start,Math.min(start+17,profile.length));if(contour.length<2)continue;
+ const left=contour[0][0],right=contour.at(-1)[0],tip=left+(right-left)*(.35+((start/16+layer)%3)*.13),shade=(start/16+layer)%2===0?'#69553e':'#eadbc4';
+ facets.push(`<path d="M ${contour.map(p=>p.join(',')).join(' L ')} L ${tip},512 Z" fill="${shade}" opacity="${.065+layer*.015}"/>`);
+ }
+ return base+facets.join('');
+ });return `<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="512" viewBox="0 0 2048 512">${paths.join('')}</svg>`;}
