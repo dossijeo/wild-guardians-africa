@@ -29,3 +29,11 @@ test('biome heights preserve source proportions and open angular valleys',()=>{
  assert.throws(()=>mountainArcComposition(cells,712,{height:0}),/Invalid/);
  assert.throws(()=>mountainArcComposition(cells,712,{baseY:NaN}),/Invalid/);
 });
+test('a reviewed individual cell height corrects a low silhouette without changing other arcs or closing valleys',()=>{
+ const source=cells.map(cell=>({...cell,uv:[...cell.uv]}));source[3].heightScale=110/(130*80/110);const before=JSON.stringify(source),original=mountainArcComposition(cells,712,{height:130}),arcs=mountainArcComposition(source,712,{height:130});
+ assert.deepEqual(arcs.slice(0,3),original.slice(0,3));assert.ok(Math.abs(arcs[3].height-110)<1e-12);assert.equal(arcs[3].baseY,-35);assert.equal(arcs[3].aspect,4);assert.equal(JSON.stringify(source),before);
+ for(let i=0;i<4;i++){const next=arcs[(i+1)%4],gap=next.angle+(i===3?2*Math.PI:0)-arcs[i].angle-(arcs[i].height+next.height)*4/860;assert.ok(gap>.35);}
+ const geometry=createMountainArcGeometry(430,arcs);assert.equal(geometry.index.count,288);assert.equal(geometry.groups.length,0);geometry.dispose();
+ for(const heightScale of [NaN,0,2])assert.throws(()=>mountainArcComposition([...cells.slice(0,3),{...cells[3],heightScale}],712,{height:130}),/height scale/);
+ assert.throws(()=>mountainArcComposition([{...cells[0],heightScale:1.5},...cells.slice(1)],712,{height:160}),/height scale/);
+});
