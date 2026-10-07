@@ -5,6 +5,7 @@ import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
 import {farAtmosphere} from './far-atmosphere.js';
+import {farVegetationProfile} from './far-vegetation-profile.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
 // RGBA8 plus mip estimate from loaded dimensions; this is not driver RAM.
@@ -17,6 +18,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  const atmosphere=farAtmosphere(options);
  if(typeof logicalStandbyPreload!=='boolean')throw Error('Invalid logical standby option');
  if(typeof includeFarGround!=='boolean')throw Error('Invalid far ground option');
+ if(options.qualityDriven!==undefined&&typeof options.qualityDriven!=='boolean')throw Error('Invalid far quality policy');
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
@@ -41,7 +43,16 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   }
   const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
   backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
-  owner={enabled:true,adapters,stats:{logicalStandbyPreload,species:species.length,estimatedAtlasTextureBytes:results.reduce((sum,{value:{metadata,day,night}})=>sum+textureStorageEstimate(day,metadata.atlasWidth??1024,metadata.atlasHeight??1024)+textureStorageEstimate(night,metadata.atlasWidth??1024,metadata.atlasHeight??1024),0),estimatedBackdropTextureBytes:textureStorageEstimate(backdropTexture,2048,512),errors:[]},update(dt){
+  owner={enabled:true,adapters,configureQuality(quality){
+   if(closed||!options.qualityDriven)return false;
+   const next=farVegetationProfile({quality,biome:world.nav.config.biome});
+   // Quality changes only the small-tree band. The large-tree/prewarm extent
+   // stays owned by the existing banks, so no atlas or geometry is reloaded.
+   if(JSON.stringify(next.transitionHeight)!==JSON.stringify(transitionHeight)||next.end>transitionEnd)throw Error('Far quality policy exceeds prepared extent');
+   if(adapters.some(adapter=>typeof adapter.configureTransition!=='function'))throw Error('Far quality adapter cannot update its transition');
+   for(const adapter of adapters)adapter.configureTransition(next.start,next.end,transitionHeight);
+   start=next.start;end=next.end;visualRange=next.visualRange;return true;
+  },stats:{logicalStandbyPreload,species:species.length,estimatedAtlasTextureBytes:results.reduce((sum,{value:{metadata,day,night}})=>sum+textureStorageEstimate(day,metadata.atlasWidth??1024,metadata.atlasHeight??1024)+textureStorageEstimate(night,metadata.atlasWidth??1024,metadata.atlasHeight??1024),0),estimatedBackdropTextureBytes:textureStorageEstimate(backdropTexture,2048,512),errors:[]},update(dt){
    if(cancelled()){release();return;}world.farResidentRange=this.enabled&&residentRange!==null?residentRange:previousRange;world.farVisualRange=this.enabled&&visualRange!==null?visualRange:previousVisual;world.farPreserveTerrain=this.enabled&&visualRange!==null?preserveTerrain:previousPreserve;world.farPropTransitionDistance=this.enabled&&visualRange!==null&&preserveTerrain?transitionEnd+transitionMargin:previousTransition;world.farPropTransitionSlots=this.enabled&&visualRange!==null&&preserveTerrain?transitionSlots:previousSlots;world.assetGroups.omitZeroColor=this.enabled;backdrop.root.visible=this.enabled;backdrop.update();
    for(const adapter of adapters){adapter.enabled=this.enabled;adapter.update(dt);}
    if(!this.enabled)world.scene.fog=previousFog;

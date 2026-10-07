@@ -2,7 +2,20 @@ import {prepareNativeFarGpu} from '../tools/experiments/prepare-native-far-gpu.j
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
 import {attachBiomeFarVegetation} from '../src/rendering/far-vegetation.js';
 const metadata={slot:0,localBase:[0,0,0],day:'./assets/day.webp',night:'./assets/night.webp'};
+import {farVegetationProfile} from '../src/rendering/far-vegetation-profile.js';
 function fixture(){const textures=[],controllers=[],world={scene:new THREE.Scene(),assetGroups:{omitZeroColor:false},nav:{config:{biome:'savanna'}},loading:new AbortController(),disposed:false};const services={loadManifest:async()=>({biomes:{savanna:[metadata]}}),loadTexture:async()=>{const texture=new THREE.Texture();texture.releases=0;texture.addEventListener('dispose',()=>texture.releases++);textures.push(texture);return texture;},attachSpecies:async()=>{const controller={update(){},dispose(){this.disposed=true;}};controllers.push(controller);return controller;},makeBackdrop:()=>({root:{visible:true},update(){},dispose(){}})};return {world,services,textures,controllers};}
+
+test('integrated quality changes reuse owned adapters and atlas resources within the prepared extent',async()=>{
+ const f=fixture(),updates=[];f.world.quality='media';const attach=f.services.attachSpecies;
+ f.services.attachSpecies=async(world,options)=>{const a=await attach(world,options);a.configureTransition=(start,end,policy)=>updates.push({start,end,policy});return a;};
+ const owner=await attachBiomeFarVegetation(f.world,farVegetationProfile({quality:'media',biome:'savanna'}),f.services),textures=[...f.textures],adapters=[...owner.adapters];
+ for(const [quality,range,visualRange]of [['alta',[120,160],2],['muy_baja',[70,100],1],['media',[90,120],1]]){
+  f.world.quality=quality;assert.equal(owner.configureQuality(quality),true);owner.update(0);assert.deepEqual([updates.at(-1).start,updates.at(-1).end],range);assert.deepEqual(updates.at(-1).policy,{minimumHeight:24,start:200,end:240});assert.equal(f.world.farVisualRange,visualRange);assert.equal(f.world.farPropTransitionDistance,248);assert.deepEqual(f.textures,textures);assert.deepEqual(owner.adapters,adapters);assert.ok(textures.every(t=>t.releases===0));
+ }
+ assert.throws(()=>owner.configureQuality('invalid'),/quality/);assert.equal(updates.length,3);owner.dispose();assert.equal(owner.configureQuality('alta'),false);assert.equal(updates.length,3);assert.ok(textures.every(t=>t.releases===1));
+ const legacy=fixture(),oldOwner=await attachBiomeFarVegetation(legacy.world,{},legacy.services);assert.equal(oldOwner.configureQuality('alta'),false);oldOwner.dispose();
+ const invalid=fixture();await assert.rejects(attachBiomeFarVegetation(invalid.world,{qualityDriven:'yes'},invalid.services),/quality policy/);assert.equal(invalid.textures.length,0);
+});
 test('attachment loads only selected biome resources and releases them once on world close',async()=>{const f=fixture(),owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(f.textures.length,3);assert.equal(owner.stats.species,1);owner.update(0);assert.equal(f.world.assetGroups.omitZeroColor,true);owner.dispose();owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));assert.ok(f.controllers.every(c=>c.disposed));assert.equal(f.world.farVegetation,null);assert.equal(f.world.assetGroups.omitZeroColor,false);});
 test('atmosphere options reach the biome adapter and invalid distances allocate no resources',async()=>{
  const f=fixture();let received;const original=f.services.attachSpecies;f.services.attachSpecies=async(world,options)=>{received=options;return original(world,options);};
