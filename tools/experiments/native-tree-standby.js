@@ -32,7 +32,7 @@ function geometryView(source,capacity){
 export class NativeTreeStandby {
  constructor({scene,sources,prepare,start=40,end=60,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<end||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
+  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,estimatedPreparedMatrixCpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
@@ -63,25 +63,45 @@ export class NativeTreeStandby {
    // zero-fade entries can then be excluded by count without matrix uploads.
    for(const rows of bank.rows)rows.sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
    for(const [level,mesh] of bank.meshes.entries()){const rows=bank.rows[level];mesh.count=rows.length;mesh.visible=rows.length>0;for(const [i,d] of rows.entries()){const offset=i*16;mesh.instanceMatrix.array.set(d.matrix,offset);mesh.instanceMatrix.array[offset+12]=d.matrix[12]-bank.root.position.x;mesh.instanceMatrix.array[offset+14]=d.matrix[14]-bank.root.position.z;}mesh.instanceMatrix.needsUpdate=true;mesh.geometry.attributes.nativeVisibility.array.fill(0);mesh.geometry.attributes.nativeVisibility.needsUpdate=true;}
+   // The fence covers every identity/transform. Preserve those exact float32
+   // rows separately while the same GPU buffers later draw a compact subset.
+   bank.preparedMatrices=bank.meshes.map(mesh=>new Float32Array(mesh.instanceMatrix.array));bank.drawRows=bank.rows.map(rows=>rows.slice());
    await this.prepare(bank.root,()=>this.closed);if(this.closed)break;
    // A generation may change between the preparation promise and adoption.
    if([...wanted.values()].some(d=>d.resource!==this.sourceKey(d.level)))throw new NativeFarGpuCancelled('resources-changed');
    this.active?.root.removeFromParent();this.active=bank;this.scene.add(bank.root);this.revision++;this.stats.preparations++;this.stats.trees=wanted.size;
+   this.stats.estimatedPreparedMatrixCpuBytes=this.banks.filter(Boolean).reduce((sum,b)=>sum+(b.preparedMatrices??[]).reduce((n,a)=>n+a.byteLength,0),0);
    this.stats.estimatedOwnedGpuBytes=this.banks.filter(Boolean).reduce((sum,b)=>sum+b.meshes.reduce((n,m)=>n+m.instanceMatrix.array.byteLength+(m.geometry.index?.array.byteLength??0)+Object.values(m.geometry.attributes).reduce((v,a)=>v+a.array.byteLength,0),0),0);
   }}catch(error){if(!this.closed){if(error instanceof NativeFarGpuCancelled)this.stats.cancelledPreparations++;else{this.stats.errors.push(String(error));this.onError(error);}}}
   finally{this.busy=false;if(this.closed){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}else if(this.pending)void this.run();}
  }
+ drawDiagnosis(id){
+  const bank=this.active;if(!bank)return null;
+  for(const [level,rows]of bank.drawRows.entries()){const drawIndex=rows.findIndex(d=>d.id===id);if(drawIndex<0)continue;const preparedIndex=bank.rows[level].indexOf(rows[drawIndex]),mesh=bank.meshes[level];
+   const expected=Array.from(bank.preparedMatrices[level].subarray(preparedIndex*16,preparedIndex*16+16)),actual=Array.from(mesh.instanceMatrix.array.subarray(drawIndex*16,drawIndex*16+16));
+   return {id,level,drawIndex,preparedIndex,count:mesh.count,key:rows[drawIndex].key,expected,actual,matrixExact:actual.every((v,i)=>v===expected[i]),matrixVersion:mesh.instanceMatrix.version,visibilityVersion:mesh.geometry.attributes.nativeVisibility.version,visibility:mesh.geometry.attributes.nativeVisibility.getX(drawIndex)};
+  }return null;
+ }
  update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1,frustum=null){
-  let rendered=0,submittedInstances=0,submittedTriangles=0,visibleTriangles=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){
-   const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1,live=0,lastLive=-1;
-   for(const [i,d] of this.active.rows[level].entries()){
+  let rendered=0,submittedInstances=0,submittedTriangles=0,visibleTriangles=0;if(!this.active)return;
+  const bank=this.active;for(const [level,mesh] of bank.meshes.entries()){
+   const attribute=mesh.geometry.attributes.nativeVisibility,drawRows=bank.drawRows[level],prepared=bank.preparedMatrices[level];let first=Infinity,last=-1,matrixFirst=Infinity,matrixLast=-1,live=0;
+   for(const [i,d]of bank.rows[level].entries()){
     const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),this.start,this.end,state.ready)):0);
-    if(value>0){live++;rendered++;lastLive=i;}if(attribute.array[i]!==value){attribute.array[i]=value;first=Math.min(first,i);last=i;}
+    if(value<=0)continue;
+    // A permutation contains only exact, already-fenced transforms. No new
+    // source/identity/LOD is accepted by this draw packing operation.
+    for(let j=0;j<16;j++){const offset=live*16+j,next=prepared[i*16+j];if(mesh.instanceMatrix.array[offset]!==next){mesh.instanceMatrix.array[offset]=next;matrixFirst=Math.min(matrixFirst,offset);matrixLast=offset;}}
+    if(attribute.array[live]!==value){attribute.array[live]=value;first=Math.min(first,live);last=live;}
+    drawRows[live]=d;live++;
    }
-   mesh.visible=live>0;mesh.count=lastLive+1;const triangles=standbySubmittedTriangles(mesh);submittedInstances+=mesh.count;submittedTriangles+=triangles;visibleTriangles+=mesh.count?triangles*live/mesh.count:0;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
+   drawRows.length=live;mesh.visible=live>0;mesh.count=live;rendered+=live;submittedInstances+=live;const triangles=standbySubmittedTriangles(mesh);submittedTriangles+=triangles;visibleTriangles+=triangles;
+   if(matrixLast>=matrixFirst){mesh.instanceMatrix.addUpdateRange(matrixFirst,matrixLast-matrixFirst+1);mesh.instanceMatrix.needsUpdate=true;}
+   if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   }Object.assign(this.stats,{rendered,submittedInstances,maskedInstances:submittedInstances-rendered,submittedTriangles,visibleTriangles});
  }
+
  release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();}}
- clearStats(){this.stats.submittedInstances=0;this.stats.maskedInstances=0;this.stats.submittedTriangles=0;this.stats.visibleTriangles=0;this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
+ clearStats(){this.stats.estimatedPreparedMatrixCpuBytes=0;this.stats.submittedInstances=0;this.stats.maskedInstances=0;this.stats.submittedTriangles=0;this.stats.visibleTriangles=0;this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
  dispose(){if(this.closed)return;this.closed=true;this.pending=null;this.active?.root.removeFromParent();this.stats.rendered=0;if(!this.busy){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}}
 }

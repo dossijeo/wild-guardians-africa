@@ -11,5 +11,5 @@ function motionSummary(motion){
  return {...rest,allNear:auditSummary(allNear),transitionReadinessDropCount:transitionReadinessDrops?.length??0,densitySampleCount:densitySamples?.length??0};
 }
 export function compactFarReport(report){
- return {...report,diagnostics:'Full traces: Exportar diagnóstico completo',motion:motionSummary(report.motion),sequence:report.sequence?{...report.sequence,results:report.sequence.results.map(row=>({...row,motion:motionSummary(row.motion)}))}:report.sequence};
+ return {...report,standbyUpload:report.standbyUpload?{...report.standbyUpload,draws:report.standbyUpload.draws.map(({rows,...draw})=>({...draw,rowCount:rows.length}))}:report.standbyUpload,diagnostics:'Full traces: Exportar diagnóstico completo',motion:motionSummary(report.motion),sequence:report.sequence?{...report.sequence,results:report.sequence.results.map(row=>({...row,motion:motionSummary(row.motion)}))}:report.sequence};
 }

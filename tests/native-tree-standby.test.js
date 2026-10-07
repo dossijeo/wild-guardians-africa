@@ -83,16 +83,16 @@ test('missing physical chunk bridges with retained uploaded identity without wea
 });
 
 
-test('zero-fade tail is not submitted and returns without changing prepared packing',async()=>{
+test('zero-fade rows are omitted and return with exact prepared transforms',async()=>{
  const f=fixture(),near=tree('near',5),middle=tree('middle',30),far=tree('far',80);
  f.owner.request([descriptor(far),descriptor(middle),descriptor(near)],{x:0,z:0});await settled(f.owner);
- const bank=f.owner.active,mesh=bank.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(mesh.instanceMatrix.array),revision=f.owner.revision;
+ const bank=f.owner.active,mesh=bank.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(bank.preparedMatrices[0]),revision=f.owner.revision;
  assert.deepEqual(bank.rows[0].map(d=>d.id),['near','middle','far']);
  const trees=new Map([near,middle,far].map(t=>[t.id,t])),state=()=>({ready:1,enabled:true});
  f.owner.update({x:0,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,2);assert.equal(f.owner.stats.rendered,2);
- f.owner.update({x:80,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,3);assert.equal(f.owner.has('far',far),true);
+ f.owner.update({x:80,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,2);assert.equal(f.owner.has('far',far),true);assert.equal(f.owner.drawDiagnosis('far').matrixExact,true);
  f.owner.update({x:300,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,0);assert.equal(mesh.visible,false);
- assert.equal(mesh.instanceMatrix.version,version);assert.deepEqual(Array.from(mesh.instanceMatrix.array),matrices);assert.equal(f.owner.revision,revision);
+ assert.ok(mesh.instanceMatrix.version>version);assert.deepEqual(Array.from(bank.preparedMatrices[0]),matrices);assert.equal(f.owner.revision,revision);
  assert.equal(f.owner.has('near',near,new Set(['near'])),false);f.close();
 });
 
@@ -155,15 +155,15 @@ test('control: registry adoption invalidates a fence captured before the first r
 });
 
 
-test('submission accounting keeps masked interior rows visible in cost diagnostics without changing packing',async()=>{
+test('submission compaction omits interior zero-fade rows with exact ID and transform mapping',async()=>{
  const f=fixture(),a=tree('a',5),b=tree('b',20),c=tree('c',30);
  f.owner.request([a,b,c].map(t=>descriptor(t)),{x:0,z:0});await settled(f.owner);
- const mesh=f.owner.active.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(mesh.instanceMatrix.array);
+ const bank=f.owner.active,mesh=bank.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(bank.preparedMatrices[0]);
  f.owner.update({x:0,z:0},new Map([a,b,c].map(t=>[t.id,t])),()=>({enabled:true,ready:1}),id=>id==='b',new Set());
- assert.equal(f.owner.stats.rendered,2);assert.equal(f.owner.stats.submittedInstances,3);assert.equal(f.owner.stats.maskedInstances,1);
- assert.equal(f.owner.stats.submittedTriangles,36);assert.equal(f.owner.stats.visibleTriangles,24);
- assert.equal(standbySubmittedTriangles(mesh),36);assert.equal(mesh.instanceMatrix.version,version);assert.deepEqual(Array.from(mesh.instanceMatrix.array),matrices);
- mesh.geometry.setDrawRange(3,12);assert.equal(standbySubmittedTriangles(mesh),12);
+ assert.equal(f.owner.stats.rendered,2);assert.equal(f.owner.stats.submittedInstances,2);assert.equal(f.owner.stats.maskedInstances,0);
+ assert.equal(f.owner.stats.submittedTriangles,24);assert.equal(f.owner.stats.visibleTriangles,24);
+ assert.equal(standbySubmittedTriangles(mesh),24);assert.ok(mesh.instanceMatrix.version>version);assert.deepEqual(Array.from(bank.preparedMatrices[0]),matrices);assert.deepEqual(bank.drawRows[0].map(d=>d.id),['a','c']);assert.equal(f.owner.drawDiagnosis('c').preparedIndex,2);assert.equal(f.owner.drawDiagnosis('c').drawIndex,1);assert.equal(f.owner.drawDiagnosis('c').matrixExact,true);assert.equal(f.owner.drawDiagnosis('b'),null);
+ mesh.geometry.setDrawRange(3,12);assert.equal(standbySubmittedTriangles(mesh),8);
  f.owner.dispose();assert.equal(f.owner.stats.submittedTriangles,0);assert.equal(f.owner.stats.submittedInstances,0);f.close();
 });
 
@@ -186,8 +186,8 @@ test('standby frustum uses cached full-source global envelopes without revoking 
  assert.equal(f.owner.stats.rendered,1);assert.equal(mesh.count,1);assert.equal(f.owner.has(b.id,b),true);
  camera.rotation.y=Math.PI;camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
  f.owner.update({x:0,z:0},trees,state,()=>false,new Set(),()=>1,frustum);
- assert.equal(f.owner.stats.rendered,1);assert.equal(mesh.count,2);assert.equal(mesh.geometry.attributes.nativeVisibility.getX(1),1);
- assert.equal(mesh.instanceMatrix.version,version);assert.equal(bank.entries.get(a.id).bounds,bounds);assert.equal(f.owner.has(a.id,a),true);f.close();
+ assert.equal(f.owner.stats.rendered,1);assert.equal(mesh.count,1);assert.equal(mesh.geometry.attributes.nativeVisibility.getX(0),1);assert.equal(f.owner.drawDiagnosis(b.id).matrixExact,true);
+ assert.ok(mesh.instanceMatrix.version>version);assert.equal(bank.entries.get(a.id).bounds,bounds);assert.equal(f.owner.has(a.id,a),true);f.close();
 });
 
 test('standby envelope includes every LOD and preserves edge visibility for rotated nonuniform trees',async()=>{
@@ -199,4 +199,22 @@ test('standby envelope includes every LOD and preserves edge visibility for rota
  const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.updateMatrixWorld(true);const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
  assert.equal(frustum.containsPoint(new THREE.Vector3(t.x,t.y,t.z)),false);assert.equal(frustum.intersectsBox(bounds),true);
  f.owner.update({x:0,z:0},new Map([[t.id,t]]),()=>({enabled:true,ready:1}),()=>false,new Set(),()=>1,frustum);assert.equal(f.owner.stats.rendered,1);f.close();large.dispose();
+});
+
+test('compact draw mapping stays an exact prepared subset through moving masks, LODs, suppression and epochs',async()=>{
+ const f=fixture(),trees=Array.from({length:24},(_,i)=>tree('id-'+i,i*2)),map=new Map(trees.map(t=>[t.id,t]));let epoch=0;f.owner.resourceRevision=()=>epoch;
+ f.owner.request(trees.map((t,i)=>descriptor(t,i%2)),{x:0,z:0});await settled(f.owner);const bank=f.owner.active,proof=bank.preparedMatrices.map(a=>Array.from(a)),revision=f.owner.revision;
+ for(let frame=0;frame<40;frame++){
+  const suppressed=new Set([trees[frame%24].id]),native=id=>(Number(id.slice(3))+frame)%4===0;
+  f.owner.update({x:frame,z:0},map,()=>({enabled:true,ready:1}),native,suppressed);
+  for(const [level,mesh]of bank.meshes.entries()){
+   assert.equal(mesh.count,bank.drawRows[level].length);assert.equal(mesh.visible,mesh.count>0);
+   for(const row of bank.drawRows[level]){const d=f.owner.drawDiagnosis(row.id);assert.equal(d.level,level);assert.equal(d.matrixExact,true);assert.equal(d.visibility>0,true);assert.equal(suppressed.has(row.id),false);assert.equal(native(row.id),false);assert.equal(f.owner.has(row.id,map.get(row.id),suppressed),true);}
+   assert.deepEqual(Array.from(bank.preparedMatrices[level]),proof[level]);
+  }
+  assert.equal(f.owner.stats.maskedInstances,0);assert.equal(f.owner.revision,revision);
+ }
+ const versions=bank.meshes.map(m=>[m.instanceMatrix.version,m.geometry.attributes.nativeVisibility.version]);
+ f.owner.update({x:39,z:0},map,()=>({enabled:true,ready:1}),id=>(Number(id.slice(3))+39)%4===0,new Set([trees[39%24].id]));assert.deepEqual(bank.meshes.map(m=>[m.instanceMatrix.version,m.geometry.attributes.nativeVisibility.version]),versions);
+ epoch++;f.owner.update({x:39,z:0},map,()=>({enabled:true,ready:1}),()=>false,new Set());assert.equal(f.owner.stats.rendered,0);assert.ok(bank.meshes.every(m=>m.count===0));assert.equal(f.owner.has(trees[0].id,trees[0]),false);f.close();
 });
