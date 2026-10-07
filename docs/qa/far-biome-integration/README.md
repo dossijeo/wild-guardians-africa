@@ -171,3 +171,15 @@ The next candidate unions the original square with a horizontal circle intersect
 A baselines drift3.7%; B is close to their average and does not demonstrate GPU improvement. These samples are not converted into promised FPS. The larger circle also brings back small props/shadows that should disappear earlier, so the next candidate separates them: the original square remains for small vegetation/debris/stones and a circle extends only the biome's actual tree slots. Clipped terrain pieces retain their existing handling. Twenty-seven grouping/shadow/ownership/navigation tests pass, including current native matrix populations and legacy unmerged layers.
 
 `canyon-tree-circle-approach.json` repeats the same path after this separation:385/406 ready transition frames, zero selected-tree descents, unchanged state/errors0. The one other-tree decline remains explicitly outside frustum. Final residency is9small-prop chunks/12tree chunks/25exact terrain-picking chunks. Native combined cost for this tree-only circle is still pending; the all-prop circular measurement cannot describe it.
+## Combined cost of tree-only circular residency (f2302ca)
+
+`savanna-tree-circle-abba.json` is a fresh native measurement with the same paused seed712 Sabana/Mapungubwe/media camera, 1280×720 CSS viewport and 1600×900 world framebuffer. Each lot has45 warmup and120 measured frames; all480 GPU queries resolve without disjoint/discard/context loss, and logical state remains identical.
+
+| Lot | GPU p50 ms | CPU render p50 ms | Draws | Triangles |
+| --- | --- | --- | --- | --- |
+| A1 native |21.399|6.2|59|960014|
+| B1 tree-only circle |20.325|6.2|55|810914|
+| B2 tree-only circle |20.544|6.2|55|810914|
+| A2 native |21.611|6.7|59|960014|
+
+The two B medians are about5% below the average A median in this single scene, with A medians differing about1%. This supports a local GPU-cost reduction for this variant; it does not establish an FPS gain across biomes, qualities, motion or devices. Frame-time distributions remain noisy. The extra native tree casters remain while small-prop casters follow the smaller square, so this is a deliberate distant-detail change rather than pixel-equivalent rendering. Visual/motion acceptance in the remaining biomes is still pending and normal gameplay remains OFF.
