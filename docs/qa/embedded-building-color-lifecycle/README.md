@@ -25,7 +25,7 @@ The reviewed candidate introduces no obvious added motif, roof-seam, destruction
 
 This is a frozen front-view render sequence over a flat QA floor, with fixed native day/night light. Six biome labels repeat that same native building lighting; they do not establish six full-world scenes or different building palettes. The bottom report panel obscures part of the floor/base, and the toolbar may obscure high flying debris. No HDR environment, continuous-collapse video, worker repair route, reconstruction charge, economic behavior, mobile result, RAM saving or frame-time improvement is established here.
 
-Lifecycle review of Etiope, Saheliana and Musgum remains pending. The five cultures' separate intact/35%/65% front/back day/night reviews are archived in `../embedded-building-color-native`. These candidates have not yet replaced the production building GLBs.
+Lifecycle capture and bounded visual review of all five cultures are now complete. The five cultures' separate intact/35%/65% front/back day/night reviews are archived in `../embedded-building-color-native`. These candidates have not yet replaced the production building GLBs.
 
 ## Suajili lifecycle and directed regressions
 
@@ -34,3 +34,11 @@ Tab 681 captured and closed after the same eight-state sequence: 32 screenshots 
 The first navigation on port 5173 remained on the loading header without initializing the module or producing an error log. It did not yield evidence and was not counted as a successful run. Navigation of the same tab to the existing main QA server on port 5181 initialized the lifecycle correctly; all archived Suajili captures come from that successful page. No production fix or explanation of the earlier server's module initialization is claimed.
 
 On main `640fe0e9`, `node --test tests/buildings.test.js tests/destruction-native.test.js tests/approved-embedded-colors.test.js tests/embedded-candidate-key.test.js` passed all 34 tests with no skipped/cancelled cases (19.672 s). [Full output, line endings normalized to LF](directed-tests.txt), SHA-256 `3340e714046e41978d366e7725375b6bd39579743c08e7aad6d86d5f9f05225e`. These regressions cover native destruction, renderer state recovery, real rounded repair debits, source/recipe guards and model-specific candidate isolation. Their building fixtures use original models and mocked renderer paths; the browser captures separately exercise the actual compressed GLBs and GPU passes. Neither result establishes physical mobile acceptance or a performance improvement.
+
+## Etiope, Saheliana and Musgum lifecycle
+
+Tabs 682, 683 and 684 each captured the same eight states and were closed after capture. Each culture archives 32 original 1280 × 720 JPEG screenshots, eight finished reports and 96 GPU readback pairs. The independent verifier passed for all three with the actual runtime/candidate hashes, expected native states, matching camera/target, zero GL/fixture errors, empty console warning/error logs and exact initial/repaired/rebuilt screenshot bytes within each variant/light. Across five cultures this lifecycle evidence totals 160 screenshots and 480 readback pairs.
+
+All 96 additional images were visually reviewed using uncropped 640 × 360 previews in paired day/night contact sheets; the six original full-resolution collapse-middle/day images were also inspected individually. No obvious added roof, motif, plaster, destruction-edge or particle defect was observed at that framing. This bounded review does not establish every texture texel, hidden surfaces, continuous animation or device acceptance. Originals, states and receipts are archived; contact sheets are only local review aids.
+
+Reproduce the additional receipt checks with `node tools/verify_native_building_color_evidence.mjs etiope --lifecycle`, then the same command for `saheliana` and `musgum`. Production installation and independent verification of the rebuilt GLBs remain pending.
