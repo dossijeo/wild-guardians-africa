@@ -21,3 +21,11 @@ Límites: prueba aislada de CPU, no frametime, FPS, RAM ni campaña integrada. L
 Validación: 59 pruebas dirigidas de reglas, eventos, cadenas físicas, reconstrucción nativa de los ocho cultivos y FIFO correctas. Tras la corrección final se repiten las 44 de reglas/eventos/cadenas, además de build y paquete web: 641 archivos, 859 enlaces relativos, 20 GLB runtime. La comprobación del paquete no acredita experiencia móvil ni calidad visual.
 
 Reproducción: extraer los bytes de `git show 312a2ca:src/simulation/crops.js` a un archivo temporal conservando LF; ejecutar `node tools/benchmark_crop_water_scan.mjs <archivo-referencia> <salida.json>` desde la raíz. La sonda importa las reglas actuales para ambas versiones y aborta ante cualquier diferencia de estado.
+
+## Comprobación integrada posterior
+
+`integrated.json` registra una jornada completa en cada uno de los seis biomas, cultura Mapungubwe, seed712, cultivos mixtos y contratación pagada de ancianas, incluida ampliación de plantilla a mitad del día. Ambos mundos usan los mismos comandos ordinarios y navegación nativa. Coinciden exactamente el guardado final, los recuentos de eventos, el informe diario y ocho puntos de control completos muestreados durante cada partida. Las seis terminan una noche sin derrota y con entregas físicas.
+
+El estado final y los puntos de control incluyen plantas, deuda hídrica, tareas FIFO, trabajadores, cajas, dinero e incursión. Esto comprueba comportamiento integrado; no demuestra equivalencia en los intervalos entre muestras ni constituye una campaña de 100 noches. No cubre todas las culturas, móvil o renderizado. La magia durante crecimiento se compara en la sonda aislada anterior, no se desbloquea en estas jornadas iniciales.
+
+La referencia es una copia de fuentes y herramientas actuales con únicamente `crops.js` sustituido por los bytes de `312a2ca`. Al finalizar se compararon todos los archivos de `src`: la única diferencia era ese archivo, cuyos hashes quedan registrados como auditoría posterior. Para repetir, preparar esa copia y ejecutar `node tools/check_crop_water_integrated.mjs <raíz-referencia> <salida.json>`. No se introducen overrides de economía, tiempo, daño o recorridos para conseguir un resultado favorable.
