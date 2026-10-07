@@ -34,6 +34,8 @@ Estado: [conversión experimental de los 147 audios medida](qa/opus-conversion/R
 
 ## Imágenes WebP y Tinify (pedido el 5 de octubre de 2026)
 
+Estado actual en `dadf056d`: [recetas y candidatas contrastadas](qa/tinify-building-runtime/color-approval-status.json). Hay 14 colores embebidos aprobados e instalados (cinco bestias, cuatro trabajadores de gameplay y cinco casas). Del lote histórico de 16 candidatas quedan cinco pendientes de revisión nativa —diorama del menú y cuatro variantes de labs de trabajadores— y dos colores de cultivos rechazados por calidad. Las cifras de preparación/lotes inferiores son históricas; no deben interpretarse como 16 colores todavía pendientes. Normales/datos mantienen sus gates específicos.
+
 Estado embebido actual: [lote completo preparado](qa/embedded-color-batch-preparation/README.md). Las cinco bestias tienen sus colores revisados instalados; quedan 16 colores con entradas PNG sin pérdida preparadas desde originales y 42 normales/datos para revisión específica. Los PNG intermedios están en caché, fuera del paquete. Treinta pruebas correctas; todavía no hay conversiones nuevas ni ahorro adicional en esta entrega.
 
 Resultado del lote: [16 candidatas Tinify comprobadas](qa/embedded-color-batch-candidates/README.md). Catorce pasan los gates independientes y quedan para revisión visual; las dos texturas de cultivos se rechazan por calidad inferior a 32 dB. Ahorro potencial de las candidatas que pasan: 5.741.092 bytes, sin integración ni ahorro distribuido nuevo. Doce salidas únicas y sus recibos se conservan fuera de public; 24 pruebas correctas.
