@@ -1,219 +1,800 @@
 TAP version 13
-# Subtest: far atmosphere retains the existing default and permits a band around the handoff
-ok 1 - far atmosphere retains the existing default and permits a band around the handoff
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 1 - native shadow population combines color bins once using the final original variant and stable GPU matrices
   ---
-  duration_ms: 4.1707
+  duration_ms: 26.637
   ...
-# (node:45040) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 2 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 43.9747
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 3 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 10.4393
+  ...
+# Subtest: decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+ok 4 - decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+  ---
+  duration_ms: 9.1084
+  ...
+# Subtest: invalid backdrop fog mix rejects before mutating the scene or texture
+ok 5 - invalid backdrop fog mix rejects before mutating the scene or texture
+  ---
+  duration_ms: 1.6687
+  ...
+# Subtest: decorative fog uses the shared atmosphere palette through the day/night transition
+ok 6 - decorative fog uses the shared atmosphere palette through the day/night transition
+  ---
+  duration_ms: 3.8167
+  ...
+# Subtest: optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+ok 7 - optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+  ---
+  duration_ms: 1.8304
+  ...
+# (node:29704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: offline atlases cover the native tree slots, preserve alpha and match both baked phases
+ok 8 - offline atlases cover the native tree slots, preserve alpha and match both baked phases
+  ---
+  duration_ms: 5813.0963
+  ...
+# Subtest: far atmosphere retains the existing default and permits a band around the handoff
+ok 9 - far atmosphere retains the existing default and permits a band around the handoff
+  ---
+  duration_ms: 4.3272
+  ...
+# (node:10976) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: offline backdrop silhouettes are deterministic, periodic and fit their fixed transparent atlas
-ok 2 - offline backdrop silhouettes are deterministic, periodic and fit their fixed transparent atlas
+ok 10 - offline backdrop silhouettes are deterministic, periodic and fit their fixed transparent atlas
   ---
-  duration_ms: 47.5038
+  duration_ms: 75.4598
   ...
 # Subtest: savanna layers have independent relief instead of sharing parallel height offsets
-ok 3 - savanna layers have independent relief instead of sharing parallel height offsets
+ok 11 - savanna layers have independent relief instead of sharing parallel height offsets
   ---
-  duration_ms: 2.6722
+  duration_ms: 2.7934
   ...
 # Subtest: savanna baked facets retain a solid body under the skyline instead of introducing alpha seams
-ok 4 - savanna baked facets retain a solid body under the skyline instead of introducing alpha seams
+ok 12 - savanna baked facets retain a solid body under the skyline instead of introducing alpha seams
   ---
-  duration_ms: 376.3981
+  duration_ms: 320.0527
   ...
 # Subtest: deployed backdrops match the offline generator and retain transparent sky at fixed resolution
-ok 5 - deployed backdrops match the offline generator and retain transparent sky at fixed resolution
+ok 13 - deployed backdrops match the offline generator and retain transparent sky at fixed resolution
   ---
-  duration_ms: 2445.8304
+  duration_ms: 2774.4853
   ...
 # Subtest: river skyline uses independent broad rolling relief without parallel low bands
-ok 6 - river skyline uses independent broad rolling relief without parallel low bands
+ok 14 - river skyline uses independent broad rolling relief without parallel low bands
   ---
-  duration_ms: 1.1434
+  duration_ms: 1.3755
   ...
-# (node:26888) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: approach reverses through the whole transition without changing height
+ok 15 - approach reverses through the whole transition without changing height
+  ---
+  duration_ms: 2.5638
+  ...
+# Subtest: orbit keeps distance and completes a full turn around a rotated starting direction
+ok 16 - orbit keeps distance and completes a full turn around a rotated starting direction
+  ---
+  duration_ms: 1.0961
+  ...
+# Subtest: lateral sweep visits both sides and returns to its starting pose
+ok 17 - lateral sweep visits both sides and returns to its starting pose
+  ---
+  duration_ms: 1.7092
+  ...
+# Subtest: native far paths traverse the configured 100–140 band and keep rotated orbital distance
+ok 18 - native far paths traverse the configured 100–140 band and keep rotated orbital distance
+  ---
+  duration_ms: 1.1561
+  ...
+# Subtest: contact insertion reaches authored foot height without moving trees or increasing base sampling
+ok 19 - contact insertion reaches authored foot height without moving trees or increasing base sampling
+  ---
+  duration_ms: 7.0879
+  ...
+# Subtest: grid edge and triangle diagonal contacts share a vertex across all affected triangles
+ok 20 - grid edge and triangle diagonal contacts share a vertex across all affected triangles
+  ---
+  duration_ms: 1.1911
+  ...
+# Subtest: outside and duplicate contacts do not add unused vertices
+ok 21 - outside and duplicate contacts do not add unused vertices
+  ---
+  duration_ms: 0.5945
+  ...
+# Subtest: seeded regional terrain reaches every native anisotropic foot without changing procedural instances
+ok 22 - seeded regional terrain reaches every native anisotropic foot without changing procedural instances
+  ---
+  duration_ms: 849.1122
+  ...
+# Subtest: far ground samples native surface once per indexed vertex and preserves triangle orientation and anchors
+ok 23 - far ground samples native surface once per indexed vertex and preserves triangle orientation and anchors
+  ---
+  duration_ms: 4.8493
+  ...
+# Subtest: height proxy retains deterministic real terrain relief and uses far fewer triangles than metre grid
+ok 24 - height proxy retains deterministic real terrain relief and uses far fewer triangles than metre grid
+  ---
+  duration_ms: 454.5857
+  ...
+# Subtest: proxy samples source colours per vertex and washes detail without shifting terrain
+ok 25 - proxy samples source colours per vertex and washes detail without shifting terrain
+  ---
+  duration_ms: 0.6396
+  ...
+# Subtest: far density preserves all faithful objects and converges smoothly and deterministically on approach
+ok 26 - far density preserves all faithful objects and converges smoothly and deterministically on approach
+  ---
+  duration_ms: 194.7017
+  ...
+# Subtest: cylindrical billboard ignores camera height and remains perpendicular to the horizontal view
+ok 27 - cylindrical billboard ignores camera height and remains perpendicular to the horizontal view
+  ---
+  duration_ms: 0.4965
+  ...
+# Subtest: atlas preserves tree rotation, interpolates neighbouring views and wraps through zero
+ok 28 - atlas preserves tree rotation, interpolates neighbouring views and wraps through zero
+  ---
+  duration_ms: 0.5895
+  ...
+# Subtest: model anchor transforms to the identical billboard base at every procedural rotation and scale
+ok 29 - model anchor transforms to the identical billboard base at every procedural rotation and scale
+  ---
+  duration_ms: 0.7615
+  ...
+# Subtest: bidirectional LOD retains impostor until model readiness and ramps in late models
+ok 30 - bidirectional LOD retains impostor until model readiness and ramps in late models
+  ---
+  duration_ms: 0.5825
+  ...
+# Subtest: near selection reuses quiet-camera results, excludes the far field, and invalidates geometry/readiness changes
+ok 31 - near selection reuses quiet-camera results, excludes the far field, and invalidates geometry/readiness changes
+  ---
+  duration_ms: 2.2634
+  ...
+# Subtest: anisotropic atlas angle agrees with inverse native model transform and screen projection
+ok 32 - anisotropic atlas angle agrees with inverse native model transform and screen projection
+  ---
+  duration_ms: 72.6401
+  ...
+# Subtest: fallback model origin preserves the exact native base under anisotropic scales
+ok 33 - fallback model origin preserves the exact native base under anisotropic scales
+  ---
+  duration_ms: 0.798
+  ...
+# Subtest: native-backed impostors allocate no duplicate 3D resources and preserve per-tree state
+ok 34 - native-backed impostors allocate no duplicate 3D resources and preserve per-tree state
+  ---
+  duration_ms: 12.3675
+  ...
+# Subtest: decoded normal rotates and rescales like the native inverse-transpose matrix
+ok 35 - decoded normal rotates and rescales like the native inverse-transpose matrix
+  ---
+  duration_ms: 6.8932
+  ...
+# Subtest: cancelled angular directions and transparent samples use the stable fallback
+ok 36 - cancelled angular directions and transparent samples use the stable fallback
+  ---
+  duration_ms: 1.3298
+  ...
+# Subtest: near audit catches unselected species regression and omission but ignores a tree the camera left
+ok 37 - near audit catches unselected species regression and omission but ignores a tree the camera left
+  ---
+  duration_ms: 2.7604
+  ...
+# Subtest: initial loading is counted without inventing a descent, and trace storage is bounded
+ok 38 - initial loading is counted without inventing a descent, and trace storage is bounded
+  ---
+  duration_ms: 1.1695
+  ...
+# Subtest: stationary, orbit and grid-edge jitter never trigger regional sampling
+ok 39 - stationary, orbit and grid-edge jitter never trigger regional sampling
+  ---
+  duration_ms: 48.5135
+  ...
+# Subtest: settled travel updates both coordinates once; reverse travel must cross the hysteresis margin
+ok 40 - settled travel updates both coordinates once; reverse travel must cross the hysteresis margin
+  ---
+  duration_ms: 1.5169
+  ...
+# Subtest: rapid travel waits for latest region to settle and invalid focus produces no request
+ok 41 - rapid travel waits for latest region to settle and invalid focus produces no request
+  ---
+  duration_ms: 0.4092
+  ...
+# Subtest: regional request covers every direction with fixed, grid-aligned bounds and terrain margin
+ok 42 - regional request covers every direction with fixed, grid-aligned bounds and terrain margin
+  ---
+  duration_ms: 1.0347
+  ...
+# Subtest: failed region can reset to retained centre and retry after settling again
+ok 43 - failed region can reset to retained centre and retry after settling again
+  ---
+  duration_ms: 0.3587
+  ...
+# (node:29800) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: muy_baja: a compact visual world retains the normal raid border and logical prop state
+ok 44 - muy_baja: a compact visual world retains the normal raid border and logical prop state
+  ---
+  duration_ms: 5.1144
+  ...
+# Subtest: baja: a compact visual world retains the normal raid border and logical prop state
+ok 45 - baja: a compact visual world retains the normal raid border and logical prop state
+  ---
+  duration_ms: 0.962
+  ...
+# Subtest: media: a compact visual world retains the normal raid border and logical prop state
+ok 46 - media: a compact visual world retains the normal raid border and logical prop state
+  ---
+  duration_ms: 1.5151
+  ...
+# Subtest: alta: a compact visual world retains the normal raid border and logical prop state
+ok 47 - alta: a compact visual world retains the normal raid border and logical prop state
+  ---
+  duration_ms: 0.7349
+  ...
+# Subtest: visual-only compaction preserves exact terrain picking, CPU residency, raid bounds, and restores visibility
+ok 48 - visual-only compaction preserves exact terrain picking, CPU residency, raid bounds, and restores visibility
+  ---
+  duration_ms: 29.3771
+  ...
+# Subtest: tree-only compaction keeps exact ground and native horizon extents while shortening prop color residency
+ok 49 - tree-only compaction keeps exact ground and native horizon extents while shortening prop color residency
+  ---
+  duration_ms: 1.4543
+  ...
+# Subtest: experimental resident radius retains the native lattice and never changes default quality
+ok 50 - experimental resident radius retains the native lattice and never changes default quality
+  ---
+  duration_ms: 52.8608
+  ...
+# Subtest: native worker returns identical scene arrays and detaches all transferred buffers
+ok 51 - native worker returns identical scene arrays and detaches all transferred buffers
+  ---
+  duration_ms: 2151.3397
+  ...
+# Subtest: native worker vegetation-only protocol returns the same trees with no ground transfers
+ok 52 - native worker vegetation-only protocol returns the same trees with no ground transfers
+  ---
+  duration_ms: 365.9434
+  ...
+# Subtest: loader resolves once and releases worker handlers on success
+ok 53 - loader resolves once and releases worker handlers on success
+  ---
+  duration_ms: 1.0377
+  ...
+# Subtest: loader cancellation prevents construction or cancels an active request and ignores late data
+ok 54 - loader cancellation prevents construction or cancels an active request and ignores late data
+  ---
+  duration_ms: 2.5347
+  ...
+# Subtest: worker error, decode error and post failures reject and terminate once
+ok 55 - worker error, decode error and post failures reject and terminate once
+  ---
+  duration_ms: 0.9344
+  ...
+# Subtest: overlapping regional scenes keep identical native tree IDs and transforms
+ok 56 - overlapping regional scenes keep identical native tree IDs and transforms
+  ---
+  duration_ms: 1257.4268
+  ...
+# Subtest: stream retains complete region during a replacement and ignores stale completion
+ok 57 - stream retains complete region during a replacement and ignores stale completion
+  ---
+  duration_ms: 4.2222
+  ...
+# Subtest: duplicate requests share a worker and completed keys reuse the resident result
+ok 58 - duplicate requests share a worker and completed keys reuse the resident result
+  ---
+  duration_ms: 0.3654
+  ...
+# Subtest: failure preserves old region and can be retried; obsolete errors do not replace current errors
+ok 59 - failure preserves old region and can be retried; obsolete errors do not replace current errors
+  ---
+  duration_ms: 2.3179
+  ...
+# Subtest: dispose aborts once and late arrays cannot become resident; queued obsolete loads never start
+ok 60 - dispose aborts once and late arrays cannot become resident; queued obsolete loads never start
+  ---
+  duration_ms: 1.3249
+  ...
+# Subtest: returning to the resident region cancels an intermediate load without regeneration
+ok 61 - returning to the resident region cancels an intermediate load without regeneration
+  ---
+  duration_ms: 0.5607
+  ...
+# Subtest: savanna: far species keep exact native identities across seed and chunk boundaries
+ok 62 - savanna: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 1027.9202
+  ...
+# Subtest: grand_river: far species keep exact native identities across seed and chunk boundaries
+ok 63 - grand_river: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 605.6101
+  ...
+# Subtest: mangrove: far species keep exact native identities across seed and chunk boundaries
+ok 64 - mangrove: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 795.2129
+  ...
+# Subtest: volcanoes: far species keep exact native identities across seed and chunk boundaries
+ok 65 - volcanoes: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 425.9927
+  ...
+# Subtest: canyons: far species keep exact native identities across seed and chunk boundaries
+ok 66 - canyons: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 230.2223
+  ...
+# Subtest: desert: far species keep exact native identities across seed and chunk boundaries
+ok 67 - desert: far species keep exact native identities across seed and chunk boundaries
+  ---
+  duration_ms: 895.7111
+  ...
+# Subtest: far vegetation accepts only real large-tree slots and never canyon mesa slots
+ok 68 - far vegetation accepts only real large-tree slots and never canyon mesa slots
+  ---
+  duration_ms: 1.1034
+  ...
+# Subtest: independent tree readiness preserves neighbours and follows packed slots across camera movement
+ok 69 - independent tree readiness preserves neighbours and follows packed slots across camera movement
+  ---
+  duration_ms: 67.2268
+  ...
+# Subtest: tree-only queries equal complete native populations across seeds and chunk boundaries
+ok 70 - tree-only queries equal complete native populations across seeds and chunk boundaries
+  ---
+  duration_ms: 784.8219
+  ...
+# Subtest: atlas anchor preserves the original anisotropic native model transform
+ok 71 - atlas anchor preserves the original anisotropic native model transform
+  ---
+  duration_ms: 3.0745
+  ...
+# Subtest: overlapping moving regions retain exact acacia identity, anchor and anisotropic transform
+ok 72 - overlapping moving regions retain exact acacia identity, anchor and anisotropic transform
+  ---
+  duration_ms: 214.935
+  ...
+# Subtest: QA rejects hidden nested GPU failures even with clean global errors
+ok 73 - QA rejects hidden nested GPU failures even with clean global errors
+  ---
+  duration_ms: 50.4931
+  ...
+# Subtest: clean native resources keep global errors and support a not-yet-loaded owner
+ok 74 - clean native resources keep global errors and support a not-yet-loaded owner
+  ---
+  duration_ms: 0.3036
+  ...
+# (node:40988) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: attachment loads only selected biome resources and releases them once on world close
-ok 7 - attachment loads only selected biome resources and releases them once on world close
+ok 75 - attachment loads only selected biome resources and releases them once on world close
   ---
-  duration_ms: 8.1234
+  duration_ms: 6.3426
   ...
 # Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
-ok 8 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 76 - atmosphere options reach the biome adapter and invalid distances allocate no resources
   ---
-  duration_ms: 7.0494
+  duration_ms: 2.4595
   ...
 # Subtest: late texture arriving after attachment cancellation is immediately released
-ok 9 - late texture arriving after attachment cancellation is immediately released
+ok 77 - late texture arriving after attachment cancellation is immediately released
   ---
-  duration_ms: 11.9635
+  duration_ms: 8.5458
   ...
 # Subtest: late prepared species is disposed after world close without double-releasing earlier textures
-ok 10 - late prepared species is disposed after world close without double-releasing earlier textures
+ok 78 - late prepared species is disposed after world close without double-releasing earlier textures
   ---
-  duration_ms: 2.9265
+  duration_ms: 2.4217
   ...
 # Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
-ok 11 - configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 79 - configured visual radius is reversible on disable/dispose and validated before resource loading
   ---
-  duration_ms: 1.3276
+  duration_ms: 1.1821
   ...
 # Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
-ok 12 - visual-only radius retains loaded radius ownership and restores both preceding values
+ok 80 - visual-only radius retains loaded radius ownership and restores both preceding values
   ---
-  duration_ms: 1.0051
+  duration_ms: 0.8113
   ...
 # Subtest: prop transition circle is owned and restored independently of exact terrain residency
-ok 13 - prop transition circle is owned and restored independently of exact terrain residency
+ok 81 - prop transition circle is owned and restored independently of exact terrain residency
   ---
-  duration_ms: 2.7868
+  duration_ms: 2.1823
   ...
 # Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
-ok 14 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 82 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
   ---
-  duration_ms: 6.1097
+  duration_ms: 6.1694
   ...
 # Subtest: GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
-ok 15 - GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+ok 83 - GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
   ---
-  duration_ms: 14.9087
+  duration_ms: 9.2651
   ...
 # Subtest: failed zero-pixel draw restores renderer and parent before rejecting
-ok 16 - failed zero-pixel draw restores renderer and parent before rejecting
+ok 84 - failed zero-pixel draw restores renderer and parent before rejecting
   ---
-  duration_ms: 2.281
+  duration_ms: 1.699
   ...
 # Subtest: overlapping species compilation leaves culling unchanged until each synchronous upload draw
-ok 17 - overlapping species compilation leaves culling unchanged until each synchronous upload draw
+ok 85 - overlapping species compilation leaves culling unchanged until each synchronous upload draw
   ---
-  duration_ms: 2.028
+  duration_ms: 1.4312
   ...
 # Subtest: failed upload draw restores native mesh culling without changing intentionally unculled meshes
-ok 18 - failed upload draw restores native mesh culling without changing intentionally unculled meshes
+ok 86 - failed upload draw restores native mesh culling without changing intentionally unculled meshes
   ---
-  duration_ms: 14.3904
+  duration_ms: 0.7318
   ...
 # Subtest: cancelled preparation never compiles or draws
-ok 19 - cancelled preparation never compiles or draws
+ok 87 - cancelled preparation never compiles or draws
   ---
-  duration_ms: 1.9396
+  duration_ms: 0.817
   ...
 # Subtest: cancellation during fence polling releases the sync and leaves rendering restored
-ok 20 - cancellation during fence polling releases the sync and leaves rendering restored
+ok 88 - cancellation during fence polling releases the sync and leaves rendering restored
   ---
-  duration_ms: 1.5929
+  duration_ms: 49.4722
   ...
 # Subtest: texture preparation deduplicates and yields between bounded batches before compilation
-ok 21 - texture preparation deduplicates and yields between bounded batches before compilation
+ok 89 - texture preparation deduplicates and yields between bounded batches before compilation
   ---
-  duration_ms: 2.578
+  duration_ms: 0.9345
   ...
 # Subtest: cancelling between texture batches prevents remaining uploads and compilation
-ok 22 - cancelling between texture batches prevents remaining uploads and compilation
+ok 90 - cancelling between texture batches prevents remaining uploads and compilation
   ---
-  duration_ms: 4.5716
+  duration_ms: 2.752
   ...
 # Subtest: optional image decoding finishes before upload and cancellation prevents upload
-ok 23 - optional image decoding finishes before upload and cancellation prevents upload
+ok 91 - optional image decoding finishes before upload and cancellation prevents upload
   ---
-  duration_ms: 1.9236
+  duration_ms: 1.5082
   ...
 # Subtest: warm texture generations skip upload budgets but always compile, draw and fence new native packing
-ok 24 - warm texture generations skip upload budgets but always compile, draw and fence new native packing
+ok 92 - warm texture generations skip upload budgets but always compile, draw and fence new native packing
   ---
-  duration_ms: 3.0997
+  duration_ms: 2.5076
   ...
 # Subtest: context restoration invalidates warm texture budgets independently per renderer
-ok 25 - context restoration invalidates warm texture budgets independently per renderer
+ok 93 - context restoration invalidates warm texture budgets independently per renderer
   ---
-  duration_ms: 1.5111
+  duration_ms: 1.8516
   ...
 # Subtest: shared image source changes require a new upload budget even without texture wrapper version change
-ok 26 - shared image source changes require a new upload budget even without texture wrapper version change
+ok 94 - shared image source changes require a new upload budget even without texture wrapper version change
   ---
-  duration_ms: 0.7624
+  duration_ms: 0.7866
   ...
 # Subtest: closing a renderer owner releases texture and context listeners, including after restoration
-ok 27 - closing a renderer owner releases texture and context listeners, including after restoration
+ok 95 - closing a renderer owner releases texture and context listeners, including after restoration
   ---
-  duration_ms: 0.9159
+  duration_ms: 0.8464
   ...
 # Subtest: a late cancelled request cannot create an owner after its cache was released
-ok 28 - a late cancelled request cannot create an owner after its cache was released
+ok 96 - a late cancelled request cannot create an owner after its cache was released
   ---
-  duration_ms: 0.6759
+  duration_ms: 0.5593
   ...
 # Subtest: a cancelled generation keeps only uploads already completed for the next generation
-ok 29 - a cancelled generation keeps only uploads already completed for the next generation
+ok 97 - a cancelled generation keeps only uploads already completed for the next generation
   ---
-  duration_ms: 0.804
+  duration_ms: 0.7924
   ...
 # Subtest: a failed texture upload is never reused by a subsequent generation
-ok 30 - a failed texture upload is never reused by a subsequent generation
+ok 98 - a failed texture upload is never reused by a subsequent generation
   ---
-  duration_ms: 0.9647
+  duration_ms: 0.7971
   ...
 # Subtest: context restoration invalidates a completed native tree proof before any handoff can reuse it
-ok 31 - context restoration invalidates a completed native tree proof before any handoff can reuse it
+ok 99 - context restoration invalidates a completed native tree proof before any handoff can reuse it
   ---
-  duration_ms: 2.7381
+  duration_ms: 1.5632
+  ...
+# Subtest: loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+ok 100 - loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+  ---
+  duration_ms: 1.26
+  ...
+# Subtest: nonzero WebGL error rejects the native proof with its original code and releases the fence
+ok 101 - nonzero WebGL error rejects the native proof with its original code and releases the fence
+  ---
+  duration_ms: 0.8165
+  ...
+# Subtest: regional ground clips the current native rectangle and follows the shared render origin
+ok 102 - regional ground clips the current native rectangle and follows the shared render origin
+  ---
+  duration_ms: 6.0262
+  ...
+# Subtest: mapped far ground borrows biome tiles and freezes expensive detail without changing global uniforms
+ok 103 - mapped far ground borrows biome tiles and freezes expensive detail without changing global uniforms
+  ---
+  duration_ms: 4.0089
+  ...
+# Subtest: region replacement preserves old visual until prepared, retains tree state and borrows source resources
+ok 104 - region replacement preserves old visual until prepared, retains tree state and borrows source resources
+  ---
+  duration_ms: 21.131
+  ...
+# Subtest: obsolete or failed GPU preparation never replaces the resident visual
+ok 105 - obsolete or failed GPU preparation never replaces the resident visual
+  ---
+  duration_ms: 5.0149
+  ...
+# Subtest: vegetation-only worker requests allocate no terrain geometry buffers
+ok 106 - vegetation-only worker requests allocate no terrain geometry buffers
+  ---
+  duration_ms: 91.3019
+  ...
+# Subtest: disposal restores borrowed native color visibility without touching logical obstruction
+ok 107 - disposal restores borrowed native color visibility without touching logical obstruction
+  ---
+  duration_ms: 2.4651
+  ...
+# Subtest: prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+ok 108 - prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+  ---
+  duration_ms: 1.4275
+  ...
+# Subtest: another species or vegetation group cannot invalidate a completed fence of unchanged trees
+ok 109 - another species or vegetation group cannot invalidate a completed fence of unchanged trees
+  ---
+  duration_ms: 3.2347
+  ...
+# Subtest: own geometry, material recipe, LOD addition/removal and render-origin changes reject obsolete fences
+ok 110 - own geometry, material recipe, LOD addition/removal and render-origin changes reject obsolete fences
+  ---
+  duration_ms: 2.3508
+  ...
+# Subtest: camera motion, uniform fades and map iteration order do not create new renderable generations
+ok 111 - camera motion, uniform fades and map iteration order do not create new renderable generations
+  ---
+  duration_ms: 0.4374
+  ...
+# Subtest: another LOD packing and merged resource replacement preserve an unchanged near packing proof
+ok 112 - another LOD packing and merged resource replacement preserve an unchanged near packing proof
+  ---
+  duration_ms: 1.4618
+  ...
+# Subtest: partial completion accepts only unchanged LOD packing resources, never matrices or new IDs
+ok 113 - partial completion accepts only unchanged LOD packing resources, never matrices or new IDs
+  ---
+  duration_ms: 0.8898
+  ...
+# Subtest: own source/merged material or geometry and origin replacement revoke exactly the affected LOD proofs
+ok 114 - own source/merged material or geometry and origin replacement revoke exactly the affected LOD proofs
+  ---
+  duration_ms: 1.5288
+  ...
+# Subtest: PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+ok 115 - PCF preserves the original nine taps, slope compensation, bias and edge fade verbatim
+  ---
+  duration_ms: 3.7837
+  ...
+# Subtest: shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+ok 116 - shadow target keeps packed-color compatibility and native depth24 comparison through resizing
+  ---
+  duration_ms: 5.0847
+  ...
+# Subtest: native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+ok 117 - native depth pass applies polygon offset to custom and shared materials, restoring state on exception
+  ---
+  duration_ms: 7.6145
+  ...
+# Subtest: disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+ok 118 - disabled shadow passes do not allocate depth targets; shared uniforms follow enabled state and light VP
+  ---
+  duration_ms: 9.4264
+  ...
+# Subtest: Standard direct lighting uses native PCF while spot and point shadows keep their own source
+ok 119 - Standard direct lighting uses native PCF while spot and point shadows keep their own source
+  ---
+  duration_ms: 0.4278
+  ...
+# Subtest: ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+ok 120 - ground, actors and water share the same native depth sampler without replacing DEST custom-depth materials
+  ---
+  duration_ms: 4.0405
+  ...
+# Subtest: independent water retains one valid fallback across shader recompiles and releases it with the material
+ok 121 - independent water retains one valid fallback across shader recompiles and releases it with the material
+  ---
+  duration_ms: 2.4995
+  ...
+# Subtest: PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+ok 122 - PCF reuse remains valid only while Three lighting leaves the sampled normal unchanged
+  ---
+  duration_ms: 1.2176
+  ...
+# Subtest: loaded native chunk cannot replace impostor until color instances are packed; quiet frames reuse coverage
+ok 123 - loaded native chunk cannot replace impostor until color instances are packed; quiet frames reuse coverage
+  ---
+  duration_ms: 36.3191
+  ...
+# Subtest: native suppression, rebuilding and chunk retirement invalidate coverage without terrain regeneration
+ok 124 - native suppression, rebuilding and chunk retirement invalidate coverage without terrain regeneration
+  ---
+  duration_ms: 2.4385
+  ...
+# Subtest: coverage is species-specific and overlapping owners keep an ID until the final owner retires
+ok 125 - coverage is species-specific and overlapping owners keep an ID until the final owner retires
+  ---
+  duration_ms: 1.779
+  ...
+# Subtest: native CPU coverage and explicit GPU completion jointly gate per-ID transitions and suppression
+ok 126 - native CPU coverage and explicit GPU completion jointly gate per-ID transitions and suppression
+  ---
+  duration_ms: 2.9567
+  ...
+# Subtest: native LOD coverage drives actual prototype readiness buffers and hides both representations on suppression
+ok 127 - native LOD coverage drives actual prototype readiness buffers and hides both representations on suppression
+  ---
+  duration_ms: 9.3036
+  ...
+# Subtest: far coverage composes obstruction, preserves native logical coverage and reaches merged color groups
+ok 128 - far coverage composes obstruction, preserves native logical coverage and reaches merged color groups
+  ---
+  duration_ms: 10.7357
+  ...
+# Subtest: native far distance uses the authored bottom pivot with anisotropic scale and world yaw
+ok 129 - native far distance uses the authored bottom pivot with anisotropic scale and world yaw
+  ---
+  duration_ms: 1.6488
   ...
 # Subtest: retained proof requires current physical selection and matching native and procedural identities
-ok 32 - retained proof requires current physical selection and matching native and procedural identities
+ok 130 - retained proof requires current physical selection and matching native and procedural identities
   ---
-  duration_ms: 24.5227
+  duration_ms: 18.9796
   ...
 # Subtest: standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees
-ok 33 - standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees
+ok 131 - standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees
   ---
-  duration_ms: 4.5791
+  duration_ms: 6.2672
   ...
 # Subtest: previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it
-ok 34 - previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it
+ok 132 - previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it
   ---
-  duration_ms: 4.0433
+  duration_ms: 7.6643
   ...
 # Subtest: fallback renders only while its native replacement lacks proof, using exact transition and suppression
-ok 35 - fallback renders only while its native replacement lacks proof, using exact transition and suppression
+ok 133 - fallback renders only while its native replacement lacks proof, using exact transition and suppression
   ---
-  duration_ms: 3.0255
+  duration_ms: 3.2518
   ...
 # Subtest: inactive banks are reused and source GPU attribute identities remain borrowed only at CPU-array level
-ok 36 - inactive banks are reused and source GPU attribute identities remain borrowed only at CPU-array level
+ok 134 - inactive banks are reused and source GPU attribute identities remain borrowed only at CPU-array level
   ---
-  duration_ms: 3.5804
+  duration_ms: 4.5875
   ...
 # Subtest: world close during replacement removes visible bank and releases late buffers exactly once
-ok 37 - world close during replacement removes visible bank and releases late buffers exactly once
+ok 135 - world close during replacement removes visible bank and releases late buffers exactly once
   ---
-  duration_ms: 3.8556
+  duration_ms: 3.0151
   ...
 # Subtest: standby prunes distant identities and refuses to exceed its explicit population budget
-ok 38 - standby prunes distant identities and refuses to exceed its explicit population budget
+ok 136 - standby prunes distant identities and refuses to exceed its explicit population budget
   ---
-  duration_ms: 3.0304
+  duration_ms: 2.3026
   ...
 # Subtest: context restoration revokes retained GPU proof until a fresh owned-bank upload completes
-ok 39 - context restoration revokes retained GPU proof until a fresh owned-bank upload completes
+ok 137 - context restoration revokes retained GPU proof until a fresh owned-bank upload completes
   ---
-  duration_ms: 7.0677
+  duration_ms: 32.6161
   ...
 # Subtest: replacement source geometry cannot borrow the old bank buffers or its uploaded proof
-ok 40 - replacement source geometry cannot borrow the old bank buffers or its uploaded proof
+ok 138 - replacement source geometry cannot borrow the old bank buffers or its uploaded proof
   ---
-  duration_ms: 4.4886
+  duration_ms: 4.5907
   ...
 # Subtest: large world placement preserves fractional coordinates through a relative GPU bank anchor
-ok 41 - large world placement preserves fractional coordinates through a relative GPU bank anchor
+ok 139 - large world placement preserves fractional coordinates through a relative GPU bank anchor
   ---
-  duration_ms: 2.7992
+  duration_ms: 2.088
   ...
-1..41
-# tests 41
+# Subtest: static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+ok 140 - static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw
+  ---
+  duration_ms: 41.2112
+  ...
+# Subtest: unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+ok 141 - unchanged instance uploads reuse shadows; active instance values, count and growth uniforms invalidate
+  ---
+  duration_ms: 12.2547
+  ...
+# Subtest: geometry and per-object culling spheres invalidate depth without geometry or pose changes
+ok 142 - geometry and per-object culling spheres invalidate depth without geometry or pose changes
+  ---
+  duration_ms: 6.0173
+  ...
+# Subtest: skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+ok 143 - skin poses, morphs, cut holes, alpha textures, clipping and geometry replacement invalidate
+  ---
+  duration_ms: 6.7901
+  ...
+# Subtest: unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+ok 144 - unknown callbacks and custom depth shaders never reuse; failed draws never commit a snapshot
+  ---
+  duration_ms: 44.4841
+  ...
+# Subtest: temporary asset proxies participate before cache comparison and wrappers release in reverse order
+ok 145 - temporary asset proxies participate before cache comparison and wrappers release in reverse order
+  ---
+  duration_ms: 4.4494
+  ...
+# Subtest: context loss/restoration invalidates cached textures and disposal removes listeners
+ok 146 - context loss/restoration invalidates cached textures and disposal removes listeners
+  ---
+  duration_ms: 28.0047
+  ...
+# Subtest: instanced interleaved geometry compares its active prefix, including divisor and count
+ok 147 - instanced interleaved geometry compares its active prefix, including divisor and count
+  ---
+  duration_ms: 3.3068
+  ...
+# Subtest: restored shadow maps retain native comparison setup, proxy traversal order and release current hooks
+ok 148 - restored shadow maps retain native comparison setup, proxy traversal order and release current hooks
+  ---
+  duration_ms: 3.8794
+  ...
+# (node:36148) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 149 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 46.0884
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 150 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 0.7514
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 151 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 19.1149
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 152 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 1317.2537
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 153 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 1.7476
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 154 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.1864
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 155 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 17.3535
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 156 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.4876
+  ...
+1..156
+# tests 156
 # suites 0
-# pass 41
+# pass 156
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 3706.3092
+# duration_ms 6658.3538
