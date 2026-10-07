@@ -36,9 +36,10 @@ async function campaign(){
  const controlDiagnosis=options.has('controlDiagnosis');if(controlDiagnosis&&!sourceTwin)throw Error('Source-only diagnosis requires sourceTwin');
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
- const withheldVersion=options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
+ const withheldVersion=options.has('withheldV6')?6:options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
  const views={1:{fractions:[.125,.625],elevations:[25,55],azimuths:[22.5,67.5,157.5,247.5]},2:{fractions:[.375,.875],elevations:[40,70],azimuths:[11.25,101.25,191.25,281.25]},3:{fractions:[.3125,.8125],elevations:[35,65],azimuths:[33.75,123.75,213.75,303.75]},4:{fractions:[.1875,.6875],elevations:[30,60],azimuths:[18.75,108.75,198.75,288.75]}};
  views[5]={fractions:[.21875,.71875],elevations:[32.5,62.5],azimuths:[26.25,116.25,206.25,296.25]};
+ views[6]={fractions:[.40625,.90625],elevations:[37.5,67.5],azimuths:[54.375,144.375,234.375,324.375]};
  const {fractions,elevations,azimuths}=views[withheldVersion];
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
  const library=await fetch('/content/worker-actions.json').then(r=>r.json());
@@ -73,6 +74,7 @@ async function campaign(){
  }
  const camera=new THREE.PerspectiveCamera(42,1,.01,100),linear=new Float32Array(256);for(let i=0;i<256;i++){const v=i/255;linear[i]=v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
+ report.conditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
  report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
  report.candidateReceipt=sourceTwin?null:(await fetch('/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';

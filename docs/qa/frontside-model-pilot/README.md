@@ -695,3 +695,12 @@ radial fold). All four pilot meshes yield0eligible fans. The nonlinear height
 pow/smoothstep and radial fold prevent assuming a rest-pose dissolve preserves
 animated surfaces; no global decimation or solidify performed. This narrow
 negative screen is not proof that broader authored remodeling cannot succeed.
+
+Prospective worker V6 is reserved before drawing: clip fractions .40625/.90625,
+elevations37.5/67.5, azimuth54.375/144.375/234.375/324.375, same frozen e554227b
+packed candidate, policy2 and unchanged alpha/RGB limits. A limited Water
+screen can diagnose generalization with shadowFront separately, stopping at
+first failure or invalid control; neither is retried to seek exact controls.
+Remaining12clip/culture/biome/maps/shadow-ground/GPU gates stay required.
+Subsequent worker report CPU conditions come from an explicit campaign query
+instead of stale hardcoded frozen49032/39340. Historical reports are retained.
