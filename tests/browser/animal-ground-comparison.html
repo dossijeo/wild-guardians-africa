@@ -1,0 +1,77 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA apoyo nativo de bestias</title>
+<style>body{margin:0;background:#e7ddc6;color:#293025;font:14px system-ui}header{position:absolute;z-index:1;background:#fff9ed;padding:12px;left:0;right:0}button{padding:8px;margin:3px}canvas{width:100vw;height:100vh;display:block}#report{max-height:120px;overflow:auto;font-size:11px;margin:5px 0}#status{display:block}</style>
+<header>GLB runtime comprimidos, texturas y toon de producción. Comparación de altura con la fórmula anterior, sin simulación ni partidas guardadas.
+<div><button id="run" disabled>Comparar todas las poses</button><button id="walk" disabled>Ver caminar</button><button id="runPose" disabled>Ver correr</button><button id="attack" disabled>Ver ataque</button></div><output id="status">Preparando modelos…</output><pre id="report"></pre></header>
+<canvas id="view" aria-label="Cinco bestias a escala nativa con apoyo en el suelo"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {Assets,json} from '/src/rendering/assets.js';
+import {assetUrl} from '/src/rendering/asset-url.js';
+import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
+import {AfricanToon} from '/src/rendering/african-toon.js';
+import {installNativeShadow} from '/src/rendering/native-shadow.js';
+import {installShaderFailureGuard} from '/src/rendering/shader-failure.js';
+const status=document.querySelector('#status'),report=document.querySelector('#report'),canvas=document.querySelector('#view'),assets=new Assets(),actors=[],errors=[];
+let renderer,scene,camera,toon,sun,floor,releaseShadow,shaderGuard,presentationFrame;
+const result={fixtureVersion:'animal-ground-comparison-1',scope:'Native compressed models/textures, day toon and shadows on flat QA floor; no gameplay or performance measurement.',errors,poses:0,maximumGroundError:0,records:[],view:null};
+const point=new THREE.Vector3(),inverse=new THREE.Matrix4();
+const assert=(value,message)=>{if(!value)throw Error(message);};
+const paint=()=>{report.textContent=JSON.stringify(result,null,2);};
+function oldGroundHeight(actor){
+ const model=actor.model,saved=model.position.y;
+ try{
+  model.position.y=0;model.parent?.updateWorldMatrix(true,false);model.updateMatrixWorld(true);
+  if(model.parent)inverse.copy(model.parent.matrixWorld).invert();else inverse.identity();let minimum=Infinity;
+  for(const {mesh,index} of actor.groundSamples){mesh.getVertexPosition(index,point);point.applyMatrix4(mesh.matrixWorld).applyMatrix4(inverse);minimum=Math.min(minimum,point.y);}
+  return minimum<.022*model.scale.y?.022*model.scale.y-minimum:0;
+ }finally{model.position.y=saved;model.updateMatrixWorld(true);}
+}
+function pose(actor,name,phase,key){
+ const duration=actor.library.clips[name].duration,time=duration*phase;
+ const animal=['Walking','Running'].includes(name)?{species:actor.species,status:name==='Running'?'entering':'walking',motionPhase:time}:{species:actor.species,status:'attacking',animation:name,attackId:key,attackDuration:duration,attackRemaining:duration-time};
+ applyAnimalPose(actor,animal,time);return Math.abs(actor.model.position.y-oldGroundHeight(actor));
+}
+function initializeGraphics(){
+ if(renderer)return;
+ renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(1);renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
+ shaderGuard=installShaderFailureGuard(renderer);scene=new THREE.Scene();scene.background=new THREE.Color('#e7ddc6');camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100);camera.position.set(0,5,24);camera.lookAt(0,1,0);
+ sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-30,55,25);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-15,right:15,top:8,bottom:-8,near:.1,far:100});scene.add(sun,sun.target,new THREE.HemisphereLight('#ebf1d9','#765b3b',2));
+ toon=new AfricanToon();toon.update(0,sun,'sabana');releaseShadow=installNativeShadow(renderer,sun,toon.shadowUniforms);
+ floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+ for(const actor of actors){toon.apply(actor.model);actor.model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});scene.add(actor.root);}
+ // Keep frozen poses visible after the default WebGL drawing buffer is
+ // presented. No simulation or pose clocks advance in this presentation loop.
+ const present=()=>{try{renderer.render(scene,camera);if(shaderGuard.current)throw shaderGuard.current;presentationFrame=requestAnimationFrame(present);}catch(error){errors.push(error.message);result.state='failed';paint();status.textContent='Error: '+error.message;}};
+ presentationFrame=requestAnimationFrame(present);
+}
+function draw(name){
+ initializeGraphics();for(const actor of actors){actor.root.position.set(actor.column,0,0);actor.root.rotation.set(0,0,0);actor.root.scale.setScalar(1);actor.model.scale.setScalar(1);actor.model.rotation.set(0,0,0);pose(actor,name,.55,`view-${name}`);}
+ renderer.render(scene,camera);if(shaderGuard.current)throw shaderGuard.current;const glError=renderer.getContext().getError();assert(glError===0,'GL error '+glError);
+ result.view=name;result.glError=glError;paint();status.textContent=`${result.state??'Preparado'} · ${name} · cinco bestias a escala nativa1`;
+}
+document.querySelector('#run').onclick=async()=>{
+ try{
+  result.state='running';result.records.length=0;result.poses=0;result.maximumGroundError=0;
+  for(const actor of actors){
+   let maximum=0,count=0;
+   for(const name of ['Walking','Running','Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2'])for(let phase=0;phase<12;phase++){
+    actor.root.position.set(phase>5?4800:actor.column,.13*phase,-37*phase);actor.root.rotation.set(.03*phase,.27*phase,-.02*phase);actor.root.scale.set(1.1,.9,1.2);actor.model.scale.setScalar(phase%2?.75:1);actor.model.rotation.y=.11*phase;
+    const error=pose(actor,name,(phase+.25)/12,`${name}-${phase}`);assert(error<1e-9,`${actor.species}/${name}/${phase}: changed grounding`);maximum=Math.max(maximum,error);count++;
+   }
+   result.records.push({species:actor.species,runtimeUrl:actor.runtimeUrl,poses:count,groundSamples:actor.groundSamples.length,maximumGroundError:maximum});result.poses+=count;result.maximumGroundError=Math.max(result.maximumGroundError,maximum);paint();await new Promise(resolve=>setTimeout(resolve,0));
+  }
+  result.state='passed';paint();status.textContent='360 poses correctas; elegir una vista para comprobar renderizado';
+ }catch(error){errors.push(error.message);result.state='failed';paint();status.textContent='Error: '+error.message;}
+};
+for(const [button,name] of [['walk','Walking'],['runPose','Running'],['attack','Weapon_Combo_2']])document.querySelector('#'+button).onclick=()=>{try{draw(name);}catch(error){errors.push(error.message);result.state='failed';paint();}};
+try{
+ const libraries=(await json('/content/animal-actions.json')).animals;
+ for(const [column,[species,library]] of Object.entries(libraries).entries()){
+  const gltf=await assets.model(library.url),model=prepareAnimalModel(clone(gltf.scene),species),root=new THREE.Group();root.position.x=(column-2)*4;root.add(model);
+  actors.push({species,library,model,root,column:(column-2)*4,runtimeUrl:assetUrl(library.url),mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)});
+ }
+ status.textContent='Modelos preparados; GPU sin iniciar hasta elegir una vista';result.state='ready';paint();document.querySelectorAll('button').forEach(button=>button.disabled=false);
+}catch(error){errors.push(error.message);result.state='failed';paint();status.textContent='Error: '+error.message;}
+addEventListener('pagehide',()=>{cancelAnimationFrame(presentationFrame);for(const actor of actors){actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.model);actor.model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.skeleton.dispose();});}releaseShadow?.();sun?.shadow.dispose();floor?.geometry.dispose();floor?.material.dispose();assets.disposeModels();renderer?.dispose();renderer?.forceContextLoss();});
+</script></html>
