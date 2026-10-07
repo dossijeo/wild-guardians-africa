@@ -1,0 +1,1133 @@
+{
+  "source": "fa9698ee",
+  "cpuBackground": [
+    40968,
+    41304,
+    49032,
+    45948
+  ],
+  "results": [
+    {
+      "component": "no-sprites",
+      "rows": [
+        {
+          "mode": "no-sprites",
+          "gpuMedianMs": 5.718333,
+          "samples": 120,
+          "calls": 15,
+          "triangles": 87055
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.065,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.194479,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "no-sprites",
+          "gpuMedianMs": 4.832083,
+          "samples": 120,
+          "calls": 15,
+          "triangles": 87055
+        }
+      ],
+      "aTraceExact": true,
+      "bTraceExact": true,
+      "remainingDrawsExact": true,
+      "contextsExact": true,
+      "unchanged": true,
+      "hidden": false,
+      "errors": [],
+      "GL": 0,
+      "gpuStatus": {
+        "supported": true,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "unresolvedAtDispose": 0,
+        "contextLost": false,
+        "pending": 0
+      },
+      "removedDraws": [
+        {
+          "pass": "screen",
+          "object": "d8a56025-ccf3-49f6-a187-abb570c80e26",
+          "name": "",
+          "geometry": "928c19b3-8224-42bf-9dff-b2430b9608ba",
+          "material": "9543fea2-a7b7-49f2-88e3-bf1ac07d528c",
+          "materialVersion": 0,
+          "materialType": "ShaderMaterial",
+          "program": 57,
+          "recipe": "onBeforeCompile() {\n  }",
+          "count": 207,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 4,
+              "itemSize": 2,
+              "version": 0
+            },
+            "aTreeBase": {
+              "count": 207,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 621,
+                "bytes": 2484,
+                "hash": "2d801638"
+              }
+            },
+            "aTreeYaw": {
+              "count": 207,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 207,
+                "bytes": 828,
+                "hash": "0e7f58b8"
+              }
+            },
+            "aTreeScale": {
+              "count": 207,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 621,
+                "bytes": 2484,
+                "hash": "91d4d058"
+              }
+            },
+            "aTreeRank": {
+              "count": 207,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 207,
+                "bytes": 828,
+                "hash": "67f49390"
+              }
+            },
+            "aTreeTransitionWeight": {
+              "count": 207,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 207,
+                "bytes": 828,
+                "hash": "14b5f475"
+              }
+            },
+            "aTreeReady": {
+              "count": 207,
+              "itemSize": 1,
+              "version": 838,
+              "active": {
+                "elements": 207,
+                "bytes": 828,
+                "hash": "dc27e845"
+              }
+            }
+          },
+          "index": {
+            "count": 6,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "01855781-8ca2-412a-beb3-402c16a79fda",
+          "name": "",
+          "geometry": "facefd5a-5a22-40d4-93d1-95f65da426e8",
+          "material": "c2b8cc35-11d9-409e-85cd-eec97ef72396",
+          "materialVersion": 0,
+          "materialType": "ShaderMaterial",
+          "program": 55,
+          "recipe": "onBeforeCompile() {\n  }",
+          "count": 370,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 4,
+              "itemSize": 2,
+              "version": 0
+            },
+            "aTreeBase": {
+              "count": 370,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 1110,
+                "bytes": 4440,
+                "hash": "987836c6"
+              }
+            },
+            "aTreeYaw": {
+              "count": 370,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 370,
+                "bytes": 1480,
+                "hash": "ea6d5543"
+              }
+            },
+            "aTreeScale": {
+              "count": 370,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 1110,
+                "bytes": 4440,
+                "hash": "a1b39f98"
+              }
+            },
+            "aTreeRank": {
+              "count": 370,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 370,
+                "bytes": 1480,
+                "hash": "0d789c67"
+              }
+            },
+            "aTreeTransitionWeight": {
+              "count": 370,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 370,
+                "bytes": 1480,
+                "hash": "e60e3c65"
+              }
+            },
+            "aTreeReady": {
+              "count": 370,
+              "itemSize": 1,
+              "version": 1522,
+              "active": {
+                "elements": 370,
+                "bytes": 1480,
+                "hash": "b0cf1818"
+              }
+            }
+          },
+          "index": {
+            "count": 6,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "991defeb-9044-4484-a108-47e370d240a7",
+          "name": "",
+          "geometry": "44a31c3b-5009-410f-af37-23f2b7f2233a",
+          "material": "a1890560-0f2a-478a-a4cb-b858e14957d6",
+          "materialVersion": 0,
+          "materialType": "ShaderMaterial",
+          "program": 56,
+          "recipe": "onBeforeCompile() {\n  }",
+          "count": 129,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 4,
+              "itemSize": 2,
+              "version": 0
+            },
+            "aTreeBase": {
+              "count": 129,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 387,
+                "bytes": 1548,
+                "hash": "ac6668a6"
+              }
+            },
+            "aTreeYaw": {
+              "count": 129,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 129,
+                "bytes": 516,
+                "hash": "6fde422d"
+              }
+            },
+            "aTreeScale": {
+              "count": 129,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 387,
+                "bytes": 1548,
+                "hash": "d3e6acb3"
+              }
+            },
+            "aTreeRank": {
+              "count": 129,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 129,
+                "bytes": 516,
+                "hash": "910a3f3d"
+              }
+            },
+            "aTreeTransitionWeight": {
+              "count": 129,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 129,
+                "bytes": 516,
+                "hash": "4f942df5"
+              }
+            },
+            "aTreeReady": {
+              "count": 129,
+              "itemSize": 1,
+              "version": 684,
+              "active": {
+                "elements": 129,
+                "bytes": 516,
+                "hash": "0e89a1d8"
+              }
+            }
+          },
+          "index": {
+            "count": 6,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "39606fde-cedc-49e3-993a-65a0d9b4a714",
+          "name": "",
+          "geometry": "37e7ef94-67fb-402d-8adc-d1b4d3ebe77a",
+          "material": "7829c98f-e78a-430a-9c70-8db7c485e8d8",
+          "materialVersion": 0,
+          "materialType": "ShaderMaterial",
+          "program": 53,
+          "recipe": "onBeforeCompile() {\n  }",
+          "count": 635,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 4,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 4,
+              "itemSize": 2,
+              "version": 0
+            },
+            "aTreeBase": {
+              "count": 635,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 1905,
+                "bytes": 7620,
+                "hash": "0977f919"
+              }
+            },
+            "aTreeYaw": {
+              "count": 635,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 635,
+                "bytes": 2540,
+                "hash": "4d18477c"
+              }
+            },
+            "aTreeScale": {
+              "count": 635,
+              "itemSize": 3,
+              "version": 0,
+              "active": {
+                "elements": 1905,
+                "bytes": 7620,
+                "hash": "687fb43a"
+              }
+            },
+            "aTreeRank": {
+              "count": 635,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 635,
+                "bytes": 2540,
+                "hash": "f0350551"
+              }
+            },
+            "aTreeTransitionWeight": {
+              "count": 635,
+              "itemSize": 1,
+              "version": 0,
+              "active": {
+                "elements": 635,
+                "bytes": 2540,
+                "hash": "57cbac35"
+              }
+            },
+            "aTreeReady": {
+              "count": 635,
+              "itemSize": 1,
+              "version": 1327,
+              "active": {
+                "elements": 635,
+                "bytes": 2540,
+                "hash": "f545ff05"
+              }
+            }
+          },
+          "index": {
+            "count": 6,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        }
+      ]
+    },
+    {
+      "component": "no-standby",
+      "rows": [
+        {
+          "mode": "no-standby",
+          "gpuMedianMs": 4.014479,
+          "samples": 120,
+          "calls": 15,
+          "triangles": 74003
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.283541,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.116354,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "no-standby",
+          "gpuMedianMs": 4.502291,
+          "samples": 120,
+          "calls": 15,
+          "triangles": 74003
+        }
+      ],
+      "aTraceExact": true,
+      "bTraceExact": true,
+      "remainingDrawsExact": true,
+      "contextsExact": true,
+      "unchanged": true,
+      "hidden": false,
+      "errors": [],
+      "GL": 0,
+      "gpuStatus": {
+        "supported": true,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "unresolvedAtDispose": 0,
+        "contextLost": false,
+        "pending": 0
+      },
+      "removedDraws": [
+        {
+          "pass": "screen",
+          "object": "118076e9-d325-4d97-8466-c096eb7ebbd1",
+          "name": "",
+          "geometry": "0bfb554c-058a-48ce-b0f5-22f836c48928",
+          "material": "fa8a6159-9267-4cab-af72-cfccdffece5a",
+          "materialVersion": 3,
+          "materialType": "MeshStandardMaterial",
+          "program": 45,
+          "recipe": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "count": 6,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            144,
+            0,
+            -48,
+            1
+          ],
+          "instanceMatrices": {
+            "elements": 96,
+            "bytes": 384,
+            "hash": "6247fd63"
+          },
+          "attributes": {
+            "position": {
+              "count": 3524,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 3524,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 3524,
+              "itemSize": 2,
+              "version": 0
+            },
+            "tangent": {
+              "count": 3524,
+              "itemSize": 4,
+              "version": 0
+            },
+            "nativeVisibility": {
+              "count": 256,
+              "itemSize": 1,
+              "version": 36,
+              "active": {
+                "elements": 6,
+                "bytes": 24,
+                "hash": "65655dd7"
+              }
+            }
+          },
+          "index": {
+            "count": 4557,
+            "version": 0
+          },
+          "receiveShadow": true,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "fdd2f143-2f35-4fff-95d9-583e1815dca5",
+          "name": "",
+          "geometry": "7423bf74-a76e-4338-8762-447e265773d9",
+          "material": "2bbb2fbc-7169-4c4d-885c-941e7f07ba59",
+          "materialVersion": 3,
+          "materialType": "MeshStandardMaterial",
+          "program": 45,
+          "recipe": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "count": 1,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            144,
+            0,
+            -48,
+            1
+          ],
+          "instanceMatrices": {
+            "elements": 16,
+            "bytes": 64,
+            "hash": "f982511b"
+          },
+          "attributes": {
+            "position": {
+              "count": 2259,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 2259,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 2259,
+              "itemSize": 2,
+              "version": 0
+            },
+            "tangent": {
+              "count": 2259,
+              "itemSize": 4,
+              "version": 0
+            },
+            "nativeVisibility": {
+              "count": 128,
+              "itemSize": 1,
+              "version": 89,
+              "active": {
+                "elements": 1,
+                "bytes": 4,
+                "hash": "6f201aea"
+              }
+            }
+          },
+          "index": {
+            "count": 3096,
+            "version": 0
+          },
+          "receiveShadow": true,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "c89ef5a8-4c1e-4316-bcfe-85f8242a16ad",
+          "name": "",
+          "geometry": "0842d642-735f-4a7f-8e97-3e38d0156e7a",
+          "material": "e03ec832-600c-4f5b-9081-52a03eb47914",
+          "materialVersion": 3,
+          "materialType": "MeshStandardMaterial",
+          "program": 45,
+          "recipe": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "count": 4,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            144,
+            0,
+            -48,
+            1
+          ],
+          "instanceMatrices": {
+            "elements": 64,
+            "bytes": 256,
+            "hash": "90bd31bd"
+          },
+          "attributes": {
+            "position": {
+              "count": 2529,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 2529,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 2529,
+              "itemSize": 2,
+              "version": 0
+            },
+            "tangent": {
+              "count": 2529,
+              "itemSize": 4,
+              "version": 0
+            },
+            "nativeVisibility": {
+              "count": 64,
+              "itemSize": 1,
+              "version": 105,
+              "active": {
+                "elements": 4,
+                "bytes": 16,
+                "hash": "0248dbea"
+              }
+            }
+          },
+          "index": {
+            "count": 3741,
+            "version": 0
+          },
+          "receiveShadow": true,
+          "castShadow": false
+        },
+        {
+          "pass": "screen",
+          "object": "3f1e5ad5-70da-448f-8fca-87da6adf0553",
+          "name": "",
+          "geometry": "6ff9e1c0-95f8-4d17-ac9e-4baf293e796e",
+          "material": "2a62daf1-795d-4544-9e56-aca4db01649d",
+          "materialVersion": 3,
+          "materialType": "MeshStandardMaterial",
+          "program": 45,
+          "recipe": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "count": 1,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            144,
+            0,
+            -48,
+            1
+          ],
+          "instanceMatrices": {
+            "elements": 16,
+            "bytes": 64,
+            "hash": "a1f49179"
+          },
+          "attributes": {
+            "position": {
+              "count": 1258,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 1258,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 1258,
+              "itemSize": 2,
+              "version": 0
+            },
+            "tangent": {
+              "count": 1258,
+              "itemSize": 4,
+              "version": 0
+            },
+            "nativeVisibility": {
+              "count": 64,
+              "itemSize": 1,
+              "version": 185,
+              "active": {
+                "elements": 1,
+                "bytes": 4,
+                "hash": "eb75540d"
+              }
+            }
+          },
+          "index": {
+            "count": 1800,
+            "version": 0
+          },
+          "receiveShadow": true,
+          "castShadow": false
+        }
+      ]
+    },
+    {
+      "component": "no-ground",
+      "rows": [
+        {
+          "mode": "no-ground",
+          "gpuMedianMs": 4.54901,
+          "samples": 120,
+          "calls": 18,
+          "triangles": 63727
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.231562,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.059947,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "no-ground",
+          "gpuMedianMs": 4.104218,
+          "samples": 120,
+          "calls": 18,
+          "triangles": 63727
+        }
+      ],
+      "aTraceExact": true,
+      "bTraceExact": true,
+      "remainingDrawsExact": true,
+      "contextsExact": true,
+      "unchanged": true,
+      "hidden": false,
+      "errors": [],
+      "GL": 0,
+      "gpuStatus": {
+        "supported": true,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "unresolvedAtDispose": 0,
+        "contextLost": false,
+        "pending": 0
+      },
+      "removedDraws": [
+        {
+          "pass": "screen",
+          "object": "bc8cd213-2471-4751-81c4-7e40fb0cf65b",
+          "name": "",
+          "geometry": "5c56d90c-6fda-46ef-95c8-d395ff8dbfde",
+          "material": "239085fa-691e-4b1b-aebb-6bd5fdd9e5e0",
+          "materialVersion": 0,
+          "materialType": "MeshBasicMaterial",
+          "program": 54,
+          "recipe": "far-ground-resident-material-v4:vertex",
+          "count": null,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 13222,
+              "itemSize": 3,
+              "version": 0
+            },
+            "color": {
+              "count": 13222,
+              "itemSize": 3,
+              "version": 0
+            }
+          },
+          "index": {
+            "count": 78030,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        }
+      ]
+    },
+    {
+      "component": "no-backdrop",
+      "rows": [
+        {
+          "mode": "no-backdrop",
+          "gpuMedianMs": 4.950885,
+          "samples": 120,
+          "calls": 18,
+          "triangles": 89609
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.051302,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "all",
+          "gpuMedianMs": 5.245416,
+          "samples": 120,
+          "calls": 19,
+          "triangles": 89737
+        },
+        {
+          "mode": "no-backdrop",
+          "gpuMedianMs": 4.922552,
+          "samples": 120,
+          "calls": 18,
+          "triangles": 89609
+        }
+      ],
+      "aTraceExact": true,
+      "bTraceExact": true,
+      "remainingDrawsExact": true,
+      "contextsExact": true,
+      "unchanged": true,
+      "hidden": false,
+      "errors": [],
+      "GL": 0,
+      "gpuStatus": {
+        "supported": true,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "unresolvedAtDispose": 0,
+        "contextLost": false,
+        "pending": 0
+      },
+      "removedDraws": [
+        {
+          "pass": "screen",
+          "object": "91f646d7-886e-4056-82db-56b6b5263224",
+          "name": "",
+          "geometry": "110517a3-4c9a-4070-bbe9-b766aca3fdfb",
+          "material": "056de7ff-89d5-4021-840b-f89c5cdfc1c0",
+          "materialVersion": 0,
+          "materialType": "ShaderMaterial",
+          "program": 48,
+          "recipe": "onBeforeCompile() {\n  }",
+          "count": null,
+          "drawRange": {
+            "start": 0,
+            "count": null
+          },
+          "group": null,
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            141.21470949565781,
+            30.252348321562867,
+            -44.65185974550772,
+            1
+          ],
+          "instanceMatrices": null,
+          "attributes": {
+            "position": {
+              "count": 130,
+              "itemSize": 3,
+              "version": 0
+            },
+            "normal": {
+              "count": 130,
+              "itemSize": 3,
+              "version": 0
+            },
+            "uv": {
+              "count": 130,
+              "itemSize": 2,
+              "version": 0
+            }
+          },
+          "index": {
+            "count": 384,
+            "version": 0
+          },
+          "receiveShadow": false,
+          "castShadow": false
+        }
+      ]
+    }
+  ],
+  "limit": "The omission changes visible content. CPU active attribute hashes/versions and actual program IDs are identical for surviving submissions; not GPU byte/framebuffer proof. Marginal differences are not additive attribution of overall cost."
+}
