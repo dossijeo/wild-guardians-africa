@@ -5,6 +5,7 @@
 <script type="module">
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
+import {NATIVE_LIGHT_DIRECTION} from '../../src/rendering/shadow-camera.js';
 import {atlasElevationFrame} from '../../tools/experiments/atlas-elevation-frame.js';
 import {Assets,json} from '../../src/rendering/assets.js';
 const params=new URLSearchParams(location.search),bakeMode=params.get('bake'),normalBake=bakeMode==='normals',prelitBake=['day','night'].includes(bakeMode),toon=normalBake||prelitBake?new AfricanToon():null;const status=document.querySelector('#status'),report=document.querySelector('#report'),button=document.querySelector('#bake'),assets=new Assets(),errors=[];
@@ -24,14 +25,14 @@ try{
  material=new THREE.MeshBasicMaterial({map:source.material.map,color:source.material.color.clone(),alphaTest:source.material.alphaTest,opacity:source.material.opacity,side:source.material.side});
  if(normalBake||prelitBake){
   material.dispose();material=source.material.clone();material.userData={...source.material.userData};material.onBeforeCompile=source.material.onBeforeCompile;material.customProgramCacheKey=()=>source.material.customProgramCacheKey()+'|offline-atlas-'+bakeMode;
-  const sun=new THREE.DirectionalLight();sun.position.set(-30,55,25);toon.update(bakeMode==='night'?1:0,sun,gameBiome);toon.material(material);
+  const sun=new THREE.DirectionalLight();if(params.get('native-sun')==='1')sun.position.copy(NATIVE_LIGHT_DIRECTION).multiplyScalar(240);else sun.position.set(-30,55,25);toon.update(bakeMode==='night'?1:0,sun,gameBiome);toon.material(material);
   if(normalBake){
   const previous=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{previous.call(material,shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','outgoingLight=normalize(toonN)*.5+.5;\n#include <opaque_fragment>').replace('#include <colorspace_fragment>','').replace('#include <tonemapping_fragment>','');};
   renderer.debug.onShaderError=()=>errors.push('Normal atlas shader failed');
   metadata.lighting='Encoded local light normal from native normal map + art canopy; no baked illumination';metadata.normalEncoding='RGB = normal * 0.5 + 0.5; linear data, no sRGB conversion; source orientation';metadata.normalExperimental=true;
   document.querySelector('h1').textContent='Atlas offline de normales · Acacia de Sabana';document.querySelector('#download').download='savanna-acacia-normals-8views.png';
   }else{
-   metadata.lighting='Native AfricanToon and source material, baked '+bakeMode;metadata.bakedPhase=bakeMode;metadata.nightAmount=bakeMode==='night'?1:0;metadata.sunPosition=[-30,55,25];metadata.sourceYaw=rotationViews===1?0:null;metadata.rowMeaning='Tree world yaw relative to fixed sun; columns are camera angles relative to that tree';metadata.colorEncoding='sRGB display color, native shader grading; no runtime normal atlas';
+   metadata.lighting='Native AfricanToon and source material, baked '+bakeMode;metadata.bakedPhase=bakeMode;metadata.nightAmount=bakeMode==='night'?1:0;metadata.sunPosition=sun.position.toArray();metadata.nativeSunDirection=params.get('native-sun')==='1';metadata.sourceYaw=rotationViews===1?0:null;metadata.rowMeaning='Tree world yaw relative to fixed sun; columns are camera angles relative to that tree';metadata.colorEncoding='sRGB display color, native shader grading; no runtime normal atlas';
    renderer.debug.onShaderError=()=>errors.push('Prelit atlas shader failed');document.querySelector('h1').textContent='Atlas offline precocinado · '+bakeMode;document.querySelector('#download').download=biome+'-tree-'+slot+'-'+bakeMode+'-'+cameraViews+'views'+(rotationViews>1?'-rotations8':'')+'.png';
   }
  }
