@@ -7,7 +7,7 @@
 <p><label>Elevación desde cámara inicial (m) <input id="elevation" type="number" min="0" max="600" step="20" value="4"></label></p>
 <p><label>Desplazamiento de base (m) <input id="base-shift" type="number" min="-200" max="100" step="5" value="0"></label></p>
 <p><label><input id="lod-debug" type="checkbox"> Diagnóstico LOD solicitado</label><br><small>Azul/verde &lt;4 · naranja 4–5 (posible mip5) · magenta ≥5. Huella por derivadas, no consulta al driver.</small></p>
-<button id="turn" disabled>Girar 45°</button><button id="rotation" disabled>Validar giro 360°</button><button id="move" disabled>Desplazar +20 m</button><button id="move-back" disabled>Desplazar −20 m</button>
+<button id="turn" disabled>Girar 45°</button><button id="rotation" disabled>Validar giro 360°</button><button id="move" disabled>Desplazar +20 m</button><button id="move-back" disabled>Desplazar −20 m</button><button id="path" disabled>Recorrido continuo</button>
 <button id="hide">Ocultar controles</button><button id="export" disabled>Exportar recibo</button><button id="close" disabled>Cerrar mundo</button><pre id="report">Preparando metadatos</pre><pre id="full-report" hidden></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
@@ -80,6 +80,14 @@ try{
   if(running)return;running=true;const before=JSON.stringify(state),start=rows.length;
   for(let yaw=0;yaw<=360&&!closed;yaw+=5){document.querySelector('#yaw').value=yaw;draw();await frame();await frame();rows.push(snapshot());report.textContent=JSON.stringify({running:true,completed:rows.length-start,yaw,phase:document.querySelector('#phase').value,errors});}
   running=false;receipt={biome,culture,unchangedState:before===JSON.stringify(state),poses:rows.slice(start),errors:[...errors],limit:'Fixed-eye native horizon rotation, not frametime/driver-memory or all camera inclinations acceptance.'};report.textContent=JSON.stringify({completed:receipt.poses.length,unchangedState:receipt.unchangedState,errors,glErrors:receipt.poses.filter(p=>p.glError),first:receipt.poses[0],last:receipt.poses.at(-1)},null,2);
+ };
+ document.querySelector('#path').onclick=async()=>{
+  if(running)return;if(cameraElevation>580){report.textContent='El recorrido necesita elevación inicial ≤580 m';return;}
+  running=true;receipt=null;const before=JSON.stringify(state),origin=eye.clone(),elevation=cameraElevation,poses=[];
+  const positions=[];for(let i=0;i<=40;i++)positions.push({segment:'pan-out',x:i*.5,e:0});for(let i=39;i>=0;i--)positions.push({segment:'pan-back',x:i*.5,e:0});for(let i=1;i<=40;i++)positions.push({segment:'rise',x:0,e:i*.5});for(let i=39;i>=0;i--)positions.push({segment:'descend',x:0,e:i*.5});
+  try{for(const position of positions){if(closed)break;eye.copy(origin);eye.x+=position.x;cameraElevation=elevation+position.e;document.querySelector('#elevation').value=cameraElevation;draw();await frame();await frame();if(closed)break;poses.push({...snapshot(),segment:position.segment});report.textContent=JSON.stringify({running:true,path:true,completed:poses.length,segment:position.segment,errors});}
+   receipt={biome,culture,unchangedState:before===JSON.stringify(state),completed:poses.length===positions.length,poses,errors:[...errors],limit:'Continuous 0.5 m pan out/back and camera rise/descent, two RAF per pose; fixed yaw. Native rendering validity and altitude continuity, not frametime or all terrain occlusion acceptance.'};
+  }finally{eye.copy(origin);cameraElevation=elevation;document.querySelector('#elevation').value=elevation;running=false;draw();report.textContent=JSON.stringify({completed:receipt?.completed,poses:poses.length,errors});}
  };
  document.querySelector('#export').onclick=()=>document.querySelector('#full-report').textContent=JSON.stringify(receipt??snapshot(),null,2);
  document.querySelector('#close').onclick=close;
