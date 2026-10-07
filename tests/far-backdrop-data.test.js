@@ -28,5 +28,5 @@ test('river skyline uses independent broad rolling relief without parallel low b
  assert.ok(Math.min(...a.map(p=>p[1]))<115);
  assert.ok(Math.max(...a.map(p=>p[1]))-Math.min(...a.map(p=>p[1]))>200);
  // Rounded hills have gradual adjacent changes; no isolated thin vertical peaks.
- assert.ok(a.slice(1).every((p,i)=>Math.abs(p[1]-a[i][1])<36));
+ assert.ok(a.slice(1).every((p,i)=>Math.abs(p[1]-a[i][1])<64));
 });

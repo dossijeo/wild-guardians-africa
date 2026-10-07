@@ -4,10 +4,10 @@ const colors={savanna:['#afa6a7','#b8a69c','#b19c82'],grand_river:['#96aaa0','#8
 function random(seed){return()=>{seed=Math.imul(seed^seed>>>15,1|seed);seed^=seed+Math.imul(seed^seed>>>7,61|seed);return ((seed^seed>>>14)>>>0)/4294967296;};}
 export function backdropProfile(biome,layer){
  const index=backdropBiomes.indexOf(biome);if(index<0||!Number.isInteger(layer)||layer<0||layer>2)throw Error('Invalid backdrop profile');
- const step=biome==='savanna'?8:16,r=random(1471+index*193+layer*277),jitter=Array.from({length:2048/step},()=>r()*7),points=[];
+ const step=(biome==='savanna'||biome==='grand_river')?8:16,r=random(1471+index*193+layer*277),jitter=Array.from({length:2048/step},()=>r()*7),points=[];
  // Broad separated ridges and short mesa caps, independently composed per layer.
  // Avoid three phase-aligned sine waves that read as parallel horizontal bands.
- const riverRidges=biome==='grand_river'?Array.from({length:5},(_,i)=>({center:(i+.1+r()*.8)*2048/5,width:210+r()*170,height:225+r()*95-layer*14})):null;
+ const riverRidges=biome==='grand_river'?Array.from({length:16},(_,i)=>({center:(i+.1+r()*.8)*2048/16,width:70+r()*70,height:185+r()*145-layer*14})):null;
  const ridges=biome==='savanna'?Array.from({length:7},(_,i)=>({center:(i+.15+r()*.7)*2048/7,width:125+r()*110,height:105+r()*95-layer*12,cap:.10+r()*.17})):null;
  for(let x=0;x<=2048;x+=step){const wrap=x%2048;let height;
   if(ridges){let relief=0;for(const ridge of ridges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,ridge.height*(p<ridge.cap?1:Math.max(0,1-(p-ridge.cap)/(1-ridge.cap))));}height=315+layer*42-relief+Math.sin(wrap*Math.PI*2/2048*(5+layer)) * 3;}
