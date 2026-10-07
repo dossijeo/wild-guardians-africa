@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import {farAtmosphere} from './far-atmosphere.js';
 // Decorative biome silhouettes intentionally have no procedural-world identity.
 // They sit beyond faithful vegetation and move with a small, bounded parallax.
-export function createBiomeBackdrop(world,texture,{radius=430,height=null,parallax=.03,fogMix=null}={}){
+export function createBiomeBackdrop(world,texture,{radius=430,height=null,parallax=.03,fogMix=null,fogDayColor='#b5d9e8',fogNightColor='#263747'}={}){
+ farAtmosphere({fogDayColor,fogNightColor});
  if(![radius,parallax].every(Number.isFinite)||radius<=0||parallax<0||parallax>1)throw Error('Invalid biome backdrop settings');
  height??={savanna:110,grand_river:85,mangrove:60,volcanoes:160,canyons:130,desert:115}[world.nav.config.biome];
  if(!Number.isFinite(height)||height<=0)throw Error('Invalid biome backdrop height');
@@ -15,6 +17,6 @@ export function createBiomeBackdrop(world,texture,{radius=430,height=null,parall
  }`});
  const geometry=new THREE.CylinderGeometry(radius,radius,height,64,1,true);geometries.push(geometry);const mesh=new THREE.Mesh(geometry,material);mesh.position.y=height/2-35;mesh.renderOrder=-1000;root.add(mesh);
  root.name='biome-2d-backdrop';world.scene.add(root);let closed=false;
- const fogDay=new THREE.Color('#b5d9e8'),fogNight=new THREE.Color('#263747');
+ const fogDay=new THREE.Color(fogDayColor),fogNight=new THREE.Color(fogNightColor);
  return {root,update(){if(closed)return;root.position.set(world.camera.position.x-Math.tanh((world.camera.position.x-anchor.x)/1000)*1000*parallax,world.nav.field.surface(world.camera.position.x,world.camera.position.z),world.camera.position.z-Math.tanh((world.camera.position.z-anchor.z)/1000)*1000*parallax);uniforms.uBackdropFog.value.copy(fogDay).lerp(fogNight,world.toon.uniforms.uNight.value);},dispose(){if(closed)return;closed=true;root.removeFromParent();for(const geometry of geometries)geometry.dispose();material.dispose();}};
 }
