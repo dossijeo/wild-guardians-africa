@@ -16,3 +16,11 @@ test('logical prewarm is deterministic, bounded, and omits suppressed, resident 
 test('logical prewarm follows actual quality LOD bins without changing source geometry',()=>{
  const t=tree('a',100);assert.equal(logicalNativeStandbyEntries([t],options())[0].level,2);assert.equal(logicalNativeStandbyEntries([t],options({quality:'alta'}))[0].level,1);
 });
+
+
+test('optional adopted preload rectangle admits exact edge anchors without changing native transforms',()=>{
+ const trees=[tree('inside',60),tree('edge',79),tree('outside',90)];const previous=logicalNativeStandbyEntries(trees,options()),bounded=logicalNativeStandbyEntries(trees,options({preloadBounds:[0,-10,80,10]}));
+ assert.deepEqual(bounded.map(t=>t.id),['inside','edge']);for(const t of bounded)assert.deepEqual(t,previous.find(p=>p.id===t.id));
+ assert.deepEqual(logicalNativeStandbyEntries(trees,options({preloadBounds:null})),previous);assert.deepEqual(logicalNativeStandbyEntries([...trees].reverse(),options({preloadBounds:[0,-10,80,10]})),bounded);
+ assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[0,0,Infinity,10]})),/bounds/);assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[80,-10,0,10]})),/bounds/);
+});
