@@ -40,3 +40,12 @@ test('opt-in seam shares the color map and night recipe but does not discard its
  const shader=()=>({uniforms:{},vertexShader:'#include <worldpos_vertex>\n#include <color_vertex>',fragmentShader:'#include <map_fragment>\n#include <clipping_planes_fragment>'}),a=shader(),b=shader();ground.material.onBeforeCompile(a);seam.material.onBeforeCompile(b);assert.ok(a.fragmentShader.includes(')discard;'));assert.ok(b.fragmentShader.includes('if(!onFarEdge)discard;'));assert.equal(b.fragmentShader.includes('if(farGroundXZ.x>='),false);assert.ok(b.fragmentShader.includes('smoothstep(.45,.55,diffuseColor.a)'));assert.equal(b.uniforms.uFarGroundNight,world.toon.uniforms.uNight);assert.equal(seam.material.customProgramCacheKey(),ground.material.customProgramCacheKey()+':seam-v2');
  let textureDisposals=0;ground.material.map.addEventListener('dispose',()=>textureDisposals++);candidate.dispose();candidate.dispose();assert.equal(textureDisposals,1);assert.equal(candidate.impostors.children.length,0);
 });
+
+
+test('offline landscape grading preserves tree identity, geometry and water coverage',async()=>{
+ const {readFileSync}=await import('node:fs');const {buildFarSceneData}=await import('../tools/experiments/far-scene-data.js');
+ const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile,request={config:{seed:'712',biome:'savanna',relief:1,river:true,density:1,n:1,cx:0,cz:0,layers:Array(6).fill(true)},profile,treeBounds:{minX:-24,maxX:24,minZ:-24,maxZ:24},groundBounds:{minX:-32,maxX:32,minZ:-32,maxZ:32},step:16,colorMapStep:4,waterSurface:true};
+ const original=buildFarSceneData(request),explicit=buildFarSceneData({...request,groundWash:.25}),unwashed=buildFarSceneData({...request,groundWash:0});assert.deepEqual(original,explicit);assert.deepEqual(unwashed.trees,original.trees);assert.deepEqual(unwashed.ground.positions,original.ground.positions);assert.deepEqual(unwashed.ground.indices,original.ground.indices);
+ assert.notDeepEqual(unwashed.ground.colorMap.data,original.ground.colorMap.data);for(let i=3;i<original.ground.colorMap.data.length;i+=4)assert.equal(unwashed.ground.colorMap.data[i],original.ground.colorMap.data[i]);
+ for(const value of [-.01,1.01,NaN,Infinity])assert.throws(()=>buildFarSceneData({...request,groundWash:value}),/ground wash/);
+});

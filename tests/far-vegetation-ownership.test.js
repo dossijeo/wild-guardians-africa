@@ -63,3 +63,10 @@ test('texture storage estimates use loaded atlas dimensions rather than a unifor
  const f=fixture();const original=f.services.loadTexture;let calls=0;f.services.loadTexture=async(...args)=>{const texture=await original(...args);texture.image=calls++<2?{width:2048,height:1024}:{width:2048,height:512};return texture;};
  const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(owner.stats.estimatedAtlasTextureBytes,2*2048*1024*4*4/3);assert.equal(owner.stats.estimatedBackdropTextureBytes,2048*512*4*4/3);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
 });
+
+
+test('landscape composition forwards existing backdrop controls without altering atlas ownership',async()=>{
+ const f=fixture();let received;f.services.makeBackdrop=(world,texture,options)=>{received=options;return {root:{visible:true},update(){},dispose(){}};};
+ const owner=await attachBiomeFarVegetation(f.world,{backdropHeight:180,backdropRadius:600,backdropParallax:.04,backdropFogMix:.7,groundWash:0},f.services);
+ assert.equal(received.height,180);assert.equal(received.radius,600);assert.equal(received.parallax,.04);assert.equal(received.fogMix,.7);assert.equal(f.textures.length,3);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});
