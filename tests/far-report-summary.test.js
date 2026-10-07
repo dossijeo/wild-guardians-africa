@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {compactFarReport} from './browser/far-report-summary.js';
+import {compactFarReport,farConfiguredNear} from './browser/far-report-summary.js';
 
 test('QA display omits detailed arrays but retains every descent counter and explicit failure',()=>{
  const audit={observations:40,descents:7,offscreenBoundsDescents:4,potentiallyVisibleDescents:2,unknownDescents:1,drops:[{id:'a'},{id:'b'}],nonOffscreenDrops:[{id:'a'}],omissions:[{id:'c'}]};
@@ -29,3 +29,5 @@ test('timing display retains totals without repeatedly serializing full draw and
  const submissionState={draws:[{matrix:new Array(16).fill(1)}],breakdown:{totals:{calls:1,triangles:2},rows:[{pass:'screen',calls:1}],objects:[{name:'expensive'}]},limit:'CPU only'},input={submissionState,benchmark:{lots:[{enabled:true,cpu:{p50:1},submissionState,drawContext:{chunks:['a']}}]}};
  const original=JSON.stringify(input),out=compactFarReport(input);assert.equal(JSON.stringify(input),original);assert.equal(out.submissionState.drawCount,1);assert.equal(out.submissionState.draws,undefined);assert.deepEqual(out.benchmark.lots[0].submissionState.totals,{calls:1,triangles:2});assert.equal(out.benchmark.lots[0].drawContext,undefined);assert.equal(out.benchmark.lots[0].cpu.p50,1);
 });
+
+test('QA range receipt survives owner disposal after a quality change',()=>{const adapters=[{layer:{options:{start:120,end:160}}}],owner={adapters},fallback={start:90,end:120};assert.deepEqual(farConfiguredNear(owner,fallback),[120,160]);adapters.length=0;assert.deepEqual(farConfiguredNear(owner,fallback),[90,120]);assert.deepEqual(adapters,[]);});

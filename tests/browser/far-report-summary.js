@@ -19,5 +19,8 @@ function benchmarkSummary(benchmark){
  return benchmark?{...benchmark,lots:benchmark.lots.map(({submissionState,drawContext,...lot})=>({...lot,submissionState:submissionSummary(submissionState)}))}:benchmark;
 }
 export function compactFarReport(report){
- return {...report,submissionState:submissionSummary(report.submissionState),benchmark:benchmarkSummary(report.benchmark),standbyUpload:report.standbyUpload?{...report.standbyUpload,draws:report.standbyUpload.draws.map(({rows,...draw})=>({...draw,rowCount:rows.length}))}:report.standbyUpload,diagnostics:'Full traces: Exportar diagnóstico completo',motion:motionSummary(report.motion),sequence:report.sequence?{...report.sequence,results:report.sequence.results.map(row=>({...row,motion:motionSummary(row.motion)}))}:report.sequence};
+ return {...report,submissionState:submissionSummary(report.submissionState),benchmark:benchmarkSummary(report.benchmark),standbyUpload:report.standbyUpload?{...report.standbyUpload,draws:report.standbyUpload.draws.map(({rows,...draw})=>({...draw,rowCount:rows.length}))}:report.standbyUpload,diagnostics:'Full traces: Exportar diagnÃ³stico completo',motion:motionSummary(report.motion),sequence:report.sequence?{...report.sequence,results:report.sequence.results.map(row=>({...row,motion:motionSummary(row.motion)}))}:report.sequence};
 }
+
+// A disposed owner clears adapters; the receipt must still describe its last range.
+export function farConfiguredNear(owner,fallback){const options=owner.adapters?.[0]?.layer.options??fallback;return [options.start,options.end];}
