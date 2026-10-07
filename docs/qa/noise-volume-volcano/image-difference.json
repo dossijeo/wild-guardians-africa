@@ -1,0 +1,25 @@
+{
+  "scope": "Full screenshot RGB comparison, not framebuffer readback or proof of simulation equality. No alignment, tolerance or masked pixels.",
+  "pairs": [
+    {
+      "phase": "day",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 11511,
+      "pixelsOver8": 293,
+      "maxChannelDifference": 22,
+      "meanChannelDifference": 0.020889033564814814
+    },
+    {
+      "phase": "night",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 12239,
+      "pixelsOver8": 38,
+      "maxChannelDifference": 14,
+      "meanChannelDifference": 0.019085648148148147
+    }
+  ]
+}
