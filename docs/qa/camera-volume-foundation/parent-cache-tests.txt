@@ -1,0 +1,167 @@
+TAP version 13
+# Subtest: camera volumes retain all five native center scales, pivots and collapse envelopes
+ok 1 - camera volumes retain all five native center scales, pivots and collapse envelopes
+  ---
+  duration_ms: 30.9509
+  ...
+# Subtest: auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+ok 2 - auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+  ---
+  duration_ms: 32.0817
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 3 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 9222.2971
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 4 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 14.6285
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 5 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 3.2598
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 6 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 10.6014
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 7 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 32.9511
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 8 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 29.1511
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 9 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 7.0153
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 10 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 190.6535
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 11 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.8811
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 12 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 105.2679
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 13 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 24.7962
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 14 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 15.2848
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 15 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 6.3297
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 16 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 90.322
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 17 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.4855
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 18 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.6626
+  ...
+# Subtest: shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+ok 19 - shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+  ---
+  duration_ms: 13.0708
+  ...
+# Subtest: registry updates native state, transform, replacement and removal without rebuilding idle volumes
+ok 20 - registry updates native state, transform, replacement and removal without rebuilding idle volumes
+  ---
+  duration_ms: 2.0069
+  ...
+# Subtest: village registry uses independent unit boxes and excludes unrelated decorative meshes
+ok 21 - village registry uses independent unit boxes and excludes unrelated decorative meshes
+  ---
+  duration_ms: 3.4632
+  ...
+# Subtest: pose resolver keeps desired eye separate from correction through synchronous updates and focus
+ok 22 - pose resolver keeps desired eye separate from correction through synchronous updates and focus
+  ---
+  duration_ms: 55.9677
+  ...
+# Subtest: fast pan cannot tunnel through a house and oblique pan slides beside it
+ok 23 - fast pan cannot tunnel through a house and oblique pan slides beside it
+  ---
+  duration_ms: 21.5357
+  ...
+# Subtest: approach decelerates while retreat converges smoothly to raw intent
+ok 24 - approach decelerates while retreat converges smoothly to raw intent
+  ---
+  duration_ms: 112.8531
+  ...
+# Subtest: finite roof allows overflight and upward recovery from a loaded volume
+ok 25 - finite roof allows overflight and upward recovery from a loaded volume
+  ---
+  duration_ms: 5.7386
+  ...
+# Subtest: opposing faces of overlapping houses cannot trap recovery in an oscillation
+ok 26 - opposing faces of overlapping houses cannot trap recovery in an oscillation
+  ---
+  duration_ms: 0.4751
+  ...
+# Subtest: focus reset chooses safe destination rather than sweeping through intervening buildings
+ok 27 - focus reset chooses safe destination rather than sweeping through intervening buildings
+  ---
+  duration_ms: 0.3076
+  ...
+# Subtest: rotated volumes and deletion preserve safety without trapping an idle camera
+ok 28 - rotated volumes and deletion preserve safety without trapping an idle camera
+  ---
+  duration_ms: 11.7953
+  ...
+# Subtest: model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+ok 29 - model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+  ---
+  duration_ms: 6.8471
+  ...
+# Subtest: unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+ok 30 - unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+  ---
+  duration_ms: 1.0158
+  ...
+# (node:40896) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five village loaders bound every indexed unit without copying or restricting its shared geometry
+ok 31 - five village loaders bound every indexed unit without copying or restricting its shared geometry
+  ---
+  duration_ms: 20374.0659
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21509.46
