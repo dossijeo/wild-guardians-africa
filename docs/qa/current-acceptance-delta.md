@@ -2,6 +2,10 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Mezcla y colapsos nativos](audio-world-collapses-current/README.md): trabajo pagado, incursión y tres colapsos integrados; fuentes043/046 desde emisiones/contactos reales, límites correctos, cero voces y contexto cerrado al terminar. Silenciado y precargado: no acredita escucha, primer decode, cosecha entregada, FPS ni móvil. Se identifica el ui_click heredado de la solicitud automática de cosecha para revisar.
+
+- [Validate Game c18d119](validation-c18d119/README.md): resultado terminal correcto, 2713 pruebas, verificaciones, build y paquete. No incluye la optimización posterior del guardado ni acredita los ensayos nativos/móviles pendientes.
+
 - [Validación repetida de guardados](save-primary-cache/README.md): respaldo idéntico, 19 pruebas dirigidas y 13 controles de recuperación con IndexedDB real en localhost. Una única copia durable evita volver a analizar la primaria si sus bytes coinciden exactamente. Las muestras grandes tienen deriva CPU y la caché retiene una cadena adicional. No acredita porcentaje estable, latencia de fincas grandes, FPS o móvil.
 
 - [Reservas de animales cerradas](animal-preload-disposed/README.md): llamadas tardías a warm/take no inician nuevas cargas; 39 pruebas, build y paquete correctos. No acredita ausencia de tirones en móvil ni recuperación de contexto WebGL.
