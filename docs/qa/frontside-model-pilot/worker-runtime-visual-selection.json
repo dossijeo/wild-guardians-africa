@@ -4,7 +4,7 @@
   "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
   "source": "worker-actions.youngMale runtime web",
   "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
-  "candidateSide": "Original twin control",
+  "candidateSide": "FrontSide accessories; existing FrontSide body retained",
   "maxSamples": 1,
   "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
   "shadowsEnabled": false,
@@ -20,14 +20,92 @@
       "alphaIoU": 1,
       "missingFraction": 0,
       "addedFraction": 0,
-      "linearRgbMae": 0,
+      "linearRgbMae": 0.000008248791942270193,
       "p99Approx": 0,
-      "maxError": 0,
-      "maxTileMae": 0,
+      "maxError": 0.3962237387895584,
+      "maxTileMae": 0.01620295478238,
       "originalPixels": 143052,
       "missingPixels": 0,
       "addedPixels": 0,
-      "rgbOutlierRegions": [],
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            675,
+            448,
+            675,
+            448
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            619,
+            464,
+            619,
+            464
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            616,
+            465,
+            616,
+            465
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            613,
+            466,
+            613,
+            466
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            610,
+            467,
+            610,
+            467
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            607,
+            468,
+            607,
+            468
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            633,
+            497,
+            633,
+            497
+          ],
+          "classification": "rgb"
+        }
+      ],
       "missingRegions": [],
       "shadowPackedDifference": null,
       "alphaDistanceGate": {
@@ -128,14 +206,26 @@
           }
         ]
       ],
-      "passes": true
+      "passes": false
     }
   ],
   "limitations": [
     "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required."
   ],
   "originalWorldPath": "WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon",
-  "candidateReceipt": null,
+  "candidateReceipt": {
+    "category": "youngMale",
+    "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd.glb",
+    "sourceCandidateSha256": "dec153352c2eebda633408b47f7f0a33b972ebe58bfd0413a9ab95ca007516bf",
+    "bytes": 5241864,
+    "baselineRuntimeBytes": 5612688,
+    "growthPercent": -6.606887822733065,
+    "prunedUnusedAccessors": 633,
+    "sha256": "ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd",
+    "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
+    "status": "NOT_APPROVED"
+  },
   "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
   "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "timerQueryAvailable": true,
@@ -357,8 +447,86 @@
       "maxByteDifference": 0
     }
   ],
-  "failed": false,
-  "sourceTwin": true,
+  "failed": true,
+  "rgbTriangleProvenance": [
+    {
+      "side": "source",
+      "faces": [
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 235,
+          "backFacing": true,
+          "pixels": 3
+        },
+        {
+          "mesh": "Can_Nozzle_geometry_3",
+          "face": 106,
+          "backFacing": true,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 237,
+          "backFacing": true,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 233,
+          "backFacing": true,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_2",
+          "face": 1208,
+          "backFacing": true,
+          "pixels": 1
+        }
+      ]
+    },
+    {
+      "side": "candidate",
+      "faces": [
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 1423,
+          "backFacing": false,
+          "pixels": 2
+        },
+        {
+          "mesh": "Can_Nozzle_geometry_3",
+          "face": 67,
+          "backFacing": false,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 1424,
+          "backFacing": false,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 1422,
+          "backFacing": false,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_1",
+          "face": 1420,
+          "backFacing": false,
+          "pixels": 1
+        },
+        {
+          "mesh": "Prop_WateringCan_geometry_2",
+          "face": 1207,
+          "backFacing": false,
+          "pixels": 1
+        }
+      ]
+    }
+  ],
+  "sourceTwin": false,
   "originalShadowDiagnostic": false,
   "frontShadow": false,
   "sharedPersistentShadowHook": true,

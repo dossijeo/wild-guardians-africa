@@ -27,7 +27,7 @@ function alphaDistanceGate(a,b,width){
  const missingBeyondOnePixel=violations(a,b),addedBeyondOnePixel=violations(b,a);
  return{radiusPixels:1,missingBeyondOnePixel,addedBeyondOnePixel,passes:missingBeyondOnePixel===0&&addedBeyondOnePixel===0};
 }
-function mapMissingToSource(renderer,rig,camera,pixels,size){
+function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing'){
  const saved=[],descriptors=[];let nextId=1;
  rig.model.traverse(mesh=>{if(!mesh.isMesh)return;const originalGeometry=mesh.geometry,originalMaterial=mesh.material;
   const geometry=originalGeometry.index?originalGeometry.toNonIndexed():originalGeometry.clone(),count=geometry.getAttribute('position').count,ids=new Float32Array(count),start=nextId;
@@ -37,9 +37,9 @@ function mapMissingToSource(renderer,rig,camera,pixels,size){
   material.customProgramCacheKey=()=> 'frontside-source-triangle-map-'+originalMaterial.side;material.toneMapped=false;mesh.geometry=geometry;mesh.material=material;
   saved.push({mesh,originalGeometry,originalMaterial,geometry,material});descriptors.push({start,end:nextId,mesh:mesh.name});
  });
- const previousShadow=renderer.shadowMap.enabled,previousColor=renderer.outputColorSpace,found=new Map();
+ const previousShadow=renderer.shadowMap.enabled,previousColor=renderer.outputColorSpace,found=new Map(),linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});
  try{renderer.shadowMap.enabled=false;renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.render(rig.scene,camera);const ids=new Uint8Array(size*size*4),gl=renderer.getContext();gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,ids);
-  for(let i=0;i<ids.length;i+=4){if(!pixels[0][i+3]||pixels[1][i+3])continue;const id=ids[i]+256*ids[i+1]+65536*ids[i+2],descriptor=descriptors.find(d=>id>=d.start&&id<d.end);if(!descriptor)throw Error('Missing triangle provenance at pixel '+i/4);
+  for(let i=0;i<ids.length;i+=4){const matches=mode==='rgb'?pixels[0][i+3]&&pixels[1][i+3]&&[0,1,2].some(c=>Math.abs(linear[pixels[0][i+c]]-linear[pixels[1][i+c]])>.03):pixels[0][i+3]&&!pixels[1][i+3];if(!matches)continue;const id=ids[i]+256*ids[i+1]+65536*ids[i+2],descriptor=descriptors.find(d=>id>=d.start&&id<d.end);if(!descriptor)throw Error('Missing triangle provenance at pixel '+i/4);
    const key=descriptor.mesh+':'+(id-descriptor.start);if(!found.has(key))found.set(key,{mesh:descriptor.mesh,face:id-descriptor.start,backFacing:ids[i+3]===128,pixels:0});found.get(key).pixels++;
   }
  }finally{renderer.shadowMap.enabled=previousShadow;renderer.outputColorSpace=previousColor;for(const s of saved){s.mesh.geometry=s.originalGeometry;s.mesh.material=s.originalMaterial;s.geometry.dispose();s.material.dispose();}}
@@ -137,6 +137,7 @@ async function campaign(){
  // the early screen is rejection evidence and does not need a passing sweep.
  report.failed=failed;
  if(failed&&options.has('mapMissing')){rigs.forEach((rig,i)=>rig.model.visible=i===0);report.missingTriangleProvenance=mapMissingToSource(renderer,rigs[0],camera,pixels,size);}
+ if(failed&&options.has('mapRgb')){report.rgbTriangleProvenance=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);report.rgbTriangleProvenance.push({side:side===0?'source':'candidate',faces:mapMissingToSource(renderer,rigs[side],camera,pixels,size,'rgb')});}}
  report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;report.requestedClips=campaignClips;report.withheldVersion=withheldVersion;
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.

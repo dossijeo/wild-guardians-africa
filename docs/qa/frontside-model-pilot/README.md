@@ -385,3 +385,14 @@ explained exclusively by shadows or unchanged-source noise in this view.
 It remains a candidate color/map/geometry defect to diagnose, not a reason
 to relax the tile gate. Source/candidate face provenance for those color
 outliers is the next diagnostic before any further geometry change.
+
+The color-ID diagnostic preserves the real vertex/skin hooks and material sides
+and traces both sides at those7outlier pixels. Five authored back-facing body
+pixels (faces233/235/237) are now covered by new rim faces1420/1422/1423/1424;
+their flat rim shading differs from the authored surface. One nozzle pixel
+changes sourceBack106 to candidateFront67, and one handle pixel changes
+sourceBack1208 to candidateFront1207. This separates the new wall's rim-shading
+issue from still-unselected accessory back surfaces. Map/color-aware local
+solutions must preserve the physical wall and the fixed quality thresholds;
+the current candidate remains rejected. `mapRgb` retains both mesh/face maps
+and the preceding PBR comparison rather than accepting ID visibility alone.
