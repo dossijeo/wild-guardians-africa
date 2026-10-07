@@ -1,0 +1,37 @@
+{
+  "scope": "Two ordinary one-day native intensive strategies, complete per-tick equality with and without checkpoint observer. QA capture threshold 1 and deterministic wall clock deliberately exercise capture when possible; production threshold remains 128 and 300000 ms. No gameplay overrides or timings. No large-backlog/100-night claim.",
+  "runs": [
+    {
+      "biome": "sabana",
+      "ticks": 380,
+      "completedNights": 1,
+      "result": null,
+      "captures": 0,
+      "retained": [],
+      "trajectorySha256": "70d92908d4fad2266a82e21f93a56176404d88817eba801cec8f7f5671c0c4f2",
+      "finalStateSha256": "b7ac82c9590b19a17514001e8693b10fbe9190449259df30a174a0b09d27bcb7",
+      "living": 73,
+      "delivered": 38
+    },
+    {
+      "biome": "gran-canon",
+      "ticks": 379,
+      "completedNights": 1,
+      "result": null,
+      "captures": 0,
+      "retained": [],
+      "trajectorySha256": "467ca6485919f2189567e3d8b9aa0cffae2021d209c43999a5e0b3fe7966e003",
+      "finalStateSha256": "79f6364749bcd89bbedcaa61017c8d78dd0c113717f18d3174e7f54033d12311",
+      "living": 66,
+      "delivered": 23
+    }
+  ],
+  "sourceHashes": {
+    "tools/check_intensive_checkpoints.mjs": "a5076be669eefa71de3bff820a64c95b226516b9c022d002bf8b82c40a42b4f7",
+    "tools/check_intensive_farm.mjs": "2064cd442109b79e8a2b3e24c9af3dbeed3c81cf3f87a616c5a6d2ac968718cf",
+    "tools/intensive-blocked-checkpoint.mjs": "7e56190cc6b15344b1cac7193dca38f7dde7c37b48480ac1ba6119ce94f107fa",
+    "tools/intensive-heartbeat.mjs": "61935ea6bc521719ff3eb0b5a4738d27f38fc2861b10a617f2f4b6bb616083f7",
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "src/world/navigation.js": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8"
+  }
+}
