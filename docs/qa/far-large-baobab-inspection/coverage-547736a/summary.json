@@ -1,0 +1,815 @@
+{
+  "source": "547736a",
+  "kind": "QA analytic camera, not normal terrain-following gameplay camera",
+  "treeId": "0:-6:-4",
+  "cameraAndTargetExact": true,
+  "allReady": true,
+  "allGlAndErrorsZero": true,
+  "cases": [
+    {
+      "case": "blend-rotation",
+      "coverage": "blend",
+      "sampling": "rotation",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 68,
+        "triangles": 1076453
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 1,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 1,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "blend",
+      "coverage": "blend",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 68,
+        "triangles": 1076453
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 0.5,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 0.5,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "native-night",
+      "coverage": "native",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 1,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 68,
+        "triangles": 1086429
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 0,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 0,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "native",
+      "coverage": "native",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 68,
+        "triangles": 1086429
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 0,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 0,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "restored-night",
+      "coverage": "blend",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 1,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 68,
+        "triangles": 1076453
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 0.5,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 0.5,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "sprite-nearest",
+      "coverage": "sprite",
+      "sampling": "nearest",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 1050368
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 1,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 1,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "sprite-night",
+      "coverage": "sprite",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 1,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 1050368
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 1,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 1,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    },
+    {
+      "case": "sprite",
+      "coverage": "sprite",
+      "sampling": "both",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "target": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 1050368
+      },
+      "tree": {
+        "slot": 2,
+        "tree": {
+          "id": "0:-6:-4",
+          "slot": 2,
+          "x": -76.79309376666808,
+          "z": -46.97362664255934,
+          "y": 5.953485200435965,
+          "yaw": 3.408928405608354,
+          "scale": 1.1375437579839491,
+          "sx": 2.9345365729556656,
+          "sy": 2.924911883567863,
+          "sz": 2.596753733437445,
+          "tint": 0.9549651284930761,
+          "radius": 8.803609718866998,
+          "priority": 0.972649700473994,
+          "origin": {
+            "x": -76.00761344564148,
+            "y": 5.953485200435965,
+            "z": -47.1158615551237
+          }
+        },
+        "distance": 140,
+        "height": 32.24962524394025,
+        "screenCenter": [
+          639.9999999999999,
+          359.99999999999994
+        ],
+        "spriteMix": 1,
+        "rawRank": 0.17028139089234173,
+        "rank": 0.08448167145252228,
+        "densityParameters": {
+          "start": 190,
+          "end": 280,
+          "minimum": 0.04,
+          "band": 0.04
+        },
+        "densityFade": 1,
+        "distanceFade": 1,
+        "billboardCoverage": 1,
+        "ready": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": [],
+        "diagnosis": {
+          "logicalKey": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+          "bankEntries": [
+            {
+              "index": 0,
+              "active": false,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            },
+            {
+              "index": 1,
+              "active": true,
+              "key": "0:-6:-4:-76.00761344564148:5.953485200435965:-47.1158615551237:3.408928405608354:2.9345365729556656:2.924911883567863:2.596753733437445",
+              "level": 2,
+              "resource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+              "currentResource": "0:4a254da4-bb28-4a0d-8a99-91c5aab7195c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3"
+            }
+          ],
+          "physical": [],
+          "nativeMissing": true,
+          "retainedPrepared": true,
+          "standbyAvailable": true,
+          "coverage": false,
+          "prepared": false,
+          "nativeRevision": 14,
+          "preparedRevision": 29,
+          "renderSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "proofSignature": "0:0|2:1:a6e8ce0f-902b-4cd6-bc2b-65093e33be7d:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3|2:2:faf3a7d4-abcb-4531-9367-e5606f4e111c:42bf3d39-6c0f-41f9-aa4d-c71f576fb06f:3",
+          "batches": []
+        }
+      }
+    }
+  ],
+  "acceptance": {
+    "visual": false,
+    "performance": false,
+    "reason": "Crown silhouette and color mismatch remain visible; blend still exposes dither. No performance measurements."
+  }
+}
