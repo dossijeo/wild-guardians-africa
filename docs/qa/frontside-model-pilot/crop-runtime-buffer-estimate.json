@@ -1,0 +1,283 @@
+{
+  "status": "RESOURCE_ESTIMATE_NOT_GPU_BENCHMARK",
+  "runtime": "src/rendering/crop-batch.js",
+  "assumptions": [
+    "MAX_PLANTS=128, all 40 indexed states and 32 bridges are allocated eagerly",
+    "Bridge vertex attributes have 22 float32 lanes, 3 vertices per triangle",
+    "Each source state contributes to one or two adjacent bridge buffers",
+    "Texture payloads unchanged; omitted GPU driver overhead and texture allocations"
+  ],
+  "bridgeBytesBefore": 44743512,
+  "bridgeBytesAfter": 47787168,
+  "bridgeGrowthPercent": 6.802452163343808,
+  "instanceBufferBytesUnchanged": 737280,
+  "indexedAndBridgeBufferBytesBefore": 52688374,
+  "indexedAndBridgeBufferBytesAfter": 56257468,
+  "totalBufferGrowthPercent": 6.773968769656857,
+  "pairs": [
+    {
+      "a": 0,
+      "b": 1,
+      "trianglesBefore": 2152,
+      "trianglesAfter": 2780,
+      "bufferBytesBefore": 568128,
+      "bufferBytesAfter": 733920
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "trianglesBefore": 3997,
+      "trianglesAfter": 5060,
+      "bufferBytesBefore": 1055208,
+      "bufferBytesAfter": 1335840
+    },
+    {
+      "a": 2,
+      "b": 3,
+      "trianglesBefore": 5948,
+      "trianglesAfter": 7636,
+      "bufferBytesBefore": 1570272,
+      "bufferBytesAfter": 2015904
+    },
+    {
+      "a": 3,
+      "b": 4,
+      "trianglesBefore": 8140,
+      "trianglesAfter": 10727,
+      "bufferBytesBefore": 2148960,
+      "bufferBytesAfter": 2831928
+    },
+    {
+      "a": 5,
+      "b": 6,
+      "trianglesBefore": 2214,
+      "trianglesAfter": 2214,
+      "bufferBytesBefore": 584496,
+      "bufferBytesAfter": 584496
+    },
+    {
+      "a": 6,
+      "b": 7,
+      "trianglesBefore": 3823,
+      "trianglesAfter": 3823,
+      "bufferBytesBefore": 1009272,
+      "bufferBytesAfter": 1009272
+    },
+    {
+      "a": 7,
+      "b": 8,
+      "trianglesBefore": 5290,
+      "trianglesAfter": 5290,
+      "bufferBytesBefore": 1396560,
+      "bufferBytesAfter": 1396560
+    },
+    {
+      "a": 8,
+      "b": 9,
+      "trianglesBefore": 6256,
+      "trianglesAfter": 6256,
+      "bufferBytesBefore": 1651584,
+      "bufferBytesAfter": 1651584
+    },
+    {
+      "a": 10,
+      "b": 11,
+      "trianglesBefore": 2023,
+      "trianglesAfter": 2023,
+      "bufferBytesBefore": 534072,
+      "bufferBytesAfter": 534072
+    },
+    {
+      "a": 11,
+      "b": 12,
+      "trianglesBefore": 3148,
+      "trianglesAfter": 3148,
+      "bufferBytesBefore": 831072,
+      "bufferBytesAfter": 831072
+    },
+    {
+      "a": 12,
+      "b": 13,
+      "trianglesBefore": 3790,
+      "trianglesAfter": 3790,
+      "bufferBytesBefore": 1000560,
+      "bufferBytesAfter": 1000560
+    },
+    {
+      "a": 13,
+      "b": 14,
+      "trianglesBefore": 4810,
+      "trianglesAfter": 4810,
+      "bufferBytesBefore": 1269840,
+      "bufferBytesAfter": 1269840
+    },
+    {
+      "a": 15,
+      "b": 16,
+      "trianglesBefore": 2207,
+      "trianglesAfter": 2842,
+      "bufferBytesBefore": 582648,
+      "bufferBytesAfter": 750288
+    },
+    {
+      "a": 16,
+      "b": 17,
+      "trianglesBefore": 3743,
+      "trianglesAfter": 4981,
+      "bufferBytesBefore": 988152,
+      "bufferBytesAfter": 1314984
+    },
+    {
+      "a": 17,
+      "b": 18,
+      "trianglesBefore": 4564,
+      "trianglesAfter": 6233,
+      "bufferBytesBefore": 1204896,
+      "bufferBytesAfter": 1645512
+    },
+    {
+      "a": 18,
+      "b": 19,
+      "trianglesBefore": 7884,
+      "trianglesAfter": 9905,
+      "bufferBytesBefore": 2081376,
+      "bufferBytesAfter": 2614920
+    },
+    {
+      "a": 20,
+      "b": 21,
+      "trianglesBefore": 5234,
+      "trianglesAfter": 5234,
+      "bufferBytesBefore": 1381776,
+      "bufferBytesAfter": 1381776
+    },
+    {
+      "a": 21,
+      "b": 22,
+      "trianglesBefore": 6636,
+      "trianglesAfter": 6636,
+      "bufferBytesBefore": 1751904,
+      "bufferBytesAfter": 1751904
+    },
+    {
+      "a": 22,
+      "b": 23,
+      "trianglesBefore": 8577,
+      "trianglesAfter": 8577,
+      "bufferBytesBefore": 2264328,
+      "bufferBytesAfter": 2264328
+    },
+    {
+      "a": 23,
+      "b": 24,
+      "trianglesBefore": 11215,
+      "trianglesAfter": 11215,
+      "bufferBytesBefore": 2960760,
+      "bufferBytesAfter": 2960760
+    },
+    {
+      "a": 25,
+      "b": 26,
+      "trianglesBefore": 4213,
+      "trianglesAfter": 4213,
+      "bufferBytesBefore": 1112232,
+      "bufferBytesAfter": 1112232
+    },
+    {
+      "a": 26,
+      "b": 27,
+      "trianglesBefore": 5019,
+      "trianglesAfter": 5019,
+      "bufferBytesBefore": 1325016,
+      "bufferBytesAfter": 1325016
+    },
+    {
+      "a": 27,
+      "b": 28,
+      "trianglesBefore": 6276,
+      "trianglesAfter": 6276,
+      "bufferBytesBefore": 1656864,
+      "bufferBytesAfter": 1656864
+    },
+    {
+      "a": 28,
+      "b": 29,
+      "trianglesBefore": 6815,
+      "trianglesAfter": 6815,
+      "bufferBytesBefore": 1799160,
+      "bufferBytesAfter": 1799160
+    },
+    {
+      "a": 30,
+      "b": 31,
+      "trianglesBefore": 4295,
+      "trianglesAfter": 4295,
+      "bufferBytesBefore": 1133880,
+      "bufferBytesAfter": 1133880
+    },
+    {
+      "a": 31,
+      "b": 32,
+      "trianglesBefore": 5112,
+      "trianglesAfter": 5112,
+      "bufferBytesBefore": 1349568,
+      "bufferBytesAfter": 1349568
+    },
+    {
+      "a": 32,
+      "b": 33,
+      "trianglesBefore": 6055,
+      "trianglesAfter": 6055,
+      "bufferBytesBefore": 1598520,
+      "bufferBytesAfter": 1598520
+    },
+    {
+      "a": 33,
+      "b": 34,
+      "trianglesBefore": 6608,
+      "trianglesAfter": 6608,
+      "bufferBytesBefore": 1744512,
+      "bufferBytesAfter": 1744512
+    },
+    {
+      "a": 35,
+      "b": 36,
+      "trianglesBefore": 4166,
+      "trianglesAfter": 4166,
+      "bufferBytesBefore": 1099824,
+      "bufferBytesAfter": 1099824
+    },
+    {
+      "a": 36,
+      "b": 37,
+      "trianglesBefore": 5300,
+      "trianglesAfter": 5300,
+      "bufferBytesBefore": 1399200,
+      "bufferBytesAfter": 1399200
+    },
+    {
+      "a": 37,
+      "b": 38,
+      "trianglesBefore": 6452,
+      "trianglesAfter": 6452,
+      "bufferBytesBefore": 1703328,
+      "bufferBytesAfter": 1703328
+    },
+    {
+      "a": 38,
+      "b": 39,
+      "trianglesBefore": 7521,
+      "trianglesAfter": 7521,
+      "bufferBytesBefore": 1985544,
+      "bufferBytesAfter": 1985544
+    }
+  ],
+  "pilotSpeciesBufferBytesBefore": 12006492,
+  "pilotSpeciesBufferBytesAfter": 15575586,
+  "pilotSpeciesBufferGrowthPercent": 29.726368034893124,
+  "limitations": [
+    "Actual GPU residency and full renderer time remain required.",
+    "A category aggregate can mask a large local transition cost; report both.",
+    "This diagnoses the current union-selection approach, not all possible repairs."
+  ]
+}

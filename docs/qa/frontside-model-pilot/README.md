@@ -178,3 +178,24 @@ NOT-APPROVED names. No asset manifest/runtime activation or mass adaptation has
 occurred. `tools/frontside_pilot_server.mjs` serves only fixed candidate/report
 routes on loopback. Browser comparisons use CUA; offline scripts use Blender,
 Python and lossless Meshopt packing. Reports retain failed cases and controls.
+
+Shared-hook controls now establish that two independently loaded originals
+produce identical color and packed-shadow maps. The DoubleSide selective
+candidate retains the same shadow rejection with that persistent hook. A
+further diagnostic can constrain the candidate's shadow draw range to original
+indices, retaining added reverse geometry in the color pass, to isolate the
+added coplanar faces. This is a diagnosis, not an approved shadow adaptation.
+Packed bytes are now unpacked using r180's exact factors before reporting world
+depth deltas: byte carries can make max byte difference misleading. Connected
+RGB error regions and contour/interior missing components are also reported.
+
+`python tools/frontside_crop_resource_audit.py` counts actual eager allocations
+from crop-batch's 22 float32 bridge lanes and 128 instance slots. For the two
+pilot species, indexed states, eight bridges and instance payloads grow from
+12006492 to15575586 bytes (+29.726%). The full eight-species buffers grow from
+52688374 to56257468 bytes (+6.774%); using that denominator alone would conceal
+the local pilot transition cost. This is buffer payload estimation, not measured
+GPU residency or frame time. The proposed 10% screen limits additional botanical
+vertex/storage work while seeking a measured full-renderer improvement of at
+least 5%/.20ms. Pair-specific reverse selection rather than the current union
+across states/bridges is an alternative to investigate before abandoning repair.
