@@ -1,0 +1,18 @@
+{
+  "productionBase": "ee495d8b935a8458c9397d88c062611936473c3a",
+  "command": "node --test tests/music-window-transport.test.js tests/music-window-gameplay.test.js tests/music-window-pool.test.js tests/music-transport.test.js tests/music-mixer.test.js",
+  "native": false,
+  "tests": 47,
+  "sha256": {
+    "tests/music-window-transport.test.js": "df4d5286f7f9a96192a05666be4cc449ebf678237baf2f0db573894616f9cb97",
+    "src/audio/music-window-transport.js": "9bb65ad7236c8135386b04398311398d57abaaefad1eedfc8fb64b6f862c75f7",
+    "src/audio/music-window-pool.js": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7",
+    "src/audio/music-transport.js": "7290b935bfc8d3c49ebc970c111a489cbd125106d8f30509df318495bee64ab1",
+    "src/audio/music-mixer.js": "d455f91a3e180214a56865886447244b72e48e4d5e4d46c7468efd11cacfab2b",
+    "src/audio/audio.js": "b01768bd102a4447504236cd61f08cc00e5c314d8bb07504b022560cf99d949d",
+    "public/content/music-opus-windows-a.json": "8bff80e89e8ec6a3b1fe6a560d4b20baaa9771251069946abf3f8680193b17a7",
+    "public/content/music-opus-windows-b.json": "a6c7b35a8c137bd1c46f3129fa5847c2247f5b1ba1c622765705ab6a1857604c",
+    "public/content/music-a.json": "6552725306c2c226e0ac8c44f4f179e944cdfb11e92cf6b147285129a0ad66dd",
+    "public/content/music-b.json": "45097265d2d27aafd2bc73b54d1e024a476299931c29ee01f210cfebf039b70d"
+  }
+}

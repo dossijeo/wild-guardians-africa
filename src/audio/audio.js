@@ -198,6 +198,9 @@ export class AudioSystem {
     let alerts;
     for(let index=start;index<events.length;index++){
       const event=events[index];if(this.seen.has(event.id))continue;this.seen.add(event.id);
+      // Automatic harvest only queues worker work; it is not a player click.
+      // Consume its ID normally so history changes cannot replay it later.
+      if(event.type==='HarvestRequested'&&event.automatic===true)continue;
       if(event.type==='CampaignWon')this.musicEvent='success';if(event.type==='GameOver')this.musicEvent='failure';
       const id=event.type==='StructureHit'?structureHitSound(event,state):wallBuildSound(event)??eventSound[event.type];
       const requested=this.context?.currentTime??0,generation=this.generation;

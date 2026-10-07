@@ -2,6 +2,12 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Cosecha automática sin clic](automatic-harvest-click/README.md):60 pruebas, cero clics desde cuatro solicitudes reales en escena nativa, recolección/entrega conservadas en jornada legal dirigida. Capturas de mundo visibles mediante render detenido de la fixture. Pico musical mayor en esta repetición requiere revisar retención; sin aceptación de escucha, RAM total, FPS o móvil.
+
+- [Mezcla y colapsos nativos](audio-world-collapses-current/README.md): trabajo pagado, incursión y tres colapsos integrados; fuentes043/046 desde emisiones/contactos reales, límites correctos, cero voces y contexto cerrado al terminar. Silenciado y precargado: no acredita escucha, primer decode, cosecha entregada, FPS ni móvil. El canvas de la captura final está vacío y falta aceptación visual; también se identifica el ui_click heredado de la solicitud automática de cosecha para revisar.
+
+- [Validate Game c18d119](validation-c18d119/README.md): resultado terminal correcto, 2713 pruebas, verificaciones, build y paquete. No incluye la optimización posterior del guardado ni acredita los ensayos nativos/móviles pendientes.
+
 - [Validación repetida de guardados](save-primary-cache/README.md): respaldo idéntico, 19 pruebas dirigidas y 13 controles de recuperación con IndexedDB real en localhost. Una única copia durable evita volver a analizar la primaria si sus bytes coinciden exactamente. Las muestras grandes tienen deriva CPU y la caché retiene una cadena adicional. No acredita porcentaje estable, latencia de fincas grandes, FPS o móvil.
 
 - [Reservas de animales cerradas](animal-preload-disposed/README.md): llamadas tardías a warm/take no inician nuevas cargas; 39 pruebas, build y paquete correctos. No acredita ausencia de tirones en móvil ni recuperación de contexto WebGL.
@@ -90,3 +96,5 @@ Prioridades de aceptación que permanecen abiertas: recorrido móvil actualizado
 [Validate Game ef4c50b](validate-ef4c50b/README.md) ha terminado con2.691 pruebas, sin fallos/canceladas/omitidas, verificaciones, compilación y ambos pasos de empaquetado correctos. Se conserva el log completo. [Catálogo de voces nativo](spirit-catalog-native/README.md):54 inicios/cierres reales y un ended natural verificados con salida silenciada; el ensayo adicional de reproducción completa sigue activo y no se da por terminado.
 
 Actualización de reproducción completa: el primer ensayo terminó por tiempo de espera en ES_21 después de 20 finales naturales. El fallo y sus hashes están conservados en el informe del catálogo. Se añadió diagnóstico de eventos/estado nativo y se inició una prueba parcial desde ES_21; esa pista sí terminó en la repetición y la causa del fallo inicial sigue sin determinarse. No se acredita aún reproducción completa de las 54 voces.
+
+[Retención musical prolongada](music-window-lifecycle/README.md): cuatro sesiones de338,56/399,76s con los índices Opus actuales reproducen un pico de74.876.928 bytes en saltos registrados con dos decks y32 ventanas. Las fuentes terminadas liberan sus referencias y el pool vuelve a bajar tras el solapamiento;47 pruebas dirigidas correctas. El contexto/decoder son dobles de prueba: no acredita RAM física ni atribuye retrospectivamente el pico de la escena nativa, que todavía necesita registrar el estado del transporte en ese instante. No se modifica el runtime ni se declara ahorro.

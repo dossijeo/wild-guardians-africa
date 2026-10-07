@@ -8,8 +8,8 @@ import {MUSIC_POLICIES} from '../src/audio/music-policy.js';
 const banks=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-${pack}.json`,import.meta.url)))]));
 const indices=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-windows-${pack}.json`,import.meta.url)))]));
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
-async function fixture(pack,{offset=0,random=()=>1,scene='day',beforeRead}={}){
- const sources=[],decoded=[],gains=[],index=indices[pack],bank=banks[pack],audio=new AudioSystem({sfx:0,music:0});
+async function fixture(pack,{offset=0,random=()=>1,scene='day',beforeRead,windowIndex=indices[pack],mixerRandom}={}){
+ const sources=[],decoded=[],gains=[],index=windowIndex,bank=banks[pack],audio=new AudioSystem({sfx:0,music:0});
  audio.context={state:'running',currentTime:1,createGain(){const node={gain:{setValueAtTime(){},cancelScheduledValues(){},linearRampToValueAtTime(){}},connect(){},disconnect(){this.closed=true;}};gains.push(node);return node;},createBufferSource(){const source={playbackRate:{value:0},connect(){},disconnect(){this.closed=true;},start(when,offset){this.when=when;this.offset=offset;},stop(at){this.stopAt=at??-Infinity;}};sources.push(source);return source;}};
  audio.musicGain={};audio.musicScene=scene;
  audio.musicWindowPool=new MusicWindowPool(index,{readRange:async(url,start)=>{await beforeRead?.(url,start);return {url,start};},decode:async data=>{
@@ -19,9 +19,11 @@ async function fixture(pack,{offset=0,random=()=>1,scene='day',beforeRead}={}){
  const pool=audio.musicWindowPool;
  await Promise.all(bank.tracks.filter((t,i)=>MUSIC_POLICIES[pack].levels[scene][i]>0).map(t=>pool.load(t.id,pool.at(t.id,offset).window)));
  const transport=new MusicWindowTransport(audio,pack,bank,bank.tracks.map(track=>({track})),{offset,random});audio.transport=transport;
+ if(mixerRandom)transport.mixer.random=mixerRandom;
  async function tick(now,next=scene){
   audio.context.currentTime=now;
-  for(const source of [...audio.active])if(source.stopAt<=now)source.onended?.();
+  // Native ended also fires after stopVoice removes a source from audio.active.
+  for(const source of sources)if(!source.nativeEnded&&source.stopAt<=now){source.nativeEnded=true;source.onended?.();}
   transport.update(next,now);await settle();await settle();transport.update(next,now);
  }
  await tick(1);return {audio,transport,pool,sources,gains,decoded,tick};
@@ -131,4 +133,43 @@ for(const pack of ['a','b'])test(pack+': stopping suspended music releases nativ
  assert.ok(active.every(source=>source.buffer===null));
  for(const source of active)source.onended?.();
  assert.equal(audio.active.length,0);assert.equal(pool.pcmBytes(),0);
+});
+
+// Exercise runtime Opus window sizes and navigation without decoding audio in
+// Node. Only the encoded-byte assembly is bypassed: codec correctness and native
+// decoding have separate tests. The clock, mixer, pool and source lifecycle here
+// are the production implementations, with deterministic native-ended callbacks.
+for(const pack of ['a','b'])for(const branching of [false,true])test(`${pack}: long Opus ${branching?'branching':'wrapping'} playback releases expired windows`,async t=>{
+ const runtime=JSON.parse(readFileSync(new URL(`../public/content/music-opus-windows-${pack}.json`,import.meta.url)));
+ const windowIndex={...runtime,tracks:runtime.tracks.map(track=>({...track,windows:track.windows.map(({recipe,...window})=>window)}))};
+ let seed=1729;const mixerRandom=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2**32;};
+ const {audio,transport,pool,sources,tick}=await fixture(pack,{windowIndex,offset:banks[pack].duration-10,random:()=>branching?0:1,mixerRandom});
+ const scenes=['day','night','attack','minimal'],maximumWindowBytes=Math.max(...runtime.tracks.flatMap(track=>track.windows.map(window=>window.decodedSamples*8)));
+ let peakBytes=0,peakSources=0,peakDecks=0,overlapBytes=0,returnedToSingle=false,finished=0,peak;
+ for(let now=1;now<2*banks[pack].duration+40;now+=.1){
+  await tick(now,scenes[Math.floor(now/37)%scenes.length]);
+  const native=transport.decks.flatMap(deck=>deck.sources.flatMap(voice=>[...voice.native.values()]));
+  assert.deepEqual(new Set(audio.active),new Set(native),'active sources must belong to a retained deck');
+  assert.ok(transport.decks.length<=2,'only the outgoing and incoming deck may coexist');
+  for(const key of pool.ready.keys())assert.ok(transport.wantedKeys.has(key),'expired PCM must not remain in the pool');
+  const bytes=pool.pcmBytes();
+  // Each deck needs current/next windows per stem; a pending destination can
+  // require one extra window. This is a demand bound, independent of elapsed
+  // track duration or number of loops, rather than an arbitrary RAM threshold.
+  assert.ok(bytes<=5*runtime.tracks.length*maximumWindowBytes);
+  if(bytes>peakBytes){peakBytes=bytes;peak={now,decks:transport.decks.length,nativeSources:native.length,readyWindows:pool.ready.size,plan:transport.plan?.kind??null};}
+  peakSources=Math.max(peakSources,native.length);peakDecks=Math.max(peakDecks,transport.decks.length);
+  if(transport.decks.length===2)overlapBytes=Math.max(overlapBytes,bytes);
+  if(overlapBytes&&transport.decks.length===1&&bytes<overlapBytes)returnedToSingle=true;
+  finished=0;
+  for(const source of sources)if(source.stopAt<=now){assert.equal(source.buffer,null,'ended sources must release their PCM reference');finished++;}
+ }
+ if(branching)assert.ok(transport.lastEdge,'registered branch must be exercised');else assert.ok(transport.loops>=2,'multiple whole-bank wraps must be exercised');
+ assert.equal(peakDecks,2);assert.ok(returnedToSingle,'PCM must fall again after the overlap');assert.ok(finished>20);
+ for(const source of sources)assert.ok(Math.abs(source.musicWindowFirstSample/48000+source.offset-(source.musicDeckOffset+source.when-source.musicDeckStart))<1e-10);
+ assert.equal(transport.windowError,undefined);
+ t.diagnostic(JSON.stringify({pack,branching,seconds:2*banks[pack].duration+40,peakBytes,peakSources,peakDecks,peak,loops:transport.loops,jumps:transport.jumps,finishedSources:finished}));
+ audio.stop();assert.equal(pool.pcmBytes(),0);assert.equal(pool.pending.size,0);assert.equal(audio.active.length,0);
+ // Flush the stop callbacks as a running native context would do asynchronously.
+ for(const source of sources)source.onended?.();assert.ok(sources.every(source=>source.buffer===null));
 });
