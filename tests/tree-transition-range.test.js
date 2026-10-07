@@ -19,7 +19,7 @@ test('height classification is deterministic, anisotropic and independent of cam
 test('sprite, resident native and retained standby share exact per-tree ranges and keep unready fallback',async()=>{
  const geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial(),texture=new THREE.Texture(),source={geometry,material},metadata={impostorWidth:8,impostorHeight:height,localBase:[0,0,0]};
  const p=createFarImpostorPrototype(source,texture,metadata,trees,{nativeModels:false,start:120,end:160,transitionHeight:policy});
- assert.deepEqual(Array.from(p.impostors.geometry.attributes.aTreeTransitionWeight.array),[0,1]);assert.deepEqual(p.uniforms.uLargeRange.value.toArray(),[200,240]);
+ assert.deepEqual(Array.from(p.impostors.geometry.attributes.aTreeTransitionWeight.array),[0,1]);assert.deepEqual(p.uniforms.uLargeRange.value.toArray(),[200,240]);assert.deepEqual(p.treeTransitionRange('giant'),[200,240]);assert.deepEqual(p.treeTransitionRange('small'),[120,160]);assert.equal(lodMix(220,...p.treeTransitionRange('giant'),1),.5);
  const mesh=new THREE.InstancedMesh(geometry.clone(),material,2);mesh.geometry.setAttribute('nativeVisibility',new THREE.InstancedBufferAttribute(new Float32Array(2),1));
  const batch={slot:2,instances:trees,fade:{attribute:new THREE.InstancedBufferAttribute(new Float32Array([1,1]),1)},meshes:[mesh],orders:[[0,1]],key:'test'},chunks=new Map([['0',{userData:{lodBatches:[batch]}}]]);
  const fade=new NativeFarCoverage([0,0,0],{start:120,end:160,slot:2,treeHeight:height,transitionHeight:policy}),scene=new THREE.Scene(),standby=new NativeTreeStandby({scene,sources:[source],start:120,end:160,keepDistance:288,treeHeight:height,transitionHeight:policy,prepare:async()=>{}});
@@ -32,7 +32,7 @@ test('sprite, resident native and retained standby share exact per-tree ranges a
   for(const [i,t]of trees.entries()){const range=treeTransitionRange(t,height,120,160,policy),native=Math.fround(1-lodMix(distance,...range,ready));assert.equal(mesh.geometry.attributes.nativeVisibility.getX(i),native);const draw=standby.drawDiagnosis(t.id);assert.equal(draw?.visibility??0,native);assert.equal(draw?.matrixExact??true,true);if(!ready)assert.equal(native,0,'unprepared model cannot hide sprite');}
  }
  assert.deepEqual(standby.active.preparedMatrices[0],prepared);
- const layer={options:{},fade,current:{prototype:p}};inspectFarTransition(layer,standby,120,160,null);assert.deepEqual(p.uniforms.uLargeRange.value.toArray(),[120,160]);assert.deepEqual(Array.from(p.impostors.geometry.attributes.aTreeTransitionWeight.array),[0,0]);assert.deepEqual(standby.active.entries.get('giant').transitionRange,[120,160]);
+ const layer={options:{},fade,current:{prototype:p}};inspectFarTransition(layer,standby,120,160,null);assert.deepEqual(p.uniforms.uLargeRange.value.toArray(),[120,160]);assert.deepEqual(Array.from(p.impostors.geometry.attributes.aTreeTransitionWeight.array),[0,0]);assert.deepEqual(p.treeTransitionRange('giant'),[120,160]);assert.deepEqual(standby.active.entries.get('giant').transitionRange,[120,160]);
  inspectFarTransition(layer,standby,120,160,policy);assert.deepEqual(standby.active.entries.get('giant').transitionRange,[200,240]);assert.deepEqual(p.uniforms.uLargeRange.value.toArray(),[200,240]);assert.deepEqual(Array.from(p.impostors.geometry.attributes.aTreeTransitionWeight.array),[0,1]);
  standby.dispose();p.dispose();mesh.dispose();mesh.geometry.dispose();geometry.dispose();material.dispose();
 });

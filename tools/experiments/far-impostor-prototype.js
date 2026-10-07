@@ -77,6 +77,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
   if(nativeModels&&(selected||packedRevision!==readinessRevision)){let first=Infinity,last=-1;const attribute=modelGeometry.attributes.aTreeReady;for(const [slot,index] of selection.indices.entries()){const value=geometry.attributes.aTreeReady.getX(index);if(attribute.getX(slot)!==value){attribute.setX(slot,value);first=Math.min(first,slot);last=slot;}}if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;readinessUploads++;}packedRevision=readinessRevision;}
   if(nativeModels&&!toon)modelMaterial.color.copy(originalColor).multiply(uniforms.uLighting.value);
  }
+ function treeTransitionRange(id){const index=indicesById.get(id);if(index===undefined)return null;const weight=geometry.attributes.aTreeTransitionWeight.getX(index);return [uniforms.uStart.value+(uniforms.uLargeRange.value.x-uniforms.uStart.value)*weight,uniforms.uEnd.value+(uniforms.uLargeRange.value.y-uniforms.uEnd.value)*weight];}
  function setTransitionHeight(policy){
   transitionHeight=validateTreeTransitionPolicy(policy,uniforms.uStart.value,uniforms.uEnd.value);uniforms.uLargeRange.value.set(transitionHeight?.start??uniforms.uStart.value,transitionHeight?.end??uniforms.uEnd.value);
   const attr=geometry.attributes.aTreeTransitionWeight;let changed=false;for(const [i,t]of trees.entries()){const weight=treeTransitionWeight(t,metadata.impostorHeight,transitionHeight);if(attr.getX(i)!==weight){attr.setX(i,weight);attr.addUpdateRange(i,1);changed=true;}}if(changed)attr.needsUpdate=true;
@@ -85,5 +86,5 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  function setHullEnabled(enabled){if(!hullShape)return false;const changed=hullShape.set(enabled);geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);return changed;}
  function stats(){return {selectionScans:selection.scans,matrixUploads,readinessRevision,readinessUploads};}
  function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
- return {impostors,models,uniforms,setHullEnabled,setTransitionHeight,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
+ return {impostors,models,uniforms,setHullEnabled,setTransitionHeight,treeTransitionRange,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
 }
