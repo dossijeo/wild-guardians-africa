@@ -1,0 +1,149 @@
+{
+  "status": "DESIGN_COST_DIAGNOSIS_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "bridgeDataSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "meshes": [
+    {
+      "mesh": "maiz_03_adulto",
+      "sourceTriangles": 2743,
+      "frontBaseCoreTriangles": 1219,
+      "doubleLeafTriangles": 1524,
+      "sourceOrderGroups": 1246,
+      "twoGroupDrawCalls": 2,
+      "newTriangles": 0,
+      "stateActiveGpuIndexDeltaBytes": 0,
+      "stateNewIndexArrayBytes": 16458,
+      "bridgePairs": [
+        {
+          "a": 1,
+          "b": 2,
+          "triangles": 3997,
+          "frontCoreTriangles": 2155,
+          "doubleLeafTriangles": 1842,
+          "originalOrderDrawGroups": 1670,
+          "twoGroupAddedIndexBytes": 23982,
+          "originalBridgeVertexBytes": 1055208,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        },
+        {
+          "a": 2,
+          "b": 3,
+          "triangles": 5948,
+          "frontCoreTriangles": 2351,
+          "doubleLeafTriangles": 3597,
+          "originalOrderDrawGroups": 2607,
+          "twoGroupAddedIndexBytes": 35688,
+          "originalBridgeVertexBytes": 1570272,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        }
+      ]
+    },
+    {
+      "mesh": "maiz_04_desarrollo",
+      "sourceTriangles": 3205,
+      "frontBaseCoreTriangles": 1132,
+      "doubleLeafTriangles": 2073,
+      "sourceOrderGroups": 1361,
+      "twoGroupDrawCalls": 2,
+      "newTriangles": 0,
+      "stateActiveGpuIndexDeltaBytes": 0,
+      "stateNewIndexArrayBytes": 19230,
+      "bridgePairs": [
+        {
+          "a": 2,
+          "b": 3,
+          "triangles": 5948,
+          "frontCoreTriangles": 2351,
+          "doubleLeafTriangles": 3597,
+          "originalOrderDrawGroups": 2607,
+          "twoGroupAddedIndexBytes": 35688,
+          "originalBridgeVertexBytes": 1570272,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        },
+        {
+          "a": 3,
+          "b": 4,
+          "triangles": 8140,
+          "frontCoreTriangles": 3058,
+          "doubleLeafTriangles": 5082,
+          "originalOrderDrawGroups": 3440,
+          "twoGroupAddedIndexBytes": 48840,
+          "originalBridgeVertexBytes": 2148960,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        }
+      ]
+    },
+    {
+      "mesh": "maiz_05_maduro",
+      "sourceTriangles": 4935,
+      "frontBaseCoreTriangles": 1926,
+      "doubleLeafTriangles": 3009,
+      "sourceOrderGroups": 2080,
+      "twoGroupDrawCalls": 2,
+      "newTriangles": 0,
+      "stateActiveGpuIndexDeltaBytes": 0,
+      "stateNewIndexArrayBytes": 29610,
+      "bridgePairs": [
+        {
+          "a": 3,
+          "b": 4,
+          "triangles": 8140,
+          "frontCoreTriangles": 3058,
+          "doubleLeafTriangles": 5082,
+          "originalOrderDrawGroups": 3440,
+          "twoGroupAddedIndexBytes": 48840,
+          "originalBridgeVertexBytes": 2148960,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        }
+      ]
+    },
+    {
+      "mesh": "platano_05_maduro",
+      "sourceTriangles": 5640,
+      "frontBaseCoreTriangles": 2649,
+      "doubleLeafTriangles": 2991,
+      "sourceOrderGroups": 2146,
+      "twoGroupDrawCalls": 2,
+      "newTriangles": 0,
+      "stateActiveGpuIndexDeltaBytes": 0,
+      "stateNewIndexArrayBytes": 33840,
+      "bridgePairs": [
+        {
+          "a": 18,
+          "b": 19,
+          "triangles": 7884,
+          "frontCoreTriangles": 3740,
+          "doubleLeafTriangles": 4144,
+          "originalOrderDrawGroups": 3084,
+          "twoGroupAddedIndexBytes": 47304,
+          "originalBridgeVertexBytes": 2081376,
+          "twoGroupBufferGrowthPercent": 2.272727272727273
+        }
+      ]
+    }
+  ],
+  "alternatives": [
+    {
+      "name": "Preserve source face priority",
+      "trianglesAdded": 0,
+      "attributeOrIndexBytesAdded": 0,
+      "drawCalls": "One per contiguous Front/Double run; exact counts above."
+    },
+    {
+      "name": "Two draw groups",
+      "trianglesAdded": 0,
+      "attributeBytesAdded": 0,
+      "stateActiveGpuIndexDeltaBytes": 0,
+      "newCpuIndexArrays": "State replacement arrays and bridge indices counted above; keeping original owners retains old arrays too.",
+      "bridgeIndexBytes": "Uint16/32 sequential index stream to partition unindexed bridge; exact counts above.",
+      "risk": "Changes cross-group face priority; must reconstruct faceLabels/provenance and test coincident interfaces."
+    }
+  ],
+  "limitations": [
+    "Labels0/1 designate ground/core, not proof of geometric closure or FrontSide visual correctness.",
+    "True leaf surfaces would remain selectively DoubleSide; design acceptance requires user scope and GPU benefit, not topology alone.",
+    "Material/program allocations and disposal of previously uploaded indices require runtime measurement; buffer counts do not establish total GPU memory.",
+    "The measured GPU ceiling for all originals forced FrontSide cannot be attributed to this partial alternative.",
+    "No material/group/index/asset change and no benchmark."
+  ]
+}

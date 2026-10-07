@@ -1,0 +1,6656 @@
+{
+  "status": "PER_ACCESSORY_NORMAL_AUDIT_NOT_APPROVAL",
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "baseCandidateSha256": "e7db32838f66fc14a23a9216af3c65d28b02205f14866c31092ea2fcb99cf5c0",
+  "requestedExport": null,
+  "maximumSupportAngleDegrees": 15,
+  "accessories": [
+    {
+      "mesh": "Can_Nozzle_geometry_4",
+      "sourceZeroNormals": 81,
+      "proposalNormals": 81,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            -3.7517231631679474e-18,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287658462770294,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            0.03526661545038223
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.03526661545038223,
+            0.9957445859909058,
+            0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            -0.03526661545038223,
+            0.9957445859909058,
+            0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            -0.0851411372423172,
+            0.9957445859909058,
+            0.03526661545038223
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            -0.0851411372423172,
+            0.9957445859909058,
+            -0.03526661545038223
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.03526661545038223,
+            0.9957445859909058,
+            -0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            0.03526661545038223,
+            0.9957445859909058,
+            -0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            -0.03526661545038223
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 54,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287660367230318,
+          "supportFaces": [
+            81,
+            83,
+            85,
+            87,
+            89,
+            91,
+            93,
+            95
+          ]
+        },
+        {
+          "vertex": 55,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            81
+          ]
+        },
+        {
+          "vertex": 56,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            83
+          ]
+        },
+        {
+          "vertex": 57,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            85
+          ]
+        },
+        {
+          "vertex": 58,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            87
+          ]
+        },
+        {
+          "vertex": 59,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            89
+          ]
+        },
+        {
+          "vertex": 60,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            91
+          ]
+        },
+        {
+          "vertex": 61,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            93
+          ]
+        },
+        {
+          "vertex": 62,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            95
+          ]
+        },
+        {
+          "vertex": 108,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287659969951128,
+          "supportFaces": [
+            161,
+            163,
+            165,
+            167,
+            169,
+            171,
+            173,
+            175
+          ]
+        },
+        {
+          "vertex": 109,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            0.03526662662625313
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            161
+          ]
+        },
+        {
+          "vertex": 110,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            163
+          ]
+        },
+        {
+          "vertex": 111,
+          "normal": [
+            -0.03526664152741432,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            165
+          ]
+        },
+        {
+          "vertex": 112,
+          "normal": [
+            -0.0851411372423172,
+            0.9957445859909058,
+            0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            167
+          ]
+        },
+        {
+          "vertex": 113,
+          "normal": [
+            -0.0851411372423172,
+            0.9957445859909058,
+            -0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            169
+          ]
+        },
+        {
+          "vertex": 114,
+          "normal": [
+            -0.03526664152741432,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            171
+          ]
+        },
+        {
+          "vertex": 115,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            173
+          ]
+        },
+        {
+          "vertex": 116,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            -0.03526662662625313
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            175
+          ]
+        },
+        {
+          "vertex": 162,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287660367230318,
+          "supportFaces": [
+            241,
+            243,
+            245,
+            247,
+            249,
+            251,
+            253,
+            255
+          ]
+        },
+        {
+          "vertex": 163,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            241
+          ]
+        },
+        {
+          "vertex": 164,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            243
+          ]
+        },
+        {
+          "vertex": 165,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            245
+          ]
+        },
+        {
+          "vertex": 166,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            247
+          ]
+        },
+        {
+          "vertex": 167,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            249
+          ]
+        },
+        {
+          "vertex": 168,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            251
+          ]
+        },
+        {
+          "vertex": 169,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            253
+          ]
+        },
+        {
+          "vertex": 170,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            255
+          ]
+        },
+        {
+          "vertex": 216,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287659913197035,
+          "supportFaces": [
+            321,
+            323,
+            325,
+            327,
+            329,
+            331,
+            333,
+            335
+          ]
+        },
+        {
+          "vertex": 217,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            321
+          ]
+        },
+        {
+          "vertex": 218,
+          "normal": [
+            0.03526662662625313,
+            0.9957445859909058,
+            0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            323
+          ]
+        },
+        {
+          "vertex": 219,
+          "normal": [
+            -0.03526662662625313,
+            0.9957445859909058,
+            0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            325
+          ]
+        },
+        {
+          "vertex": 220,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            327
+          ]
+        },
+        {
+          "vertex": 221,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            329
+          ]
+        },
+        {
+          "vertex": 222,
+          "normal": [
+            -0.03526662662625313,
+            0.9957445859909058,
+            -0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            331
+          ]
+        },
+        {
+          "vertex": 223,
+          "normal": [
+            0.03526662662625313,
+            0.9957445859909058,
+            -0.0851411372423172
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            333
+          ]
+        },
+        {
+          "vertex": 224,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            -0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            335
+          ]
+        },
+        {
+          "vertex": 270,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287660367230318,
+          "supportFaces": [
+            401,
+            403,
+            405,
+            407,
+            409,
+            411,
+            413,
+            415
+          ]
+        },
+        {
+          "vertex": 271,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            401
+          ]
+        },
+        {
+          "vertex": 272,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            403
+          ]
+        },
+        {
+          "vertex": 273,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            405
+          ]
+        },
+        {
+          "vertex": 274,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            407
+          ]
+        },
+        {
+          "vertex": 275,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            409
+          ]
+        },
+        {
+          "vertex": 276,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            411
+          ]
+        },
+        {
+          "vertex": 277,
+          "normal": [
+            0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            413
+          ]
+        },
+        {
+          "vertex": 278,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            415
+          ]
+        },
+        {
+          "vertex": 324,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287659913197035,
+          "supportFaces": [
+            481,
+            483,
+            485,
+            487,
+            489,
+            491,
+            493,
+            495
+          ]
+        },
+        {
+          "vertex": 325,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            0.03526662662625313
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            481
+          ]
+        },
+        {
+          "vertex": 326,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            483
+          ]
+        },
+        {
+          "vertex": 327,
+          "normal": [
+            -0.03526663780212402,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            485
+          ]
+        },
+        {
+          "vertex": 328,
+          "normal": [
+            -0.085141122341156,
+            0.9957445859909058,
+            0.03526664525270462
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            487
+          ]
+        },
+        {
+          "vertex": 329,
+          "normal": [
+            -0.085141122341156,
+            0.9957445859909058,
+            -0.03526664525270462
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            489
+          ]
+        },
+        {
+          "vertex": 330,
+          "normal": [
+            -0.03526663780212402,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            491
+          ]
+        },
+        {
+          "vertex": 331,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            493
+          ]
+        },
+        {
+          "vertex": 332,
+          "normal": [
+            0.0851411372423172,
+            0.9957445859909058,
+            -0.03526662662625313
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            495
+          ]
+        },
+        {
+          "vertex": 378,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287660367230318,
+          "supportFaces": [
+            561,
+            563,
+            565,
+            567,
+            569,
+            571,
+            573,
+            575
+          ]
+        },
+        {
+          "vertex": 379,
+          "normal": [
+            0.085141122341156,
+            0.9957445859909058,
+            0.03526664525270462
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            561
+          ]
+        },
+        {
+          "vertex": 380,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            563
+          ]
+        },
+        {
+          "vertex": 381,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            565
+          ]
+        },
+        {
+          "vertex": 382,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            567
+          ]
+        },
+        {
+          "vertex": 383,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.035266660153865814
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            569
+          ]
+        },
+        {
+          "vertex": 384,
+          "normal": [
+            -0.035266660153865814,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            571
+          ]
+        },
+        {
+          "vertex": 385,
+          "normal": [
+            0.03526663780212402,
+            0.9957445859909058,
+            -0.08514115959405899
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            573
+          ]
+        },
+        {
+          "vertex": 386,
+          "normal": [
+            0.085141122341156,
+            0.9957445859909058,
+            -0.03526664525270462
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            575
+          ]
+        },
+        {
+          "vertex": 432,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 5.287659913197035,
+          "supportFaces": [
+            641,
+            643,
+            645,
+            647,
+            649,
+            651,
+            653,
+            655
+          ]
+        },
+        {
+          "vertex": 433,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            641
+          ]
+        },
+        {
+          "vertex": 434,
+          "normal": [
+            0.03526664525270462,
+            0.9957445859909058,
+            0.085141122341156
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            643
+          ]
+        },
+        {
+          "vertex": 435,
+          "normal": [
+            -0.03526664525270462,
+            0.9957445859909058,
+            0.085141122341156
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            645
+          ]
+        },
+        {
+          "vertex": 436,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            647
+          ]
+        },
+        {
+          "vertex": 437,
+          "normal": [
+            -0.08514115959405899,
+            0.9957445859909058,
+            -0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            649
+          ]
+        },
+        {
+          "vertex": 438,
+          "normal": [
+            -0.03526664525270462,
+            0.9957445859909058,
+            -0.085141122341156
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            651
+          ]
+        },
+        {
+          "vertex": 439,
+          "normal": [
+            0.03526664525270462,
+            0.9957445859909058,
+            -0.085141122341156
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            653
+          ]
+        },
+        {
+          "vertex": 440,
+          "normal": [
+            0.08514115959405899,
+            0.9957445859909058,
+            -0.03526663780212402
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            655
+          ]
+        }
+      ],
+      "sourceVertices": 486,
+      "candidateVertices": 486,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Can_badge_geometry_5",
+      "sourceZeroNormals": 17,
+      "proposalNormals": 16,
+      "unresolved": [
+        {
+          "vertex": 0,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 47.96863679570804,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "vertex": 1,
+          "normal": [
+            0.18982002139091492,
+            0.9587807655334473,
+            0.211442232131958
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.14072012901306152,
+            0.8384190201759338,
+            0.5265467166900635
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.08144588768482208,
+            0.7262420654296875,
+            0.682597279548645
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            0.02636692300438881,
+            0.6695373058319092,
+            0.7423102855682373
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            -0.02636692300438881,
+            0.6695373058319092,
+            0.7423102855682373
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.08144588768482208,
+            0.7262420654296875,
+            0.682597279548645
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            -0.14072012901306152,
+            0.8384190201759338,
+            0.5265467166900635
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            -0.18982002139091492,
+            0.9587807655334473,
+            0.211442232131958
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            -0.18982002139091492,
+            0.9587807655334473,
+            -0.211442232131958
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            -0.14072012901306152,
+            0.8384190201759338,
+            -0.5265467166900635
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 11,
+          "normal": [
+            -0.08144588768482208,
+            0.7262420654296875,
+            -0.682597279548645
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            21
+          ]
+        },
+        {
+          "vertex": 12,
+          "normal": [
+            -0.02636692300438881,
+            0.6695373058319092,
+            -0.7423102855682373
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            23
+          ]
+        },
+        {
+          "vertex": 13,
+          "normal": [
+            0.02636692300438881,
+            0.6695373058319092,
+            -0.7423102855682373
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            25
+          ]
+        },
+        {
+          "vertex": 14,
+          "normal": [
+            0.08144588768482208,
+            0.7262420654296875,
+            -0.682597279548645
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            27
+          ]
+        },
+        {
+          "vertex": 15,
+          "normal": [
+            0.14072012901306152,
+            0.8384190201759338,
+            -0.5265467166900635
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            29
+          ]
+        },
+        {
+          "vertex": 16,
+          "normal": [
+            0.18982002139091492,
+            0.9587807655334473,
+            -0.211442232131958
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            31
+          ]
+        }
+      ],
+      "sourceVertices": 187,
+      "candidateVertices": 187,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 1,
+      "status": "AMBIGUOUS_NOT_EXPORTED"
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_10",
+      "sourceZeroNormals": 72,
+      "proposalNormals": 64,
+      "unresolved": [
+        {
+          "vertex": 0,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.355858576519225,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15
+          ]
+        },
+        {
+          "vertex": 54,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.35567729603777,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            81,
+            83,
+            85,
+            87,
+            89,
+            91,
+            93,
+            95
+          ]
+        },
+        {
+          "vertex": 108,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.355858576519225,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            161,
+            163,
+            165,
+            167,
+            169,
+            171,
+            173,
+            175
+          ]
+        },
+        {
+          "vertex": 162,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.35567729603777,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            241,
+            243,
+            245,
+            247,
+            249,
+            251,
+            253,
+            255
+          ]
+        },
+        {
+          "vertex": 216,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.355858576519225,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            321,
+            323,
+            325,
+            327,
+            329,
+            331,
+            333,
+            335
+          ]
+        },
+        {
+          "vertex": 270,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.35567729603777,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            401,
+            403,
+            405,
+            407,
+            409,
+            411,
+            413,
+            415
+          ]
+        },
+        {
+          "vertex": 324,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.355858576519225,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            481,
+            483,
+            485,
+            487,
+            489,
+            491,
+            493,
+            495
+          ]
+        },
+        {
+          "vertex": 378,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 38.35567729603777,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            561,
+            563,
+            565,
+            567,
+            569,
+            571,
+            573,
+            575
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "vertex": 1,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 55,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            81
+          ]
+        },
+        {
+          "vertex": 56,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            83
+          ]
+        },
+        {
+          "vertex": 57,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            85
+          ]
+        },
+        {
+          "vertex": 58,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            87
+          ]
+        },
+        {
+          "vertex": 59,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            89
+          ]
+        },
+        {
+          "vertex": 60,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            91
+          ]
+        },
+        {
+          "vertex": 61,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            93
+          ]
+        },
+        {
+          "vertex": 62,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            95
+          ]
+        },
+        {
+          "vertex": 109,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            161
+          ]
+        },
+        {
+          "vertex": 110,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            163
+          ]
+        },
+        {
+          "vertex": 111,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            165
+          ]
+        },
+        {
+          "vertex": 112,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            167
+          ]
+        },
+        {
+          "vertex": 113,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            169
+          ]
+        },
+        {
+          "vertex": 114,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            171
+          ]
+        },
+        {
+          "vertex": 115,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            173
+          ]
+        },
+        {
+          "vertex": 116,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            175
+          ]
+        },
+        {
+          "vertex": 163,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            241
+          ]
+        },
+        {
+          "vertex": 164,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            243
+          ]
+        },
+        {
+          "vertex": 165,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            245
+          ]
+        },
+        {
+          "vertex": 166,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            247
+          ]
+        },
+        {
+          "vertex": 167,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            249
+          ]
+        },
+        {
+          "vertex": 168,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            251
+          ]
+        },
+        {
+          "vertex": 169,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            253
+          ]
+        },
+        {
+          "vertex": 170,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            255
+          ]
+        },
+        {
+          "vertex": 217,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            321
+          ]
+        },
+        {
+          "vertex": 218,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            323
+          ]
+        },
+        {
+          "vertex": 219,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            325
+          ]
+        },
+        {
+          "vertex": 220,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            327
+          ]
+        },
+        {
+          "vertex": 221,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            329
+          ]
+        },
+        {
+          "vertex": 222,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            331
+          ]
+        },
+        {
+          "vertex": 223,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            333
+          ]
+        },
+        {
+          "vertex": 224,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            335
+          ]
+        },
+        {
+          "vertex": 271,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            401
+          ]
+        },
+        {
+          "vertex": 272,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            403
+          ]
+        },
+        {
+          "vertex": 273,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            405
+          ]
+        },
+        {
+          "vertex": 274,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            407
+          ]
+        },
+        {
+          "vertex": 275,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            409
+          ]
+        },
+        {
+          "vertex": 276,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            411
+          ]
+        },
+        {
+          "vertex": 277,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            413
+          ]
+        },
+        {
+          "vertex": 278,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            415
+          ]
+        },
+        {
+          "vertex": 325,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            481
+          ]
+        },
+        {
+          "vertex": 326,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            483
+          ]
+        },
+        {
+          "vertex": 327,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            485
+          ]
+        },
+        {
+          "vertex": 328,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            487
+          ]
+        },
+        {
+          "vertex": 329,
+          "normal": [
+            -0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            489
+          ]
+        },
+        {
+          "vertex": 330,
+          "normal": [
+            -0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            491
+          ]
+        },
+        {
+          "vertex": 331,
+          "normal": [
+            0.10553710162639618,
+            0.7841717600822449,
+            -0.611503541469574
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            493
+          ]
+        },
+        {
+          "vertex": 332,
+          "normal": [
+            0.2953930199146271,
+            0.9091267585754395,
+            -0.2936519682407379
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            495
+          ]
+        },
+        {
+          "vertex": 379,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            561
+          ]
+        },
+        {
+          "vertex": 380,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            563
+          ]
+        },
+        {
+          "vertex": 381,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            565
+          ]
+        },
+        {
+          "vertex": 382,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            567
+          ]
+        },
+        {
+          "vertex": 383,
+          "normal": [
+            -0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            569
+          ]
+        },
+        {
+          "vertex": 384,
+          "normal": [
+            -0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            571
+          ]
+        },
+        {
+          "vertex": 385,
+          "normal": [
+            0.10553668439388275,
+            0.7841737270355225,
+            -0.6115010976791382
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            573
+          ]
+        },
+        {
+          "vertex": 386,
+          "normal": [
+            0.2953914403915405,
+            0.9091277718544006,
+            -0.29365038871765137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            575
+          ]
+        }
+      ],
+      "sourceVertices": 432,
+      "candidateVertices": 432,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 8,
+      "status": "AMBIGUOUS_NOT_EXPORTED"
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_11",
+      "sourceZeroNormals": 57,
+      "proposalNormals": 57,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365502803846432,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31,
+            33,
+            35
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.13787317276000977,
+            0.9901271462440491,
+            0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.12122225016355515,
+            0.9899531006813049,
+            0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.089950330555439,
+            0.9896866679191589,
+            0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            0.04785020649433136,
+            0.9894525408744812,
+            0.13672621548175812
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            0.14548736810684204
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.04785020649433136,
+            0.9894525408744812,
+            0.13672621548175812
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            -0.089950330555439,
+            0.9896866679191589,
+            0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            -0.12122225016355515,
+            0.9899531006813049,
+            0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            -0.13787317276000977,
+            0.9901271462440491,
+            0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            -0.13787317276000977,
+            0.9901271462440491,
+            -0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 11,
+          "normal": [
+            -0.12122225016355515,
+            0.9899531006813049,
+            -0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            21
+          ]
+        },
+        {
+          "vertex": 12,
+          "normal": [
+            -0.089950330555439,
+            0.9896866679191589,
+            -0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            23
+          ]
+        },
+        {
+          "vertex": 13,
+          "normal": [
+            -0.04785030335187912,
+            0.9894525408744812,
+            -0.13672615587711334
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            25
+          ]
+        },
+        {
+          "vertex": 14,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            -0.14548732340335846
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            27
+          ]
+        },
+        {
+          "vertex": 15,
+          "normal": [
+            0.04785030335187912,
+            0.9894525408744812,
+            -0.13672615587711334
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            29
+          ]
+        },
+        {
+          "vertex": 16,
+          "normal": [
+            0.089950330555439,
+            0.9896866679191589,
+            -0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            31
+          ]
+        },
+        {
+          "vertex": 17,
+          "normal": [
+            0.12122225016355515,
+            0.9899531006813049,
+            -0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            33
+          ]
+        },
+        {
+          "vertex": 18,
+          "normal": [
+            0.13787317276000977,
+            0.9901271462440491,
+            -0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            35
+          ]
+        },
+        {
+          "vertex": 247,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365502803846432,
+          "supportFaces": [
+            433,
+            435,
+            437,
+            439,
+            441,
+            443,
+            445,
+            447,
+            449,
+            451,
+            453,
+            455,
+            457,
+            459,
+            461,
+            463,
+            465,
+            467
+          ]
+        },
+        {
+          "vertex": 248,
+          "normal": [
+            0.13787317276000977,
+            0.9901271462440491,
+            0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            433
+          ]
+        },
+        {
+          "vertex": 249,
+          "normal": [
+            0.12122225016355515,
+            0.9899531006813049,
+            0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            435
+          ]
+        },
+        {
+          "vertex": 250,
+          "normal": [
+            0.089950330555439,
+            0.9896866679191589,
+            0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            437
+          ]
+        },
+        {
+          "vertex": 251,
+          "normal": [
+            0.04785020649433136,
+            0.9894525408744812,
+            0.13672621548175812
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            439
+          ]
+        },
+        {
+          "vertex": 252,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            0.14548736810684204
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            441
+          ]
+        },
+        {
+          "vertex": 253,
+          "normal": [
+            -0.04785020649433136,
+            0.9894525408744812,
+            0.13672621548175812
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            443
+          ]
+        },
+        {
+          "vertex": 254,
+          "normal": [
+            -0.089950330555439,
+            0.9896866679191589,
+            0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            445
+          ]
+        },
+        {
+          "vertex": 255,
+          "normal": [
+            -0.12122225016355515,
+            0.9899531006813049,
+            0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            447
+          ]
+        },
+        {
+          "vertex": 256,
+          "normal": [
+            -0.13787317276000977,
+            0.9901271462440491,
+            0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            449
+          ]
+        },
+        {
+          "vertex": 257,
+          "normal": [
+            -0.13787317276000977,
+            0.9901271462440491,
+            -0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            451
+          ]
+        },
+        {
+          "vertex": 258,
+          "normal": [
+            -0.12122225016355515,
+            0.9899531006813049,
+            -0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            453
+          ]
+        },
+        {
+          "vertex": 259,
+          "normal": [
+            -0.089950330555439,
+            0.9896866679191589,
+            -0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            455
+          ]
+        },
+        {
+          "vertex": 260,
+          "normal": [
+            -0.04785030335187912,
+            0.9894525408744812,
+            -0.13672615587711334
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            457
+          ]
+        },
+        {
+          "vertex": 261,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            -0.14548732340335846
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            459
+          ]
+        },
+        {
+          "vertex": 262,
+          "normal": [
+            0.04785030335187912,
+            0.9894525408744812,
+            -0.13672615587711334
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            461
+          ]
+        },
+        {
+          "vertex": 263,
+          "normal": [
+            0.089950330555439,
+            0.9896866679191589,
+            -0.11148660629987717
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            463
+          ]
+        },
+        {
+          "vertex": 264,
+          "normal": [
+            0.12122225016355515,
+            0.9899531006813049,
+            -0.07278748601675034
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            465
+          ]
+        },
+        {
+          "vertex": 265,
+          "normal": [
+            0.13787317276000977,
+            0.9901271462440491,
+            -0.025283165276050568
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            467
+          ]
+        },
+        {
+          "vertex": 494,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365502803846432,
+          "supportFaces": [
+            865,
+            867,
+            869,
+            871,
+            873,
+            875,
+            877,
+            879,
+            881,
+            883,
+            885,
+            887,
+            889,
+            891,
+            893,
+            895,
+            897,
+            899
+          ]
+        },
+        {
+          "vertex": 495,
+          "normal": [
+            0.13787321746349335,
+            0.9901271462440491,
+            0.025283170863986015
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            865
+          ]
+        },
+        {
+          "vertex": 496,
+          "normal": [
+            0.1212223470211029,
+            0.9899531006813049,
+            0.07278730720281601
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            867
+          ]
+        },
+        {
+          "vertex": 497,
+          "normal": [
+            0.0899503156542778,
+            0.9896866679191589,
+            0.11148658394813538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            869
+          ]
+        },
+        {
+          "vertex": 498,
+          "normal": [
+            0.04785023629665375,
+            0.9894525408744812,
+            0.13672617077827454
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            871
+          ]
+        },
+        {
+          "vertex": 499,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            0.14548736810684204
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            873
+          ]
+        },
+        {
+          "vertex": 500,
+          "normal": [
+            -0.04785023629665375,
+            0.9894525408744812,
+            0.13672617077827454
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            875
+          ]
+        },
+        {
+          "vertex": 501,
+          "normal": [
+            -0.0899503156542778,
+            0.9896866679191589,
+            0.11148658394813538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            877
+          ]
+        },
+        {
+          "vertex": 502,
+          "normal": [
+            -0.1212223470211029,
+            0.9899531006813049,
+            0.07278730720281601
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            879
+          ]
+        },
+        {
+          "vertex": 503,
+          "normal": [
+            -0.13787321746349335,
+            0.9901271462440491,
+            0.025283170863986015
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            881
+          ]
+        },
+        {
+          "vertex": 504,
+          "normal": [
+            -0.13787321746349335,
+            0.9901271462440491,
+            -0.025283170863986015
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            883
+          ]
+        },
+        {
+          "vertex": 505,
+          "normal": [
+            -0.1212223470211029,
+            0.9899531006813049,
+            -0.07278730720281601
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            885
+          ]
+        },
+        {
+          "vertex": 506,
+          "normal": [
+            -0.0899503156542778,
+            0.9896866679191589,
+            -0.11148658394813538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            887
+          ]
+        },
+        {
+          "vertex": 507,
+          "normal": [
+            -0.04785023629665375,
+            0.9894525408744812,
+            -0.13672617077827454
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            889
+          ]
+        },
+        {
+          "vertex": 508,
+          "normal": [
+            0.0,
+            0.9893600940704346,
+            -0.14548736810684204
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            891
+          ]
+        },
+        {
+          "vertex": 509,
+          "normal": [
+            0.04785023629665375,
+            0.9894525408744812,
+            -0.13672617077827454
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            893
+          ]
+        },
+        {
+          "vertex": 510,
+          "normal": [
+            0.0899503156542778,
+            0.9896866679191589,
+            -0.11148658394813538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            895
+          ]
+        },
+        {
+          "vertex": 511,
+          "normal": [
+            0.1212223470211029,
+            0.9899531006813049,
+            -0.07278730720281601
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            897
+          ]
+        },
+        {
+          "vertex": 512,
+          "normal": [
+            0.13787321746349335,
+            0.9901271462440491,
+            -0.025283170863986015
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            899
+          ]
+        }
+      ],
+      "sourceVertices": 741,
+      "candidateVertices": 741,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_13",
+      "sourceZeroNormals": 88,
+      "proposalNormals": 88,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 77,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            121,
+            123,
+            125,
+            127,
+            129,
+            131,
+            133,
+            135,
+            137,
+            139
+          ]
+        },
+        {
+          "vertex": 78,
+          "normal": [
+            0.05939382687211037,
+            0.9974882006645203,
+            0.03859643638134003
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            121
+          ]
+        },
+        {
+          "vertex": 79,
+          "normal": [
+            0.03658793866634369,
+            0.9942420125007629,
+            0.1007179543375969
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            123
+          ]
+        },
+        {
+          "vertex": 80,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            125
+          ]
+        },
+        {
+          "vertex": 81,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            127
+          ]
+        },
+        {
+          "vertex": 82,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            129
+          ]
+        },
+        {
+          "vertex": 83,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            -0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            131
+          ]
+        },
+        {
+          "vertex": 84,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            133
+          ]
+        },
+        {
+          "vertex": 85,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            135
+          ]
+        },
+        {
+          "vertex": 86,
+          "normal": [
+            0.03658793866634369,
+            0.9942420125007629,
+            -0.1007179543375969
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            137
+          ]
+        },
+        {
+          "vertex": 87,
+          "normal": [
+            0.05939382687211037,
+            0.9974882006645203,
+            -0.03859643638134003
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            139
+          ]
+        },
+        {
+          "vertex": 154,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            241,
+            243,
+            245,
+            247,
+            249,
+            251,
+            253,
+            255,
+            257,
+            259
+          ]
+        },
+        {
+          "vertex": 155,
+          "normal": [
+            0.05939384922385216,
+            0.9974882006645203,
+            0.03859632834792137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            241
+          ]
+        },
+        {
+          "vertex": 156,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            243
+          ]
+        },
+        {
+          "vertex": 157,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            245
+          ]
+        },
+        {
+          "vertex": 158,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            247
+          ]
+        },
+        {
+          "vertex": 159,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            249
+          ]
+        },
+        {
+          "vertex": 160,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            -0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            251
+          ]
+        },
+        {
+          "vertex": 161,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            253
+          ]
+        },
+        {
+          "vertex": 162,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            255
+          ]
+        },
+        {
+          "vertex": 163,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            257
+          ]
+        },
+        {
+          "vertex": 164,
+          "normal": [
+            0.05939384922385216,
+            0.9974882006645203,
+            -0.03859632834792137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            259
+          ]
+        },
+        {
+          "vertex": 231,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            361,
+            363,
+            365,
+            367,
+            369,
+            371,
+            373,
+            375,
+            377,
+            379
+          ]
+        },
+        {
+          "vertex": 232,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            361
+          ]
+        },
+        {
+          "vertex": 233,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            363
+          ]
+        },
+        {
+          "vertex": 234,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            365
+          ]
+        },
+        {
+          "vertex": 235,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            367
+          ]
+        },
+        {
+          "vertex": 236,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            369
+          ]
+        },
+        {
+          "vertex": 237,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            371
+          ]
+        },
+        {
+          "vertex": 238,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            373
+          ]
+        },
+        {
+          "vertex": 239,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            375
+          ]
+        },
+        {
+          "vertex": 240,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            377
+          ]
+        },
+        {
+          "vertex": 241,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            379
+          ]
+        },
+        {
+          "vertex": 308,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            481,
+            483,
+            485,
+            487,
+            489,
+            491,
+            493,
+            495,
+            497,
+            499
+          ]
+        },
+        {
+          "vertex": 309,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            481
+          ]
+        },
+        {
+          "vertex": 310,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            483
+          ]
+        },
+        {
+          "vertex": 311,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            485
+          ]
+        },
+        {
+          "vertex": 312,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            487
+          ]
+        },
+        {
+          "vertex": 313,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            489
+          ]
+        },
+        {
+          "vertex": 314,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            491
+          ]
+        },
+        {
+          "vertex": 315,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            493
+          ]
+        },
+        {
+          "vertex": 316,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            495
+          ]
+        },
+        {
+          "vertex": 317,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            497
+          ]
+        },
+        {
+          "vertex": 318,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            499
+          ]
+        },
+        {
+          "vertex": 385,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            601,
+            603,
+            605,
+            607,
+            609,
+            611,
+            613,
+            615,
+            617,
+            619
+          ]
+        },
+        {
+          "vertex": 386,
+          "normal": [
+            0.05939382687211037,
+            0.9974882006645203,
+            0.03859643638134003
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            601
+          ]
+        },
+        {
+          "vertex": 387,
+          "normal": [
+            0.03658793866634369,
+            0.9942420125007629,
+            0.1007179543375969
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            603
+          ]
+        },
+        {
+          "vertex": 388,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            605
+          ]
+        },
+        {
+          "vertex": 389,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            607
+          ]
+        },
+        {
+          "vertex": 390,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            609
+          ]
+        },
+        {
+          "vertex": 391,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            -0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            611
+          ]
+        },
+        {
+          "vertex": 392,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            613
+          ]
+        },
+        {
+          "vertex": 393,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            615
+          ]
+        },
+        {
+          "vertex": 394,
+          "normal": [
+            0.03658793866634369,
+            0.9942420125007629,
+            -0.1007179543375969
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            617
+          ]
+        },
+        {
+          "vertex": 395,
+          "normal": [
+            0.05939382687211037,
+            0.9974882006645203,
+            -0.03859643638134003
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            619
+          ]
+        },
+        {
+          "vertex": 462,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            721,
+            723,
+            725,
+            727,
+            729,
+            731,
+            733,
+            735,
+            737,
+            739
+          ]
+        },
+        {
+          "vertex": 463,
+          "normal": [
+            0.05939384922385216,
+            0.9974882006645203,
+            0.03859632834792137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            721
+          ]
+        },
+        {
+          "vertex": 464,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            723
+          ]
+        },
+        {
+          "vertex": 465,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            725
+          ]
+        },
+        {
+          "vertex": 466,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            727
+          ]
+        },
+        {
+          "vertex": 467,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            729
+          ]
+        },
+        {
+          "vertex": 468,
+          "normal": [
+            -0.05939382687211037,
+            0.9974882006645203,
+            -0.038596395403146744
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            731
+          ]
+        },
+        {
+          "vertex": 469,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            733
+          ]
+        },
+        {
+          "vertex": 470,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            735
+          ]
+        },
+        {
+          "vertex": 471,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            737
+          ]
+        },
+        {
+          "vertex": 472,
+          "normal": [
+            0.05939384922385216,
+            0.9974882006645203,
+            -0.03859632834792137
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            739
+          ]
+        },
+        {
+          "vertex": 539,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.137157370947231,
+          "supportFaces": [
+            841,
+            843,
+            845,
+            847,
+            849,
+            851,
+            853,
+            855,
+            857,
+            859
+          ]
+        },
+        {
+          "vertex": 540,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            841
+          ]
+        },
+        {
+          "vertex": 541,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            843
+          ]
+        },
+        {
+          "vertex": 542,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            845
+          ]
+        },
+        {
+          "vertex": 543,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            847
+          ]
+        },
+        {
+          "vertex": 544,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            849
+          ]
+        },
+        {
+          "vertex": 545,
+          "normal": [
+            -0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            851
+          ]
+        },
+        {
+          "vertex": 546,
+          "normal": [
+            -0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            853
+          ]
+        },
+        {
+          "vertex": 547,
+          "normal": [
+            0.0,
+            0.9922515749931335,
+            -0.12424499541521072
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            855
+          ]
+        },
+        {
+          "vertex": 548,
+          "normal": [
+            0.036587927490472794,
+            0.9942420125007629,
+            -0.10071796178817749
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            857
+          ]
+        },
+        {
+          "vertex": 549,
+          "normal": [
+            0.05939380079507828,
+            0.9974882006645203,
+            -0.038596462458372116
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            859
+          ]
+        }
+      ],
+      "sourceVertices": 616,
+      "candidateVertices": 628,
+      "reverseSourceVertices": [
+        45,
+        46,
+        56,
+        345,
+        346,
+        356,
+        427,
+        428,
+        438,
+        572,
+        573,
+        583
+      ],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_14",
+      "sourceZeroNormals": 57,
+      "proposalNormals": 57,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365470016676023,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31,
+            33,
+            35
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 11,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            21
+          ]
+        },
+        {
+          "vertex": 12,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            23
+          ]
+        },
+        {
+          "vertex": 13,
+          "normal": [
+            -0.047850146889686584,
+            0.989452600479126,
+            -0.13672558963298798
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            25
+          ]
+        },
+        {
+          "vertex": 14,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            -0.1454867571592331
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            27
+          ]
+        },
+        {
+          "vertex": 15,
+          "normal": [
+            0.047850146889686584,
+            0.989452600479126,
+            -0.13672558963298798
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            29
+          ]
+        },
+        {
+          "vertex": 16,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            31
+          ]
+        },
+        {
+          "vertex": 17,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            33
+          ]
+        },
+        {
+          "vertex": 18,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            35
+          ]
+        },
+        {
+          "vertex": 247,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365470016676023,
+          "supportFaces": [
+            433,
+            435,
+            437,
+            439,
+            441,
+            443,
+            445,
+            447,
+            449,
+            451,
+            453,
+            455,
+            457,
+            459,
+            461,
+            463,
+            465,
+            467
+          ]
+        },
+        {
+          "vertex": 248,
+          "normal": [
+            0.1378726363182068,
+            0.9901272058486938,
+            0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            433
+          ]
+        },
+        {
+          "vertex": 249,
+          "normal": [
+            0.12122177332639694,
+            0.9899531602859497,
+            0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            435
+          ]
+        },
+        {
+          "vertex": 250,
+          "normal": [
+            0.08994998037815094,
+            0.9896867275238037,
+            0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            437
+          ]
+        },
+        {
+          "vertex": 251,
+          "normal": [
+            0.04785002022981644,
+            0.989452600479126,
+            0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            439
+          ]
+        },
+        {
+          "vertex": 252,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            441
+          ]
+        },
+        {
+          "vertex": 253,
+          "normal": [
+            -0.04785002022981644,
+            0.989452600479126,
+            0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            443
+          ]
+        },
+        {
+          "vertex": 254,
+          "normal": [
+            -0.08994998037815094,
+            0.9896867275238037,
+            0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            445
+          ]
+        },
+        {
+          "vertex": 255,
+          "normal": [
+            -0.12122177332639694,
+            0.9899531602859497,
+            0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            447
+          ]
+        },
+        {
+          "vertex": 256,
+          "normal": [
+            -0.1378726363182068,
+            0.9901272058486938,
+            0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            449
+          ]
+        },
+        {
+          "vertex": 257,
+          "normal": [
+            -0.1378726363182068,
+            0.9901272058486938,
+            -0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            451
+          ]
+        },
+        {
+          "vertex": 258,
+          "normal": [
+            -0.12122177332639694,
+            0.9899531602859497,
+            -0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            453
+          ]
+        },
+        {
+          "vertex": 259,
+          "normal": [
+            -0.08994998037815094,
+            0.9896867275238037,
+            -0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            455
+          ]
+        },
+        {
+          "vertex": 260,
+          "normal": [
+            -0.04785002022981644,
+            0.989452600479126,
+            -0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            457
+          ]
+        },
+        {
+          "vertex": 261,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            -0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            459
+          ]
+        },
+        {
+          "vertex": 262,
+          "normal": [
+            0.04785002022981644,
+            0.989452600479126,
+            -0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            461
+          ]
+        },
+        {
+          "vertex": 263,
+          "normal": [
+            0.08994998037815094,
+            0.9896867275238037,
+            -0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            463
+          ]
+        },
+        {
+          "vertex": 264,
+          "normal": [
+            0.12122177332639694,
+            0.9899531602859497,
+            -0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            465
+          ]
+        },
+        {
+          "vertex": 265,
+          "normal": [
+            0.1378726363182068,
+            0.9901272058486938,
+            -0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            467
+          ]
+        },
+        {
+          "vertex": 494,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365470016676023,
+          "supportFaces": [
+            865,
+            867,
+            869,
+            871,
+            873,
+            875,
+            877,
+            879,
+            881,
+            883,
+            885,
+            887,
+            889,
+            891,
+            893,
+            895,
+            897,
+            899
+          ]
+        },
+        {
+          "vertex": 495,
+          "normal": [
+            0.1378726363182068,
+            0.9901272058486938,
+            0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            865
+          ]
+        },
+        {
+          "vertex": 496,
+          "normal": [
+            0.12122177332639694,
+            0.9899531602859497,
+            0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            867
+          ]
+        },
+        {
+          "vertex": 497,
+          "normal": [
+            0.08994998037815094,
+            0.9896867275238037,
+            0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            869
+          ]
+        },
+        {
+          "vertex": 498,
+          "normal": [
+            0.04785002022981644,
+            0.989452600479126,
+            0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            871
+          ]
+        },
+        {
+          "vertex": 499,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            873
+          ]
+        },
+        {
+          "vertex": 500,
+          "normal": [
+            -0.04785002022981644,
+            0.989452600479126,
+            0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            875
+          ]
+        },
+        {
+          "vertex": 501,
+          "normal": [
+            -0.08994998037815094,
+            0.9896867275238037,
+            0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            877
+          ]
+        },
+        {
+          "vertex": 502,
+          "normal": [
+            -0.12122177332639694,
+            0.9899531602859497,
+            0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            879
+          ]
+        },
+        {
+          "vertex": 503,
+          "normal": [
+            -0.1378726363182068,
+            0.9901272058486938,
+            0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            881
+          ]
+        },
+        {
+          "vertex": 504,
+          "normal": [
+            -0.1378726363182068,
+            0.9901272058486938,
+            -0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            883
+          ]
+        },
+        {
+          "vertex": 505,
+          "normal": [
+            -0.12122177332639694,
+            0.9899531602859497,
+            -0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            885
+          ]
+        },
+        {
+          "vertex": 506,
+          "normal": [
+            -0.08994998037815094,
+            0.9896867275238037,
+            -0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            887
+          ]
+        },
+        {
+          "vertex": 507,
+          "normal": [
+            -0.04785002022981644,
+            0.989452600479126,
+            -0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            889
+          ]
+        },
+        {
+          "vertex": 508,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            -0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            891
+          ]
+        },
+        {
+          "vertex": 509,
+          "normal": [
+            0.04785002022981644,
+            0.989452600479126,
+            -0.13672567903995514
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            893
+          ]
+        },
+        {
+          "vertex": 510,
+          "normal": [
+            0.08994998037815094,
+            0.9896867275238037,
+            -0.11148616671562195
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            895
+          ]
+        },
+        {
+          "vertex": 511,
+          "normal": [
+            0.12122177332639694,
+            0.9899531602859497,
+            -0.07278720289468765
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            897
+          ]
+        },
+        {
+          "vertex": 512,
+          "normal": [
+            0.1378726363182068,
+            0.9901272058486938,
+            -0.02528306655585766
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            899
+          ]
+        }
+      ],
+      "sourceVertices": 741,
+      "candidateVertices": 741,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_15",
+      "sourceZeroNormals": 38,
+      "proposalNormals": 38,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365470016676023,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31,
+            33,
+            35
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            -0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 11,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            21
+          ]
+        },
+        {
+          "vertex": 12,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            23
+          ]
+        },
+        {
+          "vertex": 13,
+          "normal": [
+            -0.047850146889686584,
+            0.989452600479126,
+            -0.13672558963298798
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            25
+          ]
+        },
+        {
+          "vertex": 14,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            -0.1454867571592331
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            27
+          ]
+        },
+        {
+          "vertex": 15,
+          "normal": [
+            0.047850146889686584,
+            0.989452600479126,
+            -0.13672558963298798
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            29
+          ]
+        },
+        {
+          "vertex": 16,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            31
+          ]
+        },
+        {
+          "vertex": 17,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            33
+          ]
+        },
+        {
+          "vertex": 18,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            35
+          ]
+        },
+        {
+          "vertex": 247,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 8.365470016676023,
+          "supportFaces": [
+            433,
+            435,
+            437,
+            439,
+            441,
+            443,
+            445,
+            447,
+            449,
+            451,
+            453,
+            455,
+            457,
+            459,
+            461,
+            463,
+            465,
+            467
+          ]
+        },
+        {
+          "vertex": 248,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            433
+          ]
+        },
+        {
+          "vertex": 249,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            435
+          ]
+        },
+        {
+          "vertex": 250,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            437
+          ]
+        },
+        {
+          "vertex": 251,
+          "normal": [
+            0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            439
+          ]
+        },
+        {
+          "vertex": 252,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            441
+          ]
+        },
+        {
+          "vertex": 253,
+          "normal": [
+            -0.047850050032138824,
+            0.989452600479126,
+            0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            443
+          ]
+        },
+        {
+          "vertex": 254,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            445
+          ]
+        },
+        {
+          "vertex": 255,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            447
+          ]
+        },
+        {
+          "vertex": 256,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            449
+          ]
+        },
+        {
+          "vertex": 257,
+          "normal": [
+            -0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            451
+          ]
+        },
+        {
+          "vertex": 258,
+          "normal": [
+            -0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            453
+          ]
+        },
+        {
+          "vertex": 259,
+          "normal": [
+            -0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            455
+          ]
+        },
+        {
+          "vertex": 260,
+          "normal": [
+            -0.047850050032138824,
+            0.989452600479126,
+            -0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            457
+          ]
+        },
+        {
+          "vertex": 261,
+          "normal": [
+            0.0,
+            0.9893602132797241,
+            -0.14548680186271667
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            459
+          ]
+        },
+        {
+          "vertex": 262,
+          "normal": [
+            0.047850050032138824,
+            0.989452600479126,
+            -0.13672564923763275
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            461
+          ]
+        },
+        {
+          "vertex": 263,
+          "normal": [
+            0.08994996547698975,
+            0.9896867275238037,
+            -0.11148615181446075
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            463
+          ]
+        },
+        {
+          "vertex": 264,
+          "normal": [
+            0.1212218701839447,
+            0.9899531602859497,
+            -0.07278702408075333
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            465
+          ]
+        },
+        {
+          "vertex": 265,
+          "normal": [
+            0.13787268102169037,
+            0.9901272058486938,
+            -0.025283074006438255
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            467
+          ]
+        }
+      ],
+      "sourceVertices": 494,
+      "candidateVertices": 497,
+      "reverseSourceVertices": [
+        337,
+        338,
+        356
+      ],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_16",
+      "sourceZeroNormals": 33,
+      "proposalNormals": 33,
+      "unresolved": [],
+      "changes": [
+        {
+          "vertex": 0,
+          "normal": [
+            -3.995687263540968e-18,
+            1.0,
+            0.0
+          ],
+          "method": "exact-position-area-support",
+          "maximumDisagreementDegrees": 7.200118872878512,
+          "supportFaces": [
+            1,
+            3,
+            5,
+            7,
+            9,
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31,
+            33,
+            35,
+            37,
+            39,
+            41,
+            43,
+            45,
+            47,
+            49,
+            51,
+            53,
+            55,
+            57,
+            59,
+            61,
+            63
+          ]
+        },
+        {
+          "vertex": 1,
+          "normal": [
+            0.09761656075716019,
+            0.9951301217079163,
+            0.013675982132554054
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            1
+          ]
+        },
+        {
+          "vertex": 2,
+          "normal": [
+            0.09358646720647812,
+            0.9948338270187378,
+            0.039335232228040695
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            3
+          ]
+        },
+        {
+          "vertex": 3,
+          "normal": [
+            0.08646096289157867,
+            0.9943777918815613,
+            0.06113307923078537
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            5
+          ]
+        },
+        {
+          "vertex": 4,
+          "normal": [
+            0.07686284929513931,
+            0.9938793778419495,
+            0.0793469101190567
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            7
+          ]
+        },
+        {
+          "vertex": 5,
+          "normal": [
+            0.06424595415592194,
+            0.9933681488037109,
+            0.09535308182239532
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            9
+          ]
+        },
+        {
+          "vertex": 6,
+          "normal": [
+            0.047824010252952576,
+            0.9928603172302246,
+            0.10927610099315643
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            11
+          ]
+        },
+        {
+          "vertex": 7,
+          "normal": [
+            0.028195571154356003,
+            0.992422878742218,
+            0.11959005147218704
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            13
+          ]
+        },
+        {
+          "vertex": 8,
+          "normal": [
+            0.007565544452518225,
+            0.9921541810035706,
+            0.12479131668806076
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            15
+          ]
+        },
+        {
+          "vertex": 9,
+          "normal": [
+            -0.011717935092747211,
+            0.9921144247055054,
+            0.12478631734848022
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            17
+          ]
+        },
+        {
+          "vertex": 10,
+          "normal": [
+            -0.028881140053272247,
+            0.9922986626625061,
+            0.12045428156852722
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            19
+          ]
+        },
+        {
+          "vertex": 11,
+          "normal": [
+            -0.04487762600183487,
+            0.9926882386207581,
+            0.1120537519454956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            21
+          ]
+        },
+        {
+          "vertex": 12,
+          "normal": [
+            -0.0606098398566246,
+            0.993266761302948,
+            0.09872958064079285
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            23
+          ]
+        },
+        {
+          "vertex": 13,
+          "normal": [
+            -0.07536303251981735,
+            0.9939397573471069,
+            0.08002582937479019
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            25
+          ]
+        },
+        {
+          "vertex": 14,
+          "normal": [
+            -0.08728881180286407,
+            0.9945287704467773,
+            0.05738668888807297
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            27
+          ]
+        },
+        {
+          "vertex": 15,
+          "normal": [
+            -0.09503190219402313,
+            0.9949049949645996,
+            0.033659834414720535
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            29
+          ]
+        },
+        {
+          "vertex": 16,
+          "normal": [
+            -0.09858773648738861,
+            0.9950680136680603,
+            0.010957454331219196
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            31
+          ]
+        },
+        {
+          "vertex": 17,
+          "normal": [
+            -0.09858773648738861,
+            0.9950680136680603,
+            -0.010957454331219196
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            33
+          ]
+        },
+        {
+          "vertex": 18,
+          "normal": [
+            -0.09503190219402313,
+            0.9949049949645996,
+            -0.033659834414720535
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            35
+          ]
+        },
+        {
+          "vertex": 19,
+          "normal": [
+            -0.08728881180286407,
+            0.9945287704467773,
+            -0.05738668888807297
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            37
+          ]
+        },
+        {
+          "vertex": 20,
+          "normal": [
+            -0.07536303251981735,
+            0.9939397573471069,
+            -0.08002582937479019
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            39
+          ]
+        },
+        {
+          "vertex": 21,
+          "normal": [
+            -0.0606098398566246,
+            0.993266761302948,
+            -0.09872958064079285
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            41
+          ]
+        },
+        {
+          "vertex": 22,
+          "normal": [
+            -0.04487762600183487,
+            0.9926882386207581,
+            -0.1120537519454956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            43
+          ]
+        },
+        {
+          "vertex": 23,
+          "normal": [
+            -0.028881140053272247,
+            0.9922986626625061,
+            -0.12045428156852722
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            45
+          ]
+        },
+        {
+          "vertex": 24,
+          "normal": [
+            -0.011717935092747211,
+            0.9921144247055054,
+            -0.12478631734848022
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            47
+          ]
+        },
+        {
+          "vertex": 25,
+          "normal": [
+            0.007565544452518225,
+            0.9921541810035706,
+            -0.12479131668806076
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            49
+          ]
+        },
+        {
+          "vertex": 26,
+          "normal": [
+            0.028195571154356003,
+            0.992422878742218,
+            -0.11959005147218704
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            51
+          ]
+        },
+        {
+          "vertex": 27,
+          "normal": [
+            0.047824010252952576,
+            0.9928603172302246,
+            -0.10927610099315643
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            53
+          ]
+        },
+        {
+          "vertex": 28,
+          "normal": [
+            0.06424595415592194,
+            0.9933681488037109,
+            -0.09535308182239532
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            55
+          ]
+        },
+        {
+          "vertex": 29,
+          "normal": [
+            0.07686284929513931,
+            0.9938793778419495,
+            -0.0793469101190567
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            57
+          ]
+        },
+        {
+          "vertex": 30,
+          "normal": [
+            0.08646096289157867,
+            0.9943777918815613,
+            -0.06113307923078537
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            59
+          ]
+        },
+        {
+          "vertex": 31,
+          "normal": [
+            0.09358646720647812,
+            0.9948338270187378,
+            -0.039335232228040695
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            61
+          ]
+        },
+        {
+          "vertex": 32,
+          "normal": [
+            0.09761656075716019,
+            0.9951301217079163,
+            -0.013675982132554054
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            63
+          ]
+        }
+      ],
+      "sourceVertices": 859,
+      "candidateVertices": 859,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 0,
+      "status": "UNAMBIGUOUS_GEOMETRIC_PROPOSAL_NOT_VISUAL_APPROVAL"
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_20",
+      "sourceZeroNormals": 30,
+      "proposalNormals": 28,
+      "unresolved": [
+        {
+          "vertex": 77,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 57.734723737108546,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            121,
+            123,
+            125,
+            127,
+            129,
+            131,
+            133,
+            135,
+            137,
+            139,
+            141,
+            143,
+            145,
+            147
+          ]
+        },
+        {
+          "vertex": 242,
+          "reason": "Incident support is ambiguous across normals",
+          "maximumDisagreementDegrees": 57.734723737108546,
+          "method": "exact-position-area-support",
+          "supportFaces": [
+            401,
+            403,
+            405,
+            407,
+            409,
+            411,
+            413,
+            415,
+            417,
+            419,
+            421,
+            423,
+            425,
+            427
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "vertex": 78,
+          "normal": [
+            -0.28046703338623047,
+            0.9052490592002869,
+            0.31915879249572754
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            121
+          ]
+        },
+        {
+          "vertex": 79,
+          "normal": [
+            -0.25241437554359436,
+            0.676320493221283,
+            0.6920098066329956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            123
+          ]
+        },
+        {
+          "vertex": 80,
+          "normal": [
+            -0.25812357664108276,
+            0.5165557265281677,
+            0.8164204955101013
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            125
+          ]
+        },
+        {
+          "vertex": 81,
+          "normal": [
+            -0.3014286458492279,
+            0.44059720635414124,
+            0.8455855250358582
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            127
+          ]
+        },
+        {
+          "vertex": 82,
+          "normal": [
+            -0.38791733980178833,
+            0.4277593195438385,
+            0.8164202570915222
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            129
+          ]
+        },
+        {
+          "vertex": 83,
+          "normal": [
+            -0.5388922691345215,
+            0.4803299605846405,
+            0.6920102834701538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            131
+          ]
+        },
+        {
+          "vertex": 84,
+          "normal": [
+            -0.7420991659164429,
+            0.5894310474395752,
+            0.3191549777984619
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            133
+          ]
+        },
+        {
+          "vertex": 85,
+          "normal": [
+            -0.7420991659164429,
+            0.5894310474395752,
+            -0.3191549777984619
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            135
+          ]
+        },
+        {
+          "vertex": 86,
+          "normal": [
+            -0.5388922691345215,
+            0.4803299605846405,
+            -0.6920102834701538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            137
+          ]
+        },
+        {
+          "vertex": 87,
+          "normal": [
+            -0.38791733980178833,
+            0.4277593195438385,
+            -0.8164202570915222
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            139
+          ]
+        },
+        {
+          "vertex": 88,
+          "normal": [
+            -0.3014286458492279,
+            0.44059720635414124,
+            -0.8455855250358582
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            141
+          ]
+        },
+        {
+          "vertex": 89,
+          "normal": [
+            -0.25812357664108276,
+            0.5165557265281677,
+            -0.8164204955101013
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            143
+          ]
+        },
+        {
+          "vertex": 90,
+          "normal": [
+            -0.25241437554359436,
+            0.676320493221283,
+            -0.6920098066329956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            145
+          ]
+        },
+        {
+          "vertex": 91,
+          "normal": [
+            -0.28046703338623047,
+            0.9052490592002869,
+            -0.31915879249572754
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            147
+          ]
+        },
+        {
+          "vertex": 243,
+          "normal": [
+            0.7420991659164429,
+            0.5894310474395752,
+            0.3191549777984619
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            401
+          ]
+        },
+        {
+          "vertex": 244,
+          "normal": [
+            0.5388922691345215,
+            0.4803299605846405,
+            0.6920102834701538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            403
+          ]
+        },
+        {
+          "vertex": 245,
+          "normal": [
+            0.38791733980178833,
+            0.4277593195438385,
+            0.8164202570915222
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            405
+          ]
+        },
+        {
+          "vertex": 246,
+          "normal": [
+            0.3014286458492279,
+            0.44059720635414124,
+            0.8455855250358582
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            407
+          ]
+        },
+        {
+          "vertex": 247,
+          "normal": [
+            0.25812357664108276,
+            0.5165557265281677,
+            0.8164204955101013
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            409
+          ]
+        },
+        {
+          "vertex": 248,
+          "normal": [
+            0.25241437554359436,
+            0.676320493221283,
+            0.6920098066329956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            411
+          ]
+        },
+        {
+          "vertex": 249,
+          "normal": [
+            0.28046703338623047,
+            0.9052490592002869,
+            0.31915879249572754
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            413
+          ]
+        },
+        {
+          "vertex": 250,
+          "normal": [
+            0.28046703338623047,
+            0.9052490592002869,
+            -0.31915879249572754
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            415
+          ]
+        },
+        {
+          "vertex": 251,
+          "normal": [
+            0.25241437554359436,
+            0.676320493221283,
+            -0.6920098066329956
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            417
+          ]
+        },
+        {
+          "vertex": 252,
+          "normal": [
+            0.25812357664108276,
+            0.5165557265281677,
+            -0.8164204955101013
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 1.2074182697257333e-06,
+          "supportFaces": [
+            419
+          ]
+        },
+        {
+          "vertex": 253,
+          "normal": [
+            0.3014286458492279,
+            0.44059720635414124,
+            -0.8455855250358582
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            421
+          ]
+        },
+        {
+          "vertex": 254,
+          "normal": [
+            0.38791733980178833,
+            0.4277593195438385,
+            -0.8164202570915222
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            423
+          ]
+        },
+        {
+          "vertex": 255,
+          "normal": [
+            0.5388922691345215,
+            0.4803299605846405,
+            -0.6920102834701538
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 0.0,
+          "supportFaces": [
+            425
+          ]
+        },
+        {
+          "vertex": 256,
+          "normal": [
+            0.7420991659164429,
+            0.5894310474395752,
+            -0.3191549777984619
+          ],
+          "method": "original-area-weighted",
+          "maximumDisagreementDegrees": 8.537736462515939e-07,
+          "supportFaces": [
+            427
+          ]
+        }
+      ],
+      "sourceVertices": 407,
+      "candidateVertices": 407,
+      "reverseSourceVertices": [],
+      "unresolvedCandidateNormals": 2,
+      "status": "AMBIGUOUS_NOT_EXPORTED"
+    }
+  ],
+  "limitations": [
+    "Both own incident normals and exact-position fallback must agree within15deg; no arbitrary-axis repair.",
+    "Audit proposals do not activate/export the category; only a named entirely unambiguous accessory may export.",
+    "Private reverse correspondence verified using frozen source face IDs, every source lane and reversed index winding.",
+    "Material/shader/coverage, all12clips, shadow and GPU gates remain pending."
+  ]
+}

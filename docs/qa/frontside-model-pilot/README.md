@@ -745,3 +745,46 @@ report resulted. The team CPU suite77319 was active alongside27148/49032;
 there is no timing result. Keep coverage pending and do not expand normal
 repair based on the earlier compatible screen. Root has the exact opt-in
 fixture URL for a later available provider; the local server remains5284.
+
+The resumed audit covers all nine rigid accessories without exporting the
+category. Of473 original zero normals,462 have coherent incident area support
+within15degrees. The11 ambiguous cases belong to Badge5(1), FruitCrate10(8)
+and HarvestSack20(2); each is used only by one triangle containing exactly
+repeated POSITION lanes. No tolerance weld or near-zero-area deletion applies.
+The reusable cleanup removes only those incident faces, compacts unused
+vertices, preserves retained face order and records both old-face and
+old-vertex correspondence. It is restricted to rigid meshes without morphs
+and requires equal positions to produce equal clip positions: ordinary
+Standard and the inspected AfricanToon hook do not displace these props.
+This argument must not be transferred to crop driver attributes. Effective
+material flags and diagnostic coverage still need runtime verification.
+Six synthetic checks pass, including ambiguous hard corners, isolated exact
+support, nonfinite rejection and refusal to delete collinear/near-duplicate
+distinct positions.
+
+One separate disabled Badge5 pilot is exported:16 coherent normals repaired,
+one repeated-position triangle and one unused vertex removed. Serialized GLB
+is independently read back: every retained non-normal attribute/index is
+verified against its mapping, all other meshes are exact, inverse-bind lanes
+and12clips/440056 animation sampler bytes remain exact. Raw2611a85a and
+webc71db6a6 are immutable archives; lossless codec lanes and existing web
+texture payloads verified. Packed5,243,360bytes,132bytes above frozen shell.
+It does not incorporate the separate Nozzle4 repair. No coverage, visual,
+ground-shadow or GPU acceptance follows from these contract checks.
+
+Geometry-derived replacement models are now explicitly authorized, subject
+to all previous quality/resource/performance gates. A read-only crop cost
+inventory considers keeping genuine thin leaves selectively DoubleSide and
+using FrontSide for labels0/1, without adding triangles. Labels alone do not
+establish valid Front coverage. Preserving original contiguous face priority
+would require1246/1361/2080/2146 drawgroups for maize3/4/5 and banana5, so that
+layout is rejected as a practical rendering candidate. Two stable-partitioned
+groups keep state GPU index bytes unchanged, allocate replacement CPU index
+arrays, and add2.2727% index-buffer bytes to these unindexed bridges
+(Uint16 indices versus88bytes per original bridge vertex). It changes
+cross-group priority and requires rebuilding/verifying provenance, driver
+labels and coincident-interface rendering. It is an untested design option,
+not a partial acceptance of geometric leaf repair. Derived leaf remodeling
+remains a separate option requiring UV/shading/growth preservation tests.
+Neither can inherit the raw-Front GPU ceiling: deleting required backfaces
+reduces coverage, whereas geometric reverse faces restore its vertex cost.
