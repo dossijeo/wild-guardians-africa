@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {prepareNativeBuilding,NativeBuilding,BuildingDestructionPass,centerVisualDamage} from '../src/rendering/buildings.js';
+import {WorldScene} from '../src/rendering/scene.js';
 import {hitStructure} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
@@ -253,4 +254,20 @@ test('centers consume shared fractional atmosphere rather than inferring night f
  const pass=new BuildingDestructionPass(fakeRenderer()),house=new NativeBuilding(templates[0],{id:'dusk',hp:600,maxHp:600,status:'intact'},pass),camera=new THREE.PerspectiveCamera();camera.updateMatrixWorld();
  for(const phase of [0,.25,.5,.75,1]){pass.night=phase;pass.nightLight=1.12;house.cameraUniforms(house.outer,camera);assert.equal(house.uniforms.uNight.value,phase);assert.equal(house.uniforms.uNightLight.value,1.12);}
  house.dispose();pass.dispose();
+});
+
+
+test('concurrent cancelled building requests release each shared native template only once in all cultures',async()=>{
+ for(const descriptor of catalogue){
+  const model=originalModel(descriptor),template=prepareNativeBuilding(model,descriptor);
+  const resources=new Set([template.body,template.ash,template.noise,model.geometry,model.material,...Object.values(model.material).filter(v=>v?.isTexture)]),disposals=new Map();
+  for(const resource of resources){disposals.set(resource,0);resource.addEventListener('dispose',()=>disposals.set(resource,disposals.get(resource)+1));}
+  const world=Object.create(WorldScene.prototype);let finish;
+  const shared=new Promise(resolve=>finish=resolve);world.buildingTemplates=new Map();world.buildingCatalogue=[descriptor];world.assets={building:()=>shared};
+  const requests=[world.ensureBuilding(descriptor.culture),world.ensureBuilding(descriptor.culture),world.ensureBuilding(descriptor.culture)];
+  world.disposed=true;finish(template);const results=await Promise.allSettled(requests);
+  assert.ok(results.every(r=>r.status==='rejected'&&/cancelada/.test(r.reason.message)));
+  assert.equal(world.buildingTemplates.size,0);assert.ok([...disposals.values()].every(n=>n===1),descriptor.culture+' template disposed repeatedly');
+  template.dispose();assert.ok([...disposals.values()].every(n=>n===1));
+ }
 });
