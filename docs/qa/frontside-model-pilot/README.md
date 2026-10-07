@@ -677,3 +677,21 @@ or tolerance change. The frozen training receipt is unchanged. More camera
 selection can increase reversals but does not address the failed triangle
 budget. Next exploration must consider winding/component and thin-surface
 geometry rather than treating these training successes as adaptation approval.
+
+New offline Blender4.5.9 scratch inspection covers maize stages3/4/5 and mature
+banana using exact position connectivity, never exporting or modifying source
+UV/index/faceLabels. Components are1/1/2/1; none are closed consistently by
+this diagnostic. Authored normal/cross opposition is0 in all four meshes.
+Blender recalc proposes30/28/99/347 winding flips, of which only21/26/34/81
+intersect699/989/1629/1211 selected reversals. Recalc on these open/non-manifold
+components is not a reliable external orientation or a solution to the budget;
+those proposals remain unapplied. Closedness is not a universal FrontSide rule.
+
+A separate affine-fan inventory checks conservative tessellation reduction:
+simple interior source-index ring, one faceLabel driver, constant normal bits,
+planar/affine-UV fit residuals≤1e-12/1e-10, and a region where actual growth/wind
+and bridgeBase are affine (below ground, or constant-height with saturated
+radial fold). All four pilot meshes yield0eligible fans. The nonlinear height
+pow/smoothstep and radial fold prevent assuming a rest-pose dissolve preserves
+animated surfaces; no global decimation or solidify performed. This narrow
+negative screen is not proof that broader authored remodeling cannot succeed.

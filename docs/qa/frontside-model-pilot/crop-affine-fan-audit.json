@@ -1,0 +1,72 @@
+{
+  "status": "AFFINE_FAN_DIAGNOSIS_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "meshes": [
+    {
+      "mesh": "maiz_03_adulto",
+      "triangles": 2743,
+      "vertices": 4999,
+      "rejectedReasons": {
+        "notInteriorFan": 4214,
+        "openOrNonManifoldFan": 659,
+        "normalNotConstant": 35,
+        "driverBoundary": 91
+      },
+      "eligibleFans": [],
+      "disjointFans": [],
+      "disjointNominalReduction": 0
+    },
+    {
+      "mesh": "maiz_04_desarrollo",
+      "triangles": 3205,
+      "vertices": 5778,
+      "rejectedReasons": {
+        "openOrNonManifoldFan": 707,
+        "notInteriorFan": 4885,
+        "normalNotConstant": 53,
+        "driverBoundary": 133
+      },
+      "eligibleFans": [],
+      "disjointFans": [],
+      "disjointNominalReduction": 0
+    },
+    {
+      "mesh": "maiz_05_maduro",
+      "triangles": 4935,
+      "vertices": 8983,
+      "rejectedReasons": {
+        "openOrNonManifoldFan": 1114,
+        "notInteriorFan": 7580,
+        "normalNotConstant": 42,
+        "driverBoundary": 247
+      },
+      "eligibleFans": [],
+      "disjointFans": [],
+      "disjointNominalReduction": 0
+    },
+    {
+      "mesh": "platano_05_maduro",
+      "triangles": 5640,
+      "vertices": 10981,
+      "rejectedReasons": {
+        "openOrNonManifoldFan": 1127,
+        "notInteriorFan": 9637,
+        "normalNotConstant": 65,
+        "driverBoundary": 152
+      },
+      "eligibleFans": [],
+      "disjointFans": [],
+      "disjointNominalReduction": 0
+    }
+  ],
+  "thresholds": {
+    "planeFitResidual": 1e-12,
+    "uvFitResidual": 1e-10
+  },
+  "limitations": [
+    "Numerical affine fits only screen proposals; no source index/attribute/faceLabel changes.",
+    "Retriangulation can change Float32 raster interpolation; full shader/UV/morph/wind/shadow QA remains mandatory.",
+    "A positive fan would need controlled triangulation and rebuilt bridge mappings, not a global Blender decimation.",
+    "This deliberately conservative audit is not a proof that broader remodeling cannot work."
+  ]
+}
