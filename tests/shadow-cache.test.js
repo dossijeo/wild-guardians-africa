@@ -116,3 +116,27 @@ test('restored shadow maps retain native comparison setup, proxy traversal order
  events.dispatchEvent(new Event('webglcontextrestored'));f.draw();assert.equal(calls,3);
  assets();native();assert.equal(listeners.size,0);assert.equal(f.renderer.shadowMap.render,lastOriginal);f.close();proxy.dispose();
 });
+
+test('view-camera orbit and projection preserve depth; camera layers and light pose still invalidate',()=>{
+  const f=fixture();f.draw();
+  f.camera.position.set(20,12,-4);f.camera.lookAt(0,0,0);f.draw();
+  assert.equal(f.draws,1,'shadow geometry is rendered from the light camera');
+  f.camera.fov=35;f.camera.aspect=2;f.camera.updateProjectionMatrix();f.draw();
+  assert.equal(f.draws,1,'view projection does not determine the shadow map');
+  f.camera.layers.enable(2);f.draw();assert.equal(f.draws,2);
+  f.light.position.x+=1;f.draw();assert.equal(f.draws,3);f.close();
+});
+
+test('alpha-to-coverage changes the native depth alpha cutoff and invalidates cached shadows',()=>{
+  const f=fixture();f.draw();f.mesh.material.alphaToCoverage=true;f.draw();
+  assert.equal(f.draws,2,'Three uses a 0.5 depth cutoff for alpha-to-coverage');
+  f.draw();assert.equal(f.draws,2);f.mesh.material.alphaToCoverage=false;f.draw();
+  assert.equal(f.draws,3);f.close();
+});
+
+test('declared camera-dependent custom depth inputs remain tracked when the view moves',()=>{
+  const f=fixture(),depth=new THREE.MeshDepthMaterial();
+  depth.userData.nativeShadowInputs=()=>[f.camera.position.x];f.mesh.customDepthMaterial=depth;
+  f.draw();f.camera.position.x=2;f.draw();assert.equal(f.draws,2);
+  f.draw();assert.equal(f.draws,2);f.close();depth.dispose();
+});
