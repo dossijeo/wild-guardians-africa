@@ -3,7 +3,7 @@ import {AfricanToon} from '../src/rendering/african-toon.js';
 import {SceneMaterialRegistry} from '../src/rendering/material-registry.js';
 import {NativeFarGpuCancelled} from '../tools/experiments/prepare-native-far-gpu.js';
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
-import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady,finalizeStandbyMaterials} from '../tools/experiments/native-tree-standby.js';
+import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady,finalizeStandbyMaterials,standbySubmittedTriangles} from '../tools/experiments/native-tree-standby.js';
 function fixture(prepare=async()=>{}){const geometry=new THREE.BoxGeometry(2,4,2),material=new THREE.MeshStandardMaterial(),scene=new THREE.Scene(),sources=[{geometry,material},{geometry,material}],owner=new NativeTreeStandby({scene,sources,prepare});return {owner,scene,sources,close(){owner.dispose();geometry.dispose();material.dispose();}};}
 function tree(id='a',x=0){return {id,x,y:0,z:0,yaw:0,sx:1,sy:1,sz:1};}
 function descriptor(t=tree(),level=0){const matrix=new THREE.Matrix4().makeTranslation(t.x,t.y,t.z).toArray();return {id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,level,matrix};}
@@ -152,4 +152,17 @@ test('control: registry adoption invalidates a fence captured before the first r
  f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
  assert.equal(f.sources[0].material.version,fencedVersion+1);assert.equal(f.owner.has(t.id,t),false);
  registry.dispose();f.close();
+});
+
+
+test('submission accounting keeps masked interior rows visible in cost diagnostics without changing packing',async()=>{
+ const f=fixture(),a=tree('a',5),b=tree('b',20),c=tree('c',30);
+ f.owner.request([a,b,c].map(t=>descriptor(t)),{x:0,z:0});await settled(f.owner);
+ const mesh=f.owner.active.meshes[0],version=mesh.instanceMatrix.version,matrices=Array.from(mesh.instanceMatrix.array);
+ f.owner.update({x:0,z:0},new Map([a,b,c].map(t=>[t.id,t])),()=>({enabled:true,ready:1}),id=>id==='b',new Set());
+ assert.equal(f.owner.stats.rendered,2);assert.equal(f.owner.stats.submittedInstances,3);assert.equal(f.owner.stats.maskedInstances,1);
+ assert.equal(f.owner.stats.submittedTriangles,36);assert.equal(f.owner.stats.visibleTriangles,24);
+ assert.equal(standbySubmittedTriangles(mesh),36);assert.equal(mesh.instanceMatrix.version,version);assert.deepEqual(Array.from(mesh.instanceMatrix.array),matrices);
+ mesh.geometry.setDrawRange(3,12);assert.equal(standbySubmittedTriangles(mesh),12);
+ f.owner.dispose();assert.equal(f.owner.stats.submittedTriangles,0);assert.equal(f.owner.stats.submittedInstances,0);f.close();
 });

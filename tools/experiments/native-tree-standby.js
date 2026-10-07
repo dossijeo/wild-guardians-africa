@@ -5,6 +5,11 @@ import {lodMix} from './far-impostor-math.js';
 
 // Immutable logical identity survives changes of native instance order/LOD.
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
+export function standbySubmittedTriangles(mesh){
+ const total=mesh.geometry.index?.count??mesh.geometry.attributes.position?.count??0,start=mesh.geometry.drawRange.start,end=Math.min(total,start+mesh.geometry.drawRange.count);
+ if(!mesh.geometry.groups.length)return Math.max(0,end-start)/3*mesh.count;
+ let count=0;for(const g of mesh.geometry.groups)count+=Math.max(0,Math.min(end,g.start+g.count)-Math.max(start,g.start));return count/3*mesh.count;
+}
 export function standbyTreeKey(tree){const p=tree.origin??tree;return [tree.id,p.x,p.y,p.z,tree.yaw,tree.sx,tree.sy,tree.sz].join(':');}
 // A missing chunk may use its owned, GPU-prepared bank. A resident tree still
 // needs current physical selection; culling must not authorize extra geometry.
@@ -27,7 +32,7 @@ function geometryView(source,capacity){
 export class NativeTreeStandby {
  constructor({scene,sources,prepare,start=40,end=60,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<end||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
+  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,submittedInstances:0,maskedInstances:0,submittedTriangles:0,visibleTriangles:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
@@ -64,16 +69,16 @@ export class NativeTreeStandby {
   finally{this.busy=false;if(this.closed){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}else if(this.pending)void this.run();}
  }
  update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1){
-  let rendered=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){
+  let rendered=0,submittedInstances=0,submittedTriangles=0,visibleTriangles=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){
    const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1,live=0,lastLive=-1;
    for(const [i,d] of this.active.rows[level].entries()){
     const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround(!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),this.start,this.end,state.ready)):0);
     if(value>0){live++;rendered++;lastLive=i;}if(attribute.array[i]!==value){attribute.array[i]=value;first=Math.min(first,i);last=i;}
    }
-   mesh.visible=live>0;mesh.count=lastLive+1;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
-  }this.stats.rendered=rendered;
+   mesh.visible=live>0;mesh.count=lastLive+1;const triangles=standbySubmittedTriangles(mesh);submittedInstances+=mesh.count;submittedTriangles+=triangles;visibleTriangles+=mesh.count?triangles*live/mesh.count:0;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
+  }Object.assign(this.stats,{rendered,submittedInstances,maskedInstances:submittedInstances-rendered,submittedTriangles,visibleTriangles});
  }
  release(bank){bank.root.removeFromParent();for(const mesh of bank.meshes){mesh.dispose();mesh.geometry.dispose();}}
- clearStats(){this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
+ clearStats(){this.stats.submittedInstances=0;this.stats.maskedInstances=0;this.stats.submittedTriangles=0;this.stats.visibleTriangles=0;this.stats.rendered=0;this.stats.trees=0;this.stats.estimatedOwnedGpuBytes=0;}
  dispose(){if(this.closed)return;this.closed=true;this.pending=null;this.active?.root.removeFromParent();this.stats.rendered=0;if(!this.busy){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}}
 }
