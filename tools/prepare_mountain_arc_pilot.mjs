@@ -7,7 +7,12 @@ const presets={savanna:{source:'savanna-isolated-v3',height:110},grand_river:{so
 if(!presets[biome])throw Error('Unknown single silhouette pilot biome');
 const source='assets-source/far-backdrops-hq/'+presets[biome].source+'.png';
 const output=process.argv[2]??'.cache/hq-arc-pilot';
-const original=await fs.readFile(source),decoded=await sharp(original).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+const contract=JSON.parse(await fs.readFile('assets-source/far-backdrops-hq/single-export-contract.json','utf8')),expected=contract.biomes[biome];
+for(const [key,value] of Object.entries(contract.versions))if(sharp.versions[key]!==value)throw Error('Pinned encoder mismatch: '+key);
+const original=await fs.readFile(source);
+if(expected.source!==source||expected.sourceSha256!==hash(original))throw Error('Source contract mismatch');
+const decoded=await sharp(original).ensureAlpha().raw().toBuffer({resolveWithObject:true});
 const crop=hqBackdropCrop(decoded.data,decoded.info.width,decoded.info.height);
 let saturatedVisible=0,edgeVisible=0;
 for(let y=0;y<decoded.info.height;y++)for(let x=0;x<decoded.info.width;x++){const i=(y*decoded.info.width+x)*4;if(decoded.data[i+3]<90)continue;if(Math.max(decoded.data[i],decoded.data[i+1],decoded.data[i+2])-Math.min(decoded.data[i],decoded.data[i+1],decoded.data[i+2])>160)saturatedVisible++;if(x<16||x>=decoded.info.width-16)edgeVisible++;}
@@ -17,7 +22,7 @@ const atlas=await sharp({create:{width:2048,height:512,channels:4,background:{r:
 let lowest=-1;for(let y=0;y<decoded.info.height;y++)for(let x=0;x<decoded.info.width;x++)if(decoded.data[(y*decoded.info.width+x)*4+3]>=90)lowest=Math.max(lowest,y);
 const baseline=(crop.height-(lowest-crop.top))/crop.height;
 const layout=[{angle:0,height:presets[biome].height,aspect:4,baseY:-35,baseline,uv:[32/2048,264/512,992/2048,504/512]}];
-const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+if(atlas.length!==expected.bytes||hash(atlas)!==expected.atlasSha256)throw Error('Encoded atlas differs from pinned pilot recipe');
 await fs.mkdir(output,{recursive:true});await fs.writeFile(output+'/atlas.webp',atlas);
 await fs.writeFile(output+'/layout.json',JSON.stringify(layout,null,2)+'\n');
 await fs.writeFile(output+'/export.json',JSON.stringify({assets:[{biome,file:'atlas.webp'}],limit:'Single populated padded cell; does not validate cross-variant bleed for a completed atlas.'},null,2)+'\n');

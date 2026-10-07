@@ -224,3 +224,12 @@ ID is `mangrove`, `volcanoes`, `canyons` or `desert`. The native harness uses
 Only Sabana currently has four distinct silhouettes and a 360° composition.
 These other pilots are framing/contact studies, not complete horizon or mobile
 acceptance. Do not generate further variations until native placement is sound.
+
+All six single-cell recipes are now pinned in
+`assets-source/far-backdrops-hq/single-export-contract.json`. The exporter checks
+source SHA and Sharp 0.35.5 / vips 8.18.7 / WebP 1.6.0 before decoding, then exact atlas
+SHA/length before any output write. A second export of every biome to separate
+`.cache/hq-single-repro-ID` directories passed byte equality. Three executable
+CLI regressions reject changed encoder/source/output contracts and prove that
+an existing output atlas remains untouched, with no added layout or receipt
+files. All 3 pass. This is reproducibility of candidates, not artistic approval.
