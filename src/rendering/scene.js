@@ -1,6 +1,7 @@
 import {FluidGpuPreload} from './fluid-preload.js';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
 import {CameraExclusionMotion} from './camera-exclusion-motion.js';
+import {constrainCameraToTerrain} from './camera-terrain-exclusion.js';
 import {installCameraPoseResolver} from './terrain-camera.js';
 import {initializeProgramBindings} from './program-bindings.js';
 import {VfxGpuPreload} from './vfx-preload.js';
@@ -164,13 +165,12 @@ export class WorldScene {
       const now=performance.now(),seconds=Math.max(0,(now-last)/1000);last=now;
       registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);
       let eye=motion.resolve(pose.eye,previous?.eye,seconds,{reset:context==='focus'});
-      // A lateral slide may reach higher terrain than the raw desired eye.
-      // Recheck its floor before drawing/picking; conflicting envelopes remain
-      // explicit QA diagnostics instead of a false claim of full acceptance.
-      for(let i=0;i<3;i++){
-        const floor=this.nav.field.surface(eye[0],eye[2])+2;if(eye[1]>=floor)break;
-        eye[1]=floor;const recovered=motion.recover(eye);eye=recovered.point;motion.stats.unresolved||=!recovered.recovered;
-      }
+      // A focus/first pose must recover from the requested destination, rather
+      // than an intermediate nearest-face exit that terrain would undo.
+      const terrain=constrainCameraToTerrain(context==='focus'||!previous?pose.eye:eye,motion,this.nav.field);
+      if(terrain.point.some((value,i)=>Math.abs(value-eye[i])>motion.skin))motion.corrected=motion.stats.corrected=true;
+      eye=terrain.point;
+      motion.stats.unresolved||=!terrain.resolved;motion.stats.terrainRecoveryIterations=terrain.iterations;
       const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+20;
       return {...pose,eye,altitude:eye[1]-ground};
     });

@@ -39,4 +39,4 @@ La [cámara cercana del diagnóstico de cultivos](qa/crop-frustum-prototype/NEAR
 
 ## Estado de implementación
 
-Primera base geométrica e índice espacial preparados y verificados: [evidencias y límites](qa/camera-volume-foundation/README.md). Aún no están conectados a la cámara del juego. Siguen pendientes los volúmenes de los modelos reales, la corrección suave de controles y toda la aceptación visual y móvil descrita arriba.
+Base geométrica, índice espacial, volúmenes derivados de edificios y corrección suave preparados en un prototipo opcional de diagnóstico: [evidencias y límites](qa/camera-volume-foundation/README.md). La actualización de ancestros compartidos se mide en [PARENT-CACHE](qa/camera-volume-foundation/PARENT-CACHE.md), y la recuperación conjunta frente a terreno/edificios en [TERRAIN-RECOVERY](qa/camera-volume-foundation/TERRAIN-RECOVERY.md). La protección sigue desactivada en el gameplay normal. No están aprobados los márgenes visuales por modelo/cultura, la aceptación de controles y streaming, los árboles grandes, el fade secundario ni la validación móvil completa.
