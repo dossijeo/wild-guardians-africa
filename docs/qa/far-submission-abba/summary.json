@@ -1,0 +1,138 @@
+{
+  "source": "e4c9d4a28ed84c887ef6d44388004fbd1485d076",
+  "rows": [
+    {
+      "lot": "A1",
+      "enabled": false,
+      "gpuMedianMs": 3.00229,
+      "sampleCount": 120,
+      "cpuMedianMs": 4.700000047683716,
+      "calls": 14,
+      "triangles": 53762,
+      "traceTotals": {
+        "calls": 14,
+        "triangles": 53762
+      }
+    },
+    {
+      "lot": "B1",
+      "enabled": true,
+      "gpuMedianMs": 5.810677,
+      "sampleCount": 120,
+      "cpuMedianMs": 6.5,
+      "calls": 19,
+      "triangles": 89737,
+      "traceTotals": {
+        "calls": 19,
+        "triangles": 89737
+      }
+    },
+    {
+      "lot": "B2",
+      "enabled": true,
+      "gpuMedianMs": 5.294635,
+      "sampleCount": 120,
+      "cpuMedianMs": 6.399999976158142,
+      "calls": 19,
+      "triangles": 89737,
+      "traceTotals": {
+        "calls": 19,
+        "triangles": 89737
+      }
+    },
+    {
+      "lot": "A2",
+      "enabled": false,
+      "gpuMedianMs": 3.139062,
+      "sampleCount": 120,
+      "cpuMedianMs": 4.799999952316284,
+      "calls": 14,
+      "triangles": 53762,
+      "traceTotals": {
+        "calls": 14,
+        "triangles": 53762
+      }
+    }
+  ],
+  "contextsExact": true,
+  "bSubmissionTraceExact": true,
+  "aCountersExact": true,
+  "aDrawTraceDifferences": [
+    {
+      "drawIndex": 1,
+      "changedFields": [
+        "attributes"
+      ]
+    },
+    {
+      "drawIndex": 2,
+      "changedFields": [
+        "attributes"
+      ]
+    },
+    {
+      "drawIndex": 3,
+      "changedFields": [
+        "attributes"
+      ]
+    },
+    {
+      "drawIndex": 4,
+      "changedFields": [
+        "object",
+        "geometry"
+      ]
+    },
+    {
+      "drawIndex": 5,
+      "changedFields": [
+        "object",
+        "geometry"
+      ]
+    },
+    {
+      "drawIndex": 6,
+      "changedFields": [
+        "object",
+        "geometry"
+      ]
+    },
+    {
+      "drawIndex": 7,
+      "changedFields": [
+        "object",
+        "geometry"
+      ]
+    },
+    {
+      "drawIndex": 8,
+      "changedFields": [
+        "object",
+        "geometry"
+      ]
+    }
+  ],
+  "gpuStatus": {
+    "supported": true,
+    "reason": null,
+    "disjointEvents": 0,
+    "discarded": 0,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "allocationFailures": 0,
+    "unresolvedAtDispose": 0,
+    "contextLost": false,
+    "pending": 0
+  },
+  "unchanged": true,
+  "hidden": false,
+  "errors": [],
+  "webglError": 0,
+  "cpuBackground": [
+    40968,
+    41304,
+    49032,
+    45948
+  ],
+  "conclusion": "Negative: candidate adds GPU cost in this pose. A1/A2 traces are not exact: native instance attribute versions and five object/geometry identities change during toggle reconstruction. No GPU byte or pixel equivalence proof."
+}
