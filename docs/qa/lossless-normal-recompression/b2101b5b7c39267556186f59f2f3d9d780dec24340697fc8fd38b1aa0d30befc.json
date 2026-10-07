@@ -23,6 +23,7 @@
   "savedBytes": 66866,
   "smaller": true,
   "reused": false,
-  "acceptedForRuntime": false,
-  "scope": "Local exact RGBA8 data conversion, no Tinify lossy conversion or runtime replacement. Native GPU decode/readback required before integration."
+  "acceptedForRuntime": true,
+  "scope": "Exact RGBA8 conversion verified with Sharp and native WebGL2 readback, colorSpaceConversion none/default. Runtime alias replaces encoded source; original retained outside shipped package.",
+  "nativeProof": "docs/qa/lossless-normal-recompression/native-webgl.json"
 }
