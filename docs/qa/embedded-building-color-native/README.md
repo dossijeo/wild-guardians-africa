@@ -33,3 +33,15 @@ Temporary native tab 677 completed and closed after 24 screenshots and six finis
 The screenshot API returned JPEG bytes despite the archived filenames ending in .png. Bytes are preserved unchanged; pair manifests now explicitly record the actual encoding. These screenshots support perceptual inspection and are not lossless GPU pixel evidence. The readback reports are the independent direct GPU measurements.
 
 Reproduce: `/tests/browser/embedded-color-pilot.html?culture=etiope&pilot=6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309-1`. Baseline SHA-256 `4bb83ba28b6150477a54074f2510441c78961a4de0c41617555448589ab075d8`; candidate SHA-256 `6596a82a37bb7095b6f076dc1d0d57184efb45e12d20de7f7fc2ef5f16d32b60`. No performance or RAM improvement is claimed.
+
+## Saheliana and Musgum checkpoints
+
+Native tabs 678 (Saheliana) and 679 (Musgum) each completed 24 screenshots and six readback reports, then closed. All 48 screenshots were visually inspected: no obvious added artifact was found in Saheliana's painted sun/triangle motifs, projecting beams, doors and red roof, or Musgum's ribbed surfaces, red/black motifs and damaged openings in the visible framing. The report panel masks some lower bases and props. The candidates are lossy and this is not every-texel, close-camera, collapse/repair, full-world or device acceptance.
+
+The independent receipt verifier passed for both cultures: twelve screenshot pairs and 72 readbacks each, current runtime/candidate GLB hashes confirmed, expected damage/view/light states and camera pairs, zero GL/fixture errors and empty warning/error logs. A stale closed-tab handle in the first Musgum helper call failed before its first click; the helper was replaced with explicit current handles and the existing intact Musgum tab completed without reload. No failed attempt is counted in the reports.
+
+Saheliana's earlier numerical gate was PSNR 33.99 dB with 442,648 bytes potential GLB saving; Musgum's was 34.27 dB and 359,056 bytes. Geometry/animation and alpha passed the independent candidate gates. Both remain outside runtime; no new distributed saving or GPU/RAM/frametime improvement is claimed.
+
+Reproduce with `culture=saheliana&pilot=f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f-1` or `culture=musgum&pilot=eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9-1` on the same comparator. Run `node tools/verify_native_building_color_evidence.mjs saheliana` and `node tools/verify_native_building_color_evidence.mjs musgum` while their frozen baseline/candidate files are present.
+
+The five-culture intact/damage checkpoint now contains 120 inspected screenshots and 360 readbacks. The next integration gate remains native lifecycle (collapse, ruined state, repair/reconstruction), followed by installation and independent rebuild/package verification.
