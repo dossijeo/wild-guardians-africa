@@ -435,7 +435,7 @@ function reserveAvailableTasks(s,nav){
   });
 }
 function updateWorkers(s,dt,nav) {
-  const findPlant=workerEntityLookup(()=>s.plants),findCrate=workerEntityLookup(()=>s.crates),findTask=workerEntityLookup(()=>s.tasks);
+  const findPlant=workerEntityLookup(()=>s.plants,{reuse:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true}),findTask=workerEntityLookup(()=>s.tasks);
   let idlePlants;
   const newArrivals=[];
   if(!s.raid&&s.time<300)for(const w of s.workers){
