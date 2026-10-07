@@ -1,5 +1,16 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ: primera integración visual rechazada](qa/hq-mountain-sabana-negative/README.md):
+Sabana carga y gira día/noche sin errores, pero el empalme por reflejo produce
+simetría artificial. Conservar fuentes/evidencia y terminar una composición
+natural de 360° antes de promover los seis fondos; también revisar proporciones.
+
+[Impostores y horizonte integrados en main](qa/far-merge-e4afdcbd/README.md): PR #6
+revisada/mergeada/pull, 44 atlas reproducibles exactos, CI de rama web/Windows
+aprobada y 208 pruebas combinadas + build/paquete correctos. Montañas HQ siguen
+en rama separada para aceptación de costuras/composición/luz y coste; la matriz
+intensiva y aceptación física más amplia continúan pendientes.
+
 [SFX del gesto de muralla 094/095](qa/wall-gesture-audio/README.md): arrastre una
 vez al superar umbral, release una vez, cancelación y protección de decode tardío;
 101 pruebas dirigidas y voces nativas Opus aceptadas en navegador. Matriz vigente:

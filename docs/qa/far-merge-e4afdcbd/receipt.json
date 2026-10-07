@@ -1,0 +1,55 @@
+{
+  "head": "e4afdcbd182ad7b412c7590c4e0cbe1beac588d3",
+  "scope": "Combined post-merge directed tests and production build/package, not full goal acceptance",
+  "pr": {
+    "url": "https://github.com/dossijeo/wild-guardians-africa/pull/6",
+    "reviewedHead": "8b023b718734dae6cd5201faa32c690c5128120d",
+    "validateRun": 37670002404,
+    "windowsRun": 37670002179,
+    "bothTerminalSuccess": true,
+    "rootAtlasReproduction": {
+      "count": 44,
+      "passed": true,
+      "publicWrites": false
+    }
+  },
+  "checks": {
+    "directed": {
+      "pass": 208,
+      "fail": 0,
+      "durationMs": 6305.8082,
+      "logSha256": "56ac5b5adecd011e1c3c4e6dcb62e19822cdf73491fb4c1467642c3f731284d2"
+    },
+    "build": {
+      "modules": 266,
+      "seconds": 13.47,
+      "passed": true
+    },
+    "webPackage": {
+      "files": 695,
+      "bytes": 398302299,
+      "relativeLinks": 859,
+      "runtimeGlbs": 20,
+      "passed": true
+    }
+  },
+  "sourceHashes": {
+    "src/app/main.js": "949591acc4f78557d876e92a71565a47758c0fc00148b5f88664c4f8c73d174c",
+    "src/rendering/scene.js": "dd23d212668a78315cfbf625235e9ff5e839421f7eb509619ce7d05650984dc1",
+    "src/rendering/far-vegetation.js": "da94398c2dca6ae2108932172c1f9eb860c9a08d1147ae0c26f6f59de6c6e415",
+    "src/rendering/far-vegetation-profile.js": "ee4e8cfd7433f5f3dc0ca8fb242d44ce9e3b4108ca827b655f04fc06c6a9a8e7",
+    "src/rendering/biome-backdrop.js": "10d36d208b41defe2181ab583dc8858a659a3f1c99a1037700457171c84c924f",
+    "src/rendering/wall-drawing.js": "944cb30fd586bebaaee9de0870f4a156d2791112d077608240938a1e83265e0e",
+    "src/audio/ui-audio.js": "681de79cc7227570b6a90d4cc428ae414cc89a16259c7c777acad0337f854f7e",
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "src/world/navigation.js": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8",
+    "tools/intensive-blocked-checkpoint.mjs": "7e56190cc6b15344b1cac7193dca38f7dde7c37b48480ac1ba6119ce94f107fa",
+    "tools/rebuild_far_atlases.mjs": "de21fa8dacbf583b692bdac85e3f9bc26e209b7a5021fb189366f6047421b5c4",
+    "public/content/far-vegetation.json": "fe553e32a655b864794815eb1474d65f930701b3e699ad3aa9626c2232618373"
+  },
+  "limits": [
+    "Main CI is independently pending, not included in these pass claims",
+    "Mountain HQ candidates remain off runtime",
+    "No new 100-night matrix/mobile/GPU benchmark acceptance"
+  ]
+}
