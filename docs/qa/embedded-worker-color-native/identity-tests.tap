@@ -1,0 +1,101 @@
+TAP version 13
+# Subtest: models sharing an image never overwrite each other; provider image dedup remains independent
+ok 1 - models sharing an image never overwrite each other; provider image dedup remains independent
+  ---
+  duration_ms: 2.166
+  ...
+# Subtest: candidate directories reject unsafe model and image identities
+ok 2 - candidate directories reject unsafe model and image identities
+  ---
+  duration_ms: 0.6781
+  ...
+# (node:41756) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent decoded gate verifies original geometry and color pixels without a provider
+ok 3 - independent decoded gate verifies original geometry and color pixels without a provider
+  ---
+  duration_ms: 2748.5774
+  ...
+# Subtest: validly encoded changed geometry is rejected against the original, not accepted from container validity
+ok 4 - validly encoded changed geometry is rejected against the original, not accepted from container validity
+  ---
+  duration_ms: 916.8247
+  ...
+# Subtest: changed animation metadata is rejected before it can be attributed to color conversion
+ok 5 - changed animation metadata is rejected before it can be attributed to color conversion
+  ---
+  duration_ms: 726.5466
+  ...
+# (node:40756) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: warthog color input derives from original 4096 PNG at unchanged runtime 2048 resolution
+ok 6 - warthog color input derives from original 4096 PNG at unchanged runtime 2048 resolution
+  ---
+  duration_ms: 1564.7412
+  ...
+# Subtest: normal/data and mismatched original/runtime color consumers are excluded before any provider exists
+ok 7 - normal/data and mismatched original/runtime color consumers are excluded before any provider exists
+  ---
+  duration_ms: 107.5219
+  ...
+# Subtest: external original image storage is rejected rather than guessed or fetched
+ok 8 - external original image storage is rejected rather than guessed or fetched
+  ---
+  duration_ms: 98.2415
+  ...
+# Subtest: runtime dimensions cannot change the original aspect ratio or enlarge the source
+ok 9 - runtime dimensions cannot change the original aspect ratio or enlarge the source
+  ---
+  duration_ms: 1040.538
+  ...
+# Subtest: invalid embedded ranges are rejected before decoding any image
+ok 10 - invalid embedded ranges are rejected before decoding any image
+  ---
+  duration_ms: 147.6019
+  ...
+# (node:32776) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: converts once, publishes no credential/location and reuses the verified disk result across clients
+ok 11 - converts once, publishes no credential/location and reuses the verified disk result across clients
+  ---
+  duration_ms: 636.0885
+  ...
+# Subtest: simultaneous requests for identical bytes share one upload and one output
+ok 12 - simultaneous requests for identical bytes share one upload and one output
+  ---
+  duration_ms: 418.5818
+  ...
+# Subtest: already WebP requests download optimization without an unnecessary conversion operation
+ok 13 - already WebP requests download optimization without an unnecessary conversion operation
+  ---
+  duration_ms: 157.6161
+  ...
+# Subtest: failed output resumes the known upload and never exposes provider error bodies or the secret
+ok 14 - failed output resumes the known upload and never exposes provider error bodies or the secret
+  ---
+  duration_ms: 265.1395
+  ...
+# Subtest: rejects hostile upload locations without sending an authenticated request to another host
+ok 15 - rejects hostile upload locations without sending an authenticated request to another host
+  ---
+  duration_ms: 148.7662
+  ...
+# Subtest: rejects corrupted disk outputs and non-WebP provider output
+ok 16 - rejects corrupted disk outputs and non-WebP provider output
+  ---
+  duration_ms: 483.1127
+  ...
+# Subtest: network exception text cannot echo the authorization value
+ok 17 - network exception text cannot echo the authorization value
+  ---
+  duration_ms: 47.1371
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15319.9949

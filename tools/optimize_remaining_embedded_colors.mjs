@@ -7,6 +7,7 @@ import {TinifyImageCache} from './tinify-image-cache.mjs';
 import {replaceWebGlbColorImages} from './repack_web_glb_images.mjs';
 import {verifyEmbeddedColorCandidate} from './verify-embedded-color-candidate.mjs';
 import {prepareEmbeddedColorInput} from './embedded-color-input.mjs';
+import {embeddedCandidateKey} from './embedded-candidate-key.mjs';
 
 const [directory,...extra]=process.argv.slice(2),validateOnly=extra.length===1&&extra[0]==='--validate-only';assert.ok(directory&&(!extra.length||validateOnly),'Provide the prepared cache directory and optional --validate-only');
 const root=process.cwd(),cache=resolve(root,'.cache'),input=resolve(root,directory);
@@ -34,11 +35,11 @@ for(const entry of pending){
  assert.equal(prepared.provenance.originalImageSha256,entry.originalImageSha256);assert.equal(prepared.provenance.uploadSha256,entry.uploadSha256,'Input no longer matches original-derived preparation');
  if(validateOnly)continue;
  const optimized=await client.optimize(upload,{format:'png'}),candidate=await replaceWebGlbColorImages(runtime,new Map([[entry.index,optimized.bytes]]));
- const candidateDirectory=resolve(input,entry.originalImageSha256+'-'+entry.index);await mkdir(candidateDirectory,{recursive:true});
+ const candidateKey=embeddedCandidateKey(entry.originalGlbSha256,entry.index),candidateDirectory=resolve(input,candidateKey);await mkdir(candidateDirectory,{recursive:true});
  await writeFile(resolve(candidateDirectory,'candidate.webp'),optimized.bytes);await writeFile(resolve(candidateDirectory,'candidate.glb'),candidate);
  let verification=null,error=null;
  try{verification=await verifyEmbeddedColorCandidate(original,runtime,candidate,entry.index);}catch(e){error=e.message.split('\n')[0];}
- const row={source:entry.source,runtime:entry.runtime,index:entry.index,originalImageSha256:entry.originalImageSha256,...optimized.receipt,reused:optimized.reused,savedImageBytes:entry.runtimeImageBytes-optimized.bytes.length,savedRuntimeBytes:runtime.length-candidate.length,candidateGlbSha256:sha(candidate),candidateDirectory:entry.originalImageSha256+'-'+entry.index,verification,error,acceptedForRuntime:false};
+ const row={source:entry.source,runtime:entry.runtime,index:entry.index,originalImageSha256:entry.originalImageSha256,...optimized.receipt,reused:optimized.reused,savedImageBytes:entry.runtimeImageBytes-optimized.bytes.length,savedRuntimeBytes:runtime.length-candidate.length,candidateGlbSha256:sha(candidate),candidateDirectory:candidateKey,verification,error,acceptedForRuntime:false};
  rows.push(row);await writeFile(resolve(candidateDirectory,'report.json'),JSON.stringify(row,null,2)+'\n');await writeFile(resolve(input,'candidates.json'),JSON.stringify(report(),null,2)+'\n');
  console.log(JSON.stringify({image:entry.originalImageSha256,index:entry.index,savedRuntimeBytes:row.savedRuntimeBytes,psnr:verification?.psnr??null,gate:error?'failed':'passed',reused:optimized.reused}));
 }
