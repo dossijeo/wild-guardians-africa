@@ -1,6 +1,7 @@
 import {validateTreeTransitionPolicy} from '../../tools/experiments/tree-transition-range.js';
 import {releaseNativeFarGpuCache,registerNativeFarTextureOwner} from '../../tools/experiments/prepare-native-far-gpu.js';
 import {createBiomeBackdrop} from './biome-backdrop.js';
+import {mountainBackdropProfile} from './mountain-backdrop-profile.js';
 import {TextureLoader} from 'three';
 import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
@@ -19,6 +20,8 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  if(typeof logicalStandbyPreload!=='boolean')throw Error('Invalid logical standby option');
  if(typeof includeFarGround!=='boolean')throw Error('Invalid far ground option');
  if(options.qualityDriven!==undefined&&typeof options.qualityDriven!=='boolean')throw Error('Invalid far quality policy');
+ if(options.backdropHQ!==undefined&&typeof options.backdropHQ!=='boolean')throw Error('Invalid HQ mountain policy');
+ const mountain=options.backdropHQ?mountainBackdropProfile(world.nav.config.biome,world.state?.seed??world.nav.config.seed):null;
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
@@ -41,8 +44,8 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
    const adapter=await attachSpecies(world,{groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
-  const backdropTexture=await load('assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
-  backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,arcLayout:options.backdropArcLayout,stableAltitude:options.backdropStableAltitude,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
+  const backdropTexture=await load(mountain?.atlas??'assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
+  backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,arcLayout:options.backdropArcLayout??mountain?.arcLayout,stableAltitude:options.backdropStableAltitude??mountain?.stableAltitude,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix??mountain?.fogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
   owner={enabled:true,adapters,configureQuality(quality){
    if(closed||!options.qualityDriven)return false;
    const next=farVegetationProfile({quality,biome:world.nav.config.biome});

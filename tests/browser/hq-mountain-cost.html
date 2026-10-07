@@ -61,7 +61,7 @@ try{
  const loader=new THREE.TextureLoader();
 
  const backdropArcLayout=arcPilot?arcCells===4?mountainArcComposition(await json(arcDirectory+'/cells.json'),712,{height:{savanna:110,grand_river:85,mangrove:60,volcanoes:160,canyons:130,desert:115}[nav.config.biome]}):await json(arcDirectory+'/layout.json'):null;
- await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout,backdropStableAltitude:arcPilot?arcStableAltitude:false,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?arcAtlasUrl:`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
+ await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropHQ:false,backdropMirrored:!arcPilot,backdropArcLayout,backdropStableAltitude:arcPilot?arcStableAltitude:false,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?arcAtlasUrl:`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  if(arcPilot&&arcNoMips){const texture=world.scene.getObjectByName('biome-2d-backdrop').children[0].material.uniforms.uBackdropAtlas.value;texture.generateMipmaps=false;texture.minFilter=THREE.LinearFilter;texture.needsUpdate=true;}
  await prepareInitialFarWorld(world);
  mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];normalMaterial=mesh.material;hqTexture=normalMaterial.uniforms.uBackdropAtlas.value;
