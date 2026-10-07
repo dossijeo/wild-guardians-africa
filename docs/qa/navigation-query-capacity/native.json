@@ -1,0 +1,37 @@
+{
+  "scope": "100 native ticks from historical Gran Cañón day-11 checkpoint; paid hiring and complete per-tick state parity. No artificial pressure here; not a current campaign replay, GPU/FPS/RAM measurement or proof of overflow in gameplay.",
+  "input": "docs/qa/intensive-canyon-10/state.json",
+  "inputSha256": "501a1240a9de9f6f6ca860216c45c9a24ab4c5101155a4fded85159eebdc32ec",
+  "ticks": 100,
+  "stepSeconds": 0.1,
+  "trajectorySha256": "8c75dbfd1eb03ecb4e8b3db99f7529ab9c2049223516b69fbc4eaebf1b8310a6",
+  "sourceHashes": {
+    "navigation": "2ed816c61bd0eb4fedcb3b41c1f9c1b9fb71be14b6d1dcdbeb21e5d46253609c",
+    "reference": "9274155550808b66e0f067fef790c9c26d119ba024ba4497da0469b3322342ec",
+    "game": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19"
+  },
+  "worlds": [
+    {
+      "name": "previous",
+      "staff": 13,
+      "walkMisses": 1529,
+      "segmentMisses": 2338,
+      "maxWalkKeys": 1516,
+      "maxSegmentKeys": 2177,
+      "finalStateSha256": "806de0042659d6e23af6c3e945eb1390ec127db2847197e85acd7e2acd260c38",
+      "alive": 148,
+      "money": 179
+    },
+    {
+      "name": "retained",
+      "staff": 13,
+      "walkMisses": 1529,
+      "segmentMisses": 2338,
+      "maxWalkKeys": 1516,
+      "maxSegmentKeys": 2177,
+      "finalStateSha256": "806de0042659d6e23af6c3e945eb1390ec127db2847197e85acd7e2acd260c38",
+      "alive": 148,
+      "money": 179
+    }
+  ]
+}

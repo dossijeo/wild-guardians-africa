@@ -120,7 +120,7 @@ export class Navigation {
     const exact=Number.isInteger(x)&&Number.isInteger(z),key=`${x},${z}:${radius}:${ignore}:${worker}`;
     if(exact&&this.walkCache.has(key))return this.walkCache.get(key);
     const result=this.testWalkable(x,z,radius,ignore,worker);
-    if(exact){if(this.walkCache.size>50000)this.walkCache.clear();this.walkCache.set(key,result);}
+    if(exact){if(this.walkCache.size>=50000)evictOldest(this.walkCache);this.walkCache.set(key,result);}
     return result;
   }
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
@@ -354,7 +354,7 @@ export class Navigation {
     const key=grid?`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}`:null;
     if(key&&this.segmentCache.has(key))return this.segmentCache.get(key);
     const result=this.testSegmentClear(start,end,radius,ignore,worker);
-    if(key){if(this.segmentCache.size>=100000)this.segmentCache.clear();this.segmentCache.set(key,result);}
+    if(key){if(this.segmentCache.size>=100000)evictOldest(this.segmentCache);this.segmentCache.set(key,result);}
     return result;
   }
   workerMotionClear(start,end,radius=.28){
