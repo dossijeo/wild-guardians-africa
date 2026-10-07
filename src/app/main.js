@@ -33,6 +33,7 @@ import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/
 import {WorldScene} from '../rendering/scene.js';
 import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
+import {frameDelta} from './frame-delta.js';
 import {json} from '../rendering/assets.js';
 import {assetUrl} from '../rendering/asset-url.js';
 import {createFrameImageLoader} from '../ui/frame-image-loader.js';
@@ -403,7 +404,7 @@ function updateRaidLoading(){
   document.querySelector('#stage').append(raidLoading);
 }
 function frame(now) {
-  requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
+  requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
     try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
