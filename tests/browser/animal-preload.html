@@ -4,6 +4,7 @@ import {Box3,Frustum,Matrix4,PerspectiveCamera,Vector3} from 'three';
 import {BufferRequests} from './buffer-requests.js';
 import {RenderGlCalls} from './render-gl-calls.js';
 import {RenderCpuCalls} from './render-cpu-calls.js';
+import {ActorArrivalCpu} from './actor-arrival-cpu.js';
 import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
 import {findInitialLocationAsync} from '/src/world/villages.js';
 import {WorldScene} from '/src/rendering/scene.js';
@@ -13,7 +14,8 @@ import {focusTerrainCamera} from '/src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '/src/world/active-region.js';
 import {serialize,deserialize} from '/src/persistence/snapshots.js';
 const params=new URLSearchParams(location.search),biome=params.get('biome')??'gran-canon',measureTiming=params.get('timing')==='1',errors=[];
-let failureContext=null;
+let failureContext=null,arrivalCpu=null;
+addEventListener('pagehide',()=>arrivalCpu?.dispose());
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
 const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
@@ -64,6 +66,7 @@ const copies=Number(params.get('copies')??1);if(!Number.isInteger(copies)||copie
 const spawnSpecies=Array.from({length:copies},()=>requestedSpecies?[requestedSpecies]:species).flat();
 const plannedReserves=params.get('plan-reserves')==='1';
 if(plannedReserves){state.nightPlan={at:400,group:spawnSpecies,done:false};world.render(0);await world.animalReservePreparation;before.spareModelIds=(await world.animalPreload.spares()).map(r=>r.model.uuid);timing.plannedReserves={ready:before.spareModelIds.length,creations:timing.creations.splice(0),scope:'Native WorldScene planned group; no simulated clock advancement, one new reserve per frame and GPU bone texture preparation'};}
+if(measureTiming&&params.get('actor-profile')==='1')arrivalCpu=new ActorArrivalCpu(world);
 const appearance=performance.now();if(savedReserves)Game.tick(state,.2,nav);else if(!savedActive)spawnRaid(state,{group:spawnSpecies},nav);
 if(timing.preparation){timing.preparation.used=world.raidEntryPreparer.stats.used;timing.preparation.postState=serialize(state);}
 for(const [name,original] of originals)nav[name]=original;
@@ -78,6 +81,7 @@ const firstRender=()=>{const stamp=performance.now(),actorsBefore=world.mixers.s
 firstRender();await new Promise(resolve=>setTimeout(resolve,0));firstRender();
 const firstAppearanceMs=performance.now()-appearance;
 if(measureTiming){await sampleFrames(timing.appearance,60);timing.summary={baseline:summarize(timing.baseline),appearance:summarize(timing.appearance)};timing.horizonWorker={available:!!world.horizon.generator.worker,disabled:world.horizon.generator.disabled,pending:!!world.horizon.generator.busy,region:world.horizon.region};}
+if(arrivalCpu){timing.actorArrival=arrivalCpu.finish();arrivalCpu=null;}
 const rigs=state.raid.animals.map(a=>{const rig=world.mixers.get(a.id),skeletons=new Set(),geometry=new Set(),materials=new Set(),boneTextures=new Set();rig?.model.traverse(mesh=>{if(!mesh.isMesh)return;geometry.add(mesh.geometry.uuid);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])materials.add(material.uuid);if(mesh.isSkinnedMesh){skeletons.add(mesh.skeleton.uuid);if(mesh.skeleton.boneTexture)boneTextures.add(mesh.skeleton.boneTexture.uuid);}});return {species:a.species,ready:!!rig,modelId:rig?.model.uuid,fromSpare:before.spareModelIds.includes(rig?.model.uuid),skeletons:[...skeletons],boneTextures:[...boneTextures],geometry:[...geometry],materials:[...materials]};});
 const repeatedRigResources=Object.fromEntries([...new Set(spawnSpecies)].map(species=>{const matches=rigs.filter(r=>r.species===species),ids=field=>matches.flatMap(r=>r[field]);return [species,{copies:matches.length,sparesUsed:matches.filter(r=>r.fromSpare).length,uniqueModels:new Set(matches.map(r=>r.modelId)).size,privateSkeletons:new Set(ids('skeletons')).size===ids('skeletons').length,privateBoneTextures:new Set(ids('boneTextures')).size===ids('boneTextures').length,sharedGeometry:matches.every(r=>JSON.stringify(r.geometry)===JSON.stringify(matches[0].geometry)),sharedMaterials:matches.every(r=>JSON.stringify(r.materials)===JSON.stringify(matches[0].materials))}];}));
 if(Object.values(repeatedRigResources).some(r=>r.sparesUsed!==((plannedReserves||savedReserves||savedActive)?r.copies:1)||r.uniqueModels!==r.copies||!r.privateSkeletons||!r.privateBoneTextures||!r.sharedGeometry||!r.sharedMaterials))throw Error('Repeated rigs failed ownership checks');
@@ -116,5 +120,5 @@ const report={...(resources?{resourceStages}:{}),ok:world.animalGpuReady&&rigs.e
 document.querySelector('#report').textContent=JSON.stringify(report,null,2);
 if(!world.disposed&&params.get('motion')==='1'){const button=document.querySelector('#inspect');button.disabled=false;button.onclick=()=>{const animal=state.raid?.animals[0],before=serialize(state);if(!animal)return;world.focus({x:animal.x,z:animal.z,distance:8});world.render(0);if(serialize(state)!==before)throw Error('Inspection changed logical state');report.inspection={scope:'Close camera after first hit; no subsequent simulation ticks',logicalStateUnchanged:true,eye:world.camera.position.toArray(),target:world.controls.target.toArray()};document.querySelector('#report').textContent=JSON.stringify(report,null,2);};}
 let last=performance.now();function frame(now){world.render(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}if(!world.disposed)requestAnimationFrame(frame);
-}catch(error){document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,errors,failureContext},null,2);}
+}catch(error){arrivalCpu?.dispose();arrivalCpu=null;document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,errors,failureContext},null,2);}
 </script></body></html>
