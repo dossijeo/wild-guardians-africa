@@ -14,3 +14,10 @@ test('no assignment avoids history and independent update scopes never reuse old
  const unused=workerEntityLookup(()=>{throw Error('No collection access');});assert.equal(unused(null),undefined);assert.equal(unused(undefined),undefined);
  const original={id:'crop'},restored={id:'crop'},a=workerEntityLookup(()=>[original]),b=workerEntityLookup(()=>[restored]);assert.equal(a('crop'),original);assert.equal(b('crop'),restored);
 });
+
+test('explicit history reuse avoids rebuilding or scanning immutable memberships across worker updates',()=>{
+ let reads=0;const rows=Array.from({length:100},(_,i)=>({get id(){reads++;return 'p'+i;},alive:true}));const first=workerEntityLookup(()=>rows,{reuse:true});first('p99');first('p98');reads=0;for(let step=0;step<100;step++){const lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('p99'),rows[99]);rows[99].alive=false;assert.equal(lookup('p99').alive,false);}assert.equal(reads,0);
+});
+test('reused history indexes observe appends, removals, replacement and restored objects on later passes',()=>{
+ let rows=Array.from({length:100},(_,i)=>({id:'p'+i}));let lookup=workerEntityLookup(()=>rows,{reuse:true});lookup('p0');lookup('p99');rows.push({id:'new'});lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('new'),rows.at(-1));lookup('p0');rows.pop();lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('new'),undefined);lookup('p0');const prior=rows[0];rows=rows.map(p=>({...p}));lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('p0'),rows[0]);assert.notEqual(lookup('p0'),prior);
+});
