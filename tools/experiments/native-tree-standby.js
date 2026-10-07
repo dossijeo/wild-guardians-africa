@@ -4,9 +4,10 @@ import {lodMix} from './far-impostor-math.js';
 // Immutable logical identity survives changes of native instance order/LOD.
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
 export function standbyTreeKey(tree){const p=tree.origin??tree;return [tree.id,p.x,p.y,p.z,tree.yaw,tree.sx,tree.sy,tree.sz].join(':');}
-// A retained bank cannot extend current native selection or authorize a changed
-// logical tree. Both the physical batch and current procedural region must match.
-export function standbyCoverageReady(id,{coverage,standby,nativeTree,logicalTree,suppressed}){
+// A missing chunk may use its owned, GPU-prepared bank. A resident tree still
+// needs current physical selection; culling must not authorize extra geometry.
+export function standbyCoverageReady(id,{coverage,standby,nativeTree,logicalTree,suppressed,nativeMissing=false}){
+ if(nativeMissing&&nativeTree===undefined)return standby.has(id,logicalTree,suppressed);
  return coverage.has(id,suppressed)&&standby.has(id,nativeTree,suppressed)&&standby.has(id,logicalTree,suppressed);
 }
 function sourceKey(source){return [source.geometry.uuid,source.material.uuid,source.material.version].join(':');}

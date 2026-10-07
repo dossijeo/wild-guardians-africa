@@ -53,3 +53,16 @@ test('large world placement preserves fractional coordinates through a relative 
  const f=fixture(),t=tree('far',1e8+.25);t.z=-1e8+.125;f.owner.request([descriptor(t)],{x:t.x,z:t.z});await settled(f.owner);const bank=f.owner.active,m=bank.meshes[0];
  assert.equal(bank.entries.get(t.id).matrix[12],t.x);assert.equal(bank.root.position.x+m.instanceMatrix.array[12],t.x);assert.equal(bank.root.position.z+m.instanceMatrix.array[14],t.z);assert.equal(f.owner.has(t.id,t),true);f.close();
 });
+
+test('missing physical chunk bridges with retained uploaded identity without weakening resident selection or epoch guards',async()=>{
+ const f=fixture(),t=tree();let epoch=0;f.owner.resourceRevision=()=>epoch;f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
+ const args={coverage:{has:()=>false},standby:f.owner,nativeTree:undefined,logicalTree:{...t},nativeMissing:true};
+ assert.equal(standbyCoverageReady(t.id,args),true);
+ f.owner.update({x:0,z:50},new Map([[t.id,t]]),()=>({ready:1,enabled:true}),()=>!standbyCoverageReady(t.id,args),new Set());assert.equal(f.owner.stats.rendered,1);assert.equal(f.owner.active.meshes[0].geometry.attributes.nativeVisibility.getX(0),.5);
+ args.nativeMissing=false;assert.equal(standbyCoverageReady(t.id,args),false);args.nativeMissing=true;
+ args.nativeTree=t;assert.equal(standbyCoverageReady(t.id,args),false);args.nativeTree=undefined;
+ args.logicalTree=tree(t.id,2);assert.equal(standbyCoverageReady(t.id,args),false);args.logicalTree={...t};
+ args.suppressed=new Set([t.id]);assert.equal(standbyCoverageReady(t.id,args),false);args.suppressed=undefined;
+ epoch++;assert.equal(standbyCoverageReady(t.id,args),false);epoch--;
+ f.sources[0].material.version++;assert.equal(standbyCoverageReady(t.id,args),false);f.close();
+});
