@@ -1,0 +1,244 @@
+TAP version 13
+# (node:46820) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pending horizon retains adopted exact terrain while quality changes alta → media {}
+ok 1 - pending horizon retains adopted exact terrain while quality changes alta → media {}
+  ---
+  duration_ms: 4.9167
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes alta → media {"farVisualRange":1,"farPreserveTerrain":true}
+ok 2 - pending horizon retains adopted exact terrain while quality changes alta → media {"farVisualRange":1,"farPreserveTerrain":true}
+  ---
+  duration_ms: 0.621
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes media → alta {}
+ok 3 - pending horizon retains adopted exact terrain while quality changes media → alta {}
+  ---
+  duration_ms: 0.4115
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes media → alta {"farVisualRange":1,"farPreserveTerrain":true}
+ok 4 - pending horizon retains adopted exact terrain while quality changes media → alta {"farVisualRange":1,"farPreserveTerrain":true}
+  ---
+  duration_ms: 0.3427
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole media/3/null
+ok 5 - independent visual terrain covers the previously adopted hole media/3/null
+  ---
+  duration_ms: 0.8284
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole alta/1/null
+ok 6 - independent visual terrain covers the previously adopted hole alta/1/null
+  ---
+  duration_ms: 0.3775
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole media/3/1
+ok 7 - independent visual terrain covers the previously adopted hole media/3/1
+  ---
+  duration_ms: 0.4177
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole alta/1/3
+ok 8 - independent visual terrain covers the previously adopted hole alta/1/3
+  ---
+  duration_ms: 0.8638
+  ...
+# Subtest: explicit resident radius also waits for matching adopted horizon before reducing exact chunks
+ok 9 - explicit resident radius also waits for matching adopted horizon before reducing exact chunks
+  ---
+  duration_ms: 1.5929
+  ...
+# Subtest: exact radius changes only when new horizon is adopted media
+ok 10 - exact radius changes only when new horizon is adopted media
+  ---
+  duration_ms: 1.0221
+  ...
+# Subtest: exact radius changes only when new horizon is adopted alta
+ok 11 - exact radius changes only when new horizon is adopted alta
+  ---
+  duration_ms: 0.4401
+  ...
+# Subtest: visual compaction releases excess coverage after smaller horizon is adopted
+ok 12 - visual compaction releases excess coverage after smaller horizon is adopted
+  ---
+  duration_ms: 0.6754
+  ...
+# Subtest: experimental resident radius retains the native lattice and never changes default quality
+ok 13 - experimental resident radius retains the native lattice and never changes default quality
+  ---
+  duration_ms: 5.6415
+  ...
+# (node:42276) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 14 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 8.8085
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 15 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 2.2615
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 16 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 7.4536
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 17 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 2.0458
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 18 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.3082
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 19 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.7779
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 20 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 2.6541
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 21 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 5.8741
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 22 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 1.7364
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 23 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 2.1866
+  ...
+# Subtest: GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+ok 24 - GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+  ---
+  duration_ms: 9.242
+  ...
+# Subtest: failed zero-pixel draw restores renderer and parent before rejecting
+ok 25 - failed zero-pixel draw restores renderer and parent before rejecting
+  ---
+  duration_ms: 3.2491
+  ...
+# Subtest: overlapping species compilation leaves culling unchanged until each synchronous upload draw
+ok 26 - overlapping species compilation leaves culling unchanged until each synchronous upload draw
+  ---
+  duration_ms: 1.3373
+  ...
+# Subtest: failed upload draw restores native mesh culling without changing intentionally unculled meshes
+ok 27 - failed upload draw restores native mesh culling without changing intentionally unculled meshes
+  ---
+  duration_ms: 0.8458
+  ...
+# Subtest: cancelled preparation never compiles or draws
+ok 28 - cancelled preparation never compiles or draws
+  ---
+  duration_ms: 0.8191
+  ...
+# Subtest: cancellation during fence polling releases the sync and leaves rendering restored
+ok 29 - cancellation during fence polling releases the sync and leaves rendering restored
+  ---
+  duration_ms: 0.7928
+  ...
+# Subtest: texture preparation deduplicates and yields between bounded batches before compilation
+ok 30 - texture preparation deduplicates and yields between bounded batches before compilation
+  ---
+  duration_ms: 0.7511
+  ...
+# Subtest: cancelling between texture batches prevents remaining uploads and compilation
+ok 31 - cancelling between texture batches prevents remaining uploads and compilation
+  ---
+  duration_ms: 1.3037
+  ...
+# Subtest: optional image decoding finishes before upload and cancellation prevents upload
+ok 32 - optional image decoding finishes before upload and cancellation prevents upload
+  ---
+  duration_ms: 1.376
+  ...
+# Subtest: warm texture generations skip upload budgets but always compile, draw and fence new native packing
+ok 33 - warm texture generations skip upload budgets but always compile, draw and fence new native packing
+  ---
+  duration_ms: 2.7509
+  ...
+# Subtest: context restoration invalidates warm texture budgets independently per renderer
+ok 34 - context restoration invalidates warm texture budgets independently per renderer
+  ---
+  duration_ms: 1.8477
+  ...
+# Subtest: shared image source changes require a new upload budget even without texture wrapper version change
+ok 35 - shared image source changes require a new upload budget even without texture wrapper version change
+  ---
+  duration_ms: 0.6672
+  ...
+# Subtest: closing a renderer owner releases texture and context listeners, including after restoration
+ok 36 - closing a renderer owner releases texture and context listeners, including after restoration
+  ---
+  duration_ms: 1.0032
+  ...
+# Subtest: a late cancelled request cannot create an owner after its cache was released
+ok 37 - a late cancelled request cannot create an owner after its cache was released
+  ---
+  duration_ms: 0.5273
+  ...
+# Subtest: a cancelled generation keeps only uploads already completed for the next generation
+ok 38 - a cancelled generation keeps only uploads already completed for the next generation
+  ---
+  duration_ms: 0.8616
+  ...
+# Subtest: a failed texture upload is never reused by a subsequent generation
+ok 39 - a failed texture upload is never reused by a subsequent generation
+  ---
+  duration_ms: 0.6892
+  ...
+# Subtest: context restoration invalidates a completed native tree proof before any handoff can reuse it
+ok 40 - context restoration invalidates a completed native tree proof before any handoff can reuse it
+  ---
+  duration_ms: 1.5337
+  ...
+# Subtest: loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+ok 41 - loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+  ---
+  duration_ms: 1.079
+  ...
+# Subtest: nonzero WebGL error rejects the native proof with its original code and releases the fence
+ok 42 - nonzero WebGL error rejects the native proof with its original code and releases the fence
+  ---
+  duration_ms: 0.7218
+  ...
+# Subtest: opt-in diagnostics distinguish pre-existing GL faults before uploading or drawing
+ok 43 - opt-in diagnostics distinguish pre-existing GL faults before uploading or drawing
+  ---
+  duration_ms: 0.4912
+  ...
+# Subtest: opt-in diagnostic upload-draw faults preserve renderer cleanup and report the failing stage
+ok 44 - opt-in diagnostic upload-draw faults preserve renderer cleanup and report the failing stage
+  ---
+  duration_ms: 0.6018
+  ...
+# Subtest: release during initTexture prevents late texture handler registration
+ok 45 - release during initTexture prevents late texture handler registration
+  ---
+  duration_ms: 0.5863
+  ...
+# Subtest: released in-flight compile cannot adopt or release a replacement cache
+ok 46 - released in-flight compile cannot adopt or release a replacement cache
+  ---
+  duration_ms: 0.7737
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 569.8933
