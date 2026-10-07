@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Complete the active suite while frequent pushes replace the pending run.
+  cancel-in-progress: false
 
 permissions:
   contents: read
