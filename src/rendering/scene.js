@@ -225,9 +225,13 @@ export class WorldScene {
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.
-    const horizonRequested=this.farVisualRange==null||this.farPreserveTerrain?requested:nativeNearRegion(this.camera.position,this.quality,Math.min(this.farVisualRange,requested.range));
-    const visibleRegion=this.horizon.update(this.nav.config,this.pack.profile,horizonRequested,this.quality,force)??horizonRequested,{cx,cz}=visibleRegion,range=requested.range;
-    const region=this.farVisualRange==null?visibleRegion:nativeNearRegion({x:cx*48,z:cz*48},this.quality,range);
+    const exactTerrain=this.farVisualRange==null||this.farPreserveTerrain;
+    const horizonRequested=exactTerrain?requested:nativeNearRegion(this.camera.position,this.quality,Math.min(this.farVisualRange,requested.range));
+    const visibleRegion=this.horizon.update(this.nav.config,this.pack.profile,horizonRequested,this.quality,force)??horizonRequested,{cx,cz}=visibleRegion;
+    // A pending horizon still owns its preceding hole. Exact terrain follows
+    // that adopted radius; visual compaction must at least cover the old hole.
+    const range=exactTerrain?visibleRegion.range:Math.max(requested.range,visibleRegion.range);
+    const region=exactTerrain?visibleRegion:nativeNearRegion({x:cx*48,z:cz*48},this.quality,range);
     // A smaller visual radius must not move the gameplay raid-entry border.
     const logicalBounds=this.farResidentRange==null?region.bounds:nativeNearRegion({x:cx*48,z:cz*48},this.quality).bounds;
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(logicalBounds);this.nav.setRaidView?.(this.camera.position,this.controls.target);
