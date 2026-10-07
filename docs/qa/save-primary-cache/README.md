@@ -10,7 +10,7 @@ atómica no cambian. Una copia externa diferente, una ranura distinta, corrupci�
 o un cambio de versión de la base siguen la validación completa. Una transacción
 abortada no actualiza la caché; eliminar la ranura libera su referencia.
 
-`tests.log`: 19 pruebas dirigidas correctas, incluidas modificaciones externas,
+`tests.log.gz` (hash en `hashes.json`): 19 pruebas dirigidas correctas, incluidas modificaciones externas,
 corrupción, identidad de ranura, fallo de escritura, captura de estados en cola,
 rechazo del estado nuevo inválido y recuperación. El doble de transacciones
 publica sus escrituras solo al completarse. No constituye una nueva ejecución de
@@ -39,3 +39,6 @@ históricos de día 101 usados para medir no prueban la campaña actual de 100 n
 Build correcto, 225 módulos, 14,84 s; advertencia preexistente de bundle grande.
 Gate de sintaxis: 134 páginas/133 scripts sin errores. La reproducción nativa y
 el frametime móvil permanecen sin acreditar para este cambio.
+
+Paquete web verificado: 641 archivos, 382702425 bytes, 859 enlaces relativos y
+20 GLB de runtime; sin duplicados originales o suelo/poblado sustituido.
