@@ -738,3 +738,10 @@ not proof that repaired tiny pole faces were drawn. Before extending the
 normal repair, an opt-in source/candidate ID coverage draw will count the
 original faces incident to those81undefined normals; it remains separate from
 PBR quality. A zero covered count limits what the compatible screen establishes.
+
+Coverage draw was not executed: two CUA browser2 webview-attachment timeouts,
+with empty tab inventory between attempts. No Run click/render/context or
+report resulted. The team CPU suite77319 was active alongside27148/49032;
+there is no timing result. Keep coverage pending and do not expand normal
+repair based on the earlier compatible screen. Root has the exact opt-in
+fixture URL for a later available provider; the local server remains5284.
