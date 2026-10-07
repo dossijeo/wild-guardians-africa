@@ -17,14 +17,15 @@ import {attachNativeFarGround} from './native-far-ground.js';
 import {farAtmosphere} from '../../src/rendering/far-atmosphere.js';
 
 // Explicit QA opt-in. Atlas resources remain owned by the caller.
-export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundSeam=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
+export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundSeam=false,nativeWaterMask=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
  transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);const maxTransitionEnd=transitionHeight?.end??end;
  if(typeof logicalSizePreload!=='boolean'||logicalSizePreload&&(!logicalStandbyPreload||!transitionHeight))throw Error('Invalid logical size preload option');
  if(typeof logicalStandbyPreload!=='boolean')throw Error('Invalid logical standby option');
  if(logicalPreloadMargin!==null&&(!Number.isFinite(logicalPreloadMargin)||logicalPreloadMargin<0||logicalPreloadMargin>48))throw Error('Invalid logical preload margin');
- if(groundColorStep!==null&&(!simplifiedFarGround||!Number.isFinite(groundColorStep)||groundColorStep<=0))throw Error('Invalid far ground color step');
+ if(groundColorStep!==null&&(!simplifiedFarGround&&!nativeWaterMask||!Number.isFinite(groundColorStep)||groundColorStep<=0))throw Error('Invalid far ground color step');
  if(typeof simplifiedFarGround!=='boolean')throw Error('Invalid simplified far ground option');
- if(typeof groundSeam!=='boolean'||groundSeam&&includeGround&&(!simplifiedFarGround||groundColorStep===null))throw Error('Invalid far ground seam option');
+ if(typeof nativeWaterMask!=='boolean'||nativeWaterMask&&(simplifiedFarGround||groundColorStep===null))throw Error('Invalid native far water mask option');
+ if(typeof groundSeam!=='boolean'||groundSeam&&includeGround&&(!simplifiedFarGround&&!nativeWaterMask||groundColorStep===null))throw Error('Invalid far ground seam option');
  if(!Number.isFinite(groundWash)||groundWash<0||groundWash>1)throw Error('Invalid far ground wash');
  farAtmosphere({fogStart,fogEnd,fogDayColor,fogNightColor});
  if(![densityStart,densityEnd,densityMinimum,fadeStart,fadeEnd].every(Number.isFinite)||densityStart<maxTransitionEnd||densityEnd<=densityStart||densityMinimum<0||densityMinimum>1||fadeStart<densityEnd||fadeEnd<=fadeStart||fadeEnd>treeHalf-64)throw Error('Invalid native far landscape distances');
@@ -42,7 +43,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
  const fog=new Fog(fogDayColor,fogStart,fogEnd),fogDay=new Color(fogDayColor),fogNight=new Color(fogNightColor);
- const layer=new NativeFarLayer({scene:world.scene,source:world.prototypes[slot][0],texture,metadata,treesOnly:!includeGround,selectTrees:trees=>trees.filter(t=>t.slot===slot),attachData:(p,data,cancelled)=>{if(data.ground)attachNativeFarGround(p,data.ground,world,{simplified:simplifiedFarGround,seam:groundSeam,cancelled:()=>cancelled()||isCancelled()});},options:{toon:bakedOnly?null:world.toon,prelitAtlas,start,end,transitionHeight,cullZeroImpostors,slot,importanceHeight,importanceMaxBoost,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
+ const layer=new NativeFarLayer({scene:world.scene,source:world.prototypes[slot][0],texture,metadata,treesOnly:!includeGround,selectTrees:trees=>trees.filter(t=>t.slot===slot),attachData:(p,data,cancelled)=>{if(data.ground)attachNativeFarGround(p,data.ground,world,{simplified:simplifiedFarGround,seam:groundSeam,nativeWaterMask,cancelled:()=>cancelled()||isCancelled()});},options:{toon:bakedOnly?null:world.toon,prelitAtlas,start,end,transitionHeight,cullZeroImpostors,slot,importanceHeight,importanceMaxBoost,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
   if(bakedOnly)candidate.uniforms.uNight=world.toon.uniforms.uNight;
   candidate.uniforms.uDensityEnabled.value=1;candidate.uniforms.uDensityRange.value.set(densityStart,densityEnd);candidate.uniforms.uDensityMinimum.value=densityMinimum;candidate.uniforms.uDistanceFadeRange.value.set(fadeStart,fadeEnd);
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);

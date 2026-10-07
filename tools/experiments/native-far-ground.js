@@ -6,10 +6,11 @@ import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
 // Low-detail ground belongs to the regional layer. Discard the live resident
 // rectangle so the two surfaces never overlap or compete in the depth buffer.
-export function attachNativeFarGround(candidate,data,world,{simplified=false,seam=false,cancelled=()=>false,seamStreamFactory,seamPrepare}={}){
+export function attachNativeFarGround(candidate,data,world,{simplified=false,seam=false,nativeWaterMask=false,cancelled=()=>false,seamStreamFactory,seamPrepare}={}){
  const mapped=!!world.biomeGround&&!simplified,colors=mapped||data.colorMap?data.colors:Float32Array.from(data.colors,c=>c<=.04045?c*.0773993808:Math.pow((c+.055)*.9478672986,2.4));
- if(data.colorMap&&mapped)throw Error('Color-map ground requires the simplified recipe');
- if(seam&&(!data.colorMap||mapped))throw Error('Ground seam requires the simplified color-map recipe');
+ if(nativeWaterMask&&(!mapped||!data.colorMap?.waterColor))throw Error('Native water mask requires mapped ground and water data');
+ if(data.colorMap&&mapped&&!nativeWaterMask)throw Error('Color-map ground requires the simplified recipe');
+ if(seam&&(!data.colorMap||mapped&&!nativeWaterMask))throw Error('Ground seam requires the simplified color-map recipe');
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
  let colorMap=null;
  if(data.colorMap){const map=data.colorMap;colorMap=new THREE.DataTexture(map.data,map.width,map.height,THREE.RGBAFormat);colorMap.colorSpace=THREE.SRGBColorSpace;colorMap.magFilter=THREE.LinearFilter;colorMap.minFilter=THREE.LinearMipmapLinearFilter;colorMap.generateMipmaps=true;colorMap.needsUpdate=true;geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,map),2));candidate.farGroundTextures=[colorMap];}
@@ -25,8 +26,9 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  const patchGroundShader=(shader,renderer,clipNear=true)=>{
   original.call(material,shader,renderer);
   if(mapped){
+   if(nativeWaterMask){shader.uniforms.uFarWaterMask={value:colorMap};shader.uniforms.uFarMaskWaterColor={value:new THREE.Vector3(...data.colorMap.waterColor)};shader.vertexShader='varying vec2 vFarWaterUv;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarWaterUv=uv;');shader.fragmentShader='varying vec2 vFarWaterUv;uniform sampler2D uFarWaterMask;uniform vec3 uFarMaskWaterColor;\n'+shader.fragmentShader;}
    shader.vertexShader='attribute float aFarWater;varying float vFarWater;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('void main() {','void main() {vFarWater=aFarWater;');
-   shader.fragmentShader='varying float vFarWater;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb=mix(gl_FragColor.rgb,pow(max(vColor.rgb,vec3(0.)),vec3(2.2))*mix(vec3(1.),vec3(.187675676,.302022472,.661818182),uNight),smoothstep(.45,.55,vFarWater));');
+   shader.fragmentShader='varying float vFarWater;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','#include <opaque_fragment>\ngl_FragColor.rgb=mix(gl_FragColor.rgb,pow(max('+(nativeWaterMask?'uFarMaskWaterColor':'vColor.rgb')+',vec3(0.)),vec3(2.2))*mix(vec3(1.),vec3(.187675676,.302022472,.661818182),uNight),'+(nativeWaterMask?'smoothstep(.45,.55,texture2D(uFarWaterMask,vFarWaterUv).a)':'smoothstep(.45,.55,vFarWater)')+');');
   }
   Object.assign(shader.uniforms,{uFarNearBounds:bounds,uFarGroundOrigin:origin,uFarGroundNight:world.toon.uniforms.uNight});
   shader.vertexShader='varying vec2 vFarGroundXZ;uniform float uFarGroundNight;\n'+shader.vertexShader;
@@ -34,13 +36,13 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   // Approximate fixed-light night grading per vertex: no terrain noise, normals
   // or extra fragment texture reads for the original vertex-color path.
   if(!mapped&&!colorMap)shader.vertexShader=shader.vertexShader.replace('#include <color_vertex>','#include <color_vertex>\nvColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');
-  if(colorMap){if(data.colorMap.waterColor){shader.uniforms.uFarGroundWaterColor={value:new THREE.Color().setRGB(...data.colorMap.waterColor).convertSRGBToLinear()};shader.fragmentShader='uniform vec3 uFarGroundWaterColor;\n'+shader.fragmentShader;}shader.uniforms.uFarGroundNight=world.toon.uniforms.uNight;shader.fragmentShader='uniform float uFarGroundNight;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n'+(data.colorMap.waterColor?'diffuseColor.rgb=mix(diffuseColor.rgb,uFarGroundWaterColor,smoothstep(.45,.55,diffuseColor.a));diffuseColor.a=1.;\n':'')+'diffuseColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');}
+  if(colorMap&&!mapped){if(data.colorMap.waterColor){shader.uniforms.uFarGroundWaterColor={value:new THREE.Color().setRGB(...data.colorMap.waterColor).convertSRGBToLinear()};shader.fragmentShader='uniform vec3 uFarGroundWaterColor;\n'+shader.fragmentShader;}shader.uniforms.uFarGroundNight=world.toon.uniforms.uNight;shader.fragmentShader='uniform float uFarGroundNight;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n'+(data.colorMap.waterColor?'diffuseColor.rgb=mix(diffuseColor.rgb,uFarGroundWaterColor,smoothstep(.45,.55,diffuseColor.a));diffuseColor.a=1.;\n':'')+'diffuseColor.rgb*=mix(vec3(1.),vec3(.187675676,.302022472,.661818182),clamp(uFarGroundNight,0.,1.));');}
   shader.fragmentShader='varying vec2 vFarGroundXZ;uniform vec4 uFarNearBounds;uniform vec2 uFarGroundOrigin;\n'+shader.fragmentShader;
   if(clipNear)shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nvec2 farGroundXZ=vFarGroundXZ+uFarGroundOrigin;if(farGroundXZ.x>=uFarNearBounds.x&&farGroundXZ.y>=uFarNearBounds.y&&farGroundXZ.x<=uFarNearBounds.z&&farGroundXZ.y<=uFarNearBounds.w)discard;');
   else shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nvec2 farGroundXZ=vFarGroundXZ+uFarGroundOrigin;bool onFarEdge=((abs(farGroundXZ.x-uFarNearBounds.x)<.01||abs(farGroundXZ.x-uFarNearBounds.z)<.01)&&farGroundXZ.y>=uFarNearBounds.y&&farGroundXZ.y<=uFarNearBounds.w)||((abs(farGroundXZ.y-uFarNearBounds.y)<.01||abs(farGroundXZ.y-uFarNearBounds.w)<.01)&&farGroundXZ.x>=uFarNearBounds.x&&farGroundXZ.x<=uFarNearBounds.z);if(!onFarEdge)discard;');
  };
  material.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer);
- material.customProgramCacheKey=()=> colorMap?'far-ground-color-map-v2:'+(data.colorMap.waterColor?'mask':'opaque'):'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
+ material.customProgramCacheKey=()=> nativeWaterMask?'far-ground-native-water-mask-v1':colorMap?'far-ground-color-map-v2:'+(data.colorMap.waterColor?'mask':'opaque'):'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
  const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  let seamOwner=null,lastSeamPromise=null;
  candidate.updateGroundBounds=()=>{bounds.value.set(...world.nearBounds);if(seamOwner){const promise=seamOwner.update();if(promise!==lastSeamPromise){lastSeamPromise=promise;promise.catch(error=>world.onError?.(error));}}};
@@ -48,8 +50,8 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  if(seam){
   // Basic/fog ground requires no world lights or shadow casters. Upload this
   // small replacement alone rather than redraw the resident world per border.
-  const warmScene=new THREE.Scene();
-  const prepareSeam=async(root,stale)=>{warmScene.fog=world.scene.fog;const previous=root.onBeforeRender;root.onBeforeRender=function(renderer,scene,...args){if(scene===warmScene)candidate.groundSeamStats.warmDraws=(candidate.groundSeamStats.warmDraws??0)+1;previous.call(this,renderer,scene,...args);};try{return await prepareNativeFarGpu(world.renderer,root,warmScene,world.camera,[colorMap],{cancelled:stale});}finally{root.onBeforeRender=previous;}};
+  const warmScene=mapped?world.scene:new THREE.Scene();
+  const prepareSeam=async(root,stale)=>{if(!mapped)warmScene.fog=world.scene.fog;const previous=root.onBeforeRender;root.onBeforeRender=function(renderer,scene,...args){if(scene===warmScene)candidate.groundSeamStats.warmDraws=(candidate.groundSeamStats.warmDraws??0)+1;previous.call(this,renderer,scene,...args);};try{return await prepareNativeFarGpu(world.renderer,root,warmScene,world.camera,[colorMap],{cancelled:stale});}finally{root.onBeforeRender=previous;}};
   seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,streamFactory:seamStreamFactory,prepare:seamPrepare??prepareSeam,createMaterial:()=>{const seamMaterial=material.clone();seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam-v2';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;
  }
  let disposed=false;const dispose=candidate.dispose;candidate.dispose=options=>{if(disposed)return;disposed=true;seamOwner?.dispose();mesh.removeFromParent();geometry.dispose();material.dispose();colorMap?.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
