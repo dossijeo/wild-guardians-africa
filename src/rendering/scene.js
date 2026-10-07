@@ -1,4 +1,7 @@
 import {FluidGpuPreload} from './fluid-preload.js';
+import {CameraBuildingRegistry} from './camera-building-registry.js';
+import {CameraExclusionMotion} from './camera-exclusion-motion.js';
+import {installCameraPoseResolver} from './terrain-camera.js';
 import {initializeProgramBindings} from './program-bindings.js';
 import {VfxGpuPreload} from './vfx-preload.js';
 import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
@@ -151,6 +154,27 @@ export class WorldScene {
       await this.loadReady(this.objects.get(animal.id)?.userData.actorReady);
       if(!this.mixers.has(animal.id))throw Error('Animal guardado sin modelo: '+animal.id);
     }
+  }
+  setCameraExclusion(enabled,options={}){
+    this.releaseCameraExclusion?.();this.releaseCameraExclusion=null;this.cameraExclusion=null;
+    if(!enabled)return;
+    const registry=new CameraBuildingRegistry(options),motion=new CameraExclusionMotion(registry.index,options);let last=performance.now();
+    this.cameraExclusion={registry,motion};
+    const release=installCameraPoseResolver(this.camera,(pose,previous,context)=>{
+      const now=performance.now(),seconds=Math.max(0,(now-last)/1000);last=now;
+      registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);
+      let eye=motion.resolve(pose.eye,previous?.eye,seconds,{reset:context==='focus'});
+      // A lateral slide may reach higher terrain than the raw desired eye.
+      // Recheck its floor before drawing/picking; conflicting envelopes remain
+      // explicit QA diagnostics instead of a false claim of full acceptance.
+      for(let i=0;i<3;i++){
+        const floor=this.nav.field.surface(eye[0],eye[2])+2;if(eye[1]>=floor)break;
+        eye[1]=floor;const recovered=motion.recover(eye);eye=recovered.point;motion.stats.unresolved||=!recovered.recovered;
+      }
+      const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+20;
+      return {...pose,eye,altitude:eye[1]-ground};
+    });
+    this.releaseCameraExclusion=()=>{release();registry.clear();};
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
@@ -441,6 +465,6 @@ export class WorldScene {
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera,this.renderer.domElement.clientHeight);
   }
   render(dt) {if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();this.updateCamera();this.raidCamera?.update(this.state,dt);this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});this.farVegetation?.update(dt);this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
-  dispose() {if(this.disposed)return;this.disposed=true;this.loading?.abort();this.canvasEvents?.abort();this.raidEntryPreparer?.dispose();this.hiringRoutePreparer?.dispose();this.animalPreload?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.renderer.forceContextLoss();this.state=null;}
+  dispose() {if(this.disposed)return;this.disposed=true;this.loading?.abort();this.canvasEvents?.abort();this.raidEntryPreparer?.dispose();this.hiringRoutePreparer?.dispose();this.animalPreload?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.renderer.forceContextLoss();this.state=null;}
 
 }

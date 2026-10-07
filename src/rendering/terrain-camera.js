@@ -4,6 +4,12 @@ import * as THREE from 'three';
 export const TERRAIN_CAMERA={minPhi:.065,maxPhi:1.47,minDistance:4,maxDistance:65,minClearance:2,maxClearance:20,targetLift:.18};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lastPose=new WeakMap();
+const poseResolvers=new WeakMap();
+export function installCameraPoseResolver(camera,resolver){
+  if(poseResolvers.has(camera))throw Error('Camera already has a pose resolver');
+  poseResolvers.set(camera,resolver);
+  return ()=>{if(poseResolvers.get(camera)===resolver)poseResolvers.delete(camera);};
+}
 const matches=(vector,array)=>array.every((v,i)=>Math.abs(vector.getComponent(i)-v)<1e-8);
 function restoreOrbitIntent(camera,controls,field){
   const previous=lastPose.get(camera);
@@ -21,9 +27,10 @@ export function installTerrainCameraIntent(camera,controls,fieldSource){
   controls.update=update;
   return ()=>{if(controls.update===update)controls.update=original;};
 }
-function applyPose(camera,controls,field,pose,rawEye){
+function applyPose(camera,controls,field,desiredPose,rawEye,context='move'){
+  const pose=poseResolvers.get(camera)?.(desiredPose,lastPose.get(camera)?.pose,context)??desiredPose;
   controls.target.fromArray(pose.target);camera.position.fromArray(pose.eye);camera.lookAt(controls.target);camera.updateMatrixWorld();
-  lastPose.set(camera,{field,pose,rawEye});return pose;
+  lastPose.set(camera,{field,pose,desiredPose,rawEye});return pose;
 }
 
 function cameraPose(field,target,theta,phi,distance){
@@ -45,7 +52,7 @@ export function protectTerrainCamera(camera,controls,field){
   const previous=lastPose.get(camera);
   // OrbitControls reconstructs spherical coordinates from the corrected eye.
   // A static frame must not reinterpret the height correction as another orbit.
-  if(previous?.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))return applyPose(camera,controls,field,previous.pose,previous.rawEye);
+  if(previous?.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))return applyPose(camera,controls,field,previous.desiredPose,previous.rawEye);
   const offset=camera.position.clone().sub(controls.target),spherical=new THREE.Spherical().setFromVector3(offset);
   const {pose,rawEye}=cameraPose(field,controls.target.toArray(),spherical.theta,spherical.phi,spherical.radius);
   return applyPose(camera,controls,field,pose,rawEye);
@@ -61,7 +68,7 @@ export function updateTerrainCamera(camera,controls,field){
 export function focusTerrainCamera(camera,controls,field,point){
   const damping=controls.enableDamping;controls.enableDamping=false;try{controls.update?.();}finally{controls.enableDamping=damping;}
   const {pose,rawEye}=cameraPose(field,[point.x,0,point.z],point.theta??(field.canyon?0:.50),field.canyon?1.18:1.16,point.distance??(field.canyon?34:38));
-  return applyPose(camera,controls,field,pose,rawEye);
+  return applyPose(camera,controls,field,pose,rawEye,'focus');
 }
 
 export function beginTerrainCameraTravel(camera,controls,field,duration=1.2){

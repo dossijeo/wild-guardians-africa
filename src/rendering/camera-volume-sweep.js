@@ -2,9 +2,9 @@
 // corners matter: expanding a box alone rejects otherwise safe diagonal views.
 const axes=[0,1,2];
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-function contact(start,delta,t,box){
+function contact(start,delta,t,box,radius){
  const point=start.map((x,i)=>x+delta[i]*t),normal=point.map((x,i)=>x-clamp(x,box.min[i],box.max[i]));
- const length=Math.hypot(...normal);
+ const length=Math.hypot(...normal);let penetration=Math.max(0,radius-length);
  if(length>1e-12)for(const i of axes)normal[i]/=length;
  else {
   // A loaded/constructed volume may surround the initial camera. Report a
@@ -14,9 +14,9 @@ function contact(start,delta,t,box){
    const d=s<0?point[i]-box.min[i]:box.max[i]-point[i];
    if(d<distance){distance=d;axis=i;sign=s;}
   }
-  normal.fill(0);normal[axis]=sign;
+  normal.fill(0);normal[axis]=sign;penetration=distance+radius;
  }
- return {id:box.id,fraction:t,point,normal};
+ return {id:box.id,fraction:t,point,normal,penetration};
 }
 export function sweepCameraVolume(start,end,box,radius=0){
  if(box.yaw!==undefined){
@@ -50,12 +50,12 @@ export function sweepCameraVolume(start,end,box,radius=0){
    const offset=start[i]-face;a+=delta[i]*delta[i];b+=2*delta[i]*offset;c+=offset*offset;
   }
   const value=t=>(a*t+b)*t+c;
-  if(value(lo)<=0)return contact(start,delta,lo,box);
+  if(value(lo)<=0)return contact(start,delta,lo,box,radius);
   if(a===0)continue;
   const discriminant=b*b-4*a*c;
   if(discriminant<0)continue;
   const root=(-b-Math.sqrt(discriminant))/(2*a);
-  if(root>=lo-1e-12&&root<=hi+1e-12)return contact(start,delta,clamp(root,lo,hi),box);
+  if(root>=lo-1e-12&&root<=hi+1e-12)return contact(start,delta,clamp(root,lo,hi),box,radius);
  }
  return null;
 }
