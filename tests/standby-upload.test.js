@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {readBoundFloatAttribute} from '../tools/experiments/capture-standby-upload.js';
+import {readBoundFloatAttribute,readStandbyProgramUniforms} from '../tools/experiments/capture-standby-upload.js';
 function glFixture({stride=16,offset=4,type=1,size=52}={}){
  const data=new Float32Array([99,1,2,3,4,5,6,7,8,9,10,11,12]),buffer={},previous={},bindings=[];let bound=previous;
  const gl={FLOAT:1,VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:2,VERTEX_ATTRIB_ARRAY_TYPE:3,VERTEX_ATTRIB_ARRAY_STRIDE:4,VERTEX_ATTRIB_ARRAY_POINTER:5,COPY_READ_BUFFER_BINDING:6,COPY_READ_BUFFER:7,BUFFER_SIZE:8,
@@ -12,3 +12,5 @@ test('invalid or overrun GPU attribute buffers remain errors and restore state',
  const f=glFixture({size:8});assert.throws(()=>readBoundFloatAttribute(f.gl,{},'instanceMatrix',2,4),/exceeds buffer/);assert.equal(f.bindings.at(-1),f.previous);
  const bad=glFixture({type:12});assert.throws(()=>readBoundFloatAttribute(bad.gl,{},'instanceMatrix',1,4),/layout/);assert.equal(bad.bindings.length,0);
 });
+
+test('QA uniforms come from the actual current program without substituting CPU uniform state',()=>{const program={},calls=[],gl={getUniformLocation:(p,name)=>{assert.equal(p,program);calls.push(name);return name==='uNativeEnvEnabled'?null:name;},getUniform:(p,location)=>{assert.equal(p,program);return location==='uFineNoise'?0:location==='uNight'?1:new Float32Array([1,2]);}};const values=readStandbyProgramUniforms(gl,program);assert.deepEqual(values.uFineNoise,{active:true,value:0});assert.deepEqual(values.uNight,{active:true,value:1});assert.deepEqual(values.uNativeEnvEnabled,{active:false,value:null});assert.deepEqual(values.uEnvEndpoints,{active:true,value:[1,2]});assert.equal(calls.length,4);});

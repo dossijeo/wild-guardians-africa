@@ -11,6 +11,15 @@ export function readBoundFloatAttribute(gl,program,name,count,itemSize){
  finally{gl.bindBuffer(gl.COPY_READ_BUFFER,previous);}
  for(let i=0;i<count;i++)for(let j=0;j<itemSize;j++)values[i*itemSize+j]=data[i*stride/4+j];return values;
 }
+export function readStandbyProgramUniforms(gl,program){
+ const values={};
+ for(const name of ['uFineNoise','uNight','uNativeEnvEnabled','uEnvEndpoints']){
+  const location=gl.getUniformLocation(program,name);
+  if(location===null){values[name]={active:false,value:null};continue;}
+  const value=gl.getUniform(program,location);values[name]={active:true,value:ArrayBuffer.isView(value)?Array.from(value):value};
+ }
+ return values;
+}
 export function captureStandbyUploads(world,adapters){
  const gl=world.renderer.getContext(),report={draws:[],errors:[],instances:0,matrixExact:0,visibilityExact:0,identityExact:0,passed:false},restore=[];
  for(const adapter of adapters)for(const record of adapter.standbyDraws()){
@@ -24,7 +33,7 @@ export function captureStandbyUploads(world,adapters){
      report.instances++;report.matrixExact+=Number(matrixExact);report.visibilityExact+=Number(visibilityExact);report.identityExact+=Number(identityExact);
      rows.push({id:d.id,key:d.key,level:record.level,drawIndex:i,preparedIndex,matrixExact,visibilityExact,identityExact,gpu,expected,gpuVisibility:visibility[i]});
     }
-    report.draws.push({slot:adapter.layer.options.slot,level:record.level,count:mesh.count,matrixVersion:mesh.instanceMatrix.version,visibilityVersion:mesh.geometry.attributes.nativeVisibility.version,rows});
+    report.draws.push({slot:adapter.layer.options.slot,level:record.level,count:mesh.count,matrixVersion:mesh.instanceMatrix.version,visibilityVersion:mesh.geometry.attributes.nativeVisibility.version,shader:{materialType:(args[4]??mesh.material).type,materialName:(args[4]??mesh.material).name,materialUuid:(args[4]??mesh.material).uuid,uniforms:readStandbyProgramUniforms(gl,program)},rows});
    }catch(error){report.errors.push(String(error));}
   };restore.push(()=>mesh.onAfterRender=previous);
  }
