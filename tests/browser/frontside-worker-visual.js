@@ -10,7 +10,7 @@ import {WorldScene} from '../../src/rendering/scene.js';
 import {Assets} from '../../src/rendering/assets.js';
 const status=document.querySelector('#status');let renderer,cancelled=false;
 import {regions,alphaDistanceGate,controlEnvelopeMetrics,accumulateControlEnvelope,addControlUncertainty} from '../../tools/lib/frontside-visual-metrics.mjs';
-function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing'){
+function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing',faceMaps={}){
  const saved=[],descriptors=[];let nextId=1;
  rig.model.traverse(mesh=>{if(!mesh.isMesh)return;const originalGeometry=mesh.geometry,originalMaterial=mesh.material;
   const geometry=originalGeometry.index?originalGeometry.toNonIndexed():originalGeometry.clone(),count=geometry.getAttribute('position').count,ids=new Float32Array(count),start=nextId;
@@ -23,7 +23,9 @@ function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing'){
  const previousShadow=renderer.shadowMap.enabled,previousColor=renderer.outputColorSpace,found=new Map(),linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});
  try{renderer.shadowMap.enabled=false;renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.render(rig.scene,camera);const ids=new Uint8Array(size*size*4),gl=renderer.getContext();gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,ids);
   for(let i=0;i<ids.length;i+=4){const matches=mode==='visible'?pixels[0][i+3]:mode==='rgb'?pixels[0][i+3]&&pixels[1][i+3]&&[0,1,2].some(c=>Math.abs(linear[pixels[0][i+c]]-linear[pixels[1][i+c]])>.03):pixels[0][i+3]&&!pixels[1][i+3];if(!matches)continue;const id=ids[i]+256*ids[i+1]+65536*ids[i+2],descriptor=descriptors.find(d=>id>=d.start&&id<d.end);if(!descriptor)throw Error('Missing triangle provenance at pixel '+i/4);
-   const key=descriptor.mesh+':'+(id-descriptor.start);if(!found.has(key))found.set(key,{mesh:descriptor.mesh,face:id-descriptor.start,backFacing:ids[i+3]===128,pixels:0});found.get(key).pixels++;
+   const candidateFace=id-descriptor.start,face=faceMaps[descriptor.mesh]?.[candidateFace]??candidateFace;
+   if(faceMaps[descriptor.mesh]&&faceMaps[descriptor.mesh][candidateFace]===undefined)throw Error('Candidate provenance outside retained face map');
+   const key=descriptor.mesh+':'+face;if(!found.has(key))found.set(key,{mesh:descriptor.mesh,face,candidateFace,backFacing:ids[i+3]===128,pixels:0});found.get(key).pixels++;
   }
  }finally{renderer.shadowMap.enabled=previousShadow;renderer.outputColorSpace=previousColor;for(const s of saved){s.mesh.geometry=s.originalGeometry;s.mesh.material=s.originalMaterial;s.geometry.dispose();s.material.dispose();}}
  return [...found.values()].sort((a,b)=>b.pixels-a.pixels);
@@ -46,7 +48,12 @@ async function campaign(){
  const allClipNames=Object.keys(library.youngMale.actions);if(clipFilter&&!allClipNames.includes(clipFilter))throw Error('Unknown screen clip');
  const campaignClips=clipFilter?[clipFilter]:options.has('allClips')?allClipNames:['Idle','Water','Carry_Crate','Fall'];
  const sourceAssets=new Assets();
- const localNormal=options.has('localNormal'),urls=[library.youngMale.url,sourceTwin?library.youngMale.url:localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
+ const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal');
+ if(localNormal&&badgeNormal)throw Error('Separate normal pilots cannot be combined implicitly');
+ if(badgeNormal&&originalShadow)throw Error('Badge cleanup requires mapped shadow geometry; originalShadow prefix diagnostic is incompatible');
+ const normalMesh=badgeNormal?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
+ if(badgeNormal){const audit=await fetch('/docs/qa/frontside-model-pilot/Can_badge_geometry_5-normal-export-audit.json').then(r=>r.json());if(audit.sourceSha256!==library.youngMale.sha256)throw Error('Badge provenance source mismatch');candidateFaceMaps[normalMesh]=audit.accessories.find(a=>a.mesh===normalMesh).retainedBaseCandidateFaces;}
+ const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:badgeNormal?'/__frontside_candidate/youngMale-badge-normal':localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
  const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
  // Exercise the actual WorldScene.actor/updateActor path, including skeleton
  // cloning, action setup and tool visibility, without starting a second renderer.
@@ -76,8 +83,9 @@ async function campaign(){
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
  report.conditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
  report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
- report.candidateReceipt=sourceTwin?null:(await fetch(localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
+ report.candidateReceipt=sourceTwin?null:(await fetch(badgeNormal?'/docs/qa/frontside-model-pilot/packed-badge-normal-candidate-receipts.json':localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
  report.localNormalDiagnosis=localNormal;report.candidate=localNormal?'Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb':report.candidate;
+ report.badgeNormalDiagnosis=badgeNormal;if(badgeNormal)report.candidate='Can_badge_geometry_5-normals-cleanup-v2-NOT-APPROVED-web.glb';
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
  report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
  report.sourceSha256=library.youngMale.sha256;
@@ -137,8 +145,8 @@ async function campaign(){
  // the early screen is rejection evidence and does not need a passing sweep.
  report.failed=failed;
  if(failed&&options.has('mapMissing')){rigs.forEach((rig,i)=>rig.model.visible=i===0);report.missingTriangleProvenance=mapMissingToSource(renderer,rigs[0],camera,pixels,size);}
- if(failed&&options.has('mapRgb')){report.rgbTriangleProvenance=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);report.rgbTriangleProvenance.push({side:side===0?'source':'candidate',faces:mapMissingToSource(renderer,rigs[side],camera,pixels,size,'rgb')});}}
- if(options.has('mapNormalCoverage')){const diagnostic=await fetch('/docs/qa/frontside-model-pilot/worker-zero-normal-diagnostics.json').then(r=>r.json());if(diagnostic.sourceSha256!==library.youngMale.sha256)throw Error('Normal coverage source mismatch');const affected=new Set(diagnostic.meshes.find(m=>m.mesh==='Can_Nozzle_geometry_4').affectedFaces);report.normalRepairCoverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible').filter(f=>f.mesh==='Can_Nozzle_geometry_4'&&affected.has(f.face));report.normalRepairCoverage.push({side:side===0?'source':'candidate',affectedVisiblePixels:faces.reduce((n,f)=>n+f.pixels,0),faces,meaning:'Later diagnostic ID draw, not normal/PBR/map acceptance'});}}
+ if(failed&&options.has('mapRgb')){report.rgbTriangleProvenance=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);report.rgbTriangleProvenance.push({side:side===0?'source':'candidate',faces:mapMissingToSource(renderer,rigs[side],camera,pixels,size,'rgb',side===1&&!sourceTwin?candidateFaceMaps:{})});}}
+ if(options.has('mapNormalCoverage')){const diagnostic=await fetch('/docs/qa/frontside-model-pilot/worker-zero-normal-diagnostics.json').then(r=>r.json());if(diagnostic.sourceSha256!==library.youngMale.sha256)throw Error('Normal coverage source mismatch');const affected=new Set(diagnostic.meshes.find(m=>m.mesh===normalMesh).affectedFaces);report.normalRepairCoverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible',side===1&&!sourceTwin?candidateFaceMaps:{}).filter(f=>f.mesh===normalMesh&&affected.has(f.face));report.normalRepairCoverage.push({side:side===0?'source':'candidate',mesh:normalMesh,affectedVisiblePixels:faces.reduce((n,f)=>n+f.pixels,0),faces,meaning:'Later diagnostic ID draw with retained-face provenance, not normal/PBR/map acceptance'});}}
  report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;report.requestedClips=campaignClips;report.withheldVersion=withheldVersion;
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.

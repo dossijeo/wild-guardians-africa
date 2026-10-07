@@ -788,3 +788,24 @@ not a partial acceptance of geometric leaf repair. Derived leaf remodeling
 remains a separate option requiring UV/shading/growth preservation tests.
 Neither can inherit the raw-Front GPU ceiling: deleting required backfaces
 reduces coverage, whereas geometric reverse faces restore its vertex cost.
+
+Badge coverage instrumentation uses the exported retained-face map before
+joining candidate IDs to original affected normals; compact candidate face
+numbers are never treated as original numbers. The opt-in badgeNormal arm
+is mutually exclusive with localNormal and refuses the originalShadow prefix
+shortcut because removal changes that prefix correspondence. Source identity
+is checked against the audit. Syntax checks pass. The attempted browser
+attachment returned unavailable browser2 and listBrowsers[]; no tab/Run/render
+or coverage report was produced, and GPU reservation was immediately released.
+
+The two-group crop helper is QA-only and not wired into production. It borrows
+all original attribute objects, including live instance growth/bridge buffers,
+and stable-partitions only source indices. It records original face order,
+labels and provenance; no vertex, UV, normal or driver lane changes. Two tests
+verify indexed/unindexed corner correspondence, source immutability and live
+instance references. This verifies construction contracts, not raster priority
+or Front coverage. Before visual comparison, the fixture must isolate original
+DoubleSide, indexed DoubleSide, partitioned DoubleSide and partitioned
+core-Front/leaf-Double; arrays of material clones must preserve shader hooks
+and be disposed separately, restoring borrowed originals before batch cleanup.
+No benchmark, visual approval or new acceptance PR exists.
