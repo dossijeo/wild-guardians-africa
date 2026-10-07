@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "scope": "CPU double-precision model of authored smooth interpolation and normalized R8 repeat sampling; not GPU pixels or visual acceptance",
+  "seed": 712,
+  "size": 64,
+  "sourceBytes": 262144,
+  "dataSha256": "4141da2f9dafb3d334f1a6b1199a5099e277f0ae064680e1dc9acb346028f807",
+  "checks": {
+    "interiorHalfByteBound": true,
+    "period64": true,
+    "continuousWrappedSeams": true,
+    "handCheckedInterpolation": true
+  },
+  "error": {
+    "interior": {
+      "samples": 4096,
+      "meanAbsolute": 0.0005932829740614388,
+      "rootMeanSquare": 0.0007263978016721839,
+      "p95Absolute": 0.0013823572749098179,
+      "maxAbsolute": 0.001871053959587532
+    },
+    "wrappedPositiveSeam": {
+      "samples": 4096,
+      "meanAbsolute": 0.11811354529487311,
+      "rootMeanSquare": 0.18142064883978695,
+      "p95Absolute": 0.4119086128635482,
+      "maxAbsolute": 0.8923010482461933
+    },
+    "negativeOctant": {
+      "samples": 4096,
+      "meanAbsolute": 0.20298279475984132,
+      "rootMeanSquare": 0.2568438111023539,
+      "p95Absolute": 0.5153351900271066,
+      "maxAbsolute": 0.8859038229796949
+    },
+    "wideField": {
+      "samples": 4096,
+      "meanAbsolute": 0.2075321466932341,
+      "rootMeanSquare": 0.26258813004529835,
+      "p95Absolute": 0.5289405685960713,
+      "maxAbsolute": 0.8816555931375706
+    }
+  },
+  "repeatedSampleDifference": {
+    "samples": 4096,
+    "meanAbsolute": 0,
+    "rootMeanSquare": 0,
+    "p95Absolute": 0,
+    "maxAbsolute": 0
+  },
+  "maxContinuityGap": 2.8099744753262712e-12,
+  "recipePeriods": [
+    {
+      "recipe": "pigment low frequency",
+      "scale": 0.85,
+      "axisWorldPeriod": 75.29411764705883
+    },
+    {
+      "recipe": "pigment high frequency",
+      "scale": 2.2,
+      "axisWorldPeriod": 29.09090909090909
+    },
+    {
+      "recipe": "fallback ground fine noise",
+      "scale": 2.6,
+      "patternSpaceAxisPeriod": 24.615384615384613
+    }
+  ],
+  "combinedPigmentAxisPeriod": 1280,
+  "limitations": [
+    "No floating-point GLSL/hash or GPU texture filtering equivalence claim.",
+    "Ground coordinates may be transformed by worldPatternPosition; pattern-space period is not necessarily a world-axis period.",
+    "Coarse ground noise, palettes, textures and other shading remain nonperiodic; this does not prove a visible repeating ground pattern.",
+    "Statistics concern raw scalar noise, not final weighted pigment, shaded color, performance or visibility."
+  ],
+  "sources": {
+    "tests/browser/noise-volume.js": "99b7ad665794a700ab8a2a564d3c7ca527c0b7493fc039c51d2c5202011b3329",
+    "src/rendering/fine-noise.js": "fedb902cb8431f52edf06fb01be28a6c23b011b2dae05b945b0cdbde6d3c3fa8",
+    "src/rendering/african-toon-source.js": "38f19f485e448fcf381732ae2e4267012a3fee19cfbec17925bd06f86221bff4",
+    "tools/audit_noise_volume.mjs": "1813a604de906ded224110d9afaa6838eeed0e08330b536d026fb608c3d221cf"
+  }
+}
