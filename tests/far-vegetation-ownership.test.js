@@ -49,3 +49,12 @@ test('far ground is independently configurable without changing exact terrain ow
  const f=fixture();let received;const original=f.services.attachSpecies;f.services.attachSpecies=async(world,options)=>{received=options;return original(world,options);};f.world.farPreserveTerrain=true;const owner=await attachBiomeFarVegetation(f.world,{includeFarGround:false,preserveTerrain:true},f.services);assert.equal(received.includeGround,false);owner.update(0);assert.equal(f.world.farPreserveTerrain,true);assert.equal(owner.stats.species,1);owner.dispose();assert.equal(f.world.farPreserveTerrain,true);assert.ok(f.textures.every(t=>t.releases===1));
  const invalid=fixture();await assert.rejects(attachBiomeFarVegetation(invalid.world,{includeFarGround:'no'},invalid.services),/far ground/);assert.equal(invalid.textures.length,0);assert.equal(invalid.world.farVegetation,undefined);
 });
+
+test('logical native prewarm stays opt-in and invalid options allocate no atlas',async()=>{
+ const f=fixture();let received;f.services.attachSpecies=async(_,options)=>{received=options;return {update(){},dispose(){}};};const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(received.logicalStandbyPreload,false);owner.dispose();
+ const on=fixture();on.services.attachSpecies=async(_,options)=>{assert.equal(options.logicalStandbyPreload,true);return {update(){},dispose(){}};};const active=await attachBiomeFarVegetation(on.world,{logicalStandbyPreload:true},on.services);assert.equal(active.stats.logicalStandbyPreload,true);active.dispose();
+ const bad=fixture();await assert.rejects(attachBiomeFarVegetation(bad.world,{logicalStandbyPreload:1},bad.services),/logical standby/);assert.equal(bad.textures.length,0);
+});
+test('seed changes invalidate the whole far owner and release borrowed preparations once',async()=>{
+ const f=fixture();f.world.state={seed:'one'};const owner=await attachBiomeFarVegetation(f.world,{logicalStandbyPreload:true},f.services);owner.update(0);f.world.state.seed='two';owner.update(0);assert.equal(f.world.farVegetation,null);assert.ok(f.textures.every(t=>t.releases===1));assert.ok(f.controllers.every(c=>c.disposed));owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});
