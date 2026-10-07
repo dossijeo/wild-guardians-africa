@@ -15,7 +15,8 @@ const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:t
       res.setHeader('Content-Type','application/json');res.end('{"saved":true}');
     }catch(error){res.statusCode=400;res.end(String(error));}
   });server.middlewares.use('/__frontside_candidate',async(req,res)=>{
-    if(req.method!=='GET'||req.url!=='/youngMale'){res.statusCode=404;res.end();return;}
-    try{const file=await import('node:fs/promises').then(fs=>fs.readFile('.cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb'));res.setHeader('Content-Type','model/gltf-binary');res.end(file);}catch(error){res.statusCode=500;res.end(String(error));}
+    const paths={'/youngMale':'.cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb','/youngMale-local-normal':'.cache/frontside-model-pilot/candidates/Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb'};
+    if(req.method!=='GET'||!paths[req.url]){res.statusCode=404;res.end();return;}
+    try{const file=await import('node:fs/promises').then(fs=>fs.readFile(paths[req.url]));res.setHeader('Content-Type','model/gltf-binary');res.end(file);}catch(error){res.statusCode=500;res.end(String(error));}
   });}
 }]});await server.listen();server.printUrls();

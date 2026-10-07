@@ -6,7 +6,8 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {readGlb,writeGlb} from './glb-container.mjs';
 import {createHash} from 'node:crypto';
 await Promise.all([MeshoptEncoder.ready,MeshoptDecoder.ready]);
-const receipts=JSON.parse(await readFile('docs/qa/frontside-model-pilot/selective-candidate-receipts.json','utf8'));
+const receiptPath=process.argv[2]??'docs/qa/frontside-model-pilot/selective-candidate-receipts.json',outputPath=process.argv[3]??'docs/qa/frontside-model-pilot/packed-candidate-receipts.json';
+const receipts=JSON.parse(await readFile(receiptPath,'utf8'));
 const manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));
 const output=[];
 for(const receipt of receipts){
@@ -53,4 +54,4 @@ for(const receipt of receipts){
  if(exists){if(!Buffer.from(await readFile(archivePath)).equals(Buffer.from(bytes)))throw Error('Archive hash collision');}else await writeFile(archivePath,bytes);
  output.push({category:receipt.category,path,archivePath,sourceCandidateSha256:receipt.candidateSha256,bytes:bytes.length,baselineRuntimeBytes:record.afterBytes,growthPercent:100*(bytes.length/record.afterBytes-1),prunedUnusedAccessors:oldAccessorCount-json.accessors.length,sha256,codec:'Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap',status:'NOT_APPROVED'});
 }
-await writeFile('docs/qa/frontside-model-pilot/packed-candidate-receipts.json',JSON.stringify(output,null,2)+'\n');console.log(JSON.stringify(output));
+await writeFile(outputPath,JSON.stringify(output,null,2)+'\n');console.log(JSON.stringify(output));

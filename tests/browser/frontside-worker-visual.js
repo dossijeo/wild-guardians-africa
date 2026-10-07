@@ -46,7 +46,7 @@ async function campaign(){
  const allClipNames=Object.keys(library.youngMale.actions);if(clipFilter&&!allClipNames.includes(clipFilter))throw Error('Unknown screen clip');
  const campaignClips=clipFilter?[clipFilter]:options.has('allClips')?allClipNames:['Idle','Water','Carry_Crate','Fall'];
  const sourceAssets=new Assets();
- const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:'/__frontside_candidate/youngMale'];
+ const localNormal=options.has('localNormal'),urls=[library.youngMale.url,sourceTwin?library.youngMale.url:localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
  const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
  // Exercise the actual WorldScene.actor/updateActor path, including skeleton
  // cloning, action setup and tool visibility, without starting a second renderer.
@@ -76,7 +76,8 @@ async function campaign(){
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
  report.conditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
  report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
- report.candidateReceipt=sourceTwin?null:(await fetch('/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
+ report.candidateReceipt=sourceTwin?null:(await fetch(localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
+ report.localNormalDiagnosis=localNormal;report.candidate=localNormal?'Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb':report.candidate;
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
  report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
  report.sourceSha256=library.youngMale.sha256;

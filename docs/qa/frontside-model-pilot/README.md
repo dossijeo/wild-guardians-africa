@@ -715,3 +715,19 @@ Original/candidate Water tool visibility/scales match (can visible, other
 tools hidden by the original action); no accessories were pruned. Captured
 CPU27148/49032 active, no GPUtiming. Two samples are limited evidence, not
 complete profileV6/12clips/cultures/biomes/shadows/category acceptance.
+
+Separate normal-repair investigation targets Can_Nozzle_geometry_4 only,
+leaving frozen e554227b unchanged. Its81 undefined source normals are replaced
+by normalized original incident face-area vectors;9zero-area isolated copies
+use exact-position incident support only when directions agree within15deg.
+All81resolved; no arbitrary axis, welding, vertex/index reorder or triangle
+change. Defined normal bits and every non-normal attribute remain exact.
+Writer verifies original/candidate target geometry correspondence, base hash,
+nodes/skins/12animations and preserved binary prefix. Raw265dfea7/web3714f849
+are disabled separate archives; lossless Meshopt decode lanes and original web
+textures verified. Web5,243,500B vs frozen5,243,228 (+272B), triangles unchanged.
+Other392 source zero normals remain unresolved. Normal validity is not visual
+acceptance: repaired undefined directions deliberately change source shading.
+The opt-in localNormal comparison will use existing guided WaterV6 views,
+same real material/shader/shadowFront and policy2 gates, with3controls each;
+stop at failure/control invalidity. No source asset or production manifest change.
