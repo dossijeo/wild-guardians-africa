@@ -15,6 +15,11 @@ test('mountain arcs keep their terrain datum across canyon cliffs, reverse pan a
  owner.dispose();world.camera.position.x=0;owner.update();assert.equal(samples,1);texture.dispose();
  const badWorld={...world,scene:new THREE.Scene()},badTexture=new THREE.Texture();assert.throws(()=>createBiomeBackdrop(badWorld,badTexture,{stableAltitude:'yes'}),/altitude/);assert.equal(badWorld.scene.children.length,0);assert.equal(badTexture.colorSpace,THREE.NoColorSpace);
 });
+test('new and resumed mountain arcs share the first persisted village altitude despite different camera sites',()=>{
+ const world=x=>({state:{villages:[{x:12,z:8}]},scene:new THREE.Scene(),camera:{position:new THREE.Vector3(x,90,0)},nav:{config:{biome:'canyons'},field:{surface:(x,z)=>x*.1+z*.2}},toon:{uniforms:{uNight:{value:0}}}});
+ const texture=new THREE.Texture(),arc={angle:0,height:130,aspect:4,baseY:-35,baseline:0,uv:[0,0,1,1]},a=createBiomeBackdrop(world(-39),texture,{arcLayout:[arc]}),b=createBiomeBackdrop(world(900),texture,{arcLayout:[arc]});
+ a.update();b.update();assert.equal(a.root.position.y,2.8);assert.equal(b.root.position.y,a.root.position.y);a.dispose();b.dispose();texture.dispose();
+});
 test('invalid backdrop fog mix rejects before mutating the scene or texture',()=>{
  const world={nav:{config:{biome:'savanna'}},scene:new THREE.Scene()},texture=new THREE.Texture();assert.throws(()=>createBiomeBackdrop(world,texture,{fogMix:1.01}),/fog mix/);assert.equal(world.scene.children.length,0);assert.equal(texture.colorSpace,THREE.NoColorSpace);
 });

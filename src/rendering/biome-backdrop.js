@@ -17,9 +17,11 @@ export function createBiomeBackdrop(world,texture,{radius=430,height=null,parall
  if(arcLayout!==null&&!Array.isArray(arcLayout))throw Error('Invalid mountain arc layout');
  if(arcLayout&&mirrored)throw Error('Mountain arcs cannot mirror their atlas');
  if(typeof stableAltitude!=='boolean')throw Error('Invalid backdrop altitude policy');
- // Distant decorative mountains must not ride the cliff beneath a moving
- // camera. Keep the initial terrain datum; vertical orbit/zoom never changes it.
- const altitude=stableAltitude?world.nav.field.surface(world.camera.position.x,world.camera.position.z):null;
+ // The first procedural village is persisted with the world, so new games and
+ // resumed games share a datum regardless of the camera's starting position.
+ // Standalone render fixtures without a village use their initial camera site.
+ const site=world.state?.villages?.[0]??world.camera.position;
+ const altitude=stableAltitude?world.nav.field.surface(site.x,site.z):null;
  if(stableAltitude&&!Number.isFinite(altitude))throw Error('Invalid backdrop altitude');
  const geometry=arcLayout?createMountainArcGeometry(radius,arcLayout):new THREE.CylinderGeometry(radius,radius,height,64,1,true);
  texture.colorSpace=THREE.SRGBColorSpace;texture.generateMipmaps=true;
