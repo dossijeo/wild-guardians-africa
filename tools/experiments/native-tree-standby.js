@@ -7,7 +7,7 @@ import {lodMix} from './far-impostor-math.js';
 // The standby itself receives a real upload draw/fence, never a CPU-only proof.
 export function standbySubmittedTriangles(mesh){
  const total=mesh.geometry.index?.count??mesh.geometry.attributes.position?.count??0,start=mesh.geometry.drawRange.start,end=Math.min(total,start+mesh.geometry.drawRange.count);
- if(!mesh.geometry.groups.length)return Math.max(0,end-start)/3*mesh.count;
+ if(!Array.isArray(mesh.material)||!mesh.geometry.groups.length)return Math.max(0,end-start)/3*mesh.count;
  let count=0;for(const g of mesh.geometry.groups)count+=Math.max(0,Math.min(end,g.start+g.count)-Math.max(start,g.start));return count/3*mesh.count;
 }
 export function standbyTreeKey(tree){const p=tree.origin??tree;return [tree.id,p.x,p.y,p.z,tree.yaw,tree.sx,tree.sy,tree.sz].join(':');}

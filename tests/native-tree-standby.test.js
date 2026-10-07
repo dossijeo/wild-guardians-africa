@@ -166,3 +166,11 @@ test('submission accounting keeps masked interior rows visible in cost diagnosti
  mesh.geometry.setDrawRange(3,12);assert.equal(standbySubmittedTriangles(mesh),12);
  f.owner.dispose();assert.equal(f.owner.stats.submittedTriangles,0);assert.equal(f.owner.stats.submittedInstances,0);f.close();
 });
+
+test('bridge triangle accounting follows renderer single-material versus grouped draws',()=>{
+ const geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial(),mesh=new THREE.InstancedMesh(geometry,material,2);
+ geometry.clearGroups();geometry.addGroup(0,6,0);geometry.addGroup(3,6,1);
+ assert.equal(standbySubmittedTriangles(mesh),24);
+ mesh.material=[material,material];assert.equal(standbySubmittedTriangles(mesh),8);
+ geometry.setDrawRange(3,3);assert.equal(standbySubmittedTriangles(mesh),4);mesh.dispose();geometry.dispose();material.dispose();
+});
