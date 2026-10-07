@@ -46,3 +46,8 @@ The pre-existing 100-night processes 40968 and 41304 were confirmed alive while
 this was implemented and were left running on their frozen source revisions.
 They do not acquire this instrumentation retroactively. Their old reports
 remain historical evidence and must not be relabeled as current-main results.
+
+The later [current-source campaign receipt](../current-campaign-9c2db027/README.md)
+also exercises actual periodic file integration: sequence 7 at about 181 seconds
+of monotonic wall time, with all 291 frozen input hashes rechecked. That campaign
+is still running; this extends observability evidence, not 100-night acceptance.
