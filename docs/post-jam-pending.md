@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Filtro topológico para caras traseras](qa/mesh-sidedness-audit/README.md): 406 entradas de props/poblados, cinco controles sintéticos; cuatro candidatos pequeños y ningún prop válido en todos sus LODs según el filtro conservador. No se modifica `DoubleSide` ni se consideran rotos los modelos rechazados. Pendientes imagen/sombras por categoría y beneficio medido; priorizar dibujo/shader/profundidad antes que un cambio global no acreditado.
+
 [Índice de cultivos comprobado en finca renderizada](qa/active-crops-rendered/README.md): 800 muestras y queries, estado/eventos/rutas/envíos idénticos. CPU simulación mediana 2,1–2,2 a 0,95–1,0 ms; RAF permanece ~70 ms y render sigue dominante. Framebuffer 1600×900, distinto del ensayo anterior de audio; no comparar absolutos entre ellos. Próxima prioridad: coste de dibujo/materiales/pases y fincas actuales mayores, sin atribuir mejora general de FPS a este ahorro.
 
 [Índice activo de cultivos aplicado al crecimiento](qa/active-crops-index/README.md): conserva historial/guardado/FIFO y retira entradas del índice al recoger o destruir. 75 pruebas dirigidas y build; tres estados históricos nativos con estado final completo idéntico y menor mediana CPU del recorrido. No acredita FPS ni mejora de p95 constante; pendientes frametime integrado, memoria/móvil y campañas actuales completas.
