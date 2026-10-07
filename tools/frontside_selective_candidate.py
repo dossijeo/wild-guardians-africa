@@ -31,6 +31,7 @@ if args.training_profile!='256' and high_resolution.exists():
         assert name.startswith('worker/')
         selection['selected'][name]=sorted(set(selection['selected'].get(name,[]))|set(faces))
 models=json.loads((ROOT/'public/content/models.json').read_text());workers=json.loads((ROOT/'public/content/worker-actions.json').read_text())
+if args.rgb_selected_backs:assert color_provenance['sourceSha256']==workers['youngMale']['sha256'],'Color IDs belong to another authored worker'
 bridge=json.loads((ROOT/'public/content/crop-bridges.json').read_text())
 out=ROOT/'.cache/frontside-model-pilot/candidates';out.mkdir(parents=True,exist_ok=True)
 receipts=[]

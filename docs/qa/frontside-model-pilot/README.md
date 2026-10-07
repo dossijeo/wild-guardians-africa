@@ -421,3 +421,14 @@ script prefers that separate provenance when present, and otherwise exits
 PENDING_PAIR_SELECTION instead of fabricating a saving. The isolated server
 was restarted for that explicit artifact route. No production state, bridge,
 compression or worker manifest changed.
+
+Both authored crop atlas materials use normalTexture. In Three r180's local
+`normal_fragment_begin.glsl.js`, DOUBLE_SIDED flips the tangent-frame XY even
+when USE_TANGENT is absent. Production bridges omit tangent attributes and
+derive that frame from deformed positions/UVs. A reversed FrontSide bridge
+normal alone therefore does not preserve its authored back-face normal map.
+A pair-specific proposal must also preserve frame XY orientation per reverse
+face (aPart.w is an unused existing lane), and verify diagnostic map/color
+captures through the real shader before approval. No such compensation is
+activated or claimed tested yet. Indexed candidates already reverse the
+authored tangent XYZ and handedness; bridge reconstruction is a separate gate.
