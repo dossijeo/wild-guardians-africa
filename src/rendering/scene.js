@@ -147,8 +147,8 @@ export class WorldScene {
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
     await this.loadReady(this.warmAnimalGpu());
-    // The normal game remains unchanged; native QA can opt into the horizon
-    // through the same loading/cancellation boundary as every other asset.
+    // Callers choose a configured horizon through the same loading/cancellation
+    // boundary as every other asset; generic worlds may still omit it.
     if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}
   }
   prepareSavedAnimalRigs(state){
