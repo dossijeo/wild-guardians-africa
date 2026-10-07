@@ -9,3 +9,6 @@ test('clean native resources keep global errors and support a not-yet-loaded own
  assert.deepEqual(farValidationErrors(['frame exception'],null),['frame exception']);
  assert.deepEqual(farValidationErrors([],{stats:{errors:[]},adapters:[]}),[]);
 });
+test('ground seam worker or GPU failures also reject a completed QA result',()=>{
+ assert.deepEqual(farValidationErrors([],{adapters:[{layer:{current:{prototype:{groundSeamStats:{errors:['seam upload failed']}}}}}]}),['species 0 ground seam: seam upload failed']);
+});

@@ -5,6 +5,7 @@ export function farValidationErrors(errors,owner){
  for(const [slot,adapter] of (owner?.adapters??[]).entries()){
   for(const error of adapter.stats?.errors??[])rows.push('species '+slot+': '+error);
   for(const error of adapter.stats?.standby?.errors??[])rows.push('species '+slot+' standby: '+error);
+  for(const error of adapter.layer?.current?.prototype.groundSeamStats?.errors??[])rows.push('species '+slot+' ground seam: '+error);
  }
  return rows;
 }

@@ -20,7 +20,7 @@ export class NativeFarLayer {
   if(this.closed||epoch!==this.epoch||!result)return null;
   const trees=this.selectTrees(result.data.trees).map(tree=>treeAtlasAnchor(tree,this.metadata.localBase));
   const candidate=this.create(this.source,this.texture,this.metadata,trees,{...this.options,nativeModels:false});
-  try{this.attachData(candidate,result.data);await this.prepare(candidate,()=>this.closed||epoch!==this.epoch);}
+  try{this.attachData(candidate,result.data,()=>this.closed||epoch!==this.epoch);await this.prepare(candidate,()=>this.closed||epoch!==this.epoch);}
   catch(error){candidate.dispose({disposeTexture:false});if(this.closed||epoch!==this.epoch)return null;throw error;}
   if(this.closed||epoch!==this.epoch){candidate.dispose({disposeTexture:false});return null;}
   const previous=this.current;

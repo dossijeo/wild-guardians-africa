@@ -5,7 +5,7 @@ import {farGroundColorUvs} from './far-ground-color-map.js';
 // Private opt-in owner. Updates compare a discrete rectangle; terrain sampling
 // happens only in a cancellable worker. Previously prepared geometry is kept
 // until the replacement is complete, with borrowed map/material inputs.
-export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,streamFactory=()=>new FarGroundSeamStream()}={}){
+export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
  if(!ground.colorMap||typeof createMaterial!=='function')throw Error('Mapped ground required for seam');
  const emptyPromise=Promise.resolve(null),sourceSeed=world.nav.config.seed,sourceBiome=world.nav.config.biome;
  let closed=false,generation=0,current=null,requestedBounds=null,pending=null,stream=streamFactory(),lost=world.renderer.getContext().isContextLost(),preparedPromise=emptyPromise;
@@ -17,18 +17,21 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,st
  const onRestored=()=>{lost=false;if(!closed)stream=streamFactory();};
  canvas.addEventListener('webglcontextlost',onLost);canvas.addEventListener('webglcontextrestored',onRestored);
  function update(){
-  if(closed||world.disposed||lost)return emptyPromise;
+  if(closed||world.disposed||lost||cancelled())return emptyPromise;
   if(world.nav.config.seed!==sourceSeed||world.nav.config.biome!==sourceBiome)return Promise.reject(Error('Ground seam world configuration changed'));
   const bounds=world.nearBounds;if(!Array.isArray(bounds)||bounds.length!==4||!bounds.every(Number.isFinite))return Promise.reject(Error('Invalid adopted seam bounds'));
   if(requestedBounds&&bounds[0]===requestedBounds[0]&&bounds[1]===requestedBounds[1]&&bounds[2]===requestedBounds[2]&&bounds[3]===requestedBounds[3])return pending??preparedPromise;
   if(JSON.stringify(world.nav.config)!==sourceConfig)return Promise.reject(Error('Ground seam world configuration changed'));
   const next=bounds.join(':');requestedBounds=[...bounds];const epoch=++generation;stats.requests++;
   const request={config:world.nav.config,nearBounds:[...bounds],ground:{positions:ground.positions,indices:ground.indices,bounds:ground.bounds,nx:ground.nx,nz:ground.nz,contactCells:ground.contactCells}};
-  pending=stream.request(next,request).then(result=>{
-   if(!result||closed||world.disposed||epoch!==generation||lost||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
+  pending=stream.request(next,request).then(async result=>{
+   const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig;
+   if(!result||stale()){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    const data=result.data,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,ground.colorMap),2));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
    let material;try{material=createMaterial();}catch(error){geometry.dispose();throw error;}
    const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.farGroundSeam=true;mesh.userData.materialRegistryExcluded=true;
+   try{if(prepare)await prepare(mesh,stale);}catch(error){release(mesh);if(stale()){stats.stale++;return null;}throw error;}
+   if(stale()){release(mesh);stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    candidate.impostors.add(mesh);release(current);current=mesh;stats.adopted++;stats.vertices=data.positions.length/3;stats.bytes=data.positions.byteLength+data.indices.byteLength+geometry.attributes.uv.array.byteLength;stats.buildMs=result.buildMs;
    preparedPromise=Promise.resolve(mesh);return mesh;
   }).catch(error=>{if(closed||epoch!==generation)return null;requestedBounds=null;stats.errors.push(String(error));throw error;}).finally(()=>{if(epoch===generation)pending=null;});
