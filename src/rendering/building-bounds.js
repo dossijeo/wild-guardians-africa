@@ -24,5 +24,9 @@ export function nativeBuildingBounds(body,ash){
   }
   const ashBox=ash.boundingBox.clone().expandByPoint(new THREE.Vector3());
   const envelope=box=>box.expandByScalar(1e-4).getBoundingSphere(new THREE.Sphere());
-  return {still:envelope(still),fall:envelope(fall),ash:envelope(ashBox)};
+  const spheres={still:envelope(still),fall:envelope(fall),ash:envelope(ashBox)};
+  // Retain the same finite vertex envelopes for camera exclusion. Do not
+  // reconstruct boxes from the much larger culling spheres or the undeformed
+  // geometry; both lose the actual model's intended visual envelope.
+  return {...spheres,boxes:{still:still.clone(),fall:fall.clone(),ash:ashBox.clone()}};
 }

@@ -12,6 +12,8 @@ import {AfricanToon} from '../src/rendering/african-toon.js';
 import {withDepthCaptureMaterials} from '../src/rendering/depth-capture.js';
 import {auxiliaryBuildingDepthFragment} from '../src/rendering/building-depth.js';
 import {destructionFragment} from '../src/rendering/destruction-native.js';
+import {cameraModelVolume} from '../src/rendering/camera-model-volume.js';
+import {sweepCameraVolume} from '../src/rendering/camera-volume-sweep.js';
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/destruction.json',import.meta.url))).buildings;
 function originalModel(building){
   const bytes=readFileSync(new URL('../public'+building.url,import.meta.url)),array=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),view=new DataView(array);let json,bin;
@@ -26,6 +28,25 @@ function fakeRenderer(){
     getDrawingBufferSize(out){return out.copy(this.size)},getRenderTarget(){return this.target},setRenderTarget(target){this.target=target},getClearColor(out){return out.copy(this.color)},getClearAlpha(){return this.alpha},setClearColor(color,alpha){this.color.set(color);this.alpha=alpha},render(){this.renders++;if(this.fail)throw new Error('fallo GPU de prueba');}};
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
+
+test('camera volumes retain all five native center scales, pivots and collapse envelopes',()=>{
+ const pass=new BuildingDestructionPass(fakeRenderer()),point=new THREE.Vector3();
+ for(const template of templates){
+  const house=new NativeBuilding(template,{id:template.building.culture,hp:600,maxHp:600,status:'intact',yaw:.71},pass);
+  house.position.set(170,12,-49);house.updateWorldMatrix(true,true);
+  for(const state of ['still','fall','ash']){
+   const bounds=template.culling.boxes[state],volume=cameraModelVolume(house.entityId,bounds,house.matrixWorld);
+   for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){
+    point.set(x,y,z).applyMatrix4(house.matrixWorld);
+    assert.ok(sweepCameraVolume(point.toArray(),point.toArray(),volume,1e-7),`${house.entityId}/${state}: transformed corner must be enclosed`);
+   }
+   const above=volume.max[1]+1;
+   assert.equal(sweepCameraVolume([150,above,-49],[190,above,-49],volume,.5),null);
+  }
+  house.dispose();
+ }
+ pass.dispose();
+});
 
 test('auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures',()=>{
   const shell=destructionFragment.slice(destructionFragment.indexOf('  if(uInner>.5){'),destructionFragment.indexOf('  float soot='));
@@ -68,12 +89,14 @@ test('five native center envelopes contain intact/interior and falling vertices 
           const source=p.map((v,k)=>v-.21*inner*[normals.getX(i),normals.getY(i),normals.getZ(i)][k]);
           const collapsed=kernel.collapsedPoint(source,g);collapsed[1]=Math.max(collapsed[1],.035);
           point.fromArray(collapsed);assert.ok(sphere.containsPoint(point),`${template.building.id} damage ${damage} inner ${inner} vertex ${i}`);
+          assert.ok(culling.boxes[damage>.79?'fall':'still'].containsPoint(point),`${template.building.id}: camera box excludes deformed vertex`);
         }
       }
     }
     for(const growth of [0,.25,.5,1])for(let i=0;i<template.ash.attributes.position.count;i++){
       point.fromBufferAttribute(template.ash.attributes.position,i);point.x*=.15+.85*growth;point.z*=.15+.85*growth;point.y*=.3+.7*growth;
       assert.ok(culling.ash.containsPoint(point),'ash contraction stays inside its independent envelope');
+      assert.ok(culling.boxes.ash.containsPoint(point),'camera ash box contains contracted vertices');
     }
     kernel.setDamage(0);
     const pass=new BuildingDestructionPass(fakeRenderer()),entity={id:'bounds',hp:600,maxHp:600,status:'intact'},house=new NativeBuilding(template,entity,pass);
