@@ -3,8 +3,8 @@ import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
 // Low-detail ground belongs to the regional layer. Discard the live resident
 // rectangle so the two surfaces never overlap or compete in the depth buffer.
-export function attachNativeFarGround(candidate,data,world){
- const mapped=!!world.biomeGround,colors=mapped?data.colors:Float32Array.from(data.colors,c=>c<=.04045?c*.0773993808:Math.pow((c+.055)*.9478672986,2.4));
+export function attachNativeFarGround(candidate,data,world,{simplified=false}={}){
+ const mapped=!!world.biomeGround&&!simplified,colors=mapped?data.colors:Float32Array.from(data.colors,c=>c<=.04045?c*.0773993808:Math.pow((c+.055)*.9478672986,2.4));
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
  const bounds={value:new THREE.Vector4()},origin=world.toon.uniforms.uWorldOrigin,material=mapped?nativeGroundMaterial('muy_baja'):new THREE.MeshBasicMaterial({vertexColors:true,fog:true,toneMapped:false});
  let farToon=null;
@@ -30,7 +30,7 @@ export function attachNativeFarGround(candidate,data,world){
   shader.fragmentShader='varying vec2 vFarGroundXZ;uniform vec4 uFarNearBounds;uniform vec2 uFarGroundOrigin;\n'+shader.fragmentShader;
   shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nvec2 farGroundXZ=vFarGroundXZ+uFarGroundOrigin;if(farGroundXZ.x>=uFarNearBounds.x&&farGroundXZ.y>=uFarNearBounds.y&&farGroundXZ.x<=uFarNearBounds.z&&farGroundXZ.y<=uFarNearBounds.w)discard;');
  };
- material.customProgramCacheKey=()=> 'far-ground-resident-material-v3';
+ material.customProgramCacheKey=()=> 'far-ground-resident-material-v4:'+(mapped?'native':'vertex');
  const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.materialRegistryExcluded=true;candidate.impostors.add(mesh);
  candidate.updateGroundBounds=()=>bounds.value.set(...world.nearBounds);
  candidate.updateGroundBounds();const dispose=candidate.dispose;candidate.dispose=options=>{mesh.removeFromParent();geometry.dispose();material.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
