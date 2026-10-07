@@ -41,3 +41,37 @@ recorte superior de 181 px conserva toda la silueta visible en cinco imágenes;
 en Desierto cortaría 52 píxeles visibles y queda rechazado: requiere nuevo
 encuadre. El alpha de la base no es 255; verificar cobertura con el corte actual
 y mipmaps. No usar estos diagnósticos como prueba de una exportación aceptada.
+
+## Arcos HQ — piloto actual
+
+La repetición del panorama y su variante reflejada se conservaron como pruebas
+negativas: la simetría en espejo era demasiado evidente. El piloto posterior
+utiliza cuatro siluetas imagegen diferentes en un atlas 2048×512, con valles
+amplios entre arcos proporcionados; una malla, una muestra de textura y el
+mismo tintado diurno/nocturno. Los detalles y pendientes son ilustrados,
+suaves y erosionados, sin aspecto de facetas low poly.
+
+Los contratos `*-four-export-contract.json` fijan las cuatro fuentes,
+Sharp/vips/WebP y el hash de salida. Reproducir cada atlas con:
+
+    node tools/prepare_mountain_arc_four.mjs .cache/hq-arc-four-BIOMA BIOMA
+
+BIOMA es savanna, grand_river, mangrove, volcanoes, canyons o desert.
+El datum vertical de los arcos es la altura procedural del terreno en la
+primera aldea persistida (`state.villages[0]`). Esa coordenada se conserva al
+continuar partida: no depende de la posición inicial de la cámara ni sigue
+la meseta bajo ella al desplazarse. Solo fixtures sin aldea usan su sitio
+inicial de cámara como referencia. El parallax horizontal acotado se conserva;
+la elevación de cámara no mueve las montañas en vertical. El ajuste de base
+por arco sigue siendo una decisión artística que requiere revisión nativa.
+
+Volcanes cuatro-celdas original permanece en el contrato negativo v1.
+Su reparación v4/v2/v2/v2 vuelve a generar flancos continuos mediante imagegen;
+D, de 2171 px de ancho, recibe una única columna transparente antes del crop
+4:1 y la reducción uniforme, sin alterar ningún píxel fuente. No se corrige
+el defecto mediante ruido/blending adicional en shader.
+
+Los pilotos continúan fuera de los assets públicos hasta completar contacto,
+giros día/noche, filtrado efectivo y comparación de coste. Los informes de
+`docs/qa/far-hq-mountains-pilot` distinguen diagnósticos CPU de aceptación nativa;
+las muestras de mips altos pueden mezclar celdas y no se descartan esos negativos.
