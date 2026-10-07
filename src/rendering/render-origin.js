@@ -18,6 +18,10 @@ export class RenderOrigin {
 // outside this synchronous window and retain their global coordinates.
 export function withRenderOrigin({scene,camera,origin,detached=[],minMax=[],minSize=[]},draw){
   if(!origin.x&&!origin.z)return draw();
+  // The default origin needs no bounds adjustments. Resolve live metadata
+  // lazily rather than scanning materials/terrain before the no-op fast path.
+  if(typeof minMax==='function')minMax=minMax();
+  if(typeof minSize==='function')minSize=minSize();
   const position=scene.position.clone(),eye=camera.position.clone();
   const roots=detached.map(root=>[root,root.position.clone()]);
   const bounds=new Map();
