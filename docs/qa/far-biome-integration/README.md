@@ -52,7 +52,7 @@ All files listed below come from one Mapungubwe village, seed 712, no gameplay s
 | Gran CaÃ±Ã³n | Medium | `canyon-tree-only-day/night.json/png`, `canyon-tree-only-orbit.png` | River and cliff terrain retained. Two resident species. Horizon-button view could enter a cliff; orbit view exposes mesa backdrop. |
 | Volcanes | Medium | `volcano-tree-only-day/night.json/png`, `volcano-tree-only-moved.png` | Lateral 96 m movement changes region to 192:0; native preparation settles without GL errors. Nearby baked billboards can visibly simplify the silhouette while models prepare. |
 | Manglares | High | `mangrove-high-tree-only-day/night.json/png` | 49 exact terrains and 25 prop chunks; water channels/moss remain native. Angular movement and night phase tested. |
-| Gran RÃ­o | Low | `river-low-tree-only-day/dusk.json/png` | Original river near terrain; angular movement and mixed day/night atlas phase. Coarse far shoreline remains approximate. |
+| Gran Río | Low | `river-low-tree-only-day/dusk.json/png` | Original river near terrain; angular movement and mixed day/night atlas phase. Coarse far shoreline remains approximate. |
 | Desierto | Very low | `desert-min-tree-only-day/night.json/png`, `desert-min-tree-only-horizon.png` | Native dunes/coarse horizon retained; mesa backdrop visible. Sparse tree population in reference scene. |
 
 Recorded JSON checks show zero world/shader/WebGL errors; no missing-biome asset exception. Static captures are not proof of imperceptible animated transitions. Native 8Â° atlas elevation is appropriate for distant trees, but the 40â€“60 m candidate transition remains visibly simplified in elevated/teleported views. Remaining acceptance work: slow approach/retreat and lateral/orbital recordings, delayed-chunk perception, precise far shorelines, backdrop art/composition, independent performance repetitions, mobile/device memory and other cultures. The optional loader is connected but **normal gameplay remains OFF**.
@@ -70,7 +70,7 @@ The same report contains approximately 100 cancelled preparations per species ov
 
 A temporary Vite alias replaced only the GPU preparation helper, leaving the source revision under the serial full-test suite unchanged. The candidate remembers initialized texture wrapper/source versions per renderer, invalidates on disposal/context restoration and keeps compile, zero-pixel draw and fence for every new native packing. Fourteen isolated tests pass, including late cancellation, failed upload, context loss/restoration and listener ownership.
 
-`savanna-cache-approach.json` repeats exactly the same slot-0 tree `0:9:2`, 20-second 140â†’25â†’140 m path. The selected tree reaches readiness 1 first at 10.216 s; only 28 of 164 near frames (â‰¤40 m) have readiness 1. Useful preparations at completion: 21/20/19/17; cancelled: 95/89/93/91. No game-state or WebGL errors. These counts show increased useful completions but **do not resolve the continuous-motion transition**.
+`savanna-cache-approach.json` repeats exactly the same slot-0 tree `0:9:2`, 20-second 140Ã¢â€ â€™25Ã¢â€ ’140 m path. The selected tree reaches readiness 1 first at 10.216 s; only 28 of 164 near frames (â‰¤40 m) have readiness 1. Useful preparations at completion: 21/20/19/17; cancelled: 95/89/93/91. No game-state or WebGL errors. These counts show increased useful completions but **do not resolve the continuous-motion transition**.
 
 `savanna-cache-hold.json` adds a three-second stationary hold at 25 m. Readiness 1 occurs first at 10.203 s, with 115 of 261 near frames fully ready. Useful preparations: 32/28/28/23; cancelled: 76/73/74/75. This verifies that the handoff can settle when stationary; renewed motion still invalidates it. Counters are not a performance benchmark, and the duration/near-frame counts differ between these two paths.
 
@@ -109,7 +109,7 @@ A further candidate retains a previously prepared native tree representation in 
 
 `savanna-standby-quiet.json` repeats the static scene with that guard: all four species report zero standby trees drawn, with 54 calls / 805743 triangles. This proves absence of static fallback duplication in this view, not equivalent frame time.
 
-`savanna-standby-approach.json` completes the same native-source 23-second 140â†’25â†’140 m path with a three-second hold: **263/263 near frames and 355/355 transition frames ready, zero readiness descents**, unchanged logical state and no reported errors. The end screenshot is a far retreat view, not a close-up handoff proof. Two reusable banks per species estimate 7,624,632 bytes (7.27 MiB) of additional owned GPU attributes/indices/instance storage after this movement. This excludes materials, driver overhead, decoded images and CPU memory; no additional atlas textures are owned by the standby. The former failed paths remain evidence of earlier variants.
+`savanna-standby-approach.json` completes the same native-source 23-second 140Ã¢â€ â€™25Ã¢â€ ’140 m path with a three-second hold: **263/263 near frames and 355/355 transition frames ready, zero readiness descents**, unchanged logical state and no reported errors. The end screenshot is a far retreat view, not a close-up handoff proof. Two reusable banks per species estimate 7,624,632 bytes (7.27 MiB) of additional owned GPU attributes/indices/instance storage after this movement. This excludes materials, driver overhead, decoded images and CPU memory; no additional atlas textures are owned by the standby. The former failed paths remain evidence of earlier variants.
 
 This is one successful approach repetition only. Orbital/lateral repetition, other biomes/phases, visible silhouette matching, ownership/disposal and fresh combined CPU/GPU cost remain acceptance work. Normal gameplay remains OFF; earlier ABBA results do not apply to this new bank recipe.
 
@@ -127,7 +127,7 @@ The real-source repetition completes all paths with unchanged logical state, zer
 
 Initial unready frames retain the impostor while preparation/fade completes; this is not instant native readiness. Floating-point rounding makes the orbital â‰¤40 m counter include only part of the path and the lateral â‰¤40 m counter zero, so the whole-path comparison uses â‰¤60 m transition frames. This repetition resolves the prior measured descents for these three Sabana paths; it does not establish all-biome acceptance or a combined cost improvement. The captured flat/cyan backdrop is still a visual counterexample.
 
-A subsequent offline-only backdrop candidate replaces Sabana's parallel waves with independently composed broad ridges/mesa caps, warm muted colors and a 145 m decorative cylinder height instead of 80 m. It retains one 2048Ã—512 RGBA atlas and the same shader/draw/vertex recipe; transfer increases by 2,218 bytes (14,246â†’16,464). Three generator tests verify deterministic seamless profiles, independent relief, and byte-for-byte regeneration of all six deployed alpha backdrops. Other biome assets remain byte-identical. Native composition acceptance of this candidate is still pending.
+A subsequent offline-only backdrop candidate replaces Sabana's parallel waves with independently composed broad ridges/mesa caps, warm muted colors and a 145 m decorative cylinder height instead of 80 m. It retains one 2048×512 RGBA atlas and the same shader/draw/vertex recipe; transfer increases by 2,218 bytes (14,246Ã¢â€ ’16,464). Three generator tests verify deterministic seamless profiles, independent relief, and byte-for-byte regeneration of all six deployed alpha backdrops. Other biome assets remain byte-identical. Native composition acceptance of this candidate is still pending.
 
 ## Relative retained-bank precision, native disposal and backdrop diagnosis (d9e485c)
 
@@ -137,7 +137,7 @@ The retained native banks now keep frozen CPU matrices as Float64 and subtract a
 
 The source atlas was explicitly inspected through its decoded texture image (`savanna-decoded-backdrop-preview.png`). Isolating the regional ground (`savanna-ground-isolated.json/png`) removes exactly one draw and 26010 triangles, but does not remove the pale backdrop band. This disproves the old-image/cache and far-ground explanations for that band. Ground/picking/navigation therefore remain unchanged.
 
-The subsequent Sabana-only art candidate reduces the fixed fog mix from .48 to .24, bakes low-contrast facets into the existing 2048Ã—512 atlas, and reduces decorative cylinder height from145 to110. Other biome atlases/parameters remain unchanged. The atlas grows from16464 to46686 bytes; decoded allocation and shader texture/read/draw counts do not increase. Generator tests confirm opaque interiors below the skyline and byte-exact reproducibility. Inspect alpha images on a composed background: some viewers display discarded transparent RGB as gray bands/white seams, which are not holes in this atlas.
+The subsequent Sabana-only art candidate reduces the fixed fog mix from .48 to .24, bakes low-contrast facets into the existing 2048×512 atlas, and reduces decorative cylinder height from145 to110. Other biome atlases/parameters remain unchanged. The atlas grows from16464 to46686 bytes; decoded allocation and shader texture/read/draw counts do not increase. Generator tests confirm opaque interiors below the skyline and byte-exact reproducibility. Inspect alpha images on a composed background: some viewers display discarded transparent RGB as gray bands/white seams, which are not holes in this atlas.
 
 `savanna-fog24-{day,night}.png` is the intermediate un-faceted145m candidate; `savanna-facets145-day.png` adds baked relief at145m; `savanna-facets110-{day,night}.png` is the current lower candidate, all captured at the same native horizon camera on5192. Day color and excessive prominence improve, but the backdrop remains compositionally simple; those images are intermediate review evidence, not concept-art acceptance or a performance claim. The experiment remains OFF in normal gameplay. Twelve focused owner/backdrop tests pass; latest combined cost, other-biome motion and final visual acceptance are still pending.
 
@@ -192,13 +192,13 @@ The following native paths use exact terrain/picking/navigation and tree-only ci
 | --- | --- | --- | --- |
 | Manglares / day / approach |267/267|0|`mangroves-tree-circle-approach.json/png`|
 | Manglares / night / orbit |490/490|0|`mangroves-tree-circle-night-orbit.json/png`|
-| Gran RÃ­o / day / lateral |562/594|0|`river-tree-circle-lateral.json/png`|
-| Gran RÃ­o / dusk / approach |276/277|0|`river-tree-circle-dusk-approach.json/png`|
+| Gran Río / day / lateral |562/594|0|`river-tree-circle-lateral.json/png`|
+| Gran Río / dusk / approach |276/277|0|`river-tree-circle-dusk-approach.json/png`|
 | Desierto / low / day / approach |606/606|0|`desert-low-tree-circle-approach.json/png`|
 
 All five paths preserve logical state and report zero errors. Initial unready frames keep the impostor while native preparation completes. All-near readiness traces record16/5/12/15/1 declines respectively, each with `frustum=false`, tree residency preserved and native LOD orders still present. These are retained explicitly rather than hidden or counted as on-screen readiness failures. The all-near counter is not an assertion that every tree in every viewport was ready from its initial observation.
 
-These checks expand motion evidence to all six biomes across this and earlier source revisions, but do not validate every species, every quality or pixel-equivalent lighting/silhouette matching. Manglares' final horizon remains visibly flat; the Gran RÃ­o close tree is a native model but distant dithering is noticeable in a static capture. Backdrop/atmospheric composition and remaining species/quality checks still block activation and an acceptance PR. No gain is attributed to these paths; the GPU cost evidence remains the single Sabana ABBA above.
+These checks expand motion evidence to all six biomes across this and earlier source revisions, but do not validate every species, every quality or pixel-equivalent lighting/silhouette matching. Manglares' final horizon remains visibly flat; the Gran Río close tree is a native model but distant dithering is noticeable in a static capture. Backdrop/atmospheric composition and remaining species/quality checks still block activation and an acceptance PR. No gain is attributed to these paths; the GPU cost evidence remains the single Sabana ABBA above.
 
 ## Configurable atmosphere candidate (not visually accepted)
 
@@ -251,20 +251,44 @@ All paths preserve state/errors0. All-near declines10/0/11 retain native orders/
 
 42 targeted atmosphere/backdrop/ownership/native grouping/shadow/transition/terrain-camera checks PASS (`current-directed-tests.txt`). Build PASS (`current-build.txt`); package PASS (`current-package.txt`):694files/403539773bytes/859relative links/20runtimeGLBs, including current Opus/voice/image aliases. The full-suite2632PASS record predates these changes and is not represented as validation of this source. Remaining native species/biome and optional atmosphere acceptance work is still required before PR.
 
-## Remaining Sabana and Gran RÃ­o species (b449105)
+## Remaining Sabana and Gran Río species (b449105)
 
 | Biome / quality / slot / phase / path | Ready transition frames | Selected descents | Evidence |
 | --- | --- | --- | --- |
 | Sabana / very low /2 / dusk / lateral |638/669|0|`savanna-very-low-slot2-dusk-lateral.json`|
 | Sabana / very low /3 / day / approach |385/387|0|`savanna-very-low-slot3-day-approach.json`|
-| Gran RÃ­o / low /1 / night / orbit |802/840|0|`river-low-slot1-night-orbit.json`|
-| Gran RÃ­o / low /2 / dusk / lateral |806/806|0|`river-low-slot2-dusk-lateral.json`|
-| Gran RÃ­o / low /3 / day / approach |437/437|0|`river-low-slot3-day-approach.json`|
+| Gran Río / low /1 / night / orbit |802/840|0|`river-low-slot1-night-orbit.json`|
+| Gran Río / low /2 / dusk / lateral |806/806|0|`river-low-slot2-dusk-lateral.json`|
+| Gran Río / low /3 / day / approach |437/437|0|`river-low-slot3-day-approach.json`|
 
-All five paths report errors0 and identical state. Nearby declines0/12/4/10/15 respectively are outside the frustum, with native residency/orders preserved. Combined with prior slot0 evidence, all four slots of Sabana/Manglares/Gran RÃ­o now have selected-tree native motion evidence. With earlier Volcanes0, Desierto0 and Canyon1 paths,15 of22 slots have such evidence; seven remain (Volcanes1â€“3, Desierto1â€“3, Canyon0). This is not a complete phaseÃ—quality matrix or final art approval.
+All five paths report errors0 and identical state. Nearby declines0/12/4/10/15 respectively are outside the frustum, with native residency/orders preserved. Combined with prior slot0 evidence, all four slots of Sabana/Manglares/Gran Río now have selected-tree native motion evidence. With earlier Volcanes0, Desierto0 and Canyon1 paths,15 of22 slots have such evidence; seven remain (Volcanes1â€“3, Desierto1â€“3, Canyon0). This is not a complete phaseÃ—quality matrix or final art approval.
 
 `river-low-softfog-{day,night}.json/png` retains the open procedural distribution and fog but exposes a new decorative-art counterexample: its low, parallel wave profile reads as a thin horizontal wall against the sky. Native readiness success does not resolve this backdrop composition. It remains pending before acceptance.
 
 ### Gran Río skyline revision (offline; native acceptance pending)
 
 The earlier `river-low-softfog-day/night` captures retain the thin horizontal backdrop counterexample. The new generator composes five independently seeded rounded ridges per layer, retaining the same 2048×512 atlas, cylinder height (85 m), draw call and shader recipe. It changes only the Gran Río backdrop image (14,490 → 14,760 bytes). Five generator tests pass, including periodic seams, independent relief, bounded slopes and byte-exact deployment. No native artistic or performance acceptance is claimed for this revision until it is viewed in the actual scene. Mangrove profiles remain flat marsh silhouettes.
+
+The current `river-ridges-day/night` native captures use the exact earlier comparison camera [51.54259579985163,14.02192278906814,14.848751295665068], low quality, seed712 and 30/300 soft atmosphere. Errors/WebGL=0, state paused. Independent rolling relief is now visible, but the low decorative skyline still reads as broad horizontal layers, particularly at night. This is intermediate art evidence, not final acceptance or a claim that the flat-band concern is eliminated.
+
+### Current base validation (c4e851b, includes main af13fce)
+
+41 targeted ownership/GPU/standby/atmosphere/backdrop tests pass. Vite build succeeds. Web package validates 694 files / 403,540,167 bytes, 859 relative links and 20 runtime GLBs, with current image and voice runtime aliases. `current-directed-tests.txt`, `current-build.txt`, `current-package.txt` were refreshed from this exact revision. The earlier full suite remains historical evidence, not a claim that the latest source has passed the full suite.
+
+### Additional Volcanes species paths (c4e851b)
+
+| Slot / phase / path | Fully ready transition frames | Selected declines | Other nearby declines |
+|---|---:|---:|---:|
+| 1 / night / orbit |537/568|0|13|
+| 2 / dusk / lateral |542/574|0|4|
+| 3 / day / approach |280/286|0|10|
+
+All three paths complete with unchanged simulation state and errors0. Every recorded nearby decline is outside the native chunk frustum, with physical residency/orders retained. Together with prior slot0, all four Volcanes slots have selected-tree motion evidence at differing phases, without implying a full Cartesian quality/phase matrix.
+
+### Additional Desierto species paths (c4e851b, high quality)
+
+Slot1 night orbit:774/818 transition frames fully prepared; slot2 dusk lateral:720/757; slot3 day approach:401/401. Zero selected descents in all three; unchanged simulation state and errors0. Nearby declines are0,0,0. Sparse desert placement is retained (slot1 initially only nine eligible trees), without increasing procedural density to make the fixture easier. Together with prior slot0 low-quality evidence all four Desert slots have motion evidence.
+
+### Final selected species route (c4e851b)
+
+Canyon slot0, low quality/night orbit, completes1068/1124 fully prepared transition frames, zero selected descents and errors0, unchanged state. Its 0 nearby declines are all outside the physical frustum, with residency/orders intact. Combined with earlier Canyon1, all22 species slots in the six biomes now have a complete selected-tree motion route. This is not an exhaustive phase/quality/culture Cartesian matrix, final horizon-art approval, native context-loss acceptance, or universal FPS evidence.

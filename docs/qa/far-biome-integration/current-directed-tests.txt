@@ -1,226 +1,219 @@
 TAP version 13
-# Subtest: transition chunks retain tree color and shadows without bringing back nearby small props
-ok 1 - transition chunks retain tree color and shadows without bringing back nearby small props
-  ---
-  duration_ms: 45.579
-  ...
-# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
-ok 2 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
-  ---
-  duration_ms: 10.7381
-  ...
-# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
-ok 3 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
-  ---
-  duration_ms: 15.4926
-  ...
-# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
-ok 4 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
-  ---
-  duration_ms: 44.8697
-  ...
-# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
-ok 5 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
-  ---
-  duration_ms: 26.8323
-  ...
-# Subtest: light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
-ok 6 - light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
-  ---
-  duration_ms: 11.7306
-  ...
-# Subtest: shadow selection includes bounds of the final native variant even if they exceed LOD0
-ok 7 - shadow selection includes bounds of the final native variant even if they exceed LOD0
-  ---
-  duration_ms: 4.093
-  ...
-# Subtest: optional far color compaction removes only fully hidden instances and preserves native shadows
-ok 8 - optional far color compaction removes only fully hidden instances and preserves native shadows
-  ---
-  duration_ms: 5.3023
-  ...
-# Subtest: shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
-ok 9 - shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
-  ---
-  duration_ms: 43.6849
-  ...
-# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
-ok 10 - native shadow population combines color bins once using the final original variant and stable GPU matrices
-  ---
-  duration_ms: 64.9594
-  ...
-# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
-ok 11 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
-  ---
-  duration_ms: 44.3538
-  ...
-# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
-ok 12 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
-  ---
-  duration_ms: 11.0593
-  ...
-# Subtest: decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
-ok 13 - decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
-  ---
-  duration_ms: 12.2635
-  ...
-# Subtest: invalid backdrop fog mix rejects before mutating the scene or texture
-ok 14 - invalid backdrop fog mix rejects before mutating the scene or texture
-  ---
-  duration_ms: 1.7701
-  ...
-# Subtest: decorative fog uses the shared atmosphere palette through the day/night transition
-ok 15 - decorative fog uses the shared atmosphere palette through the day/night transition
-  ---
-  duration_ms: 2.3093
-  ...
-# Subtest: optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
-ok 16 - optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
-  ---
-  duration_ms: 2.275
-  ...
-# (node:30664) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
-# (Use `node --trace-warnings ...` to show where the warning was created)
-# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
-ok 17 - terrain floor and a tall house cannot bounce recovery below ground forever
-  ---
-  duration_ms: 11.35
-  ...
-# Subtest: recovery respects ceiling and finite roofs still allow overflight
-ok 18 - recovery respects ceiling and finite roofs still allow overflight
-  ---
-  duration_ms: 1.2104
-  ...
-# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
-ok 19 - candidate terrain height is resampled after lateral recovery on a cliff
-  ---
-  duration_ms: 3.6419
-  ...
-# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
-ok 20 - overlapping buildings expand the encountered envelope without scanning the scene
-  ---
-  duration_ms: 1.5303
-  ...
-# Subtest: clear poses remain stable and retain the native altitude range
-ok 21 - clear poses remain stable and retain the native altitude range
-  ---
-  duration_ms: 2.1101
-  ...
-# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
-ok 22 - bounded recovery reports unresolved pathological nesting rather than claiming safety
-  ---
-  duration_ms: 15.6796
-  ...
-# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
-ok 23 - scene resolver reconciles terrain after focus recovery and remains stable while idle
-  ---
-  duration_ms: 81.759
-  ...
 # Subtest: far atmosphere retains the existing default and permits a band around the handoff
-ok 24 - far atmosphere retains the existing default and permits a band around the handoff
+ok 1 - far atmosphere retains the existing default and permits a band around the handoff
   ---
-  duration_ms: 5.2389
+  duration_ms: 4.1707
   ...
-# (node:21792) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (node:45040) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: offline backdrop silhouettes are deterministic, periodic and fit their fixed transparent atlas
+ok 2 - offline backdrop silhouettes are deterministic, periodic and fit their fixed transparent atlas
+  ---
+  duration_ms: 47.5038
+  ...
+# Subtest: savanna layers have independent relief instead of sharing parallel height offsets
+ok 3 - savanna layers have independent relief instead of sharing parallel height offsets
+  ---
+  duration_ms: 2.6722
+  ...
+# Subtest: savanna baked facets retain a solid body under the skyline instead of introducing alpha seams
+ok 4 - savanna baked facets retain a solid body under the skyline instead of introducing alpha seams
+  ---
+  duration_ms: 376.3981
+  ...
+# Subtest: deployed backdrops match the offline generator and retain transparent sky at fixed resolution
+ok 5 - deployed backdrops match the offline generator and retain transparent sky at fixed resolution
+  ---
+  duration_ms: 2445.8304
+  ...
+# Subtest: river skyline uses independent broad rolling relief without parallel low bands
+ok 6 - river skyline uses independent broad rolling relief without parallel low bands
+  ---
+  duration_ms: 1.1434
+  ...
+# (node:26888) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
 # Subtest: attachment loads only selected biome resources and releases them once on world close
-ok 25 - attachment loads only selected biome resources and releases them once on world close
+ok 7 - attachment loads only selected biome resources and releases them once on world close
   ---
-  duration_ms: 9.0386
+  duration_ms: 8.1234
   ...
 # Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
-ok 26 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 8 - atmosphere options reach the biome adapter and invalid distances allocate no resources
   ---
-  duration_ms: 4.9307
+  duration_ms: 7.0494
   ...
 # Subtest: late texture arriving after attachment cancellation is immediately released
-ok 27 - late texture arriving after attachment cancellation is immediately released
+ok 9 - late texture arriving after attachment cancellation is immediately released
   ---
-  duration_ms: 9.808
+  duration_ms: 11.9635
   ...
 # Subtest: late prepared species is disposed after world close without double-releasing earlier textures
-ok 28 - late prepared species is disposed after world close without double-releasing earlier textures
+ok 10 - late prepared species is disposed after world close without double-releasing earlier textures
   ---
-  duration_ms: 3.3501
+  duration_ms: 2.9265
   ...
 # Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
-ok 29 - configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 11 - configured visual radius is reversible on disable/dispose and validated before resource loading
   ---
-  duration_ms: 1.5966
+  duration_ms: 1.3276
   ...
 # Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
-ok 30 - visual-only radius retains loaded radius ownership and restores both preceding values
+ok 12 - visual-only radius retains loaded radius ownership and restores both preceding values
   ---
-  duration_ms: 1.0678
+  duration_ms: 1.0051
   ...
 # Subtest: prop transition circle is owned and restored independently of exact terrain residency
-ok 31 - prop transition circle is owned and restored independently of exact terrain residency
+ok 13 - prop transition circle is owned and restored independently of exact terrain residency
   ---
-  duration_ms: 2.9617
+  duration_ms: 2.7868
   ...
 # Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
-ok 32 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 14 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
   ---
-  duration_ms: 9.8426
+  duration_ms: 6.1097
   ...
-# Subtest: transition residency retains the real canyon edge chunk after square radius drops it
-ok 33 - transition residency retains the real canyon edge chunk after square radius drops it
+# Subtest: GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+ok 15 - GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
   ---
-  duration_ms: 2.7661
+  duration_ms: 14.9087
   ...
-# Subtest: all chunk-owned anchors in the handoff circle remain resident across cell borders and negative coordinates
-ok 34 - all chunk-owned anchors in the handoff circle remain resident across cell borders and negative coordinates
+# Subtest: failed zero-pixel draw restores renderer and parent before rejecting
+ok 16 - failed zero-pixel draw restores renderer and parent before rejecting
   ---
-  duration_ms: 4.2957
+  duration_ms: 2.281
   ...
-# (node:45392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
-# (Use `node --trace-warnings ...` to show where the warning was created)
-# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
-ok 35 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+# Subtest: overlapping species compilation leaves culling unchanged until each synchronous upload draw
+ok 17 - overlapping species compilation leaves culling unchanged until each synchronous upload draw
   ---
-  duration_ms: 32.8286
+  duration_ms: 2.028
   ...
-# Subtest: intent hook handles field changes and preserves external pan edits and update return values
-ok 36 - intent hook handles field changes and preserves external pan edits and update return values
+# Subtest: failed upload draw restores native mesh culling without changing intentionally unculled meshes
+ok 18 - failed upload draw restores native mesh culling without changing intentionally unculled meshes
   ---
-  duration_ms: 1.2684
+  duration_ms: 14.3904
   ...
-# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
-ok 37 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+# Subtest: cancelled preparation never compiles or draws
+ok 19 - cancelled preparation never compiles or draws
   ---
-  duration_ms: 34.9782
+  duration_ms: 1.9396
   ...
-# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
-ok 38 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+# Subtest: cancellation during fence polling releases the sync and leaves rendering restored
+ok 20 - cancellation during fence polling releases the sync and leaves rendering restored
   ---
-  duration_ms: 1717.726
+  duration_ms: 1.5929
   ...
-# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
-ok 39 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+# Subtest: texture preparation deduplicates and yields between bounded batches before compilation
+ok 21 - texture preparation deduplicates and yields between bounded batches before compilation
   ---
-  duration_ms: 3.864
+  duration_ms: 2.578
   ...
-# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
-ok 40 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+# Subtest: cancelling between texture batches prevents remaining uploads and compilation
+ok 22 - cancelling between texture batches prevents remaining uploads and compilation
   ---
-  duration_ms: 1.7389
+  duration_ms: 4.5716
   ...
-# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
-ok 41 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+# Subtest: optional image decoding finishes before upload and cancellation prevents upload
+ok 23 - optional image decoding finishes before upload and cancellation prevents upload
   ---
-  duration_ms: 8.8014
+  duration_ms: 1.9236
   ...
-# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
-ok 42 - picking uses the protected camera even when input arrives before the next rendered frame
+# Subtest: warm texture generations skip upload budgets but always compile, draw and fence new native packing
+ok 24 - warm texture generations skip upload budgets but always compile, draw and fence new native packing
   ---
-  duration_ms: 1.8148
+  duration_ms: 3.0997
   ...
-1..42
-# tests 42
+# Subtest: context restoration invalidates warm texture budgets independently per renderer
+ok 25 - context restoration invalidates warm texture budgets independently per renderer
+  ---
+  duration_ms: 1.5111
+  ...
+# Subtest: shared image source changes require a new upload budget even without texture wrapper version change
+ok 26 - shared image source changes require a new upload budget even without texture wrapper version change
+  ---
+  duration_ms: 0.7624
+  ...
+# Subtest: closing a renderer owner releases texture and context listeners, including after restoration
+ok 27 - closing a renderer owner releases texture and context listeners, including after restoration
+  ---
+  duration_ms: 0.9159
+  ...
+# Subtest: a late cancelled request cannot create an owner after its cache was released
+ok 28 - a late cancelled request cannot create an owner after its cache was released
+  ---
+  duration_ms: 0.6759
+  ...
+# Subtest: a cancelled generation keeps only uploads already completed for the next generation
+ok 29 - a cancelled generation keeps only uploads already completed for the next generation
+  ---
+  duration_ms: 0.804
+  ...
+# Subtest: a failed texture upload is never reused by a subsequent generation
+ok 30 - a failed texture upload is never reused by a subsequent generation
+  ---
+  duration_ms: 0.9647
+  ...
+# Subtest: context restoration invalidates a completed native tree proof before any handoff can reuse it
+ok 31 - context restoration invalidates a completed native tree proof before any handoff can reuse it
+  ---
+  duration_ms: 2.7381
+  ...
+# Subtest: retained proof requires current physical selection and matching native and procedural identities
+ok 32 - retained proof requires current physical selection and matching native and procedural identities
+  ---
+  duration_ms: 24.5227
+  ...
+# Subtest: standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees
+ok 33 - standby owns uploaded frozen matrices and never authorizes CPU-only or changed logical trees
+  ---
+  duration_ms: 4.5791
+  ...
+# Subtest: previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it
+ok 34 - previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it
+  ---
+  duration_ms: 4.0433
+  ...
+# Subtest: fallback renders only while its native replacement lacks proof, using exact transition and suppression
+ok 35 - fallback renders only while its native replacement lacks proof, using exact transition and suppression
+  ---
+  duration_ms: 3.0255
+  ...
+# Subtest: inactive banks are reused and source GPU attribute identities remain borrowed only at CPU-array level
+ok 36 - inactive banks are reused and source GPU attribute identities remain borrowed only at CPU-array level
+  ---
+  duration_ms: 3.5804
+  ...
+# Subtest: world close during replacement removes visible bank and releases late buffers exactly once
+ok 37 - world close during replacement removes visible bank and releases late buffers exactly once
+  ---
+  duration_ms: 3.8556
+  ...
+# Subtest: standby prunes distant identities and refuses to exceed its explicit population budget
+ok 38 - standby prunes distant identities and refuses to exceed its explicit population budget
+  ---
+  duration_ms: 3.0304
+  ...
+# Subtest: context restoration revokes retained GPU proof until a fresh owned-bank upload completes
+ok 39 - context restoration revokes retained GPU proof until a fresh owned-bank upload completes
+  ---
+  duration_ms: 7.0677
+  ...
+# Subtest: replacement source geometry cannot borrow the old bank buffers or its uploaded proof
+ok 40 - replacement source geometry cannot borrow the old bank buffers or its uploaded proof
+  ---
+  duration_ms: 4.4886
+  ...
+# Subtest: large world placement preserves fractional coordinates through a relative GPU bank anchor
+ok 41 - large world placement preserves fractional coordinates through a relative GPU bank anchor
+  ---
+  duration_ms: 2.7992
+  ...
+1..41
+# tests 41
 # suites 0
-# pass 42
+# pass 41
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 3584.6591
+# duration_ms 3706.3092
