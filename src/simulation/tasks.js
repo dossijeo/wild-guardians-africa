@@ -51,17 +51,24 @@ export function reserveTasks(state,canExecute=()=>true) {
       if(!needed.size)break;
     }
   }
+  // Eligibility is stable during this synchronous reservation pass. Keep one
+  // live candidate list per center and remove each employee when assigned,
+  // rather than filtering all employees again for every queued target.
+  const available=new Map();
+  for(const w of state.workers)if(w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state)){
+    const workers=available.get(w.centerId)??[];workers.push(w);available.set(w.centerId,workers);
+  }
   for(const t of [...state.tasks].sort((a,b)=>a.created-b.created||a.id.localeCompare(b.id))) {
     if(t.workerId)continue;
     const target=targets.get(t.targetId);
     if(!target)continue;
-    const workers=state.workers.filter(w=>w.centerId===t.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state));
+    const workers=available.get(t.centerId)??[];
     // Reachability can require A*: test nearest candidates until one succeeds.
     // The pure predicate and ordering retain the nearest eligible worker.
     workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
     const worker=workers.find(w=>canExecute(w,t,target));
     t.blocked=!worker && workers.length>0;
-    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking'; }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
   }
 }
 export function releaseTask(state,worker) {

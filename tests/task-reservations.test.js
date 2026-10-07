@@ -72,3 +72,15 @@ test('busy farms with no blocked task avoid all historical entity collections',(
  for(const name of ['plants','crates','structures'])Object.defineProperty(s,name,{get(){throw Error('Unused history');}});
  reserveTasks(s,()=>{throw Error('No route');});assert.equal(s.tasks[0].blocked,false);
 });
+
+test('exhausted center pools clear remaining blocked flags without rescanning all employees',()=>{
+ const s=state();s.plants=Array.from({length:1600},(_,i)=>({id:'p'+i,x:i%40,z:Math.floor(i/40)}));
+ s.tasks=s.plants.map((p,i)=>({id:'t'+i,created:i,targetId:p.id,centerId:i%2?'center':'other',workerId:null,blocked:true}));
+ s.workers=Array.from({length:140},(_,i)=>({id:'w'+i,x:i%20,z:0,centerId:i%3?'center':'other',status:'idle',taskId:null,contractDay:2,incapacitated:false}));
+ const expected=structuredClone(s);reference(expected,()=>true);
+ let centerReads=0;for(const w of s.workers){const center=w.centerId;Object.defineProperty(w,'centerId',{enumerable:true,get(){centerReads++;return center;}});}
+ reserveTasks(s,()=>true);const reads=centerReads;assert.deepEqual(s,expected);assert.ok(reads<=s.workers.length*3,`${reads} center reads`);
+ // A later pass observes a changed center/contract rather than reusing pools.
+ const restored=structuredClone(s);restored.workers.push({id:'late',x:0,z:0,centerId:'other',status:'idle',taskId:null,contractDay:2});
+ const next=structuredClone(restored);reference(next,()=>true);reserveTasks(restored,()=>true);assert.deepEqual(restored,next);
+});
