@@ -1,0 +1,176 @@
+TAP version 13
+# (node:40760) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: offscene packed prototypes and standalone textures are owned and released once; caches clear
+ok 1 - offscene packed prototypes and standalone textures are owned and released once; caches clear
+  ---
+  duration_ms: 264.5117
+  ...
+# Subtest: scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+ok 2 - scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+  ---
+  duration_ms: 3.8565
+  ...
+# Subtest: inflight model and texture finishing after close dispose once without resurrecting caches
+ok 3 - inflight model and texture finishing after close dispose once without resurrecting caches
+  ---
+  duration_ms: 1.0455
+  ...
+# Subtest: a failed standalone texture is retryable while open
+ok 4 - a failed standalone texture is retryable while open
+  ---
+  duration_ms: 0.6687
+  ...
+# Subtest: pending building cannot create new procedural resources after its owner closes
+ok 5 - pending building cannot create new procedural resources after its owner closes
+  ---
+  duration_ms: 0.7635
+  ...
+# Subtest: packed biome, village and wall binary loads cannot allocate prototypes after close
+ok 6 - packed biome, village and wall binary loads cannot allocate prototypes after close
+  ---
+  duration_ms: 17.845
+  ...
+# Subtest: failed building download clears both caches; concurrent retry prepares the original model once
+ok 7 - failed building download clears both caches; concurrent retry prepares the original model once
+  ---
+  duration_ms: 1032.4704
+  ...
+# (node:32736) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera volumes retain all five native center scales, pivots and collapse envelopes
+ok 8 - camera volumes retain all five native center scales, pivots and collapse envelopes
+  ---
+  duration_ms: 26.9775
+  ...
+# Subtest: auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+ok 9 - auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+  ---
+  duration_ms: 29.4338
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 10 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 6218.5248
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 11 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 7.1878
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 12 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 2.6654
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 13 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 9.887
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 14 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 26.1068
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 15 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 21.5748
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 16 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.8246
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 17 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 133.6906
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 18 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.859
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 19 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 77.8657
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 20 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 19.0677
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 21 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 10.3247
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 22 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 6.2848
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 23 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 57.7086
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 24 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 5.4109
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 25 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 1.9525
+  ...
+# Subtest: concurrent cancelled building requests release each shared native template only once in all cultures
+ok 26 - concurrent cancelled building requests release each shared native template only once in all cultures
+  ---
+  duration_ms: 2920.136
+  ...
+# (node:43716) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: phase barrier rejects late results and releases an unregistered template
+ok 27 - phase barrier rejects late results and releases an unregistered template
+  ---
+  duration_ms: 3.739
+  ...
+# Subtest: late building template cannot enter the cache; an already owned template is not released twice
+ok 28 - late building template cannot enter the cache; an already owned template is not released twice
+  ---
+  duration_ms: 0.9717
+  ...
+# Subtest: closed warm-up does not mark late models as prepared
+ok 29 - closed warm-up does not mark late models as prepared
+  ---
+  duration_ms: 0.7739
+  ...
+# Subtest: ground catalogue arriving after close cannot request or create textures
+ok 30 - ground catalogue arriving after close cannot request or create textures
+  ---
+  duration_ms: 2.6178
+  ...
+# Subtest: late ground and mud textures are not cloned and borrowed sources are preserved
+ok 31 - late ground and mud textures are not cloned and borrowed sources are preserved
+  ---
+  duration_ms: 11.9658
+  ...
+# Subtest: mud failure frees completed private clones without disposing borrowed originals
+ok 32 - mud failure frees completed private clones without disposing borrowed originals
+  ---
+  duration_ms: 2.0994
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13631.6223
