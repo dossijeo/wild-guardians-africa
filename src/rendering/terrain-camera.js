@@ -5,6 +5,22 @@ export const TERRAIN_CAMERA={minPhi:.065,maxPhi:1.47,minDistance:4,maxDistance:6
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lastPose=new WeakMap();
 const matches=(vector,array)=>array.every((v,i)=>Math.abs(vector.getComponent(i)-v)<1e-8);
+function restoreOrbitIntent(camera,controls,field){
+  const previous=lastPose.get(camera);
+  if(previous&&previous.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))camera.position.fromArray(previous.rawEye);
+}
+// Pointer and wheel handlers also call OrbitControls.update synchronously.
+// Restore intent there as well as in the render loop, before spherical
+// coordinates can absorb a terrain/exclusion correction as player input.
+export function installTerrainCameraIntent(camera,controls,fieldSource){
+  const original=controls.update;
+  function update(...args){
+    const field=fieldSource();restoreOrbitIntent(camera,controls,field);
+    const changed=original.apply(this,args);protectTerrainCamera(camera,controls,field);return changed;
+  }
+  controls.update=update;
+  return ()=>{if(controls.update===update)controls.update=original;};
+}
 function applyPose(camera,controls,field,pose,rawEye){
   controls.target.fromArray(pose.target);camera.position.fromArray(pose.eye);camera.lookAt(controls.target);camera.updateMatrixWorld();
   lastPose.set(camera,{field,pose,rawEye});return pose;
@@ -36,10 +52,9 @@ export function protectTerrainCamera(camera,controls,field){
 }
 
 export function updateTerrainCamera(camera,controls,field){
-  const previous=lastPose.get(camera);
   // Feed the orbit intent, not the vertical terrain correction, back to controls.
   // Otherwise a cliff can change the inferred distance/tilt on every idle frame.
-  if(previous?.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))camera.position.fromArray(previous.rawEye);
+  restoreOrbitIntent(camera,controls,field);
   controls.update();return protectTerrainCamera(camera,controls,field);
 }
 

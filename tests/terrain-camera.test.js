@@ -5,12 +5,35 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {TerrainField} from '../src/world/terrain.js';
 import {nativeGroundGeometry} from '../src/rendering/terrain-geometry.js';
-import {nativeCameraPose,protectTerrainCamera,updateTerrainCamera,focusTerrainCamera,configureTerrainControls} from '../src/rendering/terrain-camera.js';
+import {nativeCameraPose,protectTerrainCamera,updateTerrainCamera,focusTerrainCamera,configureTerrainControls,installTerrainCameraIntent} from '../src/rendering/terrain-camera.js';
 import {WorldScene} from '../src/rendering/scene.js';
 const source=readFileSync('references/extracted/Bioma_Lab_V4_0_Materiales_Luz_Optimizado/script-8.js','utf8');
 const update=source.slice(source.indexOf('function updateCamera(dt){'),source.indexOf('\nfunction zoom(amount)'));
 const reference=Function('field','target','theta','phi','distance',`const mode='terrain',world={field},state={},clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,add=(a,b)=>a.map((v,i)=>v+b[i]);const camera={theta,phi,distance,target:[...target],focusHeight:0,goal:{theta,phi,distance,target:[...target]}};${update};updateCamera(1000);return {target:camera.target,eye:camera.eye,altitude:camera.altitude};`);
 const packs=['savanna','grand_river','mangrove','volcanoes','canyons','desert'].map(id=>JSON.parse(readFileSync('public/content/biome-'+id+'.json')));
+
+test('synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius',()=>{
+ const field={surface:x=>x>5?100:0},camera=new THREE.PerspectiveCamera(),controls=new OrbitControls(camera,null);
+ configureTerrainControls(controls);controls.enableDamping=true;
+ const original=controls.update,release=installTerrainCameraIntent(camera,controls,()=>field);
+ focusTerrainCamera(camera,controls,field,{x:0,z:0});assert.ok(camera.position.distanceTo(controls.target)>65);
+ // This is the same synchronous update path used by the installed wheel
+ // handler; it happens before WorldScene's next render-loop update.
+ controls._dollyIn(.95);controls.update();
+ const expected=nativeCameraPose(field,[0,0,0],.5,1.16,38*.95);
+ assert.ok(camera.position.distanceTo(new THREE.Vector3(...expected.eye))<1e-9);
+ for(let i=0;i<200;i++){controls.update();assert.ok(camera.position.distanceTo(new THREE.Vector3(...expected.eye))<1e-9);}
+ release();assert.equal(controls.update,original);
+});
+
+test('intent hook handles field changes and preserves external pan edits and update return values',()=>{
+ let field;const camera=new THREE.PerspectiveCamera(),controls={target:new THREE.Vector3(),update(){return 'changed';}};
+ const original=controls.update,release=installTerrainCameraIntent(camera,controls,()=>field);
+ assert.equal(controls.update(),'changed');field={surface:()=>0};focusTerrainCamera(camera,controls,field,{x:0,z:0});
+ camera.position.x+=12;controls.target.x+=12;assert.equal(controls.update(),'changed');assert.equal(controls.target.x,12);
+ field={surface:()=>7};controls.update();assert.equal(controls.target.y,7.18);assert.ok(camera.position.y>=9);
+ release();assert.equal(controls.update,original);
+});
 
 test('terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose',()=>{
   for(const pack of packs){const field=new TerrainField({seed:'712',biome:pack.biomeId,relief:1,river:true});
