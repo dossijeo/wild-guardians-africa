@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: indexed sweeps match direct sweeps through negative cells, corners and roofs
+ok 1 - indexed sweeps match direct sweeps through negative cells, corners and roofs
+  ---
+  duration_ms: 71.0763
+  ...
+# Subtest: descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+ok 2 - descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+  ---
+  duration_ms: 0.8176
+  ...
+# Subtest: large volumes and long queries use bounded fallback without losing collisions
+ok 3 - large volumes and long queries use bounded fallback without losing collisions
+  ---
+  duration_ms: 0.4101
+  ...
+# Subtest: local queries exclude distant buildings and cleanup releases all owned descriptors
+ok 4 - local queries exclude distant buildings and cleanup releases all owned descriptors
+  ---
+  duration_ms: 12.8224
+  ...
+# Subtest: invalid updates preserve the previous valid descriptor
+ok 5 - invalid updates preserve the previous valid descriptor
+  ---
+  duration_ms: 0.7601
+  ...
+# Subtest: coordinates beyond safe integer grid addressing use bounded fallback
+ok 6 - coordinates beyond safe integer grid addressing use bounded fallback
+  ---
+  duration_ms: 0.4463
+  ...
+# Subtest: fast movement cannot tunnel through a finite building
+ok 7 - fast movement cannot tunnel through a finite building
+  ---
+  duration_ms: 12.0328
+  ...
+# Subtest: overflight is allowed above the finite roof, and a descent detects that roof
+ok 8 - overflight is allowed above the finite roof, and a descent detects that roof
+  ---
+  duration_ms: 0.3762
+  ...
+# Subtest: rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+ok 9 - rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+  ---
+  duration_ms: 0.3597
+  ...
+# Subtest: starting inside a newly loaded volume returns a finite nearest exit direction
+ok 10 - starting inside a newly loaded volume returns a finite nearest exit direction
+  ---
+  duration_ms: 1.9544
+  ...
+# Subtest: stationary safe camera and outward movement remain unobstructed
+ok 11 - stationary safe camera and outward movement remain unobstructed
+  ---
+  duration_ms: 0.4042
+  ...
+# Subtest: selection uses the nearest obstacle rather than collection order
+ok 12 - selection uses the nearest obstacle rather than collection order
+  ---
+  duration_ms: 0.6259
+  ...
+# Subtest: zero radius ray and tangent sphere contact are included
+ok 13 - zero radius ray and tangent sphere contact are included
+  ---
+  duration_ms: 0.2877
+  ...
+# Subtest: translated buildings and camera trajectories preserve the collision fraction
+ok 14 - translated buildings and camera trajectories preserve the collision fraction
+  ---
+  duration_ms: 0.379
+  ...
+# Subtest: invalid geometry and radii are rejected
+ok 15 - invalid geometry and radii are rejected
+  ---
+  duration_ms: 0.7742
+  ...
+# Subtest: seeded trajectories agree with an independent convex-distance oracle
+ok 16 - seeded trajectories agree with an independent convex-distance oracle
+  ---
+  duration_ms: 80.3912
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 561.0279
