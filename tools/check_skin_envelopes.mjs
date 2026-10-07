@@ -18,7 +18,11 @@ for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals)){
  const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(geometryOnly(bytes),'');
  const root=new Group();root.position.set(4800,5,-7200);root.rotation.set(.1,.7,-.08);root.scale.set(1.2,.85,1.1);root.add(gltf.scene);
  const meshes=[];gltf.scene.traverse(m=>{if(m.isSkinnedMesh)meshes.push(m);});assert.ok(meshes.length);
+ const preparationStart=performance.now();
  const envelopes=meshes.map(m=>prepareSkinEnvelope(m));assert.ok(envelopes.every(Boolean));
+ const preparationMs=performance.now()-preparationStart,cacheStart=performance.now();
+ meshes.forEach((m,i)=>assert.equal(prepareSkinEnvelope(m),envelopes[i]));
+ const preparationCacheMs=performance.now()-cacheStart;
  const mixer=new AnimationMixer(gltf.scene);let poses=0,verticesChecked=0,maxRadiusRatio=0,maxBroadRadiusRatio=0,maxExcess=-Infinity;
  const culling={scope:'Analytical camera sweeps, not rendered draw counts or GPU timings',queries:0,referenceVisible:0,broadVisible:0,groupedVisible:0,broadExtra:0,groupedExtra:0};
  const camera=new PerspectiveCamera(50,16/9,.1,100),frustum=new Frustum(),projection=new Matrix4();
@@ -51,7 +55,7 @@ for(const [species,library] of Object.entries(ANIMAL_ACTIONS.animals)){
   if(pair>=5)timings[mode].push(performance.now()-start);
  }
  const summary=values=>{const a=[...values].sort((a,b)=>a-b);return {median:a[Math.floor(a.length/2)],p95:a[Math.floor(a.length*.95)],samples:values};};
- const row={species,runtime:record.runtime,sha256:hash(bytes),clips:gltf.animations.length,poses,verticesChecked,maxExcess,maxRadiusRatio,maxBroadRadiusRatio,culling,bones:envelopes.reduce((n,e)=>n+e.boxes.length,0),groups:envelopes.reduce((n,e)=>n+e.groups.length,0),terms:envelopes.reduce((n,e)=>n+e.groups.reduce((t,g)=>t+g.length,0),0),timings:Object.fromEntries(Object.entries(timings).map(([k,v])=>[k,summary(v)]))};records.push(row);
+ const row={species,runtime:record.runtime,sha256:hash(bytes),preparationMs,preparationCacheMs,clips:gltf.animations.length,poses,verticesChecked,maxExcess,maxRadiusRatio,maxBroadRadiusRatio,culling,bones:envelopes.reduce((n,e)=>n+e.boxes.length,0),groups:envelopes.reduce((n,e)=>n+e.groups.length,0),terms:envelopes.reduce((n,e)=>n+e.groups.reduce((t,g)=>t+g.length,0),0),timings:Object.fromEntries(Object.entries(timings).map(([k,v])=>[k,summary(v)]))};records.push(row);
  console.log(JSON.stringify({...row,timings:Object.fromEntries(Object.entries(row.timings).map(([k,v])=>[k,{median:v.median,p95:v.p95}]))}));
  mixer.stopAllAction();mixer.uncacheRoot(gltf.scene);
 }
