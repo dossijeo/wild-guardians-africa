@@ -1,4 +1,5 @@
 import {POWER_READY_SOUND_IDS} from '../src/audio/power-ready-audio.js';
+import {DESTRUCTION_SOUND_ROUTES} from '../src/audio/destruction-audio.js';
 import {UNLOCK_SOUND_IDS} from '../src/audio/unlock-audio.js';
 import {GUARDIAN_SOUND_IDS} from '../src/audio/guardian-audio.js';
 import {WORKER_SOUND_IDS} from '../src/audio/worker-audio.js';
@@ -40,6 +41,7 @@ test('QA-152: all 126 routes are explicit and every final MP3 is byte exact incl
   else if(item.id==='game_enemy_detected'){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-raid-farm-arrival']);assert.equal(item.loop,false);}
   else if(Object.values(STRUCTURE_ALERT_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,Object.keys(STRUCTURE_ALERT_SOUNDS).filter(trigger=>STRUCTURE_ALERT_SOUNDS[trigger]===item.id));assert.equal(item.loop,false);}
   else if(Object.values(STRUCTURE_DETAIL_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,Object.keys(STRUCTURE_DETAIL_SOUNDS).filter(trigger=>STRUCTURE_DETAIL_SOUNDS[trigger]===item.id));assert.equal(item.loop,false);}
+  else if(Object.values(DESTRUCTION_SOUND_ROUTES).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,[item.id==='wall_debris_small'?'Native building fragments: emitted batch':'Native building fragments: first ground contacts']);assert.equal(item.loop,false);}
   else if(Object.values(WALL_BUILD_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,Object.keys(WALL_BUILD_SOUNDS).filter(material=>WALL_BUILD_SOUNDS[material]===item.id).map(material=>'WallChainBuilt:wall:'+material));assert.equal(item.loop,false);}
   else if(Object.values(WALL_HIT_SOUNDS).includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['StructureHit:wall:'+Object.keys(WALL_HIT_SOUNDS).find(material=>WALL_HIT_SOUNDS[material]===item.id)]);assert.equal(item.loop,false);}
   else if(GUARDIAN_SOUND_IDS.includes(item.id)){assert.equal(route.status,'connected');assert.deepEqual(route.destination,['native-guardian-lifecycle']);assert.equal(item.loop,false);}
