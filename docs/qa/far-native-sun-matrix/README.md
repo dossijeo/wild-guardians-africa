@@ -1,5 +1,7 @@
 # Native-sun biome matrix: all species, technical continuity
 
+Latest candidate `8b8a931` refreshes a retained bank's requested LOD only after its replacement fence. The previous policy retained LOD0 for Sabana baobab `0:-6:-4` at142m even though the native logical request selected LOD2; the atlas was LOD2. Forty-seven directed tests pass and the new regression fails with the old condition. This change has not yet repeated the matrix below: native visual comparison, movement and cost are still pending. Diagnostic-only `ecd5c3b` exposes the retained level directly; `d183251` adds an offline backdrop composition pilot without changing deployed atlases.
+
 The current 120–160 m preset has completed **66 routes for 22 species across six biomes**, at seed 712, Mapungubwe, medium quality. Each species uses one deterministic tree ID through a daytime approach, a full-night orbit and a daytime lateral pass. Rendering revision is `a0fb5ce`; individual source commits are retained in the table and raw reports. Subsequent root animal grounding and QA/offline changes are not attributed to historical runs.
 
 All 66 routes preserve exact logical state and finish with no render errors or WebGL errors. Target readiness descents, potentially visible descents and unknown descents are zero. The aggregate keeps **8,030 global descents**, all classified by individual tree bounds outside the camera frustum; full traces retain keys, resource epochs, transforms and packing.
