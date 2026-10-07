@@ -1,0 +1,7 @@
+# Far ground cost isolation
+
+Hypothesis of duplicate nativehorizon ground in Sabana was incorrect: NativeHorizon onlyexistscanyons/desert, where farGround was alreadyomitted. preserveTerrain retains25/49 residentchunks, not fullgroundbeyondtheirrectangle in otherbiomes. Exact13.2s no-ground screenshot shows backgroundvoid/floatingtrees; removingfarGround REJECTED. No performancebenchmark for rejectedgeometry variant.
+
+567692b adds optional simplifiedFarGround boolean, retainingindexedpositions, sourcecolourvertices convertedlinear, residentclip/worldorigin, sharednightuniform, fog andownership. ExistingMeshBasic vertexcolourpath used evenwhenbiomeGroundavailable, no detailedbiomefragmentrecipe. Defaultunchanged. Native/vertex programcachekeys differ.20directedownership/ground/layer tests passed; threefinalgroundtests verifyrecipekeys. Visuals/GPUpending.
+
+Native samecamera day/night captured567692b,errorsGL0. Daybackground hue is moregreen than nearmaterial; novisualmatching acceptance. Repeated cleanABBA GPUp50 A1/B1/B2/A2=30.798645/31.273906/30.381874/30.389685ms. No consistentGPUreduction; calls73/78/78/73, triangles1328232/1293842/1293842/1328232. CPU medians~10ms,p95~54msbothvariants, noCPU/FPSclaim. Two oldrootcampaigns maybackgroundrun; noownbuild/CPUbenchmark. Firsttrial haspossibleoverlap ofroot PNGcapture/DOM from isolatedrenderer alreadydisposed, notproven active3Drender; retainedwithoutattributing cause. Defaultnativegroundunchanged.

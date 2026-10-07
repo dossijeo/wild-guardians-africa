@@ -1,0 +1,316 @@
+{
+  "loaded": true,
+  "pathSelection": {
+    "slot": 1,
+    "slotId": 1,
+    "total": 14,
+    "eligible": 14,
+    "selected": "canyon:prop:0:-4:-10",
+    "examples": [
+      {
+        "id": "canyon:prop:0:-4:-10",
+        "distance": 123.03283488417404
+      },
+      {
+        "id": "canyon:prop:0:-1:12",
+        "distance": 163.74211686190728
+      },
+      {
+        "id": "canyon:prop:0:-1:-13",
+        "distance": 168.05479994150514
+      }
+    ]
+  },
+  "groundIsolated": false,
+  "farClosed": false,
+  "closeReport": null,
+  "benchmark": null,
+  "motion": {
+    "allNear": {
+      "observations": 485,
+      "readyObservations": 348,
+      "drops": [
+        {
+          "id": "canyon:prop:0:-1:-9",
+          "age": 8.430700000000018,
+          "range": 39.78584767246369,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "0,-2",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    -24,
+                    3.0084619522094727,
+                    -124.42176742044609
+                  ],
+                  [
+                    24.4655696557516,
+                    41.40384574517541,
+                    -71.57143942016285
+                  ]
+                ],
+                "tree": [
+                  -10.550513288360088,
+                  3.8794452137220015,
+                  -105.65375729710796
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  1,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 9,
+            "preparedRevision": 21,
+            "renderSignature": "0:0|0:1:b0dbd1a2-3ed5-4f18-90c3-4c8defc8e7d5:76114f27-a2eb-49cf-9d59-0ccd22109acf:3",
+            "proofSignature": "0:0|0:1:b0dbd1a2-3ed5-4f18-90c3-4c8defc8e7d5:76114f27-a2eb-49cf-9d59-0ccd22109acf:3",
+            "batches": []
+          }
+        }
+      ],
+      "omissions": []
+    },
+    "mode": "approach",
+    "slot": 1,
+    "age": 20,
+    "hold": 0,
+    "done": true,
+    "tree": "canyon:prop:0:-4:-10",
+    "treePosition": [
+      -47.80281890580308,
+      -121.32937130120352
+    ],
+    "minimumDistance": 25.000056310406464,
+    "nearFrames": 258,
+    "nearReadyFrames": 258,
+    "nearSeconds": 6.584900000000001,
+    "nearReadySeconds": 6.584900000000001,
+    "nearReadinessDrops": 0,
+    "transitionFrames": 406,
+    "transitionReadyFrames": 385,
+    "transitionReadinessDrops": [],
+    "firstReadyAt": 5.35450000000001,
+    "initial": [
+      {
+        "regions": 1,
+        "nativePreparations": 0,
+        "stalePreparations": 1,
+        "preparationAttempts": 1,
+        "fencedPreparations": 0,
+        "rejectedPacking": 0,
+        "signatureChanges": 2,
+        "packingChanges": 2,
+        "cachedTextures": 0,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 0,
+        "prepared": 0,
+        "standby": {
+          "preparations": 0,
+          "rendered": 0,
+          "trees": 0,
+          "estimatedOwnedGpuBytes": 0,
+          "errors": []
+        }
+      },
+      {
+        "regions": 1,
+        "nativePreparations": 0,
+        "stalePreparations": 0,
+        "preparationAttempts": 0,
+        "fencedPreparations": 0,
+        "rejectedPacking": 0,
+        "signatureChanges": 0,
+        "packingChanges": 0,
+        "cachedTextures": 0,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 0,
+        "prepared": 0,
+        "standby": {
+          "preparations": 0,
+          "rendered": 0,
+          "trees": 0,
+          "estimatedOwnedGpuBytes": 0,
+          "errors": []
+        }
+      }
+    ],
+    "final": [
+      {
+        "regions": 3,
+        "nativePreparations": 10,
+        "stalePreparations": 1,
+        "preparationAttempts": 11,
+        "fencedPreparations": 10,
+        "rejectedPacking": 0,
+        "signatureChanges": 10,
+        "packingChanges": 16,
+        "cachedTextures": 49,
+        "textureUploads": 1,
+        "errors": [],
+        "coverage": 0,
+        "prepared": 0,
+        "standby": {
+          "preparations": 5,
+          "rendered": 0,
+          "trees": 1,
+          "estimatedOwnedGpuBytes": 2262048,
+          "errors": []
+        }
+      },
+      {
+        "regions": 3,
+        "nativePreparations": 6,
+        "stalePreparations": 0,
+        "preparationAttempts": 6,
+        "fencedPreparations": 6,
+        "rejectedPacking": 0,
+        "signatureChanges": 8,
+        "packingChanges": 8,
+        "cachedTextures": 30,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 0,
+        "prepared": 0,
+        "standby": {
+          "preparations": 2,
+          "rendered": 0,
+          "trees": 2,
+          "estimatedOwnedGpuBytes": 1719288,
+          "errors": []
+        }
+      }
+    ],
+    "unchanged": true,
+    "ready": {
+      "ready": 0,
+      "enabled": true
+    }
+  },
+  "biome": "gran-canon",
+  "quality": "media",
+  "culture": "mapungubwe",
+  "enabled": true,
+  "camera": [
+    -47.80281890580308,
+    16.81238189026204,
+    18.67062869879647
+  ],
+  "chunks": 25,
+  "night": 0,
+  "render": {
+    "calls": 30,
+    "triangles": 153378
+  },
+  "gpuMemory": {
+    "geometries": 102,
+    "textures": 54
+  },
+  "reportedJSHeapOnly": {
+    "used": 321786692,
+    "total": 359798776,
+    "limit": 4395630592
+  },
+  "programs": 53,
+  "resources": {
+    "species": 2,
+    "estimatedAtlasTextureBytes": 22369621.333333332,
+    "estimatedBackdropTextureBytes": 5592405.333333333,
+    "errors": []
+  },
+  "residentRange": null,
+  "visualRange": 1,
+  "transitionRadius": 68,
+  "visibleChunks": 25,
+  "propChunks": 9,
+  "treePropChunks": 12,
+  "pickMeshes": 25,
+  "logicalBounds": [
+    -168,
+    -120,
+    72,
+    120
+  ],
+  "visibleBounds": [
+    -168,
+    -120,
+    72,
+    120
+  ],
+  "removed": null,
+  "layers": [
+    {
+      "slot": 0,
+      "key": "0:0",
+      "trees": 14,
+      "ready": 0,
+      "preparations": 10,
+      "coverage": 0,
+      "prepared": 0,
+      "stale": 1,
+      "attempts": 11,
+      "fenced": 10,
+      "rejectedPacking": 0,
+      "signatureChanges": 10,
+      "packingChanges": 16,
+      "textureUploads": 1,
+      "cachedTextures": 49,
+      "standby": {
+        "preparations": 5,
+        "rendered": 0,
+        "trees": 1,
+        "estimatedOwnedGpuBytes": 2262048,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "slot": 1,
+      "key": "0:0",
+      "trees": 14,
+      "ready": 0,
+      "preparations": 6,
+      "coverage": 0,
+      "prepared": 0,
+      "stale": 0,
+      "attempts": 6,
+      "fenced": 6,
+      "rejectedPacking": 0,
+      "signatureChanges": 8,
+      "packingChanges": 8,
+      "textureUploads": 0,
+      "cachedTextures": 30,
+      "standby": {
+        "preparations": 2,
+        "rendered": 0,
+        "trees": 2,
+        "estimatedOwnedGpuBytes": 1719288,
+        "errors": []
+      },
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "webglError": 0
+}

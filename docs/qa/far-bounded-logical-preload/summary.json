@@ -1,0 +1,379 @@
+[
+  {
+    "name": "orbit-paused",
+    "source": "cb0bfbbf",
+    "motion": {
+      "allNear": {
+        "observations": 150357,
+        "readyObservations": 20056,
+        "descents": 141,
+        "offscreenBoundsDescents": 141,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 30991,
+        "readyObservations": 13271,
+        "descents": 9,
+        "offscreenBoundsDescents": 9,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedNear": [
+        200,
+        240
+      ],
+      "mode": "orbit",
+      "path": {
+        "duration": 20,
+        "near": 200,
+        "far": 240,
+        "height": 100,
+        "yaw": 0,
+        "focus": "tree"
+      },
+      "slot": 2,
+      "age": 5,
+      "paused": true,
+      "done": false,
+      "tree": "0:-6:-4",
+      "minimumDistance": 219.9999999999999,
+      "nearFrames": 0,
+      "nearReadyFrames": 0,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 1670,
+      "transitionReadyFrames": 0,
+      "firstReadyAt": null,
+      "ready": {
+        "ready": 0,
+        "enabled": true
+      }
+    },
+    "render": {
+      "calls": 18,
+      "triangles": 86970
+    },
+    "camera": [
+      143.20690623333192,
+      110.25234832156283,
+      -46.973626642559324
+    ],
+    "bounds": [
+      24,
+      -168,
+      264,
+      72
+    ],
+    "standbyUpload": null,
+    "errors": [],
+    "webglError": 0
+  },
+  {
+    "name": "approach-paused",
+    "source": "cb0bfbbf",
+    "motion": {
+      "allNear": {
+        "observations": 61046,
+        "readyObservations": 27373,
+        "descents": 70,
+        "offscreenBoundsDescents": 70,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 16164,
+        "readyObservations": 10065,
+        "descents": 6,
+        "offscreenBoundsDescents": 6,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedNear": [
+        200,
+        240
+      ],
+      "mode": "approach",
+      "path": {
+        "duration": 20,
+        "near": 25,
+        "far": 260,
+        "height": 100,
+        "yaw": 0,
+        "focus": "tree"
+      },
+      "slot": 2,
+      "age": 5,
+      "paused": true,
+      "done": false,
+      "tree": "0:-6:-4",
+      "minimumDistance": 93.82990642116135,
+      "nearFrames": 721,
+      "nearReadyFrames": 583,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 780,
+      "transitionReadyFrames": 583,
+      "firstReadyAt": 5,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      }
+    },
+    "render": {
+      "calls": 36,
+      "triangles": 153213
+    },
+    "camera": [
+      -76.79309376666808,
+      106.71065023901062,
+      46.856279778602016
+    ],
+    "bounds": [
+      -216,
+      -72,
+      24,
+      168
+    ],
+    "standbyUpload": {
+      "errors": [],
+      "instances": 3,
+      "matrixExact": 3,
+      "visibilityExact": 3,
+      "identityExact": 3,
+      "passed": true,
+      "webglError": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  {
+    "name": "approach-end",
+    "source": "cb0bfbbf",
+    "motion": {
+      "allNear": {
+        "observations": 111306,
+        "readyObservations": 52613,
+        "descents": 96,
+        "offscreenBoundsDescents": 96,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 29809,
+        "readyObservations": 19159,
+        "descents": 12,
+        "offscreenBoundsDescents": 12,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedNear": [
+        200,
+        240
+      ],
+      "mode": "approach",
+      "path": {
+        "duration": 20,
+        "near": 25,
+        "far": 260,
+        "height": 100,
+        "yaw": 0,
+        "focus": "tree"
+      },
+      "slot": 2,
+      "age": 20,
+      "paused": false,
+      "done": true,
+      "tree": "0:-6:-4",
+      "minimumDistance": 25.00007247990363,
+      "nearFrames": 1328,
+      "nearReadyFrames": 1190,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 1432,
+      "transitionReadyFrames": 1235,
+      "firstReadyAt": 5,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      }
+    },
+    "render": {
+      "calls": 30,
+      "triangles": 174854
+    },
+    "camera": [
+      -76.79309376666808,
+      105.80496746253476,
+      213.0263733574406
+    ],
+    "bounds": [
+      -216,
+      72,
+      24,
+      312
+    ],
+    "standbyUpload": {
+      "errors": [],
+      "instances": 3,
+      "matrixExact": 3,
+      "visibilityExact": 3,
+      "identityExact": 3,
+      "passed": true,
+      "webglError": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  {
+    "name": "night-orbit-end",
+    "source": "cb0bfbbf",
+    "motion": {
+      "allNear": {
+        "observations": 188823,
+        "readyObservations": 23689,
+        "descents": 515,
+        "offscreenBoundsDescents": 515,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 42081,
+        "readyObservations": 14928,
+        "descents": 57,
+        "offscreenBoundsDescents": 57,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedNear": [
+        200,
+        240
+      ],
+      "mode": "orbit",
+      "path": {
+        "duration": 20,
+        "near": 200,
+        "far": 240,
+        "height": 100,
+        "yaw": 0,
+        "focus": "tree"
+      },
+      "slot": 2,
+      "age": 20,
+      "paused": false,
+      "done": true,
+      "tree": "0:-6:-4",
+      "minimumDistance": 219.99999999999986,
+      "nearFrames": 0,
+      "nearReadyFrames": 0,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 2054,
+      "transitionReadyFrames": 2054,
+      "firstReadyAt": 0.03329999999998836,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      }
+    },
+    "render": {
+      "calls": 24,
+      "triangles": 120907
+    },
+    "camera": [
+      -76.79309376666814,
+      104.54323827420717,
+      173.02637335744066
+    ],
+    "bounds": [
+      -216,
+      72,
+      24,
+      312
+    ],
+    "standbyUpload": {
+      "errors": [],
+      "instances": 3,
+      "matrixExact": 3,
+      "visibilityExact": 3,
+      "identityExact": 3,
+      "passed": true,
+      "webglError": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  {
+    "name": "lateral-end",
+    "source": "cb0bfbbf",
+    "motion": {
+      "allNear": {
+        "observations": 258776,
+        "readyObservations": 29956,
+        "descents": 68,
+        "offscreenBoundsDescents": 68,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 71757,
+        "readyObservations": 16544,
+        "descents": 12,
+        "offscreenBoundsDescents": 12,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedNear": [
+        200,
+        240
+      ],
+      "mode": "lateral",
+      "path": {
+        "duration": 20,
+        "near": 200,
+        "far": 240,
+        "height": 100,
+        "yaw": 0,
+        "focus": "tree"
+      },
+      "slot": 2,
+      "age": 20,
+      "paused": false,
+      "done": true,
+      "tree": "0:-6:-4",
+      "minimumDistance": 220,
+      "nearFrames": 0,
+      "nearReadyFrames": 0,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 770,
+      "transitionReadyFrames": 770,
+      "firstReadyAt": 0.033200000000011644,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      }
+    },
+    "render": {
+      "calls": 24,
+      "triangles": 116350
+    },
+    "camera": [
+      -76.79309376666811,
+      104.54323827420717,
+      173.02637335744066
+    ],
+    "bounds": [
+      -216,
+      72,
+      24,
+      312
+    ],
+    "standbyUpload": {
+      "errors": [],
+      "instances": 3,
+      "matrixExact": 3,
+      "visibilityExact": 3,
+      "identityExact": 3,
+      "passed": true,
+      "webglError": 0
+    },
+    "errors": [],
+    "webglError": 0
+  }
+]

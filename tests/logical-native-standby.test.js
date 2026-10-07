@@ -1,0 +1,59 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {Object3D} from 'three';
+import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from '../tools/experiments/logical-native-standby.js';
+import {attachNativeFarWorld} from '../tools/experiments/attach-native-far-world.js';
+import {standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
+const metadata={impostorHeight:12,sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
+const tree=(id,x)=>({id,x:x+1,y:2,z:0,origin:{x,y:1,z:0},yaw:.62,sx:1.2,sy:.9,sz:1.3});
+function options(extra={}){return {metadata,camera:{x:0,y:10,z:0},quality:'media',range:180,physicalIds:new Set(),suppressed:new Set(),...extra};}
+test('logical prewarm uses exact native origin, yaw and anisotropic scale instead of billboard pivot',()=>{
+ const t=tree('a',140),row=logicalNativeStandbyEntries([t],options())[0],native={...t,...t.origin},d=new Object3D();d.position.set(native.x,native.y,native.z);d.rotation.y=native.yaw;d.scale.set(native.sx,native.sy,native.sz);d.updateMatrix();
+ assert.equal(row.key,standbyTreeKey(t));assert.deepEqual(row.matrix,d.matrix.toArray());assert.equal(row.matrix[12],140);assert.equal(row.level,2);
+});
+test('logical prewarm is deterministic, bounded, and omits suppressed, resident and out of range trees',()=>{
+ const trees=[tree('d',180),tree('c',80),tree('b',70),tree('a',60)];
+ const args=options({maxTrees:1,physicalIds:new Set(['a']),suppressed:new Set(['b'])});const a=logicalNativeStandbyEntries(trees,args),b=logicalNativeStandbyEntries([...trees].reverse(),args);
+ assert.deepEqual(a,b);assert.deepEqual(a.map(r=>r.id),['c']);assert.throws(()=>logicalNativeStandbyEntries(trees,options({range:Infinity})),/budget/);
+});
+test('logical prewarm follows actual quality LOD bins without changing source geometry',()=>{
+ const t=tree('a',100);assert.equal(logicalNativeStandbyEntries([t],options())[0].level,2);assert.equal(logicalNativeStandbyEntries([t],options({quality:'alta'}))[0].level,1);
+});
+
+
+test('optional adopted preload rectangle admits exact edge anchors without changing native transforms',()=>{
+ const trees=[tree('inside',60),tree('edge',79),tree('outside',90)];const previous=logicalNativeStandbyEntries(trees,options()),bounded=logicalNativeStandbyEntries(trees,options({preloadBounds:[0,-10,80,10]}));
+ assert.deepEqual(bounded.map(t=>t.id),['inside','edge']);for(const t of bounded)assert.deepEqual(t,previous.find(p=>p.id===t.id));
+ assert.deepEqual(logicalNativeStandbyEntries(trees,options({preloadBounds:null})),previous);assert.deepEqual(logicalNativeStandbyEntries([...trees].reverse(),options({preloadBounds:[0,-10,80,10]})),bounded);
+ assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[0,0,Infinity,10]})),/bounds/);assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[80,-10,0,10]})),/bounds/);
+});
+
+
+test('adopted preload policy defers missing or malformed regions without global fallback',()=>{
+ assert.equal(adoptedLogicalPreloadBounds(undefined,null),null);
+ for(const bounds of [undefined,null,[],[0,0,Infinity,10],[10,0,0,10],[0,0,10,0]])assert.equal(adoptedLogicalPreloadBounds(bounds,16),undefined);
+ const bounds=[0,-10,80,10],before=[...bounds];assert.deepEqual(adoptedLogicalPreloadBounds(bounds,16),[-16,-26,96,26]);assert.deepEqual(bounds,before);
+ assert.throws(()=>adoptedLogicalPreloadBounds(bounds,49),/margin/);
+});
+
+
+test('size exception prewarms only authored large trees outside adopted bounds within the same budget',()=>{
+ const policy={minimumHeight:24},large={...tree('large',150),sy:3},small=tree('small',100),inside=tree('inside',60),far={...tree('far',190),sy:3};
+ const trees=[large,small,inside,far],args=options({preloadBounds:[0,-10,80,10],preloadHeightPolicy:policy});
+ const rows=logicalNativeStandbyEntries(trees,args);
+ assert.deepEqual(rows.map(r=>r.id),['inside','large']);
+ assert.deepEqual(rows,logicalNativeStandbyEntries([...trees].reverse(),args));
+ for(const row of rows)assert.deepEqual(row,logicalNativeStandbyEntries(trees,options()).find(r=>r.id===row.id));
+ assert.deepEqual(logicalNativeStandbyEntries(trees,{...args,maxTrees:1}).map(r=>r.id),['inside']);
+ for(const excluded of ['physicalIds','suppressed'])assert.deepEqual(logicalNativeStandbyEntries(trees,{...args,[excluded]:new Set(['large'])}).map(r=>r.id),['inside']);
+ assert.deepEqual(logicalNativeStandbyEntries(trees,options({preloadBounds:[0,-10,80,10]})).map(r=>r.id),['inside']);
+});
+
+test('size exception rejects malformed authored dimensions and thresholds',()=>{
+ const args=options({preloadBounds:[0,-10,80,10]});
+ for(const minimumHeight of [0,-1,NaN,Infinity])assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,preloadHeightPolicy:{minimumHeight}}),/height policy/);
+ assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,metadata:{...metadata,impostorHeight:NaN},preloadHeightPolicy:{minimumHeight:24}}),/dimensions/);
+});
+
+
+test('size preload option requires authored size policy and enabled logical preparation before allocation',async()=>{
+ for(const extra of [{logicalSizePreload:1},{logicalSizePreload:true},{logicalSizePreload:true,logicalStandbyPreload:true},{logicalSizePreload:true,transitionHeight:{minimumHeight:24,start:200,end:240}}])await assert.rejects(attachNativeFarWorld({},extra),/logical size preload/);
+});

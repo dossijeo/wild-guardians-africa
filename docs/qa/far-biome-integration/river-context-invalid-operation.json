@@ -1,0 +1,1668 @@
+{
+  "report": {
+    "loaded": true,
+    "pathSelection": {
+      "slot": 0,
+      "slotId": 0,
+      "total": 682,
+      "eligible": 682,
+      "selected": "0:9:2",
+      "examples": [
+        {
+          "id": "0:7:2",
+          "distance": 20.441629888945005
+        },
+        {
+          "id": "0:4:4",
+          "distance": 35.26280107705839
+        },
+        {
+          "id": "0:6:5",
+          "distance": 40.80884805448362
+        }
+      ]
+    },
+    "groundIsolated": false,
+    "farClosed": false,
+    "closeReport": null,
+    "benchmark": null,
+    "motion": {
+      "allNear": {
+        "observations": 6836,
+        "readyObservations": 4279,
+        "drops": [
+          {
+            "id": "0:7:10",
+            "age": 0.34950000000000003,
+            "range": 38.14983375735606,
+            "from": 0.18289999663829803,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": true,
+                  "bounds": [
+                    [
+                      70.13021728376435,
+                      7.841462135314941,
+                      119.2970225167597
+                    ],
+                    [
+                      120.23108440480412,
+                      23.758556600892845,
+                      168.8899569812403
+                    ]
+                  ],
+                  "tree": [
+                    101.32761939416639,
+                    9.815188193706865,
+                    137.85544304944574
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "coverage": true,
+              "prepared": false,
+              "nativeRevision": 4,
+              "preparedRevision": 9,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:775ed60f-52c5-4322-b63e-c4cef129477e:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:775ed60f-52c5-4322-b63e-c4cef129477e:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": [
+                {
+                  "stamp": "true:1:true:200c4c3f-4837-4d3a-9639-d6081cfff831:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3:true:1",
+                  "accepted": false,
+                  "level": 0,
+                  "resourceSignature": "2:0|200c4c3f-4837-4d3a-9639-d6081cfff831:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+                  "levels": [
+                    {
+                      "count": 1,
+                      "visible": true,
+                      "matrixVersion": 1
+                    },
+                    {
+                      "count": 0,
+                      "visible": true,
+                      "matrixVersion": 2
+                    },
+                    {
+                      "count": 0,
+                      "visible": true,
+                      "matrixVersion": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "0:7:8",
+            "age": 1.6965999999999988,
+            "range": 39.35296935451351,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": true,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    100.45959224360995,
+                    9.202445519240628,
+                    113.00110706529581
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    false,
+                    true,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": true,
+              "prepared": false,
+              "nativeRevision": 9,
+              "preparedRevision": 19,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": [
+                {
+                  "stamp": "true:1:true:07d08f27-70e4-4eb9-97a2-cf8d0515c19b:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3:true:3",
+                  "accepted": false,
+                  "level": 1,
+                  "resourceSignature": "2:0|07d08f27-70e4-4eb9-97a2-cf8d0515c19b:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+                  "levels": [
+                    {
+                      "count": 1,
+                      "visible": true,
+                      "matrixVersion": 1
+                    },
+                    {
+                      "count": 1,
+                      "visible": true,
+                      "matrixVersion": 3
+                    },
+                    {
+                      "count": 0,
+                      "visible": true,
+                      "matrixVersion": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "0:8:7",
+            "age": 1.6965999999999988,
+            "range": 38.6254577559709,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": true,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    119.04771270814352,
+                    12.104192392790058,
+                    102.77890988077037
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": true,
+              "prepared": false,
+              "nativeRevision": 9,
+              "preparedRevision": 19,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": [
+                {
+                  "stamp": "true:1:true:905aea20-a505-4920-b5ca-cdb5d1437fc6:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3:true:1",
+                  "accepted": false,
+                  "level": 0,
+                  "resourceSignature": "2:0|905aea20-a505-4920-b5ca-cdb5d1437fc6:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+                  "levels": [
+                    {
+                      "count": 1,
+                      "visible": true,
+                      "matrixVersion": 1
+                    },
+                    {
+                      "count": 1,
+                      "visible": true,
+                      "matrixVersion": 3
+                    },
+                    {
+                      "count": 0,
+                      "visible": true,
+                      "matrixVersion": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "0:7:10",
+            "age": 2.494999999999997,
+            "range": 30.38975850169475,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.13021728376435,
+                      7.841462135314941,
+                      119.2970225167597
+                    ],
+                    [
+                      120.23108440480412,
+                      23.758556600892845,
+                      168.8899569812403
+                    ]
+                  ],
+                  "tree": [
+                    101.32761939416639,
+                    9.815188193706865,
+                    137.85544304944574
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 15,
+              "preparedRevision": 31,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:fcbef55b-9e3e-47f1-bec0-5e16b9b3c5f4:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e4c67714-2bf7-46ab-b95d-590c83acddb9:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:fcbef55b-9e3e-47f1-bec0-5e16b9b3c5f4:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:7:11",
+            "age": 2.494999999999997,
+            "range": 36.68092925951591,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.13021728376435,
+                      7.841462135314941,
+                      119.2970225167597
+                    ],
+                    [
+                      120.23108440480412,
+                      23.758556600892845,
+                      168.8899569812403
+                    ]
+                  ],
+                  "tree": [
+                    103.71725989295169,
+                    8.704205184630867,
+                    153.625764948288
+                  ],
+                  "slot": 1,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 10,
+              "preparedRevision": 20,
+              "renderSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:8454592a-33be-4c60-815a-f7b2f8acc970:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "proofSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:8454592a-33be-4c60-815a-f7b2f8acc970:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:7:9",
+            "age": 2.494999999999997,
+            "range": 28.39684680079551,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.13021728376435,
+                      7.841462135314941,
+                      119.2970225167597
+                    ],
+                    [
+                      120.23108440480412,
+                      23.758556600892845,
+                      168.8899569812403
+                    ]
+                  ],
+                  "tree": [
+                    100.51102583759463,
+                    8.796466590050878,
+                    127.93025880354458
+                  ],
+                  "slot": 2,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 7,
+              "preparedRevision": 20,
+              "renderSignature": "2:0|2:1:cd61b3bc-0c3c-4041-96fe-b19b884af420:f84ff8e3-2778-46c3-90c2-16eb09b77f1b:3",
+              "proofSignature": "2:0|2:0:8abc2afc-2898-4e10-849b-43eb8f448403:f84ff8e3-2778-46c3-90c2-16eb09b77f1b:3|2:1:cd61b3bc-0c3c-4041-96fe-b19b884af420:f84ff8e3-2778-46c3-90c2-16eb09b77f1b:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:8:9",
+            "age": 2.494999999999997,
+            "range": 15.417508292086447,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.13021728376435,
+                      7.841462135314941,
+                      119.2970225167597
+                    ],
+                    [
+                      120.23108440480412,
+                      23.758556600892845,
+                      168.8899569812403
+                    ]
+                  ],
+                  "tree": [
+                    114.95321079804563,
+                    11.724727325147256,
+                    132.95295813454314
+                  ],
+                  "slot": 3,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    2,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 9,
+              "preparedRevision": 20,
+              "renderSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "proofSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:9:11",
+            "age": 2.661199999999998,
+            "range": 26.781593404300473,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      8.847734451293945,
+                      118.24077862389406
+                    ],
+                    [
+                      170.37435289637853,
+                      21.078669610615187,
+                      170.11657761492253
+                    ]
+                  ],
+                  "tree": [
+                    131.4075425180141,
+                    10.960403743041677,
+                    150.69446586591192
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 17,
+              "preparedRevision": 33,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:2c9c3416-54e9-4205-82b2-1dc6fdafebad:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:fcbef55b-9e3e-47f1-bec0-5e16b9b3c5f4:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:0ada8eb5-c8b9-49c7-962c-211b04d3759c:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:fcbef55b-9e3e-47f1-bec0-5e16b9b3c5f4:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:10:11",
+            "age": 2.661199999999998,
+            "range": 35.546234352911156,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      8.847734451293945,
+                      118.24077862389406
+                    ],
+                    [
+                      170.37435289637853,
+                      21.078669610615187,
+                      170.11657761492253
+                    ]
+                  ],
+                  "tree": [
+                    143.16927427824587,
+                    11.4494709667596,
+                    156.84111387575047
+                  ],
+                  "slot": 1,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 11,
+              "preparedRevision": 22,
+              "renderSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:8454592a-33be-4c60-815a-f7b2f8acc970:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "proofSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:8454592a-33be-4c60-815a-f7b2f8acc970:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:11:10",
+            "age": 2.661199999999998,
+            "range": 32.389853454958335,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      8.847734451293945,
+                      118.24077862389406
+                    ],
+                    [
+                      170.37435289637853,
+                      21.078669610615187,
+                      170.11657761492253
+                    ]
+                  ],
+                  "tree": [
+                    156.3734496237617,
+                    11.844374023495364,
+                    142.08950569169596
+                  ],
+                  "slot": 3,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 10,
+              "preparedRevision": 21,
+              "renderSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "proofSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:9:10",
+            "age": 2.661199999999998,
+            "range": 14.16135146557961,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,3",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      8.847734451293945,
+                      118.24077862389406
+                    ],
+                    [
+                      170.37435289637853,
+                      21.078669610615187,
+                      170.11657761492253
+                    ]
+                  ],
+                  "tree": [
+                    123.70358707699927,
+                    12.488941274556094,
+                    137.2034726268053
+                  ],
+                  "slot": 3,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 10,
+              "preparedRevision": 21,
+              "renderSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "proofSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:56c1598a-5bf3-4524-94d7-2ec791457989:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:8:7",
+            "age": 6.070900000000005,
+            "range": 27.735949188565364,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    119.04771270814352,
+                    12.104192392790058,
+                    102.77890988077037
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 32,
+              "preparedRevision": 63,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:e72d9e7e-cbe4-49d3-bc6f-4049aee4f51b:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:8b919ef3-522c-4c15-adba-a16310f6ca27:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:7:7",
+            "age": 6.070900000000005,
+            "range": 37.868042121768745,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    103.96090781701727,
+                    10.525247446355214,
+                    105.63135404460131
+                  ],
+                  "slot": 1,
+                  "orders": [
+                    false,
+                    true,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    2,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 23,
+              "preparedRevision": 47,
+              "renderSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "proofSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:8:6",
+            "age": 6.070900000000005,
+            "range": 14.989328230233182,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    117.87640187219718,
+                    13.184846841737542,
+                    86.37174733992666
+                  ],
+                  "slot": 1,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    2,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 23,
+              "preparedRevision": 47,
+              "renderSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "proofSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:8:8",
+            "age": 6.070900000000005,
+            "range": 35.27409695110298,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "2,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      70.65240870031084,
+                      8.345840454101562,
+                      70.79541748203317
+                    ],
+                    [
+                      123.97367770303826,
+                      20.692707788133987,
+                      120.16741677056498
+                    ]
+                  ],
+                  "tree": [
+                    118.82418495708147,
+                    11.756983501754155,
+                    110.12699990716764
+                  ],
+                  "slot": 1,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    2,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 23,
+              "preparedRevision": 47,
+              "renderSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "proofSignature": "2:0|1:0:27a25b0e-45e4-4ca2-a2ca-fa47539fcb02:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:1:ad573c2c-db54-4d26-b1ff-36f3346dea3a:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3|1:2:ef704226-31b5-4e27-aefa-f679a58af8ac:912c6a6f-7fe7-4222-a90d-42aa63c97bc7:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:11:6",
+            "age": 6.370100000000007,
+            "range": 33.48944397112162,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      10.894193649291992,
+                      68.46032344576457
+                    ],
+                    [
+                      168.7648759469587,
+                      21.62769447341944,
+                      121.7242338919559
+                    ]
+                  ],
+                  "tree": [
+                    158.7269176784344,
+                    12.74045225149612,
+                    89.54492122381924
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 34,
+              "preparedRevision": 68,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:1eef2882-0024-42f1-8c3f-7cfddc564a0f:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:41e54462-3ab4-43f2-bee8-dbae3b728fda:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:11:7",
+            "age": 6.370100000000007,
+            "range": 38.81460471321479,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      10.894193649291992,
+                      68.46032344576457
+                    ],
+                    [
+                      168.7648759469587,
+                      21.62769447341944,
+                      121.7242338919559
+                    ]
+                  ],
+                  "tree": [
+                    155.6478081530705,
+                    11.87920988059381,
+                    102.64681034079753
+                  ],
+                  "slot": 0,
+                  "orders": [
+                    false,
+                    true,
+                    false
+                  ],
+                  "counts": [
+                    1,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 34,
+              "preparedRevision": 68,
+              "renderSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:1eef2882-0024-42f1-8c3f-7cfddc564a0f:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "proofSignature": "2:0|0:0:d100dbdd-1bec-4d88-803e-2b34f736f1bc:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:1:41e54462-3ab4-43f2-bee8-dbae3b728fda:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3|0:2:77b351bf-3ef7-4e90-9325-c49578acfda5:2ac19a50-16f4-4340-9f81-b0dd0cde8c98:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:11:5",
+            "age": 6.370100000000007,
+            "range": 29.027037594028627,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      10.894193649291992,
+                      68.46032344576457
+                    ],
+                    [
+                      168.7648759469587,
+                      21.62769447341944,
+                      121.7242338919559
+                    ]
+                  ],
+                  "tree": [
+                    157.87451261272656,
+                    12.636837423524161,
+                    73.3793425385747
+                  ],
+                  "slot": 3,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 21,
+              "preparedRevision": 39,
+              "renderSignature": "2:0|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:667ad32a-b88c-436d-aa2c-09f069447c25:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "proofSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:667ad32a-b88c-436d-aa2c-09f069447c25:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "batches": []
+            }
+          },
+          {
+            "id": "0:9:5",
+            "age": 6.370100000000007,
+            "range": 3.7721908360709495,
+            "from": 1,
+            "to": 0,
+            "diagnosis": {
+              "physical": [
+                {
+                  "chunk": "3,2",
+                  "groupVisible": true,
+                  "propsVisible": true,
+                  "treesVisible": true,
+                  "treeSlots": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "frustum": false,
+                  "bounds": [
+                    [
+                      120,
+                      10.894193649291992,
+                      68.46032344576457
+                    ],
+                    [
+                      168.7648759469587,
+                      21.62769447341944,
+                      121.7242338919559
+                    ]
+                  ],
+                  "tree": [
+                    133.08234911195933,
+                    12.306677711605783,
+                    72.35361416207625
+                  ],
+                  "slot": 3,
+                  "orders": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "counts": [
+                    2,
+                    1,
+                    0
+                  ]
+                }
+              ],
+              "coverage": false,
+              "prepared": false,
+              "nativeRevision": 21,
+              "preparedRevision": 39,
+              "renderSignature": "2:0|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:667ad32a-b88c-436d-aa2c-09f069447c25:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "proofSignature": "2:0|3:0:f81e5bde-d968-4ce3-af85-cd88a3fcd335:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:1:58f07ea3-1dc2-485a-a72e-77e394d93d7a:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3|3:2:667ad32a-b88c-436d-aa2c-09f069447c25:31ba1f1b-440e-4ce9-9f74-65a5b269521e:3",
+              "batches": []
+            }
+          }
+        ],
+        "omissions": []
+      },
+      "mode": "approach",
+      "slot": 0,
+      "age": 20,
+      "hold": 0,
+      "done": true,
+      "tree": "0:9:2",
+      "treePosition": [
+        129.10698353662778,
+        30.506834056264633
+      ],
+      "minimumDistance": 25.001234669880024,
+      "nearFrames": 188,
+      "nearReadyFrames": 188,
+      "nearSeconds": 6.570300000000019,
+      "nearReadySeconds": 6.570300000000019,
+      "nearReadinessDrops": 0,
+      "transitionFrames": 296,
+      "transitionReadyFrames": 296,
+      "transitionReadinessDrops": [],
+      "firstReadyAt": 2.8608,
+      "initial": [
+        {
+          "regions": 1,
+          "nativePreparations": 2,
+          "stalePreparations": 0,
+          "preparationAttempts": 2,
+          "fencedPreparations": 2,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 4,
+          "textureUploads": 6,
+          "errors": [],
+          "coverage": 12,
+          "prepared": 12,
+          "standby": {
+            "preparations": 2,
+            "rendered": 0,
+            "trees": 12,
+            "estimatedOwnedGpuBytes": 1704444,
+            "errors": []
+          }
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 2,
+          "stalePreparations": 0,
+          "preparationAttempts": 2,
+          "fencedPreparations": 2,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 2,
+          "cachedTextures": 6,
+          "textureUploads": 4,
+          "errors": [],
+          "coverage": 12,
+          "prepared": 12,
+          "standby": {
+            "preparations": 2,
+            "rendered": 0,
+            "trees": 12,
+            "estimatedOwnedGpuBytes": 1795392,
+            "errors": []
+          }
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 2,
+          "stalePreparations": 1,
+          "preparationAttempts": 3,
+          "fencedPreparations": 2,
+          "rejectedPacking": 0,
+          "signatureChanges": 3,
+          "packingChanges": 2,
+          "cachedTextures": 6,
+          "textureUploads": 4,
+          "errors": [],
+          "coverage": 2,
+          "prepared": 2,
+          "standby": {
+            "preparations": 2,
+            "rendered": 0,
+            "trees": 2,
+            "estimatedOwnedGpuBytes": 2173920,
+            "errors": []
+          }
+        },
+        {
+          "regions": 1,
+          "nativePreparations": 2,
+          "stalePreparations": 0,
+          "preparationAttempts": 2,
+          "fencedPreparations": 2,
+          "rejectedPacking": 0,
+          "signatureChanges": 2,
+          "packingChanges": 1,
+          "cachedTextures": 6,
+          "textureUploads": 4,
+          "errors": [],
+          "coverage": 6,
+          "prepared": 6,
+          "standby": {
+            "preparations": 2,
+            "rendered": 0,
+            "trees": 6,
+            "estimatedOwnedGpuBytes": 2399916,
+            "errors": []
+          }
+        }
+      ],
+      "final": [
+        {
+          "regions": 3,
+          "nativePreparations": 49,
+          "stalePreparations": 7,
+          "preparationAttempts": 57,
+          "fencedPreparations": 49,
+          "rejectedPacking": 0,
+          "signatureChanges": 26,
+          "packingChanges": 73,
+          "cachedTextures": 239,
+          "textureUploads": 6,
+          "errors": [
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502"
+          ],
+          "coverage": 17,
+          "prepared": 9,
+          "standby": {
+            "preparations": 21,
+            "rendered": 0,
+            "trees": 13,
+            "estimatedOwnedGpuBytes": 1710972,
+            "errors": [
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502"
+            ]
+          }
+        },
+        {
+          "regions": 3,
+          "nativePreparations": 32,
+          "stalePreparations": 3,
+          "preparationAttempts": 38,
+          "fencedPreparations": 33,
+          "rejectedPacking": 1,
+          "signatureChanges": 15,
+          "packingChanges": 49,
+          "cachedTextures": 161,
+          "textureUploads": 4,
+          "errors": [
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502"
+          ],
+          "coverage": 18,
+          "prepared": 6,
+          "standby": {
+            "preparations": 17,
+            "rendered": 1,
+            "trees": 10,
+            "estimatedOwnedGpuBytes": 1801920,
+            "errors": [
+              "Error: Native GPU preparation error 0x502",
+              "Error: Native GPU preparation error 0x502"
+            ]
+          }
+        },
+        {
+          "regions": 2,
+          "nativePreparations": 16,
+          "stalePreparations": 2,
+          "preparationAttempts": 19,
+          "fencedPreparations": 16,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "cachedTextures": 76,
+          "textureUploads": 4,
+          "errors": [
+            "Error: Native GPU preparation error 0x502"
+          ],
+          "coverage": 3,
+          "prepared": 1,
+          "standby": {
+            "preparations": 7,
+            "rendered": 0,
+            "trees": 1,
+            "estimatedOwnedGpuBytes": 2173920,
+            "errors": []
+          }
+        },
+        {
+          "regions": 3,
+          "nativePreparations": 32,
+          "stalePreparations": 1,
+          "preparationAttempts": 34,
+          "fencedPreparations": 32,
+          "rejectedPacking": 0,
+          "signatureChanges": 8,
+          "packingChanges": 44,
+          "cachedTextures": 156,
+          "textureUploads": 4,
+          "errors": [],
+          "coverage": 18,
+          "prepared": 6,
+          "standby": {
+            "preparations": 12,
+            "rendered": 5,
+            "trees": 11,
+            "estimatedOwnedGpuBytes": 2403180,
+            "errors": []
+          }
+        }
+      ],
+      "unchanged": true,
+      "ready": {
+        "ready": 0,
+        "enabled": true
+      }
+    },
+    "biome": "gran-rio",
+    "quality": "media",
+    "culture": "mapungubwe",
+    "enabled": true,
+    "camera": [
+      129.10698353662778,
+      24.477605160609514,
+      170.50683405626464
+    ],
+    "chunks": 25,
+    "night": 0,
+    "render": {
+      "calls": 60,
+      "triangles": 775780
+    },
+    "gpuMemory": {
+      "geometries": 94,
+      "textures": 30
+    },
+    "reportedJSHeapOnly": {
+      "used": 294554169,
+      "total": 377359345,
+      "limit": 4395630592
+    },
+    "programs": 15,
+    "resources": {
+      "species": 4,
+      "estimatedAtlasTextureBytes": 44739242.666666664,
+      "estimatedBackdropTextureBytes": 5592405.333333333,
+      "errors": []
+    },
+    "residentRange": null,
+    "visualRange": 1,
+    "atmosphere": {
+      "near": 30,
+      "far": 300
+    },
+    "transitionRadius": 68,
+    "visibleChunks": 25,
+    "propChunks": 9,
+    "treePropChunks": 14,
+    "pickMeshes": 25,
+    "logicalBounds": [
+      24,
+      72,
+      264,
+      312
+    ],
+    "visibleBounds": [
+      24,
+      72,
+      264,
+      312
+    ],
+    "removed": null,
+    "suppressionReport": null,
+    "layers": [
+      {
+        "slot": 0,
+        "key": "96:192",
+        "trees": 702,
+        "ready": 17,
+        "preparations": 50,
+        "coverage": 17,
+        "prepared": 17,
+        "stale": 8,
+        "attempts": 58,
+        "fenced": 50,
+        "rejectedPacking": 0,
+        "signatureChanges": 27,
+        "packingChanges": 73,
+        "textureUploads": 6,
+        "cachedTextures": 244,
+        "standby": {
+          "preparations": 22,
+          "rendered": 0,
+          "trees": 19,
+          "estimatedOwnedGpuBytes": 1710972,
+          "errors": [
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502"
+          ]
+        },
+        "errors": [
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502"
+        ]
+      },
+      {
+        "slot": 1,
+        "key": "96:192",
+        "trees": 432,
+        "ready": 18,
+        "preparations": 33,
+        "coverage": 18,
+        "prepared": 18,
+        "stale": 3,
+        "attempts": 38,
+        "fenced": 34,
+        "rejectedPacking": 1,
+        "signatureChanges": 15,
+        "packingChanges": 49,
+        "textureUploads": 4,
+        "cachedTextures": 166,
+        "standby": {
+          "preparations": 19,
+          "rendered": 0,
+          "trees": 17,
+          "estimatedOwnedGpuBytes": 1801920,
+          "errors": [
+            "Error: Native GPU preparation error 0x502",
+            "Error: Native GPU preparation error 0x502"
+          ]
+        },
+        "errors": [
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502",
+          "Error: Native GPU preparation error 0x502"
+        ]
+      },
+      {
+        "slot": 2,
+        "key": "96:192",
+        "trees": 137,
+        "ready": 3,
+        "preparations": 18,
+        "coverage": 3,
+        "prepared": 3,
+        "stale": 2,
+        "attempts": 20,
+        "fenced": 18,
+        "rejectedPacking": 0,
+        "signatureChanges": 18,
+        "packingChanges": 23,
+        "textureUploads": 4,
+        "cachedTextures": 86,
+        "standby": {
+          "preparations": 9,
+          "rendered": 0,
+          "trees": 3,
+          "estimatedOwnedGpuBytes": 2173920,
+          "errors": []
+        },
+        "errors": [
+          "Error: Native GPU preparation error 0x502"
+        ]
+      },
+      {
+        "slot": 3,
+        "key": "96:192",
+        "trees": 381,
+        "ready": 18,
+        "preparations": 33,
+        "coverage": 18,
+        "prepared": 18,
+        "stale": 2,
+        "attempts": 35,
+        "fenced": 33,
+        "rejectedPacking": 0,
+        "signatureChanges": 9,
+        "packingChanges": 44,
+        "textureUploads": 4,
+        "cachedTextures": 161,
+        "standby": {
+          "preparations": 14,
+          "rendered": 0,
+          "trees": 17,
+          "estimatedOwnedGpuBytes": 2406444,
+          "errors": []
+        },
+        "errors": []
+      }
+    ],
+    "errors": [],
+    "webglError": 0
+  },
+  "context": {
+    "available": true,
+    "lost": false,
+    "events": [
+      {
+        "kind": "lost",
+        "time": 15191.299999952316
+      },
+      {
+        "kind": "restored",
+        "time": 18454
+      }
+    ],
+    "unchanged": true
+  },
+  "console": [],
+  "accepted": false
+}

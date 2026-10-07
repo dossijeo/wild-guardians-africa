@@ -1,0 +1,127 @@
+{
+  "source": "116f2f3d",
+  "backgroundCpuCampaigns": [
+    40968,
+    41304,
+    49032
+  ],
+  "routes": {
+    "night-orbit": {
+      "done": true,
+      "nearReadinessDrops": 0,
+      "transitionReadinessDrops": [],
+      "minimumDistance": 219.99999999999986,
+      "unchanged": true,
+      "allNear": {
+        "observations": 96144,
+        "readyObservations": 21080,
+        "descents": 487,
+        "offscreenBoundsDescents": 487,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 21760,
+        "readyObservations": 14501,
+        "descents": 49,
+        "offscreenBoundsDescents": 49,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      }
+    },
+    "day-lateral": {
+      "done": true,
+      "nearReadinessDrops": 0,
+      "transitionReadinessDrops": [],
+      "minimumDistance": 220,
+      "unchanged": true,
+      "allNear": {
+        "observations": 128113,
+        "readyObservations": 15544,
+        "descents": 77,
+        "offscreenBoundsDescents": 77,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 35299,
+        "readyObservations": 24284,
+        "descents": 12,
+        "offscreenBoundsDescents": 12,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      }
+    },
+    "day-approach": {
+      "done": true,
+      "nearReadinessDrops": 0,
+      "transitionReadinessDrops": [],
+      "minimumDistance": 25.00574111008258,
+      "unchanged": true,
+      "allNear": {
+        "observations": 94740,
+        "readyObservations": 47613,
+        "descents": 62,
+        "offscreenBoundsDescents": 62,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "selectedSpeciesNear": {
+        "observations": 25416,
+        "readyObservations": 21981,
+        "descents": 8,
+        "offscreenBoundsDescents": 8,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      }
+    }
+  },
+  "initialGpuDrawProof": {
+    "errors": [],
+    "instances": 12,
+    "matrixExact": 12,
+    "visibilityExact": 12,
+    "identityExact": 12,
+    "passed": true,
+    "webglError": 0
+  },
+  "abba": {
+    "gpuMedians": [
+      6.3215875,
+      8.9421865,
+      8.580104,
+      4.4755199999999995
+    ],
+    "samples": 480,
+    "disjoint": 0,
+    "unchanged": true,
+    "geometry": [
+      [
+        53762,
+        14
+      ],
+      [
+        89737,
+        19
+      ],
+      [
+        89737,
+        19
+      ],
+      [
+        53762,
+        14
+      ]
+    ],
+    "accepted": false
+  },
+  "finalApproachGpuDrawProof": {
+    "errors": [],
+    "instances": 3,
+    "matrixExact": 3,
+    "visibilityExact": 3,
+    "identityExact": 3,
+    "passed": true,
+    "webglError": 0
+  }
+}

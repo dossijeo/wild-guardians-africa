@@ -297,6 +297,11 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 [Tuplas temporales de cultivos reutilizadas](qa/crop-instance-scratch/README.md): 32 pruebas y build correctos; cinco casos CPU aislados con buffers idénticos. Maduras: mediana aproximada 0,55 a 0,26 ms para 1.200 plantas, sin mejora amplia de FPS acreditada. Pendientes GC/RAM y coste integrado/móvil.
 
 
+### Integración optativa de impostores en seis biomas
+
+La rama de integración añade 22 especies con 44 atlas offline de día/noche y sol fijo, selección determinista lejana, bruma, suelo regional lavado y backdrop 2D por bioma. `WorldScene.load(..., {farVegetation: options})` permite probarlo; su valor por defecto continúa siendo `false`. El experimento `compact=trees` acorta props nativos y conserva terreno exacto, picking y límites lógicos de incursión. [Evidencia, variantes y límites](qa/far-biome-integration/README.md).
+
+No dar por aprobada la activación: la deriva ABBA no acredita un ahorro GPU sólido; el fondo bajo de Sabana y la simplificación visible de árboles próximos necesitan otra ronda visual. Falta validar movimiento lento, transiciones/chunks tardíos, shoreline distante, móvil/memoria real y otras culturas. La integración optativa no equivale a cerrar esos criterios.
 [Usos de imágenes distribuidas completos](qa/image-display-classification/README.md): 225 entradas, cero desconocidas y cero errores. Preflight actual: 95 candidatas de color, 45 de revisión y 22 variantes integradas; SVG y prueba de soporte WebP preservados. No son nuevas conversiones ni ahorro; pendientes API/aceptación, perfiles y mapas embebidos.
 
 

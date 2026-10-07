@@ -1,0 +1,29 @@
+# Large far tree density counterexample and candidate
+
+The elevated matrix previously associated the stippled Sabana baobab with a model/impostor transition or differing LOD silhouette. The exact native A/B and expanded projection probe contradict that attribution for this identified object. Native A has no corresponding packed model in this view. Preserve the original observation, but do not interpret it as proof of a handoff failure.
+
+Same camera, seed712, Sabana/media, Mapungubwe,40–60m transition,30–300m atmosphere: slot2 ID0:-4:2 has horizontal distance168.45803419943124m, height39.513796470142886m and projected center[453.20349184568795,135.6739567008661]. Its native coverage is empty, sprite mix1, distance fade1; the density fade alone was0.6262022251037308. The original rank was0.5017783069051802. The partial far density dissolve is therefore the concrete cause of this object’s Bayer coverage.
+
+Candidate19424f6 weights the existing deterministic rank once by authored/procedural world height. Reference height16m and maximum boost4 are configurable experimental parameters. Small trees retain their rank; larger silhouettes receive higher survival priority. No new attribute, uniform, texture read, shader branch or per-frame rank update is added. Positions, IDs, species, scales, rotation and all faithful-range objects are unchanged. The distant population remains sparse, not uniformly preserved.
+
+At the identical camera the large tree’s packed rank becomes0.20318099856376648 and coverage1 in both day/night native views. The large tree no longer has the previous density stippling. This is acceptance of that isolated counterexample, not universal acceptance of all density/final-distance transitions or LOD matching. The original sourceLOD2 atlases have not been changed.
+
+Seventeen directed mathematical, static-upload, native-only, readiness and layer ownership tests pass. Static tests cover10,000 deterministic ranks and convergence on approach; priority still thins most large trees at maximum density distance. Extra pixel coverage may increase GPU fragment work, so previous ABBA timing does not validate this candidate’s cost. Native motion and current combined GPU comparison remain pending. Experiment remains OFF in normal gameplay.
+
+Files candidate-night/native-night retain the initial exact A/B. diagnosed-night contains the full expanded visible-object probe. importance-day/night are candidate screenshots/reports. Browser CSS1280×720; no timing benchmark during these captures. Parent’s muted HTMLAudio playback test was running without WebGL.
+
+Native20s baobab-slot orbit on19424f6 completes with unchanged state,238/247 near frames prepared and zero target/transition descents. The broader audit records3,917 observations/3,094 prepared and ten other-tree readiness descents; every stored physical diagnostic reports frustum=false, no omissions. Thus these counters do not establish on-screen gaps, but are preserved rather than removed from the audit. errors/WebGL0. The selected orbit tree differs from the168m baobab density counterexample; this traversal validates nearby handoff under the changed static packing, not that object’s distant thinning.
+
+## Broader counterexample: small acacia, camera-aligned diagnosis
+
+The eight density-motion captures are a moving-camera observation series, not exact report/pixel alignment. Captures6/7 have only transient chunk-loading reports and are not valid full diagnostics. An offline procedural projection narrowed the candidate to acacia irregular0:-3:5, but the first report showed coverage1 while the screenshot showed stippling; movement between reads made that attribution incomplete.
+
+The QA fixture now supports pause-at=13.2 and an explicit pause/resume control. With the camera held at[-43.49710893312456,17.708301721455364,191.85039633264967], exact probe+PNG identify0:-3:5 at120.008913m,8.816716m tall, projected center[695.866,96.231], sprite mix1, density coverage0.6903984 and native color0. Its rank0.9124893 is unaffected by size weighting. This confirms size weighting alone does not conceal early density removal of other objects.
+
+7026224 tested an extra density-dependent atmosphere factor in the existing fog mix (no new texture read or varying, but extra arithmetic). density-fog-day-13p2 is the exact A/B: the object becomes gray, but stippling remains conspicuous against less fogged soil. The candidate is REJECTED and reverted byc3b6034. These files must not be presented as visual approval or current shader behavior.
+
+The subsequent d7fa2c6 candidate keeps the faithful intermediate distribution until180m, reduces density180–280m and removes selected far silhouettes280–330m. The60m model threshold remains unchanged. No extra shader arithmetic is retained. Distances are configurable. Thirteen focused ownership/static-density tests pass; exact paused day/night comparison now passes the identified120m density case; combined GPU cost remains pending. Wider faithful coverage can increase fragment work.
+
+Frozen cea4305 build/package/web-assets/audio validators pass:694files/403444981bytes/859relative links/20runtimeGLBs. The full suite completed2804/2804 exit0 on its immutable archive; see ../far-final-cea4305. It predates the new thinning distances; later QA controls are also outside that snapshot.
+
+faithful-day/night-13p2 preserve exact native views after the180m faithful middle range. ID0:-3:5 density0.6903984→1 with unchanged transform; screenshot no longer has that object’s partial density dissolve. The nearby slot0 ID0:-2:10 at56.861m remains a separate nativeLOD1-to-LOD2 billboard mismatch; ../far-lod1-matching records an isolated LOD1 atlas comparison that improves canopy shape but does not fully resolve edge stippling. No full visual acceptance or current-cost claim.

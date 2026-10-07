@@ -1,0 +1,170 @@
+{
+  "orbit": {
+    "done": true,
+    "age": 20,
+    "nearFrames": 0,
+    "nearReadyFrames": 0,
+    "transitionFrames": 1126,
+    "transitionReadyFrames": 1126,
+    "transitionReadinessDropCount": null,
+    "unchanged": false,
+    "allNear": {
+      "descents": 325,
+      "offscreenBoundsDescents": 325,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "lateral": {
+    "done": true,
+    "age": 20,
+    "nearFrames": 0,
+    "nearReadyFrames": 0,
+    "transitionFrames": 280,
+    "transitionReadyFrames": 280,
+    "transitionReadinessDropCount": null,
+    "unchanged": false,
+    "allNear": {
+      "descents": 40,
+      "offscreenBoundsDescents": 40,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "approach": {
+    "done": true,
+    "age": 20,
+    "nearFrames": 815,
+    "nearReadyFrames": 815,
+    "transitionFrames": 856,
+    "transitionReadyFrames": 856,
+    "transitionReadinessDropCount": null,
+    "unchanged": true,
+    "allNear": {
+      "descents": 72,
+      "offscreenBoundsDescents": 72,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "restored": {
+    "upload": {
+      "draws": [
+        {
+          "slot": 2,
+          "level": 2,
+          "count": 1,
+          "matrixVersion": 151,
+          "visibilityVersion": 528,
+          "shader": {
+            "materialType": "MeshStandardMaterial",
+            "materialName": "",
+            "materialUuid": "35e2a7a6-e8fa-4ddb-bfa7-4aef4ff5a989",
+            "uniforms": {
+              "uFineNoise": {
+                "active": true,
+                "value": 1
+              },
+              "uNight": {
+                "active": true,
+                "value": 0
+              },
+              "uNativeEnvEnabled": {
+                "active": true,
+                "value": 1
+              },
+              "uEnvEndpoints": {
+                "active": true,
+                "value": 1
+              }
+            }
+          },
+          "rows": [
+            {
+              "id": "0:-4:2",
+              "key": "0:-4:2:-42.62158479396254:3.472340721914784:31.403806197512893:3.873617188595668:4.0206996315808174:3.583743128367651:3.600332406947853",
+              "level": 2,
+              "drawIndex": 0,
+              "preparedIndex": 2,
+              "matrixExact": true,
+              "visibilityExact": true,
+              "identityExact": true,
+              "gpu": [
+                -2.990687847137451,
+                0,
+                2.687342643737793,
+                0,
+                0,
+                3.583743095397949,
+                0,
+                0,
+                -2.406378984451294,
+                0,
+                -2.678009271621704,
+                0,
+                53.378414154052734,
+                3.4723408222198486,
+                -160.59619140625,
+                1
+              ],
+              "expected": [
+                -2.990687847137451,
+                0,
+                2.687342643737793,
+                0,
+                0,
+                3.583743095397949,
+                0,
+                0,
+                -2.406378984451294,
+                0,
+                -2.678009271621704,
+                0,
+                53.378414154052734,
+                3.4723408222198486,
+                -160.59619140625,
+                1
+              ],
+              "gpuVisibility": 1
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "instances": 1,
+      "matrixExact": 1,
+      "visibilityExact": 1,
+      "identityExact": 1,
+      "passed": true,
+      "webglError": 0
+    },
+    "errors": [],
+    "webglError": 0,
+    "glResourceEpoch": {
+      "epoch": 1,
+      "created": 24006,
+      "staleDeletes": 7,
+      "currentDeletes": 22222,
+      "unknownDeletes": 0
+    }
+  },
+  "close": {
+    "before": {
+      "geometries": 100,
+      "textures": 36
+    },
+    "bankBytes": 7804152,
+    "after": {
+      "geometries": 83,
+      "textures": 25
+    },
+    "unchanged": true,
+    "ownerRemoved": true
+  }
+}

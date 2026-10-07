@@ -1,0 +1,9 @@
+# Native fixed-sun pilot — QA only
+
+The previous offline baker used DirectionalLight position[-30,55,25], while WorldScene updates it using normalized(-.82,.52,.31)*240 relative to the target. AfricanToon.update derives uLightDir from that offset. This is a concrete mismatch of lighting inputs. QA source6f7c0e0 adds native-sun=1; source3d7e2b7 loads the isolated atlas with atlas-sun=native only for Acacia paraguas in Sabana. The public runtime manifest and the other43phase atlases are unchanged.
+
+Both pilot atlases retain nativeLOD2, LOD0 framing, elevation8°, base, dimensions,1024²,8views×8world rotations. Native-sun direction matches the actual updateShadowCamera/AfricanToon inputs to <1e-12 in two regression tests. Visible RGBA channels of the PNG→losslessWebP conversions are exact. Invisible RGB(alpha0) is not asserted.
+
+Relative to existing public acacia atlases: alpha differs at zero pixels in both phases. Visible RGB mean absolute difference is15.7153(day) and8.1847(night) on279,536 nonzero-alpha pixels, maximum183/75. Pilot sizes502,708/427,316bytes. Texture dimensions/memory are unchanged. This comparison quantifies the different lighting input, not proximity to native shaded pixels.
+
+Source3d7e2b7 native world comparison repeats the exact paused5s orbital pose from far-orbit-band-review, camera[85.58664194084739,22.48969883679717,140.3412427423997], targetacacia0:-2:10 at105m, near90–120/Sabana/media/fog30–300. Day/night images and raw states archived. Render/GL errors0. The image still shows visible screen-door texture in the transition; fixing direction alone does not establish perceptual acceptance or explain the separate readiness drop. No shader, native light or nearLOD changes. Further transition investigation and full-biome rebake/validation remain pending.

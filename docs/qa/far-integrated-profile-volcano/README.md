@@ -1,0 +1,7 @@
+# Integrated profile — Volcanes
+
+Source `6d34850c`, media/Mapungubwe, public atlases. Twelve terminal 20-second routes cover four species: approach by day, orbit by night, lateral by day. Every route retains simulation snapshots, reports GL0/errors empty, zero selected readiness drops and zero global potentially visible/unknown descents. Offscreen descents and initial unprepared observations remain in full raw evidence. Counters are observations, not FPS.
+
+Day/night captures share the final camera pose. Native rock ground and lava are retained, with filled vegetation beyond near chunks. Dither is still visible on some medium trees; the backdrop is an obvious layered silhouette, especially at night. These remain visual iteration items under the user's accepted integration criterion, without claiming photographic matching or acceptance of other biomes.
+
+After terminal routes and captures, owner disposal cleared adapters but the new QA configuredNear field accessed adapters[0].layer. publishReport therefore threw and left a stale farClosed:false DOM report. Preserve this counterexample separately from the clean route export. QA fix `9105dcfd` uses a safe fallback; a fresh native closure check is required before accepting release. ANGLE environment4 warnings and post-close TypeErrors are preserved in separate logs. No timings or driver-memory measurements were made; normal application activation remains separate.

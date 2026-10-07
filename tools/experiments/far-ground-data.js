@@ -1,7 +1,7 @@
 // Height-only proxy for the isolated Sabana experiment. No native chunk buffers,
 // water, props or detail textures. Never generated in the gameplay frame loop.
 import {groundCellTriangles,groundTriangleWeights} from './far-ground-contacts.js';
-export function farGroundData(field,bounds,{step=4,color=[.59,.61,.38],colorAt=null,wash=.25}={}){
+export function farGroundData(field,bounds,{step=4,color=[.59,.61,.38],colorAt=null,heightAt=null,wash=.25}={}){
  if(!(step>0)||!Number.isFinite(step)||![bounds.minX,bounds.maxX,bounds.minZ,bounds.maxZ].every(Number.isFinite)||bounds.maxX<=bounds.minX||bounds.maxZ<=bounds.minZ)throw Error('Invalid far ground bounds/step');
  const nx=Math.ceil((bounds.maxX-bounds.minX)/step),nz=Math.ceil((bounds.maxZ-bounds.minZ)/step),count=(nx+1)*(nz+1);
  if(count>250000)throw Error('Far ground sample budget exceeded');
@@ -9,7 +9,7 @@ export function farGroundData(field,bounds,{step=4,color=[.59,.61,.38],colorAt=n
  for(let z=0;z<=nz;z++)for(let x=0;x<=nx;x++){
   const i=z*(nx+1)+x,px=bounds.minX+(bounds.maxX-bounds.minX)*x/nx,pz=bounds.minZ+(bounds.maxZ-bounds.minZ)*z/nz;
   const washed=(colorAt?colorAt(px,pz):color).map(value=>value*(1-wash)+.65*wash);
-  positions.set([px,field.surface(px,pz),pz],i*3);colors.set(washed,i*3);
+  positions.set([px,heightAt?heightAt(px,pz):field.surface(px,pz),pz],i*3);colors.set(washed,i*3);
  }
  for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){
   const i=(z*nx+x)*6,a=z*(nx+1)+x,b=a+1,d=a+nx+1,c=d+1;indices.set([a,d,b,b,d,c],i);

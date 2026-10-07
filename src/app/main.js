@@ -31,6 +31,9 @@ import {BrowserSaveRepository} from '../persistence/browser-saves.js';
 import {Navigation,BIOME_IDS} from '../world/navigation.js';
 import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/villages.js';
 import {WorldScene} from '../rendering/scene.js';
+import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
+import {prepareInitialFarWorld} from './far-world-loading.js';
+import {frameDelta} from './frame-delta.js';
 import {json} from '../rendering/assets.js';
 import {assetUrl} from '../rendering/asset-url.js';
 import {createFrameImageLoader} from '../ui/frame-image-loader.js';
@@ -134,8 +137,9 @@ async function startGame(loaded=null) {
     document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
     world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#loading-progress');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
-    await world.load(state,nav,payload);
+    await world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome})});
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
+    await world.loadReady(prepareInitialFarWorld(world));
     world.render(0);document.querySelector('#world-loading').remove();document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
   } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}
 }
@@ -400,7 +404,7 @@ function updateRaidLoading(){
   document.querySelector('#stage').append(raidLoading);
 }
 function frame(now) {
-  requestAnimationFrame(frame);const dt=lastFrame?Math.min(.1,(now-lastFrame)/1000):0;lastFrame=now;
+  requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
     try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}

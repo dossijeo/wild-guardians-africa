@@ -1,0 +1,9 @@
+# Species-specific distance pilot (not activated)
+
+The diagnostic large-tree-range=1 override extends only Sabana slot2 (baobab) to200-240m, with thinning starting270m. Other species retain120-160m and density180-280m. All atlases are the original eight-view/eight-yaw/elevation8 native fixed-sun LOD2 assets. This is still fixture-only and does not change normal-game settings or attachBiomeFarVegetation defaults.
+
+Six frozen day/night model/sprite/blended pairs hold exactly the same camera and target as the global200-240m pilot. Target0:-6:-4 remains220m away, ready1 with exact deterministic transforms and owned level2 banks. Blended target has mix0.5 and densityFade1. Console and reports are empty/GL0. The night blend was repeated on2dffed0 after correcting the diagnostic restore button to restore the selected species range.
+
+Compared with the global-distance pilot at this identical pose, the blended day submission drops from1,542,467 to1,307,336triangles;72draws in both. These are render counters, not GPU timing or FPS. Terrain/navigation bounds are identical; world transition radius remains168m instead of248m. Logical bank estimates are7,804,152 versus7,882,488bytes, excluding borrowed source buffers and atlases; this is not measured driver RAM.
+
+The baobab's smaller apparent size and existing atmospheric fade make its mismatch less conspicuous in this pose. No angular or moving-camera acceptance is inferred from frozen images. The global readiness audit remains present and retains its configured120m range. Subsequent extended-range paths add a separate selected-species200m audit and use the selected200-240m range for their targeted transition counters; they do not discard the original aggregate. Movement, inclined-camera acceptance, cost and remaining backdrop composition are still pending.

@@ -1,0 +1,692 @@
+{
+  "loaded": true,
+  "pathSelection": {
+    "slot": 0,
+    "slotId": 0,
+    "total": 478,
+    "eligible": 478,
+    "selected": "0:3:12",
+    "examples": [
+      {
+        "id": "0:2:14",
+        "distance": 31.75224781776701
+      },
+      {
+        "id": "0:6:17",
+        "distance": 40.57684948022863
+      },
+      {
+        "id": "0:5:13",
+        "distance": 41.41251266120637
+      }
+    ]
+  },
+  "groundIsolated": false,
+  "farClosed": false,
+  "closeReport": null,
+  "benchmark": null,
+  "motion": {
+    "allNear": {
+      "observations": 5981,
+      "readyObservations": 4656,
+      "drops": [
+        {
+          "id": "0:5:13",
+          "age": 6.356399999999984,
+          "range": 33.958272825062586,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "2,4",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    67.28338146663525,
+                    3.0253763340332918,
+                    165.55957400154557
+                  ],
+                  [
+                    122.23522662084429,
+                    13.67269361268168,
+                    220.06695529944767
+                  ]
+                ],
+                "tree": [
+                  72.18014285236539,
+                  3.3375802321936288,
+                  183.68369574045812
+                ],
+                "slot": 0,
+                "orders": [
+                  true,
+                  false,
+                  false
+                ],
+                "counts": [
+                  1,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 69,
+            "preparedRevision": 135,
+            "renderSignature": "0:1|0:1:25b454a4-9095-4030-b7d1-5899d600b9b1:5392dd66-0467-40da-bc26-90517253ffef:3|0:2:9d6864ee-e7a7-4bdd-a425-8260bacd148f:5392dd66-0467-40da-bc26-90517253ffef:3",
+            "proofSignature": "0:1|0:0:33c5587f-6e4b-478f-a118-f2310561396b:5392dd66-0467-40da-bc26-90517253ffef:3|0:1:25b454a4-9095-4030-b7d1-5899d600b9b1:5392dd66-0467-40da-bc26-90517253ffef:3|0:2:9d6864ee-e7a7-4bdd-a425-8260bacd148f:5392dd66-0467-40da-bc26-90517253ffef:3",
+            "batches": []
+          }
+        },
+        {
+          "id": "0:7:12",
+          "age": 6.356399999999984,
+          "range": 39.37692434306861,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "2,4",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    67.28338146663525,
+                    3.0253763340332918,
+                    165.55957400154557
+                  ],
+                  [
+                    122.23522662084429,
+                    13.67269361268168,
+                    220.06695529944767
+                  ]
+                ],
+                "tree": [
+                  96.45935000811967,
+                  3.315,
+                  181.90619172307075
+                ],
+                "slot": 3,
+                "orders": [
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  1,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 49,
+            "preparedRevision": 95,
+            "renderSignature": "0:1|3:0:6725f9ea-70c6-47dd-bbcf-cba6212ff9a2:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:2:65dc3274-7b4f-44c1-81da-7f97b91b3a99:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "proofSignature": "0:1|3:0:6725f9ea-70c6-47dd-bbcf-cba6212ff9a2:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:2:65dc3274-7b4f-44c1-81da-7f97b91b3a99:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "batches": []
+          }
+        },
+        {
+          "id": "0:6:9",
+          "age": 7.720700000000001,
+          "range": 16.020232910634988,
+          "from": 1,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "2,3",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    69.7712883937892,
+                    3.1315470492165627,
+                    117.11535187274708
+                  ],
+                  [
+                    122.95983566863907,
+                    13.299391531724684,
+                    170.87616410151756
+                  ]
+                ],
+                "tree": [
+                  79.49976046576624,
+                  3.315,
+                  134.08883718659095
+                ],
+                "slot": 2,
+                "orders": [
+                  true,
+                  false,
+                  false
+                ],
+                "counts": [
+                  1,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 62,
+            "preparedRevision": 136,
+            "renderSignature": "0:1|2:0:b9c77bea-84aa-45f6-b751-ac6adbbc33b7:a2d79a22-47c6-416f-bfe5-601e7dd16293:3|2:1:b2b2e84f-8411-468e-a090-1be8a9734347:a2d79a22-47c6-416f-bfe5-601e7dd16293:3",
+            "proofSignature": "0:1|2:0:b9c77bea-84aa-45f6-b751-ac6adbbc33b7:a2d79a22-47c6-416f-bfe5-601e7dd16293:3|2:1:b2b2e84f-8411-468e-a090-1be8a9734347:a2d79a22-47c6-416f-bfe5-601e7dd16293:3",
+            "batches": []
+          }
+        },
+        {
+          "id": "0:2:6",
+          "age": 8.818899999999992,
+          "range": 31.80921028137794,
+          "from": 0.5989999771118164,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "1,2",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    21.80561681497501,
+                    3.1312343674367806,
+                    70.52552401190098
+                  ],
+                  [
+                    74.3524671757377,
+                    13.575779063470582,
+                    121.7447259767602
+                  ]
+                ],
+                "tree": [
+                  43.726345887684786,
+                  3.315,
+                  98.0809305609964
+                ],
+                "slot": 3,
+                "orders": [
+                  true,
+                  false,
+                  false
+                ],
+                "counts": [
+                  1,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 54,
+            "preparedRevision": 104,
+            "renderSignature": "0:1|3:0:6725f9ea-70c6-47dd-bbcf-cba6212ff9a2:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "proofSignature": "0:1|3:0:6725f9ea-70c6-47dd-bbcf-cba6212ff9a2:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "batches": []
+          }
+        },
+        {
+          "id": "0:2:6",
+          "age": 11.015099999999988,
+          "range": 35.37973338328615,
+          "from": 0.3495999872684479,
+          "to": 0,
+          "diagnosis": {
+            "physical": [
+              {
+                "chunk": "1,2",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": false,
+                "bounds": [
+                  [
+                    21.80561681497501,
+                    3.1312343674367806,
+                    70.52552401190098
+                  ],
+                  [
+                    74.3524671757377,
+                    13.575779063470582,
+                    121.7447259767602
+                  ]
+                ],
+                "tree": [
+                  43.726345887684786,
+                  3.315,
+                  98.0809305609964
+                ],
+                "slot": 3,
+                "orders": [
+                  true,
+                  false,
+                  false
+                ],
+                "counts": [
+                  1,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "coverage": false,
+            "prepared": false,
+            "nativeRevision": 57,
+            "preparedRevision": 110,
+            "renderSignature": "0:1|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:2:45c8a0e4-5beb-4214-a402-ad5481d128ea:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "proofSignature": "0:1|3:0:7f9c2c70-417c-41c9-a5ff-7a98c831dd6d:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:1:f950bd57-58d7-4cd7-aaec-5700c5420f76:38556894-9f66-4e4c-9e46-8b54ab025758:3|3:2:45c8a0e4-5beb-4214-a402-ad5481d128ea:38556894-9f66-4e4c-9e46-8b54ab025758:3",
+            "batches": []
+          }
+        }
+      ],
+      "omissions": []
+    },
+    "mode": "orbit",
+    "slot": 0,
+    "age": 20,
+    "hold": 0,
+    "done": true,
+    "tree": "0:3:12",
+    "treePosition": [
+      37.59202308453297,
+      166.22539341618813
+    ],
+    "minimumDistance": 39.99999999999996,
+    "nearFrames": 301,
+    "nearReadyFrames": 301,
+    "nearSeconds": 11.926399999999983,
+    "nearReadySeconds": 11.926399999999983,
+    "nearReadinessDrops": 0,
+    "transitionFrames": 490,
+    "transitionReadyFrames": 490,
+    "transitionReadinessDrops": [],
+    "firstReadyAt": 0.04979999999999563,
+    "initial": [
+      {
+        "regions": 4,
+        "nativePreparations": 38,
+        "stalePreparations": 5,
+        "preparationAttempts": 43,
+        "fencedPreparations": 38,
+        "rejectedPacking": 0,
+        "signatureChanges": 19,
+        "packingChanges": 54,
+        "cachedTextures": 190,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 8,
+        "prepared": 8,
+        "standby": {
+          "preparations": 24,
+          "rendered": 0,
+          "trees": 8,
+          "estimatedOwnedGpuBytes": 4026732,
+          "errors": []
+        }
+      },
+      {
+        "regions": 4,
+        "nativePreparations": 34,
+        "stalePreparations": 1,
+        "preparationAttempts": 36,
+        "fencedPreparations": 35,
+        "rejectedPacking": 1,
+        "signatureChanges": 12,
+        "packingChanges": 46,
+        "cachedTextures": 175,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 7,
+        "prepared": 7,
+        "standby": {
+          "preparations": 12,
+          "rendered": 0,
+          "trees": 8,
+          "estimatedOwnedGpuBytes": 4516272,
+          "errors": []
+        }
+      },
+      {
+        "regions": 4,
+        "nativePreparations": 31,
+        "stalePreparations": 4,
+        "preparationAttempts": 37,
+        "fencedPreparations": 33,
+        "rejectedPacking": 2,
+        "signatureChanges": 22,
+        "packingChanges": 45,
+        "cachedTextures": 165,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 12,
+        "prepared": 12,
+        "standby": {
+          "preparations": 9,
+          "rendered": 0,
+          "trees": 12,
+          "estimatedOwnedGpuBytes": 1156500,
+          "errors": []
+        }
+      },
+      {
+        "regions": 4,
+        "nativePreparations": 23,
+        "stalePreparations": 3,
+        "preparationAttempts": 26,
+        "fencedPreparations": 23,
+        "rejectedPacking": 0,
+        "signatureChanges": 9,
+        "packingChanges": 32,
+        "cachedTextures": 115,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 4,
+        "prepared": 4,
+        "standby": {
+          "preparations": 9,
+          "rendered": 0,
+          "trees": 8,
+          "estimatedOwnedGpuBytes": 797412,
+          "errors": []
+        }
+      }
+    ],
+    "final": [
+      {
+        "regions": 6,
+        "nativePreparations": 64,
+        "stalePreparations": 6,
+        "preparationAttempts": 72,
+        "fencedPreparations": 66,
+        "rejectedPacking": 2,
+        "signatureChanges": 26,
+        "packingChanges": 94,
+        "cachedTextures": 330,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 7,
+        "prepared": 7,
+        "standby": {
+          "preparations": 32,
+          "rendered": 0,
+          "trees": 9,
+          "estimatedOwnedGpuBytes": 4026732,
+          "errors": []
+        }
+      },
+      {
+        "regions": 6,
+        "nativePreparations": 61,
+        "stalePreparations": 3,
+        "preparationAttempts": 65,
+        "fencedPreparations": 62,
+        "rejectedPacking": 1,
+        "signatureChanges": 24,
+        "packingChanges": 88,
+        "cachedTextures": 310,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 6,
+        "prepared": 6,
+        "standby": {
+          "preparations": 19,
+          "rendered": 0,
+          "trees": 11,
+          "estimatedOwnedGpuBytes": 4516272,
+          "errors": []
+        }
+      },
+      {
+        "regions": 6,
+        "nativePreparations": 65,
+        "stalePreparations": 6,
+        "preparationAttempts": 73,
+        "fencedPreparations": 67,
+        "rejectedPacking": 2,
+        "signatureChanges": 35,
+        "packingChanges": 86,
+        "cachedTextures": 335,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 11,
+        "prepared": 11,
+        "standby": {
+          "preparations": 13,
+          "rendered": 0,
+          "trees": 13,
+          "estimatedOwnedGpuBytes": 1156500,
+          "errors": []
+        }
+      },
+      {
+        "regions": 6,
+        "nativePreparations": 44,
+        "stalePreparations": 7,
+        "preparationAttempts": 52,
+        "fencedPreparations": 45,
+        "rejectedPacking": 1,
+        "signatureChanges": 30,
+        "packingChanges": 71,
+        "cachedTextures": 225,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 3,
+        "prepared": 3,
+        "standby": {
+          "preparations": 17,
+          "rendered": 0,
+          "trees": 8,
+          "estimatedOwnedGpuBytes": 797412,
+          "errors": []
+        }
+      }
+    ],
+    "unchanged": true,
+    "ready": {
+      "ready": 1,
+      "enabled": true
+    }
+  },
+  "biome": "manglares",
+  "quality": "media",
+  "culture": "mapungubwe",
+  "enabled": true,
+  "camera": [
+    37.59202308453296,
+    17.32,
+    206.22539341618813
+  ],
+  "chunks": 25,
+  "night": 1,
+  "render": {
+    "calls": 76,
+    "triangles": 820065
+  },
+  "gpuMemory": {
+    "geometries": 156,
+    "textures": 68
+  },
+  "reportedJSHeapOnly": {
+    "used": 320878016,
+    "total": 387550452,
+    "limit": 4395630592
+  },
+  "programs": 50,
+  "resources": {
+    "species": 4,
+    "estimatedAtlasTextureBytes": 44739242.666666664,
+    "estimatedBackdropTextureBytes": 5592405.333333333,
+    "errors": []
+  },
+  "residentRange": null,
+  "visualRange": 1,
+  "transitionRadius": 68,
+  "visibleChunks": 25,
+  "propChunks": 9,
+  "treePropChunks": 14,
+  "pickMeshes": 25,
+  "logicalBounds": [
+    -72,
+    72,
+    168,
+    312
+  ],
+  "visibleBounds": [
+    -72,
+    72,
+    168,
+    312
+  ],
+  "removed": null,
+  "layers": [
+    {
+      "slot": 0,
+      "key": "0:192",
+      "trees": 464,
+      "ready": 7,
+      "preparations": 64,
+      "coverage": 7,
+      "prepared": 7,
+      "stale": 6,
+      "attempts": 72,
+      "fenced": 66,
+      "rejectedPacking": 2,
+      "signatureChanges": 26,
+      "packingChanges": 94,
+      "textureUploads": 0,
+      "cachedTextures": 330,
+      "standby": {
+        "preparations": 32,
+        "rendered": 0,
+        "trees": 9,
+        "estimatedOwnedGpuBytes": 4026732,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "slot": 1,
+      "key": "0:192",
+      "trees": 401,
+      "ready": 6,
+      "preparations": 61,
+      "coverage": 6,
+      "prepared": 6,
+      "stale": 3,
+      "attempts": 65,
+      "fenced": 62,
+      "rejectedPacking": 1,
+      "signatureChanges": 24,
+      "packingChanges": 88,
+      "textureUploads": 0,
+      "cachedTextures": 310,
+      "standby": {
+        "preparations": 19,
+        "rendered": 0,
+        "trees": 11,
+        "estimatedOwnedGpuBytes": 4516272,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "slot": 2,
+      "key": "0:192",
+      "trees": 230,
+      "ready": 11,
+      "preparations": 65,
+      "coverage": 11,
+      "prepared": 11,
+      "stale": 6,
+      "attempts": 73,
+      "fenced": 67,
+      "rejectedPacking": 2,
+      "signatureChanges": 35,
+      "packingChanges": 86,
+      "textureUploads": 0,
+      "cachedTextures": 335,
+      "standby": {
+        "preparations": 13,
+        "rendered": 0,
+        "trees": 13,
+        "estimatedOwnedGpuBytes": 1156500,
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "slot": 3,
+      "key": "0:192",
+      "trees": 207,
+      "ready": 3,
+      "preparations": 44,
+      "coverage": 3,
+      "prepared": 3,
+      "stale": 7,
+      "attempts": 52,
+      "fenced": 45,
+      "rejectedPacking": 1,
+      "signatureChanges": 30,
+      "packingChanges": 71,
+      "textureUploads": 0,
+      "cachedTextures": 225,
+      "standby": {
+        "preparations": 17,
+        "rendered": 0,
+        "trees": 8,
+        "estimatedOwnedGpuBytes": 797412,
+        "errors": []
+      },
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "webglError": 0
+}

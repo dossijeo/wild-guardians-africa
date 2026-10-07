@@ -101,6 +101,22 @@ test('instanced interleaved geometry compares its active prefix, including divis
   f.close();mesh.geometry.dispose();mesh.material.dispose();
 });
 
+test('restored shadow maps retain native comparison setup, proxy traversal order and release current hooks',()=>{
+ const f=fixture();f.release();const events=new EventTarget(),listeners=new Set();
+ f.renderer.domElement={addEventListener(type,fn){events.addEventListener(type,fn);listeners.add(fn);},removeEventListener(type,fn){events.removeEventListener(type,fn);listeners.delete(fn);}};
+ const uniforms=createNativeShadowUniforms(),native=installNativeShadow(f.renderer,f.light,uniforms),group=new THREE.Group();f.scene.add(group);
+ const proxy=createAssetShadow([{geometry:f.mesh.geometry,material:f.mesh.material}],4,0);proxy.count=1;group.userData.lodBatches=[{shadow:proxy,meshes:[f.mesh]}];
+ const assets=installAssetShadows(f.renderer,()=>new Map([[1,group]]));assert.equal(listeners.size,3);let calls=0,lastOriginal;
+ for(let round=0;round<2;round++){
+  lastOriginal=function(lights,scene,camera){calls++;assert.equal(this,f.renderer.shadowMap);assert.equal(camera,f.camera);const pass=scene.getObjectByName('native_asset_shadow_pass');assert.ok(pass);assert.equal(pass.children[0],proxy);assert.notEqual(proxy.material,f.mesh.material);assert.ok(f.light.shadow.map.depthTexture);};
+  f.renderer.shadowMap={enabled:true,autoUpdate:true,needsUpdate:false,type:THREE.PCFSoftShadowMap,render:lastOriginal};events.dispatchEvent(new Event('webglcontextrestored'));
+  f.draw();f.draw();assert.equal(calls,round+1);assert.equal(uniforms.uNativeShadowOn.value,1);assert.equal(uniforms.uNativeShadowFiltered.value,f.light.shadow.map.depthTexture);assert.equal(proxy.parent,null);assert.equal(proxy.material,f.mesh.material);
+ }
+ // Same-object diagnostic restoration invalidates the cache without wrapping twice.
+ events.dispatchEvent(new Event('webglcontextrestored'));f.draw();assert.equal(calls,3);
+ assets();native();assert.equal(listeners.size,0);assert.equal(f.renderer.shadowMap.render,lastOriginal);f.close();proxy.dispose();
+});
+
 test('view-camera orbit and projection preserve depth; camera layers and light pose still invalidate',()=>{
   const f=fixture();f.draw();
   f.camera.position.set(20,12,-4);f.camera.lookAt(0,0,0);f.draw();
