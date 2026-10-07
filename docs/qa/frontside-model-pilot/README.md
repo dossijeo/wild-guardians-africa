@@ -424,14 +424,17 @@ compression or worker manifest changed.
 
 Both authored crop atlas materials use normalTexture. In Three r180's local
 `normal_fragment_begin.glsl.js`, DOUBLE_SIDED flips the tangent-frame XY even
-when USE_TANGENT is absent. Production bridges omit tangent attributes and
-derive that frame from deformed positions/UVs. A reversed FrontSide bridge
-normal alone therefore does not preserve its authored back-face normal map.
+when USE_TANGENT is absent. All40 actual indexed crop states have only
+POSITION/NORMAL/TEXCOORD_0; production bridges also omit tangent attributes.
+Both derive that frame from positions/UVs. A reversed FrontSide normal alone
+therefore does not preserve the authored back-face normal map in either path.
 A pair-specific proposal must also preserve frame XY orientation per reverse
 face (aPart.w is an unused existing lane), and verify diagnostic map/color
 captures through the real shader before approval. No such compensation is
-activated or claimed tested yet. Indexed candidates already reverse the
-authored tangent XYZ and handedness; bridge reconstruction is a separate gate.
+activated or claimed tested yet. The controlled writer negates authored
+tangent XYZ/handedness where present, but these crops have no such attribute.
+Indexed states need their own compatible per-face frame compensation and
+resource accounting; the existing bridge lane cannot solve the indexed path.
 
 Continuous-rim candidate e554227b now passes the previously rejected diagnosis
 (Water .3125/213.75/35, noShadows): IoU1/0alpha differences, MAE9.502e-7,
@@ -455,3 +458,43 @@ times .1875/.6875, elevations30/60 and azimuths18.75/108.75/198.75/288.75,
 distinct from prior selection/diagnosis and unchanged gates. The source is
 repeated3times in each sample. Water may be screened first, but all12clips,
 attachments, day/night/cultures/biomes/maps/shadows and GPU gates remain.
+
+Version4 produced8 valid independent Water samples (first reserved time,
+all8 angle/elevation combinations), each with3byte-exact source repeats and
+passing color/alpha screens. Maximum tile MAE was .001823. The ninth sample
+(.6875/18.75/30) was INVALID: its first source repeat differed in2bytes by at
+most2byte units. No candidate comparison was interpreted for that sample.
+The archived invalid-control report remains unchanged, without a capture.
+A separate first-view shadowFront screen passed alpha/color; one packed
+shadow texel differed by32.18micrometres decoded depth. This does not approve
+ground shadow masks/depth or the category, and no timings were collected.
+
+Prospective metric policy2, declared before any new capture: source alpha
+bytes must match exactly in all3repeated renders. For each pixel/channel,
+let b=2*max_j(abs(linear(sourceRepeat_j)-linear(sourceReference))). Use
+Float64 accumulation and evaluate candidate RGB on
+E=abs(linear(candidate)-linear(sourceReference))+b. This adds uncertainty to
+the candidate error; it never subtracts noise or enlarges a candidate gate.
+Triangle inequality bounds the error against every measured source repeat;
+the additional factor2 supplies margin over that observed envelope. Three
+renders cannot establish a bound on unseen variability, so this is an
+observed-control screen, not statistical confidence or category approval.
+If variability grows in later controls, that affected sample is invalidated.
+
+The envelope itself must fit one fifth of the declared RGB budgets: MAE
+<=.0004, p99<=.003, maximum16x16tile MAE<=.002, and no connected region
+larger than3pixels with any channel b>.006. The3pixel gate rounds16/5 down.
+The p99 histogram rounds each value upward to a1/255bin, conservatively.
+Candidate gates stay MAE<=.002, p99<=.015, tile<=.01 and connected >.03
+region<=16pixels, with all original alpha/interior-hole gates unchanged.
+Reports preserve nominal RGB metrics separately from E-based metrics and
+save source controls/envelope metrics per sample. RGB face provenance still
+maps nominal >.03differences; envelope-only outliers are not geometry IDs.
+Earlier rejections and version4's invalid ninth sample are not reclassified.
+Pure metric tests verify observed-reference bounds, local/channel accounting,
+budget consumption, connected-noise rejection and exact alpha distances.
+
+Before measurement, version5 reserves times .21875/.71875, elevations
+32.5/62.5 and azimuths26.25/116.25/206.25/296.25. It uses policy2 and new
+views, not a retry of version4's invalid sample. Water may be screened first;
+the complete shader/map/shadow/12clip/resource/GPU acceptance remains pending.

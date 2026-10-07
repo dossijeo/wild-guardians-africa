@@ -6,25 +6,25 @@
   "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
   "candidateSide": "FrontSide accessories; existing FrontSide body retained",
   "maxSamples": 1,
-  "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
-  "shadowsEnabled": false,
+  "shadowSide": "Originally DoubleSide accessories shadowFront; original body default shadowSide retained",
+  "shadowsEnabled": true,
   "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
   "samples": [
     {
       "biome": "sabana",
       "night": 0,
       "clip": "Water",
-      "fraction": 0.3125,
-      "azimuth": 213.75,
-      "elevation": 35,
+      "fraction": 0.1875,
+      "azimuth": 18.75,
+      "elevation": 30,
       "alphaIoU": 1,
       "missingFraction": 0,
       "addedFraction": 0,
-      "linearRgbMae": 9.501698668055371e-7,
+      "linearRgbMae": 0.000001509270962527437,
       "p99Approx": 0,
-      "maxError": 0.053116604685783386,
-      "maxTileMae": 0.0016737498342990875,
-      "originalPixels": 143052,
+      "maxError": 0.1121005117893219,
+      "maxTileMae": 0.0018232664162362063,
+      "originalPixels": 136998,
       "missingPixels": 0,
       "addedPixels": 0,
       "rgbOutlierRegions": [
@@ -32,9 +32,20 @@
           "pixels": 1,
           "diameterUpperBound": 0,
           "bounds": [
-            619,
+            364,
+            368,
+            364,
+            368
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            396,
             464,
-            619,
+            396,
             464
           ],
           "classification": "rgb"
@@ -43,49 +54,30 @@
           "pixels": 1,
           "diameterUpperBound": 0,
           "bounds": [
-            616,
-            465,
-            616,
-            465
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            613,
-            466,
-            613,
-            466
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            610,
-            467,
-            610,
-            467
-          ],
-          "classification": "rgb"
-        },
-        {
-          "pixels": 1,
-          "diameterUpperBound": 0,
-          "bounds": [
-            607,
-            468,
-            607,
-            468
+            386,
+            505,
+            386,
+            505
           ],
           "classification": "rgb"
         }
       ],
       "missingRegions": [],
-      "shadowPackedDifference": null,
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
       "alphaDistanceGate": {
         "radiusPixels": 1,
         "missingBeyondOnePixel": 0,
@@ -410,7 +402,7 @@
       "customDepthMaterial": null
     }
   ],
-  "caseOffset": 2,
+  "caseOffset": 0,
   "unchangedOriginalControls": [
     {
       "differentBytes": 0,
@@ -425,15 +417,30 @@
       "maxByteDifference": 0
     }
   ],
+  "shadowPackedDifference": {
+    "differentBytes": 1,
+    "maxByteDifference": 1,
+    "changedTexels": 1,
+    "maxWorldDepthDelta": 0.0000321805477142334,
+    "changed": [
+      {
+        "x": 512,
+        "y": 515,
+        "originalDepth": 0.44340670108795166,
+        "candidateDepth": 0.4434066414833069,
+        "worldDepthDelta": 0.0000321805477142334
+      }
+    ]
+  },
   "failed": false,
   "sourceTwin": false,
   "originalShadowDiagnostic": false,
-  "frontShadow": false,
+  "frontShadow": true,
   "sharedPersistentShadowHook": true,
   "clipFilter": "Water",
   "requestedClips": [
     "Water"
   ],
-  "withheldVersion": 3,
+  "withheldVersion": 4,
   "capture": "worker-runtime-visual-last-frame.png"
 }

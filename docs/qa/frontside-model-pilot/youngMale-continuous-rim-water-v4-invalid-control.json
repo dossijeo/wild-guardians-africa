@@ -1,0 +1,1670 @@
+{
+  "status": "VISUAL_SCREEN_NOT_APPROVED",
+  "resolution": 1024,
+  "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
+  "source": "worker-actions.youngMale runtime web",
+  "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
+  "candidateSide": "FrontSide accessories; existing FrontSide body retained",
+  "maxSamples": 16,
+  "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
+  "shadowsEnabled": true,
+  "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
+  "samples": [
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 18.75,
+      "elevation": 30,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.000001509270962527437,
+      "p99Approx": 0,
+      "maxError": 0.1121005117893219,
+      "maxTileMae": 0.0018232664162362063,
+      "originalPixels": 136998,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            364,
+            368,
+            364,
+            368
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            396,
+            464,
+            396,
+            464
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            386,
+            505,
+            386,
+            505
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 108.75,
+      "elevation": 30,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.0000027068098722886547,
+      "p99Approx": 0,
+      "maxError": 0.2610571924597025,
+      "maxTileMae": 0.0009028475728537579,
+      "originalPixels": 120298,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            503,
+            574,
+            503,
+            574
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            517,
+            577,
+            517,
+            577
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 198.75,
+      "elevation": 30,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 5.0677237543705595e-8,
+      "p99Approx": 0,
+      "maxError": 0.002633042633533478,
+      "maxTileMae": 0.000014553123037330806,
+      "originalPixels": 145448,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 288.75,
+      "elevation": 30,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.00001433641756833313,
+      "p99Approx": 0,
+      "maxError": 0.2456926852464676,
+      "maxTileMae": 0.0013099896799152095,
+      "originalPixels": 113034,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 3,
+          "diameterUpperBound": 1.4142135623730951,
+          "bounds": [
+            495,
+            406,
+            496,
+            407
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 2,
+          "diameterUpperBound": 1,
+          "bounds": [
+            515,
+            408,
+            515,
+            409
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 2,
+          "diameterUpperBound": 1,
+          "bounds": [
+            474,
+            419,
+            475,
+            419
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 2,
+          "diameterUpperBound": 1,
+          "bounds": [
+            478,
+            419,
+            479,
+            419
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            485,
+            407,
+            485,
+            407
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            495,
+            416,
+            495,
+            416
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            481,
+            420,
+            481,
+            420
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            477,
+            424,
+            477,
+            424
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            497,
+            428,
+            497,
+            428
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            494,
+            429,
+            494,
+            429
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            492,
+            430,
+            492,
+            430
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            490,
+            431,
+            490,
+            431
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            491,
+            436,
+            491,
+            436
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            516,
+            440,
+            516,
+            440
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            478,
+            443,
+            478,
+            443
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            471,
+            445,
+            471,
+            445
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            482,
+            452,
+            482,
+            452
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 18.75,
+      "elevation": 60,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.000005166702394463369,
+      "p99Approx": 0,
+      "maxError": 0.4234082102775574,
+      "maxTileMae": 0.0010828230533809439,
+      "originalPixels": 111473,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            409,
+            457,
+            409,
+            457
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            449,
+            498,
+            449,
+            498
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 108.75,
+      "elevation": 60,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0,
+      "p99Approx": 0,
+      "maxError": 0,
+      "maxTileMae": 0,
+      "originalPixels": 99118,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 198.75,
+      "elevation": 60,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 1.068420421659636e-8,
+      "p99Approx": 0,
+      "maxError": 0.003737911581993103,
+      "maxTileMae": 0.000004867072372386853,
+      "originalPixels": 116618,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    },
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.1875,
+      "azimuth": 288.75,
+      "elevation": 60,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.0000042371148246936785,
+      "p99Approx": 0,
+      "maxError": 0.15029194951057434,
+      "maxTileMae": 0.000356903134767587,
+      "originalPixels": 100541,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            522,
+            397,
+            522,
+            397
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            499,
+            399,
+            499,
+            399
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            489,
+            402,
+            489,
+            402
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            506,
+            407,
+            506,
+            407
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": {
+        "differentBytes": 1,
+        "maxByteDifference": 1,
+        "changedTexels": 1,
+        "maxWorldDepthDelta": 0.0000321805477142334,
+        "changed": [
+          {
+            "x": 512,
+            "y": 515,
+            "originalDepth": 0.44340670108795166,
+            "candidateDepth": 0.4434066414833069,
+            "worldDepthDelta": 0.0000321805477142334
+          }
+        ]
+      },
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              0.000009999999747378752,
+              0.000009999999747378752,
+              0.000009999999747378752
+            ]
+          }
+        ]
+      ],
+      "passes": true
+    }
+  ],
+  "limitations": [
+    "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required."
+  ],
+  "originalWorldPath": "WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon",
+  "candidateReceipt": {
+    "category": "youngMale",
+    "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a48e9c145b.glb",
+    "sourceCandidateSha256": "e7db32838f66fc14a23a9216af3c65d28b02205f14866c31092ea2fcb99cf5c0",
+    "bytes": 5243228,
+    "baselineRuntimeBytes": 5612688,
+    "growthPercent": -6.582585741448666,
+    "prunedUnusedAccessors": 633,
+    "sha256": "e554227b392a3d5496135d763ee9350198d80ebf5a016418e08d59a48e9c145b",
+    "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
+    "status": "NOT_APPROVED"
+  },
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timerQueryAvailable": true,
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "originalEffectiveMaterials": [
+    {
+      "mesh": "Mesh0",
+      "material": "BakedMaterial",
+      "side": 0,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 1,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "material": "Esmalte verde azulado",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_2",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_3",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_4",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_5",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_6",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_7",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_8",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_9",
+      "material": "Cantos de madera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_10",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_11",
+      "material": "Manzanas verdes",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_12",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_13",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_14",
+      "material": "Tomates maduros",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_15",
+      "material": "Naranjas",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_16",
+      "material": "Lona de algodón",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_17",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_18",
+      "material": "Costuras de lona",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_19",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_20",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_21",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_22",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_23",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_24",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    }
+  ],
+  "caseOffset": 0,
+  "unchangedOriginalControls": [
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    }
+  ],
+  "shadowPackedDifference": {
+    "differentBytes": 1,
+    "maxByteDifference": 1,
+    "changedTexels": 1,
+    "maxWorldDepthDelta": 0.0000321805477142334,
+    "changed": [
+      {
+        "x": 512,
+        "y": 515,
+        "originalDepth": 0.44340670108795166,
+        "candidateDepth": 0.4434066414833069,
+        "worldDepthDelta": 0.0000321805477142334
+      }
+    ]
+  },
+  "failed": true,
+  "invalidControl": {
+    "biome": "sabana",
+    "night": 0,
+    "clip": "Water",
+    "fraction": 0.6875,
+    "azimuth": 18.75,
+    "elevation": 30,
+    "frontShadow": false,
+    "withheldVersion": 4,
+    "controls": [
+      {
+        "differentBytes": 2,
+        "maxByteDifference": 2
+      }
+    ],
+    "reason": "Unchanged original raster noise; affected comparison not interpreted"
+  }
+}

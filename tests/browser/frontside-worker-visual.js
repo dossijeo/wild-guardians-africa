@@ -9,24 +9,7 @@ import {syncWorkerToolVisibility} from '../../src/rendering/worker-tool-visibili
 import {WorldScene} from '../../src/rendering/scene.js';
 import {Assets} from '../../src/rendering/assets.js';
 const status=document.querySelector('#status');let renderer,cancelled=false;
-function regions(mask,width,originalAlpha){
- const seen=new Uint8Array(mask.length),queue=new Uint32Array(mask.length),out=[];
- for(let seed=0;seed<mask.length;seed++){if(!mask[seed]||seen[seed])continue;let head=0,tail=1,minX=width,maxX=0,minY=width,maxY=0,contour=false;queue[0]=seed;seen[seed]=1;
-  while(head<tail){const p=queue[head++],x=p%width,y=Math.floor(p/width);minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
-   for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=width||ny>=width){contour=true;continue;}const n=ny*width+nx;if(originalAlpha&&!originalAlpha[n])contour=true;if(mask[n]&&!seen[n]){seen[n]=1;queue[tail++]=n;}}
-  }out.push({pixels:tail,diameterUpperBound:Math.hypot(maxX-minX,maxY-minY),bounds:[minX,minY,maxX,maxY],classification:originalAlpha?(contour?'contour':'interior'):'rgb'});
- }return out.sort((a,b)=>b.pixels-a.pixels);
-}
-// The declared Hausdorff gate is one pixel. Test the exact Euclidean radius-1
-// neighborhood in both directions; diagonal neighbors are farther than 1px.
-function alphaDistanceGate(a,b,width){
- const violations=(from,to)=>{let count=0;for(let p=0;p<from.length/4;p++){
-  if(!from[p*4+3])continue;const x=p%width,y=Math.floor(p/width);
-  if(to[p*4+3]||(x>0&&to[(p-1)*4+3])||(x+1<width&&to[(p+1)*4+3])||(y>0&&to[(p-width)*4+3])||(y+1<width&&to[(p+width)*4+3]))continue;count++;
- }return count;};
- const missingBeyondOnePixel=violations(a,b),addedBeyondOnePixel=violations(b,a);
- return{radiusPixels:1,missingBeyondOnePixel,addedBeyondOnePixel,passes:missingBeyondOnePixel===0&&addedBeyondOnePixel===0};
-}
+import {regions,alphaDistanceGate,controlEnvelopeMetrics,accumulateControlEnvelope,addControlUncertainty} from '../../tools/lib/frontside-visual-metrics.mjs';
 function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing'){
  const saved=[],descriptors=[];let nextId=1;
  rig.model.traverse(mesh=>{if(!mesh.isMesh)return;const originalGeometry=mesh.geometry,originalMaterial=mesh.material;
@@ -52,8 +35,9 @@ async function campaign(){
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
- const withheldVersion=options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
+ const withheldVersion=options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
  const views={1:{fractions:[.125,.625],elevations:[25,55],azimuths:[22.5,67.5,157.5,247.5]},2:{fractions:[.375,.875],elevations:[40,70],azimuths:[11.25,101.25,191.25,281.25]},3:{fractions:[.3125,.8125],elevations:[35,65],azimuths:[33.75,123.75,213.75,303.75]},4:{fractions:[.1875,.6875],elevations:[30,60],azimuths:[18.75,108.75,198.75,288.75]}};
+ views[5]={fractions:[.21875,.71875],elevations:[32.5,62.5],azimuths:[26.25,116.25,206.25,296.25]};
  const {fractions,elevations,azimuths}=views[withheldVersion];
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
  const library=await fetch('/content/worker-actions.json').then(r=>r.json());
@@ -90,6 +74,8 @@ async function campaign(){
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
  report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
  report.candidateReceipt=sourceTwin?null:(await fetch('/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
+ report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
+ report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
  report.sourceSha256=library.youngMale.sha256;
  const gpuInfo=gl.getExtension('WEBGL_debug_renderer_info');report.gpu=gpuInfo?gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);report.timerQueryAvailable=!!gl.getExtension('EXT_disjoint_timer_query_webgl2');report.browser=navigator.userAgent;
  report.originalEffectiveMaterials=[];models[0].scene.traverse(mesh=>{if(mesh.isMesh)report.originalEffectiveMaterials.push({mesh:mesh.name,material:mesh.material.name,side:mesh.material.side,shadowSide:mesh.material.shadowSide,effectivePcfDepthSide:mesh.material.shadowSide??({0:1,1:0,2:2}[mesh.material.side]),customDepthMaterial:mesh.customDepthMaterial?.type??null});});
@@ -103,16 +89,18 @@ async function campaign(){
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
   const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
   camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(radius*3));camera.lookAt(center);camera.updateMatrixWorld();
-  const shadowPixels=[];let shadowDifference=null;const originalControls=[];
+  const shadowPixels=[];let shadowDifference=null;const originalControls=[],controlEnvelope=new Float64Array(size*size*3);let controlAlphaDifferences=0,controlMetrics=null;
   for(let side=0;side<2;side++){const rig=rigs[side];rigs.forEach((r,i)=>r.model.visible=i===side);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[side]);
    if(rig.sun.shadow.map){const map=rig.sun.shadow.map,packed=new Uint8Array(map.width*map.height*4);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,packed);shadowPixels[side]=packed;}
    if(side===0){for(let capture=0;capture<3;capture++){
-    const repeat=new Uint8Array(pixels[0].length);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);let different=0,max=0;
-    for(let i=0;i<repeat.length;i++){if(repeat[i]!==pixels[0][i])different++;max=Math.max(max,Math.abs(repeat[i]-pixels[0][i]));}
-    originalControls.push({differentBytes:different,maxByteDifference:max});if(!report.samples.length)report.unchangedOriginalControls=originalControls;
-    if(different){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,reason:'Unchanged original raster noise; affected comparison not interpreted'};
-     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Unchanged control has raster noise; no threshold interpretation');}
-   }}
+    const repeat=new Uint8Array(pixels[0].length);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);
+    const control=accumulateControlEnvelope(controlEnvelope,pixels[0],repeat,linear);
+    controlAlphaDifferences+=control.alphaDifferences;originalControls.push(control);if(!report.samples.length)report.unchangedOriginalControls=originalControls;
+   }
+   controlMetrics=controlEnvelopeMetrics(controlEnvelope,pixels[0],size);
+   if(controlAlphaDifferences||!controlMetrics.passes){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original control exceeds prospective uncertainty budget; affected comparison not interpreted'};
+    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
+   }
    }
   if(shadowPixels.length===2){let different=0,max=0,maxDepth=0,changedTexels=0;const changed=[];
    // Match r180 packing.glsl.js UnpackFactors4. A large packed byte delta
@@ -121,13 +109,15 @@ async function campaign(){
    for(let i=0;i<shadowPixels[0].length;i+=4){let differs=false;for(let c=0;c<4;c++){if(shadowPixels[0][i+c]!==shadowPixels[1][i+c]){different++;differs=true;}max=Math.max(max,Math.abs(shadowPixels[0][i+c]-shadowPixels[1][i+c]));}
     if(differs){changedTexels++;const a=unpack(shadowPixels[0],i),b=unpack(shadowPixels[1],i),delta=Math.abs(a-b);maxDepth=Math.max(maxDepth,delta);changed.push({x:(i/4)%1024,y:Math.floor(i/4/1024),originalDepth:a,candidateDepth:b,worldDepthDelta:delta*(sun.shadow.camera.far-sun.shadow.camera.near)});}}
    shadowDifference={differentBytes:different,maxByteDifference:max,changedTexels,maxWorldDepthDelta:maxDepth*(sun.shadow.camera.far-sun.shadow.camera.near),changed};report.shadowPackedDifference=shadowDifference;}
-  let original=0,union=0,intersection=0,missing=0,added=0,error=0,channels=0,maxError=0;const tileError=new Float64Array(64*64),tileChannels=new Uint32Array(64*64),hist=new Uint32Array(256),rgbMask=new Uint8Array(size*size),missingMask=new Uint8Array(size*size),originalAlpha=new Uint8Array(size*size);
+  let original=0,union=0,intersection=0,missing=0,added=0,error=0,channels=0,maxError=0,nominalError=0,nominalMaxError=0;const tileError=new Float64Array(64*64),nominalTileError=new Float64Array(64*64),tileChannels=new Uint32Array(64*64),hist=new Uint32Array(256),nominalHist=new Uint32Array(256),rgbMask=new Uint8Array(size*size),nominalRgbMask=new Uint8Array(size*size),missingMask=new Uint8Array(size*size),originalAlpha=new Uint8Array(size*size);
   for(let offset=0;offset<pixels[0].length;offset+=4){const aa=pixels[0][offset+3]>0,bb=pixels[1][offset+3]>0;if(aa)original++;if(aa&&bb)intersection++;if(aa&&!bb)missing++;if(!aa&&bb)added++;if(!(aa||bb))continue;union++;const pixel=offset/4,tile=(Math.floor(pixel/size/16)*64)+Math.floor(pixel%size/16);
    originalAlpha[pixel]=aa?1:0;missingMask[pixel]=aa&&!bb?1:0;
-   for(let channel=0;channel<3;channel++){const delta=Math.abs(linear[pixels[0][offset+channel]]-linear[pixels[1][offset+channel]]);if(delta>.03)rgbMask[pixel]=1;error+=delta;channels++;maxError=Math.max(maxError,delta);tileError[tile]+=delta;tileChannels[tile]++;hist[Math.min(255,Math.ceil(delta*255))]++;}}
+   for(let channel=0;channel<3;channel++){const nominal=Math.abs(linear[pixels[0][offset+channel]]-linear[pixels[1][offset+channel]]),delta=addControlUncertainty(nominal,controlEnvelope[pixel*3+channel]);nominalError+=nominal;nominalMaxError=Math.max(nominalMaxError,nominal);nominalTileError[tile]+=nominal;nominalHist[Math.min(255,Math.ceil(nominal*255))]++;if(nominal>.03)nominalRgbMask[pixel]=1;if(delta>.03)rgbMask[pixel]=1;error+=delta;channels++;maxError=Math.max(maxError,delta);tileError[tile]+=delta;tileChannels[tile]++;hist[Math.min(255,Math.ceil(delta*255))]++;}}
   let cumulative=0,p99=0;for(let i=0;i<hist.length;i++){cumulative+=hist[i];if(cumulative>=channels*.99){p99=i/255;break;}}
   const occupied=Array.from(tileError,(sum,i)=>tileChannels[i]?sum/tileChannels[i]:0),sample={biome,night,clip:clipName,fraction,azimuth,elevation,alphaIoU:intersection/Math.max(union,1),missingFraction:missing/Math.max(original,1),addedFraction:added/Math.max(original,1),linearRgbMae:error/Math.max(channels,1),p99Approx:p99,maxError,maxTileMae:Math.max(...occupied),originalPixels:original,missingPixels:missing,addedPixels:added};
-  sample.rgbOutlierRegions=regions(rgbMask,size);sample.missingRegions=regions(missingMask,size,originalAlpha);sample.shadowPackedDifference=shadowDifference;sample.alphaDistanceGate=alphaDistanceGate(pixels[0],pixels[1],size);sample.unchangedOriginalControls=originalControls;
+  sample.rgbOutlierRegions=regions(rgbMask,size);sample.missingRegions=regions(missingMask,size,originalAlpha);sample.shadowPackedDifference=shadowDifference;sample.alphaDistanceGate=alphaDistanceGate(pixels[0],pixels[1],size);sample.unchangedOriginalControls=originalControls;sample.controlEnvelopeMetrics=controlMetrics;sample.rgbMetricMeaning='abs(candidate-reference) + 2*max(abs(originalRepeat-reference)), per linear RGB channel; no noise subtraction';
+  let nominalAccumulated=0,nominalP99=0;for(let i=0;i<nominalHist.length;i++){nominalAccumulated+=nominalHist[i];if(nominalAccumulated>=channels*.99){nominalP99=i/255;break;}}
+  sample.nominalRgbMetrics={linearRgbMae:nominalError/Math.max(channels,1),p99Approx:nominalP99,maxError:nominalMaxError,maxTileMae:Math.max(...Array.from(nominalTileError,(v,i)=>tileChannels[i]?v/tileChannels[i]:0)),rgbOutlierRegions:regions(nominalRgbMask,size)};
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
   sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
   if(!sample.passes){failed=true;break campaignLoop;}
