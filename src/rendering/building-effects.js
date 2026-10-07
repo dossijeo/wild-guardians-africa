@@ -48,9 +48,17 @@ export class BuildingEffects {
   }
   update(damage,elapsed){
     this.building.updateWorldMatrix(true,false);this.native.configure(this.building.pipeline.effectQuality??'medium');
+    const emitted=this.native.stats.debrisEmitted,contacts=this.native.stats.groundContacts;
     if(this.lastElapsed===undefined)this.native.initialize(damage);
     else if(elapsed<this.lastElapsed)this.native.restore(damage);
     else this.native.frame(damage,elapsed-this.lastElapsed);
+    if(this.lastElapsed!==undefined&&elapsed>=this.lastElapsed){
+      const debrisEmitted=this.native.stats.debrisEmitted-emitted,groundContacts=this.native.stats.groundContacts-contacts;
+      if(debrisEmitted||groundContacts){
+        this.center.setFromMatrixPosition(this.building.matrixWorld);
+        this.building.pipeline.onDestructionCue?.({debrisEmitted,groundContacts},{id:this.building.entityId,x:this.center.x,z:this.center.z});
+      }
+    }
     this.lastElapsed=elapsed;this.packDebris();this.smoke.visible=this.native.smoke.length>0;
     this.smoke.matrix.copy(this.building.matrixWorld);
   }

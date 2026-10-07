@@ -30,6 +30,20 @@ function fakeRenderer(){
 }
 const models=catalogue.map(b=>originalModel(b)),templates=catalogue.map((b,i)=>prepareNativeBuilding(models[i],b));
 
+test('all five native houses report physical debris batches in world space, with silent loading and rewinds',()=>{
+ for(const template of templates){
+  const pass=new BuildingDestructionPass(fakeRenderer()),calls=[];pass.onDestructionCue=(counts,entity)=>calls.push({counts,entity});
+  const entity={id:template.building.culture,hp:600,maxHp:600,status:'intact',yaw:.71};
+  const house=new NativeBuilding(template,entity,pass,0);house.position.set(170,12,-49);house.updateWorldMatrix(true,true);
+  assert.equal(calls.length,0);
+  house.effects.update(.8,.1);assert.equal(calls.length,1);assert.ok(calls[0].counts.debrisEmitted>0);assert.deepEqual(calls[0].entity,{id:entity.id,x:170,z:-49});
+  for(let time=.2;time<=3;time+=.1)house.effects.update(.8,time);
+  assert.ok(calls.some(c=>c.counts.groundContacts>0));
+  const n=calls.length;house.effects.update(.8,3);assert.equal(calls.length,n);
+  house.effects.update(.9,0);assert.equal(calls.length,n);house.dispose();
+ }
+});
+
 test('camera volumes retain all five native center scales, pivots and collapse envelopes',()=>{
  const pass=new BuildingDestructionPass(fakeRenderer()),point=new THREE.Vector3();
  for(const template of templates){

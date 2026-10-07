@@ -1,4 +1,5 @@
 import {PowerReadyAudio} from './power-ready-audio.js';
+import {destructionSounds} from './destruction-audio.js';
 import {UnlockAudio} from './unlock-audio.js';
 import {GuardianAudio} from './guardian-audio.js';
 import {WorkerAudio} from './worker-audio.js';
@@ -158,6 +159,21 @@ export class AudioSystem {
     if(this.context?.state==='running'){
       const pack=state.day%2?'a':'b';if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&this.pack!==pack&&this.context.currentTime>=this.musicRetryAt)this.gameplay(state.day).catch(()=>{});
       try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}
+    }
+  }
+  destructionCue(counts,entity,{state,listener}={}){
+    if(this.context?.state!=='running'||state?.pauses?.length)return;
+    const requested=this.context.currentTime,generation=this.generation;
+    if(this.destructionTimesGeneration!==generation){this.destructionTimes=new Map();this.destructionTimesGeneration=generation;}
+    for(const id of destructionSounds(counts)){
+      this.destructionTimes??=new Map();const key=entity.id+':'+id;
+      if(requested-(this.destructionTimes.get(key)??-Infinity)<.3)continue;
+      this.destructionTimes.set(key,requested);
+      // Keep only recent contacts; capacity stays bounded across long campaigns.
+      if(this.destructionTimes.size>128){for(const [key,at] of this.destructionTimes)if(requested-at>=.3)this.destructionTimes.delete(key);while(this.destructionTimes.size>128)this.destructionTimes.delete(this.destructionTimes.keys().next().value);}
+      const distance=listener?Math.hypot(entity.x-listener.x,entity.z-listener.z):0;
+      this.sound(id,{bus:'world',family:'structure-debris',emitter:entity.id,gain:1/(1+(distance/24)**2),
+        isCurrent:()=>generation===this.generation&&this.context?.state==='running'&&this.context.currentTime-requested<=.5&&!state?.pauses?.length}).catch(()=>{});
     }
   }
   async sound(id,options={}) {
