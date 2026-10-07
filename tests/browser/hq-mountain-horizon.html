@@ -4,6 +4,8 @@
 <p><label>Fase <select id="phase"><option value="day">DÃƒÂ­a</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
 <label>Fondo <select id="mode"><option value="hq">HQ reflejado</option><option value="original">Original</option></select></label></p>
 <p><label>Azimut <input id="yaw" type="number" min="0" max="360" step="5" value="0"></label></p>
+<p><label>Elevación desde cámara inicial (m) <input id="elevation" type="number" min="0" max="600" step="20" value="4"></label></p>
+<p><label><input id="lod-debug" type="checkbox"> Diagnóstico LOD solicitado</label><br><small>Azul/verde &lt;4 · naranja 4–5 (posible mip5) · magenta ≥5. Huella por derivadas, no consulta al driver.</small></p>
 <button id="turn" disabled>Girar 45Ã‚Â°</button><button id="rotation" disabled>Validar giro 360Ã‚Â°</button><button id="move" disabled>Desplazar 20 m</button>
 <button id="hide">Ocultar controles</button><button id="export" disabled>Exportar recibo</button><button id="close" disabled>Cerrar mundo</button><pre id="report">Preparando metadatos</pre><pre id="full-report" hidden></pre></header><canvas></canvas>
 <script type="module">
@@ -17,27 +19,30 @@ import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.j
 import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
 import {mountainArcComposition} from '../../src/rendering/mountain-arc-composition.js';
+import {mountainLodDiagnosticFragment,mountainCameraElevation} from './mountain-lod-diagnostic.js';
 const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcCells=Number(params.get('arc-cells')??1),arcNoMips=params.get('arc-no-mips')==='1',arcDirectory=params.get('arc-cells')==='4'?'/.cache/hq-arc-four':biome==='sabana'?'/.cache/hq-arc-pilot':'/.cache/hq-arc-pilot-'+BIOME_IDS[biome],arcAtlasUrl=arcDirectory+'/atlas.webp',arcShift=Number(params.get('arc-shift')??0),arcBaseFog=params.has('arc-base-fog')?Number(params.get('arc-base-fog')):undefined,errors=[],rows=[];
-let world,originalTexture,hqTexture,mesh,state,eye,closed=false,ready=false,running=false,receipt=null;
+let world,originalTexture,hqTexture,mesh,normalMaterial,lodMaterial,state,eye,nativeEye,cameraElevation=mountainCameraElevation(params.get('elevation')??4),closed=false,ready=false,running=false,receipt=null;
 const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 function snapshot(){
  const direction=world.camera.getWorldDirection(new THREE.Vector3());
- return {biome,culture,arcPilot,arcCells:arcPilot?arcCells:null,arcNoMips:arcPilot?arcNoMips:null,arcShift:arcPilot?arcShift:null,arcBaseFog:arcPilot?(arcBaseFog??null):null,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?arcAtlasUrl:document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,minFilter:mesh.material.uniforms.uBackdropAtlas.value.minFilter,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
+ return {biome,culture,nativeEye,cameraElevation,lodDiagnostic:document.querySelector('#lod-debug').checked?'derivative footprint estimate, not queried driver mip levels':'off',drawingBuffer:world.renderer.getDrawingBufferSize(new THREE.Vector2()).toArray(),viewport:[innerWidth,innerHeight,devicePixelRatio],arcPilot,arcCells:arcPilot?arcCells:null,arcNoMips:arcPilot?arcNoMips:null,arcShift:arcPilot?arcShift:null,arcBaseFog:arcPilot?(arcBaseFog??null):null,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?arcAtlasUrl:document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,minFilter:mesh.material.uniforms.uBackdropAtlas.value.minFilter,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
 }
 function draw(){
  if(!ready||closed)return;
+ mesh.material=document.querySelector('#lod-debug').checked?lodMaterial:normalMaterial;
  const mode=document.querySelector('#mode').value,angle=Number(document.querySelector('#yaw').value)*Math.PI/180;
  state.time=document.querySelector('#phase').value==='night'?305:document.querySelector('#phase').value==='dusk'?300+Math.log(2)/2.4:180;
  mesh.material.uniforms.uBackdropAtlas.value=mode==='hq'?hqTexture:originalTexture;
+ const image=mesh.material.uniforms.uBackdropAtlas.value.image;lodMaterial.uniforms.uBackdropDebugSize.value.set(image.width,image.height);
  if(arcPilot)mesh.position.y=arcShift;
  const uv=mesh.geometry.attributes.uv,factor=arcPilot?1:mode==='hq'?2:1;
  for(let i=0;i<uv.count;i++)uv.setX(i,mesh.geometry.userData.originalU[i]*factor);
  uv.needsUpdate=true;
- world.camera.position.copy(eye);world.controls.target.set(eye.x+Math.sin(angle)*100,eye.y-6,eye.z+Math.cos(angle)*100);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.render(0);
+ world.camera.position.copy(eye);world.camera.position.y+=cameraElevation;world.controls.target.set(eye.x+Math.sin(angle)*100,world.camera.position.y-6,eye.z+Math.cos(angle)*100);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.render(0);
  if(!running)report.textContent=JSON.stringify(snapshot(),null,2);
 }
-function close(){if(closed)return;closed=true;world?.dispose();originalTexture?.dispose();report.textContent=JSON.stringify({closed:true,errors,rows:rows.length});}
+function close(){if(closed)return;closed=true;if(mesh&&normalMaterial)mesh.material=normalMaterial;lodMaterial?.dispose();world?.dispose();originalTexture?.dispose();report.textContent=JSON.stringify({closed:true,errors,rows:rows.length});}
 document.querySelector('#hide').onclick=()=>{document.querySelector('header').hidden=true;document.querySelector('#show').hidden=false;};
 document.querySelector('#show').onclick=()=>{document.querySelector('header').hidden=false;document.querySelector('#show').hidden=true;};
 try{
@@ -56,14 +61,16 @@ try{
  await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?arcAtlasUrl:`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  if(arcPilot&&arcNoMips){const texture=world.scene.getObjectByName('biome-2d-backdrop').children[0].material.uniforms.uBackdropAtlas.value;texture.generateMipmaps=false;texture.minFilter=THREE.LinearFilter;texture.needsUpdate=true;}
  await prepareInitialFarWorld(world);
- mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];hqTexture=mesh.material.uniforms.uBackdropAtlas.value;
+ mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];normalMaterial=mesh.material;hqTexture=normalMaterial.uniforms.uBackdropAtlas.value;
+ lodMaterial=new THREE.ShaderMaterial({vertexShader:normalMaterial.vertexShader,fragmentShader:mountainLodDiagnosticFragment(normalMaterial.fragmentShader),uniforms:{...normalMaterial.uniforms,uBackdropDebugSize:{value:new THREE.Vector2()}},side:normalMaterial.side,depthWrite:normalMaterial.depthWrite,toneMapped:normalMaterial.toneMapped,transparent:normalMaterial.transparent});
  originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
  mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/(arcPilot?1:2));
  if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent=arcCells===4?'Cuatro siluetas distintas Ã‚Â· valles abiertos':'Arco diagnÃƒÂ³stico (1 silueta, 3 celdas vacÃƒÂ­as)';}
- eye=world.camera.position.clone();eye.y+=4;world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
+ eye=world.camera.position.clone();nativeEye=eye.toArray();document.querySelector('#elevation').value=cameraElevation;document.querySelector('#lod-debug').checked=params.get('lod-debug')==='1';world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
  ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
- for(const id of ['phase','mode','yaw'])document.querySelector('#'+id).addEventListener('input',()=>{receipt=null;draw();});
+ for(const id of ['phase','mode','yaw','lod-debug'])document.querySelector('#'+id).addEventListener('input',()=>{receipt=null;draw();});
+ document.querySelector('#elevation').addEventListener('input',event=>{try{cameraElevation=mountainCameraElevation(event.target.value);event.target.setCustomValidity('');receipt=null;draw();}catch{event.target.setCustomValidity('Usa una elevación entre 0 y 600 m');}});
  document.querySelector('#turn').onclick=()=>{receipt=null;document.querySelector('#yaw').value=(Number(document.querySelector('#yaw').value)+45)%360;draw();};
  document.querySelector('#move').onclick=()=>{receipt=null;eye.x+=20;draw();};
  document.querySelector('#rotation').onclick=async()=>{

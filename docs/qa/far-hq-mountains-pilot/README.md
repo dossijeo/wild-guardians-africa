@@ -233,3 +233,26 @@ SHA/length before any output write. A second export of every biome to separate
 CLI regressions reject changed encoder/source/output contracts and prove that
 an existing output atlas remains untouched, with no added layout or receipt
 files. All 3 pass. This is reproducibility of candidates, not artistic approval.
+
+
+The harness now exposes `#elevation`, measured relative to the initial native
+eye. Its default 4 m preserves the previously captured QA eye exactly. Values
+0–600 m change only the QA camera, invalidate old receipts and remain visible
+as `cameraElevation` alongside `nativeEye`. URL `&elevation=180` is reproducible;
+Canyon can now be reviewed above its foreground mesas without editing camera
+positions through a browser evaluation. Translation still uses the move button.
+
+The optional `#lod-debug` checkbox (URL `&lod-debug=1`) swaps only the backdrop
+material for a dedicated QA shader, sharing the exact atlas/uniform handles.
+It adds no draw, texture resource or texture sample. Derivatives are calculated
+before alpha discard. Blue/green means estimated implicit LOD <4; orange 4–5 can
+involve trilinear mip 5; magenta ≥5 signals coarser levels. The diagnostic reports
+the drawing-buffer and CSS viewport/DPR, plus filter/mipmap state. It estimates
+requested footprint with dFdx/dFdy, not textureQueryLOD or exact driver-selected
+levels. Non-mip filtering still requests a geometric footprint but samples
+level 0, so the label must not be interpreted as actual mip sampling then.
+Normal mode retains the original unmodified material and shader. Closing the
+world restores that material and disposes the QA material; borrowed texture
+ownership remains with the original world. This instrument is not a frametime
+harness or a product filter change. Three helper regressions and 144 embedded
+browser scripts pass syntax; native compilation/readback remains pending.
