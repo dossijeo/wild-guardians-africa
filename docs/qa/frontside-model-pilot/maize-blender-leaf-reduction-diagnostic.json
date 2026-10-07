@@ -1,0 +1,77 @@
+{
+  "status": "LEAF_REMODELLING_COST_DIAGNOSIS_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "mesh": "maiz_05_maduro",
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "leafRatio": 0.5,
+  "sourceTriangles": 4935,
+  "sourceCoreTriangles": 1926,
+  "sourceLeafTriangles": 3009,
+  "reducedForwardTriangles": 3429,
+  "projectedAllLeafReverseTriangles": 4932,
+  "projectedTriangleChangePercent": -0.06079027355623268,
+  "sourceStateGeometryBytes": 317066,
+  "projectedReverseStateVertices": 10196,
+  "projectedReverseStateGeometryBytes": 396648,
+  "projectedStateByteChangePercent": 25.099506096522497,
+  "leaves": [
+    {
+      "label": 2,
+      "sourceFaces": 446,
+      "reducedFaces": 223,
+      "sourceVertices": 926,
+      "reducedVertices": 707
+    },
+    {
+      "label": 3,
+      "sourceFaces": 588,
+      "reducedFaces": 294,
+      "sourceVertices": 1135,
+      "reducedVertices": 849
+    },
+    {
+      "label": 4,
+      "sourceFaces": 573,
+      "reducedFaces": 286,
+      "sourceVertices": 1121,
+      "reducedVertices": 838
+    },
+    {
+      "label": 5,
+      "sourceFaces": 351,
+      "reducedFaces": 175,
+      "sourceVertices": 640,
+      "reducedVertices": 472
+    },
+    {
+      "label": 6,
+      "sourceFaces": 622,
+      "reducedFaces": 311,
+      "sourceVertices": 1178,
+      "reducedVertices": 879
+    },
+    {
+      "label": 7,
+      "sourceFaces": 209,
+      "reducedFaces": 104,
+      "sourceVertices": 378,
+      "reducedVertices": 277
+    },
+    {
+      "label": 8,
+      "sourceFaces": 220,
+      "reducedFaces": 110,
+      "sourceVertices": 411,
+      "reducedVertices": 304
+    }
+  ],
+  "archive": ".cache/frontside-model-pilot/candidates/archive/4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065.json",
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "limitations": [
+    "Leaf decimation changes geometry, UV interpolation and custom normal interpolation; quality remains untested.",
+    "Original core corners exact; each leaf label processed separately, no driver boundary merging.",
+    "Reduced leaf faces require new bridge mappings; old IDs must not be reused. No production GLB/runtime or bridge data changed.",
+    "No reversed faces added yet; projected all-leaf reversal counts do not establish orientation, coverage or GPU benefit."
+  ]
+}

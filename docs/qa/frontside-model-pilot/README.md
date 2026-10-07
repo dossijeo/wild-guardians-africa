@@ -829,3 +829,43 @@ or source changes were made. Every drawn corner's lanes were independently
 verified. This rules out another lossless state indexing shortcut for these
 pilots, not approximate authored remodeling. Growth, UV/shading and thin-leaf
 coverage still constrain any such remodeling; no budget gate is relaxed.
+
+One Blender4.5.9 derivative experiment reduces maize-mature leaves to50% each,
+processing labels2..8 independently with original UV and custom normals.
+Core/ground1926faces retain all8corner lanes bit-exact. Leaf faces3009→1503;
+forward3429, projected all-leaf geometric reverse4932 versus4935original
+(−.061%). Frozen corner archive4d6d5dd7 is diagnostic JSON only. Changed leaf
+geometry/UV/normal interpolation has not passed quality. Controlled indexing
+plus Float32 reverse flag yields10196vertices/396648decoded state bytes versus
+317066 (+25.10%): state resource gate FAIL retained. No original source or
+bridge JSON changed; derived topology needs new bridge correspondences.
+
+Opt-in blenderLeafReduction compares originalDouble, indexedDouble,
+reducedDouble and same reduced leaves with geometric reversesFront and XY
+normal-frame compensation. It refuses bridges and original-ID diagnostics,
+tests only mature maize, checks archive hash, and stops at quality/control
+failure. Per-mesh resource rows distinguish state vertices/index/decoded bytes
+from category CPU arrays; neither is measured GPU allocation or actual vertex
+invocations. No GLB web candidate exists yet. Shadows stayDouble, with no
+shadowFront credit. A corner-writer check passes reverse winding, opposite
+normals, UV/position equality and live growth references; syntax passes.
+
+Normal-storage optimization would be a different unbuilt candidate:
+[KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_mesh_quantization/README.md)
+permits normalized signed16bit NORMAL with required extension declaration
+and4byte alignment (8byte stride for VEC3 short). This changes normal values,
+requiring decoder/bridge normalized-lane support and separate map/color gates;
+it does not reinterpret the existing Float32 byte failure.
+
+Root's first native sidePartition screen is retained as guided REJECTION:
+maize mature, Sabana/day, wind1.75, azimuth26.25/elevation32.5. Three source
+controls, indexedDouble and partitionedDouble are bit-exact. CoreFront with
+leavesDouble preserves alphaIoU1,0missing/added, but RGBMAE.000674 and tile
+.054833>.01, with297pixel RGB outlier region, fail. Reordering is compatible
+in this view; partial-sidedness shading/visible core remains problematic.
+No GPU benchmark or approval. Raw report,4arm PNG,browser screenshot and
+source hashes are archived as maize-side-partition-guided-*; hashes explicitly
+record HEADddb06093 plus frozen uncommitted derived-fixture additions, not a
+false claim that HEAD alone reproduces the capture. CPU44164/49032 active
+were recorded by root; contexts/tab726 were disposed/closed afterwards.
+Subsequent UI labels now use the actual selected arm names for each profile.
