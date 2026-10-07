@@ -132,5 +132,8 @@ the current snapshot until another rotation completes.
 30 m to place the foot behind existing near ground, preserving mountain aspect,
 height, atlas and shader. Its shift is explicit in each snapshot. It is awaiting
 native review and is not proof of all camera heights or distant ground coverage.
-The existing NativeHorizon supplies only canyon/desert terrain, so this Sabana
-foot problem cannot assume a distant native ground mesh underneath it.
+NativeHorizon supplies only canyon/desert terrain, but the integrated far
+adapter separately supplies FarGround for Sabana. Therefore the foot problem
+must not be attributed to missing ground from the NativeHorizon condition
+alone. Existing base fog grading is another candidate for matching the far
+ground's atmospheric color, without additional texture reads or noise.

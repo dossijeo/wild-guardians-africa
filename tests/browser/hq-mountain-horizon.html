@@ -16,13 +16,13 @@ import {attachBiomeFarVegetation} from '../../src/rendering/far-vegetation.js';
 import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcShift=Number(params.get('arc-shift')??0),errors=[],rows=[];
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcShift=Number(params.get('arc-shift')??0),arcBaseFog=params.has('arc-base-fog')?Number(params.get('arc-base-fog')):undefined,errors=[],rows=[];
 let world,originalTexture,hqTexture,mesh,state,eye,closed=false,ready=false,running=false,receipt=null;
 const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 function snapshot(){
  const direction=world.camera.getWorldDirection(new THREE.Vector3());
- return {biome,culture,arcPilot,arcShift:arcPilot?arcShift:null,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?'/.cache/hq-arc-pilot/atlas.webp':document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
+ return {biome,culture,arcPilot,arcShift:arcPilot?arcShift:null,arcBaseFog:arcPilot?(arcBaseFog??null):null,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:arcPilot?'/.cache/hq-arc-pilot/atlas.webp':document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
 }
 function draw(){
  if(!ready||closed)return;
@@ -42,6 +42,7 @@ document.querySelector('#show').onclick=()=>{document.querySelector('header').hi
 try{
  if(!BIOME_IDS[biome])throw Error('Invalid QA biome');
  if(!Number.isFinite(arcShift)||arcShift< -200||arcShift>100)throw Error('Invalid QA mountain foot shift');
+ if(arcBaseFog!==undefined&&(!Number.isFinite(arcBaseFog)||arcBaseFog<0||arcBaseFog>1))throw Error('Invalid QA mountain base fog');
  const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture),nav=new Navigation(712,biome,pack.profile);
  state=Game.newGame({seed:712,biome,culture});const site=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);state.time=180;state.tutorial.step='done';Game.pause(state,'qa');nav.setState(state);
@@ -50,7 +51,7 @@ try{
  const loader=new THREE.TextureLoader();
  if(arcPilot&&biome!=='sabana')throw Error('Mountain arc pilot currently only supports Sabana');
  const backdropArcLayout=arcPilot?await json('/.cache/hq-arc-pilot/layout.json'):null;
- await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?'/.cache/hq-arc-pilot/atlas.webp':`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
+ await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?'/.cache/hq-arc-pilot/atlas.webp':`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  await prepareInitialFarWorld(world);
  mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];hqTexture=mesh.material.uniforms.uBackdropAtlas.value;
  originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
