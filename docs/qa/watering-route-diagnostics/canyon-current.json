@@ -1,0 +1,49 @@
+{
+  "scope": "QA observer only; native historical snapshot and ordinary paid hiring where required, complete serialized parity at every tick. No positions, collision, reach, growth, RNG, speed or economic overrides. Counters do not prove global inaccessibility; a null A* can reflect a search limit. Not the live day-76 checkpoint, 100-night acceptance, rendering or a performance benchmark.",
+  "input": "docs/qa/intensive-canyon-10/state.json",
+  "inputSha256": "501a1240a9de9f6f6ca860216c45c9a24ab4c5101155a4fded85159eebdc32ec",
+  "node": "v20.11.0",
+  "ticks": 100,
+  "stepSeconds": 0.1,
+  "trajectorySha256": "301d9a9a1782369aedb24c8c350e0466101442bf16a0fbfdcdd7e1843cd38112",
+  "sourceHashes": {
+    "workPoints": "32005dd48b01b4485febee5453a4b48afc81ee3a68a2f40a40a2409eb7883bf2",
+    "game": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "observedWork": "d17f5963872093792dc957ae81b8464d13e061d0e4c514b6d13938f26b611f3a",
+    "observedGame": "3119cd0682c7379c35331334e487f7d38501b8fdbd991d35932b20f0f5ecb229",
+    "navigation": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8",
+    "observer": "4cbeeaa63c3ff9624e978de807d5fc3d780ed19a87a63095fc37b36a53c4338b",
+    "runner": "3c9b186ca60cc2b3101fca9816a65fe1cd96ed0b30ad9a5ebbc73ccda8cab6bc"
+  },
+  "watering": {
+    "reachChecks": 2,
+    "distanceRejected": 0,
+    "heightRejected": 0,
+    "routes": 2,
+    "candidates": 2,
+    "reachRejected": 0,
+    "walkRejected": 0,
+    "pathQueries": 2,
+    "pathRejected": 0,
+    "reachable": 2,
+    "unreachable": 0
+  },
+  "navigation": {
+    "queries": 26,
+    "searches": 13,
+    "failedMemoHits": 0,
+    "failures": 0,
+    "maxFailureKeys": 0
+  },
+  "final": {
+    "day": 11,
+    "time": 9.99999999999998,
+    "result": null,
+    "hired": 13,
+    "workers": 13,
+    "living": 148,
+    "tasks": 123,
+    "blocked": 0,
+    "stateSha256": "ce417bf93a4140f971dd4ef556deb399fb4d933922d70d5608fb925d4780977c"
+  }
+}
