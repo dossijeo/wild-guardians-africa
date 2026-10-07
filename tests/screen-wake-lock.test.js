@@ -32,3 +32,18 @@ test('denial and unsupported platforms do not form per-frame retry loops; system
 test('dispose removes lifecycle listeners and cancels pending grants',async()=>{const f=fixture();f.controller.setActive(true);await flush();f.controller.dispose();f.document.dispatchEvent(new Event('pointerdown'));f.document.dispatchEvent(new Event('visibilitychange'));assert.equal(f.requests.length,1);assert.equal(f.controller.active,false);assert.equal(f.sentinels[0].released,true);});
 
 test('a hidden-to-visible transition cannot let an old pending grant replace the new lock',async()=>{const f=fixture(),grants=[];f.controller.api={request:()=>new Promise(resolve=>grants.push(resolve))};f.controller.setActive(true);f.document.hidden=true;f.document.dispatchEvent(new Event('visibilitychange'));f.document.hidden=false;f.document.dispatchEvent(new Event('visibilitychange'));assert.equal(grants.length,2);const old=new EventTarget(),fresh=new EventTarget();old.release=async()=>old.released=true;fresh.release=async()=>fresh.released=true;grants[1](fresh);await flush();grants[0](old);await flush();assert.equal(old.released,true);assert.equal(f.controller.sentinel,fresh);assert.equal(fresh.released,undefined);f.controller.dispose();assert.equal(fresh.released,true);});
+
+test('a platform release immediately after granting cannot lose recovery behind the settling request',async()=>{
+ const f=fixture(),native=f.wakeLock.request;
+ f.controller.api={request:type=>{
+  const pending=native(type),sentinel=f.sentinels.at(-1);
+  if(f.requests.length===1){
+   const listen=sentinel.addEventListener.bind(sentinel);
+   sentinel.addEventListener=(...args)=>{listen(...args);queueMicrotask(()=>sentinel.release());};
+  }
+  return pending;
+ }};
+ f.controller.setActive(true);await flush();await flush();
+ assert.equal(f.requests.length,2);assert.equal(f.controller.sentinel,f.sentinels[1]);assert.equal(f.controller.pending,null);
+ f.controller.dispose();await flush();assert.equal(f.requests.length,2);assert.equal(f.sentinels[1].released,true);
+});
