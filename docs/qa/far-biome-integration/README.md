@@ -246,3 +246,7 @@ All paths preserve state/errors0. All-near declines10/0/11 retain native orders/
 ## Very-low quality Sabana slot1 (ffdda6c)
 
 `savanna-very-low-slot1-night-orbit.json/png` exercises the baobab atlas through a complete night orbit with the soft atmosphere in the lowest profile:656/691 fully ready transition frames, zero selected descents, identical logical state and errors0. All13 nearby-tree declines retain residency/orders and are outside the frustum. This validates one additional species/profile/phase only; slots2/3 in this profile remain pending. The final PNG illustrates that route rather than exact per-angle atlas matching.
+
+## Current source validation after main811db06 (ac8e990)
+
+42 targeted atmosphere/backdrop/ownership/native grouping/shadow/transition/terrain-camera checks PASS (`current-directed-tests.txt`). Build PASS (`current-build.txt`); package PASS (`current-package.txt`):694files/403539773bytes/859relative links/20runtimeGLBs, including current Opus/voice/image aliases. The full-suite2632PASS record predates these changes and is not represented as validation of this source. Remaining native species/biome and optional atmosphere acceptance work is still required before PR.

@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: transition chunks retain tree color and shadows without bringing back nearby small props
+ok 1 - transition chunks retain tree color and shadows without bringing back nearby small props
+  ---
+  duration_ms: 45.579
+  ...
+# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+ok 2 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+  ---
+  duration_ms: 10.7381
+  ...
+# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+ok 3 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+  ---
+  duration_ms: 15.4926
+  ...
+# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+ok 4 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+  ---
+  duration_ms: 44.8697
+  ...
+# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+ok 5 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+  ---
+  duration_ms: 26.8323
+  ...
+# Subtest: light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+ok 6 - light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+  ---
+  duration_ms: 11.7306
+  ...
+# Subtest: shadow selection includes bounds of the final native variant even if they exceed LOD0
+ok 7 - shadow selection includes bounds of the final native variant even if they exceed LOD0
+  ---
+  duration_ms: 4.093
+  ...
+# Subtest: optional far color compaction removes only fully hidden instances and preserves native shadows
+ok 8 - optional far color compaction removes only fully hidden instances and preserves native shadows
+  ---
+  duration_ms: 5.3023
+  ...
+# Subtest: shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
+ok 9 - shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
+  ---
+  duration_ms: 43.6849
+  ...
+# Subtest: native shadow population combines color bins once using the final original variant and stable GPU matrices
+ok 10 - native shadow population combines color bins once using the final original variant and stable GPU matrices
+  ---
+  duration_ms: 64.9594
+  ...
+# Subtest: shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+ok 11 - shadow proxies enter only the shadow traversal and restore borrowed resources even on an exception
+  ---
+  duration_ms: 44.3538
+  ...
+# Subtest: disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+ok 12 - disabled, cached and empty-light passes do not add proxies; hidden color batches and grass never cast
+  ---
+  duration_ms: 11.0593
+  ...
+# Subtest: decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+ok 13 - decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+  ---
+  duration_ms: 12.2635
+  ...
+# Subtest: invalid backdrop fog mix rejects before mutating the scene or texture
+ok 14 - invalid backdrop fog mix rejects before mutating the scene or texture
+  ---
+  duration_ms: 1.7701
+  ...
+# Subtest: decorative fog uses the shared atmosphere palette through the day/night transition
+ok 15 - decorative fog uses the shared atmosphere palette through the day/night transition
+  ---
+  duration_ms: 2.3093
+  ...
+# Subtest: optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+ok 16 - optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+  ---
+  duration_ms: 2.275
+  ...
+# (node:30664) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 17 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 11.35
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 18 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.2104
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 19 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 3.6419
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 20 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 1.5303
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 21 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 2.1101
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 22 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 15.6796
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 23 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 81.759
+  ...
+# Subtest: far atmosphere retains the existing default and permits a band around the handoff
+ok 24 - far atmosphere retains the existing default and permits a band around the handoff
+  ---
+  duration_ms: 5.2389
+  ...
+# (node:21792) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 25 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 9.0386
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 26 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 4.9307
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 27 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 9.808
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 28 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 3.3501
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 29 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.5966
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 30 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 1.0678
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 31 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 2.9617
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 32 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 9.8426
+  ...
+# Subtest: transition residency retains the real canyon edge chunk after square radius drops it
+ok 33 - transition residency retains the real canyon edge chunk after square radius drops it
+  ---
+  duration_ms: 2.7661
+  ...
+# Subtest: all chunk-owned anchors in the handoff circle remain resident across cell borders and negative coordinates
+ok 34 - all chunk-owned anchors in the handoff circle remain resident across cell borders and negative coordinates
+  ---
+  duration_ms: 4.2957
+  ...
+# (node:45392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 35 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 32.8286
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 36 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 1.2684
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 37 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 34.9782
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 38 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 1717.726
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 39 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 3.864
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 40 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.7389
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 41 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 8.8014
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 42 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.8148
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3584.6591
