@@ -7,7 +7,7 @@ export function backdropProfile(biome,layer){
  const step=biome==='savanna'?8:16,r=random(1471+index*193+layer*277),jitter=Array.from({length:2048/step},()=>r()*7),points=[];
  // Broad separated ridges and short mesa caps, independently composed per layer.
  // Avoid three phase-aligned sine waves that read as parallel horizontal bands.
- const riverRidges=biome==='grand_river'?Array.from({length:5},(_,i)=>({center:(i+.1+r()*.8)*2048/5,width:210+r()*170,height:100+r()*95-layer*10})):null;
+ const riverRidges=biome==='grand_river'?Array.from({length:5},(_,i)=>({center:(i+.1+r()*.8)*2048/5,width:210+r()*170,height:225+r()*95-layer*14})):null;
  const ridges=biome==='savanna'?Array.from({length:7},(_,i)=>({center:(i+.15+r()*.7)*2048/7,width:125+r()*110,height:105+r()*95-layer*12,cap:.10+r()*.17})):null;
  for(let x=0;x<=2048;x+=step){const wrap=x%2048;let height;
   if(ridges){let relief=0;for(const ridge of ridges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,ridge.height*(p<ridge.cap?1:Math.max(0,1-(p-ridge.cap)/(1-ridge.cap))));}height=315+layer*42-relief+Math.sin(wrap*Math.PI*2/2048*(5+layer)) * 3;}
