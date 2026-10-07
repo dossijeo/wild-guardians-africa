@@ -1,3 +1,4 @@
+import {obstructionMaterial} from '../../src/rendering/obstruction.js';
 import * as THREE from 'three';
 import {NativeFarGpuCancelled} from './prepare-native-far-gpu.js';
 import {lodMix} from './far-impostor-math.js';
@@ -13,7 +14,7 @@ export function standbyCoverageReady(id,{coverage,standby,nativeTree,logicalTree
 }
 // Logical preloads can precede the first resident chunk. Finalize the same
 // idempotent recipe the scene registry applies before capturing GPU proof.
-export function finalizeStandbyMaterials(toon,sources){for(const source of sources)toon.material(source.material);}
+export function finalizeStandbyMaterials(toon,sources){for(const source of sources){obstructionMaterial(source.material);toon.material(source.material);}}
 function sourceKey(source){return [source.geometry.uuid,source.material.uuid,source.material.version].join(':');}
 function geometryView(source,capacity){
  const g=new THREE.BufferGeometry();if(source.index)g.setIndex(new THREE.BufferAttribute(source.index.array,source.index.itemSize,source.index.normalized));
