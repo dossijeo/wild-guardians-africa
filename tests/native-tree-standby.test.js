@@ -174,3 +174,29 @@ test('bridge triangle accounting follows renderer single-material versus grouped
  mesh.material=[material,material];assert.equal(standbySubmittedTriangles(mesh),8);
  geometry.setDrawRange(3,3);assert.equal(standbySubmittedTriangles(mesh),4);mesh.dispose();geometry.dispose();material.dispose();
 });
+
+test('standby frustum uses cached full-source global envelopes without revoking preparation',async()=>{
+ const f=fixture(),a=tree('a-front',0),b=tree('z-behind',0);a.z=-20;b.z=20;
+ const toEntry=t=>({...descriptor(t),matrix:new THREE.Matrix4().makeTranslation(t.x,t.y,t.z).toArray()});
+ f.owner.request([toEntry(a),toEntry(b)],{x:0,z:0});await settled(f.owner);
+ const camera=new THREE.PerspectiveCamera(60,1,.1,100),frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),bank=f.owner.active,mesh=bank.meshes[0],version=mesh.instanceMatrix.version;
+ camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+ const trees=new Map([[a.id,a],[b.id,b]]),state=()=>({enabled:true,ready:1}),bounds=bank.entries.get(a.id).bounds;
+ f.owner.update({x:0,z:0},trees,state,()=>false,new Set(),()=>1,frustum);
+ assert.equal(f.owner.stats.rendered,1);assert.equal(mesh.count,1);assert.equal(f.owner.has(b.id,b),true);
+ camera.rotation.y=Math.PI;camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+ f.owner.update({x:0,z:0},trees,state,()=>false,new Set(),()=>1,frustum);
+ assert.equal(f.owner.stats.rendered,1);assert.equal(mesh.count,2);assert.equal(mesh.geometry.attributes.nativeVisibility.getX(1),1);
+ assert.equal(mesh.instanceMatrix.version,version);assert.equal(bank.entries.get(a.id).bounds,bounds);assert.equal(f.owner.has(a.id,a),true);f.close();
+});
+
+test('standby envelope includes every LOD and preserves edge visibility for rotated nonuniform trees',async()=>{
+ const f=fixture(),large=new THREE.BoxGeometry(40,8,30),t=tree('edge',18);t.z=-20;t.y=2;t.yaw=.7;t.sx=2;t.sy=.6;t.sz=.8;
+ f.sources[1]={geometry:large,material:f.sources[1].material};const transform=new THREE.Matrix4().compose(new THREE.Vector3(t.x,t.y,t.z),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),t.yaw),new THREE.Vector3(t.sx,t.sy,t.sz));
+ f.owner.request([{...descriptor(t),matrix:transform.toArray()}],{x:0,z:0});await settled(f.owner);
+ const bounds=f.owner.active.entries.get(t.id).bounds,point=new THREE.Vector3();
+ for(const source of f.sources){const pos=source.geometry.attributes.position;for(let i=0;i<pos.count;i++){point.fromBufferAttribute(pos,i).applyMatrix4(transform);assert.ok(bounds.containsPoint(point));}}
+ const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.updateMatrixWorld(true);const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+ assert.equal(frustum.containsPoint(new THREE.Vector3(t.x,t.y,t.z)),false);assert.equal(frustum.intersectsBox(bounds),true);
+ f.owner.update({x:0,z:0},new Map([[t.id,t]]),()=>({enabled:true,ready:1}),()=>false,new Set(),()=>1,frustum);assert.equal(f.owner.stats.rendered,1);f.close();large.dispose();
+});

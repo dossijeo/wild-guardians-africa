@@ -55,7 +55,10 @@ export class NativeTreeStandby {
    // writing GPU floats, like native merged groups; large-world visits must not
    // lose the tree's fractional placement through a global Float32 translation.
    bank.root.position.set(Math.round(camera.x/48)*48,0,Math.round(camera.z/48)*48);
-   bank.entries=wanted;bank.rows=this.sources.map(()=>[]);for(const d of wanted.values())bank.rows[d.level].push(d);
+   // Cache global envelopes only during preparation. All native LOD sources
+   // contribute; static prop vertices need no per-frame bounds rebuild. The
+   // half-metre margin keeps clipping conservative at frustum boundaries.
+   bank.entries=wanted;bank.rows=this.sources.map(()=>[]);const localBounds=new THREE.Box3(),treeMatrix=new THREE.Matrix4();for(const source of this.sources){if(!source.geometry.boundingBox)source.geometry.computeBoundingBox();localBounds.union(source.geometry.boundingBox);}for(const d of wanted.values())if(!d.bounds)d.bounds=localBounds.clone().applyMatrix4(treeMatrix.fromArray(d.matrix)).expandByScalar(.5);for(const d of wanted.values())bank.rows[d.level].push(d);
    // Keep prepared packing immutable, with near entries first. Trailing
    // zero-fade entries can then be excluded by count without matrix uploads.
    for(const rows of bank.rows)rows.sort((a,b)=>Math.hypot(a.x-camera.x,a.z-camera.z)-Math.hypot(b.x-camera.x,b.z-camera.z)||a.id.localeCompare(b.id));
@@ -68,11 +71,11 @@ export class NativeTreeStandby {
   }}catch(error){if(!this.closed){if(error instanceof NativeFarGpuCancelled)this.stats.cancelledPreparations++;else{this.stats.errors.push(String(error));this.onError(error);}}}
   finally{this.busy=false;if(this.closed){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}else if(this.pending)void this.run();}
  }
- update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1){
+ update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1,frustum=null){
   let rendered=0,submittedInstances=0,submittedTriangles=0,visibleTriangles=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){
    const attribute=mesh.geometry.attributes.nativeVisibility;let first=Infinity,last=-1,live=0,lastLive=-1;
    for(const [i,d] of this.active.rows[level].entries()){
-    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround(!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),this.start,this.end,state.ready)):0);
+    const tree=trees.get(d.id),state=stateFor(d.id),value=Math.fround((!frustum||frustum.intersectsBox(d.bounds))&&!nativeReady(d.id)&&this.has(d.id,tree,suppressed)&&state?.enabled?baseFor(d.id)*(1-lodMix(Math.hypot(camera.x-tree.x,camera.z-tree.z),this.start,this.end,state.ready)):0);
     if(value>0){live++;rendered++;lastLive=i;}if(attribute.array[i]!==value){attribute.array[i]=value;first=Math.min(first,i);last=i;}
    }
    mesh.visible=live>0;mesh.count=lastLive+1;const triangles=standbySubmittedTriangles(mesh);submittedInstances+=mesh.count;submittedTriangles+=triangles;visibleTriangles+=mesh.count?triangles*live/mesh.count:0;if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
