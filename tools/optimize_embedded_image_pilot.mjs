@@ -7,6 +7,7 @@ import {prepareEmbeddedColorInput} from './embedded-color-input.mjs';
 import {replaceWebGlbColorImages} from './repack_web_glb_images.mjs';
 import {TinifyImageCache} from './tinify-image-cache.mjs';
 import {compareColorPixels} from './image-pixel-comparison.mjs';
+import {verifyEmbeddedColorCandidate} from './verify-embedded-color-candidate.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 try{
  const [path,indexText,...extra]=process.argv.slice(2);
@@ -20,7 +21,8 @@ try{
  const optimized=await client.optimize(prepared.bytes,{format:prepared.format});
  const [originalComparison,runtimeComparison]=await Promise.all([compareColorPixels(prepared.bytes,optimized.bytes),compareColorPixels(prepared.runtimeImage,optimized.bytes)]);
  const candidate=await replaceWebGlbColorImages(runtime,new Map([[index,optimized.bytes]]));
- const report={runtimePath:record.runtime,sourcePath:record.source,...prepared.provenance,...optimized.receipt,reused:optimized.reused,originalComparison,runtimeComparison,savedImageBytes:prepared.runtimeImage.length-optimized.bytes.length,beforeGlbBytes:runtime.length,candidateGlbBytes:candidate.length,savedRuntimeBytes:runtime.length-candidate.length,candidateGlbSha256:sha(candidate),acceptedForRuntime:false,scope:'Actual Tinify pilot from original embedded color at existing runtime resolution. Candidate GLB only; no distributed asset/manifest changed. Requires native visual and package acceptance; not RAM/GPU/frametime evidence.'};
+ const candidateVerification=await verifyEmbeddedColorCandidate(original,runtime,candidate,index);
+ const report={runtimePath:record.runtime,sourcePath:record.source,...prepared.provenance,...optimized.receipt,reused:optimized.reused,originalComparison,runtimeComparison,candidateVerification,savedImageBytes:prepared.runtimeImage.length-optimized.bytes.length,beforeGlbBytes:runtime.length,candidateGlbBytes:candidate.length,savedRuntimeBytes:runtime.length-candidate.length,candidateGlbSha256:sha(candidate),acceptedForRuntime:false,scope:'Actual Tinify pilot from original embedded color at existing runtime resolution. Candidate GLB only; no distributed asset/manifest changed. Requires native visual and package acceptance; not RAM/GPU/frametime evidence.'};
  const directory=resolve(root,'.cache/tinify-embedded-pilot',prepared.provenance.originalImageSha256+'-'+index);await mkdir(directory,{recursive:true});
  await writeFile(resolve(directory,'input.png'),prepared.bytes);await writeFile(resolve(directory,'candidate.webp'),optimized.bytes);await writeFile(resolve(directory,'candidate.glb'),candidate);await writeFile(resolve(directory,'report.json'),JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));

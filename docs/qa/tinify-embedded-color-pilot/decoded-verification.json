@@ -1,0 +1,35 @@
+{
+  "originalSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+  "runtimeSha256": "0a79f672e6ce777d6639510ff7a74661b92244652011682d0c28f4b4de5cc7b2",
+  "candidateSha256": "a0fec1e4402299e0b58b3b551881d513cc2b799d26b17bbf12aac5eca67c78be",
+  "imageIndex": 1,
+  "decodedGeometryViews": 1521,
+  "decodedGeometryBytes": 2691410,
+  "decodedGeometryMaxError": 0,
+  "otherImagesByteExact": 2,
+  "alphaDifferences": 0,
+  "rmse": 2.9808030647175054,
+  "psnr": 38.644137927219646,
+  "colorPixelsExact": false,
+  "maxRgbDifference": 66,
+  "decodedBaselineErrors": 1,
+  "decodedCandidateErrors": 1,
+  "baselineErrors": [
+    {
+      "code": "ACCESSOR_VECTOR3_NON_UNIT",
+      "message": "Vector3 at accessor indices 57584..57586 is not of unit length: 0.",
+      "severity": 0,
+      "pointer": "/meshes/0/primitives/0/attributes/TANGENT"
+    }
+  ],
+  "candidateErrors": [
+    {
+      "code": "ACCESSOR_VECTOR3_NON_UNIT",
+      "message": "Vector3 at accessor indices 57584..57586 is not of unit length: 0.",
+      "severity": 0,
+      "pointer": "/meshes/0/primitives/0/attributes/TANGENT"
+    }
+  ],
+  "newErrors": [],
+  "scope": "Offline decoded geometry, metadata, alpha, color error and conformance. Native appearance/loading, build/package and performance acceptance remain separate."
+}

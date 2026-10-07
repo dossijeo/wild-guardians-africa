@@ -1,5 +1,5 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA color embebido Tinify</title>
-<style>body{margin:0;font:14px system-ui;background:#e7ddc6}header{position:absolute;z-index:2;background:#fff9ed;padding:8px;max-width:95vw}button{padding:8px}#report{font-size:11px;max-height:90px;overflow:auto}canvas{display:block;width:100vw;height:100vh}</style>
+<style>body{margin:0;font:14px system-ui;background:#e7ddc6}header{position:absolute;z-index:2;background:#fff9ed;padding:8px;max-width:95vw}button{padding:8px}#report{position:fixed;bottom:0;left:0;background:#fff9ed;font-size:11px;max-height:90px;max-width:95vw;overflow:auto;margin:0}canvas{display:block;width:100vw;height:100vh}</style>
 <header>Facóquero: runtime actual / candidata Tinify desde PNG original. Pose congelada, luz nativa fija y suelo QA; sin HDR ni simulación.<br><button id="baseline" disabled>Runtime actual</button><button id="candidate" disabled>Candidata Tinify</button><button id="night" disabled>Día / noche</button><button id="compare" disabled>Comparar seis paletas día/noche</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas id="view"></canvas>
 <script type="module">
 import * as THREE from 'three';
