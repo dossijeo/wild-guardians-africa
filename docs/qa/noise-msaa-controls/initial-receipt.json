@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-07T21:10:26.242Z",
+  "baseGitHead": "59085f3c",
+  "sources": {
+    "tests/browser/african-toon.html": "552e7b181b0aec601adb9c9ffcb52dd4f8a816ce4e0caba5664f472519e47b8e",
+    "tests/browser/noise-spatial-review.js": "d294cff1f039756cc74bbca3eedcce683c3d6ee33adc6d91c28503c73e43fd99",
+    "tests/browser/noise-spatial-metrics.js": "5cd6d2c2b8998d67932ac1f7441f44eb6d0243955b273d56fa3e90e4a9ab6eee",
+    "tests/browser/noise-volume.js": "99b7ad665794a700ab8a2a564d3c7ca527c0b7493fc039c51d2c5202011b3329"
+  },
+  "files": {
+    "no-msaa": {
+      "rawSha256": "d5a8ae3902b6a6a368fd8ffe64c448ed0bef0a73bc28829df1247a323e866acc",
+      "gzipSha256": "f97993e22b64374ce85cd134b019de36637721df0eca5e8c91026271613d668e",
+      "gzipBytes": 2611,
+      "contextAttributes": {
+        "alpha": false,
+        "antialias": false,
+        "depth": true,
+        "desynchronized": false,
+        "failIfMajorPerformanceCaveat": false,
+        "powerPreference": "default",
+        "premultipliedAlpha": true,
+        "preserveDrawingBuffer": false,
+        "stencil": false,
+        "xrCompatible": false
+      },
+      "shadows": true,
+      "screenshot": {
+        "bytes": 133047,
+        "sha256": "ecc469432c7466bec4c6577a6d85df83a05f535cebc4a477a0a8feb5356ac1aa"
+      }
+    },
+    "msaa": {
+      "rawSha256": "f183f8bc2a0a9c977d559cd4c018a8bc0de1c1e4d2e9fcc1a13cc1b9dff0d3d7",
+      "gzipSha256": "e3fc773b08f7b2d84bb0161c263e39b935e094df76315717e19286e31734fb26",
+      "gzipBytes": 2354,
+      "contextAttributes": {
+        "alpha": true,
+        "antialias": true,
+        "depth": true,
+        "desynchronized": false,
+        "failIfMajorPerformanceCaveat": false,
+        "powerPreference": "default",
+        "premultipliedAlpha": true,
+        "preserveDrawingBuffer": false,
+        "stencil": false,
+        "xrCompatible": false
+      },
+      "shadows": true,
+      "screenshot": {
+        "bytes": 128148,
+        "sha256": "d75a17d62d013a89f85c80cf3d6c415429db4117d733d7332110ab1c88041298"
+      }
+    }
+  },
+  "limit": "Initial no-MSAA context also differs in alpha; retain as confounded control. Repeat matching native alpha before interpreting antialias independently."
+}

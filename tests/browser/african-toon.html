@@ -32,7 +32,16 @@ async function load(){tinifyVillageMaps=null;tinifyVillageEnabled=true;document.
  const biome=biomes[Math.floor(index/5)],culture=cultures[index%5],payload=payloads.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));if(!payload)throw new Error('Cultura no encontrada '+culture);
  const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),state=Game.newGame({biome,culture,seed:712}),nav=new Navigation(712,biome,pack.profile),location=await findInitialLocationAsync(nav,payload);
  Object.assign(state.villages[0],location);state.suppressed.push(...location.suppress);nav.setState(state);
- world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=error;world.qualitySetting(new URL(document.URL).searchParams.get('q')??'media');document.querySelector('#quality').value=world.quality;await world.load(state,nav,payload);
+ const qaCanvas=document.querySelector('#world');
+ // QA-only control: establish the context before Three allocates resources.
+ // WorldScene's production renderer options and GL epoch guard stay unchanged.
+ if(new URL(document.URL).searchParams.get('qa-no-msaa')==='1'){
+  // Three requests a context with alpha:true even when its renderer alpha
+  // option is false. Match the actual native context to isolate only MSAA.
+  const qaContext=qaCanvas.getContext('webgl2',{antialias:false,alpha:true});
+  if(!qaContext||qaContext.getContextAttributes()?.antialias!==false)throw Error('QA no-MSAA context unavailable');
+ }
+ world=new WorldScene(qaCanvas,()=>{});world.onError=error;world.qualitySetting(new URL(document.URL).searchParams.get('q')??'media');document.querySelector('#quality').value=world.quality;await world.load(state,nav,payload);
  const center=location.center;Game.resume(state,'intro');Game.placeStructure(state,'qa-center',center,nav);Game.pause(state,'qa');state.tutorial.step='done';
  // Explicit visual fixture actors, not a claimed gameplay scenario. No persistence.
  const profiles=['olderMale','olderFemale','youngMale','youngFemale'];
