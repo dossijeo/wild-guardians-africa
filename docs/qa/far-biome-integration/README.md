@@ -213,3 +213,16 @@ The experimental adapter and decorative backdrop now accept a shared validated d
 `savanna-skyfog30-near25.json/png` is actual near-handoff evidence, captured during hold10 at age18.9125 with exactly25m minimum distance and selected readiness1. The matching native tree is fully3D. Its complete30s approach (`savanna-skyfog30-approach.json`) has513/528 fully ready transition frames, zero selected descents, state identical and errors0. This is not proof of every other tree/species or performance.
 
 A subsequent soft-grade option (`backdrop-grade=soft`, source6001b5d) retains one atlas/one draw/same cylinder and uses the existing fog mix with an inexpensive quadratic UV weight toward fog at its bottom; the default configuration retains its former constant expression. The same option reduces the decorative night tint to[.08,.10,.12]. `savanna-softfog-{day,night}.json/png` confirms the same camera and zero errors. The base band is less pronounced and the night backdrop better matches the dark world; mountain shapes remain simplified. It adds no texture reads or assets, but does add a few arithmetic operations in this optional fragment variant, so no zero-frametime-cost claim is made. Other-biome visual and combined-cost repetitions remain pending before enabling it. Thirteen focused checks pass; all normal gameplay remains OFF.
+
+## Cost repetition of soft atmosphere (377a6b8)
+
+`savanna-softfog-abba.json` measures the complete tree-circle variant plus30–300m sky palette and soft decorative grading in the initial native seed712/media/Mapungubwe view at1280×720 CSS /1600×900 framebuffer. All480 GPU queries resolve without disjoint or discarded samples; state is unchanged and errors0.
+
+| Lot | GPU p50 ms | CPU render p50 ms | Draws | Triangles |
+| --- | --- | --- | --- | --- |
+| A1 native |22.595|6.6|59|960014|
+| B1 soft atmosphere |21.712|5.9|55|810914|
+| B2 soft atmosphere |20.678|6.2|55|810914|
+| A2 native |23.769|7.9|59|960014|
+
+Both candidate medians are below both native medians in this view. A baselines drift5.2% and B medians differ4.8%, so this does not establish a precise percentage gain or isolate the arithmetic cost of the backdrop gradient. The earlier tree-circle measurement is a different source/configuration and is not reused to claim a free shader change. Other-biome/quality cost remains pending.
