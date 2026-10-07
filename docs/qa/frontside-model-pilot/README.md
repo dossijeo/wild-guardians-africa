@@ -644,3 +644,24 @@ pixels as source Back/unselected/different candidate source ID. Diagnostic IDs
 remain separate draws; this guides selection investigation, not acceptance.
 The earlier sourceFace-based classification is withdrawn, with no geometry
 adaptation performed from it.
+
+Corrected raw IDs now feed a QA-only `colorGuided` sidecar:31 additional
+maize-mature reversals and60 bridge3-to4 reversals, with source SHA256 and
+input report hashes verified offline; the browser also checks original bytes
+against that SHA256. No source GLB or faceLabels changes. Repeating the known
+training views with direct frame XY compensation now passes color/alpha:
+mature worst tiles .005363/.0002322, morph .0019422 with0missing pixels.
+Three source repeats per sample and indexed DoubleSide controls are exact.
+Reports retain known-view/training status and active CPU campaigns27148/49032;
+no timings. Triangles42,621 versus33,272 (+28.099%) still fail the proposed
+budget. Buffers5,738,922B versus original6,169,226B and indexed source4,248,080B
+do not establish GPU improvement or waive that failure. ShadowSide stillDouble.
+
+Before any further drawing, reserve CULT_WITHHELD_V1 for this frozen sidecar:
+azimuth43.125/133.125/223.125/313.125, elevation47.5/72.5, windclock2.875/5.625,
+mature plus stage3-to4 morph fractions .375/.875, Sabana/Manglares and day,
+half-night/night. None trained the reversal selection. Unchanged policy2
+requires3source controls in every sample; stop at the first failed candidate
+or invalid control and retain it. First limited screens can only diagnose
+generalization, not satisfy full states/cultures/shadow/resource/GPU gates.
+The colorGuided source/index layout and sidecar are frozen before this profile.
