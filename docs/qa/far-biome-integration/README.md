@@ -250,3 +250,17 @@ All paths preserve state/errors0. All-near declines10/0/11 retain native orders/
 ## Current source validation after main811db06 (ac8e990)
 
 42 targeted atmosphere/backdrop/ownership/native grouping/shadow/transition/terrain-camera checks PASS (`current-directed-tests.txt`). Build PASS (`current-build.txt`); package PASS (`current-package.txt`):694files/403539773bytes/859relative links/20runtimeGLBs, including current Opus/voice/image aliases. The full-suite2632PASS record predates these changes and is not represented as validation of this source. Remaining native species/biome and optional atmosphere acceptance work is still required before PR.
+
+## Remaining Sabana and Gran Río species (b449105)
+
+| Biome / quality / slot / phase / path | Ready transition frames | Selected descents | Evidence |
+| --- | --- | --- | --- |
+| Sabana / very low /2 / dusk / lateral |638/669|0|`savanna-very-low-slot2-dusk-lateral.json`|
+| Sabana / very low /3 / day / approach |385/387|0|`savanna-very-low-slot3-day-approach.json`|
+| Gran Río / low /1 / night / orbit |802/840|0|`river-low-slot1-night-orbit.json`|
+| Gran Río / low /2 / dusk / lateral |806/806|0|`river-low-slot2-dusk-lateral.json`|
+| Gran Río / low /3 / day / approach |437/437|0|`river-low-slot3-day-approach.json`|
+
+All five paths report errors0 and identical state. Nearby declines0/12/4/10/15 respectively are outside the frustum, with native residency/orders preserved. Combined with prior slot0 evidence, all four slots of Sabana/Manglares/Gran Río now have selected-tree native motion evidence. With earlier Volcanes0, Desierto0 and Canyon1 paths,15 of22 slots have such evidence; seven remain (Volcanes1–3, Desierto1–3, Canyon0). This is not a complete phase×quality matrix or final art approval.
+
+`river-low-softfog-{day,night}.json/png` retains the open procedural distribution and fog but exposes a new decorative-art counterexample: its low, parallel wave profile reads as a thin horizontal wall against the sky. Native readiness success does not resolve this backdrop composition. It remains pending before acceptance.
