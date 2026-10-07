@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {nativePropBatchVisible} from './prop-transition-residency.js';
 
 // The original drawBatch(shadow=true) uses the final variant for all active
 // instances. Detached proxies enter only Three's shadow traversal, after the
@@ -47,7 +48,7 @@ export function installAssetShadows(renderer,chunks){
       for(const group of chunks().values()){
         if(!group.visible)continue;
         for(const batch of group.userData.lodBatches??[]){
-          if(group.userData.farPropsVisible===false&&!batch.clip)continue;
+          if(!nativePropBatchVisible(group,batch))continue;
           const mesh=batch.shadow;if(!mesh?.castShadow||!mesh.count||!batch.meshes.some(m=>m.visible&&m.count))continue;
           materials.set(mesh,mesh.material);mesh.material=solid;
           mesh.userData.nativeShadowStats=stats;

@@ -19,6 +19,15 @@ function fixture(){
  updateAssetLods(chunks,camera,'media');return {scene,groups,chunks,camera,levels};
 }
 
+test('transition chunks retain tree color and shadows without bringing back nearby small props',()=>{
+ const f=fixture();
+ for(const [key,group]of f.chunks){group.userData.farPropsVisible=false;group.userData.farTreesVisible=true;group.userData.farTransitionTreeSlots=[0];if(key==='other')group.userData.lodBatches[0].slot=5;}
+ f.groups.update(f.chunks,f.camera);assert.ok([...f.groups.colors.keys()].every(key=>key.startsWith('0:')));assert.deepEqual([...f.groups.shadows.keys()],['0']);assert.equal([...f.groups.colors.values()].reduce((n,g)=>n+g.mesh.count,0),3);
+ const original=f.chunks.get('other').userData.lodBatches[0];assert.equal(original.instances.length,3);assert.equal(original.orders.flat().length,3);
+ f.groups.enabled=false;f.groups.update(f.chunks,f.camera);assert.ok(f.chunks.get('front').userData.lodBatches[0].meshes.every(m=>m.layers.mask===1));assert.ok(original.meshes.every(m=>m.layers.mask===(1<<31)>>>0));
+ f.groups.enabled=true;for(const group of f.chunks.values())group.userData.farPropsVisible=true;f.groups.update(f.chunks,f.camera);assert.equal([...f.groups.colors.values()].reduce((n,g)=>n+g.mesh.count,0),6);f.groups.dispose();
+});
+
 test('full native chunk boxes match the original plane culling and remain independent of reduced render geometry',()=>{
  const {chunks,camera}=fixture();
  const vp=new THREE.Matrix4();for(const eye of [[0,10,25],[80,20,0],[-80,5,0],[0,150,0]]){

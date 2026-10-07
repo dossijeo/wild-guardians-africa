@@ -212,7 +212,20 @@ export class WorldScene {
     else for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;}
     // Retain the original exact terrain for picking even beyond the visual radius.
     // Three raycasting tests the terrain meshes independently of parent visibility.
-    let visibilityChanged=false;if(this.farVisualRange!=null||this.farVisibilityOwned){for(const group of this.chunks.values()){const origin=group.userData.nativeChunkOrigin,visible=Math.abs(origin[0]/48-cx)<=visibleRegion.range&&Math.abs(origin[1]/48-cz)<=visibleRegion.range;const propsVisible=this.farVisualRange==null||Math.abs(origin[0]/48-cx)<=this.farVisualRange&&Math.abs(origin[1]/48-cz)<=this.farVisualRange||this.farPropTransitionDistance!=null&&chunkInPropTransition(origin,this.camera.position,this.farPropTransitionDistance),terrainVisible=this.farPreserveTerrain?true:visible;if(group.visible!==terrainVisible||group.userData.farPropsVisible!==propsVisible){group.visible=terrainVisible;group.userData.farPropsVisible=propsVisible;visibilityChanged=true;}}this.farVisibilityOwned=this.farVisualRange!=null;}
+    let visibilityChanged=false;
+    if(this.farVisualRange!=null||this.farVisibilityOwned){
+      for(const group of this.chunks.values()){
+        const origin=group.userData.nativeChunkOrigin;
+        const visible=Math.abs(origin[0]/48-cx)<=visibleRegion.range&&Math.abs(origin[1]/48-cz)<=visibleRegion.range;
+        const propsVisible=this.farVisualRange==null||Math.abs(origin[0]/48-cx)<=this.farVisualRange&&Math.abs(origin[1]/48-cz)<=this.farVisualRange;
+        const treesVisible=propsVisible||this.farPropTransitionDistance!=null&&chunkInPropTransition(origin,this.camera.position,this.farPropTransitionDistance);
+        const terrainVisible=this.farPreserveTerrain?true:visible;
+        if(group.visible!==terrainVisible||group.userData.farPropsVisible!==propsVisible||group.userData.farTreesVisible!==treesVisible||group.userData.farTransitionTreeSlots!==this.farPropTransitionSlots){
+          group.visible=terrainVisible;group.userData.farPropsVisible=propsVisible;group.userData.farTreesVisible=treesVisible;group.userData.farTransitionTreeSlots=this.farPropTransitionSlots;visibilityChanged=true;
+        }
+      }
+      this.farVisibilityOwned=this.farVisualRange!=null;
+    }
     if(visibilityChanged)this.releaseNativeShadow?.cache.invalidate();
     this.syncResidentProps();
     this.contacts.update(this.chunks,this.contactPrototypes,visibleRegion.bounds,this.chunkRevision,this.nav.config.layers);

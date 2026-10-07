@@ -157,3 +157,17 @@ After merging main through831bd40 and its subsequent QA-only experiment archive,
 The next candidate unions the original square with a horizontal circle intersecting chunk rectangles at `end + transitionMargin` (60+8m for this QA). This is arithmetic only, with no terrain sampling or procedural regeneration. The exact25terrain chunks, picking, navigation and original raid border remain unchanged. The owner restores the preceding transition distance on disable/dispose. Twenty focused boundary/ownership/navigation/stream tests pass.
 
 `canyon-circular-approach.json/png` completes the identical selected-slot path with392/409 ready transition frames, **zero selected-tree descents**, unchanged state and no reported GL/errors. Initial17 frames keep the impostor during preparation/fade; do not call this immediate readiness. The all-near trace still retains one other-tree drop at39.786m explicitly confirmed outside the frustum, with prop residency and native LOD1 preserved. Final native prop residency is12chunks; count varies with eye position. This is a new cost variant, so earlier9chunk ABBA results must not be attributed to it. Further biome/motion/art and combined cost acceptance remain pending.
+## Combined cost of all-prop circular residency (4784baf)
+
+`savanna-circular-abba.json` measures the complete native scene at1280×720 with source4784baf, media/Mapungubwe/seed712, paused daytime, exact terrain and current retained banks/backdrop. Each A/B/B/A lot has45 warmup and120 measuredframes. GPU timer queries are supported,480 samples, no disjoint/context loss/discard/pending query; state remains unchanged and errors0.
+
+| Lot | GPU p50 ms | CPU render p50 ms | Draws | Triangles |
+| --- | --- | --- | --- | --- |
+| A1 native |22.106|6.4|59|960014|
+| B1 circular all props |22.769|6.1|60|936332|
+| B2 circular all props |22.650|6.3|60|936332|
+| A2 native |22.919|6.3|59|960014|
+
+A baselines drift3.7%; B is close to their average and does not demonstrate GPU improvement. These samples are not converted into promised FPS. The larger circle also brings back small props/shadows that should disappear earlier, so the next candidate separates them: the original square remains for small vegetation/debris/stones and a circle extends only the biome's actual tree slots. Clipped terrain pieces retain their existing handling. Twenty-seven grouping/shadow/ownership/navigation tests pass, including current native matrix populations and legacy unmerged layers.
+
+`canyon-tree-circle-approach.json` repeats the same path after this separation:385/406 ready transition frames, zero selected-tree descents, unchanged state/errors0. The one other-tree decline remains explicitly outside frustum. Final residency is9small-prop chunks/12tree chunks/25exact terrain-picking chunks. Native combined cost for this tree-only circle is still pending; the all-prop circular measurement cannot describe it.
