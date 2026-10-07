@@ -33,6 +33,7 @@ document.querySelector('#run').onclick=async()=>{document.querySelector('#run').
 async function campaign(){
  const size=1024;renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
+ const controlDiagnosis=options.has('controlDiagnosis');if(controlDiagnosis&&!sourceTwin)throw Error('Source-only diagnosis requires sourceTwin');
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
  const withheldVersion=options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
@@ -89,16 +90,21 @@ async function campaign(){
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
   const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
   camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(radius*3));camera.lookAt(center);camera.updateMatrixWorld();
-  const shadowPixels=[];let shadowDifference=null;const originalControls=[],controlEnvelope=new Float64Array(size*size*3);let controlAlphaDifferences=0,controlMetrics=null;
+  const shadowPixels=[];let shadowDifference=null;const originalControls=[],controlEnvelope=new Float64Array(size*size*3);let controlAlphaDifferences=0,controlMetrics=null,lastSourceRepeat=null,worstSourceRepeat=null,worstSourceBytes=-1;
   for(let side=0;side<2;side++){const rig=rigs[side];rigs.forEach((r,i)=>r.model.visible=i===side);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[side]);
    if(rig.sun.shadow.map){const map=rig.sun.shadow.map,packed=new Uint8Array(map.width*map.height*4);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,packed);shadowPixels[side]=packed;}
-   if(side===0){for(let capture=0;capture<3;capture++){
+   if(side===0){for(let capture=0;capture<(controlDiagnosis?30:3);capture++){
     const repeat=new Uint8Array(pixels[0].length);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);
+    lastSourceRepeat=repeat;
     const control=accumulateControlEnvelope(controlEnvelope,pixels[0],repeat,linear);
+    if(control.differentBytes>worstSourceBytes){worstSourceBytes=control.differentBytes;worstSourceRepeat=repeat;}
     controlAlphaDifferences+=control.alphaDifferences;originalControls.push(control);if(!report.samples.length)report.unchangedOriginalControls=originalControls;
    }
    controlMetrics=controlEnvelopeMetrics(controlEnvelope,pixels[0],size);
+   if(controlDiagnosis){report.sourceOnlyDiagnosis={biome,night,clip:clipName,fraction,azimuth,elevation,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,nominalRgbFaceProvenance:mapMissingToSource(renderer,rig,camera,[pixels[0],worstSourceRepeat],size,'rgb'),meaning:'30 repeated original draws only; no candidate drawn or compared, no acceptance interpretation'};
+    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
    if(controlAlphaDifferences||!controlMetrics.passes){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original control exceeds prospective uncertainty budget; affected comparison not interpreted'};
+    if(options.has('mapControl'))report.invalidControl.lastRepeatNominalRgbFaceProvenance=mapMissingToSource(renderer,rig,camera,[pixels[0],lastSourceRepeat],size,'rgb');
     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
    }
    }

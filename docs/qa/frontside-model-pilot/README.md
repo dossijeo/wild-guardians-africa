@@ -530,3 +530,13 @@ exceeds3. The source-only failure cannot be interpreted as candidate quality.
 No retry for favorable controls, comparison of that candidate view or
 retroactive threshold change is made. The report preserves prior8samples
 and explicit source envelope evidence; no final frame is claimed for it.
+
+A separate source-only diagnosis at the invalid version5 pose draws the
+original30times, without drawing/comparing the candidate. All30draws were
+byte-exact, so no RGB face provenance was found. This did not reproduce the
+campaign fluctuation; it neither identifies a cause nor rehabilitates that
+invalid campaign sample. The report was saved before an erroneous cleanup
+call to nonexistent toon.dispose raised; the catch disposed the renderer,
+the tab was closed and the call removed offline, without repeating the draw.
+`controlDiagnosis` requires sourceTwin and explicitly exits before candidate
+comparison; `mapControl` can map source-only nominal outliers when present.
