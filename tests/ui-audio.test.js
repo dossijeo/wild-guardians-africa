@@ -43,3 +43,7 @@ test('magic selection uses original 092 instead of panel closure and expires sup
  const count=f.calls.length;assert.equal(f.ui.selectSpell('invalid'),false);assert.equal(f.calls.length,count);
  const bank=JSON.parse(readFileSync(new URL('../public/content/sfx-routing.json',import.meta.url),'utf8'));assert.equal(bank.items.find(i=>i.id==='spirit_select').number,92);
 });
+
+test('opening another surface cancels pending magic selection before late decoding',()=>{
+ const f=fixture();f.ui.selectSpell('growth');const selection=f.calls.at(-1);assert.equal(selection.options.isCurrent(),true);f.ui.surface('panel','cultivos');assert.equal(selection.options.isCurrent(),false);assert.equal(f.calls.at(-1).options.isCurrent(),true);
+});
