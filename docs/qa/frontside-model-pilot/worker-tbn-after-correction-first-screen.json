@@ -1,0 +1,39 @@
+{
+  "status": "VISUAL_SCREEN_NOT_APPROVED",
+  "resolution": 1024,
+  "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
+  "source": "worker-actions.youngMale runtime web",
+  "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
+  "shadowSide": "DoubleSide color-isolation screen; FrontSide shadow pass remains required",
+  "conditions": "CPU49032/39340 frozen, far58872 active. No GPU timing.",
+  "samples": [
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Idle",
+      "fraction": 0.125,
+      "azimuth": 22.5,
+      "elevation": 25,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 0.0008865993140183843,
+      "p99Approx": 0.03137254901960784,
+      "maxError": 0.2633445970714092,
+      "maxTileMae": 0.03702145585945497,
+      "originalPixels": 142654,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "passes": false
+    }
+  ],
+  "limitations": [
+    "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required."
+  ],
+  "unchangedOriginalControl": {
+    "differentBytes": 0,
+    "maxByteDifference": 0
+  },
+  "failed": true,
+  "capture": "worker-runtime-visual-last-frame.png"
+}

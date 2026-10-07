@@ -112,3 +112,69 @@ non-manifold edges / 282 inconsistent edges / 0 opposed geometric-normal
 triangles. Worker body/accessory totals and all source hashes are in the JSON.
 Counts do not distinguish botanical intersections from repairable defects yet.
 No multiview real-shader comparison, candidate approval or GPU result exists.
+
+## Pilot evidence after contract audit (not approved)
+
+Blender inspections use scratch meshes carrying source vertex/face identifiers.
+A seam-weld/recalculate proposal changed 99 maize and 347 banana face windings,
+despite zero originally opposed geometric normals. The worker proposal also
+removed four faces when welding. These are diagnostic proposals, not exports.
+The 512px offline multiview rejection screen rejects all three winding-only
+pilots. Compact caps cannot solve the broad thin botanical surfaces.
+
+A separate runtime visibility selector runs the actual crop growth/bridge vertex
+shader and worker fixed poses/tool visibility. It selects only source faces that
+produce visible back-facing fragments. Three Material.clone drops onBeforeCompile;
+the incorrect first pass was discarded, and the saved pass explicitly retains
+the original vertex hook. The 256px selection is training evidence, not sufficient
+resolution or withheld visual evidence for approval.
+
+The controlled writer appends private reverse vertices/faces to selected source
+faces, retaining original indices and all original attributes in their exact
+order. UV, joints, weights and morph data are copied from the corresponding
+source vertices. Crop appended faces retain their source regional driver labels.
+Original nodes, skins, materials, images and all twelve worker clips remain.
+The WebP image payloads are reused from the runtime originals; Meshopt lanes
+encode/decode exactly. Packing prunes only unreferenced accessors/views, including
+old replaced geometry records. It does not remove any accessory node or clip.
+Worker contract verification preserves all 25 meshes, 62 nodes, skin and twelve
+animation clips (440056 animation bytes), including watering/carry attachments.
+The originals and their watering source hashes remain unchanged.
+
+YoungMale selective pilot adds 1411/41927 triangles (3.365%) and 7.578% decoded
+active geometry. Packed asset is 5313604 versus 5612688 bytes (-5.329%); some of
+that reduction is unused-record pruning, and is not a GPU gain claim. Candidate
+SHA256 after reverse TBN correction is
+`60a859addeca513c2c80ba4c3698aa50a6f9087554532e95cbc6414d61e87a36`.
+
+Crop selection includes source faces exposed during both indexed growth states
+and unindexed procedural bridges. The ten maize/banana source pilots add 29.195%
+triangles, although the whole forty-state GLB active geometry grows 7.290% and
+its packed asset grows 3.243%. The 10% triangle gate is a proposed engineering
+screen, not a user prohibition or proof of disproportionate GPU cost. Each
+additional bridge triangle expands to three unindexed vertices with 22 float
+lanes (264 bytes before instance data); the inherited driver influences adjacent
+bridges, so source GLB growth understates transition buffer and vertex work.
+This makes the current union selection worth revising before exhaustive QA.
+Bridge allocations and measured GPU time are still required to justify that
+budget and to evaluate state-specific geometric alternatives. The category is
+not declared impossible and no threshold is relaxed to accept the pilot.
+
+An isolated 1024px actual AfricanToon/NativeSky/native-shadow worker screen uses
+held-out Idle fraction .125, azimuth22.5/elevation25 in day sabana. FrontSide and
+DoubleSide selective candidates both retain exact alpha silhouette in this case.
+Without shadows, linear RGB MAE is .00000472/.00000326 and tile MAE
+.001124/.000482 respectively: limited color screens only. With shadows enabled,
+both sides fail P99 (.03137) and tile MAE (.03702). DoubleSide shadow control also
+changes 57 packed-shadow bytes, whereas repeated unchanged-source color differs
+in zero bytes. This isolates a shadow-path issue; it does not yet establish
+whether candidate coplanar geometry or the comparison harness causes it. The
+next control uses two independent original loads sharing one persistent native
+shadow hook, light and target. No GPU benchmark has been run. ColorFront with
+shadowDouble does not satisfy the full FrontSide shadow gate.
+
+All candidates are under ignored `.cache/frontside-model-pilot/candidates`, with
+NOT-APPROVED names. No asset manifest/runtime activation or mass adaptation has
+occurred. `tools/frontside_pilot_server.mjs` serves only fixed candidate/report
+routes on loopback. Browser comparisons use CUA; offline scripts use Blender,
+Python and lossless Meshopt packing. Reports retain failed cases and controls.

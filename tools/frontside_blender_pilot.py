@@ -22,6 +22,8 @@ for category,url,names in [('crops',crop,{'maiz_05_maduro','platano_05_maduro'})
         me=bpy.data.meshes.new(node['name']); me.from_pydata(p.tolist(),[],ix.tolist()); me.update()
         bm=bmesh.new(); bm.from_mesh(me)
         provenance=bm.faces.layers.int.new('sourceFace')
+        vertex_ids=bm.verts.layers.int.new('sourceVertex')
+        for vertex in bm.verts: vertex[vertex_ids]=vertex.index
         for face in bm.faces: face[provenance]=face.index
         original=dict(vertices=len(bm.verts),faces=len(bm.faces),boundaryEdges=sum(e.is_boundary for e in bm.edges),
             nonManifoldEdges=sum(not e.is_manifold and not e.is_boundary for e in bm.edges),
@@ -48,8 +50,47 @@ for category,url,names in [('crops',crop,{'maiz_05_maduro','platano_05_maduro'})
         before={f[provenance]:f.normal.copy() for f in bm.faces}
         bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces)); bm.normal_update()
         flips=sorted(f[provenance] for f in bm.faces if before[f[provenance]].dot(f.normal)<-.99)
+        # Inspect small boundary loops. A fill proposal must be compact and have
+        # one crop bridge driver; large garment/leaf openings are left untouched.
+        boundary={e for e in bm.edges if e.is_boundary}; loops=[]
+        while boundary:
+            seed=boundary.pop(); edges={seed}; pending=[seed]
+            while pending:
+                edge=pending.pop()
+                for vertex in edge.verts:
+                    for other in vertex.link_edges:
+                        if other in boundary: boundary.remove(other); edges.add(other); pending.append(other)
+            vertices={v for e in edges for v in e.verts}
+            loops.append((edges,vertices))
+        bridges=json.loads((root/'public/content/crop-bridges.json').read_text(encoding='utf8'))
+        labels=None
+        if category=='crops':
+            extras=node['extras']; labels=bridges['models'][extras['cropIndex']*5+extras['stage']-1]['faceLabels']
+        cap_proposals=[]; excluded=[]
+        envelope=(p.max(axis=0)-p.min(axis=0)); area_budget=float(max(envelope)**2*.0005)
+        for edges,vertices in loops:
+            linked={f for e in edges for f in e.link_faces}
+            face_ids=[f[provenance] for f in linked]
+            label_set={labels[i] for i in face_ids} if labels else set()
+            closed_loop=all(sum(e in edges for e in v.link_edges)==2 for v in vertices)
+            if not closed_loop or len(edges)>24 or (labels and len(label_set)!=1):
+                excluded.append(dict(edges=len(edges),reason='Branch/large loop/mixed regional drivers')); continue
+            # Compute a conservative fan area before modifying scratch.
+            centroid=sum((v.co for v in vertices),vertices.copy().pop().co*0)/len(vertices)
+            area=sum((e.verts[0].co-centroid).cross(e.verts[1].co-centroid).length*.5 for e in edges)
+            if area>area_budget:
+                excluded.append(dict(edges=len(edges),area=area,reason='Closure exceeds local area budget')); continue
+            if category!='crops':
+                excluded.append(dict(edges=len(edges),area=area,reason='Worker cap needs animated seam/UV inspection')); continue
+            result=bmesh.ops.holes_fill(bm,edges=list(edges),sides=24)
+            filled=result.get('faces',[])
+            if not filled: continue
+            triangles=bmesh.ops.triangulate(bm,faces=filled).get('faces',[])
+            for face in triangles:
+                cap_proposals.append(dict(indices=[v[vertex_ids] for v in face.verts],driver=next(iter(label_set)),area=face.calc_area()))
         reports.append(dict(category=category,name=node['name'],source=url,original=original,weldedScratch=welded,
             components=sorted(components,key=lambda c:-c['faces']),recalcWindingProposal=flips,
+            capProposals=cap_proposals,excludedBoundaryLoops=excluded,
             warning='Weld/recalc scratch is not an approved repair; UV, weights and per-face provenance must be preserved by a controlled writer.'))
         bm.free()
 out=root/'docs/qa/frontside-model-pilot/blender-inspection.json'
