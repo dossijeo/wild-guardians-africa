@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {Object3D} from 'three';
 import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from '../tools/experiments/logical-native-standby.js';
 import {standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
-const metadata={sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
+const metadata={impostorHeight:12,sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
 const tree=(id,x)=>({id,x:x+1,y:2,z:0,origin:{x,y:1,z:0},yaw:.62,sx:1.2,sy:.9,sz:1.3});
 function options(extra={}){return {metadata,camera:{x:0,y:10,z:0},quality:'media',range:180,physicalIds:new Set(),suppressed:new Set(),...extra};}
 test('logical prewarm uses exact native origin, yaw and anisotropic scale instead of billboard pivot',()=>{
@@ -31,4 +31,23 @@ test('adopted preload policy defers missing or malformed regions without global 
  for(const bounds of [undefined,null,[],[0,0,Infinity,10],[10,0,0,10],[0,0,10,0]])assert.equal(adoptedLogicalPreloadBounds(bounds,16),undefined);
  const bounds=[0,-10,80,10],before=[...bounds];assert.deepEqual(adoptedLogicalPreloadBounds(bounds,16),[-16,-26,96,26]);assert.deepEqual(bounds,before);
  assert.throws(()=>adoptedLogicalPreloadBounds(bounds,49),/margin/);
+});
+
+
+test('size exception prewarms only authored large trees outside adopted bounds within the same budget',()=>{
+ const policy={minimumHeight:24},large={...tree('large',150),sy:3},small=tree('small',100),inside=tree('inside',60),far={...tree('far',190),sy:3};
+ const trees=[large,small,inside,far],args=options({preloadBounds:[0,-10,80,10],preloadHeightPolicy:policy});
+ const rows=logicalNativeStandbyEntries(trees,args);
+ assert.deepEqual(rows.map(r=>r.id),['inside','large']);
+ assert.deepEqual(rows,logicalNativeStandbyEntries([...trees].reverse(),args));
+ for(const row of rows)assert.deepEqual(row,logicalNativeStandbyEntries(trees,options()).find(r=>r.id===row.id));
+ assert.deepEqual(logicalNativeStandbyEntries(trees,{...args,maxTrees:1}).map(r=>r.id),['inside']);
+ for(const excluded of ['physicalIds','suppressed'])assert.deepEqual(logicalNativeStandbyEntries(trees,{...args,[excluded]:new Set(['large'])}).map(r=>r.id),['inside']);
+ assert.deepEqual(logicalNativeStandbyEntries(trees,options({preloadBounds:[0,-10,80,10]})).map(r=>r.id),['inside']);
+});
+
+test('size exception rejects malformed authored dimensions and thresholds',()=>{
+ const args=options({preloadBounds:[0,-10,80,10]});
+ for(const minimumHeight of [0,-1,NaN,Infinity])assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,preloadHeightPolicy:{minimumHeight}}),/height policy/);
+ assert.throws(()=>logicalNativeStandbyEntries([tree('a',150)],{...args,metadata:{...metadata,impostorHeight:NaN},preloadHeightPolicy:{minimumHeight:24}}),/dimensions/);
 });
