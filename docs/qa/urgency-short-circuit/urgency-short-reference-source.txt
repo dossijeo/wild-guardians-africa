@@ -14,10 +14,7 @@ export function urgentWork(state,worker){
   for(const w of state.workers)if(w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
     w.status!=='home'&&w.status!=='returning'&&w.status!=='fleeing'&&w.status!=='incapacitated'&&state.time<PROFILES.find(p=>p.id===w.profile).end)active++;
   if(!active)return false;
-  // This is a boolean query: once enough matching tasks cross the strict
-  // threshold, later tasks cannot make the answer false. Keep the same division
-  // rather than rounding a computed task limit or caching counts across workers.
-  for(const task of state.tasks)if(task.centerId===worker.centerId&&++pending/active>B.workers.run_start_pending_tasks_per_worker_over)return true;
+  for(const task of state.tasks)if(task.centerId===worker.centerId)pending++;
   return pending/active>B.workers.run_start_pending_tasks_per_worker_over;
 }
 export function movePath(actor,metres,clear=null){
