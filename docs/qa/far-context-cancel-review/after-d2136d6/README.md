@@ -1,6 +1,6 @@
 # Native rerun after explicit cancellation and generation rejection
 
-Runtime d2136d6, main base c18d119. Manglares/Mapungubwe, medium, exact terrain retained, 120â€“160m with logical standby preload and native-sun public atlases. Three actual loss/restoration event pairs are recorded. After each restoration: logical state unchanged, rendering and console errors empty, final WebGL error zero; all four species regain prepared resources. The second loss interrupted a region/preparation change, producing counted stale/cancelled preparations, with no adoption of that cancelled work as successful proof.
+Runtime d2136d6, main base c18d119. Manglares/Mapungubwe, medium, exact terrain retained, 120–160m with logical standby preload and native-sun public atlases. Three actual loss/restoration event pairs are recorded. After each restoration: logical state unchanged, rendering and console errors empty, final WebGL error zero; all four species regain prepared resources. The second loss interrupted a region/preparation change, producing counted stale/cancelled preparations, with no adoption of that cancelled work as successful proof.
 
 Context epoch reaches 3; unknown deletes remain zero. The diagnostic disposal trace records CONTEXT_LOST_WEBGL (0x9242) **before** deleteSync during loss, not an INVALID_OPERATION caused by deletion. Preserve this trace; final GL error and pending errors are zero. The prior stale-delete guard remains limited to known old handles.
 
