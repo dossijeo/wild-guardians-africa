@@ -4,6 +4,17 @@ import {prepareNativeFarGpu} from './prepare-native-far-gpu.js';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
+// Matching RGB context for the vertical edge bridge; evaluated only when its
+// discrete rectangle changes. Alpha coverage remains fragment-sampled.
+export function configureNativeFarSeamGeometry(geometry,map){
+ const uv=geometry.attributes.uv.array,n=uv.length/2,colors=new Float32Array(n*3),normals=new Float32Array(n*3);
+ for(let i=0;i<n;i++){
+  const x=Math.max(0,Math.min(map.width-1,uv[i*2]*map.width-.5)),z=Math.max(0,Math.min(map.height-1,uv[i*2+1]*map.height-.5)),x0=Math.floor(x),z0=Math.floor(z),x1=Math.min(x0+1,map.width-1),z1=Math.min(z0+1,map.height-1),tx=x-x0,tz=z-z0;
+  for(let c=0;c<3;c++){const a=map.data[(z0*map.width+x0)*4+c],b=map.data[(z0*map.width+x1)*4+c],d=map.data[(z1*map.width+x0)*4+c],e=map.data[(z1*map.width+x1)*4+c];colors[i*3+c]=((a+(b-a)*tx)*(1-tz)+(d+(e-d)*tx)*tz)/255;}
+  normals[i*3+1]=1;
+ }
+ geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));geometry.setAttribute('normal',new THREE.BufferAttribute(normals,3));geometry.setAttribute('aFarWater',new THREE.BufferAttribute(new Float32Array(n),1));
+}
 // Low-detail ground belongs to the regional layer. Discard the live resident
 // rectangle so the two surfaces never overlap or compete in the depth buffer.
 export function attachNativeFarGround(candidate,data,world,{simplified=false,seam=false,nativeWaterMask=false,cancelled=()=>false,seamStreamFactory,seamPrepare}={}){
@@ -52,7 +63,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
   // small replacement alone rather than redraw the resident world per border.
   const warmScene=mapped?world.scene:new THREE.Scene();
   const prepareSeam=async(root,stale)=>{if(!mapped)warmScene.fog=world.scene.fog;const previous=root.onBeforeRender;root.onBeforeRender=function(renderer,scene,...args){if(scene===warmScene)candidate.groundSeamStats.warmDraws=(candidate.groundSeamStats.warmDraws??0)+1;previous.call(this,renderer,scene,...args);};try{return await prepareNativeFarGpu(world.renderer,root,warmScene,world.camera,[colorMap],{cancelled:stale});}finally{root.onBeforeRender=previous;}};
-  seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,streamFactory:seamStreamFactory,prepare:seamPrepare??prepareSeam,createMaterial:()=>{const seamMaterial=material.clone();seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam-v2';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;
+  seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,configureGeometry:mapped?geometry=>configureNativeFarSeamGeometry(geometry,data.colorMap):null,streamFactory:seamStreamFactory,prepare:seamPrepare??prepareSeam,createMaterial:()=>{const seamMaterial=material.clone();seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam-v2';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;
  }
  let disposed=false;const dispose=candidate.dispose;candidate.dispose=options=>{if(disposed)return;disposed=true;seamOwner?.dispose();mesh.removeFromParent();geometry.dispose();material.dispose();colorMap?.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
 }

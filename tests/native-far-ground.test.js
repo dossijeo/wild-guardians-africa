@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
-import {attachNativeFarGround} from '../tools/experiments/native-far-ground.js';
+import {attachNativeFarGround,configureNativeFarSeamGeometry} from '../tools/experiments/native-far-ground.js';
 test('regional ground clips the current native rectangle and follows the shared render origin',()=>{
  const candidate={impostors:new THREE.Mesh(),dispose(){this.originalDisposed=true;}},origin={value:new THREE.Vector2(192,0)},world={nearBounds:[100,-50,200,50],toon:{uniforms:{uWorldOrigin:origin,uNight:{value:0}}}};
  const positions=new Float32Array([0,0,0,1,0,0,0,0,1]),colors=new Float32Array(9).fill(.5),indices=new Uint32Array([0,2,1]);
@@ -37,4 +37,11 @@ test('native water mask rejects absent map or incompatible simplified recipe bef
  const candidate={impostors:new THREE.Mesh(),dispose(){}},world={biomeGround:{}};
  for(const extra of [{nativeWaterMask:true},{nativeWaterMask:true,simplified:true}])assert.throws(()=>attachNativeFarGround(candidate,{colors:new Float32Array(),positions:new Float32Array(),indices:new Uint32Array()},world,extra),/requires/);
  assert.equal(candidate.impostors.children.length,0);
+});
+
+
+test('native seam gets exact bilinear mask RGB, up normals and explicit water attribute without moving vertices',()=>{
+ const geometry=new THREE.BufferGeometry(),positions=new Float32Array([0,1,0,1,2,1,2,3,2]);geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array([.25,.25,.5,.5,.75,.75]),2));
+ const map={width:2,height:2,data:new Uint8Array([0,0,0,0,100,100,100,0,200,200,200,0,255,255,255,255])};configureNativeFarSeamGeometry(geometry,map);
+ assert.equal(geometry.attributes.position.array,positions);assert.equal(geometry.attributes.color.getX(0),0);assert.ok(Math.abs(geometry.attributes.color.getX(1)-138.75/255)<1e-7);assert.equal(geometry.attributes.color.getX(2),1);assert.deepEqual([...geometry.attributes.normal.array],[0,1,0,0,1,0,0,1,0]);assert.deepEqual([...geometry.attributes.aFarWater.array],[0,0,0]);geometry.dispose();
 });

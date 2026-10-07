@@ -5,7 +5,7 @@ import {farGroundColorUvs} from './far-ground-color-map.js';
 // Private opt-in owner. Updates compare a discrete rectangle; terrain sampling
 // happens only in a cancellable worker. Previously prepared geometry is kept
 // until the replacement is complete, with borrowed map/material inputs.
-export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
+export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,configureGeometry=null,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
  if(!ground.colorMap||typeof createMaterial!=='function')throw Error('Mapped ground required for seam');
  const emptyPromise=Promise.resolve(null),sourceSeed=world.nav.config.seed,sourceBiome=world.nav.config.biome;
  let closed=false,generation=0,current=null,requestedBounds=null,pending=null,stream=streamFactory(),lost=world.renderer.getContext().isContextLost(),preparedPromise=emptyPromise;
@@ -28,11 +28,11 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,pr
    const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig;
    if(!result||stale()){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    const data=result.data,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,ground.colorMap),2));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
-   let material;try{material=createMaterial();}catch(error){geometry.dispose();throw error;}
+   let material;try{configureGeometry?.(geometry);material=createMaterial();}catch(error){geometry.dispose();throw error;}
    const mesh=new THREE.Mesh(geometry,material);mesh.frustumCulled=false;mesh.userData.farGround=true;mesh.userData.farGroundSeam=true;mesh.userData.materialRegistryExcluded=true;
    try{if(prepare)await prepare(mesh,stale);}catch(error){release(mesh);if(stale()){stats.stale++;return null;}throw error;}
    if(stale()){release(mesh);stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
-   candidate.impostors.add(mesh);release(current);current=mesh;stats.adopted++;stats.vertices=data.positions.length/3;stats.bytes=data.positions.byteLength+data.indices.byteLength+geometry.attributes.uv.array.byteLength;stats.buildMs=result.buildMs;
+   candidate.impostors.add(mesh);release(current);current=mesh;stats.adopted++;stats.vertices=data.positions.length/3;stats.bytes=data.indices.byteLength+Object.values(geometry.attributes).reduce((sum,a)=>sum+a.array.byteLength,0);stats.buildMs=result.buildMs;
    preparedPromise=Promise.resolve(mesh);return mesh;
   }).catch(error=>{if(closed||epoch!==generation)return null;requestedBounds=null;stats.errors.push(String(error));throw error;}).finally(()=>{if(epoch===generation)pending=null;});
   return pending;

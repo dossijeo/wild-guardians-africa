@@ -35,3 +35,10 @@ test('GPU fence keeps the previous mesh prepared and rejects closure during uplo
 test('external owner cancellation prevents late worker completion from creating GPU resources',async()=>{
  let cancelled=false,prepares=0;const h=setup({cancelled:()=>cancelled,prepare:async()=>{prepares++;}}),pending=h.owner.update();cancelled=true;h.requests[0].resolve(result());assert.equal(await pending,null);assert.equal(prepares,0);assert.equal(h.owner.stats.adopted,0);assert.equal(h.candidate.impostors.children.length,0);h.owner.dispose();
 });
+
+
+test('seam geometry configuration is fenced and counts all owned attributes',async()=>{
+ let configured=0;const h=setup({configureGeometry:geometry=>{configured++;geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(12),3));}}),pending=h.owner.update();h.requests[0].resolve(result());const mesh=await pending;
+ assert.equal(configured,1);assert.equal(mesh.geometry.attributes.normal.count,4);assert.equal(h.owner.stats.bytes,48+32+48+24);h.owner.dispose();
+ const late=setup({configureGeometry:()=>{throw Error('Late configuration');}}),cancelled=late.owner.update();late.owner.dispose();late.requests[0].resolve(result());assert.equal(await cancelled,null);
+});
