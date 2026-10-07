@@ -511,3 +511,22 @@ must include indexed DoubleSide source as a separate control so indexing's
 gain is not misattributed to culling. Triangles, state meshes, instances,
 normal-map compensation and full pilot budget remain separate unresolved
 gates. This estimate establishes neither rendering equivalence nor GPU gain.
+
+The QA-only `frontside-indexed-bridge.mjs` constructs that stable candidate
+without production imports. Every shared key is checked against all22float32
+input bits; original faces reconstruct exactly, including signed zero. Reverses
+copy UV/organ drivers, flip normal/winding and reserve aPart.w=1 for required
+future normal-frame compensation. Instance attributes retain their original
+live references. Three tests cover prefix/bit reconstruction, faceLabels,
+reverse selection and invalid provenance. It is not yet wired to a rendered
+crop fixture and does not claim normal-map compensation or acceptance.
+
+Version5 Water/shadowFront produced8 valid screens at .21875, all3source
+controls exact per sample, maximum tile MAE .001346 and packed shadow depth
+delta48.21micrometres. The ninth view (.71875/26.25/32.5) is INVALID: the
+third source control changed27RGB bytes, maximum90byte units, alpha exact.
+Its envelope tile MAE .004923 exceeds .002 and its9pixel connected region
+exceeds3. The source-only failure cannot be interpreted as candidate quality.
+No retry for favorable controls, comparison of that candidate view or
+retroactive threshold change is made. The report preserves prior8samples
+and explicit source envelope evidence; no final frame is claimed for it.
