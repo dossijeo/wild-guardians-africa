@@ -14,13 +14,20 @@ con la fórmula anterior de transformación a mundo y vuelta al padre. Máximo
 error de altura2,274291865944633e-13m; tolerancia1e-9m. Cero errores declarados.
 Las URL runtime y números de vértices de apoyo permanecen en el informe.
 
-**Esta entrega verifica únicamente las poses y la carga de recursos.**
-El informe tiene `view:null`: la GPU no se inicializa al cargar o comparar.
-Los botones de caminar/correr/ataque preparan una comprobación visual con
-AfricanToon, sombras nativas y suelo plano QA. Esa fase y sus capturas siguen
-pendientes; la pestaña se conserva para continuar cuando termine la secuencia
-GPU del subagente de impostores. No se da por probada la compilación del shader
-en esta nueva fixture ni la colocación visual de los modelos.
+`comparison.json` conserva la comparación sin GPU (`view:null`). La fase
+gráfica posterior se ejecutó en `431a882`, sin cambios en producción o fixture
+respecto a los hashes registrados. [Caminar](walking.jpg), [correr](running.jpg)
+y [ataque](attack.jpg) muestran las cinco bestias con sus texturas, AfricanToon
+diurno y sombras nativas sobre suelo plano QA. Los tres informes JSON registran
+`state:passed`, cero errores y `glError:0`; `console.json` no contiene avisos ni
+errores. Las capturas son JPEG nativos de 1280×720, conservados sin recomprimir.
+
+Son poses congeladas al 55 % de Walking, Running y Weapon_Combo_2. La cámara,
+el suelo y las luces pertenecen a esta fixture; no se carga el mundo completo
+ni el HDR de un bioma. Se inspeccionó la visibilidad, texturas y sombras, sin
+comparación de píxeles contra el render anterior. El bucle de presentación
+mantiene la imagen visible sin avanzar animación o simulación. La pestaña648
+se cerró después de guardar los tres resultados y capturas, liberando la GPU.
 
 El ensayo no acredita rendimiento, RAM física, móvil, todos los biomas,
 terreno inclinado real o pasos dentro del río. La prueba Node anterior cubre
@@ -28,4 +35,5 @@ adicionalmente modelos sin padre y registra sus propios límites.
 
 `syntax.json.gz` verifica136 páginas/135 scripts, incluida esta fixture;
 `provenance.json` fija fuentes y cinco GLB runtime. `hashes.json` fija informes
-y documentos. Ningún código de producción cambia en esta entrega.
+y documentos, incluidos los resultados gráficos. Ningún código de producción
+cambia en esta entrega.
