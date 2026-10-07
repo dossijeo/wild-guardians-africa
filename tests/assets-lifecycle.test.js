@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {Assets} from '../src/rendering/assets.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {geometryOnly} from '../tools/calibrate_footsteps.mjs';
 const counts=resources=>{const result=new Map();for(const r of resources){result.set(r,0);r.addEventListener('dispose',()=>result.set(r,result.get(r)+1));}return result;};
 test('offscene packed prototypes and standalone textures are owned and released once; caches clear',async t=>{
  t.mock.method(globalThis,'fetch',async url=>{const b=readFileSync(new URL('../public'+url,import.meta.url));return {ok:true,arrayBuffer:async()=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)};});
@@ -41,4 +43,19 @@ test('packed biome, village and wall binary loads cannot allocate prototypes aft
   await new Promise(resolve=>setImmediate(resolve));assert.ok(pendingFetch.length>0);assets.disposeModels();for(const finish of pendingFetch)finish();
   await assert.rejects(pending,/disposed/);assert.equal(assets.ownedResources.size,0);assert.equal(assets.cache.size,0);t.mock.restoreAll();
  }
+});
+
+
+test('failed building download clears both caches; concurrent retry prepares the original model once',async()=>{
+ const descriptor=JSON.parse(readFileSync(new URL('../public/content/destruction.json',import.meta.url))).buildings[0];
+ const model=await new GLTFLoader().parseAsync(geometryOnly(readFileSync(new URL('../public'+descriptor.url,import.meta.url))),'');
+ const assets=new Assets();let attempts=0;
+ assets.loader={loadAsync:async()=>{if(++attempts===1)throw Error('temporary network failure');return model;}};
+ const failed=await Promise.allSettled([assets.building(descriptor),assets.building(descriptor)]);
+ assert.equal(attempts,1);assert.ok(failed.every(r=>r.status==='rejected'&&r.reason.message==='temporary network failure'));
+ assert.equal(assets.cache.has(descriptor.url),false);assert.equal(assets.cache.has('building:'+descriptor.url),false);
+ const [first,second]=await Promise.all([assets.building(descriptor),assets.building(descriptor)]);
+ assert.equal(attempts,2);assert.equal(first,second);assert.ok(first.body.attributes.position.count>0);assert.equal(first.scale,1);
+ assert.equal(await assets.building(descriptor),first);assert.equal(attempts,2);
+ first.dispose();assets.disposeModels();assert.equal(assets.cache.size,0);assert.equal(assets.ownedResources.size,0);
 });
