@@ -1,0 +1,51 @@
+{
+  "headSha": "e7361fe380bd8c0fefb93747b6b148b83107f838",
+  "status": "completed",
+  "conclusion": "success",
+  "logSha256": "bda594411301371c9c2efa92375d5624021e99b495e8bb713592e8b00fca3d04",
+  "artifacts": {
+    "desktop-smoke": {
+      "id": 11458829909,
+      "sha256": "fd5e9432e0298fa88ffc2223a0347b5b224d7517d2ca682e452dd4210359dd1b",
+      "ok": true,
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "menu",
+        "models",
+        "saveKeys",
+        "storage",
+        "webgl2",
+        "worker",
+        "world"
+      ]
+    },
+    "desktop-visibility": {
+      "id": 11458904448,
+      "sha256": "41f5dc3916d93b6bb5d1a923cfb7f4b851bd960220200ef1ba656fbade273b03",
+      "ok": true,
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "menu",
+        "models",
+        "saveBackend",
+        "saveKeys",
+        "storage",
+        "visibility",
+        "webgl2",
+        "worker",
+        "world"
+      ],
+      "visibility": {
+        "passed": true,
+        "hiddenMs": 300098.90000000014,
+        "resumedSimulatedSeconds": 1.0999999999989996,
+        "visibleMenuPauses": [
+          "menu"
+        ],
+        "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange."
+      }
+    }
+  }
+}
