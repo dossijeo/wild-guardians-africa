@@ -198,3 +198,29 @@ around the full circumference. Three other cells remain empty. Native URL:
 `http://127.0.0.1:5192/tests/browser/hq-mountain-horizon.html?biome=gran-rio&arcs=1&arc-base-fog=1`.
 This is a single-silhouette framing/contact test before additional variants,
 not a finished 360° composition or a new public asset.
+
+
+Initial isolated candidates for the other four biomes are retained with exact
+imagegen prompts. Mangrove v3 and Volcanoes v3 pass the safe top crop and visible
+colour gate. Canyon v3 is rejected for 156 visible chromatic outliers; v4 removes
+those but its tallest mesa would lose 1645 visible pixels in the top 181 crop.
+Imagegen reframed it downward in v5 without stretching or cropping its summit.
+Desert v3 is rejected for 7 visible chromatic outliers; v4 passes both gates.
+Selected sources all have zero crop losses and zero visible chromatic outliers.
+Mangrove 53 and Desert 15 visible pixels in the outer 16-column margin are at the
+foot, so their native contact/end treatment remains to be reviewed. Those
+counts are not silently treated as fully transparent margins.
+
+The single-cell exporter supports all six logical biome IDs, verifies source
+alpha/crop/fringe before writing, and retains their existing backdrop heights:
+Savanna 110 m, Grand River 85 m, Mangrove 60 m, Volcanoes 160 m, Canyons 130 m, Desert 115 m.
+No change to public assets or normal rendering profile is made. Each new atlas
+still uses 2048×512, a single 960×240 padded cell and one sampler; other cells
+are empty. Per-biome export/source/mip reports are in `other-singles`.
+
+Use `node tools/prepare_mountain_arc_pilot.mjs .cache/hq-arc-pilot-ID ID`, where
+ID is `mangrove`, `volcanoes`, `canyons` or `desert`. The native harness uses
+`?biome=manglares|volcanes|gran-canon|desierto&arcs=1&arc-base-fog=1`.
+Only Sabana currently has four distinct silhouettes and a 360° composition.
+These other pilots are framing/contact studies, not complete horizon or mobile
+acceptance. Do not generate further variations until native placement is sound.

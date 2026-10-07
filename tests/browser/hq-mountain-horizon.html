@@ -1,10 +1,10 @@
-<!doctype html><html lang="es"><meta charset="utf-8"><title>QA Â· MontaÃ±as HQ</title>
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA Ã‚Â· MontaÃƒÂ±as HQ</title>
 <style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:fixed;z-index:2;top:0;left:0;background:#fff9de;padding:10px;max-width:350px;max-height:86vh;overflow:auto}pre{font-size:10px;white-space:pre-wrap}button,select,input{padding:6px}#show{position:fixed;z-index:3;top:8px;left:8px}</style>
-<button id="show" hidden>Mostrar controles</button><header><b>MontaÃ±as HQ Â· mundo real</b>
-<p><label>Fase <select id="phase"><option value="day">DÃ­a</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
+<button id="show" hidden>Mostrar controles</button><header><b>MontaÃƒÂ±as HQ Ã‚Â· mundo real</b>
+<p><label>Fase <select id="phase"><option value="day">DÃƒÂ­a</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
 <label>Fondo <select id="mode"><option value="hq">HQ reflejado</option><option value="original">Original</option></select></label></p>
 <p><label>Azimut <input id="yaw" type="number" min="0" max="360" step="5" value="0"></label></p>
-<button id="turn" disabled>Girar 45Â°</button><button id="rotation" disabled>Validar giro 360Â°</button><button id="move" disabled>Desplazar 20 m</button>
+<button id="turn" disabled>Girar 45Ã‚Â°</button><button id="rotation" disabled>Validar giro 360Ã‚Â°</button><button id="move" disabled>Desplazar 20 m</button>
 <button id="hide">Ocultar controles</button><button id="export" disabled>Exportar recibo</button><button id="close" disabled>Cerrar mundo</button><pre id="report">Preparando metadatos</pre><pre id="full-report" hidden></pre></header><canvas></canvas>
 <script type="module">
 import * as THREE from 'three';
@@ -51,7 +51,7 @@ try{
  world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=error=>errors.push(String(error));world.qualitySetting('media');world.onChunkProgress=p=>report.textContent=JSON.stringify({loading:'native world',chunks:p,errors});
  await world.load(state,nav,payload);
  const loader=new THREE.TextureLoader();
- if(arcPilot&&!(biome==='sabana'||biome==='gran-rio'&&arcCells===1))throw Error('Mountain arc pilot is not prepared for this biome/cell count');
+ if(arcPilot&&arcCells===4&&biome!=='sabana')throw Error('Four silhouette composition is only prepared for Sabana');
  const backdropArcLayout=arcPilot?arcCells===4?mountainArcComposition(await json('/.cache/hq-arc-four/cells.json'),712):await json(arcDirectory+'/layout.json'):null;
  await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?arcAtlasUrl:`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  if(arcPilot&&arcNoMips){const texture=world.scene.getObjectByName('biome-2d-backdrop').children[0].material.uniforms.uBackdropAtlas.value;texture.generateMipmaps=false;texture.minFilter=THREE.LinearFilter;texture.needsUpdate=true;}
@@ -59,7 +59,7 @@ try{
  mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];hqTexture=mesh.material.uniforms.uBackdropAtlas.value;
  originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
  mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/(arcPilot?1:2));
- if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent=arcCells===4?'Cuatro siluetas distintas Â· valles abiertos':'Arco diagnÃ³stico (1 silueta, 3 celdas vacÃ­as)';}
+ if(arcPilot){document.querySelector('#mode').disabled=true;document.querySelector('#mode option[value="hq"]').textContent=arcCells===4?'Cuatro siluetas distintas Ã‚Â· valles abiertos':'Arco diagnÃƒÂ³stico (1 silueta, 3 celdas vacÃƒÂ­as)';}
  eye=world.camera.position.clone();eye.y+=4;world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
  ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
  document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
