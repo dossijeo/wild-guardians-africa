@@ -1,0 +1,71 @@
+{
+  "validate": {
+    "id": 37568078170,
+    "headSha": "e14695a00bac52d93272b111e6a56543a00a20b1",
+    "conclusion": "success",
+    "logSha256": "26ea7682f7f15b44df2cadd55adb868f0d4c2a768fddb6aa3970cc872a6a8671",
+    "testCounts": [
+      "validate\tRun npm test\t2026-10-07T03:52:55.2431989Z # tests 2702",
+      "validate\tRun npm test\t2026-10-07T03:52:55.2432168Z # pass 2702",
+      "validate\tRun npm test\t2026-10-07T03:52:55.2432249Z # fail 0",
+      "validate\tRun npm test\t2026-10-07T03:52:55.2432339Z # cancelled 0",
+      "validate\tRun npm test\t2026-10-07T03:52:55.2432425Z # skipped 0"
+    ]
+  },
+  "windows": {
+    "id": 37568078173,
+    "headSha": "e14695a00bac52d93272b111e6a56543a00a20b1",
+    "conclusion": "success",
+    "logSha256": "98422361f56abd0e2829d56f57dce60eee899c823514a4f2426732910c8643fa",
+    "testCounts": [],
+    "artifacts": [
+      {
+        "id": 11459862902,
+        "name": "Wild Guardians Africa_0.1.0_x64-setup.exe",
+        "size_in_bytes": 325235045
+      },
+      {
+        "id": 11459628183,
+        "name": "desktop-visibility.json",
+        "size_in_bytes": 109949
+      },
+      {
+        "id": 11459608232,
+        "name": "windows-canyon.png",
+        "size_in_bytes": 1174678
+      },
+      {
+        "id": 11459473495,
+        "name": "desktop-smoke.json",
+        "size_in_bytes": 2649
+      },
+      {
+        "id": 11459423392,
+        "name": "windows-cargo-lock",
+        "size_in_bytes": 25082
+      },
+      {
+        "id": 11459413495,
+        "name": "wild-guardians-africa.exe",
+        "size_in_bytes": 327648768
+      }
+    ],
+    "desktop-smoke.json": {
+      "id": 11459473495,
+      "sha256": "fd5e9432e0298fa88ffc2223a0347b5b224d7517d2ca682e452dd4210359dd1b",
+      "ok": true
+    },
+    "desktop-visibility.json": {
+      "id": 11459628183,
+      "sha256": "1a42b245f2380c68c3337c0ecef06c8037082ecd4bdabfd74b6804fa8e39c653",
+      "ok": true,
+      "visibility": {
+        "hiddenMs": 300037,
+        "resumedSimulatedSeconds": 0.8225999999992268,
+        "visibleMenuPauses": [
+          "menu"
+        ]
+      }
+    }
+  }
+}
