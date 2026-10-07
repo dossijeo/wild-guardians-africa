@@ -177,3 +177,24 @@ reviewed output SHA/length before writing any output. Its tracked contract is
 `assets-source/far-backdrops-hq/savanna-four-export-contract.json`. A second
 export to `.cache/hq-arc-four-repro` reproduced all 787504 bytes exactly. The
 public atlas and runtime profile remain unchanged.
+
+
+Remaining biome masters are continuous panoramas rather than isolated cutouts.
+Splitting them at low valleys still cuts visible slopes; their narrower source
+windows would also change angular coverage if natural aspect and peak scale
+are retained. No quadrant crop is a ready replacement.
+The first Grand River separation edit (`grand_river-separated-v2.png`) made
+straight vertical cuts, so it is retained as a rejected direction. A new
+reference-guided isolated ridge (`grand_river-isolated-v3.png`) instead tapers
+naturally: 2172×724, zero visible saturation outliers at alpha ≥90, zero pixels
+cut by the top 181 crop and zero visible pixels in the outer 16 columns. These
+CPU properties do not approve native filtering or foot contact.
+
+`node tools/prepare_mountain_arc_pilot.mjs .cache/hq-arc-pilot-grand_river grand_river`
+exports one 960×240 padded cell in a 2048×512 atlas, with source/output hashes
+recorded in `river-single/export.json`. The arc keeps aspect 4 and height 85 m
+(the biome's current backdrop height), rather than stretching the panorama
+around the full circumference. Three other cells remain empty. Native URL:
+`http://127.0.0.1:5192/tests/browser/hq-mountain-horizon.html?biome=gran-rio&arcs=1&arc-base-fog=1`.
+This is a single-silhouette framing/contact test before additional variants,
+not a finished 360° composition or a new public asset.
