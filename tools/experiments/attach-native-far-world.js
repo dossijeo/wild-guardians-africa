@@ -6,7 +6,7 @@ import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
-import {prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
+import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
 import {skyNight} from '../../src/rendering/sky.js';
 import {Fog,Frustum,Matrix4,Color} from 'three';
@@ -28,7 +28,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const errors=[],coverage=new NativeTreeCoverage(slot),signature=()=>nativeFarRenderSignature(world,slot);
  const frustum=new Frustum(),vp=new Matrix4();
  const prepared=new NativePreparedTreeCoverage(coverage,signature,record=>nativeFarPackingSignature(world,record)),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
- const stats={regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,logicalPreloads:0,logicalPreloadEntries:0,errors};
+ const stats={cancelledRegions:0,regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,logicalPreloads:0,logicalPreloadEntries:0,errors};
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
  const fog=new Fog(fogDayColor,fogStart,fogEnd),fogDay=new Color(fogDayColor),fogNight=new Color(fogNightColor);
@@ -55,7 +55,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  async function region(center){
   const key=center.x+':'+center.z;if(lastRequested===key)return;lastRequested=key;
   try{const result=await layer.request(key,{...farRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundHalf:treeHalf+32,step:groundStep}),waterSurface:bakedOnly,treeBase:metadata.localBase,treeBases:groundTreeBases,slots:includeGround&&groundTreeBases?Object.keys(groundTreeBases).map(Number):[slot]});if(result)stats.regions++;}
-  catch(error){if(!isCancelled()){lastRequested=null;errors.push(String(error));}}
+  catch(error){if(!isCancelled()){if(lastRequested===key)lastRequested=null;if(error instanceof NativeFarGpuCancelled)stats.cancelledRegions++;else errors.push(String(error));}}
  }
  function schedulePreparation(){
   if(isCancelled()||busy||nativeFarGpuContextLost(world.renderer)||!coverage.counts.size||[...coverage.counts.keys()].every(id=>prepared.has(id)))return;
@@ -68,11 +68,11 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
    try{
     const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled,diagnoseErrors:world.farGpuDiagnostics===true});
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
-   }catch(error){if(!closed){if(cancelled())stats.stalePreparations++;else errors.push(String(error));}}
+   }catch(error){if(!closed){if(cancelled()||error instanceof NativeFarGpuCancelled)stats.stalePreparations++;else errors.push(String(error));}}
   }).finally(()=>busy=false);
  }
  const adapter={layer,stats,enabled:true,readinessDiagnosis(id){const physical=[];for(const [chunk,group]of world.chunks)for(const batch of group.userData.lodBatches??[]){const index=batch.instances.findIndex(tree=>tree.id===id);if(index<0)continue;const bounds=nativeChunkBounds(group),tree=batch.instances[index];physical.push({chunk,groupVisible:group.visible,propsVisible:group.userData.farPropsVisible!==false,treesVisible:group.userData.farTreesVisible,treeSlots:group.userData.farTransitionTreeSlots,frustum:frustum.intersectsBox(bounds),bounds:[bounds.min.toArray(),bounds.max.toArray()],tree:[tree.x,tree.y,tree.z],slot:batch.slot,orders:batch.orders.map(rows=>rows.includes(index)),counts:batch.meshes.map(m=>m.count)});}return {physical,nativeMissing:!physicalIds.has(id),retainedPrepared:standby.has(id,layer.current?.treeById.get(id),world.nav.suppressed),standbyAvailable:standbyAvailable(id,world.nav.suppressed),coverage:coverage.has(id),prepared:prepared.has(id),nativeRevision:coverage.revision,preparedRevision:prepared.revision,renderSignature:signature(),proofSignature:prepared.renderSignature,batches:[...coverage.batches].filter(([,record])=>record.ids.has(id)).map(([batch,record])=>({stamp:record.stamp,accepted:prepared.prepared.get(batch)===record,level:record.level,resourceSignature:nativeFarPackingSignature(world,record),levels:record.batch.meshes.map(m=>({count:m.count,visible:m.visible,matrixVersion:m.instanceMatrix.version}))}))};},update(dt){
-  if(isCancelled()){this.dispose();return;}fog.color.copy(fogDay).lerp(fogNight,skyNight(world.state));world.scene.fog=fog;layer.current?.prototype.updateGroundBounds?.();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(next)void region(next);
+  if(isCancelled()){this.dispose();return;}fog.color.copy(fogDay).lerp(fogNight,skyNight(world.state));world.scene.fog=fog;layer.current?.prototype.updateGroundBounds?.();const next=tracker.update(world.camera.position.x,world.camera.position.z,performance.now());if(!nativeFarGpuContextLost(world.renderer)&&(next||lastRequested===null))void region(next??tracker.center);
   world.camera.updateMatrixWorld(true);frustum.setFromProjectionMatrix(vp.multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
   physicalIds=nativeTreePresence(world);
   const visible=new Map([...world.chunks].filter(([,group])=>group.visible&&(group.userData.farPropsVisible!==false||group.userData.farTreesVisible===true&&group.userData.farTransitionTreeSlots?.includes(slot))&&frustum.intersectsBox(nativeChunkBounds(group))));

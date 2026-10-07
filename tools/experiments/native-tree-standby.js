@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {NativeFarGpuCancelled} from './prepare-native-far-gpu.js';
 import {lodMix} from './far-impostor-math.js';
 
 // Immutable logical identity survives changes of native instance order/LOD.
@@ -22,7 +23,7 @@ function geometryView(source,capacity){
 export class NativeTreeStandby {
  constructor({scene,sources,prepare,start=40,end=60,keepDistance=end+48,maxTrees=1024,onError=()=>{},resourceRevision=()=>0}){
   if(typeof prepare!=='function'||!(end>start)||!Number.isFinite(keepDistance)||keepDistance<end||!Number.isInteger(maxTrees)||maxTrees<1)throw Error('Invalid standby settings');
-  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={preparations:0,rendered:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
+  Object.assign(this,{scene,sources,prepare,start,end,keepDistance,maxTrees,onError,resourceRevision});this.banks=[null,null];this.active=null;this.busy=false;this.closed=false;this.pending=null;this.revision=0;this.stats={cancelledPreparations:0,preparations:0,rendered:0,trees:0,estimatedOwnedGpuBytes:0,errors:[]};
  }
  sourceKey(level){return this.resourceRevision()+':'+sourceKey(this.sources[level]);}
  has(id,tree,suppressed){const d=this.active?.entries.get(id);return !!d&&!!tree&&!suppressed?.has(id)&&d.key===standbyTreeKey(tree)&&d.resource===this.sourceKey(d.level);}
@@ -53,8 +54,8 @@ export class NativeTreeStandby {
    await this.prepare(bank.root,()=>this.closed);if(this.closed)break;
    this.active?.root.removeFromParent();this.active=bank;this.scene.add(bank.root);this.revision++;this.stats.preparations++;this.stats.trees=wanted.size;
    this.stats.estimatedOwnedGpuBytes=this.banks.filter(Boolean).reduce((sum,b)=>sum+b.meshes.reduce((n,m)=>n+m.instanceMatrix.array.byteLength+(m.geometry.index?.array.byteLength??0)+Object.values(m.geometry.attributes).reduce((v,a)=>v+a.array.byteLength,0),0),0);
-  }}catch(error){if(!this.closed){this.stats.errors.push(String(error));this.onError(error);}}
-  finally{this.busy=false;if(this.closed){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}}
+  }}catch(error){if(!this.closed){if(error instanceof NativeFarGpuCancelled)this.stats.cancelledPreparations++;else{this.stats.errors.push(String(error));this.onError(error);}}}
+  finally{this.busy=false;if(this.closed){for(const bank of this.banks)if(bank)this.release(bank);this.banks=[null,null];this.active=null;this.clearStats();}else if(this.pending)void this.run();}
  }
  update(camera,trees,stateFor,nativeReady,suppressed,baseFor=()=>1){
   let rendered=0;if(!this.active)return;for(const [level,mesh] of this.active.meshes.entries()){

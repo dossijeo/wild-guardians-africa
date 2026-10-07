@@ -1,3 +1,4 @@
+import {NativeFarGpuCancelled} from '../tools/experiments/prepare-native-far-gpu.js';
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
 import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady} from '../tools/experiments/native-tree-standby.js';
 function fixture(prepare=async()=>{}){const geometry=new THREE.BoxGeometry(2,4,2),material=new THREE.MeshStandardMaterial(),scene=new THREE.Scene(),sources=[{geometry,material},{geometry,material}],owner=new NativeTreeStandby({scene,sources,prepare});return {owner,scene,sources,close(){owner.dispose();geometry.dispose();material.dispose();}};}
@@ -79,4 +80,22 @@ test('zero-fade tail is not submitted and returns without changing prepared pack
  f.owner.update({x:300,z:0},trees,state,()=>false,new Set());assert.equal(mesh.count,0);assert.equal(mesh.visible,false);
  assert.equal(mesh.instanceMatrix.version,version);assert.deepEqual(Array.from(mesh.instanceMatrix.array),matrices);assert.equal(f.owner.revision,revision);
  assert.equal(f.owner.has('near',near,new Set(['near'])),false);f.close();
+});
+
+
+test('explicit context cancellation preserves the previous bank and resumes the queued fresh generation',async()=>{
+ const f=fixture(),a=tree(),b=tree('b',2),c=tree('c',3);f.owner.request([descriptor(a)],{x:0,z:0});await settled(f.owner);const previous=f.owner.active;let reject;
+ f.owner.prepare=()=>new Promise((resolve,fail)=>reject=fail);
+ f.owner.request([descriptor(b)],{x:0,z:0});f.owner.request([descriptor(c)],{x:0,z:0});
+ assert.equal(f.owner.active,previous);f.owner.prepare=async()=>{};reject(new NativeFarGpuCancelled('context-changed'));await settled(f.owner);
+ assert.equal(f.owner.stats.cancelledPreparations,1);assert.deepEqual(f.owner.stats.errors,[]);
+ assert.equal(f.owner.has('a',a),true);assert.equal(f.owner.has('b',b),false);assert.equal(f.owner.has('c',c),true);assert.equal(f.scene.children.length,1);f.close();
+});
+
+test('ordinary preparation faults remain errors and never replace the accepted bank',async()=>{
+ let reported;const f=fixture(),a=tree();f.owner.onError=error=>reported=error;
+ f.owner.request([descriptor(a)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active;
+ const fault=Error('Native GPU preparation error 0x502');f.owner.prepare=async()=>{throw fault;};
+ f.owner.request([descriptor(tree('b',2))],{x:0,z:0});await settled(f.owner);
+ assert.equal(f.owner.active,bank);assert.equal(reported,fault);assert.match(f.owner.stats.errors[0],/0x502/);assert.equal(f.owner.stats.cancelledPreparations,0);f.close();
 });

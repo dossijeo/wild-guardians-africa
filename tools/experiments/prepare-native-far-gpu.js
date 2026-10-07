@@ -2,6 +2,10 @@ import {Vector4} from 'three';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
+// Only explicit lifetime/context invalidation is cancellation; GL faults remain errors.
+export class NativeFarGpuCancelled extends Error {
+ constructor(reason){super('Native GPU preparation cancelled: '+reason);this.name='AbortError';this.reason=reason;}
+}
 // A closed attachment cannot resurrect cache resources through a late callback.
 // Weak texture keys retain no world, renderer or event listener.
 export function registerNativeFarTextureOwner(texture,signal){
@@ -27,10 +31,10 @@ function rememberTexture(entry,texture){
 // the completed fence to their exact packing and renderable generation.
 export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false}={}){
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
- const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
- const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted)||gl.isContextLost())throw Error('Native GPU preparation cancelled');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
+ const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
+ const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
  const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
- check();checkErrors('before preparation');cache=textureCache(renderer);const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
+ check();checkErrors('before preparation');cache=textureCache(renderer);cacheEpoch=cache.epoch;check();const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
   for(let first=0;first<pending.length;first+=texturesPerFrame){
    check();const start=performance.now(),end=Math.min(pending.length,first+texturesPerFrame);

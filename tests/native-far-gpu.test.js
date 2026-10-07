@@ -3,7 +3,7 @@ import {NativePreparedTreeCoverage} from '../tools/experiments/native-prepared-t
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Texture,Scene,Group,Vector4,Mesh} from 'three';
-import {prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
+import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -143,4 +143,20 @@ test('released in-flight compile cannot adopt or release a replacement cache',as
  const f=fixture(),listeners=new Set(),oldTexture=new Texture(),newTexture=new Texture();f.renderer.domElement={addEventListener:(name,fn)=>listeners.add(fn),removeEventListener:(name,fn)=>listeners.delete(fn)};let complete;f.renderer.compileAsync=()=>new Promise(r=>complete=r);
  const old=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[oldTexture],{nextFrame:async()=>{}});releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);f.renderer.compileAsync=async()=>{};
  await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[newTexture],{nextFrame:async()=>{}});complete();await assert.rejects(old,/cancelled/);assert.equal(listeners.size,2);assert.equal(oldTexture._listeners.dispose.length,0);assert.equal(newTexture._listeners.dispose.length,1);releaseNativeFarGpuCache(f.renderer);assert.equal(listeners.size,0);
+});
+
+
+test('a restored context cannot accept compilation started in an earlier resource generation',async()=>{
+ const f=fixture(),texture=new Texture();f.renderer.domElement=new EventTarget();let finish;
+ f.renderer.compileAsync=()=>new Promise(resolve=>finish=resolve);
+ const old=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});
+ f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));
+ f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));
+ f.renderer.compileAsync=async()=>{};
+ const fresh=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});
+ assert.equal(fresh.cachedTextures,0);assert.equal(f.calls.filter(c=>c==='fence').length,1);
+ finish();await assert.rejects(old,error=>error instanceof NativeFarGpuCancelled&&error.reason==='context-changed');
+ assert.equal(f.calls.filter(c=>c==='render').length,1);assert.equal(f.calls.filter(c=>c==='fence').length,1);
+ assert.equal(texture._listeners.dispose.length,1);assert.equal(nativeFarGpuRevision(f.renderer),2);
+ f.restored();releaseNativeFarGpuCache(f.renderer);
 });
