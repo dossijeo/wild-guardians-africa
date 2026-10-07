@@ -1,4 +1,5 @@
 import {createCropGrouping} from './crop-components.js';
+import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -241,7 +242,7 @@ export function updateRaid(s,dt,nav) {
           if(!shield){
             if('alive' in target){
               target.attackHits=(target.attackHits??0)+1;emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
-              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
+              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;cropBecameInactive(s.plants);if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
             }
             else {
               const previousHp=target.hp;hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);

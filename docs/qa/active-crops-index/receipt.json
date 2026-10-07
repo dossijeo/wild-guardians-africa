@@ -1,0 +1,33 @@
+{
+  "sourceBase": "c443ecc1",
+  "files": {
+    "eight.json": "40907d5211f30027ac1dd3d4dde8f22e902cbdf366740a2327ab388ce81cfeb3",
+    "river.json": "e190b83326d80959f9321803388edb108b451ea6491f43d6419c018393aa3f83",
+    "mangrove.json": "3a7ea6d73c050b38011f6d792a690accb53c8473ba8c4bcc822795b03b52e6f1",
+    "tests.txt": "6ea348f8eb9aeb4bdc016f0ba474a0f648e246675d0d94ab653f983feeca0456",
+    "build.txt": "e8ae1f1ba76f217f8664b4eb16b6ed6545646f00d0ff8ef3da916e631abff3d7",
+    "package.txt": "b9577a79d3dd9e3539640e854b22a9991e22b619ee4855357d1bcad5f0e3e34c"
+  },
+  "sources": {
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "src/simulation/raids.js": "73793919cc833959e734742c42783b034f4e09bc19629c44cbd1fab6534b9457",
+    "src/simulation/active-crops.js": "64e8fab6f86309ddc629c48238aa5826c2cd12cf28fd9e433fc80a1e82cbce52",
+    "src/world/navigation.js": "24fc9030577d8530a102677bbeb151b35981b088d28893aec2894efa22f3f6f0",
+    "tools/compare_active_crops.mjs": "a16f99049a92cf57cc80509cdc3666c5f28c7c5306371cc952cfa322483ecdbb",
+    "tests/active-crops.test.js": "05d7782b0ea7caac3965c2090a2c35d23a52aea6b229a28407d0a78a4f5bce74"
+  },
+  "cases": {
+    "eight": {
+      "full": 2.3908250000004045,
+      "active": 1.3067250000012791
+    },
+    "river": {
+      "full": 1.8473250000001826,
+      "active": 1.333849999999984
+    },
+    "mangrove": {
+      "full": 0.9758750000003147,
+      "active": 0.3533750000001419
+    }
+  }
+}

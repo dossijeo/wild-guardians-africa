@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Índice activo de cultivos aplicado al crecimiento](qa/active-crops-index/README.md): conserva historial/guardado/FIFO y retira entradas del índice al recoger o destruir. 75 pruebas dirigidas y build; tres estados históricos nativos con estado final completo idéntico y menor mediana CPU del recorrido. No acredita FPS ni mejora de p95 constante; pendientes frametime integrado, memoria/móvil y campañas actuales completas.
+
 [Coste del historial de cultivos aislado](qa/crop-history-comparison/README.md): cuatro calibraciones y ocho pasadas sobre Sabana histórica, estado final completo idéntico. Mediana de medianas CPU por tick 1,860 ms con historial / 1,213 ms excluyendo temporalmente registros muertos; no acredita FPS ni autoriza borrar historial. Próximo candidato: índice de plantas activas con invalidación de ciclo de vida y comparación de nacimientos, muertes, entrega y guardado antes de integrar.
 
 [Campaña intensiva Sabana/Mapungubwe terminada](qa/intensive-sabana-mapungubwe-e461b550/README.md): revisión congelada e461b550, ocho cultivos, 100 noches, entrega física diaria y hasta 1.407 plantas vivas. Archivo y resumen recalculados en main; no equivale a repetir con navegación actual ni completar la matriz. Inactividad de estrategia 18,16% del tiempo diurno, aún por reducir; otras combinaciones y Gran Cañón siguen pendientes.
