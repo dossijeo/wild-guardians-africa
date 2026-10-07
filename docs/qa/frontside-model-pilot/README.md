@@ -299,3 +299,15 @@ SHA256-named files under ignored candidates/archive; crop bridge sidecars are
 archived with the raw candidate hash. The256/1024 source-preserving candidates
 were rebuilt and their original hashes reproduced. Fixed serving aliases point
 to the latest disabled experiment, never an activated production asset.
+
+Before inspecting the local-wall result, independent screen version2 reserves
+Water times .375/.875, elevations40/70 and azimuths11.25/101.25/191.25/281.25.
+These differ from the selector and the .125/22.5/25 diagnosis that guided the
+wall. Repeating that diagnosis checks the repair only; it is not independent
+acceptance evidence. The fixture now records GPU identity, browser and timer
+extension availability, candidate receipt/hash and packed shadows per sample.
+It tests the declared bidirectional alpha Hausdorff limit via exact Euclidean
+radius1 neighborhoods (diagonal neighbors exceed1pixel), retaining the stricter
+interior/outlier gates. `allClips` requests all12 names from the authoritative
+action manifest; the short four-clip screen remains only an early rejection
+screen. These prepared controls are not evidence that a visual or GPU gate passed.
