@@ -7,8 +7,8 @@ function auditSummary(audit){
 }
 function motionSummary(motion){
  if(!motion)return motion;
- const {snapshot,audit,allNear,selectedSpeciesNear,transitionReadinessDrops,densitySamples,...rest}=motion;
- return {...rest,allNear:auditSummary(allNear),selectedSpeciesNear:auditSummary(selectedSpeciesNear),transitionReadinessDropCount:transitionReadinessDrops?.length??0,densitySampleCount:densitySamples?.length??0};
+ const {snapshot,audit,speciesAudit,allNear,selectedSpeciesNear,transitionReadinessDrops,densitySamples,...rest}=motion;
+ return {...rest,allNear:auditSummary(allNear),selectedSpeciesNear:auditSummary(selectedSpeciesNear??speciesAudit?.stats),transitionReadinessDropCount:transitionReadinessDrops?.length??0,densitySampleCount:densitySamples?.length??0};
 }
 function submissionSummary(submission){
  if(!submission)return submission;

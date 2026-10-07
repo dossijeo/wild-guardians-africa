@@ -17,6 +17,13 @@ test('QA report supports idle and incomplete sequence without adding graphics or
 
 test('selected-species audit also projects counts without duplicating full drop traces',()=>{const audit={observations:50,descents:3,offscreenBoundsDescents:2,potentiallyVisibleDescents:1,unknownDescents:0,drops:[{id:'a'},{id:'b'},{id:'c'}],nonOffscreenDrops:[{id:'b'}],omissions:[]},input={motion:{selectedSpeciesNear:audit},sequence:{results:[{motion:{selectedSpeciesNear:audit}}]}};const out=compactFarReport(input);assert.equal(out.motion.selectedSpeciesNear.descents,3);assert.equal(out.motion.selectedSpeciesNear.potentiallyVisibleDescents,1);assert.equal(out.motion.selectedSpeciesNear.detailedDropCount,3);assert.equal(out.motion.selectedSpeciesNear.drops,undefined);assert.equal(out.sequence.results[0].motion.selectedSpeciesNear.nonOffscreenDropCount,1);assert.equal(input.motion.selectedSpeciesNear.drops.length,3);});
 
+test('completed fixture routes do not serialize their nested speciesAudit in the compact panel',()=>{
+ const audit={observations:80,descents:2,offscreenBoundsDescents:1,potentiallyVisibleDescents:1,unknownDescents:0,drops:[{diagnosis:'x'.repeat(100000)},{id:'b'}],nonOffscreenDrops:[{id:'a'}],omissions:[]};
+ const input={sequence:{index:1,done:false,results:[{slot:2,motion:{done:true,age:20,speciesAudit:{stats:audit},transitionReadinessDrops:[{id:'a'}],unchanged:true},errors:[],webglError:0}]}};
+ const before=JSON.stringify(input),out=compactFarReport(input),route=out.sequence.results[0].motion;
+ assert.equal(route.speciesAudit,undefined);assert.equal(route.selectedSpeciesNear.potentiallyVisibleDescents,1);assert.equal(route.selectedSpeciesNear.detailedDropCount,2);assert.equal(route.transitionReadinessDropCount,1);assert.equal(route.unchanged,true);assert.ok(JSON.stringify(out).length<2000);assert.equal(JSON.stringify(input),before);
+});
+
 
 test('timing display retains totals without repeatedly serializing full draw and transform traces',()=>{
  const submissionState={draws:[{matrix:new Array(16).fill(1)}],breakdown:{totals:{calls:1,triangles:2},rows:[{pass:'screen',calls:1}],objects:[{name:'expensive'}]},limit:'CPU only'},input={submissionState,benchmark:{lots:[{enabled:true,cpu:{p50:1},submissionState,drawContext:{chunks:['a']}}]}};
