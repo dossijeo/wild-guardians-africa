@@ -1,5 +1,9 @@
 # Four reviewed beast colors: offline rebuild checkpoint
 
+The subsequent full rebuild and release-package checks have completed; see
+[terminal runtime evidence](../tinify-four-beast-runtime/README.md). The text below
+preserves the earlier recipe-only checkpoint.
+
 Native acceptance is archived in `native/summary.json` and the preceding README.
 Four additional approved recipes and their hash-named WebP outputs are now stored
 outside `public/`. The offline recipe was applied independently to each current
