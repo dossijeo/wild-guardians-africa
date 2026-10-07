@@ -1,0 +1,381 @@
+{
+  "meaning": "Read-only CPU box-mip alpha provenance with bilinear samples; not native GPU LOD/readback proof. Foreign weight measures contribution from another populated cell at shader-visible samples.",
+  "sampleGrid": [
+    41,
+    41
+  ],
+  "levels": [
+    {
+      "level": 0,
+      "width": 2048,
+      "height": 512,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 866,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 881,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 2,
+          "visible": 805,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 861,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "width": 1024,
+      "height": 256,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 868,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 886,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 2,
+          "visible": 806,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 866,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "width": 512,
+      "height": 128,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 871,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 891,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 2,
+          "visible": 804,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 873,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "width": 256,
+      "height": 64,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 874,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 898,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 2,
+          "visible": 813,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 877,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "width": 128,
+      "height": 32,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 881,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 906,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 2,
+          "visible": 829,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 885,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "width": 64,
+      "height": 16,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 899,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 1,
+          "visible": 955,
+          "foreignVisible": 8,
+          "maxForeignFraction": 0.00008102152468790659
+        },
+        {
+          "cell": 2,
+          "visible": 850,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        },
+        {
+          "cell": 3,
+          "visible": 899,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 6,
+      "width": 32,
+      "height": 8,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 920,
+          "foreignVisible": 28,
+          "maxForeignFraction": 0.10405039404288138
+        },
+        {
+          "cell": 1,
+          "visible": 1012,
+          "foreignVisible": 40,
+          "maxForeignFraction": 0.00008091297432053278
+        },
+        {
+          "cell": 2,
+          "visible": 885,
+          "foreignVisible": 6,
+          "maxForeignFraction": 0.9155377199563097
+        },
+        {
+          "cell": 3,
+          "visible": 937,
+          "foreignVisible": 0,
+          "maxForeignFraction": 0
+        }
+      ]
+    },
+    {
+      "level": 7,
+      "width": 16,
+      "height": 4,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 979,
+          "foreignVisible": 336,
+          "maxForeignFraction": 0.2935033248828886
+        },
+        {
+          "cell": 1,
+          "visible": 1043,
+          "foreignVisible": 351,
+          "maxForeignFraction": 0.2640250970610034
+        },
+        {
+          "cell": 2,
+          "visible": 998,
+          "foreignVisible": 126,
+          "maxForeignFraction": 0.9961085842972507
+        },
+        {
+          "cell": 3,
+          "visible": 1084,
+          "foreignVisible": 144,
+          "maxForeignFraction": 0.9913388346490871
+        }
+      ]
+    },
+    {
+      "level": 8,
+      "width": 8,
+      "height": 2,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 1115,
+          "foreignVisible": 548,
+          "maxForeignFraction": 0.4885302755607345
+        },
+        {
+          "cell": 1,
+          "visible": 1341,
+          "foreignVisible": 669,
+          "maxForeignFraction": 0.5770902631951474
+        },
+        {
+          "cell": 2,
+          "visible": 1121,
+          "foreignVisible": 554,
+          "maxForeignFraction": 0.5102168139068834
+        },
+        {
+          "cell": 3,
+          "visible": 1645,
+          "foreignVisible": 868,
+          "maxForeignFraction": 0.5774165914843378
+        }
+      ]
+    },
+    {
+      "level": 9,
+      "width": 4,
+      "height": 1,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7195340957313703
+        },
+        {
+          "cell": 1,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7400542855691755
+        },
+        {
+          "cell": 2,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.741854332888963
+        },
+        {
+          "cell": 3,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.6738436684345299
+        }
+      ]
+    },
+    {
+      "level": 10,
+      "width": 2,
+      "height": 1,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.731523592280231
+        },
+        {
+          "cell": 1,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7233438713934494
+        },
+        {
+          "cell": 2,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7507357484639656
+        },
+        {
+          "cell": 3,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7319424375790011
+        }
+      ]
+    },
+    {
+      "level": 11,
+      "width": 1,
+      "height": 1,
+      "cells": [
+        {
+          "cell": 0,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7477439692268205
+        },
+        {
+          "cell": 1,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7391770850272342
+        },
+        {
+          "cell": 2,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7657953961758948
+        },
+        {
+          "cell": 3,
+          "visible": 1681,
+          "foreignVisible": 1681,
+          "maxForeignFraction": 0.7472835495700506
+        }
+      ]
+    }
+  ]
+}

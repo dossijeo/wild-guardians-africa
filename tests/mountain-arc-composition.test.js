@@ -17,3 +17,15 @@ test('arcs retain exact source aspect and open valleys in one bounded renderable
  assert.ok(coverage<Math.PI*1.25);
  const geometry=createMountainArcGeometry(430,arcs);assert.equal(geometry.groups.length,0);assert.equal(geometry.index.count,288);geometry.dispose();
 });
+
+test('biome heights preserve source proportions and open angular valleys',()=>{
+ for(const height of [60,85,110,115,130,160]){
+  const arcs=mountainArcComposition(cells,712,{height});
+  assert.equal(arcs[0].height,height);assert.deepEqual(arcs.map(a=>a.height),[110,90,100,80].map(n=>n*height/110));
+  for(let i=0;i<4;i++){const next=arcs[(i+1)%4],gap=next.angle+(i===3?2*Math.PI:0)-arcs[i].angle-(arcs[i].height+next.height)*4/860;assert.ok(gap>.15);assert.equal(arcs[i].baseY,-35);}
+ }
+ assert.deepEqual(mountainArcComposition(cells,712),mountainArcComposition(cells,712,{height:110,baseY:-35}));
+ assert.throws(()=>mountainArcComposition(cells,712,{height:161}),/Invalid/);
+ assert.throws(()=>mountainArcComposition(cells,712,{height:0}),/Invalid/);
+ assert.throws(()=>mountainArcComposition(cells,712,{baseY:NaN}),/Invalid/);
+});

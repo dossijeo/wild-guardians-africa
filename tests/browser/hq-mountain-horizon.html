@@ -20,7 +20,7 @@ import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
 import {mountainArcComposition} from '../../src/rendering/mountain-arc-composition.js';
 import {mountainLodDiagnosticFragment,mountainCameraElevation} from './mountain-lod-diagnostic.js';
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcCells=Number(params.get('arc-cells')??1),arcNoMips=params.get('arc-no-mips')==='1',arcDirectory=params.get('arc-cells')==='4'?'/.cache/hq-arc-four':biome==='sabana'?'/.cache/hq-arc-pilot':'/.cache/hq-arc-pilot-'+BIOME_IDS[biome],arcAtlasUrl=arcDirectory+'/atlas.webp',arcShift=Number(params.get('arc-shift')??0),arcBaseFog=params.has('arc-base-fog')?Number(params.get('arc-base-fog')):undefined,errors=[],rows=[];
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',arcPilot=params.get('arcs')==='1',arcCells=Number(params.get('arc-cells')??1),arcNoMips=params.get('arc-no-mips')==='1',arcDirectory=params.get('arc-cells')==='4'?(biome==='sabana'?'/.cache/hq-arc-four':'/.cache/hq-arc-four-'+BIOME_IDS[biome]):biome==='sabana'?'/.cache/hq-arc-pilot':'/.cache/hq-arc-pilot-'+BIOME_IDS[biome],arcAtlasUrl=arcDirectory+'/atlas.webp',arcShift=Number(params.get('arc-shift')??0),arcBaseFog=params.has('arc-base-fog')?Number(params.get('arc-base-fog')):undefined,errors=[],rows=[];
 let world,originalTexture,hqTexture,mesh,normalMaterial,lodMaterial,state,eye,nativeEye,cameraElevation=mountainCameraElevation(params.get('elevation')??4),closed=false,ready=false,running=false,receipt=null;
 const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
@@ -56,8 +56,8 @@ try{
  world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=error=>errors.push(String(error));world.qualitySetting('media');world.onChunkProgress=p=>report.textContent=JSON.stringify({loading:'native world',chunks:p,errors});
  await world.load(state,nav,payload);
  const loader=new THREE.TextureLoader();
- if(arcPilot&&arcCells===4&&biome!=='sabana')throw Error('Four silhouette composition is only prepared for Sabana');
- const backdropArcLayout=arcPilot?arcCells===4?mountainArcComposition(await json('/.cache/hq-arc-four/cells.json'),712):await json(arcDirectory+'/layout.json'):null;
+
+ const backdropArcLayout=arcPilot?arcCells===4?mountainArcComposition(await json(arcDirectory+'/cells.json'),712,{height:{savanna:110,grand_river:85,mangrove:60,volcanoes:160,canyons:130,desert:115}[nav.config.biome]}):await json(arcDirectory+'/layout.json'):null;
  await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:!arcPilot,backdropArcLayout,...(arcPilot&&arcBaseFog!==undefined?{backdropFogBaseMix:arcBaseFog}:{})},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?arcPilot?arcAtlasUrl:`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
  if(arcPilot&&arcNoMips){const texture=world.scene.getObjectByName('biome-2d-backdrop').children[0].material.uniforms.uBackdropAtlas.value;texture.generateMipmaps=false;texture.minFilter=THREE.LinearFilter;texture.needsUpdate=true;}
  await prepareInitialFarWorld(world);
