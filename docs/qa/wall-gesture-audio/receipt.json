@@ -1,0 +1,49 @@
+{
+  "scope": "Wall gesture SFX 094/095 only, no full gameplay or physical listening claim",
+  "sourceHashes": {
+    "src/app/main.js": "2c71d338805e3fc03c408cd64e612361e5e17e3029aa8ffd40b10035161d499c",
+    "src/rendering/scene.js": "cd376ab8b11bb44f6922ee031ce00bd1ca0844468675973ed3f0f214d38a4576",
+    "src/rendering/wall-drawing.js": "944cb30fd586bebaaee9de0870f4a156d2791112d077608240938a1e83265e0e",
+    "src/audio/ui-audio.js": "681de79cc7227570b6a90d4cc428ae414cc89a16259c7c777acad0337f854f7e",
+    "tests/wall-gesture-audio.test.js": "eb84ecc19ef30bfeedbd46339e85a4a51ac0333cf7ee358f97b995b58ac4fbec",
+    "tests/browser/wall-gesture-audio.html": "a6b04ca97725d3ea3d3a8f12f5f8f491695471c005373b0bc3da687c18c25acc",
+    "public/content/sfx-routing.json": "d138586a0b8a2776859f56ffa89fef58fdfddf7d6f39216936c8a7395d26b379",
+    "public/content/sfx-routing-opus.json": "a59ba90aeb65f65589e2d99b7aaa133c0c4b2cfc96f43476f5d0b10d57d07d4a",
+    "content/manifests/sfx-runtime.json": "f0a7a4546817ffb6e4b3e23732c80ae85003b9d4871aeaa143acd0e8424e0f28"
+  },
+  "checks": {
+    "directedTests": 101,
+    "passed": 101,
+    "failed": 0,
+    "build": {
+      "passed": true,
+      "modules": 231,
+      "seconds": 10.09
+    },
+    "webPackage": {
+      "passed": true,
+      "files": 641,
+      "bytes": 377432814,
+      "relativeLinks": 859,
+      "runtimeGlbs": 20
+    },
+    "sfxCatalogue": {
+      "total": 126,
+      "assigned": 99,
+      "reserved": 27,
+      "allOriginalBytesPreserved": true
+    },
+    "sfxRuntime": {
+      "passed": true,
+      "sfx": 126,
+      "metadataFiles": 3
+    },
+    "browserFixtureSyntax": {
+      "passed": true,
+      "scripts": 1
+    }
+  },
+  "directedLogSha256": "9f0583c129e914bde14eb8820911107f9ff27056a224a1ecac57fbe84a56b6ef",
+  "nativeReportSha256": "aaacab797bd6e675bfc9769f856fdddc9bc0de468b27bead0412f244572627ff",
+  "nativeScreenshotSha256": "bf0b431905a3676cfc010d1f2872352f84e14c04c24e58b5ad64133dccb34649"
+}

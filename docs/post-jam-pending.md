@@ -1,5 +1,10 @@
 # Tareas pendientes posteriores a la Jam
 
+[SFX del gesto de muralla 094/095](qa/wall-gesture-audio/README.md): arrastre una
+vez al superar umbral, release una vez, cancelación y protección de decode tardío;
+101 pruebas dirigidas y voces nativas Opus aceptadas en navegador. Matriz vigente:
+99 asignados y 27 reservas. Sigue pendiente la escucha/contexto del barrido completo.
+
 [Montañas de horizonte HQ generadas](../assets-source/far-backdrops-hq/README.md):
 seis candidatos imagegen por bioma, fuentes originales y prompts conservados.
 Relieve natural sin facetas low poly. Antes de sustituir los fondos: corregir

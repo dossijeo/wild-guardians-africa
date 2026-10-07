@@ -1,0 +1,50 @@
+{
+  "scope": "Native isolated wall gesture audio; no Game/economy/world acceptance or performance claim",
+  "context": "running",
+  "enabled": true,
+  "active": false,
+  "phases": [
+    "begin",
+    "drag",
+    "release",
+    "begin",
+    "cancel"
+  ],
+  "requests": [
+    {
+      "id": "spirit_drag",
+      "bus": "ui",
+      "emitter": "ui:wall-stroke",
+      "requestedAt": 59613.60000002384,
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "spirit_drop",
+      "bus": "ui",
+      "emitter": "ui:wall-stroke",
+      "requestedAt": 59766,
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    }
+  ],
+  "strokes": [
+    {
+      "samples": 9,
+      "start": [
+        100,
+        300
+      ],
+      "end": [
+        560,
+        340
+      ]
+    }
+  ],
+  "taps": 1,
+  "terrainQueries": 9,
+  "voices": 0,
+  "errors": []
+}
