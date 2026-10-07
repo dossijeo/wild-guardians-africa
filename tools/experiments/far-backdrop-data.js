@@ -7,13 +7,15 @@ export function backdropProfile(biome,layer){
  const step=biome==='savanna'?8:16,r=random(1471+index*193+layer*277),jitter=Array.from({length:2048/step},()=>r()*7),points=[];
  // Broad separated ridges and short mesa caps, independently composed per layer.
  // Avoid three phase-aligned sine waves that read as parallel horizontal bands.
+ const riverRidges=biome==='grand_river'?Array.from({length:5},(_,i)=>({center:(i+.1+r()*.8)*2048/5,width:210+r()*170,height:100+r()*95-layer*10})):null;
  const ridges=biome==='savanna'?Array.from({length:7},(_,i)=>({center:(i+.15+r()*.7)*2048/7,width:125+r()*110,height:105+r()*95-layer*12,cap:.10+r()*.17})):null;
  for(let x=0;x<=2048;x+=step){const wrap=x%2048;let height;
   if(ridges){let relief=0;for(const ridge of ridges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,ridge.height*(p<ridge.cap?1:Math.max(0,1-(p-ridge.cap)/(1-ridge.cap))));}height=315+layer*42-relief+Math.sin(wrap*Math.PI*2/2048*(5+layer)) * 3;}
+  else if(riverRidges){let relief=0;for(const ridge of riverRidges){const dx=Math.min(Math.abs(wrap-ridge.center),2048-Math.abs(wrap-ridge.center)),p=dx/ridge.width;relief=Math.max(relief,p<1?ridge.height*(1+Math.cos(p*Math.PI))*.5:0);}height=345+layer*35-relief;}
   else if(biome==='canyons'||biome==='desert'){const mesa=Math.floor(wrap/64);height=170+(mesa%3)*43+jitter[Math.floor(wrap/step)]+layer*55;}
   else if(biome==='volcanoes'){let mountain=0;for(let peak=0;peak<8;peak++){const center=128+peak*256,dx=Math.min(Math.abs(wrap-center),2048-Math.abs(wrap-center));mountain=Math.max(mountain,Math.max(0,1-dx/150)*(140+20*Math.cos(peak)));}height=300-mountain+layer*34;}
   else height=220+Math.sin(wrap*Math.PI*2/2048)*46+Math.sin(wrap*Math.PI*2/512)*18+layer*45+jitter[Math.floor(wrap/step)];
-  points.push([x,biome==='savanna'?Number(height.toFixed(3)):height]);
+  points.push([x,(biome==='savanna'||riverRidges)?Number(height.toFixed(3)):height]);
  }
  return points;
 }

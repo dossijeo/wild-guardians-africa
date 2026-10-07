@@ -17,3 +17,12 @@ test('savanna baked facets retain a solid body under the skyline instead of intr
 test('deployed backdrops match the offline generator and retain transparent sky at fixed resolution',async()=>{
  for(const biome of backdropBiomes){const actual=await fs.readFile(`public/assets/far-vegetation/${biome}-backdrop.webp`),expected=await sharp(Buffer.from(backdropSvg(biome))).webp({lossless:true,effort:4}).toBuffer();assert.deepEqual(actual,expected,biome);const {data,info}=await sharp(actual).raw().toBuffer({resolveWithObject:true});assert.equal(info.width,2048);assert.equal(info.height,512);assert.equal(info.channels,4);assert.ok(data.some((v,i)=>i%4===3&&v===0));assert.ok(data.some((v,i)=>i%4===3&&v===255));}
 });
+
+test('river skyline uses independent broad rolling relief without parallel low bands',()=>{
+ const a=backdropProfile('grand_river',0),b=backdropProfile('grand_river',1);
+ const delta=a.map((p,i)=>b[i][1]-p[1]);
+ assert.ok(Math.max(...delta)-Math.min(...delta)>100);
+ assert.ok(Math.max(...a.map(p=>p[1]))-Math.min(...a.map(p=>p[1]))>150);
+ // Rounded hills have gradual adjacent changes; no isolated thin vertical peaks.
+ assert.ok(a.slice(1).every((p,i)=>Math.abs(p[1]-a[i][1])<25));
+});
