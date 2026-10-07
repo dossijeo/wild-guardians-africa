@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {impostorHullShape} from './impostor-hull.js';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
 import {modelOrigin,NearTreeSelection,treeDensityRank,treeImportanceRank} from './far-impostor-math.js';
@@ -10,7 +11,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  if(prelitAtlas){for(const t of [prelitAtlas.day,prelitAtlas.night]){t.colorSpace=THREE.SRGBColorSpace;t.premultiplyAlpha=true;t.generateMipmaps=true;}uniforms.uPrelitDay={value:prelitAtlas.day};uniforms.uPrelitNight={value:prelitAtlas.night};uniforms.uPrelitEnabled={value:1};uniforms.uPrelitViews={value:prelitViews};uniforms.uRotationBlend={value:1};if(!toon)uniforms.uNight={value:0};}
  const attrs=(geometry,count)=>{for(const [name,size] of [['aTreeBase',3],['aTreeYaw',1],['aTreeScale',3],['aTreeRank',1]])geometry.setAttribute(name,new THREE.InstancedBufferAttribute(new Float32Array(count*size),size));};
  const readyAttribute=count=>new THREE.InstancedBufferAttribute(new Float32Array(count).fill(1),1).setUsage(THREE.DynamicDrawUsage);
- const plane=new THREE.PlaneGeometry(1,1),geometry=new THREE.InstancedBufferGeometry();geometry.index=plane.index;geometry.attributes=plane.attributes;attrs(geometry,trees.length);geometry.instanceCount=trees.length;geometry.setAttribute('aTreeReady',readyAttribute(trees.length));
+ const hullShape=metadata.impostorHull?impostorHullShape(metadata.impostorHull):null,plane=hullShape?.shape??new THREE.PlaneGeometry(1,1),geometry=new THREE.InstancedBufferGeometry();geometry.index=plane.index;geometry.attributes={...plane.attributes};geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);attrs(geometry,trees.length);geometry.instanceCount=trees.length;geometry.setAttribute('aTreeReady',readyAttribute(trees.length));
  for(const [i,t] of trees.entries()){geometry.attributes.aTreeBase.setXYZ(i,t.x,t.y,t.z);geometry.attributes.aTreeYaw.setX(i,t.yaw);geometry.attributes.aTreeScale.setXYZ(i,t.sx??t.scale,t.sy??t.scale,t.sz??t.scale);geometry.attributes.aTreeRank.setX(i,treeImportanceRank(treeDensityRank(t.id,seed),metadata.impostorHeight*(t.sy??t.scale),{referenceHeight:importanceHeight,maximumBoost:importanceMaxBoost}));}
  texture.colorSpace=THREE.SRGBColorSpace;texture.premultiplyAlpha=true;texture.generateMipmaps=true;
  const material=new THREE.ShaderMaterial({uniforms,fog:true,side:THREE.DoubleSide,vertexShader:`attribute vec3 aTreeBase;attribute float aTreeYaw,aTreeRank,aTreeReady;attribute vec3 aTreeScale;uniform vec2 uDensityRange,uDistanceFadeRange;uniform float uDensityEnabled,uDensityMinimum,uDensityBand;uniform vec2 uSize;uniform float uStart,uEnd,uReady;uniform vec2 uFarOrigin;varying vec2 vUv;varying float vView,vMix,vDensityFade;
@@ -73,7 +74,8 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
   if(nativeModels&&(selected||packedRevision!==readinessRevision)){let first=Infinity,last=-1;const attribute=modelGeometry.attributes.aTreeReady;for(const [slot,index] of selection.indices.entries()){const value=geometry.attributes.aTreeReady.getX(index);if(attribute.getX(slot)!==value){attribute.setX(slot,value);first=Math.min(first,slot);last=slot;}}if(last>=first){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;readinessUploads++;}packedRevision=readinessRevision;}
   if(nativeModels&&!toon)modelMaterial.color.copy(originalColor).multiply(uniforms.uLighting.value);
  }
+ function setHullEnabled(enabled){if(!hullShape)return false;const changed=hullShape.set(enabled);geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);return changed;}
  function stats(){return {selectionScans:selection.scans,matrixUploads,readinessRevision,readinessUploads};}
  function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
- return {impostors,models,uniforms,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
+ return {impostors,models,uniforms,setHullEnabled,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
 }
