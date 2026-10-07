@@ -51,6 +51,7 @@ async function campaign(){
  const size=1024;renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
  const clipFilter=options.get('clip');
+ const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
  const withheldVersion=options.has('withheldV3')?3:options.has('withheldV2')?2:1;
  const fractions=withheldVersion===3?[.3125,.8125]:withheldVersion===2?[.375,.875]:[.125,.625],elevations=withheldVersion===3?[35,65]:withheldVersion===2?[40,70]:[25,55],azimuths=withheldVersion===3?[33.75,123.75,213.75,303.75]:withheldVersion===2?[11.25,101.25,191.25,281.25]:[22.5,67.5,157.5,247.5];
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
@@ -94,7 +95,9 @@ async function campaign(){
  report.candidateSide=sourceTwin?'Original twin control':positiveControl?'Original effective sides retained':'FrontSide accessories; existing FrontSide body retained';
  report.shadowSide=frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
  let failed=false;
+ report.caseOffset=caseOffset;let campaignIndex=0;
  campaignLoop: for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of campaignClips)for(const fraction of fractions)for(const elevation of elevations)for(const azimuth of azimuths){
+  if(campaignIndex++<caseOffset)continue;
   if(cancelled)throw Error('Cancelled');
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
   const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;

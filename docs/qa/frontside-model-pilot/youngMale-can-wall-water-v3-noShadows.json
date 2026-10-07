@@ -1,0 +1,461 @@
+{
+  "status": "VISUAL_SCREEN_NOT_APPROVED",
+  "resolution": 1024,
+  "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
+  "source": "worker-actions.youngMale runtime web",
+  "candidate": "youngMale-selective-reverse-NOT-APPROVED-web.glb",
+  "candidateSide": "FrontSide accessories; existing FrontSide body retained",
+  "maxSamples": 1,
+  "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
+  "shadowsEnabled": false,
+  "conditions": "CPU49032/39340 frozen, far58872 finished. No GPU timing.",
+  "samples": [
+    {
+      "biome": "sabana",
+      "night": 0,
+      "clip": "Water",
+      "fraction": 0.3125,
+      "azimuth": 213.75,
+      "elevation": 35,
+      "alphaIoU": 1,
+      "missingFraction": 0,
+      "addedFraction": 0,
+      "linearRgbMae": 8.248791942270193e-06,
+      "p99Approx": 0,
+      "maxError": 0.3962237387895584,
+      "maxTileMae": 0.01620295478238,
+      "originalPixels": 143052,
+      "missingPixels": 0,
+      "addedPixels": 0,
+      "rgbOutlierRegions": [
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            675,
+            448,
+            675,
+            448
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            619,
+            464,
+            619,
+            464
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            616,
+            465,
+            616,
+            465
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            613,
+            466,
+            613,
+            466
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            610,
+            467,
+            610,
+            467
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            607,
+            468,
+            607,
+            468
+          ],
+          "classification": "rgb"
+        },
+        {
+          "pixels": 1,
+          "diameterUpperBound": 0,
+          "bounds": [
+            633,
+            497,
+            633,
+            497
+          ],
+          "classification": "rgb"
+        }
+      ],
+      "missingRegions": [],
+      "shadowPackedDifference": null,
+      "alphaDistanceGate": {
+        "radiusPixels": 1,
+        "missingBeyondOnePixel": 0,
+        "addedBeyondOnePixel": 0,
+        "passes": true
+      },
+      "unchangedOriginalControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0
+        }
+      ],
+      "toolStates": [
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          }
+        ],
+        [
+          {
+            "name": "Prop_WateringCan",
+            "visible": true,
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "name": "Prop_FruitCrate",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          },
+          {
+            "name": "Prop_Hoe",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          },
+          {
+            "name": "Prop_HarvestSack",
+            "visible": false,
+            "scale": [
+              9.999999747378752e-06,
+              9.999999747378752e-06,
+              9.999999747378752e-06
+            ]
+          }
+        ]
+      ],
+      "passes": false
+    }
+  ],
+  "limitations": [
+    "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required."
+  ],
+  "originalWorldPath": "WorldScene.actor \u00e2\u2020\u2019 Assets runtime GLB \u00e2\u2020\u2019 SkeletonUtils clone \u00e2\u2020\u2019 updateActor/applyWorkerPose \u00e2\u2020\u2019 SceneMaterialRegistry/AfricanToon",
+  "candidateReceipt": {
+    "category": "youngMale",
+    "path": ".cache/frontside-model-pilot/candidates/youngMale-selective-reverse-NOT-APPROVED-web.glb",
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd.glb",
+    "sourceCandidateSha256": "dec153352c2eebda633408b47f7f0a33b972ebe58bfd0413a9ab95ca007516bf",
+    "bytes": 5241864,
+    "baselineRuntimeBytes": 5612688,
+    "growthPercent": -6.606887822733065,
+    "prunedUnusedAccessors": 633,
+    "sha256": "ee05a1e0c7609ac07ad64a4c0333b96ee10b5bb20f34ef59892e53406fcbfdcd",
+    "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
+    "status": "NOT_APPROVED"
+  },
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timerQueryAvailable": true,
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "originalEffectiveMaterials": [
+    {
+      "mesh": "Mesh0",
+      "material": "BakedMaterial",
+      "side": 0,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 1,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_1",
+      "material": "Esmalte verde azulado",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_WateringCan_geometry_2",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_3",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_Nozzle_geometry_4",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_5",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Can_badge_geometry_6",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_7",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_8",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_9",
+      "material": "Cantos de madera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_10",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_11",
+      "material": "Manzanas verdes",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_12",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_13",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_14",
+      "material": "Tomates maduros",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_15",
+      "material": "Naranjas",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_16",
+      "material": "Lona de algod\u00c3\u00b3n",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_17",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_18",
+      "material": "Costuras de lona",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_19",
+      "material": "Madera oscura",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_HarvestSack_geometry_20",
+      "material": "Verde hoja",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_21",
+      "material": "Madera miel",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_22",
+      "material": "Cuerda",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_23",
+      "material": "Borde de regadera",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_24",
+      "material": "Acero mate",
+      "side": 2,
+      "shadowSide": null,
+      "effectivePcfDepthSide": 2,
+      "customDepthMaterial": null
+    }
+  ],
+  "caseOffset": 2,
+  "unchangedOriginalControls": [
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "differentBytes": 0,
+      "maxByteDifference": 0
+    }
+  ],
+  "failed": true,
+  "sourceTwin": false,
+  "originalShadowDiagnostic": false,
+  "frontShadow": false,
+  "sharedPersistentShadowHook": true,
+  "clipFilter": "Water",
+  "requestedClips": [
+    "Water"
+  ],
+  "withheldVersion": 3,
+  "capture": "youngMale-can-wall-water-v3-noShadows.png"
+}

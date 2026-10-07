@@ -374,3 +374,14 @@ sample and saves an explicit invalid-control report before aborting, retaining
 any earlier samples. Further isolation needs same-view source twins and
 noShadows controls; neither a noisy original nor tiny global MAE permits
 relaxing the regional gates. No GPU timing or promotion has occurred.
+
+Same-view isolation now confirms the version3 color rejection independently:
+`caseOffset=2&noShadows` has3unchanged-original repeats exact in that view,
+IoU1, MAE .000008249, tileMAE .016203, max RGB error .396224 and7isolated
+RGB outlier pixels. Metrics exactly match the earlier shadow-enabled capture.
+`caseOffset=2&noShadows&sourceTwin` has identical source/candidate pixels
+(MAE/tile/error0), with3exact original repeats. Thus this rejection cannot be
+explained exclusively by shadows or unchanged-source noise in this view.
+It remains a candidate color/map/geometry defect to diagnose, not a reason
+to relax the tile gate. Source/candidate face provenance for those color
+outliers is the next diagnostic before any further geometry change.
