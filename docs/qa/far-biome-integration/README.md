@@ -183,3 +183,19 @@ A baselines drift3.7%; B is close to their average and does not demonstrate GPU 
 | A2 native |21.611|6.7|59|960014|
 
 The two B medians are about5% below the average A median in this single scene, with A medians differing about1%. This supports a local GPU-cost reduction for this variant; it does not establish an FPS gain across biomes, qualities, motion or devices. Frame-time distributions remain noisy. The extra native tree casters remain while small-prop casters follow the smaller square, so this is a deliberate distant-detail change rather than pixel-equivalent rendering. Visual/motion acceptance in the remaining biomes is still pending and normal gameplay remains OFF.
+
+## Additional tree-circle biome paths (6100e12, main8d6d5b5)
+
+The following native paths use exact terrain/picking/navigation and tree-only circular residency. JSON includes complete per-species preparation counters and nearby-tree traces; PNGs are final path views, not complete motion videos.
+
+| Biome / phase / path | Fully ready transition frames | Selected descents | Evidence |
+| --- | --- | --- | --- |
+| Manglares / day / approach |267/267|0|`mangroves-tree-circle-approach.json/png`|
+| Manglares / night / orbit |490/490|0|`mangroves-tree-circle-night-orbit.json/png`|
+| Gran Río / day / lateral |562/594|0|`river-tree-circle-lateral.json/png`|
+| Gran Río / dusk / approach |276/277|0|`river-tree-circle-dusk-approach.json/png`|
+| Desierto / low / day / approach |606/606|0|`desert-low-tree-circle-approach.json/png`|
+
+All five paths preserve logical state and report zero errors. Initial unready frames keep the impostor while native preparation completes. All-near readiness traces record16/5/12/15/1 declines respectively, each with `frustum=false`, tree residency preserved and native LOD orders still present. These are retained explicitly rather than hidden or counted as on-screen readiness failures. The all-near counter is not an assertion that every tree in every viewport was ready from its initial observation.
+
+These checks expand motion evidence to all six biomes across this and earlier source revisions, but do not validate every species, every quality or pixel-equivalent lighting/silhouette matching. Manglares' final horizon remains visibly flat; the Gran Río close tree is a native model but distant dithering is noticeable in a static capture. Backdrop/atmospheric composition and remaining species/quality checks still block activation and an acceptance PR. No gain is attributed to these paths; the GPU cost evidence remains the single Sabana ABBA above.
