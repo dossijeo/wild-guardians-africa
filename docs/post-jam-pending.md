@@ -1,5 +1,10 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ: alternativa sin mipmaps](qa/hq-mountain-no-mips/README.md):
+146 poses nativas día/noche y cuatro capturas conservan el acabado. No basta
+para elegir filtro: verificar niveles efectivos y parpadeo/móvil; el negativo
+CPU de mezcla entre celdas desde mip5 permanece registrado.
+
 [Montañas HQ: pilotos de los otros cinco biomas](qa/hq-mountain-biome-pilots/README.md):
 730 poses nativas día/noche sin errores, diez capturas revisadas. Gran Río,
 Manglares, Volcanes y Desierto siguen una dirección artística aceptable; revisar
