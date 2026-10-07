@@ -19,11 +19,22 @@ test('standby owns uploaded frozen matrices and never authorizes CPU-only or cha
  let finish;const f=fixture(()=>new Promise(resolve=>finish=resolve)),t=tree(),d=descriptor(t);f.owner.request([d],{x:0,z:0});assert.equal(f.owner.has(t.id,t),false);assert.equal(f.scene.children.length,0);d.matrix[12]=500;finish();await settled(f.owner);
  assert.equal(f.owner.has(t.id,t),true);assert.equal(f.owner.active.meshes[0].instanceMatrix.array[12],0);assert.equal(f.owner.has(t.id,tree('a',2)),false);assert.equal(f.owner.has(t.id,t,new Set(['a'])),false);assert.equal(f.owner.has('new',tree('new')),false);f.close();
 });
-test('previous prepared bank remains drawable until replacement upload finishes and logical LOD changes reuse it',async()=>{
+test('LOD replacement keeps the uploaded previous level until its new fence completes',async()=>{
  let finish;const f=fixture(),a=tree();f.owner.request([descriptor(a)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active,revision=f.owner.revision;
- f.owner.request([descriptor(a,1)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.active,bank);assert.equal(f.owner.revision,revision);
- f.owner.prepare=()=>new Promise(resolve=>finish=resolve);const b=tree('b',2);f.owner.request([descriptor(a,1),descriptor(b)],{x:0,z:0});assert.equal(f.owner.active,bank);assert.equal(f.owner.has('a',a),true);assert.equal(f.owner.has('b',b),false);finish();await settled(f.owner);assert.notEqual(f.owner.active,bank);assert.equal(f.owner.has('b',b),true);assert.equal(f.scene.children.length,1);f.close();
+ f.owner.prepare=()=>new Promise(resolve=>finish=resolve);f.owner.request([descriptor(a,1)],{x:0,z:0});
+ assert.equal(f.owner.active,bank);assert.equal(f.owner.revision,revision);assert.equal(bank.entries.get(a.id).level,0);assert.equal(f.owner.has(a.id,a),true);
+ f.owner.update({x:0,z:50},new Map([[a.id,a]]),()=>({ready:1,enabled:true}),()=>false,new Set());assert.equal(bank.meshes[0].geometry.attributes.nativeVisibility.getX(0),.5);
+ finish();await settled(f.owner);assert.notEqual(f.owner.active,bank);assert.equal(f.owner.active.entries.get(a.id).level,1);assert.equal(f.owner.active.rows[0].length,0);assert.equal(f.owner.active.rows[1][0].id,a.id);assert.equal(f.owner.has(a.id,a),true);assert.equal(f.scene.children.length,1);
+ const accepted=f.owner.active,acceptedRevision=f.owner.revision;f.owner.prepare=async()=>{};f.owner.request([descriptor(a,1)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.active,accepted);assert.equal(f.owner.revision,acceptedRevision);
+ f.owner.request([descriptor(a,0)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.active.entries.get(a.id).level,0);assert.equal(f.owner.has(a.id,a),true);f.close();
 });
+
+test('a rejected LOD fence never replaces the previous prepared representation',async()=>{
+ const f=fixture(),a=tree();f.owner.request([descriptor(a)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active;
+ f.owner.prepare=async()=>{throw new NativeFarGpuCancelled('context-changed');};f.owner.request([descriptor(a,1)],{x:0,z:0});await settled(f.owner);
+ assert.equal(f.owner.active,bank);assert.equal(bank.entries.get(a.id).level,0);assert.equal(f.owner.has(a.id,a),true);assert.equal(f.owner.stats.cancelledPreparations,1);assert.deepEqual(f.owner.stats.errors,[]);f.close();
+});
+
 test('fallback renders only while its native replacement lacks proof, using exact transition and suppression',async()=>{
  const f=fixture(),t=tree();f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);const mesh=f.owner.active.meshes[0],rows=new Map([[t.id,t]]),state=()=>({ready:1,enabled:true});
  f.owner.update({x:0,z:50},rows,state,()=>false,new Set());assert.equal(mesh.visible,true);assert.equal(mesh.geometry.attributes.nativeVisibility.getX(0),.5);assert.equal(mesh.castShadow,false);assert.equal(f.owner.stats.rendered,1);

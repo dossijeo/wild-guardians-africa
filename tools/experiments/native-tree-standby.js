@@ -39,7 +39,7 @@ export class NativeTreeStandby {
   try{while(!this.closed&&this.pending){
    const {entries,camera}=this.pending;this.pending=null;const wanted=new Map();
    for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
-   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key)wanted.set(d.id,{...d,matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
+   for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
    if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}
