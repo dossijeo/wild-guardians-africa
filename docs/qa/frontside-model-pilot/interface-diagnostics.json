@@ -1,0 +1,171 @@
+{
+  "status": "INTERFACE_DIAGNOSTIC_NOT_APPROVED",
+  "meshes": [
+    {
+      "category": "crops",
+      "mesh": "maiz_05_maduro",
+      "sourceVertices": 8983,
+      "sourceTriangles": 4935,
+      "interfaces": [
+        {
+          "mode": "exactFloatPositions",
+          "distinctPositions": 2379,
+          "boundaryEdges": 118,
+          "nonManifoldEdges": 145,
+          "sameWindingManifoldEdges": 3,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        },
+        {
+          "mode": "quantized1e-5",
+          "distinctPositions": 2379,
+          "boundaryEdges": 118,
+          "nonManifoldEdges": 145,
+          "sameWindingManifoldEdges": 3,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        }
+      ],
+      "limitations": [
+        "Quantized merges do not establish exact coincidence or permit welding.",
+        "An intersecting plant organ can be intentional; manifold counts alone are insufficient.",
+        "Opposing coincident triangles may already encode a two-sided surface; retain map and driver provenance before any deduplication."
+      ]
+    },
+    {
+      "category": "crops",
+      "mesh": "platano_05_maduro",
+      "sourceVertices": 10981,
+      "sourceTriangles": 5640,
+      "interfaces": [
+        {
+          "mode": "exactFloatPositions",
+          "distinctPositions": 2486,
+          "boundaryEdges": 165,
+          "nonManifoldEdges": 413,
+          "sameWindingManifoldEdges": 17,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        },
+        {
+          "mode": "quantized1e-5",
+          "distinctPositions": 2486,
+          "boundaryEdges": 165,
+          "nonManifoldEdges": 413,
+          "sameWindingManifoldEdges": 17,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        }
+      ],
+      "limitations": [
+        "Quantized merges do not establish exact coincidence or permit welding.",
+        "An intersecting plant organ can be intentional; manifold counts alone are insufficient.",
+        "Opposing coincident triangles may already encode a two-sided surface; retain map and driver provenance before any deduplication."
+      ]
+    },
+    {
+      "category": "youngMale",
+      "mesh": "Mesh0",
+      "sourceVertices": 15080,
+      "sourceTriangles": 19951,
+      "interfaces": [
+        {
+          "mode": "exactFloatPositions",
+          "distinctPositions": 10192,
+          "boundaryEdges": 510,
+          "nonManifoldEdges": 9,
+          "sameWindingManifoldEdges": 0,
+          "coincidentTriangleGroups": 4,
+          "opposingCoincidentPairs": [
+            [
+              2675,
+              2680
+            ],
+            [
+              2693,
+              2700
+            ],
+            [
+              15828,
+              15830
+            ],
+            [
+              17951,
+              19722
+            ]
+          ],
+          "sameWindingCoincidentPairs": []
+        },
+        {
+          "mode": "quantized1e-5",
+          "distinctPositions": 10192,
+          "boundaryEdges": 510,
+          "nonManifoldEdges": 9,
+          "sameWindingManifoldEdges": 0,
+          "coincidentTriangleGroups": 4,
+          "opposingCoincidentPairs": [
+            [
+              2675,
+              2680
+            ],
+            [
+              2693,
+              2700
+            ],
+            [
+              15828,
+              15830
+            ],
+            [
+              17951,
+              19722
+            ]
+          ],
+          "sameWindingCoincidentPairs": []
+        }
+      ],
+      "limitations": [
+        "Quantized merges do not establish exact coincidence or permit welding.",
+        "An intersecting plant organ can be intentional; manifold counts alone are insufficient.",
+        "Opposing coincident triangles may already encode a two-sided surface; retain map and driver provenance before any deduplication."
+      ]
+    },
+    {
+      "category": "youngMale",
+      "mesh": "Prop_WateringCan_geometry_1",
+      "sourceVertices": 427,
+      "sourceTriangles": 720,
+      "interfaces": [
+        {
+          "mode": "exactFloatPositions",
+          "distinctPositions": 376,
+          "boundaryEdges": 58,
+          "nonManifoldEdges": 0,
+          "sameWindingManifoldEdges": 0,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        },
+        {
+          "mode": "quantized1e-5",
+          "distinctPositions": 371,
+          "boundaryEdges": 48,
+          "nonManifoldEdges": 0,
+          "sameWindingManifoldEdges": 0,
+          "coincidentTriangleGroups": 0,
+          "opposingCoincidentPairs": [],
+          "sameWindingCoincidentPairs": []
+        }
+      ],
+      "limitations": [
+        "Quantized merges do not establish exact coincidence or permit welding.",
+        "An intersecting plant organ can be intentional; manifold counts alone are insufficient.",
+        "Opposing coincident triangles may already encode a two-sided surface; retain map and driver provenance before any deduplication."
+      ]
+    }
+  ]
+}

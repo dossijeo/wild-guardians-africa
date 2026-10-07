@@ -221,3 +221,14 @@ It may be that accessories offer insufficient full-renderer gain; no gain has
 been asserted. The fixture now executes actual Assets.model, WorldScene.actor,
 updateActor and material registry paths on both paired models and reports the
 effective original material sides after AfricanToon.
+
+Exact-interface audit (`python tools/frontside_interface_audit.py`) now separates
+float-identical authored positional interfaces from the1e-5 seam diagnostic.
+Mature maize and banana have the same interface counts under both modes and
+zero coincident-triangle groups: their145/413 non-manifold positional edges are
+not artifacts of tolerance rounding. This still does not justify welding across
+UV or regional-driver seams. The watering-can first geometry differs: exact
+376 positions/58 boundary edges versus quantized371/48, so those merged gaps
+need local inspection. Worker body has four exact coincident-triangle groups,
+which are retained because its existing FrontSide contract already culls.
+The interface audit is diagnostic; counts alone approve no topology change.
