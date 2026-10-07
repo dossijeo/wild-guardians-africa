@@ -196,7 +196,9 @@ export class Navigation {
     const reused=navigationQueryResult(this,key);if(reused)return reused;
     const found=this.findPath(start,end,radius,ignore,worker,margin);
     const result=found&&worker?this.smoothPath(start,found,radius,ignore,worker):found;
-    if(!result){if(this.failedPaths.size>=50000)this.failedPaths.clear();this.failedPaths.add(key);}
+    // Capacity pressure is not a geometry change. Retain other proven failures
+    // instead of forcing up to 50,000 searches again after one new query.
+    if(!result){if(this.failedPaths.size>=50000)evictOldest(this.failedPaths);this.failedPaths.add(key);}
     if(result)rememberNavigationQuery(this,key,result);
     return result;
   }

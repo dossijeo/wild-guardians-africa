@@ -1,0 +1,35 @@
+{
+  "scope": "100 native Gran Cañón ticks from a historical day-11 hiring checkpoint, paid ordinary hiring, same complete state at every tick. Reference changes only capacity eviction back to the previous full-clear policy. No placement, water, speed, route, money or state overrides. Not current 100-night replay, runtime overflow attribution, rendering, RAM or a performance benchmark.",
+  "input": "docs/qa/intensive-canyon-10/state.json",
+  "inputSha256": "501a1240a9de9f6f6ca860216c45c9a24ab4c5101155a4fded85159eebdc32ec",
+  "ticks": 100,
+  "stepSeconds": 0.1,
+  "trajectorySha256": "6a6dd795145445c26ccea0d9f02508a9a53eeccd37f51c879fd6d1195259f49a",
+  "sourceHashes": {
+    "navigation": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8",
+    "reference": "37834fbbdd93776dd72b85e3f86935e73962cad91c5e3d246bfb5f57c76e14cc",
+    "game": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19"
+  },
+  "worlds": [
+    {
+      "name": "previous",
+      "staff": 13,
+      "pathQueries": 26,
+      "searches": 13,
+      "maxFailureKeys": 0,
+      "finalStateSha256": "24d4438f2264d1ec011ae75cb4d3b5ec69c3a72edf5ab3c7d6cb832796621e18",
+      "alive": 148,
+      "money": 179
+    },
+    {
+      "name": "retained",
+      "staff": 13,
+      "pathQueries": 26,
+      "searches": 13,
+      "maxFailureKeys": 0,
+      "finalStateSha256": "24d4438f2264d1ec011ae75cb4d3b5ec69c3a72edf5ab3c7d6cb832796621e18",
+      "alive": 148,
+      "money": 179
+    }
+  ]
+}
