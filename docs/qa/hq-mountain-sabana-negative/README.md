@@ -9,7 +9,11 @@ El candidato preserva 2048×512, un sampler, un draw de backdrop y el shader
 existente; duplica las UV del cilindro y usa MirroredRepeatWrapping para resolver
 la discontinuidad entre bordes de la fuente. Carga inicial y giros completos
 diurno/nocturno concluyen sin errores JS/GL, con la simulación sin cambios según
-el recibo exportado. Capturas originales conservadas y recibo completo gzip.
+el visor. Capturas originales conservadas y recibo completo gzip. El visor
+sobrescribe su lista en cada giro: el recibo retenido contiene exclusivamente
+las 73 poses nocturnas; el giro diurno se observó terminado a 360° en la UI,
+pero no se exportó su lista. No atribuir 146 poses al archivo ni confundir estos
+controles técnicos con una inspección visual exhaustiva de cada ángulo.
 
 El relieve mejora claramente frente al fondo poligonal, pero **no se acepta
 como solución final**: la imagen en `sabana-hq-seam180.png` muestra una mesa y
