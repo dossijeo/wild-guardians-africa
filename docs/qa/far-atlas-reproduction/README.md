@@ -1,0 +1,9 @@
+# Reviewed offline reproduction
+
+Following PR review, the 42 native phase PNGs and all original/admitted phase metadata were preserved in `tools/sources/far-atlases/native-inputs.zip` (36,110,292 bytes). The two approved linear-light PNG inputs already tracked in the alpha receipt are referenced rather than duplicated. Every archive entry, input PNG, metadata, approved public output and the runtime manifest has a pinned SHA-256.
+
+`node tools/rebuild_far_atlases.mjs` completed read-only: **44/44 generated WebP files byte-exact**, with decoded 1024×1024 RGBA equality and no public writes. Encoder versions are Sharp 0.35.5/libvips 8.18.7/libwebp 1.6.0 and Pillow 9.5.0/libwebp 1.3.0. The source archive was repacked independently using Python 3.12.3/zlib 1.3.1 and produced the same hash `522ced09c4827c77cb80cceb26f8e8d7714af0c6acf0fc82c30ece22fd4ff982`.
+
+Ten directed tests pass, including archive/input hashes, complete record admission, encoder/destination changes, obsolete sunlight, changed resolution/elevation/frame, and missing linear-alpha metadata. Original native frame fields remain archived; public-manifest key ordering and sub-picometre serialization drift are handled explicitly as documented in the source README, with original-field comparison capped at 1e-12. No atlas pixels, transforms, runtime files, geometry or public assets changed relative to PR source `1be76f99` (`git diff --quiet 1be76f99 -- src public content`: exit 0).
+
+The immutable 3040-test receipt remains attributed to e09308b1. These additions are offline tools, source inputs, directed tests and documentation; they do not require attributing that full-suite result to the new helper. A fresh CI run is required on the updated PR. The obsolete cache packer and its negative admission evidence remain intact.

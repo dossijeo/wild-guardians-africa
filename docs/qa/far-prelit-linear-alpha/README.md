@@ -18,3 +18,5 @@ Three stable-phase routes complete at20s with unchanged snapshots: night orbit, 
 
 
 Runtime promotion: the exact reviewed day/night WebP bytes are now copied to the existing public savanna-2 atlas URLs, with prelitAlphaEncoding=srgb-encoded-linear-premultiplied in the manifest. Biome attachment forwards the premultipliedLinear upload flag from that metadata; unmarked species retain their existing path. Dimensions/base/source bounds/sun/yaw framing match the preceding manifest exactly. Total deployed atlas bytes were recounted. Gameplay activation is separate from this asset-format correction; the quality profile and other-biome validation remain pending.
+
+Current offline reproduction is documented in [the reviewed source pipeline](../../../tools/sources/far-atlases/README.md): `node tools/rebuild_far_atlases.mjs` regenerates/verifies all 44 phases without public writes. The two transformed PNGs in this directory are its exact Pillow inputs; the other 42 native PNGs and all phase metadata are preserved in a deterministic source archive. Historical pilot statements above retain their original source scope.
