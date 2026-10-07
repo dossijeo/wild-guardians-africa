@@ -26,7 +26,7 @@ out=ROOT/'.cache/frontside-model-pilot/candidates';out.mkdir(parents=True,exist_
 receipts=[]
 for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['source'])),('youngMale',workers['youngMale']['url'])]:
     original,doc,bin_source=read_glb(ROOT/'public'/url.lstrip('/'));binary=bytearray(bin_source)
-    reference=copy.deepcopy(doc);changes=[];labels=copy.deepcopy(bridge) if category=='crops' else None
+    reference=copy.deepcopy(doc);changes=[];skipped=[];labels=copy.deepcopy(bridge) if category=='crops' else None
     def append(array,template,target):
         binary.extend(b'\0'*((-len(binary))%4));offset=len(binary);binary.extend(array.tobytes())
         doc['bufferViews'].append({'buffer':0,'byteOffset':offset,'byteLength':array.nbytes,'target':target})
@@ -42,6 +42,9 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
         if category=='crops':chosen.update(int(item.split(':')[1]) for item in selection['selected'].get('bridgeSource',[]) if int(item.split(':')[0])==model_index)
         if not chosen:continue
         p=doc['meshes'][node['mesh']]['primitives'][0];index_id=p['indices'];indices=accessor(doc,bin_source,index_id).reshape(-1,3).astype(np.uint32)
+        if category!='crops' and not doc['materials'][p['material']].get('doubleSided',False):
+            skipped.append(dict(name=name,reason='Already FrontSide in runtime source; retain geometry and default shadowSide',selectedFacesDiscarded=len(chosen)))
+            continue
         faces=np.asarray(sorted(chosen),dtype=np.int64);assert faces.max()<len(indices)
         # Reverse faces share a private clone of each source vertex. Source UV,
         # skin and morph seams remain separate because source index identity is
@@ -87,7 +90,7 @@ for category,url in [('crops',next(m['url'] for m in models if 'Cultivos' in m['
         candidate=str(path.relative_to(ROOT)).replace('\\','/'),candidateSha256=hashlib.sha256(candidate).hexdigest(),source=url,sourceSha256=hashlib.sha256(original).hexdigest(),
         trianglesBaseline=triangles_before,addedTriangles=extra,triangleGrowthPercent=tri_growth,
         bytesBefore=len(original),bytesAfter=len(candidate),fileGrowthPercent=100*(len(candidate)/len(original)-1),
-        activeGeometryBytesBefore=geometry_before,activeGeometryBytesAfter=geometry_after,activeGeometryGrowthPercent=100*(geometry_after/geometry_before-1),
+        activeGeometryBytesBefore=geometry_before,activeGeometryBytesAfter=geometry_after,activeGeometryGrowthPercent=100*(geometry_after/geometry_before-1),skippedAlreadyFrontSide=skipped,
         preserved=['Original binary prefix byte-exact','Nodes/skins/inverse binds/animation JSON byte values','UV/joints/weights on original and appended vertices','Materials/images/morph metadata','Crop face order unchanged; reversed faces append inherited driver labels'],changes=changes))
 (ROOT/'docs/qa/frontside-model-pilot/selective-candidate-receipts.json').write_text(json.dumps(receipts,indent=2)+'\n')
 print(json.dumps([{k:r[k] for k in ['category','status','triangleGrowthPercent','fileGrowthPercent','activeGeometryGrowthPercent']} for r in receipts]))

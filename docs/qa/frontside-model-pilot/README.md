@@ -199,3 +199,25 @@ GPU residency or frame time. The proposed 10% screen limits additional botanical
 vertex/storage work while seeking a measured full-renderer improvement of at
 least 5%/.20ms. Pair-specific reverse selection rather than the current union
 across states/bridges is an alternative to investigate before abandoning repair.
+
+Correction to worker interpretation: the source worker body BakedMaterial omits
+GLB doubleSided and already loads FrontSide. Assets.model and WorldScene.actor do
+not change that side; AfricanToon also preserves it. Its default depth side is
+BackSide in r180. The earlier whole-worker candidate and shadowDouble controls
+changed that existing contract, so their shadow rejection cannot be used to
+reject an otherwise correct accessory-only adaptation. The original-index
+shadow diagnostic reproduced the difference despite excluding appended faces;
+its 23 changed texels had up to .471m packed-depth difference, consistent with
+changing which side of the existing body shell casts shadows.
+
+The corrected writer skips every worker primitive whose source material already
+uses FrontSide. It retains body geometry and default shadow side exactly. Only
+originally DoubleSide accessories are adapted. YoungMale now adds 280/41927
+triangles (.668%) and .725% active geometry; packed candidate is5226192 bytes,
+SHA25659abdfcb1a06c9b4613839806dd6103c5a72cf0a74dc448cea5043f34928485e.
+All 25 meshes/62 nodes/12 clips still pass exact contract verification. Any GPU
+comparison must use the actual original whole worker, whose body already culls.
+It may be that accessories offer insufficient full-renderer gain; no gain has
+been asserted. The fixture now executes actual Assets.model, WorldScene.actor,
+updateActor and material registry paths on both paired models and reports the
+effective original material sides after AfricanToon.

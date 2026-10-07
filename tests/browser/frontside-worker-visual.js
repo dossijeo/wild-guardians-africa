@@ -1,7 +1,4 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
-import {assetUrl} from '../../src/rendering/asset-url.js';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {SceneMaterialRegistry} from '../../src/rendering/material-registry.js';
 import {NativeSky} from '../../src/rendering/sky.js';
@@ -9,6 +6,8 @@ import {installNativeShadow} from '../../src/rendering/native-shadow.js';
 import {configureShadowCamera,updateShadowCamera} from '../../src/rendering/shadow-camera.js';
 import {sampleFixedPose} from '../../src/rendering/fixed-pose.js';
 import {syncWorkerToolVisibility} from '../../src/rendering/worker-tool-visibility.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {Assets} from '../../src/rendering/assets.js';
 const status=document.querySelector('#status');let renderer,cancelled=false;
 function regions(mask,width,originalAlpha){
  const seen=new Uint8Array(mask.length),queue=new Uint32Array(mask.length),out=[];
@@ -24,8 +23,18 @@ async function campaign(){
  const size=1024;renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
  document.querySelector('#view').append(renderer.domElement);const gl=renderer.getContext(),pixels=[new Uint8Array(size*size*4),new Uint8Array(size*size*4)];
- const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),library=await fetch('/content/worker-actions.json').then(r=>r.json());
- const models=await Promise.all([loader.loadAsync(assetUrl(library.youngMale.url)),loader.loadAsync(sourceTwin?assetUrl(library.youngMale.url):'/__frontside_candidate/youngMale')]);
+ const library=await fetch('/content/worker-actions.json').then(r=>r.json());
+ const sourceAssets=new Assets();
+ const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:'/__frontside_candidate/youngMale'];
+ const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
+ // Exercise the actual WorldScene.actor/updateActor path, including skeleton
+ // cloning, action setup and tool visibility, without starting a second renderer.
+ for(let i=0;i<2;i++){
+  const sourceWorld=Object.create(WorldScene.prototype),sourceRoot=new THREE.Object3D(),entity={id:'frontside-worker-'+i,profile:'youngMale',status:'idle',x:0,z:0};
+  const effectiveLibrary={...library,youngMale:{...library.youngMale,url:urls[i]}};
+  Object.assign(sourceWorld,{state:{tasks:[],elapsed:0},objects:new Map([[entity.id,sourceRoot]]),mixers:new Map(),workerLibraries:effectiveLibrary,assets:sourceAssets});
+  await sourceWorld.actor(entity,'worker');models[i].scene=sourceWorld.mixers.get(entity.id).model;
+ }
  const originalIndexCounts=new Map();models[0].scene.traverse(mesh=>{if(mesh.isMesh)originalIndexCounts.set(mesh.name,mesh.geometry.index.count);});
  const sky=new NativeSky();await sky.load();const rigs=[];
  // One persistent native shadow hook/target, matching the world renderer. Never
@@ -34,13 +43,15 @@ async function campaign(){
  const sun=new THREE.DirectionalLight('#ffe2a8',3),ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);updateShadowCamera(sun,new THREE.Vector3());scene.add(sun,sun.target,ambient);
  const release=installNativeShadow(renderer,sun,toon.shadowUniforms);release.cache.enabled=false;
  for(let i=0;i<2;i++){
-  models[i].scene.traverse(mesh=>{if(!mesh.isMesh)return;mesh.castShadow=mesh.receiveShadow=true;if(i===1&&!sourceTwin){mesh.material=mesh.material.clone();mesh.material.side=positiveControl?THREE.DoubleSide:THREE.FrontSide;mesh.material.shadowSide=frontShadow?THREE.FrontSide:THREE.DoubleSide;
+  models[i].scene.traverse(mesh=>{if(!mesh.isMesh)return;mesh.castShadow=mesh.receiveShadow=true;if(i===1&&!sourceTwin&&mesh.material.side===THREE.DoubleSide){mesh.material=mesh.material.clone();mesh.material.side=positiveControl?THREE.DoubleSide:THREE.FrontSide;mesh.material.shadowSide=frontShadow?THREE.FrontSide:THREE.DoubleSide;
    if(originalShadow){const count=originalIndexCounts.get(mesh.name);if(count===undefined)throw Error('Missing original geometry correspondence '+mesh.name);mesh.onBeforeShadow=()=>mesh.geometry.setDrawRange(0,count);mesh.onAfterShadow=()=>mesh.geometry.setDrawRange(0,Infinity);}
   }});
   scene.add(models[i].scene);rigs.push({scene,toon,registry,sun,ambient,release,model:models[i].scene,mixer:new THREE.AnimationMixer(models[i].scene),clips:models[i].animations});
  }
  const camera=new THREE.PerspectiveCamera(42,1,.01,100),linear=new Float32Array(256);for(let i=0;i<256;i++){const v=i/255;linear[i]=v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
+ report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
+ report.originalEffectiveMaterials=[];models[0].scene.traverse(mesh=>{if(mesh.isMesh)report.originalEffectiveMaterials.push({mesh:mesh.name,material:mesh.material.name,side:mesh.material.side,shadowSide:mesh.material.shadowSide,customDepthMaterial:mesh.customDepthMaterial?.type??null});});
  let failed=false;
  campaignLoop: for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of ['Idle','Water','Carry_Crate','Fall'])for(const fraction of [.125,.625])for(const elevation of [25,55])for(const azimuth of [22.5,67.5,157.5,247.5]){
   if(cancelled)throw Error('Cancelled');
@@ -82,5 +93,5 @@ async function campaign(){
   for(let c=0;c<3;c++)image.data[output+c]=side<2?pixels[side][input+c]:Math.min(255,Math.abs(pixels[0][input+c]-pixels[1][input+c])*8);image.data[output+3]=255;}ctx.putImageData(image,side*size,0);}
  report.capturePng=comparison.toDataURL('image/png');
  const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());
- release();registry.dispose();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'rechazo':'pendiente gates completos'}. GPU liberada. NO aprobado.`;
+ release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'rechazo':'pendiente gates completos'}. GPU liberada. NO aprobado.`;
 }
