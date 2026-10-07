@@ -5,24 +5,43 @@
 import * as THREE from 'three';
 import {Assets,json,bytes} from '/src/rendering/assets.js';
 import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
+import {applyWorkerPose} from '/src/rendering/worker-actions.js';
+import {NativeBuilding,BuildingDestructionPass,centerVisualDamage} from '/src/rendering/buildings.js';
+import {COLLAPSE_SECONDS} from '/src/rendering/destruction-native.js';
 import {AfricanToon} from '/src/rendering/african-toon.js';
 import {installNativeShadow} from '/src/rendering/native-shadow.js';
 import {installShaderFailureGuard} from '/src/rendering/shader-failure.js';
-const query=new URLSearchParams(location.search),species=query.get('species')??'warthog',pilotKey=query.get('pilot')??'cc989532921ae705b8dcce30d3df7d0a52b3326bdfa7c8736270c23a28086ba0-1';
+const query=new URLSearchParams(location.search),culture=query.get('culture'),profile=query.get('profile'),species=query.get('species')??'warthog',pilotKey=query.get('pilot')??'cc989532921ae705b8dcce30d3df7d0a52b3326bdfa7c8736270c23a28086ba0-1';
+const lifecycle=query.get('lifecycle')==='1';
+if(lifecycle&&!culture)throw Error('Lifecycle review requires a native building');
+const lifecycleSteps=[
+ {name:'initial',status:'intact',hp:600,collapseRemaining:0,elapsed:0},
+ {name:'damaged',status:'intact',hp:210,collapseRemaining:0,elapsed:1},
+ {name:'repaired',status:'intact',hp:600,collapseRemaining:0,elapsed:2},
+ {name:'collapse-start',status:'collapsing',hp:0,collapseRemaining:COLLAPSE_SECONDS,elapsed:3},
+ {name:'collapse-middle',status:'collapsing',hp:0,collapseRemaining:COLLAPSE_SECONDS/2,elapsed:3+COLLAPSE_SECONDS/2},
+ {name:'ruined',status:'ruined',hp:0,collapseRemaining:0,elapsed:3+COLLAPSE_SECONDS},
+ {name:'ruined-settled',status:'ruined',hp:0,collapseRemaining:0,elapsed:5+COLLAPSE_SECONDS},
+ {name:'rebuilt',status:'intact',hp:600,collapseRemaining:0,elapsed:6+COLLAPSE_SECONDS},
+];
+let lifecycleStep=0;
+const workerNames={olderMale:'Trabajador mayor',olderFemale:'Trabajadora mayor',youngMale:'Trabajador joven',youngFemale:'Trabajadora joven'};
 const speciesNames={warthog:'Facóquero',hyena:'Hiena',buffalo:'Búfalo',lion:'León',rhino:'Rinoceronte'};
 const speciesFiles={warthog:'cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869',hyena:'7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25',buffalo:'88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b',lion:'5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b',rhino:'b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82'};
-if(!Object.hasOwn(speciesNames,species)||!/^([a-f0-9]{64})-\d+$/.test(pilotKey))throw Error('Invalid local pilot selection');
-document.querySelector('#model-name').textContent=speciesNames[species];
-const directory='/.cache/tinify-embedded-pilot/'+pilotKey+'/',assets=new Assets(),actors=[],errors=[],rows=[];
+if((culture?!['suajili','etiope','mapungubwe','saheliana','musgum'].includes(culture):profile?!Object.hasOwn(workerNames,profile):!Object.hasOwn(speciesNames,species))||(culture&&profile)||!/^([a-f0-9]{64})-\d+$/.test(pilotKey))throw Error('Invalid local pilot selection');
+document.querySelector('#model-name').textContent=profile?workerNames[profile]:speciesNames[species];
+const directory=(profile||culture?'/.cache/embedded-colors-remaining/':'/.cache/tinify-embedded-pilot/')+pilotKey+'/',assets=new Assets(),actors=[],errors=[],rows=[];
 const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#view'),antialias:true});renderer.setPixelRatio(1);renderer.setSize(Math.max(1,innerWidth),Math.max(1,innerHeight));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,Math.max(1,innerWidth)/Math.max(1,innerHeight),.1,100),cameraTarget=new THREE.Vector3(0,1.05,0);camera.position.set(2.9,2.1,4.8);camera.lookAt(cameraTarget);
 const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-.82,.52,.31).multiplyScalar(240);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:.1,far:500});
 const ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);scene.add(sun,sun.target,ambient);const toon=new AfricanToon(),releaseShadow=installNativeShadow(renderer,sun,toon.shadowUniforms),guard=installShaderFailureGuard(renderer);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#c4ae81',roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-let selected=0,night=false,biome='sabana',frame,ready=false,comparison,viewAngle=0;
+let selected=0,night=false,biome='sabana',frame,ready=false,comparison,viewAngle=0,receiptProof,damage=0;
+const buildingPass=culture?new BuildingDestructionPass(renderer,sun,ambient):null,buildingTemplates=[];
+if(culture){const button=document.createElement('button');button.id=lifecycle?'lifecycle':'damage';button.disabled=true;button.textContent=lifecycle?'Siguiente estado del edificio':'Daño: 0 / 35 / 65 %';document.querySelector('#compare').after(button);button.onclick=()=>{if(lifecycle){lifecycleStep=(lifecycleStep+1)%lifecycleSteps.length;damage=centerVisualDamage({...lifecycleSteps[lifecycleStep],maxHp:600});}else damage=damage===0?.35:damage===.35?.65:0;show();};}
 const target=new THREE.WebGLRenderTarget(Math.max(1,innerWidth),Math.max(1,innerHeight));target.texture.colorSpace=THREE.SRGBColorSpace;
 const status=document.querySelector('#status'),report=document.querySelector('#report');
-function state(){return {ready,species,pilotKey,selected:selected?'candidate':'baseline',night,biome,viewAngle,pose:'Walking .55',resolution:[target.width,target.height],errors,rows,comparison,scope:'Native compressed GLB, production toon palettes and fixed light, frozen pose and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
+function state(){return {ready,species:profile||culture?null:species,profile,culture,pilotKey,selected:selected?'candidate':'baseline',night,biome,viewAngle,damage:culture?damage:null,pose:culture?'NativeBuilding frozen damage':profile?'Walk_Skip .55':'Walking .55',...(lifecycle?{lifecycle:lifecycleSteps[lifecycleStep],nativeStates:actors.map(({model})=>({damage:model.damage,outer:model.outer.visible,inner:model.inner.visible,ash:model.ash.visible,smoke:model.effects.native.smoke.length,debris:model.effects.native.debris.length,effectTime:model.effects.native.time,ashAge:model.uniforms.uAshAge.value}))}:{}),resolution:[target.width,target.height],camera:camera.position.toArray(),cameraTarget:cameraTarget.toArray(),receiptProof,errors,rows,comparison,scope:'Native compressed GLB, production material and fixed light, frozen pose/damage and flat QA floor. No HDR, full biome world, gameplay or performance measurement.'};}
 const paint=()=>{report.textContent=JSON.stringify(state(),null,2);};
 function syncViewport(){
  if(innerWidth<=0||innerHeight<=0)return false;
@@ -32,7 +51,8 @@ function syncViewport(){
 function render(destination=null){
  if(!syncViewport())throw Error('Viewport unavailable; refusing an empty comparison');
  actors.forEach((actor,i)=>actor.model.visible=i===selected);sun.intensity=3-2.6*Number(night);ambient.intensity=2-.9*Number(night);scene.background=new THREE.Color(night?'#171f2e':'#e7ddc6');toon.update(night,sun,biome);
- renderer.setRenderTarget(destination);renderer.render(scene,camera);if(guard.current)throw guard.current;const error=renderer.getContext().getError();if(error)throw Error('GL error '+error);
+ if(buildingPass){buildingPass.night=Number(night);actors.forEach((actor,i)=>{const step=lifecycle?lifecycleSteps[lifecycleStep]:null;actor.model.update(step?{...actor.entity,...step}:{...actor.entity,hp:600*(1-damage)},step?.elapsed??0);actor.model.opening.visible=i===selected&&actor.model.damage>.015&&actor.model.damage<.9998;if(lifecycle)actor.model.effects.smoke.visible=i===selected&&actor.model.effects.native.smoke.length>0;});buildingPass.key='';buildingPass.render(camera,scene);}
+ renderer.setRenderTarget(destination);renderer.render(scene,camera);if(lifecycle)buildingPass.renderSmoke(camera,scene);if(guard.current)throw guard.current;const error=renderer.getContext().getError();if(error)throw Error('GL error '+error);
 }
 function show(){render();paint();status.textContent=(selected?'Candidata':'Runtime')+' · '+biome+' · '+(night?'noche':'día');}
 function present(){try{if(ready)render();frame=requestAnimationFrame(present);}catch(error){errors.push(error.message);paint();status.textContent='Error';}}
@@ -46,27 +66,37 @@ document.querySelector('#compare').onclick=async()=>{
    for(selected=0;selected<2;selected++){render(target);const rgba=new Uint8Array(target.width*target.height*4);renderer.readRenderTargetPixels(target,0,0,target.width,target.height,rgba);pixels.push(rgba);}
    let changedPixels=0,sum=0,max=0;for(let i=0;i<pixels[0].length;i+=4){let changed=false;for(let c=0;c<3;c++){const delta=Math.abs(pixels[0][i+c]-pixels[1][i+c]);sum+=delta;max=Math.max(max,delta);changed||=delta!==0;}if(changed)changedPixels++;}
    const glError=renderer.getContext().getError();if(glError)throw Error('Readback GL error '+glError);selected=1;
-   rows.push({biome,night,changedPixels,rgbMeanAbsoluteDifference:sum/(target.width*target.height*3),maxRgbDifference:max,glError});paint();await new Promise(resolve=>setTimeout(resolve,0));
+   rows.push({biome,night,...(culture?{damage}:{}),...(lifecycle?{lifecycle:lifecycleSteps[lifecycleStep].name}:{}),changedPixels,rgbMeanAbsoluteDifference:sum/(target.width*target.height*3),maxRgbDifference:max,glError});paint();await new Promise(resolve=>setTimeout(resolve,0));
   }
   selected=1;biome='sabana';night=false;comparison='finished';show();
  }catch(error){errors.push(error.message);comparison='failed';paint();status.textContent='Error';}finally{renderer.setRenderTarget(null);button.disabled=false;}
 };
 try{
- const pilot=await json(directory+'report.json');
- if(!pilot.runtimePath.endsWith(speciesFiles[species]+'.glb'))throw Error('Pilot receipt does not match selected species');
+ const response=await fetch(directory+'report.json');if(!response.ok)throw Error('Missing local pilot receipt');const pilot=await response.json();
+ const library=profile?(await json('/content/worker-actions.json'))[profile]:null;
+ const descriptor=culture?(await json('/content/destruction.json')).buildings.find(entry=>entry.culture===culture):null;
+ if(culture){document.querySelector('#model-name').textContent=descriptor.name;if(pilot.error||!pilot.verification||pilot.source!=='assets/'+descriptor.sha256+'.glb'||pilotKey!==descriptor.sha256+'-'+pilot.index)throw Error('Pilot receipt does not match selected building or failed its quality gate');}
+ if(profile&&(pilot.error||!pilot.verification||pilot.source!=='assets/'+library.sha256+'.glb'||pilotKey!==library.sha256+'-'+pilot.index))throw Error('Pilot receipt does not match selected worker or failed its quality gate');
+ if(!profile&&!culture&&!pilot.runtimePath.endsWith(speciesFiles[species]+'.glb'))throw Error('Pilot receipt does not match selected species');
+ const runtimePath=profile||culture?pilot.runtime:pilot.runtimePath,runtimeHash=profile||culture?pilot.verification.runtimeSha256:pilot.runtimeGlbSha256;
  const digest=async url=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await bytes(url))),byte=>byte.toString(16).padStart(2,'0')).join('');
- const hashes=await Promise.all([digest(pilot.runtimePath),digest(directory+'candidate.glb')]);
- if(hashes[0]!==pilot.runtimeGlbSha256||hashes[1]!==pilot.candidateGlbSha256)throw Error('Pilot baseline/candidate changed; regenerate the receipt or use its frozen source. Refusing a stale A/B comparison.');
- for(const url of [pilot.runtimePath,directory+'candidate.glb']){
-  const gltf=await assets.model(url),model=prepareAnimalModel(gltf.scene,species);model.scale.setScalar(1);scene.add(model);toon.apply(model);model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
-  const actor={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)};applyAnimalPose(actor,{species,status:'walking',motionPhase:actor.clips.find(clip=>clip.name==='Walking').duration*.55},0);actors.push(actor);
+ const hashes=await Promise.all([digest(runtimePath),digest(directory+'candidate.glb')]);
+ if(hashes[0]!==runtimeHash||hashes[1]!==pilot.candidateGlbSha256)throw Error('Pilot baseline/candidate changed; regenerate the receipt or use its frozen source. Refusing a stale A/B comparison.');
+ receiptProof={runtimePath,candidatePath:directory+'candidate.glb',runtimeSha256:hashes[0],candidateSha256:hashes[1]};
+ for(const url of [runtimePath,directory+'candidate.glb']){
+  if(culture){const template=await assets.building({...descriptor,url}),entity={id:'review-'+actors.length,kind:'center',maxHp:600,hp:600,status:'intact',collapseRemaining:0},model=new NativeBuilding(template,entity,buildingPass);buildingTemplates.push(template);scene.add(model);actors.push({model,entity});continue;}
+  const gltf=await assets.model(url),model=profile?gltf.scene:prepareAnimalModel(gltf.scene,species);model.scale.setScalar(1);scene.add(model);toon.apply(model);model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
+  const actor={model,mixer:new THREE.AnimationMixer(model),clips:profile?gltf.animations:prepareAnimalClips(gltf.animations),groundSamples:profile?null:animalGroundSamples(model)};
+  if(profile)applyWorkerPose(actor,{profile,status:'walking',walkPhase:library.actions.Walk_Skip.duration*.55},null,0,library);
+  else applyAnimalPose(actor,{species,status:'walking',motionPhase:actor.clips.find(clip=>clip.name==='Walking').duration*.55},0);
+  actors.push(actor);
  }
  while(!syncViewport())await new Promise(resolve=>requestAnimationFrame(resolve));
- if(species!=='warthog'){
+ if(culture||profile||species!=='warthog'){
   const box=new THREE.Box3().setFromObject(actors[0].model),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
   const distance=Math.max(size.y,size.x/camera.aspect,size.z)*1.95;cameraTarget.copy(center);camera.position.copy(center).add(new THREE.Vector3(.52,.30,.84).normalize().multiplyScalar(distance));camera.lookAt(center);
  }
  ready=true;document.querySelectorAll('button').forEach(button=>button.disabled=false);show();frame=requestAnimationFrame(present);
 }catch(error){errors.push(error.message);paint();status.textContent='Error: '+error.message;}
-addEventListener('pagehide',()=>{cancelAnimationFrame(frame);for(const actor of actors){actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.model);actor.model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.skeleton.dispose();});}releaseShadow();sun.shadow.dispose();floor.geometry.dispose();floor.material.dispose();target.dispose();assets.disposeModels();renderer.dispose();renderer.forceContextLoss();});
+addEventListener('pagehide',()=>{cancelAnimationFrame(frame);buildingPass?.dispose();for(const template of buildingTemplates)template.dispose();for(const actor of actors){actor.mixer?.stopAllAction();actor.mixer?.uncacheRoot(actor.model);actor.model.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.skeleton.dispose();});}releaseShadow();sun.shadow.dispose();floor.geometry.dispose();floor.material.dispose();target.dispose();assets.disposeModels();renderer.dispose();renderer.forceContextLoss();});
 </script></html>

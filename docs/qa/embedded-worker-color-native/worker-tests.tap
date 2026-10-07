@@ -1,0 +1,133 @@
+TAP version 13
+# (node:36784) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reviewed output is reapplied offline, with all expected hashes checked
+ok 1 - reviewed output is reapplied offline, with all expected hashes checked
+  ---
+  duration_ms: 2406.0518
+  ...
+# Subtest: missing recipes retain bytes and do not read unrelated files
+ok 2 - missing recipes retain bytes and do not read unrelated files
+  ---
+  duration_ms: 87.4814
+  ...
+# Subtest: changed sources, preparation, output and unsafe recipe paths fail instead of silently falling back
+ok 3 - changed sources, preparation, output and unsafe recipe paths fail instead of silently falling back
+  ---
+  duration_ms: 4562.7535
+  ...
+# Subtest: models sharing an image never overwrite each other; provider image dedup remains independent
+ok 4 - models sharing an image never overwrite each other; provider image dedup remains independent
+  ---
+  duration_ms: 5.9291
+  ...
+# Subtest: candidate directories reject unsafe model and image identities
+ok 5 - candidate directories reject unsafe model and image identities
+  ---
+  duration_ms: 4.9354
+  ...
+# (node:42368) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent decoded gate verifies original geometry and color pixels without a provider
+ok 6 - independent decoded gate verifies original geometry and color pixels without a provider
+  ---
+  duration_ms: 4012.4295
+  ...
+# Subtest: validly encoded changed geometry is rejected against the original, not accepted from container validity
+ok 7 - validly encoded changed geometry is rejected against the original, not accepted from container validity
+  ---
+  duration_ms: 1021.208
+  ...
+# Subtest: changed animation metadata is rejected before it can be attributed to color conversion
+ok 8 - changed animation metadata is rejected before it can be attributed to color conversion
+  ---
+  duration_ms: 937.3246
+  ...
+# (node:18360) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: warthog color input derives from original 4096 PNG at unchanged runtime 2048 resolution
+ok 9 - warthog color input derives from original 4096 PNG at unchanged runtime 2048 resolution
+  ---
+  duration_ms: 1900.4069
+  ...
+# Subtest: normal/data and mismatched original/runtime color consumers are excluded before any provider exists
+ok 10 - normal/data and mismatched original/runtime color consumers are excluded before any provider exists
+  ---
+  duration_ms: 225.1165
+  ...
+# Subtest: external original image storage is rejected rather than guessed or fetched
+ok 11 - external original image storage is rejected rather than guessed or fetched
+  ---
+  duration_ms: 168.7644
+  ...
+# Subtest: runtime dimensions cannot change the original aspect ratio or enlarge the source
+ok 12 - runtime dimensions cannot change the original aspect ratio or enlarge the source
+  ---
+  duration_ms: 1617.0559
+  ...
+# Subtest: invalid embedded ranges are rejected before decoding any image
+ok 13 - invalid embedded ranges are rejected before decoding any image
+  ---
+  duration_ms: 455.5322
+  ...
+# (node:41024) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all twenty runtime GLBs retain exact compressed geometry, animation and skin storage
+ok 14 - all twenty runtime GLBs retain exact compressed geometry, animation and skin storage
+  ---
+  duration_ms: 10523.0134
+  ...
+# assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb compressed views and metadata unchanged
+# assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb compressed views and metadata unchanged
+# assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb compressed views and metadata unchanged
+# assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb compressed views and metadata unchanged
+# assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb compressed views and metadata unchanged
+# assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb compressed views and metadata unchanged
+# assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb compressed views and metadata unchanged
+# assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb compressed views and metadata unchanged
+# assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb compressed views and metadata unchanged
+# assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb compressed views and metadata unchanged
+# assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb compressed views and metadata unchanged
+# assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb compressed views and metadata unchanged
+# assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb compressed views and metadata unchanged
+# assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb compressed views and metadata unchanged
+# assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb compressed views and metadata unchanged
+# assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb compressed views and metadata unchanged
+# assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb compressed views and metadata unchanged
+# assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb compressed views and metadata unchanged
+# assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb compressed views and metadata unchanged
+# assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb compressed views and metadata unchanged
+# Subtest: changed color byte length relocates compressed payloads without changing any bytes or GLTF references
+ok 15 - changed color byte length relocates compressed payloads without changing any bytes or GLTF references
+  ---
+  duration_ms: 201.1536
+  ...
+# Subtest: the native two-material model accepts both color replacements in any Map order
+ok 16 - the native two-material model accepts both color replacements in any Map order
+  ---
+  duration_ms: 238.1898
+  ...
+# Subtest: empty replacement preserves the original container byte for byte
+ok 17 - empty replacement preserves the original container byte for byte
+  ---
+  duration_ms: 16.7159
+  ...
+# Subtest: normal, mixed-use, alpha-changing, wrong-size and non-WebP images are rejected
+ok 18 - normal, mixed-use, alpha-changing, wrong-size and non-WebP images are rejected
+  ---
+  duration_ms: 59.0806
+  ...
+# Subtest: unsupported storage and extensions fail before changing the source container
+ok 19 - unsupported storage and extensions fail before changing the source container
+  ---
+  duration_ms: 30.2659
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22009.2891

@@ -1,0 +1,148 @@
+{
+  "rows": [
+    {
+      "file": "intact-front-comparison.json",
+      "damage": 0,
+      "view": "front",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0,
+        "changedPixels": 126793,
+        "rgbMeanAbsoluteDifference": 0.2757175925925926,
+        "maxRgbDifference": 41,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0,
+        "changedPixels": 126469,
+        "rgbMeanAbsoluteDifference": 0.23311414930555555,
+        "maxRgbDifference": 49,
+        "glError": 0
+      }
+    },
+    {
+      "file": "intact-back-comparison.json",
+      "damage": 0,
+      "view": "back",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0,
+        "changedPixels": 127285,
+        "rgbMeanAbsoluteDifference": 0.22936812789351851,
+        "maxRgbDifference": 47,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0,
+        "changedPixels": 126992,
+        "rgbMeanAbsoluteDifference": 0.2016673900462963,
+        "maxRgbDifference": 44,
+        "glError": 0
+      }
+    },
+    {
+      "file": "damage35-front-comparison.json",
+      "damage": 0.35,
+      "view": "front",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0.35,
+        "changedPixels": 116545,
+        "rgbMeanAbsoluteDifference": 0.2393999565972222,
+        "maxRgbDifference": 41,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0.35,
+        "changedPixels": 115641,
+        "rgbMeanAbsoluteDifference": 0.2025904224537037,
+        "maxRgbDifference": 49,
+        "glError": 0
+      }
+    },
+    {
+      "file": "damage35-back-comparison.json",
+      "damage": 0.35,
+      "view": "back",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0.35,
+        "changedPixels": 127263,
+        "rgbMeanAbsoluteDifference": 0.2290646701388889,
+        "maxRgbDifference": 47,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0.35,
+        "changedPixels": 126956,
+        "rgbMeanAbsoluteDifference": 0.2012865306712963,
+        "maxRgbDifference": 44,
+        "glError": 0
+      }
+    },
+    {
+      "file": "damage65-front-comparison.json",
+      "damage": 0.65,
+      "view": "front",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0.65,
+        "changedPixels": 93792,
+        "rgbMeanAbsoluteDifference": 0.13976960358796298,
+        "maxRgbDifference": 23,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0.65,
+        "changedPixels": 91235,
+        "rgbMeanAbsoluteDifference": 0.11807146990740741,
+        "maxRgbDifference": 18,
+        "glError": 0
+      }
+    },
+    {
+      "file": "damage65-back-comparison.json",
+      "damage": 0.65,
+      "view": "back",
+      "day": {
+        "biome": "sabana",
+        "night": false,
+        "damage": 0.65,
+        "changedPixels": 107156,
+        "rgbMeanAbsoluteDifference": 0.14693721064814816,
+        "maxRgbDifference": 31,
+        "glError": 0
+      },
+      "night": {
+        "biome": "sabana",
+        "night": true,
+        "damage": 0.65,
+        "changedPixels": 104996,
+        "rgbMeanAbsoluteDifference": 0.1293695746527778,
+        "maxRgbDifference": 21,
+        "glError": 0
+      }
+    }
+  ],
+  "completedReports": 6,
+  "readbackPairs": 72,
+  "glErrors": 0,
+  "fixtureErrors": 0,
+  "consoleWarningsOrErrors": 0,
+  "scope": "Six biome labels repeat native day/night lighting; they do not represent six full worlds or distinct NativeBuilding palettes."
+}
