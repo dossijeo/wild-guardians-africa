@@ -623,3 +623,24 @@ original order. Source GLB/bridge faceLabels stay untouched: CropBatch builds
 original bridges before this QA-only layout change. A production candidate
 would require its own fully verified faceLabels/index mapping reconstruction.
 No causal claim or quality approval is made before this diagnostic is drawn.
+
+Interleaving was drawn in2guided mature views and1guided morph view. Mature
+MAE decreased to1.933e-5/1.284e-5, but worst tile .050239 stayed unchanged.
+Morph MAE decreased to .00010174, while tile .032855,9missing pixels and
+largest missing region5 remained. Original/indexed controls and source3repeats
+were exact. These are still rejections; no threshold or acceptance changed.
+
+Instrument correction: Three BufferGeometry.copy shares userData. Assigning
+qaTriangleSourceFaces on an interleaved candidate therefore polluted the
+original clones' geometry metadata in memory. Source position/normal/UV/index
+buffers, source faceLabels JSON, source files and all rendered comparisons
+were unaffected. The redundant sourceFace field of original-arm ID records
+in historical interleave reports is INVALID; their raw face field remains
+the original emitted ID. Reports are retained, and the provenance audit now
+explicitly uses raw face for original arm0. Candidate builders detach userData
+before setting any sidecar; a7th helper test protects both original and indexed
+control metadata. Corrected joins classify59mature and182morph RGB-outlier
+pixels as source Back/unselected/different candidate source ID. Diagnostic IDs
+remain separate draws; this guides selection investigation, not acceptance.
+The earlier sourceFace-based classification is withdrawn, with no geometry
+adaptation performed from it.

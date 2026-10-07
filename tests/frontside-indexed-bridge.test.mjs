@@ -61,3 +61,9 @@ test('interleaving preserves original relative face priority and reconstructs ev
   }forwardFace++;
  }assert.equal(forwardFace,2);assert.equal(geo.index,null);
 });
+test('candidate provenance cannot alias original/indexed-control userData',()=>{
+ const {geo,keys}=fixture();geo.userData={sentinel:'original'};const control=indexBridgeGeometry(geo,keys).geometry,candidate=indexBridgeGeometry(geo,keys,[0],true).geometry;
+ assert.deepEqual(geo.userData,{sentinel:'original'});assert.notEqual(candidate.userData,geo.userData);assert.notEqual(control.userData,geo.userData);
+ assert.deepEqual(control.userData.qaTriangleSourceFaces,[0,1]);assert.deepEqual(candidate.userData.qaTriangleSourceFaces,[0,0,1]);
+ geo.setIndex([0,1,2,3,4,5]);const state=reverseIndexedState(geo,[0],true);assert.deepEqual(geo.userData,{sentinel:'original'});assert.notEqual(state.userData,geo.userData);
+});

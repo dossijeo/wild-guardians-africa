@@ -39,6 +39,9 @@ export function reverseIndexedState(geometry,faces,interleave=false){
  const count=geometry.getAttribute('position').count,index=geometry.index.array,chosen=new Set(faces);
  if(chosen.size!==faces.length||faces.some(f=>!Number.isInteger(f)||f<0||f>=index.length/3))throw Error('Invalid state reverse faces');
  const extra=[...new Set(faces.flatMap(f=>Array.from(index.slice(f*3,f*3+3))))].sort((a,b)=>a-b),lookup=new Map(extra.map((v,i)=>[v,count+i])),result=geometry.clone();
+ // BufferGeometry.copy shares userData. A candidate sidecar must never mutate
+ // the original or the independently indexed DoubleSide control's metadata.
+ result.userData={...geometry.userData};
  for(const [name,attribute] of Object.entries(geometry.attributes)){
   if(attribute.isInstancedBufferAttribute){result.setAttribute(name,attribute);continue;}
   if(attribute.isInterleavedBufferAttribute||!(attribute.array instanceof Float32Array))throw Error('Unexpected crop state attribute '+name);
@@ -93,7 +96,7 @@ export function indexBridgeGeometry(geometry,sourceKeys,reverseFaces=[],interlea
  }
  for(let vertex=0;vertex<count;vertex++)append(vertex,false);
  for(const face of reverseFaces)for(const corner of [0,2,1])append(face*3+corner,true);
- const result=geometry.clone();
+ const result=geometry.clone();result.userData={...geometry.userData};
  for(const [name,attribute] of Object.entries(geometry.attributes))if(attribute.isInstancedBufferAttribute)result.setAttribute(name,attribute);
  for(const {name,size,attribute,bits} of attributes){
   const array=new Float32Array(vertices.length*size),outBits=new Uint32Array(array.buffer);
