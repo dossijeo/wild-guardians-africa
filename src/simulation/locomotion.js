@@ -7,9 +7,15 @@ import {waitForGate} from './gates.js';
 export const WORKER_SPEED_MULTIPLIER=1.5;
 export const dailyRunMetres=()=>L.longTripMetres*B.workers.daily_run_distance_long_trips;
 export function urgentWork(state,worker){
-  const active=state.workers.filter(w=>w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
-    !['home','returning','fleeing','incapacitated'].includes(w.status)&&state.time<PROFILES.find(p=>p.id===w.profile).end);
-  return active.length>0&&state.tasks.filter(t=>t.centerId===worker.centerId).length/active.length>B.workers.run_start_pending_tasks_per_worker_over;
+  // These counts must stay live: earlier employees can finish tasks or leave
+  // during the same worker pass. Count directly without allocating two arrays
+  // for every moving worker, rather than caching a stale per-center ratio.
+  let active=0,pending=0;
+  for(const w of state.workers)if(w.centerId===worker.centerId&&!w.incapacitated&&!contractExpired(w,state)&&
+    w.status!=='home'&&w.status!=='returning'&&w.status!=='fleeing'&&w.status!=='incapacitated'&&state.time<PROFILES.find(p=>p.id===w.profile).end)active++;
+  if(!active)return false;
+  for(const task of state.tasks)if(task.centerId===worker.centerId)pending++;
+  return pending/active>B.workers.run_start_pending_tasks_per_worker_over;
 }
 export function movePath(actor,metres,clear=null){
   let left=metres;
