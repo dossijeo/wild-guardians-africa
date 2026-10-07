@@ -1,0 +1,87 @@
+{
+  "status": "EXACT_LANE_COST_DIAGNOSIS_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "meshes": [
+    {
+      "mesh": "maiz_03_adulto",
+      "triangles": 2743,
+      "sourceVertices": 4999,
+      "sourceIdentityAndDriverVertices": 5128,
+      "exactEquivalentVertices": 5128,
+      "sourceGeometryBytes": 176426,
+      "driverExpandedGeometryBytes": 180554,
+      "driverExpandedBytesChangePercent": 2.33979118723997,
+      "stateAttributeOnlyVertices": 4999,
+      "stateAttributeOnlyGeometryBytes": 176426,
+      "stateAttributeOnlyBytesChangePercent": 0.0,
+      "newTriangles": 0,
+      "limitations": [
+        "State-only equivalence ignores face labels because original state attributes do not contain organ drivers; per-face labels remain unchanged.",
+        "Driver-strict logical inventory splits shared state vertices by label; actual22-lane bridge attributes and role must also match before bridge sharing.",
+        "No source face/corner reordered; UV/normal equivalence verified byte-for-byte. Indexing/cache benefit needs runtime measurement."
+      ]
+    },
+    {
+      "mesh": "maiz_04_desarrollo",
+      "triangles": 3205,
+      "sourceVertices": 5778,
+      "sourceIdentityAndDriverVertices": 5996,
+      "exactEquivalentVertices": 5996,
+      "sourceGeometryBytes": 204126,
+      "driverExpandedGeometryBytes": 211102,
+      "driverExpandedBytesChangePercent": 3.4174970361443346,
+      "stateAttributeOnlyVertices": 5778,
+      "stateAttributeOnlyGeometryBytes": 204126,
+      "stateAttributeOnlyBytesChangePercent": 0.0,
+      "newTriangles": 0,
+      "limitations": [
+        "State-only equivalence ignores face labels because original state attributes do not contain organ drivers; per-face labels remain unchanged.",
+        "Driver-strict logical inventory splits shared state vertices by label; actual22-lane bridge attributes and role must also match before bridge sharing.",
+        "No source face/corner reordered; UV/normal equivalence verified byte-for-byte. Indexing/cache benefit needs runtime measurement."
+      ]
+    },
+    {
+      "mesh": "maiz_05_maduro",
+      "triangles": 4935,
+      "sourceVertices": 8983,
+      "sourceIdentityAndDriverVertices": 9408,
+      "exactEquivalentVertices": 9408,
+      "sourceGeometryBytes": 317066,
+      "driverExpandedGeometryBytes": 330666,
+      "driverExpandedBytesChangePercent": 4.289327774028129,
+      "stateAttributeOnlyVertices": 8983,
+      "stateAttributeOnlyGeometryBytes": 317066,
+      "stateAttributeOnlyBytesChangePercent": 0.0,
+      "newTriangles": 0,
+      "limitations": [
+        "State-only equivalence ignores face labels because original state attributes do not contain organ drivers; per-face labels remain unchanged.",
+        "Driver-strict logical inventory splits shared state vertices by label; actual22-lane bridge attributes and role must also match before bridge sharing.",
+        "No source face/corner reordered; UV/normal equivalence verified byte-for-byte. Indexing/cache benefit needs runtime measurement."
+      ]
+    },
+    {
+      "mesh": "platano_05_maduro",
+      "triangles": 5640,
+      "sourceVertices": 10981,
+      "sourceIdentityAndDriverVertices": 11276,
+      "exactEquivalentVertices": 11276,
+      "sourceGeometryBytes": 385232,
+      "driverExpandedGeometryBytes": 394672,
+      "driverExpandedBytesChangePercent": 2.450471404244725,
+      "stateAttributeOnlyVertices": 10981,
+      "stateAttributeOnlyGeometryBytes": 385232,
+      "stateAttributeOnlyBytesChangePercent": 0.0,
+      "newTriangles": 0,
+      "limitations": [
+        "State-only equivalence ignores face labels because original state attributes do not contain organ drivers; per-face labels remain unchanged.",
+        "Driver-strict logical inventory splits shared state vertices by label; actual22-lane bridge attributes and role must also match before bridge sharing.",
+        "No source face/corner reordered; UV/normal equivalence verified byte-for-byte. Indexing/cache benefit needs runtime measurement."
+      ]
+    }
+  ],
+  "limitations": [
+    "No source/candidate asset or faceLabels changed.",
+    "This is indexing, not FrontSide repair; required thin-surface backs remain a separate problem.",
+    "No threshold changed and no GPU/performance conclusion."
+  ]
+}

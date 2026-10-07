@@ -819,3 +819,13 @@ single-material RGB provenance is explicitly unavailable for this option
 instead of silently misidentifying groups. Syntax and nine construction/index
 tests pass. Runtime rendering remains unexecuted because this agent's browser
 provider exposes no surfaces; no test above establishes native rendering.
+
+Further exact-lane inventory found no redundant state vertices in the four
+representative crops: all POSITION/NORMAL/UV lanes are already distinct even
+without driver labels, giving0byte reduction. Enforcing driver labels for a
+logical bridge inventory splits existing shared vertices and increases the
+equivalent state-sized inventory2.34/3.42/4.29/2.45%; no actual bridge encoding
+or source changes were made. Every drawn corner's lanes were independently
+verified. This rules out another lossless state indexing shortcut for these
+pilots, not approximate authored remodeling. Growth, UV/shading and thin-leaf
+coverage still constrain any such remodeling; no budget gate is relaxed.
