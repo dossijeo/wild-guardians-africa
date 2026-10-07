@@ -4,7 +4,7 @@ import {nativeTreeDiagnosticBounds} from './native-tree-diagnostic-bounds.js';
 import {nativeFarRenderSignature,nativeFarPackingSignature} from './native-far-render-signature.js';
 import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady,finalizeStandbyMaterials} from './native-tree-standby.js';
 import {nativeTreePresence} from './native-tree-presence.js';
-import {logicalNativeStandbyEntries} from './logical-native-standby.js';
+import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from './logical-native-standby.js';
 import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
@@ -54,9 +54,9 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  let logicalPlan=null;
  function scheduleLogicalPreload(currentSignature){
   if(!logicalStandbyPreload||!layer.current||isCancelled()||nativeFarGpuContextLost(world.renderer))return;
-  const bounds=logicalPreloadMargin===null?null:world.nearBounds;const camera=world.camera.position,x=Math.round(camera.x/8),y=Math.round(camera.y/8),z=Math.round(camera.z/8),suppressed=world.nav.suppressed;
+  const bounds=logicalPreloadMargin===null?null:world.nearBounds,preloadBounds=adoptedLogicalPreloadBounds(bounds,logicalPreloadMargin);if(preloadBounds===undefined)return;const camera=world.camera.position,x=Math.round(camera.x/8),y=Math.round(camera.y/8),z=Math.round(camera.z/8),suppressed=world.nav.suppressed;
   if(logicalPlan?.x===x&&logicalPlan.y===y&&logicalPlan.z===z&&logicalPlan.region===layer.revision&&logicalPlan.chunk===world.chunkRevision&&logicalPlan.quality===world.quality&&logicalPlan.signature===currentSignature&&logicalPlan.suppressed===suppressed&&(bounds===null||logicalPlan.minX===bounds[0]&&logicalPlan.minZ===bounds[1]&&logicalPlan.maxX===bounds[2]&&logicalPlan.maxZ===bounds[3]))return;
-  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};const entries=logicalNativeStandbyEntries(layer.current.trees,{metadata,camera,quality:world.quality,range:maxTransitionEnd+24,physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds:bounds?[bounds[0]-logicalPreloadMargin,bounds[1]-logicalPreloadMargin,bounds[2]+logicalPreloadMargin,bounds[3]+logicalPreloadMargin]:null});
+  logicalPlan={x,y,z,...(bounds?{minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]}:{}),region:layer.revision,chunk:world.chunkRevision,quality:world.quality,signature:currentSignature,suppressed};const entries=logicalNativeStandbyEntries(layer.current.trees,{metadata,camera,quality:world.quality,range:maxTransitionEnd+24,physicalIds,suppressed,maxTrees:standby.maxTrees,levels:world.prototypes[slot].length,preloadBounds});
   stats.logicalPreloads++;stats.logicalPreloadEntries=entries.length;if(entries.length)standby.request(entries,camera);
  }
  function frozenEntries(snapshot){const rows=[],matrix=new Matrix4();for(const [,record] of snapshot.entries){record.group.updateMatrixWorld(true);for(const [i,index] of record.batch.orders[record.level].entries()){const tree=record.batch.instances[index];if(!record.ids.has(tree.id))continue;matrix.fromArray(record.mesh.instanceMatrix.array,i*16).premultiply(record.group.matrixWorld);rows.push({id:tree.id,key:standbyTreeKey(tree),x:tree.x,z:tree.z,sy:tree.sy,level:record.level,matrix:matrix.toArray()});}}return rows;}

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {Object3D} from 'three';
-import {logicalNativeStandbyEntries} from '../tools/experiments/logical-native-standby.js';
+import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from '../tools/experiments/logical-native-standby.js';
 import {standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
 const metadata={sourceBounds:{min:[-3,0,-4],max:[3,12,4]}};
 const tree=(id,x)=>({id,x:x+1,y:2,z:0,origin:{x,y:1,z:0},yaw:.62,sx:1.2,sy:.9,sz:1.3});
@@ -23,4 +23,12 @@ test('optional adopted preload rectangle admits exact edge anchors without chang
  assert.deepEqual(bounded.map(t=>t.id),['inside','edge']);for(const t of bounded)assert.deepEqual(t,previous.find(p=>p.id===t.id));
  assert.deepEqual(logicalNativeStandbyEntries(trees,options({preloadBounds:null})),previous);assert.deepEqual(logicalNativeStandbyEntries([...trees].reverse(),options({preloadBounds:[0,-10,80,10]})),bounded);
  assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[0,0,Infinity,10]})),/bounds/);assert.throws(()=>logicalNativeStandbyEntries(trees,options({preloadBounds:[80,-10,0,10]})),/bounds/);
+});
+
+
+test('adopted preload policy defers missing or malformed regions without global fallback',()=>{
+ assert.equal(adoptedLogicalPreloadBounds(undefined,null),null);
+ for(const bounds of [undefined,null,[],[0,0,Infinity,10],[10,0,0,10],[0,0,10,0]])assert.equal(adoptedLogicalPreloadBounds(bounds,16),undefined);
+ const bounds=[0,-10,80,10],before=[...bounds];assert.deepEqual(adoptedLogicalPreloadBounds(bounds,16),[-16,-26,96,26]);assert.deepEqual(bounds,before);
+ assert.throws(()=>adoptedLogicalPreloadBounds(bounds,49),/margin/);
 });

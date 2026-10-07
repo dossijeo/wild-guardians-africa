@@ -2,6 +2,15 @@ import {Object3D} from 'three';
 import {nativeLodBins} from '../../src/rendering/lod-source.js';
 import {standbyTreeKey} from './native-tree-standby.js';
 
+// Null means the legacy unbounded policy; undefined means no valid adopted
+// rectangle yet, so the caller must keep impostors and defer new preparation.
+export function adoptedLogicalPreloadBounds(bounds,margin){
+ if(margin===null)return null;
+ if(!Number.isFinite(margin)||margin<0||margin>48)throw Error('Invalid logical preload margin');
+ if(!Array.isArray(bounds)||bounds.length!==4||!bounds.every(Number.isFinite)||bounds[2]<=bounds[0]||bounds[3]<=bounds[1])return undefined;
+ return [bounds[0]-margin,bounds[1]-margin,bounds[2]+margin,bounds[3]+margin];
+}
+
 // Data only: use the existing procedural population, source dimensions and LOD
 // recipe. No terrain mesh, collider, worker task or distant shadow is created.
 export function logicalNativeStandbyEntries(trees,{metadata,camera,quality,range,physicalIds,suppressed,maxTrees=1024,levels=3,preloadBounds=null}){
