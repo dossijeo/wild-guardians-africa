@@ -1,0 +1,43 @@
+{
+  "fixture": "tests/browser/embedded-color-pilot.html",
+  "fixtureSha256": "f94a73a518e49fe06dfa2ba9a04c40658c076b221d51a829adac613048636984",
+  "source": "working fixture with viewport protection",
+  "browserTab": [
+    654
+  ],
+  "resolution": [
+    1280,
+    720
+  ],
+  "runtimeGlbSha256": "da0f77ea26b5099370355963810bcb133f0ae5e77aeef97a3ef994255a31bcf8",
+  "candidateGlbSha256": "761ac8a51726a992c0f79f8c8c9218140e519ec07dbae6ee90fb93a21ee27080",
+  "views": [
+    {
+      "view": "front",
+      "rows": 12,
+      "maxRgbDifference": 18
+    },
+    {
+      "view": "back",
+      "rows": 12,
+      "maxRgbDifference": 18
+    }
+  ],
+  "consoleErrors": 0,
+  "consoleWarnings": 0,
+  "consoleScope": "Both views",
+  "moduleSyntax": "pass",
+  "files": {
+    "back-comparison.json": "f4b8590f6857a7dee823c99eae443c7f94543dec61582eb9a53af2a4796656e3",
+    "baseline-back-day.jpg": "f39244e8b20721396ce72a4882e9cd8edaeb316f7fea16cf5b5be115aae9bec6",
+    "baseline-back-night.jpg": "f20f104458bef44b88f4ab09591332fbaae7fc8a9731bd8edab5b0b45e889d08",
+    "baseline-front-day.jpg": "503ea875a305b8aec5eb9036a3746c8148376d05e7552e3b0ba8e2dabe00e205",
+    "baseline-front-night.jpg": "d89c848e5976fe11448a3c14133a005a7ebf60e1b8c0b749764332e7d7263e40",
+    "candidate-back-day.jpg": "5036a65b0f86a362fb3cd8367bbf876f321d086afee153dd600e97c6144e4e78",
+    "candidate-back-night.jpg": "8ea7da2f812a096427b4243092b17ac90a79e61f78ba63d0697e98c9458cd9ac",
+    "candidate-front-day.jpg": "19e7e9f67d7863da41252ce4476b4cdeb262348c27301db7bfae113701fe3707",
+    "candidate-front-night.jpg": "3dfa313aaa917f520aa6aa6542af14f1424608665e017258f114d61855db1e3f",
+    "console.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "front-comparison.json": "c9f7957768e33511a501ca09c5d741617c7e3ef3379f21cc22aecac18b3d5ed0"
+  }
+}

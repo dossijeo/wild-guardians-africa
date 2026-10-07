@@ -68,6 +68,31 @@ independently checked after the opposite-view and framing edits.
 None of these four candidate models is installed yet. Remaining native evidence
 and the offline rebuild/build/package gates are required before adoption.
 
+## Completed native follow-up
+
+The browser recovered. Hyena's opposite-view run was repeated in tab 652 and its
+terminal report and console were saved. Buffalo (653), lion (654) and rhino (655)
+were then reviewed from both views, in day/night. All 32 native JPEGs were
+inspected: no obvious deterioration of fur, markings, face or ornaments was found
+at this documented framing. All eight terminal reports contain 12 finite paired
+readbacks at 1280 x 720, with no GL or fixture errors: 96 comparisons in total.
+Their differences are real lossy differences, not pixel equality. The summary
+and per-species provenance preserve exact model hashes and capture hashes.
+
+The repeated hyena run uses the fixture source from `2ebe7f3`; the other three
+use the subsequent viewport guard. A background buffalo tab initially reported
+a zero-sized target before comparison. That run was discarded. The fixture now
+waits for a usable viewport before fitting the camera, resizes renderer/target
+together and rejects empty comparisons. The three later species were tested at
+an explicit 1280 x 720 override, reset after closing all test tabs. No resize or
+empty-target readback is accepted as successful evidence.
+
+The saved console logs contain no errors; hyena's first tab console remains
+unavailable, and its log covers the repeated back run only. The remaining three
+logs cover both views. These results approve the four color outputs for the
+offline recipe stage. Actual runtime installation and build/package verification
+remain separate and are not claimed by this native checkpoint.
+
 Next: inspect baseline/candidate close views in day/night, preserve native reports
 and console warnings, then accept only adequate variants through offline recipes
 and asset/build/package checks. No reduction in RAM/GPU/frametime is claimed.
