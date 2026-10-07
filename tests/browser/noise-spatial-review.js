@@ -1,4 +1,5 @@
 import {noiseSpatialPoses,compareNoisePixels} from './noise-spatial-metrics.js';
+import {withRenderOrigin,renderOriginBounds} from '../../src/rendering/render-origin.js';
 
 // Opt-in native QA attached to the existing authored visual fixture. No game
 // imports use this module; no performance queries or simulation ticks here.
@@ -7,6 +8,7 @@ export function installNoiseSpatialReview(getWorld,volume){
   panel.style.cssText='position:absolute;right:8px;bottom:8px;z-index:4;max-width:44vw;max-height:50vh;overflow:auto;background:#fff9ed;padding:8px';
   panel.innerHTML='<summary>QA ruido fino · regiones</summary><p>Escena visual controlada. A/A/B/B/A, sin avanzar simulación. Informe describe diferencias; no aprobación automática ni benchmark.</p><button id="noise-spatial-run">Comparar 20 vistas × 3 fases</button> <label>Vista <select id="noise-spatial-pose"></select></label> <label>Luz <select id="noise-spatial-phase"><option value="day">Día</option><option value="dusk">Transición</option><option value="night">Noche</option></select></label> <label>Ruido <select id="noise-spatial-recipe"><option value="0">Analítico</option><option value="1">Volumen</option></select></label> <button id="noise-spatial-view">Mostrar vista</button> <button id="noise-spatial-close">Cerrar mundo QA</button><p id="noise-spatial-status">Sin ejecutar</p><pre id="noise-spatial-report" style="font-size:10px;white-space:pre-wrap"></pre>';
   document.body.append(panel);
+  const repeatButton=document.createElement('button');repeatButton.id='noise-spatial-repeat';repeatButton.textContent='Diagnóstico: repetir mundo / solo dibujo';panel.querySelector('p').after(repeatButton);
   const element=id=>document.getElementById(`noise-spatial-${id}`);
   const phaseTimes={day:150,dusk:300+Math.log(2)/2.4,night:350};
   const raf=()=>new Promise(resolve=>requestAnimationFrame(resolve));
@@ -35,6 +37,28 @@ export function installNoiseSpatialReview(getWorld,volume){
     return {pixels,width,height,calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles};
   }
   function lock(){const controls=[...document.querySelectorAll('button,input,select')].map(node=>[node,node.disabled]);for(const [node] of controls)node.disabled=true;return()=>{for(const [node,disabled] of controls)if(node.isConnected)node.disabled=disabled;};}
+  element('repeat').onclick=async()=>{
+    if(busy)return;busy=true;const unlock=lock();let world,updateCamera;
+    try{
+      world=available();await world.whenChunksReady();world.render(0);volume.apply(world.scene);
+      for(let i=0;i<4;i++){await raf();world.render(0);}
+      const before=JSON.stringify(world.state);updateCamera=world.updateCamera;world.updateCamera=()=>{};
+      const onlyDraw=()=>withRenderOrigin({scene:world.scene,camera:world.camera,origin:world.renderOrigin,detached:[world.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(world.scene),minSize:()=>[world.contacts.uniforms.uContactBounds.value,...world.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean)]},()=>{
+        const autoClear=world.renderer.autoClear;try{world.renderer.autoClear=false;world.renderer.clear();world.sky.render(world.renderer,world.camera,world.state);world.renderer.render(world.scene,world.camera);}finally{world.renderer.autoClear=autoClear;}
+      });
+      result={scope:'Diagnostic world updates versus repeated sky/color drawing with effective camera fixed. Only-draw excludes WorldScene effect/depth/smoke preparation and entity/material/light updates. Not a pixel-equivalent production render replacement or benchmark.',biome:world.state.biome,culture:world.state.culture,elapsed:world.state.elapsed,enabled:volume.uniforms.uFineNoiseVolumeEnabled.value,rows:[],errors:[],completed:false};
+      let previous=null;
+      for(const mode of ['world','only-draw'])for(let i=0;i<12;i++){
+        await raf();if(mode==='world')world.render(0);else onlyDraw();
+        const frame=capture(world),sha256=await hash(frame.pixels);
+        assert(JSON.stringify(world.state)===before,'Diagnostic changed logical state');
+        result.rows.push({mode,index:i,sha256,cameraMatrix:world.camera.matrixWorld.elements.slice(),calls:frame.calls,triangles:frame.triangles,difference:previous?compareNoisePixels(previous.pixels,frame.pixels,frame.width,frame.height):null});
+        previous=frame;publish();element('status').textContent=`Repetición ${mode} ${i+1}/12`;
+      }
+      result.completed=true;result.logicalStateUnchanged=JSON.stringify(world.state)===before;publish();element('status').textContent='Diagnóstico terminado · revisar controles y transición de ruta';
+    }catch(error){result??={rows:[],errors:[]};result.errors.push(String(error.stack??error));publish();element('status').textContent='Error diagnóstico · revisar informe';}
+    finally{if(world&&updateCamera)world.updateCamera=updateCamera;unlock();busy=false;}
+  };
   element('run').onclick=async()=>{
     if(busy)return;busy=true;const unlock=lock();let world,saved;
     try{
