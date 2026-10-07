@@ -1,5 +1,10 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ: cuatro siluetas Sabana](qa/hq-mountain-four-arcs/README.md):
+dirección de composición aceptable en vistas día/noche y valles abiertos;
+dos giros nativos de 73 poses sin errores, estado invariado. Falta filtrado
+entre celdas, móvil/coste e integración de los demás biomas; fondos sin activar.
+
 [Piloto de montañas HQ con arcos](qa/hq-mountain-arc-pilot/README.md):
 Sabana conserva proporciones y elimina simetría por espejo. La mezcla existente
 de bruma en la base mejora el contacto; bajar 30 m recorta laderas y se descarta.
