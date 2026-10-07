@@ -1,5 +1,11 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ: pilotos de los otros cinco biomas](qa/hq-mountain-biome-pilots/README.md):
+730 poses nativas día/noche sin errores, diez capturas revisadas. Gran Río,
+Manglares, Volcanes y Desierto siguen una dirección artística aceptable; revisar
+contacto y composición final. Cañón necesita cámara elevada: sus paredes ocultan
+el atlas en la vista inicial, por lo que no se acepta visualmente todavía.
+
 [Montañas HQ: cuatro siluetas Sabana](qa/hq-mountain-four-arcs/README.md):
 dirección de composición aceptable en vistas día/noche y valles abiertos;
 dos giros nativos de 73 poses sin errores, estado invariado. Falta filtrado

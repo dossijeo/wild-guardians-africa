@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-07T21:01:05.773Z",
+  "branch": "codex/far-hq-mountains",
+  "branchGitHead": "55441e5e",
+  "sources": {
+    "tests/browser/hq-mountain-horizon.html": "b87c21ac0e618a7492a45acddf03fd28604b7f66f9c8f37ea5b5c34cd3dd893b",
+    "src/rendering/mountain-arc-composition.js": "24f2334e55ad4a13967dbe6a9aa082ce33f2af96a151ed1fa2711bf662814b87",
+    "src/rendering/mountain-arcs.js": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+    "assets-source/far-backdrops-hq/single-export-contract.json": "6054a9d9334b557251a2364e2b31446ceb1d52f08883c1461dbd5b771c5af943"
+  },
+  "atlases": {
+    "grand_river": {
+      "source": "assets-source/far-backdrops-hq/grand_river-isolated-v3.png",
+      "sourceSha256": "9f8705d54452f555ab060322c42744edc6ebcdc89451e1210f7a4e49987c5347",
+      "atlasSha256": "a199293dc12f9956d7da7d954313be830981121187435d32529b4927b915b80b",
+      "bytes": 198778,
+      "layoutSha256": "e286f19d9764f0e5a1877048aadea84a9d950f0966c9fa68a216bad48ac3e87e"
+    },
+    "mangrove": {
+      "source": "assets-source/far-backdrops-hq/mangrove-isolated-v3.png",
+      "sourceSha256": "66360823039d4202d15b93b9f8bee5226a3758d6a22f01680ba47a69a6ad7213",
+      "atlasSha256": "404844e7cc8f0c0f63aadffe754458fc2d342127c0f43ff604f3778b8104c37a",
+      "bytes": 198118,
+      "layoutSha256": "c02869e5792c30f3ef7ad540a857db0b767f32f7574c8e2bcd5ad56da3dafd74"
+    },
+    "volcanoes": {
+      "source": "assets-source/far-backdrops-hq/volcanoes-isolated-v3.png",
+      "sourceSha256": "9e67b455fe89677fd3c55f4989790b8f10bd29c568ad128065e3525cb3886fb7",
+      "atlasSha256": "1fb3f051cc054ce5da5e2d1d73c01a7b125a7da38dbd43db8ef149add61a8ca4",
+      "bytes": 194822,
+      "layoutSha256": "d86ded61bea3dc5783426d6429dc0c70c315647b2ce994dcc243db1a5673df62"
+    },
+    "canyons": {
+      "source": "assets-source/far-backdrops-hq/canyons-isolated-v5.png",
+      "sourceSha256": "9f471670ee9e89c4e2e2a84adcd146b7c77f25f2ca756d3a725cd8799bf357de",
+      "atlasSha256": "f4d47ef6c2299b45e9457d5ae39efc42d608de48db0edba35b8fbc9a6c1e7811",
+      "bytes": 172020,
+      "layoutSha256": "74da09940b557931d16d3008c38c1c4bfc7db7c6f2a778fa346bd6ef12093909"
+    },
+    "desert": {
+      "source": "assets-source/far-backdrops-hq/desert-isolated-v4.png",
+      "sourceSha256": "40ead8884d91299f25f02db5915cdb9666e46f059954b881729e4876fa8f46a4",
+      "atlasSha256": "e85bc6ccd2b2fcafcccb713e22a040294fbe4303e0e24c8e55bd568181934fff",
+      "bytes": 212122,
+      "layoutSha256": "1e734fdf9e7567f87784bc8ea681b6761c91b873b10a0eb400f46e518673b708"
+    }
+  },
+  "files": {
+    "gran-rio-day.json": {
+      "rawSha256": "4fff1eb505b65bb8438e2663a1e3e61b5c52296e83ffd2becf711cbaf07265f2",
+      "gzipSha256": "3b4de4f4e9c41e374f3aac8ca81411b4a49bd2f0e885a52e7b0700976c8e8b63",
+      "gzipBytes": 2572,
+      "poses": 73
+    },
+    "gran-rio-day.png": {
+      "bytes": 134682,
+      "sha256": "a9811ddfe6e6eda1fea84d6ae1a7edc280789433c74206736f3aa5523bac1fa3"
+    },
+    "gran-rio-night.json": {
+      "rawSha256": "8ebb997769e4e58003062eb7b4a34c7fb269f0de437aa4d41778fbe0bcf13a44",
+      "gzipSha256": "c615536ce082c5695626d5057ecb456fcfb2caeae58ff60a11357afa0885c314",
+      "gzipBytes": 2522,
+      "poses": 73
+    },
+    "gran-rio-night.png": {
+      "bytes": 81630,
+      "sha256": "9d8eb2c64b1f70021847f6efebc42f83dbff2f41d581011706db78391ba4b020"
+    },
+    "manglares-day.json": {
+      "rawSha256": "5e16655837aa000320de6954de4969e7f660cbceb5df077f9f21bd88e3dd5c12",
+      "gzipSha256": "9f99f38e84921198484e0893e12a668346bf2de018728628d27502fc9119aa10",
+      "gzipBytes": 2643,
+      "poses": 73
+    },
+    "manglares-day.png": {
+      "bytes": 134879,
+      "sha256": "bc2fa98285efceb15f924f5c4e9f8eb87e881e07dd9f607821e02ba760a8bbfb"
+    },
+    "manglares-night.json": {
+      "rawSha256": "4db4634a4ce39ec92dc9362df4bd202302c1d0fcde20e829632efaf4ce50c23a",
+      "gzipSha256": "9a2d5b73b10d0697288882d7967094cff113e6cabbbe0a35f80e9118253b923e",
+      "gzipBytes": 2577,
+      "poses": 73
+    },
+    "manglares-night.png": {
+      "bytes": 84659,
+      "sha256": "c56747b68fd17680a9847d277ce8318a66b30059548c46c1c75ce5df3ba82083"
+    },
+    "volcanes-day.json": {
+      "rawSha256": "141f26bba8d7302934874ab935c441be6fc291ea9b2e5ca5aa752e47209ef5a0",
+      "gzipSha256": "3df7f281a5ffc810022f29b60fa5d30b8d596b7c33a1bac6483143b69a4adcea",
+      "gzipBytes": 2593,
+      "poses": 73
+    },
+    "volcanes-day.png": {
+      "bytes": 129506,
+      "sha256": "36f85737c95b4fea38d04b3ff736392f0e829efe516cfc4a23acb76beddbb2aa"
+    },
+    "volcanes-night.json": {
+      "rawSha256": "5755f6190d6013011ca8177d77d79cc49c3df594f13ac6430509dd9f4be430fa",
+      "gzipSha256": "26648b15055915d88723c08bf26675663079a6139b59898009f0248599953757",
+      "gzipBytes": 2535,
+      "poses": 73
+    },
+    "volcanes-night.png": {
+      "bytes": 79079,
+      "sha256": "e500104e9ad155de02e58a49f9f50676a227245a2f48719de8a4b15f2b1b9c9f"
+    },
+    "gran-canon-day.json": {
+      "rawSha256": "9f1cdd25af8dac9bd34932100c05fae1b69723cbe00918362f046434232ea86a",
+      "gzipSha256": "02e7a3045f0bba39cbd131fb9936f5640eb6ca8163664b3b1760038356d4e367",
+      "gzipBytes": 2496,
+      "poses": 73
+    },
+    "gran-canon-day.png": {
+      "bytes": 92533,
+      "sha256": "2f799e86d16e2d0c640e185c52f6202dc321ae04b38d3de1d65e2e1828fad298"
+    },
+    "gran-canon-night.json": {
+      "rawSha256": "8e66e941cc83531879f6a5d01fd27596b9b632f0ebfa36b51ee12eb00c66a792",
+      "gzipSha256": "a56e78b3964185380d6d2cc38199b6b82b8818599ed162f08994d0c47e58da19",
+      "gzipBytes": 2460,
+      "poses": 73
+    },
+    "gran-canon-night.png": {
+      "bytes": 65893,
+      "sha256": "5ca50c34b4cd91fd24a213715ed9ee0da6226914a1ce28f79009eaf6f62e4126"
+    },
+    "desierto-day.json": {
+      "rawSha256": "cc090d379b98f43ef829d039f58c6a34ad16a1538524532d1131f8faa064643e",
+      "gzipSha256": "c6571603691254a9408d01bf22016976d6aba5a7da1b8ab20ee68dd3bb7e6231",
+      "gzipBytes": 2524,
+      "poses": 73
+    },
+    "desierto-day.png": {
+      "bytes": 42154,
+      "sha256": "51141556e283f6e74e977eab41c551a8a8470e66e53499c7e5e4aac862422f5b"
+    },
+    "desierto-night.json": {
+      "rawSha256": "4c22f7d5098603b1150668575bea371255b3f39639993add3e7c5381a5d948f7",
+      "gzipSha256": "4df3d018637e5ae73015770d395f0b6d0cca5408f81bc2fb67053437f8638c3a",
+      "gzipBytes": 2484,
+      "poses": 73
+    },
+    "desierto-night.png": {
+      "bytes": 32153,
+      "sha256": "10fa40ac52e45c84e43c0334f2bee5f9cd69a07f548441d948d1c013b5d7fc1a"
+    }
+  },
+  "scope": "Five single populated atlas-cell pilots, 73 fixed-eye poses per phase. Visual inspection only selected yaw0 day/night PNGs. Canyons backdrop occluded at this native eye; not visual acceptance. No performance, mobile, mip bleed or complete 360 composition approval."
+}
