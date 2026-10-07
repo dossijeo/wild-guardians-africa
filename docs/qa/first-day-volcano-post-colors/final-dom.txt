@@ -1,0 +1,49 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:03
+  - img "Dinero"
+  - generic: "636"
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar" [active]:
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary:
+    - dialog "Cultivar":
+      - heading "Cultivar" [level=2]
+      - button "Cerrar": ×
+      - button "Mijo 5" [disabled]:
+        - strong: Mijo
+        - generic: "5"
+      - button "Sorgo 6" [disabled]:
+        - strong: Sorgo
+        - generic: "6"
+      - button "Maíz 8" [disabled]:
+        - strong: Maíz
+        - generic: "8"
+      - button "Batata 10" [disabled]:
+        - strong: Batata
+        - generic: "10"
+      - button "Yuca 12" [disabled]:
+        - strong: Yuca
+        - generic: "12"
+      - button "Girasol 18" [disabled]:
+        - strong: Girasol
+        - generic: "18"
+      - button "Algodón 100" [disabled]:
+        - strong: Algodón
+        - generic: "100"
+      - button "Plátano 150" [disabled]:
+        - strong: Plátano
+        - generic: "150"
+      - paragraph: Elige una semilla y toca un espacio libre.
+  - complementary

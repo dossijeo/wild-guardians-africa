@@ -1,0 +1,699 @@
+{
+  "scope": "V8 self sample counts inside the measured tick window; first-tick boundary approximated from its performance.now duration. Clock windows validated against profile start/end. Not exact instruction costs, inclusive stack timings, frame timings or stable benchmark estimates. Concurrent campaigns and browser agent remained active.",
+  "rows": [
+    {
+      "case": "native",
+      "input": "docs/qa/intensive-mangrove-shield-100/state.json.gz",
+      "biome": "manglares",
+      "living": 215,
+      "staff": 18,
+      "firstTickMs": 493.91660000000013,
+      "followingMedianMs": 2.8592999999998483,
+      "followingP95Ms": 5.266900000000078,
+      "pathSearches": 18,
+      "inputSha256": "3513537ef2c76a4637f29615a118a392587a563a83bdcf1aafcc728ad997f041",
+      "endStateSha256": "311b801e7656435a3b6c6af62826b963783a66ebb21ec7fd151252056f4ec9c7",
+      "profileSha256": "2bed717f67e7b72cc66e26b1122455a2374c47df46aca8c439ed7fe8dd1fbd0e",
+      "reportSha256": "42e93e2be9af24b4b5a005d04d0e333d16dce11fac28d9f8b9fdaa32ac4a0c3c",
+      "sampleCounts": {
+        "firstTick": 478,
+        "followingTicks": 145
+      },
+      "selfSamples": {
+        "firstTick": [
+          {
+            "function": "noise",
+            "file": "src/world/terrain.js",
+            "line": 13,
+            "samples": 65,
+            "fraction": 0.13598326359832635
+          },
+          {
+            "function": "lattice",
+            "file": "src/world/terrain.js",
+            "line": 411,
+            "samples": 58,
+            "fraction": 0.12133891213389121
+          },
+          {
+            "function": "reserveTasks",
+            "file": "src/simulation/tasks.js",
+            "line": 30,
+            "samples": 27,
+            "fraction": 0.056485355648535567
+          },
+          {
+            "function": "findPathSteps",
+            "file": "src/world/navigation.js",
+            "line": 271,
+            "samples": 25,
+            "fraction": 0.05230125523012552
+          },
+          {
+            "function": "seekWetBand",
+            "file": "src/world/terrain.js",
+            "line": 469,
+            "samples": 21,
+            "fraction": 0.043933054393305436
+          },
+          {
+            "function": "slope",
+            "file": "src/world/terrain.js",
+            "line": 419,
+            "samples": 21,
+            "fraction": 0.043933054393305436
+          },
+          {
+            "function": "surface",
+            "file": "src/world/terrain.js",
+            "line": 412,
+            "samples": 20,
+            "fraction": 0.04184100418410042
+          },
+          {
+            "function": "candidate",
+            "file": "src/world/terrain.js",
+            "line": 470,
+            "samples": 19,
+            "fraction": 0.0397489539748954
+          },
+          {
+            "function": "naturalWetlandMask",
+            "file": "src/world/terrain.js",
+            "line": 364,
+            "samples": 19,
+            "fraction": 0.0397489539748954
+          },
+          {
+            "function": "segmentClear",
+            "file": "src/world/navigation.js",
+            "line": 348,
+            "samples": 16,
+            "fraction": 0.03347280334728033
+          },
+          {
+            "function": "findPath",
+            "file": "src/world/navigation.js",
+            "line": 267,
+            "samples": 14,
+            "fraction": 0.029288702928870293
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 14,
+            "fraction": 0.029288702928870293
+          },
+          {
+            "function": "waterInfo",
+            "file": "src/world/terrain.js",
+            "line": 435,
+            "samples": 13,
+            "fraction": 0.027196652719665274
+          },
+          {
+            "function": "testSegmentClear",
+            "file": "src/world/navigation.js",
+            "line": 369,
+            "samples": 11,
+            "fraction": 0.02301255230125523
+          },
+          {
+            "function": "edgeDistance",
+            "file": "src/world/footprints.js",
+            "line": 9,
+            "samples": 9,
+            "fraction": 0.01882845188284519
+          }
+        ],
+        "followingTicks": [
+          {
+            "function": "tickScoped",
+            "file": "src/simulation/game.js",
+            "line": 572,
+            "samples": 91,
+            "fraction": 0.6275862068965518
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/game.js",
+            "line": 570,
+            "samples": 22,
+            "fraction": 0.15172413793103448
+          },
+          {
+            "function": "walkTo",
+            "file": "src/simulation/game.js",
+            "line": 361,
+            "samples": 8,
+            "fraction": 0.05517241379310345
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/worker-entity-lookup.js",
+            "line": 9,
+            "samples": 4,
+            "fraction": 0.027586206896551724
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 4,
+            "fraction": 0.027586206896551724
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/tasks.js",
+            "line": 16,
+            "samples": 4,
+            "fraction": 0.027586206896551724
+          },
+          {
+            "function": "urgentWork",
+            "file": "src/simulation/locomotion.js",
+            "line": 9,
+            "samples": 3,
+            "fraction": 0.020689655172413793
+          },
+          {
+            "function": "moveWorker",
+            "file": "src/simulation/locomotion.js",
+            "line": 43,
+            "samples": 3,
+            "fraction": 0.020689655172413793
+          },
+          {
+            "function": "updateWorkers",
+            "file": "src/simulation/game.js",
+            "line": 442,
+            "samples": 2,
+            "fraction": 0.013793103448275862
+          },
+          {
+            "function": "navigationPathKey",
+            "file": "src/world/raid-navigation-warmth.js",
+            "line": 7,
+            "samples": 1,
+            "fraction": 0.006896551724137931
+          },
+          {
+            "function": "clockBoundaries",
+            "file": "src/simulation/game.js",
+            "line": 561,
+            "samples": 1,
+            "fraction": 0.006896551724137931
+          },
+          {
+            "function": "advancePlant",
+            "file": "src/simulation/crops.js",
+            "line": 15,
+            "samples": 1,
+            "fraction": 0.006896551724137931
+          },
+          {
+            "function": "waitForGate",
+            "file": "src/simulation/gates.js",
+            "line": 7,
+            "samples": 1,
+            "fraction": 0.006896551724137931
+          }
+        ]
+      }
+    },
+    {
+      "case": "river",
+      "input": "docs/qa/intensive-river-rejoin-100/state.json.gz",
+      "biome": "gran-rio",
+      "living": 557,
+      "staff": 47,
+      "firstTickMs": 681.5699,
+      "followingMedianMs": 4.470800000000054,
+      "followingP95Ms": 9.077800000000025,
+      "pathSearches": 47,
+      "inputSha256": "3c1831ea8c59ebbb7f6a669465e50b211c6022e470cd070ce04ac1d489547bc4",
+      "endStateSha256": "55d150ab84480e9bf25c50dee1275df464ef442db08912ee5a70aa6443e7a22d",
+      "profileSha256": "89985becbecb2c746864d5bb129a7c5355833931ebb7360a4a7ae3a34508e4ff",
+      "reportSha256": "cdfcd18129eab29ddd6b139ebfcda7d9e7d463353ed3d85878a002239d23e5c0",
+      "sampleCounts": {
+        "firstTick": 662,
+        "followingTicks": 241
+      },
+      "selfSamples": {
+        "firstTick": [
+          {
+            "function": "lattice",
+            "file": "src/world/terrain.js",
+            "line": 411,
+            "samples": 111,
+            "fraction": 0.16767371601208458
+          },
+          {
+            "function": "findPathSteps",
+            "file": "src/world/navigation.js",
+            "line": 271,
+            "samples": 42,
+            "fraction": 0.0634441087613293
+          },
+          {
+            "function": "fluidInside",
+            "file": "src/world/terrain.js",
+            "line": 420,
+            "samples": 34,
+            "fraction": 0.0513595166163142
+          },
+          {
+            "function": "segmentClear",
+            "file": "src/world/navigation.js",
+            "line": 348,
+            "samples": 28,
+            "fraction": 0.04229607250755287
+          },
+          {
+            "function": "surface",
+            "file": "src/world/terrain.js",
+            "line": 412,
+            "samples": 27,
+            "fraction": 0.04078549848942598
+          },
+          {
+            "function": "reserveTasks",
+            "file": "src/simulation/tasks.js",
+            "line": 30,
+            "samples": 26,
+            "fraction": 0.03927492447129909
+          },
+          {
+            "function": "candidate",
+            "file": "src/world/terrain.js",
+            "line": 470,
+            "samples": 26,
+            "fraction": 0.03927492447129909
+          },
+          {
+            "function": "searchNeighbors",
+            "file": "src/world/navigation.js",
+            "line": 256,
+            "samples": 24,
+            "fraction": 0.03625377643504532
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 23,
+            "fraction": 0.03474320241691843
+          },
+          {
+            "function": "findPath",
+            "file": "src/world/navigation.js",
+            "line": 267,
+            "samples": 22,
+            "fraction": 0.03323262839879154
+          },
+          {
+            "function": "slope",
+            "file": "src/world/terrain.js",
+            "line": 419,
+            "samples": 21,
+            "fraction": 0.03172205438066465
+          },
+          {
+            "function": "testSegmentClear",
+            "file": "src/world/navigation.js",
+            "line": 369,
+            "samples": 20,
+            "fraction": 0.030211480362537766
+          },
+          {
+            "function": "naturalHeight",
+            "file": "src/world/terrain.js",
+            "line": 393,
+            "samples": 18,
+            "fraction": 0.027190332326283987
+          },
+          {
+            "function": "waterInfo",
+            "file": "src/world/terrain.js",
+            "line": 435,
+            "samples": 16,
+            "fraction": 0.02416918429003021
+          },
+          {
+            "function": "walkable",
+            "file": "src/world/navigation.js",
+            "line": 119,
+            "samples": 16,
+            "fraction": 0.02416918429003021
+          }
+        ],
+        "followingTicks": [
+          {
+            "function": "tickScoped",
+            "file": "src/simulation/game.js",
+            "line": 572,
+            "samples": 93,
+            "fraction": 0.38589211618257263
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/game.js",
+            "line": 570,
+            "samples": 34,
+            "fraction": 0.14107883817427386
+          },
+          {
+            "function": "urgentWork",
+            "file": "src/simulation/locomotion.js",
+            "line": 9,
+            "samples": 19,
+            "fraction": 0.07883817427385892
+          },
+          {
+            "function": "updateWorkers",
+            "file": "src/simulation/game.js",
+            "line": 442,
+            "samples": 19,
+            "fraction": 0.07883817427385892
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/worker-entity-lookup.js",
+            "line": 9,
+            "samples": 13,
+            "fraction": 0.05394190871369295
+          },
+          {
+            "function": "advancePlant",
+            "file": "src/simulation/crops.js",
+            "line": 15,
+            "samples": 11,
+            "fraction": 0.04564315352697095
+          },
+          {
+            "function": "walkTo",
+            "file": "src/simulation/game.js",
+            "line": 361,
+            "samples": 9,
+            "fraction": 0.03734439834024896
+          },
+          {
+            "function": "moveWorker",
+            "file": "src/simulation/locomotion.js",
+            "line": 43,
+            "samples": 7,
+            "fraction": 0.029045643153526972
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 5,
+            "fraction": 0.02074688796680498
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/tasks.js",
+            "line": 16,
+            "samples": 5,
+            "fraction": 0.02074688796680498
+          },
+          {
+            "function": "waitForGate",
+            "file": "src/simulation/gates.js",
+            "line": 7,
+            "samples": 4,
+            "fraction": 0.016597510373443983
+          },
+          {
+            "function": "isMature",
+            "file": "src/simulation/crops.js",
+            "line": 42,
+            "samples": 4,
+            "fraction": 0.016597510373443983
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/locomotion.js",
+            "line": 15,
+            "samples": 3,
+            "fraction": 0.012448132780082987
+          },
+          {
+            "function": "profile",
+            "file": "src/simulation/game.js",
+            "line": 42,
+            "samples": 2,
+            "fraction": 0.008298755186721992
+          },
+          {
+            "function": "movePath",
+            "file": "src/simulation/locomotion.js",
+            "line": 23,
+            "samples": 2,
+            "fraction": 0.008298755186721992
+          }
+        ]
+      }
+    },
+    {
+      "case": "eight",
+      "input": "docs/qa/crop-lifecycle-eight-100/state.json.gz",
+      "biome": "sabana",
+      "living": 546,
+      "staff": 46,
+      "firstTickMs": 744.4304999999999,
+      "followingMedianMs": 5.597700000000032,
+      "followingP95Ms": 8.054000000000087,
+      "pathSearches": 46,
+      "inputSha256": "6da1de9d51b41b829ce4a9a7180dbb8ed5b86481e01d6575954b1a4437569ea0",
+      "endStateSha256": "7bdfdaf613b06a50f4c88ca29ef1b5a2c834ef8be4664423393ed174129bb6fb",
+      "profileSha256": "57efd2c2c3bf03f2e2a54f42c8e64133c75aac2b17d43125a9eb2959b6f25cbe",
+      "reportSha256": "d088df8e773f3a1de5980d73f205fb15f43b1f915b728def3e15b7b9e42eeac4",
+      "sampleCounts": {
+        "firstTick": 699,
+        "followingTicks": 285
+      },
+      "selfSamples": {
+        "firstTick": [
+          {
+            "function": "lattice",
+            "file": "src/world/terrain.js",
+            "line": 411,
+            "samples": 139,
+            "fraction": 0.1988555078683834
+          },
+          {
+            "function": "findPathSteps",
+            "file": "src/world/navigation.js",
+            "line": 271,
+            "samples": 48,
+            "fraction": 0.06866952789699571
+          },
+          {
+            "function": "slope",
+            "file": "src/world/terrain.js",
+            "line": 419,
+            "samples": 37,
+            "fraction": 0.05293276108726753
+          },
+          {
+            "function": "fluidInside",
+            "file": "src/world/terrain.js",
+            "line": 420,
+            "samples": 32,
+            "fraction": 0.045779685264663805
+          },
+          {
+            "function": "segmentClear",
+            "file": "src/world/navigation.js",
+            "line": 348,
+            "samples": 29,
+            "fraction": 0.04148783977110158
+          },
+          {
+            "function": "surface",
+            "file": "src/world/terrain.js",
+            "line": 412,
+            "samples": 28,
+            "fraction": 0.04005722460658083
+          },
+          {
+            "function": "reserveTasks",
+            "file": "src/simulation/tasks.js",
+            "line": 30,
+            "samples": 27,
+            "fraction": 0.03862660944206009
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 22,
+            "fraction": 0.031473533619456366
+          },
+          {
+            "function": "findPath",
+            "file": "src/world/navigation.js",
+            "line": 267,
+            "samples": 20,
+            "fraction": 0.02861230329041488
+          },
+          {
+            "function": "pondMetric",
+            "file": "src/world/terrain.js",
+            "line": 345,
+            "samples": 20,
+            "fraction": 0.02861230329041488
+          },
+          {
+            "function": "candidate",
+            "file": "src/world/terrain.js",
+            "line": 470,
+            "samples": 18,
+            "fraction": 0.02575107296137339
+          },
+          {
+            "function": "propsAt",
+            "file": "src/world/navigation.js",
+            "line": 41,
+            "samples": 18,
+            "fraction": 0.02575107296137339
+          },
+          {
+            "function": "naturalHeight",
+            "file": "src/world/terrain.js",
+            "line": 393,
+            "samples": 17,
+            "fraction": 0.024320457796852647
+          },
+          {
+            "function": "walkable",
+            "file": "src/world/navigation.js",
+            "line": 119,
+            "samples": 16,
+            "fraction": 0.022889842632331903
+          },
+          {
+            "function": "testSegmentClear",
+            "file": "src/world/navigation.js",
+            "line": 369,
+            "samples": 15,
+            "fraction": 0.02145922746781116
+          }
+        ],
+        "followingTicks": [
+          {
+            "function": "tickScoped",
+            "file": "src/simulation/game.js",
+            "line": 572,
+            "samples": 135,
+            "fraction": 0.47368421052631576
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/game.js",
+            "line": 570,
+            "samples": 58,
+            "fraction": 0.20350877192982456
+          },
+          {
+            "function": "urgentWork",
+            "file": "src/simulation/locomotion.js",
+            "line": 9,
+            "samples": 15,
+            "fraction": 0.05263157894736842
+          },
+          {
+            "function": "walkTo",
+            "file": "src/simulation/game.js",
+            "line": 361,
+            "samples": 13,
+            "fraction": 0.0456140350877193
+          },
+          {
+            "function": "moveWorker",
+            "file": "src/simulation/locomotion.js",
+            "line": 43,
+            "samples": 12,
+            "fraction": 0.042105263157894736
+          },
+          {
+            "function": "updateWorkers",
+            "file": "src/simulation/game.js",
+            "line": 442,
+            "samples": 8,
+            "fraction": 0.028070175438596492
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/tasks.js",
+            "line": 16,
+            "samples": 7,
+            "fraction": 0.02456140350877193
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/game.js",
+            "line": 602,
+            "samples": 5,
+            "fraction": 0.017543859649122806
+          },
+          {
+            "function": "(anonymous)",
+            "file": "src/simulation/worker-entity-lookup.js",
+            "line": 9,
+            "samples": 5,
+            "fraction": 0.017543859649122806
+          },
+          {
+            "function": "(garbage collector)",
+            "file": "",
+            "line": 0,
+            "samples": 5,
+            "fraction": 0.017543859649122806
+          },
+          {
+            "function": "movePath",
+            "file": "src/simulation/locomotion.js",
+            "line": 23,
+            "samples": 4,
+            "fraction": 0.014035087719298246
+          },
+          {
+            "function": "advancePlant",
+            "file": "src/simulation/crops.js",
+            "line": 15,
+            "samples": 3,
+            "fraction": 0.010526315789473684
+          },
+          {
+            "function": "isMature",
+            "file": "src/simulation/crops.js",
+            "line": 42,
+            "samples": 3,
+            "fraction": 0.010526315789473684
+          },
+          {
+            "function": "evaluate",
+            "file": "",
+            "line": 0,
+            "samples": 2,
+            "fraction": 0.007017543859649123
+          },
+          {
+            "function": "spellAt",
+            "file": "src/simulation/game.js",
+            "line": 329,
+            "samples": 2,
+            "fraction": 0.007017543859649123
+          }
+        ]
+      }
+    }
+  ],
+  "toolSha256": "0f15efc24ac4494bbb66468ca56257adbe5cf435b5635fddb577bed73ff872f2",
+  "simulationSha256": "397b505243cbba18f341911550cfad196faec17ac17044317b44e51f89ece8c4",
+  "navigationSha256": "24fc9030577d8530a102677bbeb151b35981b088d28893aec2894efa22f3f6f0"
+}

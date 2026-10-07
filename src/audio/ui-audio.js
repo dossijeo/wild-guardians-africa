@@ -1,5 +1,5 @@
-export const UI_SOUND_ROUTES=Object.freeze({ui_panel_open:'ui-surface-transition',ui_panel_close:'ui-surface-transition',ui_tab:'ui-surface-transition',ui_error:'ui-command-error',ui_pause:'ui-user-pause-transition',ui_resume:'ui-user-pause-transition',spirit_select:'ui-magic-selection'});
-export const UI_SOUND_IDS=Object.freeze(['ui_panel_open','ui_panel_close','ui_tab','ui_error','ui_pause','ui_resume','spirit_select']);
+export const UI_SOUND_ROUTES=Object.freeze({ui_panel_open:'ui-surface-transition',ui_panel_close:'ui-surface-transition',ui_tab:'ui-surface-transition',ui_error:'ui-command-error',ui_pause:'ui-user-pause-transition',ui_resume:'ui-user-pause-transition',spirit_select:'ui-magic-selection',spirit_touch:'ui-guided-hud-action'});
+export const UI_SOUND_IDS=Object.freeze(['ui_panel_open','ui_panel_close','ui_tab','ui_error','ui_pause','ui_resume','spirit_select','spirit_touch']);
 
 // Feed actual interface transitions, never polling/renders or logical payments.
 export class UiAudio {
@@ -11,7 +11,12 @@ export class UiAudio {
   }
   close({silent=false}={}){const active=this.identity!==null;this.kind=null;this.identity=null;const revision=++this.surfaceRevision;if(active&&!silent)this.cue('ui_panel_close','ui:surface',()=>revision===this.surfaceRevision);}
   selectSpell(spell){if(!['shield','multiply','growth'].includes(spell))return false;const revision=++this.spellRevision,surfaceRevision=this.surfaceRevision;this.cue('spirit_select','ui:magic',()=>revision===this.spellRevision&&surfaceRevision===this.surfaceRevision);return true;}
+  guidedTouch(action,{guided=false}={}){
+    if(!guided||!['build','grow'].includes(action)||this.guidedActions.has(action))return false;
+    this.guidedActions.add(action);const revision=this.surfaceRevision;
+    this.cue('spirit_touch','ui:guided-hud',()=>revision===this.surfaceRevision);return true;
+  }
   error({force=false}={}){const now=this.clock();if(!force&&now-this.lastErrorAt<1)return;this.lastErrorAt=now;this.cue('ui_error','ui:error');}
   pause(before,after){const id=!before.includes('menu')&&after.includes('menu')?'ui_pause':before.includes('menu')&&!after.length?'ui_resume':null;if(id){const revision=++this.pauseRevision;this.cue(id,'ui:pause',()=>revision===this.pauseRevision);}}
-  reset(){this.generation++;this.surfaceRevision=0;this.pauseRevision=0;this.spellRevision=0;this.identity=null;this.kind=null;this.lastErrorAt=-Infinity;}
+  reset(){this.generation++;this.surfaceRevision=0;this.pauseRevision=0;this.spellRevision=0;this.guidedActions=new Set();this.identity=null;this.kind=null;this.lastErrorAt=-Infinity;}
 }

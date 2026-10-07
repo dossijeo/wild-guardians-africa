@@ -1,0 +1,26 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Contratación con equipo obligatorio</title>
+<link rel="stylesheet" href="/content/fonts.css"><link rel="stylesheet" href="/content/hud.css"><link rel="stylesheet" href="/src/ui/styles.css">
+<div id="host" class="overlay native-hiring"></div>
+<script type="module">
+import {hiringMarkup,ASSETS,NPC_TYPES,framePaint} from '../../src/ui/native-hud.js';
+import {hiringConfirmation} from '../../src/ui/hiring-confirmation.js';
+import {createFrameImageLoader} from '../../src/ui/frame-image-loader.js';
+import {assetUrl} from '../../src/rendering/asset-url.js';
+for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
+const host=document.querySelector('#host'),selection={};
+host.innerHTML=hiringMarkup({day:1,clock:'08:00',hiring:{hasPrevious:false,draft:[0,0,0,0]}});
+function refresh(){
+ for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector('#crewCount'+i).value);
+ const {cost,canConfirm,message}=hiringConfirmation(selection,695);
+ document.querySelector('#hireAvailable').textContent=695;
+ document.querySelector('#hireCost').textContent=cost;
+ document.querySelector('#hireBalance').textContent=695-cost;
+ document.querySelector('#hireConfirm').disabled=!canConfirm;
+ document.querySelector('#hireBudgetMessage').textContent=message;
+}
+document.querySelectorAll('[data-crew-step]').forEach(button=>button.onclick=()=>{const input=document.querySelector('#crewCount'+button.dataset.crewStep);input.value=Math.max(0,Number(input.value)+Number(button.dataset.delta));refresh();});
+document.querySelectorAll('[data-crew-count]').forEach(input=>input.oninput=refresh);
+document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(input=>input.value=0);refresh();};
+document.querySelector('#hireConfirm').onclick=()=>{if(!hiringConfirmation(selection,695).canConfirm)return;document.querySelector('#hireBudgetMessage').textContent='Equipo seleccionado';};
+refresh();const images=await createFrameImageLoader(ASSETS)();framePaint(host,{short:innerHeight<500,portrait:innerHeight>innerWidth},images);
+</script></html>

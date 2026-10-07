@@ -2,7 +2,7 @@
 
 Inventario completo de asignaciones de código y bytes originales. No acredita escucha ni la integración de los pendientes. Regenerar con `node tools/audit_sfx_catalog.mjs`; comprobar vigencia con `--check`.
 
-Asignados: **96**. Sin asignar en gameplay: **30**.
+Asignados: **97**. Sin asignar en gameplay: **29**.
 
 | Nº | ID / nombre | Estado | Acción prevista | Punto de código o contexto pendiente |
 | --- | --- | --- | --- | --- |
@@ -98,7 +98,7 @@ Asignados: **96**. Sin asignar en gameplay: **30**.
 | 090 | spirit_disappear · Desaparición | Asignado | Salida del avatar; conservar toma y detalle final aprobados. | src/audio/guardian-audio.js:1 → GuardianAudio.observe: actual rendered portrait lifecycle |
 | 091 | spirit_move · Movimiento espiritual | Pendiente | Movimiento de presencia/gesto del Espíritu; uso ambiental opcional, no loop obligatorio de cámara. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 092 | spirit_select · Seleccionar | Asignado | Selección con interacción espiritual; alternativa a ui_click. | src/audio/ui-audio.js:1 → ui-magic-selection |
-| 093 | spirit_touch · Tocar / interactuar | Pendiente | Toque guiado del tutorial o interacción espiritual; no duplicar todos los clics. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
+| 093 | spirit_touch · Tocar / interactuar | Asignado | Toque guiado del tutorial o interacción espiritual; no duplicar todos los clics. | src/audio/ui-audio.js:1 → ui-guided-hud-action |
 | 094 | spirit_drag · Arrastrar | Pendiente | Arrastre guiado/colocación; controlar inicio y fin, no disparar por cada pixel. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 095 | spirit_drop · Soltar | Pendiente | Soltar una previsualización; no equivale todavía a una compra. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |
 | 096 | spirit_valid · Acción válida | Pendiente | Colocación/interacción válida; feedback distinto de pago. | Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically. |

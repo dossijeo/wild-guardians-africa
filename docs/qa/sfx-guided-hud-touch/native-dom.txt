@@ -1,0 +1,37 @@
+Browser tab: 689, Title: "SFX 093 · toque guiado", URL: "http://127.0.0.1:5181/tests/browser/guided-touch-audio.html".
+0 AXWebArea SFX 093 · toque guiado, URL: 127.0.0.1:5181/tests/browser/guided-touch-audio.html
+	1 heading SFX 093 · toque guiado del HUD, Value: 1
+		2 text SFX 093 · toque guiado del HUD
+	3 text Prueba aislada de despacho y reproducción nativa silenciada. No acredita mezcla audible ni un recorrido completo del juego.
+	4 button Verificar toque guiado, ID: run
+	5 text {
+  "ok": true,
+  "codec": "opus",
+  "number": 93,
+  "url": "http://127.0.0.1:5181/assets/audio/ae9464cc91e60dd4d97a01afe67131fe5445fc79412676d99991fd6e81b5a0ec.opus",
+  "channels": 2,
+  "sampleRate": 48000,
+  "decodedSamples": 96000,
+  "requests": [
+    {
+      "id": "spirit_touch",
+      "bus": "ui",
+      "emitter": "ui:guided-hud"
+    },
+    {
+      "id": "spirit_touch",
+      "bus": "ui",
+      "emitter": "ui:guided-hud"
+    }
+  ],
+  "sourcesStarted": 2,
+  "ordinaryRejected": true,
+  "unsupportedRejected": true,
+  "repeatedRejected": true,
+  "voicesAfterStop": 0,
+  "context": "closed",
+  "precached": true,
+  "silenced": true
+}
+
+The focused UI element is 4 button Verificar toque guiado, ID: run

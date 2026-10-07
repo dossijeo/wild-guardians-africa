@@ -3,9 +3,9 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "c77a8f64483f3d36f52d0593b5381461d490be895fda8daf1c1711d8985e63f1",
+    "public/content/sfx-routing.json": "b0eed05a7041619782573dd2729d248d5e1142f1fb7e03e2299f935423b34092",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
-    "src/app/main.js": "46e7668b6e8e144bf24d418a7029099aad211415a14c0d168345acd9df2120e5",
+    "src/app/main.js": "3bda4e060cba87b64327d95ad3e6444cbe4b12c27ca50bbc972654fbf4bb08a4",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
     "src/audio/audio.js": "0cec796e5fe698b1cc192fe75a545a953cfea11ce33126f3ea6c93bc317eafbb",
@@ -16,7 +16,7 @@
     "src/audio/power-ready-audio.js": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77",
     "src/audio/raid-arrival-audio.js": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
     "src/audio/structure-audio.js": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21",
-    "src/audio/ui-audio.js": "1d94690a590c5b24cdafeb8f8ace7875750b6fc7c67ca00ae1dad79002887e53",
+    "src/audio/ui-audio.js": "a04c3c8bf49152f00e7089355945eb04e43994a8e2a75f1899669dadcb7006a7",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
@@ -24,8 +24,8 @@
     "src/simulation/raids.js": "49ebd8d619f4c32719b543e8c9c46c9ea8a0ba973c92c2b6234a1cb22ab909f0"
   },
   "total": 126,
-  "assigned": 96,
-  "unassigned": 30,
+  "assigned": 97,
+  "unassigned": 29,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -133,7 +133,6 @@
       "beast_vocal_aggressive",
       "beast_retreat",
       "spirit_move",
-      "spirit_touch",
       "spirit_drag",
       "spirit_drop",
       "spirit_valid",
@@ -152,6 +151,7 @@
       "beast_hit_structure",
       "npc_acknowledge",
       "spirit_select",
+      "spirit_touch",
       "spirit_power_charge",
       "ui_buy",
       "ui_objective_complete",
@@ -2000,10 +2000,16 @@
       "sha256": "3ecc526b962f07f5f1c77ff03b58a11684a73252157c99a0358aa5671db62224",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Toque guiado del tutorial o interacción espiritual; no duplicar todos los clics.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 1,
+          "trigger": "ui-guided-hud-action"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 94,

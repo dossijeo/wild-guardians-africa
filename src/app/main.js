@@ -23,7 +23,7 @@ import {WORLD_RESOLUTIONS,worldResolution,applyWorldResolution} from './world-re
 import {renderCommandFeedback} from '../ui/command-feedback.js';
 import {BALANCE as B} from '../simulation/balance.js';
 import * as Game from '../simulation/game.js';
-import {PROFILES,hiringCost} from '../simulation/workforce.js';
+import {PROFILES} from '../simulation/workforce.js';
 import {formatMoney,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
@@ -33,6 +33,8 @@ import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/
 import {WorldScene} from '../rendering/scene.js';
 import {json} from '../rendering/assets.js';
 import {assetUrl} from '../rendering/asset-url.js';
+import {createFrameImageLoader} from '../ui/frame-image-loader.js';
+import {hiringConfirmation} from '../ui/hiring-confirmation.js';
 import {AudioSystem} from '../audio/audio.js';
 import {ASSETS,hudMarkup,layoutHud,hiringMarkup,NPC_TYPES,framePaint,spellSVG} from '../ui/native-hud.js';
 import {NativeGuardian} from '../ui/guardian.js';
@@ -45,6 +47,7 @@ import '../ui/tutorial.css';
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
+const loadFrameImages=createFrameImageLoader(ASSETS);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
@@ -126,15 +129,20 @@ async function startGame(loaded=null) {
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
     bind('menuButton',pauseDialog);
     document.querySelector('[data-menu="home"]').onclick=()=>world.focusFarm();
-    document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>toolPanel('plant'));
+    document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>guidedHudAction('grow',()=>toolPanel('plant')));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
-    document.querySelector('[data-menu="build"]').onclick=()=>safe(buildPanel);
+    document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
     world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#loading-progress');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
     await world.load(state,nav,payload);
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
     world.render(0);document.querySelector('#world-loading').remove();document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
   } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}
+}
+function guidedHudAction(action,open){
+  const guided=!!hudHand&&!hudHand.image.hidden&&hudHand.selector===`[data-menu="${action}"]`;
+  open();
+  if(surfaces.active==='panel')uiAudio.guidedTouch(action,{guided});
 }
 function onPick({entityId,point}) {
   if(!state||screen!=='game')return;
@@ -182,7 +190,13 @@ function showHudPanel(title,body){
  if(!openSurface('panel',title))return false;
  const host=document.querySelector('#panel');host.className='native-panel-host';host.innerHTML=`<section class="panel" role="dialog" aria-label="${esc(title)}"><canvas class="frame-canvas" aria-hidden="true"></canvas><header class="panel-head"><h2 class="panel-title">${esc(title)}</h2><button class="close-panel" id="close-hud-panel" aria-label="Cerrar">×</button></header><div class="panel-body">${body}</div></section>`;
  bind('close-hud-panel',()=>{closeSurface();});
- Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(host.firstElementChild)framePaint(host,layoutHud(document.querySelector('#stage')),frameImages);}).catch(()=>error('No se ha podido cargar el marco del menú.'));
+ paintPanelFrame(host,document.querySelector('#stage'),'No se ha podido cargar el marco del menú.');
+}
+function paintPanelFrame(host,stage,message){
+ const panel=host.firstElementChild;
+ const current=()=>host.isConnected&&host.firstElementChild===panel;
+ if(frameImages){framePaint(host,layoutHud(stage),frameImages);return;}
+ loadFrameImages().then(images=>{frameImages=images;if(current())framePaint(host,layoutHud(stage),images);}).catch(()=>{if(current())error(message);});
 }
 function openSurface(kind,key=kind){
   if(state.pauses.includes('hiring')&&!['hiring','result'].includes(kind))return false;
@@ -332,13 +346,13 @@ function hiringDialog(centerId=null) {
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
     if(!additional)state.hiringSelection={...selection};
-    try {const cost=hiringCost(selection,additional?{time:state.time}:{}),available=numberOf(state.ledger.balance);document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=cost>available;document.querySelector('#hireBudgetMessage').textContent=cost>available?'Reduce la plantilla para ajustarla al saldo.':'El salario se cobra una sola vez al confirmar.';if(cost<=available)routes.update(state,selection,centerId);else routes.cancel();}
+    try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;if(canConfirm)routes.update(state,selection,centerId);else routes.cancel();}
     catch(e){routes.cancel();document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{const prepared=routes.take(state,selection,centerId);const hired=additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);if(hired!==false&&prepared)warmRaidNavigation(nav,prepared.warmth);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
-  Promise.all(Object.entries(ASSETS).filter(([key])=>key.startsWith('frame_')).map(([key,value])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve([key,image]);image.onerror=reject;image.src=value.src;}))).then(entries=>{frameImages=Object.fromEntries(entries);if(document.querySelector('#hiring-dialog'))framePaint(modal,layoutHud(stage),frameImages);}).catch(()=>error('No se ha podido cargar el marco de contratación.'));
+  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;const prepared=routes.take(state,selection,centerId);const hired=additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);if(hired!==false&&prepared)warmRaidNavigation(nav,prepared.warmth);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  paintPanelFrame(modal,stage,'No se ha podido cargar el marco de contratación.');
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {

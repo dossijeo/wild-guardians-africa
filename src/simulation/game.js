@@ -13,6 +13,7 @@ import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
+import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
@@ -398,6 +399,7 @@ function completeTask(s,w,t,target,nav) {
       if(target.multiplyHarvest||spellAt(s,'multiply',target))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
+      cropBecameInactive(s.plants);
       const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
@@ -594,7 +596,7 @@ function tickScoped(s,seconds,nav) {
     }
     if(previousTime<300) {
       const enqueueCrop=taskEnqueuer(s);
-      for(const p of s.plants) {
+      for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
         const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
