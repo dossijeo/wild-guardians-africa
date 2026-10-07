@@ -5,6 +5,7 @@ import {BufferRequests} from './buffer-requests.js';
 import {RenderGlCalls} from './render-gl-calls.js';
 import {RenderCpuCalls} from './render-cpu-calls.js';
 import {ActorArrivalCpu} from './actor-arrival-cpu.js';
+import {skinCullingSweep} from './skin-culling-sweep.js';
 import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
 import {findInitialLocationAsync} from '/src/world/villages.js';
 import {WorldScene} from '/src/rendering/scene.js';
@@ -119,6 +120,10 @@ if(resources&&params.get('dispose-world')==='1'){const original=world.renderer.f
 resources?.dispose();
 const skinEnvelope={enabled:world.animalSkinEnvelope,preparedMeshes:[...world.mixers.values()].reduce((n,r)=>n+(r.skinEnvelopes?.size??0),0)};
 const report={...(resources?{resourceStages}:{}),skinEnvelope,ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],copies,plannedReserves,savedReserves,savedActive,savedRaidUnchangedAtLoad:savedActive?true:null,loadReservedRigs,repeatedRigResources,rigs,before,after,postMotion,appearanceMs:firstAppearanceMs,loadingMs,errors,...((measureTiming||params.get('motion')==='1')?{timing}:{}),spawnSpecies,scope:'Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
+if(params.get('skin-culling')==='1'){
+ if(!world.animalSkinEnvelope||world.disposed)throw Error('Skin-culling requires a live envelope pilot');
+ report.skinCulling=skinCullingSweep(world,state,{holdSnapshot:params.get('skin-culling-hold')==='1'});report.ok&&=report.skinCulling.ok;
+}
 document.querySelector('#report').textContent=JSON.stringify(report,null,2);
 if(!world.disposed&&params.get('motion')==='1'){const button=document.querySelector('#inspect');button.disabled=false;button.onclick=()=>{const animal=state.raid?.animals[0],before=serialize(state);if(!animal)return;world.focus({x:animal.x,z:animal.z,distance:8});world.render(0);if(serialize(state)!==before)throw Error('Inspection changed logical state');report.inspection={scope:'Close camera after first hit; no subsequent simulation ticks',logicalStateUnchanged:true,eye:world.camera.position.toArray(),target:world.controls.target.toArray()};document.querySelector('#report').textContent=JSON.stringify(report,null,2);};}
 let last=performance.now();function frame(now){world.render(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}if(!world.disposed)requestAnimationFrame(frame);
