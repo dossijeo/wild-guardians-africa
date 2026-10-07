@@ -1,12 +1,13 @@
-import {Vector3} from 'three';
+import {Vector3,WebGLRenderTarget} from 'three';
 import {serialize} from '/src/persistence/snapshots.js';
 
 // Paired actual WorldScene renders. This deliberately stalls readPixels for
 // image comparison; its timings must never be presented as normal frametimes.
-export function skinCullingSweep(world,state,{holdSnapshot=false}={}){
+export function skinCullingSweep(world,state,{holdSnapshot=false,disableDither=false,offscreen=false,drawOnly=false}={}){
  const before=serialize(state),camera=world.camera,controls=world.controls;
  const eye=camera.position.clone(),target=controls.target.clone(),damping=controls.enableDamping;
  const gl=world.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
+ const previousTarget=world.renderer.getRenderTarget(),comparisonTarget=offscreen?new WebGLRenderTarget(w,h,{samples:0}):null;
  const a=new Uint8Array(w*h*4),b=new Uint8Array(w*h*4),control=new Uint8Array(w*h*4),meshes=[],rows=[];
  for(const animal of state.raid.animals){
   const rig=world.mixers.get(animal.id);
@@ -17,8 +18,10 @@ export function skinCullingSweep(world,state,{holdSnapshot=false}={}){
   }});
  }
  for(const entry of meshes)entry.mesh.onBeforeRender=function(...args){entry.calls++;entry.callback.apply(this,args);};
+ const ditherWasEnabled=gl.isEnabled(gl.DITHER);if(disableDither)gl.disable(gl.DITHER);
  controls.enableDamping=false;
  try{
+  if(drawOnly&&(world.renderOrigin.x||world.renderOrigin.z))throw Error('Prepared draw-only comparison requires zero render origin');
   for(const entry of meshes){
    const center=entry.native.center.clone().applyMatrix4(entry.mesh.matrixWorld);
    for(const degrees of [-60,-30,0,30,60]){
@@ -28,6 +31,7 @@ export function skinCullingSweep(world,state,{holdSnapshot=false}={}){
     camera.position.copy(center).add(new Vector3(0,6,20));
     controls.target.copy(center).add(new Vector3(Math.tan(angle)*20,0,0));
     camera.lookAt(controls.target);controls.update();world.render(0);world.render(0);
+    if(drawOnly&&(world.renderOrigin.x||world.renderOrigin.z))throw Error('Prepared draw-only pose requires zero render origin');
     const renderedEye=camera.position.clone(),renderedTarget=controls.target.clone();
     const calls={},poseDeltas={},updateCamera=world.updateCamera,sync=world.sync;
     // Prepare through the production camera and sync path, then hold that
@@ -37,10 +41,12 @@ export function skinCullingSweep(world,state,{holdSnapshot=false}={}){
     try{
     for(const mode of ['nativeControl','native','candidate']){
      for(const e of meshes){e.calls=0;e.mesh.boundingSphere.copy(e[mode==='nativeControl'?'native':mode]);}
-     world.render(0);
+     if(comparisonTarget)world.renderer.setRenderTarget(comparisonTarget);
+     if(drawOnly){const autoClear=world.renderer.autoClear;try{world.renderer.autoClear=false;world.renderer.clear();world.sky.render(world.renderer,camera,state);world.renderer.render(world.scene,camera);}finally{world.renderer.autoClear=autoClear;}}else world.render(0);
      poseDeltas[mode]={eye:camera.position.distanceTo(renderedEye),target:controls.target.distanceTo(renderedTarget)};
      if(poseDeltas[mode].eye>1e-10||poseDeltas[mode].target>1e-10)throw Error('Camera moved between paired renders '+JSON.stringify({eyeDelta:camera.position.distanceTo(renderedEye),targetDelta:controls.target.distanceTo(renderedTarget),eye:camera.position.toArray(),previousEye:renderedEye.toArray()}));
-     gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,mode==='nativeControl'?control:mode==='native'?a:b);
+     const output=mode==='nativeControl'?control:mode==='native'?a:b;
+     if(comparisonTarget){if(world.renderer.getRenderTarget()!==comparisonTarget)throw Error('Comparison render target changed');world.renderer.readRenderTargetPixels(comparisonTarget,0,0,w,h,output);world.renderer.setRenderTarget(previousTarget);}else gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,output);
      calls[mode]=Object.fromEntries(meshes.map(e=>[e.species,e.calls]));
     }
     }finally{world.updateCamera=updateCamera;world.sync=sync;}
@@ -50,10 +56,12 @@ export function skinCullingSweep(world,state,{holdSnapshot=false}={}){
    }
   }
  }finally{
+  world.renderer.setRenderTarget(previousTarget);comparisonTarget?.dispose();
+  if(disableDither){if(ditherWasEnabled)gl.enable(gl.DITHER);else gl.disable(gl.DITHER);}
   for(const e of meshes){e.mesh.boundingSphere.copy(e.candidate);e.mesh.onBeforeRender=e.callback;}
   camera.position.copy(eye);controls.target.copy(target);controls.enableDamping=damping;controls.update();world.render(0);
  }
  const stateExact=serialize(state)===before,nativeControlExact=rows.every(r=>r.controlChangedPixels===0),candidateImageExact=rows.every(r=>r.changedPixels===0);
- return {holdSnapshot,nativeControlExact,candidateImageExact,verdict:!nativeControlExact?'inconclusive-native-not-repeatable':candidateImageExact?'image-identical':'candidate-image-differs',scope:'25 production-prepared WorldScene camera poses with fixed camera/entity snapshot during native-control/native/candidate draws; actual RGBA framebuffer comparison and color-pass mesh callbacks. Optional holdSnapshot fixes camera/entity sync only for comparison, then restores them. readPixels stalls; no GPU/frame/mobile timing claim.',width:w,height:h,stateExact,rows,
+ return {holdSnapshot,disableDither,offscreen,drawOnly,ditherWasEnabled,nativeControlExact,candidateImageExact,verdict:!nativeControlExact?'inconclusive-native-not-repeatable':candidateImageExact?'image-identical':'candidate-image-differs',scope:'25 production-prepared WorldScene camera poses with fixed camera/entity snapshot during native-control/native/candidate draws; actual RGBA framebuffer comparison and color-pass mesh callbacks. Optional holdSnapshot fixes camera/entity sync only for comparison, then restores them. drawOnly compares prepared sky/scene renderer draws, excluding repeated WorldScene preparation and effect passes. readPixels stalls; no GPU/frame/mobile timing claim.',width:w,height:h,stateExact,rows,
   ok:stateExact&&rows.every(r=>r.changedPixels===0&&r.controlChangedPixels===0)&&meshes.every(e=>rows.some(r=>r.calls.native[e.species]>0))};
 }

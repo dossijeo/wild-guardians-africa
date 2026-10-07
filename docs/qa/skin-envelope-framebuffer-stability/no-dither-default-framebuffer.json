@@ -1,0 +1,1712 @@
+{
+  "skinEnvelope": {
+    "enabled": true,
+    "preparedMeshes": 5
+  },
+  "ok": false,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "warthog",
+    "rhino",
+    "buffalo",
+    "hyena",
+    "lion"
+  ],
+  "copies": 1,
+  "plannedReserves": true,
+  "savedReserves": false,
+  "savedActive": false,
+  "savedRaidUnchangedAtLoad": null,
+  "loadReservedRigs": 5,
+  "repeatedRigResources": {
+    "warthog": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "hyena": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "buffalo": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "lion": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "rhino": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "e3812e5e-85fb-4d91-b560-3a3e4f1317f1",
+      "fromSpare": true,
+      "skeletons": [
+        "b2dfa8ea-4f43-46b7-a3d1-8c63ce0a7113"
+      ],
+      "boneTextures": [
+        "a99b5f4e-4f4d-4f5b-892f-524017e5133b"
+      ],
+      "geometry": [
+        "5850969b-786f-4de7-af82-1e9f8f7b6afb"
+      ],
+      "materials": [
+        "a0cc7e08-dce4-4645-b101-b08c8136d0e1"
+      ]
+    },
+    {
+      "species": "hyena",
+      "ready": true,
+      "modelId": "9a3e5071-0179-48ce-acdf-a1113e921cc1",
+      "fromSpare": true,
+      "skeletons": [
+        "26f009f6-885f-4380-b9ae-3076f60eef41"
+      ],
+      "boneTextures": [
+        "55c5a67a-f562-49e8-a982-4cc29490985e"
+      ],
+      "geometry": [
+        "494d4e8e-2d92-4dfe-922b-eec5544b7220"
+      ],
+      "materials": [
+        "174a4c6a-4765-4969-9a27-1a13d2cf24fd"
+      ]
+    },
+    {
+      "species": "buffalo",
+      "ready": true,
+      "modelId": "986ce986-b1ca-4ef7-a819-c721fd1cab8b",
+      "fromSpare": true,
+      "skeletons": [
+        "87da3daf-9f06-4310-a417-f3342e6cf1f2"
+      ],
+      "boneTextures": [
+        "83d9a83d-f5c8-419d-9bda-e99c6f6a2c76"
+      ],
+      "geometry": [
+        "57e797b5-92dd-4724-9f3f-d83ac8fec3e8"
+      ],
+      "materials": [
+        "4fb5197b-5616-43e7-aa03-9ce1f165750e"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "20fe55b3-695a-426e-8b46-70cbe9352a52",
+      "fromSpare": true,
+      "skeletons": [
+        "1303446c-7724-4ef3-a991-d49f17e98ff0"
+      ],
+      "boneTextures": [
+        "743d64ab-f36d-4f1e-8394-9cfa674249f5"
+      ],
+      "geometry": [
+        "8009a19f-d0ea-4fa9-a25e-86ca5edf2987"
+      ],
+      "materials": [
+        "86a96026-e093-4a99-b22a-64b64db8e22b"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "a9a4f84b-e817-466f-a26c-ff6e1ce5e1f2",
+      "fromSpare": true,
+      "skeletons": [
+        "8ed4c225-4a1c-4340-9414-7e5392494548"
+      ],
+      "boneTextures": [
+        "f1c64fbd-152a-4b1f-a5c5-7be8c5f27ffb"
+      ],
+      "geometry": [
+        "2b24c898-0c56-4d00-8431-3f52eade2e67"
+      ],
+      "materials": [
+        "0f37cd39-f4e5-455a-bd0b-0aa8b22f2863"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 42,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 44,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "spareModelIds": [
+      "e3812e5e-85fb-4d91-b560-3a3e4f1317f1",
+      "9a3e5071-0179-48ce-acdf-a1113e921cc1",
+      "986ce986-b1ca-4ef7-a819-c721fd1cab8b",
+      "20fe55b3-695a-426e-8b46-70cbe9352a52",
+      "a9a4f84b-e817-466f-a26c-ff6e1ce5e1f2"
+    ],
+    "animalPrograms": [
+      0,
+      1
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 42,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 44,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      1
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 7,
+    "animalPrograms": [
+      0,
+      1
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 55.39999997615814,
+  "loadingMs": 6387.300000071526,
+  "errors": [],
+  "spawnSpecies": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "skinCulling": {
+    "holdSnapshot": true,
+    "disableDither": true,
+    "ditherWasEnabled": true,
+    "nativeControlExact": false,
+    "candidateImageExact": false,
+    "verdict": "inconclusive-native-not-repeatable",
+    "scope": "25 production-prepared WorldScene camera poses with fixed camera/entity snapshot during native-control/native/candidate draws; actual RGBA framebuffer comparison and color-pass mesh callbacks. Optional holdSnapshot fixes camera/entity sync only for comparison, then restores them. readPixels stalls; no GPU/frame/mobile timing claim.",
+    "width": 1600,
+    "height": 900,
+    "stateExact": true,
+    "rows": [
+      {
+        "species": "warthog",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 1,
+        "maxChannelDifference": 1,
+        "eye": [
+          -30.78942395095398,
+          23.260238836056764,
+          85.19869174038723
+        ],
+        "target": [
+          -65.43044010233152,
+          33.93338897981229,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 15,
+        "controlMaxChannelDifference": 78,
+        "changedPixels": 9,
+        "maxChannelDifference": 6,
+        "eye": [
+          -30.789423950953985,
+          9.636751519245045,
+          85.19869174038723
+        ],
+        "target": [
+          -42.3364293347465,
+          3.6367515192450455,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 11,
+        "controlMaxChannelDifference": 47,
+        "changedPixels": 11,
+        "maxChannelDifference": 47,
+        "eye": [
+          -30.78942395095398,
+          8.575223682513908,
+          85.19869174038723
+        ],
+        "target": [
+          -30.78942395095398,
+          2.575223682513908,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 4,
+        "controlMaxChannelDifference": 21,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.789423950953985,
+          9.915563952085574,
+          85.19869174038723
+        ],
+        "target": [
+          -19.242418567161472,
+          3.9155639520855736,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.789423950953985,
+          23.260238836056764,
+          85.19869174038723
+        ],
+        "target": [
+          3.8515922004235508,
+          38.59425587835965,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.295040659013168,
+          22.380036932980445,
+          84.84593866913484
+        ],
+        "target": [
+          -60.93605681039071,
+          24.08011479506423,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 4,
+        "controlMaxChannelDifference": 14,
+        "changedPixels": 4,
+        "maxChannelDifference": 14,
+        "eye": [
+          -26.29504065901317,
+          9.088588264100855,
+          84.84593866913484
+        ],
+        "target": [
+          -37.842046042805684,
+          3.088588264100855,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 5,
+        "controlMaxChannelDifference": 19,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.295040659013175,
+          9.520972492634954,
+          84.84593866913484
+        ],
+        "target": [
+          -26.295040659013175,
+          3.5209724926349537,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 25,
+        "controlMaxChannelDifference": 82,
+        "changedPixels": 21,
+        "maxChannelDifference": 82,
+        "eye": [
+          -26.29504065901317,
+          10.246992775097876,
+          84.84593866913484
+        ],
+        "target": [
+          -14.748035275220658,
+          4.246992775097877,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.29504065901317,
+          22.380036932980445,
+          84.84593866913484
+        ],
+        "target": [
+          8.345975492364364,
+          38.90903734105593,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -34.64285314197825,
+          23.501171934074865,
+          85.03777019506585
+        ],
+        "target": [
+          -69.28386929335579,
+          38.144559449228225,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 4,
+        "controlMaxChannelDifference": 44,
+        "changedPixels": 4,
+        "maxChannelDifference": 44,
+        "eye": [
+          -34.64285314197825,
+          9.855369547347362,
+          85.03777019506585
+        ],
+        "target": [
+          -46.18985852577077,
+          3.8553695473473613,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 24,
+        "controlMaxChannelDifference": 102,
+        "changedPixels": 17,
+        "maxChannelDifference": 59,
+        "eye": [
+          -34.64285314197825,
+          8.544761330893623,
+          85.03777019506585
+        ],
+        "target": [
+          -34.64285314197825,
+          2.5447613308936226,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 1,
+        "controlMaxChannelDifference": 1,
+        "changedPixels": 1,
+        "maxChannelDifference": 1,
+        "eye": [
+          -34.64285314197825,
+          9.639419081201016,
+          85.03777019506585
+        ],
+        "target": [
+          -23.095847758185734,
+          3.639419081201015,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -34.64285314197825,
+          23.501171934074865,
+          85.03777019506585
+        ],
+        "target": [
+          -0.0018369906007151828,
+          34.147604617263326,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.54035709248933,
+          23.401661982510127,
+          88.86829670562905
+        ],
+        "target": [
+          -65.18137324386687,
+          34.31261246620772,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 6,
+        "maxChannelDifference": 23,
+        "eye": [
+          -30.540357092489334,
+          9.658712441833046,
+          88.86829670562905
+        ],
+        "target": [
+          -42.08736247628185,
+          3.658712441833047,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 8,
+        "controlMaxChannelDifference": 14,
+        "changedPixels": 9,
+        "maxChannelDifference": 14,
+        "eye": [
+          -30.540357092489334,
+          8.540236851212715,
+          88.86829670562905
+        ],
+        "target": [
+          -30.540357092489334,
+          2.540236851212714,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 7,
+        "maxChannelDifference": 31,
+        "eye": [
+          -30.540357092489334,
+          9.82146664345749,
+          88.86829670562905
+        ],
+        "target": [
+          -18.99335170869682,
+          3.8214666434574927,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.540357092489334,
+          23.401661982510127,
+          88.86829670562905
+        ],
+        "target": [
+          4.100659058888201,
+          38.08497626324167,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -35.01805885917255,
+          23.617835301729706,
+          89.41465960076363
+        ],
+        "target": [
+          -69.65907501055008,
+          39.08985641919558,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 9,
+        "controlMaxChannelDifference": 12,
+        "changedPixels": 9,
+        "maxChannelDifference": 12,
+        "eye": [
+          -35.01805885917255,
+          10.029111824014489,
+          89.41465960076363
+        ],
+        "target": [
+          -46.565064242965065,
+          4.029111824014489,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 7,
+        "controlMaxChannelDifference": 65,
+        "changedPixels": 14,
+        "maxChannelDifference": 65,
+        "eye": [
+          -35.01805885917255,
+          8.825582472521509,
+          89.41465960076363
+        ],
+        "target": [
+          -35.01805885917255,
+          2.825582472521509,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -35.01805885917255,
+          9.60238584463966,
+          89.41465960076363
+        ],
+        "target": [
+          -23.47105347538003,
+          3.6023858446396604,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -35.01805885917255,
+          23.617835301729706,
+          89.41465960076363
+        ],
+        "target": [
+          -0.37704270779501314,
+          33.90345172932931,
+          69.41465960076363
+        ]
+      }
+    ],
+    "ok": false
+  }
+}
