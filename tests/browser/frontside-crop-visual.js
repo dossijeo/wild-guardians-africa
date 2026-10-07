@@ -10,6 +10,7 @@ import {configureShadowCamera,updateShadowCamera} from '../../src/rendering/shad
 import {indexBridgeGeometry,reverseIndexedState,patchReverseDerivativeFrame} from '../../tools/lib/frontside-indexed-bridge.mjs';
 import {regions,alphaDistanceGate,accumulateControlEnvelope,controlEnvelopeMetrics} from '../../tools/lib/frontside-visual-metrics.mjs';
 import {mapColorProvenance} from '../../tools/lib/frontside-color-provenance.mjs';
+import {partitionCropGeometry} from '../../tools/lib/frontside-crop-partition.mjs';
 const status=document.querySelector('#status'),size=1024,linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let renderer,cancelled=false;
 document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();renderer?.forceContextLoss();status.textContent+='\nGPU liberada';};
 document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await run();}catch(e){status.textContent=e.stack;renderer?.dispose();renderer?.forceContextLoss();}};
@@ -23,6 +24,7 @@ function colorMetrics(a,b,envelope){
 }
 async function run(){
  const options=new URLSearchParams(location.search),limit=Number(options.get('limit')??16),bridgeOnly=options.has('bridgeOnly'),sourceNormalPath=options.has('sourceNormalPath'),interleaveReverses=options.has('interleaveReverses'),colorGuided=options.has('colorGuided');
+ const sidePartition=options.has('sidePartition');if(sidePartition&&(sourceNormalPath||interleaveReverses||colorGuided||options.has('mapRgb')))throw Error('Partition design must remain isolated from reversal training and legacy single-material ID mapping');
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.querySelector('#view').append(renderer.domElement);
  const gl=renderer.getContext(),sourceAssets=new Assets(),manifest=await fetch('/content/models.json').then(r=>r.json()),url=manifest.find(m=>m.source.includes('Cultivos')).url;
  const [gltf,data,selection,pairSelection]=await Promise.all([sourceAssets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-selection.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-crop-pairs-selection.json').then(r=>r.json())]);
@@ -33,11 +35,17 @@ async function run(){
  const scene=new THREE.Scene(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(scene,toon),sky=new NativeSky();await sky.load();toon.environment(sky.environmentTextures,sky.uniforms.uSkyYaw);
  const sun=new THREE.DirectionalLight('#ffe2a8',3),ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);updateShadowCamera(sun,new THREE.Vector3());scene.add(sun,sun.target,ambient);
  const release=installNativeShadow(renderer,sun,toon.shadowUniforms);release.cache.enabled=false;
- const rigs=[],resourceRows=[],ownedCandidateGeometries=[];
+ const rigs=[],resourceRows=[],ownedCandidateGeometries=[],partitionMaterials=[];
  for(let arm=0;arm<4;arm++){
   const group=new THREE.Group();const batch=createCropBatch(group,renderer,gltf,data,2),speciesBudgets={};let sourceTriangles=0,candidateTriangles=0,bytes=0;
   group.traverse(mesh=>{if(!mesh.isMesh)return;const match=mesh.name.match(/^puente_(.+)_(\d+)_(\d+)$/),originalGeometry=mesh.geometry,originalFaceCount=(originalGeometry.index?.count??originalGeometry.getAttribute('position').count)/3,species=match?match[1]:sourceModels.find(m=>m.name===mesh.name).userData.crop;let changed=false;
-   if(match){const source=sourceModels.find(m=>m.userData.crop===match[1]&&m.userData.stage===Number(match[2])),ai=source.userData.cropIndex*5+Number(match[2])-1,bi=ai+1;
+   if(sidePartition&&arm>1){
+    const source=sourceModels.find(m=>match?m.userData.crop===match[1]&&m.userData.stage===Number(match[2]):m.name===mesh.name),ai=source.userData.cropIndex*5+source.userData.stage-1;
+    const labels=match?[...data.models[ai].faceLabels,...data.models[ai+1].faceLabels]:data.models[ai].faceLabels;
+    sourceTriangles+=originalFaceCount;const result=partitionCropGeometry(originalGeometry,labels);mesh.geometry=result.geometry;
+    const originalMaterial=mesh.material,materials=[0,1].map(group=>{const material=originalMaterial.clone();material.onBeforeCompile=originalMaterial.onBeforeCompile;material.customProgramCacheKey=originalMaterial.customProgramCacheKey;material.side=arm===3&&group===0?THREE.FrontSide:THREE.DoubleSide;material.shadowSide=THREE.DoubleSide;return material;});
+    mesh.material=materials;partitionMaterials.push({mesh,originalMaterial,materials});
+   }else if(match){const source=sourceModels.find(m=>m.userData.crop===match[1]&&m.userData.stage===Number(match[2])),ai=source.userData.cropIndex*5+Number(match[2])-1,bi=ai+1;
     const pair=data.pairs.find(p=>p.a===ai&&p.b===bi),keys=[];for(const [role,model] of [[0,ai],[1,bi]]){const indices=sourceModels[model].geometry.index.array;for(let f=0;f<data.models[model].faces;f++)for(let c=0;c<3;c++)keys.push([role,indices[f*3+c],data.models[model].faceLabels[f]]);}
     sourceTriangles+=keys.length/3;
     if(arm>0){const faces=arm>1?[...new Set([...(pairSelection.selected[`bridgeSource/${ai}-${bi}`]??[]).map(s=>{const [m,f]=s.split(':').map(Number);return m===ai?f:data.models[ai].faces+f;}),...(training?.selected[mesh.name]??[])])].sort((a,b)=>a-b):[];const result=indexBridgeGeometry(mesh.geometry,keys,faces,interleaveReverses&&arm>1);mesh.geometry=result.geometry;changed=faces.length>0;}
@@ -53,6 +61,7 @@ async function run(){
  }
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',cropVisual:true,metricPolicyVersion:2,source:url,sourceNormalPath,arms:['original DoubleSide','indexed DoubleSide','selective FrontSide uncompensated',sourceNormalPath?'selective FrontSide source-normal-path':'selective FrontSide XY compensated'],resolution:size,contextAttributes:gl.getContextAttributes(),resources:resourceRows,samples:[],limitations:['Maize pilot only; no category approval or GPU timing.','Color shadows retain DoubleSide; shadowFront/depth/ground masks are separate gates.','Actual source growth/bridge shaders and web textures; indexed source isolates indexing from culling.','Candidate resource gates remain unchanged; rendered quality cannot waive triangle budget.']};
  report.interleaveReverses=interleaveReverses;
+ report.sidePartition=sidePartition;if(sidePartition){report.arms=['original DoubleSide','indexed DoubleSide','two groups both DoubleSide','two groups core FrontSide/leaves DoubleSide'];report.limitations.push('Geometry-preserving partial-sidedness design; true thin leaves remain DoubleSide, no approval of geometric leaf repair.');}
  report.colorGuidedTraining=training;
  report.campaignConditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
  const withheldV1=options.has('withheldV1');report.viewProfile=withheldV1?'CULT_WITHHELD_V1':'GUIDED_EXISTING';
@@ -65,10 +74,10 @@ async function run(){
   for(let arm=0;arm<4;arm++){rigs.forEach((r,i)=>r.group.visible=i===arm);renderer.render(scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[arm]);if(arm===0){for(let j=0;j<3;j++){const repeat=new Uint8Array(pixels[0].length);renderer.render(scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);const metric=accumulateControlEnvelope(envelope,pixels[0],repeat,linear);controls.push(metric);alphaChanges+=metric.alphaDifferences;}const control=controlEnvelopeMetrics(envelope,pixels[0],size);if(alphaChanges||!control.passes){report.invalidControl={growth,clock,biome,night,elevation,azimuth,controls,control};stop=true;break;}}}
   if(stop)break campaign;
   const comparisons=[1,2,3].map(arm=>({arm,...colorMetrics(pixels[0],pixels[arm],envelope)}));report.samples.push({growth,clock,biome,night,elevation,azimuth,controls,comparisons,phase:rigs[0].batch.sample('maiz',growth*cropSpec('maiz').growth_seconds).phase});status.textContent=`${report.samples.length} vistas: indexed=${comparisons[0].passes}, sinXY=${comparisons[1].passes}, conXY=${comparisons[2].passes}`;
-  if(!comparisons[0].passes||!comparisons[2].passes||report.samples.length>=limit)break campaign;await new Promise(requestAnimationFrame);
+  if(!comparisons[0].passes||(sidePartition&&!comparisons[1].passes)||!comparisons[2].passes||report.samples.length>=limit)break campaign;await new Promise(requestAnimationFrame);
  }
  if(report.samples.length&&!report.invalidControl){const canvas=document.createElement('canvas');canvas.width=size*4;canvas.height=size;const ctx=canvas.getContext('2d');for(let arm=0;arm<4;arm++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(pixels[arm].subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);}report.capturePng=canvas.toDataURL('image/png');
   if(options.has('mapRgb')){report.rgbFaceProvenance=[];for(const arm of [0,3]){rigs.forEach((r,i)=>r.group.visible=i===arm);report.rgbFaceProvenance.push({arm,faces:mapColorProvenance(renderer,rigs[arm].group,scene,camera,pixels[0],pixels[3],size)});}}
  }
- await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const geo of ownedCandidateGeometries)geo.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
+ await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const p of partitionMaterials){p.mesh.material=p.originalMaterial;for(const material of p.materials)material.dispose();}for(const geo of ownedCandidateGeometries)geo.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
 }

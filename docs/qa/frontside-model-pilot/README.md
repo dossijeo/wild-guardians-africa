@@ -809,3 +809,13 @@ DoubleSide, indexed DoubleSide, partitioned DoubleSide and partitioned
 core-Front/leaf-Double; arrays of material clones must preserve shader hooks
 and be disposed separately, restoring borrowed originals before batch cleanup.
 No benchmark, visual approval or new acceptance PR exists.
+
+The opt-in sidePartition crop fixture now constructs those four arms. It
+preserves original growth/bridge onBeforeCompile and cache hooks on both
+material clones, registers material arrays normally, and restores borrowed
+materials before batch disposal. Shadows stay DoubleSide. It stops if either
+indexed-source, partitioned-Double or partial-culling quality fails. Legacy
+single-material RGB provenance is explicitly unavailable for this option
+instead of silently misidentifying groups. Syntax and nine construction/index
+tests pass. Runtime rendering remains unexecuted because this agent's browser
+provider exposes no surfaces; no test above establishes native rendering.
