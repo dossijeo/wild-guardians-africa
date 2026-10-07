@@ -1,0 +1,94 @@
+{
+  "baselineRef": "332e242c",
+  "node": "v20.11.0",
+  "cases": [
+    {
+      "workers": 4,
+      "tasks": 8,
+      "iterations": 100,
+      "baseline": {
+        "samples": 24,
+        "medianMs": 0.9331500000000119,
+        "p95Ms": 2.5398999999999887,
+        "maxMs": 4.180099999999982
+      },
+      "candidate": {
+        "samples": 24,
+        "medianMs": 0.9697500000000332,
+        "p95Ms": 4.903099999999995,
+        "maxMs": 18.716999999999985
+      }
+    },
+    {
+      "workers": 40,
+      "tasks": 100,
+      "iterations": 20,
+      "baseline": {
+        "samples": 24,
+        "medianMs": 8.82585000000006,
+        "p95Ms": 12.374399999999923,
+        "maxMs": 14.424299999999903
+      },
+      "candidate": {
+        "samples": 24,
+        "medianMs": 4.179699999999912,
+        "p95Ms": 6.01929999999993,
+        "maxMs": 6.812200000000303
+      }
+    },
+    {
+      "workers": 140,
+      "tasks": 1600,
+      "iterations": 4,
+      "baseline": {
+        "samples": 24,
+        "medianMs": 31.114199999999983,
+        "p95Ms": 37.47680000000037,
+        "maxMs": 37.53570000000036
+      },
+      "candidate": {
+        "samples": 24,
+        "medianMs": 10.657850000000053,
+        "p95Ms": 22.586500000000342,
+        "maxMs": 23.33770000000004
+      }
+    },
+    {
+      "workers": 40,
+      "tasks": 100,
+      "iterations": 10,
+      "blocked": true,
+      "baseline": {
+        "samples": 24,
+        "medianMs": 22.363749999999982,
+        "p95Ms": 27.291699999999764,
+        "maxMs": 35.34100000000035
+      },
+      "candidate": {
+        "samples": 24,
+        "medianMs": 19.831050000000232,
+        "p95Ms": 23.315999999999804,
+        "maxMs": 25.46180000000004
+      }
+    },
+    {
+      "workers": 140,
+      "tasks": 160,
+      "iterations": 2,
+      "blocked": true,
+      "baseline": {
+        "samples": 24,
+        "medianMs": 27.846550000000207,
+        "p95Ms": 30.886399999999412,
+        "maxMs": 35.09640000000036
+      },
+      "candidate": {
+        "samples": 24,
+        "medianMs": 23.728549999999814,
+        "p95Ms": 26.496100000000297,
+        "maxMs": 36.21650000000045
+      }
+    }
+  ],
+  "scope": "Synthetic reservation CPU only, no A* route cost. Alternating pairs, four warmups excluded, full state equality for every pair. Existing campaigns and browser processes may compete for CPU. Not GPU, FPS, mobile or hundred-night acceptance."
+}

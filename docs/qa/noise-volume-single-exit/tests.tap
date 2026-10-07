@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: QA volume is deterministic R8 data with interpolation and explicit disposal
+ok 1 - QA volume is deterministic R8 data with interpolation and explicit disposal
+  ---
+  duration_ms: 161.1982
+  ...
+# Subtest: QA adapter only replaces fine evaluations and leaves coarse ground and analytic fallback available
+ok 2 - QA adapter only replaces fine evaluations and leaves coarse ground and analytic fallback available
+  ---
+  duration_ms: 1.1712
+  ...
+# Subtest: single-exit QA control retains noise calls, texture coordinates and branch condition
+ok 3 - single-exit QA control retains noise calls, texture coordinates and branch condition
+  ---
+  duration_ms: 143.664
+  ...
+# Subtest: RGB-only QA volume preserves audited depth hooks without granting unknown hooks authority
+ok 4 - RGB-only QA volume preserves audited depth hooks without granting unknown hooks authority
+  ---
+  duration_ms: 80.7245
+  ...
+# Subtest: stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+ok 5 - stock depth retains opacity/alpha maps, transforms, displacement and built-in skin/morph while avoiding the color recipe
+  ---
+  duration_ms: 16.9284
+  ...
+# Subtest: recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+ok 6 - recognized chunk clip, obstruction and toon chain preserves live uniforms and identical cut formulas
+  ---
+  duration_ms: 2.5635
+  ...
+# Subtest: canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+ok 7 - canyon horizon depth shares mutable render-origin bounds and the same half-open discard rectangle
+  ---
+  duration_ms: 0.9006
+  ...
+# Subtest: unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+ok 8 - unknown hooks invalidate a recipe even after a valid depth material was cached; clones cannot inherit hook authority
+  ---
+  duration_ms: 2.4414
+  ...
+# Subtest: source disposal releases its cached depth material once; successive stable captures reuse it
+ok 9 - source disposal releases its cached depth material once; successive stable captures reuse it
+  ---
+  duration_ms: 6.2723
+  ...
+# Subtest: capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+ok 10 - capture keeps stock alpha-tested silhouettes native while retaining authored depth opt-in
+  ---
+  duration_ms: 1.3401
+  ...
+# Subtest: native foliage alpha samples share the authored mip bias and separate depth programs from solid surfaces
+ok 11 - native foliage alpha samples share the authored mip bias and separate depth programs from solid surfaces
+  ---
+  duration_ms: 26.6547
+  ...
+# Subtest: all 120 biome materials keep native and depth alpha mip recipes in distinct cache variants
+ok 12 - all 120 biome materials keep native and depth alpha mip recipes in distinct cache variants
+  ---
+  duration_ms: 39.6255
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 783.4137

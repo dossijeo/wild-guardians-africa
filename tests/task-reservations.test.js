@@ -84,3 +84,15 @@ test('exhausted center pools clear remaining blocked flags without rescanning al
  const restored=structuredClone(s);restored.workers.push({id:'late',x:0,z:0,centerId:'other',status:'idle',taskId:null,contractDay:2});
  const next=structuredClone(restored);reference(next,()=>true);reserveTasks(restored,()=>true);assert.deepEqual(restored,next);
 });
+
+test('nearest fast path and fallback preserve exact route-query order, including tied distances',()=>{
+ for(const count of [1,4,40,140])for(const accepted of ['first','last','none']){
+  const s=state();s.workers=Array.from({length:count},(_,i)=>({id:'w'+i,x:(i*17)%7,z:(i*11)%5,centerId:'center',status:'idle',taskId:null,contractDay:2}));
+  const expected=[...s.workers].sort((a,b)=>Math.hypot(a.x,a.z)-Math.hypot(b.x,b.z)||a.id.localeCompare(b.id));
+  const acceptedId=accepted==='first'?expected[0].id:accepted==='last'?expected.at(-1).id:null,queries=[];
+  reserveTasks(s,w=>{queries.push(w.id);return w.id===acceptedId;});
+  assert.deepEqual(queries,(accepted==='first'?expected.slice(0,1):expected).map(w=>w.id));
+  assert.equal(s.tasks[0].workerId,acceptedId);
+  assert.equal(s.tasks[0].blocked,accepted==='none');
+ }
+});

@@ -1,0 +1,45 @@
+{
+  "scope": "Screenshots from separate native tabs, no repeated-native control; not proof of framebuffer equivalence. Full RGB, no alignment or masks.",
+  "pairs": [
+    {
+      "view": "analytic-day",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 34,
+      "pixelsOver8": 0,
+      "maxChannelDifference": 2,
+      "meanChannelDifference": 4.6657986111111113e-05
+    },
+    {
+      "view": "volume-day",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 336,
+      "pixelsOver8": 64,
+      "maxChannelDifference": 22,
+      "meanChannelDifference": 0.001031177662037037
+    },
+    {
+      "view": "analytic-night",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 0,
+      "pixelsOver8": 0,
+      "maxChannelDifference": 0,
+      "meanChannelDifference": 0.0
+    },
+    {
+      "view": "volume-night",
+      "width": 1280,
+      "height": 720,
+      "pixels": 921600,
+      "changedPixels": 0,
+      "pixelsOver8": 0,
+      "maxChannelDifference": 0,
+      "meanChannelDifference": 0.0
+    }
+  ]
+}

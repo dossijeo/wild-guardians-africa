@@ -6,7 +6,7 @@ import {RenderGlCalls} from './render-gl-calls.js';
 import {RenderCpuCalls} from './render-cpu-calls.js';
 import {ActorArrivalCpu} from './actor-arrival-cpu.js';
 import {skinCullingSweep} from './skin-culling-sweep.js';
-import {applySingleExitEnvironmentQA} from './single-exit-shader.js';
+import {applySingleExitEnvironmentQA,singleExitEnvironmentQAReport} from './single-exit-shader.js';
 import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
 import {findInitialLocationAsync} from '/src/world/villages.js';
 import {WorldScene} from '/src/rendering/scene.js';
@@ -131,9 +131,10 @@ if(params.get('skin-culling')==='1'){
    // dt=0 warms rendering only; the serialized simulation must remain exact.
    world.render(0);world.render(0);
    if(serialize(state)!==shaderState)throw Error('Single-exit shader preparation changed logical state');
-   report.skinCullingShader={singleExit:true,materialAssignments,scope:'QA-only scene materials; assignment count is not a count of matched shader replacements. No production shader change or warning-cause claim.'};
+   report.skinCullingShader={singleExit:true,materialAssignments,...singleExitEnvironmentQAReport(world.scene)};
   }
   report.skinCulling=skinCullingSweep(world,state,{holdSnapshot:params.get('skin-culling-hold')==='1',disableDither:params.get('skin-culling-no-dither')==='1',offscreen:params.get('skin-culling-offscreen')==='1',drawOnly:params.get('skin-culling-draw-only')==='1'});report.ok&&=report.skinCulling.ok;
+  if(singleExit)report.skinCullingShader={...report.skinCullingShader,...singleExitEnvironmentQAReport(world.scene)};
  }finally{
   if(singleExit){applySingleExitEnvironmentQA(world.scene,false);world.render(0);}
  }

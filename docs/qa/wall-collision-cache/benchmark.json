@@ -1,0 +1,547 @@
+{
+  "reference": "f63d82db",
+  "baselineSourceSha256": "4785b6ffac8a1fef6dc8db141e3ac142ffced65b05c7c99c9a023583a73b97f7",
+  "candidateNavigationSha256": "24fc9030577d8530a102677bbeb151b35981b088d28893aec2894efa22f3f6f0",
+  "candidateFrameSha256": "a5524440405bf0cce834d944507415b573ae56a6517cf74802affefbe9087013",
+  "checks": [
+    {
+      "count": 1,
+      "exact": true,
+      "pointAndSegmentQueries": 20000
+    },
+    {
+      "count": 20,
+      "exact": true,
+      "pointAndSegmentQueries": 20000
+    },
+    {
+      "count": 100,
+      "exact": true,
+      "pointAndSegmentQueries": 20000
+    }
+  ],
+  "summary": [
+    {
+      "walls": 1,
+      "referenceMs": 43.70195000000001,
+      "candidateMs": 35.245649999999955
+    },
+    {
+      "walls": 20,
+      "referenceMs": 483.9495499999998,
+      "candidateMs": 384.2675499999996
+    },
+    {
+      "walls": 100,
+      "referenceMs": 979.3979999999974,
+      "candidateMs": 749.1360999999979
+    }
+  ],
+  "rows": [
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 0,
+      "sum": 19530,
+      "ms": 40.202999999999975
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 0,
+      "sum": 19530,
+      "ms": 42.85630000000003
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 1,
+      "sum": 19530,
+      "ms": 32.855400000000145
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 1,
+      "sum": 19530,
+      "ms": 44.643499999999904
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 2,
+      "sum": 19530,
+      "ms": 45.061100000000124
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 2,
+      "sum": 19530,
+      "ms": 29.683300000000145
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 3,
+      "sum": 19530,
+      "ms": 35.4369999999999
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 3,
+      "sum": 19530,
+      "ms": 43.63329999999996
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 4,
+      "sum": 19530,
+      "ms": 39.24479999999994
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 4,
+      "sum": 19530,
+      "ms": 35.857099999999946
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 5,
+      "sum": 19530,
+      "ms": 32.57450000000017
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 5,
+      "sum": 19530,
+      "ms": 37.93290000000002
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 6,
+      "sum": 19530,
+      "ms": 50.93180000000007
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 6,
+      "sum": 19530,
+      "ms": 37.62519999999995
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 7,
+      "sum": 19530,
+      "ms": 35.05430000000001
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 7,
+      "sum": 19530,
+      "ms": 57.313499999999976
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 8,
+      "sum": 19530,
+      "ms": 61.064600000000155
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 8,
+      "sum": 19530,
+      "ms": 31.35680000000002
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 9,
+      "sum": 19530,
+      "ms": 36.06540000000018
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 9,
+      "sum": 19530,
+      "ms": 39.79899999999998
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 10,
+      "sum": 19530,
+      "ms": 43.77060000000006
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 10,
+      "sum": 19530,
+      "ms": 33.107499999999845
+    },
+    {
+      "count": 1,
+      "mode": "candidate",
+      "iteration": 11,
+      "sum": 19530,
+      "ms": 36.93260000000009
+    },
+    {
+      "count": 1,
+      "mode": "reference",
+      "iteration": 11,
+      "sum": 19530,
+      "ms": 43.20839999999998
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 0,
+      "sum": 14920,
+      "ms": 488.3643999999995
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 0,
+      "sum": 14920,
+      "ms": 407.2386000000006
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 1,
+      "sum": 14920,
+      "ms": 408.2445000000007
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 1,
+      "sum": 14920,
+      "ms": 496.5434000000005
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 2,
+      "sum": 14920,
+      "ms": 488.6868999999997
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 2,
+      "sum": 14920,
+      "ms": 419.8269
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 3,
+      "sum": 14920,
+      "ms": 363.67029999999977
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 3,
+      "sum": 14920,
+      "ms": 451.92019999999957
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 4,
+      "sum": 14920,
+      "ms": 476.3649000000005
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 4,
+      "sum": 14920,
+      "ms": 388.8644000000004
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 5,
+      "sum": 14920,
+      "ms": 370.3928999999989
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 5,
+      "sum": 14920,
+      "ms": 465.72370000000046
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 6,
+      "sum": 14920,
+      "ms": 479.53470000000016
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 6,
+      "sum": 14920,
+      "ms": 379.67069999999876
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 7,
+      "sum": 14920,
+      "ms": 371.39570000000094
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 7,
+      "sum": 14920,
+      "ms": 438.6167000000005
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 8,
+      "sum": 14920,
+      "ms": 479.47309999999925
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 8,
+      "sum": 14920,
+      "ms": 425.9971000000005
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 9,
+      "sum": 14920,
+      "ms": 358.96290000000045
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 9,
+      "sum": 14920,
+      "ms": 513.8113000000012
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 10,
+      "sum": 14920,
+      "ms": 549.6139000000003
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 10,
+      "sum": 14920,
+      "ms": 389.34900000000016
+    },
+    {
+      "count": 20,
+      "mode": "candidate",
+      "iteration": 11,
+      "sum": 14920,
+      "ms": 369.97000000000116
+    },
+    {
+      "count": 20,
+      "mode": "reference",
+      "iteration": 11,
+      "sum": 14920,
+      "ms": 543.4400000000005
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 0,
+      "sum": 7840,
+      "ms": 920.7089999999989
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 0,
+      "sum": 7840,
+      "ms": 795.8397999999979
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 1,
+      "sum": 7840,
+      "ms": 687.7213999999985
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 1,
+      "sum": 7840,
+      "ms": 966.5470999999998
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 2,
+      "sum": 7840,
+      "ms": 974.5506999999998
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 2,
+      "sum": 7840,
+      "ms": 696.4962000000014
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 3,
+      "sum": 7840,
+      "ms": 750.6530999999995
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 3,
+      "sum": 7840,
+      "ms": 1017.2286000000022
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 4,
+      "sum": 7840,
+      "ms": 1001.4052000000011
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 4,
+      "sum": 7840,
+      "ms": 736.2690999999977
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 5,
+      "sum": 7840,
+      "ms": 772.1902000000009
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 5,
+      "sum": 7840,
+      "ms": 898.3235999999997
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 6,
+      "sum": 7840,
+      "ms": 956.8202000000019
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 6,
+      "sum": 7840,
+      "ms": 747.6190999999963
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 7,
+      "sum": 7840,
+      "ms": 717.2085999999981
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 7,
+      "sum": 7840,
+      "ms": 959.6231999999945
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 8,
+      "sum": 7840,
+      "ms": 1006.533199999998
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 8,
+      "sum": 7840,
+      "ms": 845.6119000000035
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 9,
+      "sum": 7840,
+      "ms": 757.1681000000026
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 9,
+      "sum": 7840,
+      "ms": 1035.506300000001
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 10,
+      "sum": 7840,
+      "ms": 984.245299999995
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 10,
+      "sum": 7840,
+      "ms": 739.2115999999951
+    },
+    {
+      "count": 100,
+      "mode": "candidate",
+      "iteration": 11,
+      "sum": 7840,
+      "ms": 757.8775000000023
+    },
+    {
+      "count": 100,
+      "mode": "reference",
+      "iteration": 11,
+      "sum": 7840,
+      "ms": 1127.5074999999997
+    }
+  ],
+  "scope": "Isolated rigid wall collision CPU: identical native point/segment methods, empty props and terrain allowed, warm cache, 2 warmup pairs and 12 alternating measured pairs. Not whole navigation, GPU, FPS, memory or physical-mobile evidence."
+}

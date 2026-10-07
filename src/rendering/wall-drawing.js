@@ -19,7 +19,7 @@ export class WallDrawing {
     if(!this.enabled||e.button!==0||e.shiftKey)return;
     this.consume(e);this.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});this.canvas.setPointerCapture(e.pointerId);
     if(this.pointers.size>=2){this.samples=[];this.pointer=null;this.clearPreview();this.multi=this.measure();return;}
-    this.pointer={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};const p=this.screenSpace?{x:e.clientX,z:e.clientY}:this.point(e);this.samples=p?[[p.x,p.z]]:[];this.preview(this.samples);
+    this.pointer={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,moved:0};const p=this.screenSpace?{x:e.clientX,z:e.clientY}:this.point(e);this.samples=p?[[p.x,p.z]]:[];this.preview(this.samples);
   }
   measure(){const [a,b]=[...this.pointers.values()];return {distance:Math.hypot(a.x-b.x,a.y-b.y),x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
   move(e){
@@ -29,10 +29,20 @@ export class WallDrawing {
     const p=this.pointer;if(!p||p.id!==e.pointerId)return;
     p.moved=Math.max(p.moved,Math.hypot(e.clientX-p.x,e.clientY-p.y));
     const events=e.getCoalescedEvents?.()??[e];for(const sample of events.length?events:[e]){const q=this.screenSpace?{x:sample.clientX,z:sample.clientY}:this.point(sample),last=this.samples.at(-1);if(q&&(!last||Math.hypot(q.x-last[0],q.z-last[1])>(this.screenSpace?1:.07))&&this.samples.length<3000)this.samples.push([q.x,q.z]);}
+    const lastInput=events.at(-1)??e;p.lastX=lastInput.clientX;p.lastY=lastInput.clientY;
     this.updatePreview();
   }
   up(e,cancelled=false){
     if(!this.pointers.has(e.pointerId))return;
+    // Release can carry a final position absent from pointermove. Keep it in
+    // the visual stroke before resolving terrain, without duplicating samples.
+    if(!cancelled&&!this.multi&&this.pointer?.id===e.pointerId){
+      const p=this.pointer;p.moved=Math.max(p.moved,Math.hypot(e.clientX-p.x,e.clientY-p.y));
+      if(e.clientX!==p.lastX||e.clientY!==p.lastY){
+        const q=this.screenSpace?{x:e.clientX,z:e.clientY}:this.point(e),last=this.samples.at(-1);
+        if(q&&(!last||Math.hypot(q.x-last[0],q.z-last[1])>(this.screenSpace?1:.07))&&this.samples.length<3000)this.samples.push([q.x,q.z]);
+      }
+    }
     this.consume(e);this.pointers.delete(e.pointerId);try{this.canvas.releasePointerCapture(e.pointerId);}catch{}
     if(cancelled){this.cancel();return;}
     if(this.multi){if(!this.pointers.size)this.cancel();return;}

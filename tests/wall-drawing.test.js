@@ -76,3 +76,28 @@ test('screen-space misses end the stroke without bridging unavailable terrain; e
  f.event('pointerdown',10,10);f.event('pointermove',40,50);f.event('pointermove',70,20);f.event('pointerup',70,20);
  assert.deepEqual(f.strokes,[[]]);
 });
+
+test('release retains its last position in both screen and world strokes without a final move event',()=>{
+ for(const screenSpace of [false,true]){
+  const f=fixture({screenSpace});f.event('pointerdown',10,10);f.event('pointermove',40,50);f.event('pointerup',70,20);
+  assert.deepEqual(f.strokes,[[[1,1],[4,5],[7,2]]]);assert.equal(f.taps.length,0);assert.equal(f.captured.size,0);
+ }
+});
+test('a release-only displacement is a drag; a short release-only displacement remains a tap',()=>{
+ let rays=0;const f=fixture({screenSpace:true,point:e=>{rays++;return {x:e.clientX/10,z:e.clientY/10};}});
+ f.event('pointerdown',10,10);assert.equal(rays,0);f.event('pointerup',110,10);
+ assert.deepEqual(f.strokes,[[[1,1],[11,1]]]);assert.equal(f.taps.length,0);assert.equal(rays,2);
+ f.event('pointerdown',10,10);f.event('pointerup',13,12);assert.equal(f.taps.length,1);assert.equal(f.strokes.length,1);assert.equal(rays,2);
+});
+test('cancellation never resolves or appends the release location',()=>{
+ for(const screenSpace of [false,true]){
+  let rays=0;const f=fixture({screenSpace,point:e=>{rays++;return {x:e.clientX,z:e.clientY};}});
+  f.event('pointerdown',0,0);f.event('pointermove',40,0);const before=rays;
+  f.event('pointercancel',500,500);assert.equal(rays,before);assert.deepEqual(f.strokes,[]);assert.deepEqual(f.taps,[]);
+ }
+});
+test('release includes the endpoint when the final coalesced sample precedes the dispatched move',()=>{
+ const f=fixture({screenSpace:true});f.event('pointerdown',10,10);
+ f.event('pointermove',70,20,1,{getCoalescedEvents:()=>[{clientX:40,clientY:50}]});
+ f.event('pointerup',70,20);assert.deepEqual(f.strokes,[[[1,1],[4,5],[7,2]]]);
+});

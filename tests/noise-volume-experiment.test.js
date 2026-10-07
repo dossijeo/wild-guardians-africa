@@ -26,6 +26,28 @@ test('QA adapter only replaces fine evaluations and leaves coarse ground and ana
  assert.throws(()=>volumeNoiseSource('materialNoise(worldP*.85)'),/authored color helper/);
 });
 
+test('single-exit QA control retains noise calls, texture coordinates and branch condition',()=>{
+ const source=diagnosticPigment(toonFunctions),normal=volumeNoiseSource(source),single=volumeNoiseSource(source,{singleExit:true});
+ const helper=shader=>shader.slice(shader.indexOf('float volumeFineNoise('),shader.indexOf('vec3 toLinear4'));
+ assert.equal(normal.replace(helper(normal),''),single.replace(helper(single),''));
+ const body=helper(single);
+ assert.equal(body.match(/return /g).length,1);
+ assert.ok(body.includes('float qaNoise=0.;'));
+ assert.ok(body.includes('if(uFineNoiseVolumeEnabled<.5)qaNoise=materialNoise(p);'));
+ assert.ok(body.includes('qaNoise=texture(uFineNoiseVolume,(mod(i,64.)+f+.5)/64.).r;'));
+ assert.equal(body.match(/materialNoise\(p\)/g).length,1);
+ assert.equal(body.match(/texture\(/g).length,1);
+ const volume=new FineNoiseVolume({singleExit:true}),ordinary=new FineNoiseVolume();
+ const root=new THREE.Group(),geometry=new THREE.BoxGeometry(),a=new THREE.MeshStandardMaterial(),b=new THREE.MeshStandardMaterial();
+ a.onBeforeCompile=b.onBeforeCompile=shader=>{shader.fragmentShader=source;};
+ root.add(new THREE.Mesh(geometry,a));volume.apply(root);
+ const other=new THREE.Group();other.add(new THREE.Mesh(geometry,b));ordinary.apply(other);
+ assert.notEqual(a.customProgramCacheKey(),b.customProgramCacheKey());
+ const shader={fragmentShader:'',uniforms:{}};a.onBeforeCompile(shader,{});
+ assert.equal(shader.fragmentShader,single);assert.equal(shader.uniforms.uFineNoiseVolume,volume.uniforms.uFineNoiseVolume);
+ volume.dispose();ordinary.dispose();geometry.dispose();a.dispose();b.dispose();
+});
+
 
 import * as THREE from 'three';
 import {AfricanToon} from '../src/rendering/african-toon.js';

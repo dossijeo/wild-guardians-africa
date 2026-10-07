@@ -12,25 +12,35 @@ export function cornerNoise(x,y,z){
  return fract((p[0]+dot+p[1]+dot)*(p[2]+dot));
 }
 
-export function volumeNoiseSource(source){
+export function volumeNoiseSource(source,{singleExit=false}={}){
  const calls=['materialNoise(worldP*.85)','materialNoise(worldP*2.2)','materialNoise(worldPatternPosition(worldP)*2.6)'];
  if(!calls.some(call=>source.includes(call)))return source;
  const marker='vec3 toLinear4(vec3 c)';
  if(!source.includes(marker))throw Error('Fine-noise volume requires authored color helper');
  for(const call of calls)source=source.replaceAll(call,call.replace('materialNoise','volumeFineNoise'));
+ const body=singleExit?`
+  float qaNoise=0.;
+  if(uFineNoiseVolumeEnabled<.5)qaNoise=materialNoise(p);
+  else{
+   vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+   qaNoise=texture(uFineNoiseVolume,(mod(i,64.)+f+.5)/64.).r;
+  }
+  return qaNoise;`: `
+  if(uFineNoiseVolumeEnabled<.5)return materialNoise(p);
+  vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+  return texture(uFineNoiseVolume,(mod(i,64.)+f+.5)/64.).r;`;
  const helper=`uniform highp sampler3D uFineNoiseVolume;
  uniform float uFineNoiseVolumeEnabled;
  float volumeFineNoise(vec3 p){
-  if(uFineNoiseVolumeEnabled<.5)return materialNoise(p);
-  vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
-  return texture(uFineNoiseVolume,(mod(i,64.)+f+.5)/64.).r;
+  ${body}
  }
  `;
  return source.replace(marker,helper+marker);
 }
 
 export class FineNoiseVolume{
- constructor(){
+ constructor({singleExit=false}={}){
+  this.singleExit=singleExit;
   const data=new Uint8Array(64**3);
   for(let z=0;z<64;z++)for(let y=0;y<64;y++)for(let x=0;x<64;x++)data[x+64*(y+64*z)]=Math.round(cornerNoise(x,y,z)*255);
   this.texture=new THREE.Data3DTexture(data,64,64,64);this.texture.format=THREE.RedFormat;
@@ -46,13 +56,13 @@ export class FineNoiseVolume{
    this.materials.add(material);
    const original=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
    material.onBeforeCompile=(shader,renderer)=>{
-    original.call(material,shader,renderer);const adapted=volumeNoiseSource(shader.fragmentShader);
+    original.call(material,shader,renderer);const adapted=volumeNoiseSource(shader.fragmentShader,{singleExit:this.singleExit});
     if(adapted!==shader.fragmentShader){shader.fragmentShader=adapted;Object.assign(shader.uniforms,this.uniforms);this.patched++;}
    };
    // This wrapper changes only RGB fine noise, preserving vertex/discard rules.
    // Keep previously audited depth recipes valid; unknown hooks remain unknown.
    recordNativeDepthHook(material,original);
-   material.customProgramCacheKey=()=>key()+'|qa-fine-volume-64-r8';material.needsUpdate=true;
+   material.customProgramCacheKey=()=>key()+'|qa-fine-volume-64-r8'+(this.singleExit?'|single-exit':'');material.needsUpdate=true;
   }});
  }
  dispose(){if(!this.disposed){this.disposed=true;this.texture.dispose();}}

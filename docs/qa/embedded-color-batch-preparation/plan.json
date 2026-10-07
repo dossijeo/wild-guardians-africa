@@ -1,0 +1,1336 @@
+{
+  "manifestSha256": "5ff18f3c39c7c7eb80a19a790f0e0f93d53ce41a48d86f5c3025ffaf04173061",
+  "recipesSha256": "be5bdcd1085ed407ff9c29162d4a8f14174a3d270abcbec7be91b821ec04bd4e",
+  "summary": {
+    "models": 20,
+    "images": 63,
+    "prepared": 16,
+    "installed": 5,
+    "exactDataReview": 42
+  },
+  "rows": [
+    {
+      "source": "assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "runtime": "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "runtime": "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+      "runtimeGlbSha256": "4bda23798709d0d40f734168351ded8132b7f20ec0d3e28b00918c2e7c0dd6f0",
+      "imageIndex": 1,
+      "originalImageSha256": "9cd03133ca1d97b0284254e8d5261b3be1dc4308f38e1b0047dc9f3f7e3ace54",
+      "originalImageBytes": 5879710,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "a2c7b02ff927c143dbe0bea60e722c62c8583e4a6e0ff960d82f156709895626",
+      "runtimeImageBytes": 744294,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "d3acba40cb3cf62e270186e3dcdbb551fa42d2102c17451ad3e841c4549dcb5e",
+      "uploadBytes": 7372755,
+      "inputFile": "d3acba40cb3cf62e270186e3dcdbb551fa42d2102c17451ad3e841c4549dcb5e.png"
+    },
+    {
+      "source": "assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "runtime": "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "runtime": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "runtime": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+      "runtimeGlbSha256": "ec85265ddd6b32719375eddb293d5d1d64d115785e2075c405b56dc12f8e78aa",
+      "imageIndex": 1,
+      "originalImageSha256": "60702571ca7851677330e5652fcea106c58d8c59a33707d665296a33dc1ae70c",
+      "originalImageBytes": 10284924,
+      "originalDimensions": [
+        4096,
+        4096
+      ],
+      "runtimeImageSha256": "081453339b53b9f99cbe86eb711cb88d1bd7b01bd8e3f88e9d5e85c0178626d1",
+      "runtimeImageBytes": 439434,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "17d5f695f7744b0e0d22fa011ccceff701a4ae94ad1ba9ac9919841b3d0723a2",
+      "uploadBytes": 5165667,
+      "inputFile": "17d5f695f7744b0e0d22fa011ccceff701a4ae94ad1ba9ac9919841b3d0723a2.png"
+    },
+    {
+      "source": "assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "runtime": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "runtime": "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "runtime": "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7",
+      "runtimeGlbSha256": "17b726c16ac0dad0cf3350df9cb816d70bede0905c01a998ead9bf4e6a35e6fb",
+      "imageIndex": 1,
+      "originalImageSha256": "f97ffb834eb8e087359c4754059cc4aa8226baf4b2f957fa764d1ab03cb6441a",
+      "originalImageBytes": 3533653,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "a9bd1068b3dfd8670415379e6e01c342c024b4d95ac5b8eec7a7497b012ceef2",
+      "runtimeImageBytes": 900932,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "d1a24dd089909cd9fde5aa3ca9623afb9c846ea7341232d8f1fd11b8169dc981",
+      "uploadBytes": 7967619,
+      "inputFile": "d1a24dd089909cd9fde5aa3ca9623afb9c846ea7341232d8f1fd11b8169dc981.png"
+    },
+    {
+      "source": "assets/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "runtime": "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "runtime": "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "runtime": "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+      "runtimeGlbSha256": "c50acb618e576ad05a9b769711a4aea7ec9e1ca0c1337103443a60632bf10fa9",
+      "imageIndex": 1,
+      "originalImageSha256": "d3c3ce9c5a371683a552e488c2317d79a35fa48662ad66f8d5844dbcdd0f7d73",
+      "originalImageBytes": 5753316,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "4b19d0835b33493693a9128c7bd1a48eac59dcad55abd9197266845a7dd037a6",
+      "runtimeImageBytes": 740002,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "a95b3e32d18e694fe275cc06e3adabd34c0c353dd0a342a82fc7c7c3b95e1115",
+      "uploadBytes": 7525718,
+      "inputFile": "a95b3e32d18e694fe275cc06e3adabd34c0c353dd0a342a82fc7c7c3b95e1115.png"
+    },
+    {
+      "source": "assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "runtime": "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "runtime": "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "runtime": "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "reviewed-output-installed",
+      "outputSha256": "b1c14244c110b027b3e750aaa0febc2633359c7e4d1c7b7f53e15eb1e5568d31",
+      "outputBytes": 398774
+    },
+    {
+      "source": "assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "runtime": "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "runtime": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "runtime": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309",
+      "runtimeGlbSha256": "4bb83ba28b6150477a54074f2510441c78961a4de0c41617555448589ab075d8",
+      "imageIndex": 1,
+      "originalImageSha256": "529ea9c3f11c6a31144a1c51dfaa6412611295de36be8c800392c7ed617ddca2",
+      "originalImageBytes": 5917951,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "42eaed044b7e74485ea66d7b8b6111f722453b1ccd97d7dcf2c1ff7749b48904",
+      "runtimeImageBytes": 801410,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "1f5bda3d30cbbce6d8709f0879917ee93c5e6cfb6bba0d0a2bf9da3316a2cf5b",
+      "uploadBytes": 7751720,
+      "inputFile": "1f5bda3d30cbbce6d8709f0879917ee93c5e6cfb6bba0d0a2bf9da3316a2cf5b.png"
+    },
+    {
+      "source": "assets/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "runtime": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "runtime": "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "runtime": "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c",
+      "runtimeGlbSha256": "43dad829c3ee254bbb4bf225d816742d6b6c46365e645a07098fb6739904e5e7",
+      "imageIndex": 1,
+      "originalImageSha256": "ae508052a6d0dc2567ba937eef2ccc8e289f1f83b347c39f489191a9c597a89c",
+      "originalImageBytes": 2864030,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "01e0ea027c4957d044d07ac99ae3b10660c6e2afb957264bf816c8dc3b410b59",
+      "runtimeImageBytes": 1126536,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "9876c20e060b52aebbb440b1a9c46efda573215f5ebe9d4ea60e7000dd634bc1",
+      "uploadBytes": 10207538,
+      "inputFile": "9876c20e060b52aebbb440b1a9c46efda573215f5ebe9d4ea60e7000dd634bc1.png"
+    },
+    {
+      "source": "assets/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "runtime": "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "runtime": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "runtime": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "reviewed-output-installed",
+      "outputSha256": "43b75b11fbb613876777920e93cb8fb7db1eaa7ddce45e44ee97a0844b13f6a7",
+      "outputBytes": 217998
+    },
+    {
+      "source": "assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "runtime": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "runtime": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "runtime": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "reviewed-output-installed",
+      "outputSha256": "db4c0b8f6517aa172cdb186ff3f3d34896148bc36ceb9ae7dcd23a199663560f",
+      "outputBytes": 166166
+    },
+    {
+      "source": "assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "runtime": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "runtime": "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "runtime": "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e",
+      "runtimeGlbSha256": "37e5e1a9ea4cb1199153bb0f1b99383fa815129c032771765b031bdb06128a6a",
+      "imageIndex": 1,
+      "originalImageSha256": "d3c3ce9c5a371683a552e488c2317d79a35fa48662ad66f8d5844dbcdd0f7d73",
+      "originalImageBytes": 5753316,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "4b19d0835b33493693a9128c7bd1a48eac59dcad55abd9197266845a7dd037a6",
+      "runtimeImageBytes": 740002,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "a95b3e32d18e694fe275cc06e3adabd34c0c353dd0a342a82fc7c7c3b95e1115",
+      "uploadBytes": 7525718,
+      "inputFile": "a95b3e32d18e694fe275cc06e3adabd34c0c353dd0a342a82fc7c7c3b95e1115.png"
+    },
+    {
+      "source": "assets/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "runtime": "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "runtime": "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "runtime": "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c",
+      "runtimeGlbSha256": "ae99c2797b29a5cba6936ade1f8085845f26e4004c9b1ae89cb42a5f320ad97f",
+      "imageIndex": 1,
+      "originalImageSha256": "60702571ca7851677330e5652fcea106c58d8c59a33707d665296a33dc1ae70c",
+      "originalImageBytes": 10284924,
+      "originalDimensions": [
+        4096,
+        4096
+      ],
+      "runtimeImageSha256": "081453339b53b9f99cbe86eb711cb88d1bd7b01bd8e3f88e9d5e85c0178626d1",
+      "runtimeImageBytes": 439434,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "17d5f695f7744b0e0d22fa011ccceff701a4ae94ad1ba9ac9919841b3d0723a2",
+      "uploadBytes": 5165667,
+      "inputFile": "17d5f695f7744b0e0d22fa011ccceff701a4ae94ad1ba9ac9919841b3d0723a2.png"
+    },
+    {
+      "source": "assets/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "runtime": "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "runtime": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "runtime": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76",
+      "runtimeGlbSha256": "030feeedf0d6b38299ea65740ce90b9c029eb7c545d887456618d9916ec2d2c6",
+      "imageIndex": 1,
+      "originalImageSha256": "9f79663a893dd16b7d6a9271d1202989f5a56ce878d629af9f2b3d464ae32675",
+      "originalImageBytes": 5598797,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "644c513c12bb69175f0d3ffe73ab8ca50a3877f742b1ca4c96392e42afe20794",
+      "runtimeImageBytes": 700780,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "32610fe9155dca53a788b3065d42e144330fb057b9c881bd5f333763786c05b5",
+      "uploadBytes": 7055855,
+      "inputFile": "32610fe9155dca53a788b3065d42e144330fb057b9c881bd5f333763786c05b5.png"
+    },
+    {
+      "source": "assets/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "runtime": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "runtime": "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "runtime": "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "reviewed-output-installed",
+      "outputSha256": "a6facaf00bd224962b08c2bc6612382b78914215fbaa540d3b7933a0f6806199",
+      "outputBytes": 455750
+    },
+    {
+      "source": "assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "runtime": "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+      "runtimeGlbSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+      "imageIndex": 1,
+      "originalImageSha256": "3d63ac28cdce13f1ffde5f063c7708142918340d551512b5445b3ba5fc3dfff1",
+      "originalImageBytes": 2678012,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51",
+      "runtimeImageBytes": 1371082,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "f7d2af3c84cb3fdccc99628bf5d64959115df7830e7b3650abd4356244867c17",
+      "uploadBytes": 11167536,
+      "inputFile": "f7d2af3c84cb3fdccc99628bf5d64959115df7830e7b3650abd4356244867c17.png"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 3,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[1].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 4,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[1].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+      "runtimeGlbSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+      "imageIndex": 4,
+      "originalImageSha256": "157ed6ab95fa7c5b94e659db59f05d4a3d79c2e56afda3bd6738a4b71309cce1",
+      "originalImageBytes": 2569141,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018",
+      "runtimeImageBytes": 1310498,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "9415b96fd40ea3b6e59439cbc3fa1e073beae1194273b8212d508214ae7ea60d",
+      "uploadBytes": 10754899,
+      "inputFile": "9415b96fd40ea3b6e59439cbc3fa1e073beae1194273b8212d508214ae7ea60d.png"
+    },
+    {
+      "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "index": 5,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[1].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "runtime": "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "runtime": "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "reviewed-output-installed",
+      "outputSha256": "ac003e756ca0aada4c5a59a31b24f8b897dba9954867d612ca9e175c152ada99",
+      "outputBytes": 141274
+    },
+    {
+      "source": "assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "runtime": "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "runtime": "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "runtime": "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd",
+      "runtimeGlbSha256": "e8bd2583ed61dc2f98ca94606c9f377a07b791ed4f381738ad1cea93adb8541d",
+      "imageIndex": 1,
+      "originalImageSha256": "9cd03133ca1d97b0284254e8d5261b3be1dc4308f38e1b0047dc9f3f7e3ace54",
+      "originalImageBytes": 5879710,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "a2c7b02ff927c143dbe0bea60e722c62c8583e4a6e0ff960d82f156709895626",
+      "runtimeImageBytes": 744294,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "d3acba40cb3cf62e270186e3dcdbb551fa42d2102c17451ad3e841c4549dcb5e",
+      "uploadBytes": 7372755,
+      "inputFile": "d3acba40cb3cf62e270186e3dcdbb551fa42d2102c17451ad3e841c4549dcb5e.png"
+    },
+    {
+      "source": "assets/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "runtime": "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "runtime": "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "runtime": "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+      "runtimeGlbSha256": "bdfbe659281ae763599775ba7f1b4c47b064035d464fa4be144b454be5dea80d",
+      "imageIndex": 1,
+      "originalImageSha256": "9f79663a893dd16b7d6a9271d1202989f5a56ce878d629af9f2b3d464ae32675",
+      "originalImageBytes": 5598797,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "644c513c12bb69175f0d3ffe73ab8ca50a3877f742b1ca4c96392e42afe20794",
+      "runtimeImageBytes": 700780,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "32610fe9155dca53a788b3065d42e144330fb057b9c881bd5f333763786c05b5",
+      "uploadBytes": 7055855,
+      "inputFile": "32610fe9155dca53a788b3065d42e144330fb057b9c881bd5f333763786c05b5.png"
+    },
+    {
+      "source": "assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "runtime": "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "runtime": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "runtime": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9",
+      "runtimeGlbSha256": "38c2dc736d3588ddbb0fcbc2927eb4ce901b315baa6e529a5ac195caac96c008",
+      "imageIndex": 1,
+      "originalImageSha256": "edf2ba7d28ea2b87d8c6f3f510b0739ad5ffd46ec9a3106c62d231d68fe3d7e1",
+      "originalImageBytes": 5858034,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "088368d0073a5e92c8946fa6cd6b62f74dbdbfeeff29fd853f00bd1224f700c1",
+      "runtimeImageBytes": 677318,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "41300625017489006515a11da85f9a7a32c7de22840cd89b0531d4379d901d61",
+      "uploadBytes": 7371655,
+      "inputFile": "41300625017489006515a11da85f9a7a32c7de22840cd89b0531d4379d901d61.png"
+    },
+    {
+      "source": "assets/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "runtime": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "runtime": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "runtime": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f",
+      "runtimeGlbSha256": "e446e902525cafed908e55bd4ef359bf30f93c39e4aa96db5cdecc271bece00e",
+      "imageIndex": 1,
+      "originalImageSha256": "716256d46e5b61b30b0dafc6e61a55c17b5366f825fb9798fa26c743e9752111",
+      "originalImageBytes": 6449654,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "1a05164998e939c1e9955539de57f6bd09e86c89f437dccbe91e2b1a8253f2a8",
+      "runtimeImageBytes": 876434,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "67ddabcd4d68e78413baf3522652b2b13e14f324bda7a785241ffead6aa4014d",
+      "uploadBytes": 8357321,
+      "inputFile": "67ddabcd4d68e78413baf3522652b2b13e14f324bda7a785241ffead6aa4014d.png"
+    },
+    {
+      "source": "assets/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "runtime": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "runtime": "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "index": 0,
+      "roles": [
+        "normal"
+      ],
+      "references": [
+        {
+          "path": "materials[0].normalTexture",
+          "role": "normal"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    },
+    {
+      "source": "assets/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "runtime": "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "index": 1,
+      "roles": [
+        "color"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.baseColorTexture",
+          "role": "color"
+        }
+      ],
+      "requiresExactPixels": false,
+      "disposition": "original-derived-input-ready",
+      "recipe": "Original embedded image -> Sharp proportional resize at existing runtime dimensions -> lossless PNG; no lossy intermediate",
+      "originalGlbSha256": "fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb",
+      "runtimeGlbSha256": "377a2ac673a78c000a473aac6aa3730db13017e59d38d9de6532b2bbb215d73e",
+      "imageIndex": 1,
+      "originalImageSha256": "c21481149fb1bb0f740f06bb5fddbac63a5c85e193e493b8d8a1c8624ea78d9f",
+      "originalImageBytes": 7076302,
+      "originalDimensions": [
+        2048,
+        2048
+      ],
+      "runtimeImageSha256": "187601decd80f2bf882bb36924d7c6bdf8a417186c87f192937008b395668836",
+      "runtimeImageBytes": 1092188,
+      "runtimeDimensions": [
+        2048,
+        2048
+      ],
+      "uploadSha256": "a6ec0879932ebd2cf72bf4f37e3dea2221d934d017e8ab7a803227deb1c68200",
+      "uploadBytes": 9682736,
+      "inputFile": "a6ec0879932ebd2cf72bf4f37e3dea2221d934d017e8ab7a803227deb1c68200.png"
+    },
+    {
+      "source": "assets/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "runtime": "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "index": 2,
+      "roles": [
+        "data"
+      ],
+      "references": [
+        {
+          "path": "materials[0].pbrMetallicRoughness.metallicRoughnessTexture",
+          "role": "data"
+        }
+      ],
+      "requiresExactPixels": true,
+      "disposition": "exact-data-review"
+    }
+  ],
+  "scope": "Offline original-derived lossless PNG inputs at existing runtime resolution. Installed reviewed colors verified against recipe bytes. No Tinify calls, conversions installed, encoded savings, visual or device acceptance claimed."
+}

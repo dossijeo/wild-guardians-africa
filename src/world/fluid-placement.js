@@ -26,7 +26,13 @@ export function resolveFluidPlacement(nav,shapesAt,x,z,extraCheck=()=>null){
   return {x:px,z:pz,shapes,checks,valid:checks.length===shapes.length&&checks.every(c=>c.valid)};
  };
  const initial=evaluate(x,z,true);if(initial.valid||!initial.checks.some(c=>c.fluid))return initial;
- const points=initial.shapes.flatMap(s=>s.footprint??[{x:s.x-s.radius,z:s.z-s.radius},{x:s.x+s.radius,z:s.z+s.radius}]);
+ // A rotated centre's world-axis box can grow or shrink without changing its
+ // authored length. Measure its hull in building axes for the 20% limit.
+ // Multi-building villages retain the extent of the entire proposed layout.
+ const single=initial.shapes.length===1?initial.shapes[0]:null;
+ const points=single?.kind==='center'&&single.footprint?
+  single.footprint.map(p=>{const dx=p.x-single.x,dz=p.z-single.z,c=Math.cos(single.yaw??0),s=Math.sin(single.yaw??0);return {x:dx*c-dz*s,z:dx*s+dz*c};}):
+  initial.shapes.flatMap(s=>s.footprint??[{x:s.x-s.radius,z:s.z-s.radius},{x:s.x+s.radius,z:s.z+s.radius}]);
  const limit=.2*Math.max(Math.max(...points.map(p=>p.x))-Math.min(...points.map(p=>p.x)),Math.max(...points.map(p=>p.z))-Math.min(...points.map(p=>p.z)));
  const candidates=[];
  // Shortest sampled offset first; finite search and exact distance cap.

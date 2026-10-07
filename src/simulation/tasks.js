@@ -65,8 +65,28 @@ export function reserveTasks(state,canExecute=()=>true) {
     const workers=available.get(t.centerId)??[];
     // Reachability can require A*: test nearest candidates until one succeeds.
     // The pure predicate and ordering retain the nearest eligible worker.
-    workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
-    const worker=workers.find(w=>canExecute(w,t,target));
+    // Most tasks are reachable by the nearest employee. Find that candidate
+    // in one pass; sort only when its route actually fails. The fallback keeps
+    // the same distance/id order and never queries the first candidate twice.
+    let worker;
+    if(workers.length<8){
+      workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
+      worker=workers.find(w=>canExecute(w,t,target));
+    }else{
+      const distances=new Map();
+      let nearest=workers[0],nearestDistance=Math.hypot(nearest.x-target.x,nearest.z-target.z);
+      distances.set(nearest,nearestDistance);
+      for(let i=1;i<workers.length;i++){
+        const candidate=workers[i],distance=Math.hypot(candidate.x-target.x,candidate.z-target.z);
+        distances.set(candidate,distance);
+        if((distance-nearestDistance||candidate.id.localeCompare(nearest.id))<0){nearest=candidate;nearestDistance=distance;}
+      }
+      worker=canExecute(nearest,t,target)?nearest:null;
+      if(!worker){
+        workers.sort((a,b)=>distances.get(a)-distances.get(b)||a.id.localeCompare(b.id));
+        worker=workers.find(w=>w!==nearest&&canExecute(w,t,target));
+      }
+    }
     t.blocked=!worker && workers.length>0;
     if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
   }

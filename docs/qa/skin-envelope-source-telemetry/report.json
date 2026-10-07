@@ -1,0 +1,2796 @@
+{
+  "skinEnvelope": {
+    "enabled": true,
+    "preparedMeshes": 5
+  },
+  "ok": false,
+  "biome": "gran-canon",
+  "gpuReady": true,
+  "warmed": [
+    "buffalo",
+    "warthog",
+    "hyena",
+    "lion",
+    "rhino"
+  ],
+  "copies": 1,
+  "plannedReserves": true,
+  "savedReserves": false,
+  "savedActive": false,
+  "savedRaidUnchangedAtLoad": null,
+  "loadReservedRigs": 5,
+  "repeatedRigResources": {
+    "warthog": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "hyena": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "buffalo": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "lion": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    },
+    "rhino": {
+      "copies": 1,
+      "sparesUsed": 1,
+      "uniqueModels": 1,
+      "privateSkeletons": true,
+      "privateBoneTextures": true,
+      "sharedGeometry": true,
+      "sharedMaterials": true
+    }
+  },
+  "rigs": [
+    {
+      "species": "warthog",
+      "ready": true,
+      "modelId": "c5887ec0-9a64-468a-8471-aa5476b29616",
+      "fromSpare": true,
+      "skeletons": [
+        "b4ea0616-a6d7-41f0-a595-2021fd139b1c"
+      ],
+      "boneTextures": [
+        "cde45e45-4932-44c3-a5b2-58170a25d000"
+      ],
+      "geometry": [
+        "c6f52cd7-24e9-4359-af8a-775edd6a8877"
+      ],
+      "materials": [
+        "78a57930-2ed8-4175-bce0-8981ea34f1f7"
+      ]
+    },
+    {
+      "species": "hyena",
+      "ready": true,
+      "modelId": "86aedc93-4612-4ece-8848-5cec32708af3",
+      "fromSpare": true,
+      "skeletons": [
+        "7eedef71-0778-4da4-ae87-7df28c668356"
+      ],
+      "boneTextures": [
+        "4677f759-d925-44dc-8e6e-e4954f0909c4"
+      ],
+      "geometry": [
+        "17aabdf7-2400-4f5b-afab-b9677b3b813a"
+      ],
+      "materials": [
+        "4c2b8e8e-4481-4c36-adeb-f50cdcd7b030"
+      ]
+    },
+    {
+      "species": "buffalo",
+      "ready": true,
+      "modelId": "de6d8ebf-326c-49a2-acef-edf23c0d885b",
+      "fromSpare": true,
+      "skeletons": [
+        "59cd5797-429d-4535-a948-8ac98e873c75"
+      ],
+      "boneTextures": [
+        "d15a161e-024b-4404-9b71-3a858f192c06"
+      ],
+      "geometry": [
+        "ef734e2d-2847-4493-8b9e-f06d967c0b72"
+      ],
+      "materials": [
+        "e754e69e-d6a1-4342-ba51-3830b1849b22"
+      ]
+    },
+    {
+      "species": "lion",
+      "ready": true,
+      "modelId": "c64fb099-80ef-4a94-8bb7-911e6b7b3cca",
+      "fromSpare": true,
+      "skeletons": [
+        "43e1b545-f2f7-4599-b8fc-3ef5328eee53"
+      ],
+      "boneTextures": [
+        "58397b98-3f89-4ada-b8a1-ce958120841b"
+      ],
+      "geometry": [
+        "3cd48664-faae-471a-b2b0-d6d3bcaf9d33"
+      ],
+      "materials": [
+        "0c779b09-bfc9-499d-b499-a1ccf2a0e44e"
+      ]
+    },
+    {
+      "species": "rhino",
+      "ready": true,
+      "modelId": "3900b29e-0310-4188-94c2-d10c65cc808a",
+      "fromSpare": true,
+      "skeletons": [
+        "880e9d8b-b4b5-4d16-986b-694f846105e3"
+      ],
+      "boneTextures": [
+        "8449c8f8-e172-45da-b86d-84a297286a57"
+      ],
+      "geometry": [
+        "797c93e8-553a-48c2-95df-e216b4a8d906"
+      ],
+      "materials": [
+        "dcba6034-727f-4d70-b29f-77ad7ae7aae8"
+      ]
+    }
+  ],
+  "before": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 42,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 44,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "programIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "spareModelIds": [
+      "c5887ec0-9a64-468a-8471-aa5476b29616",
+      "86aedc93-4612-4ece-8848-5cec32708af3",
+      "de6d8ebf-326c-49a2-acef-edf23c0d885b",
+      "c64fb099-80ef-4a94-8bb7-911e6b7b3cca",
+      "3900b29e-0310-4188-94c2-d10c65cc808a"
+    ],
+    "animalPrograms": [
+      0,
+      1
+    ]
+  },
+  "after": {
+    "preparedVfx": {
+      "fluidPrograms": [
+        {
+          "id": 6,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 7,
+          "key": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 30,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        },
+        {
+          "id": 42,
+          "key": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints"
+        }
+      ],
+      "remainingFluidPrimers": 0,
+      "bindings": {
+        "initialized": 44,
+        "unsupported": 0
+      },
+      "materials": 4,
+      "programIds": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "activeInstances": 0
+    },
+    "downloads": 7,
+    "programs": 48,
+    "newPrograms": [],
+    "animalPrograms": [
+      0,
+      1
+    ],
+    "newAnimalPrograms": []
+  },
+  "postMotion": {
+    "downloads": 7,
+    "animalPrograms": [
+      0,
+      1
+    ],
+    "creations": [],
+    "newAnimalPrograms": []
+  },
+  "appearanceMs": 59.90000009536743,
+  "loadingMs": 8169.100000023842,
+  "errors": [],
+  "spawnSpecies": [
+    "warthog",
+    "hyena",
+    "buffalo",
+    "lion",
+    "rhino"
+  ],
+  "scope": "Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.",
+  "skinCullingShader": {
+    "singleExit": true,
+    "materialAssignments": 640,
+    "uniqueMaterials": 134,
+    "compileAttempts": 48,
+    "matchedCompileAttempts": 47,
+    "materials": [
+      {
+        "uuid": "12862545-f52c-4aad-8362-ad812e103f57",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "0eebdf50-5e52-4a0b-9eac-5f42c79efc06",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "dabe0fd3-3c1e-45fe-be56-b2c1ad2c6aa2",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "67f7fe9e-5bdc-4027-bd42-1505654094ab",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "ef16896b-e4a1-4a1d-abba-9939a2f2382f",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "0330157a-d866-4780-b713-2f046f629e2e",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "d37bf284-69cc-415e-8e7b-f6b2823dcdc9",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "3ffac8d3-2da2-4b36-a762-cb82dc185141",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "fb951138-5b42-4ad0-9684-949a9bc23418",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "b7d1cb2e-46d3-42f1-851e-75a6f13da08a",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "12ca8cd0-bf9c-4de0-96f1-3e48e88c8207",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "f70ed8ef-af84-49ee-86ff-b0836f3bc32b",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2ef69523-e64d-4101-92bb-c3c6f74f0cb8",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "aad749ef-290e-48e4-87fb-11cfd6d2e495",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a442fdb7-c1b1-49cc-9cdd-9667905a9278",
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "76d30e61-8b92-4862-a5e1-50badeeda58d",
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "dba58528-3dc3-4d1b-90f4-2204b2289547",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "3f7487f9-17f8-4348-aff7-db2f702486fb",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "37b2197f-2095-457a-b8af-35dbc00bacd1",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7204a212-f53f-44d7-a267-a5fcd5a49429",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "60df6ca5-78b7-4301-8377-e5acdf2836d9",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a351a735-1e42-49d3-8e50-cdf3f6345410",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "ad6d780b-9135-4848-b8a5-0b169b91bc18",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "9ffce8e1-11eb-488b-abcd-a557ac489853",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "d484f1c1-39de-40a3-9483-d46ff7ea7c6f",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "348bd7c8-43ae-43d9-adcb-66aa4790a7ae",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "128a4a8e-117f-4e0a-979d-5e958573ce11",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "aec0b824-3fa8-4ce8-af45-601c68ed6f54",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "74630802-807e-4438-9411-0dfa7500be6c",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "460ea89b-cbc6-419d-9f7a-d5a52bacc7a6",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "9cbd342c-d845-4c86-8ee5-e7875e3e1bf6",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "eeef8b2c-6589-403c-aa8f-6118e3518d88",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7341a2ec-bcb7-4707-86e3-6f50d06bb969",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "b0d6877d-9e02-4696-bb18-04d01b447a89",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "dc81f385-6047-4153-9bad-fa37025f3594",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "547cb35f-5145-49e2-8243-8471228997df",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "5d4f00b6-2be1-4d67-bd28-ea42a6634b41",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c92576bb-4d2b-45a5-9b3a-a7cf5dce24f1",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "eff97c8e-c025-4a9e-898e-a85735c7ed99",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "3323bfc8-c12e-4991-9db7-552e58bea0ff",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c39ace74-6fb5-4e0a-9c67-58374326e0e6",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "46e35e50-1d0e-490b-a47e-c21a6f3530bc",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "35785c45-e054-44dc-8071-ebbd779f0472",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "e0bf5add-7714-4f12-8691-502b18a41f54",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "5b581f67-1eea-43f3-bc09-087e4db20a7b",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "82df0a6d-6c34-4fa0-9e5a-c974c6e5659b",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a89c181d-adce-427c-a54e-06b53bccff22",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "87b5cec0-2fef-43b3-b092-72a64f1c764b",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "88926ee0-d3b8-45d2-a99b-130841b1e6ba",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "cc94cdc1-fe5c-4861-beac-44fd0cccd31a",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "796d07d0-e5bc-480f-b896-8e011979657d",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "699a260e-a34b-4c2c-af18-d55173faec72",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "f6f68556-af8a-41b5-a979-60da24241f5d",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "70eb9631-9445-4829-b740-4fb2165c3653",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "8f06a571-1e2a-4fd8-a7b6-79ae10edff85",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "34a15f91-7987-4c65-8ca2-6938472b2594",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "fb999fc7-079a-4198-bcf8-0dd1293b003c",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "00ce7aa9-7bf2-4e8a-a69c-b9e037aed613",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "0ff7762e-6741-44f1-b398-855a3a86ec32",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2bc08ce1-18ba-4fb1-b31b-53e606600937",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "72a2fa74-e702-4232-9cab-e406dc90a066",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "3304c30e-893f-47f8-8c3f-9fdfc1da6ba2",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c65a8653-738b-4c5a-9620-906af711eb49",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "8fe6416d-409c-4f9a-8669-4415b912119b",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "79ae7369-88db-4cce-ba52-67a1f770740f",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "8b005fdf-3149-4acb-86c5-fd79b0276c09",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2ee0a3d5-7fa1-43a6-ad58-e1b8a6debdd2",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "dd267a53-48b1-4c47-91b0-d80572025e29",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "8d6cd4d1-bf3a-4095-8a2e-050a8f95fbd4",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "5368b4fb-bac6-4bce-aa97-ebfeef5aedce",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2ee388fa-9b89-4500-ade6-086e6400d4bb",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "1da9d95f-bef1-4c6b-8c47-c6baafc808b0",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_0",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "51940efa-8380-431d-ad13-bef1e21e8212",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "0d19ede6-bf86-4d63-8f53-4c05930f3742",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "1a9fd9f0-9769-4a80-9497-b7019de5ccac",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "19188b00-d2c0-4b3b-ab6f-e936f798f823",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2274553b-f605-4a55-902b-52eb7b376591",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "ac267559-5d8f-4b7f-a99a-7bce83230afe",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "27458230-b64a-4142-9eaf-c085347454f8",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "84804ae6-f387-4903-8fb1-b6da776995cc",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c16d251b-60ce-401e-a5c3-54e38fa39d54",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "8734dbe4-9a79-4d22-ab16-d5f93c3d192e",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "e0156fe6-f249-4629-8a1b-2a332c6ce907",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7af0ced5-6ed5-48d7-aee8-9344c171cd44",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "beea2d43-a29b-4aef-b958-b68d0f0fceef",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "cdb59f45-543e-4af1-adcf-b5c88f7da8a1",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a21d4b2f-491b-4aa1-b7ae-071dd3f0b81e",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "32938e03-78ac-4288-8f52-25e05667001a",
+        "type": "MeshStandardMaterial",
+        "name": "atlas_1",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "ee3292a1-3a7b-4d7b-a95e-a56277633683",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "228fa8c5-4ac9-4bc9-abc3-fa967b19b821",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "3b471f50-a419-4141-89e3-e0521b803a45",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7142a433-2ea4-4832-bc77-0026f4137d0c",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "e5ac5fb1-82a3-4c0c-b235-c6eaa940841f",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "6c350da2-ccb2-49d4-b1a7-20e541e4c871",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "52f63807-0c5a-44a7-be69-ab3a1dfa359c",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "01a91014-2d6e-47b7-8b8c-e422c7a1d395",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "491618c6-dd8c-4a13-8e96-eb093cc56c87",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "519af27b-2554-4ce1-b3d5-26bb09df5d4c",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a2221ce3-977d-42cb-9450-b217dcf66aa0",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "569bb053-12b0-4f60-a59b-86d9380516a2",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2acbda17-788d-4c90-993e-c7e2f9d02710",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "40c15ead-7a54-43b9-bbf1-37ec072f9474",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7737b8fb-a080-4767-863c-77a7e39bd570",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "b901335c-99ed-4677-a1f4-fb7f3695c03b",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "bced403a-1c70-42db-a26c-b183324e5b9a",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c20d9d55-d58b-4d07-bedd-f0d117d9f8bf",
+        "type": "RawShaderMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": true
+      },
+      {
+        "uuid": "a122fc20-1016-44ab-93a8-12778a1d49d1",
+        "type": "RawShaderMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": true
+      },
+      {
+        "uuid": "190809f7-4c80-4cd7-a7d9-8cee1f92bacf",
+        "type": "RawShaderMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": true
+      },
+      {
+        "uuid": "8e53ff28-3927-4d87-9f41-8da7769d9c92",
+        "type": "RawShaderMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": true
+      },
+      {
+        "uuid": "2274d4dd-bace-44d4-903b-3dccb710e219",
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "07efd01e-01b4-4d83-bf92-abe049699a5c",
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "a091f2dc-f3dc-4aa0-b8e7-e4f3c2188fd1",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "d3b19a4a-a603-4a3d-982e-e3040227f3e1",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "9d25069e-d970-4113-8b95-9b46678a5f40",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "7fbc7c8e-aca5-4ec1-b73b-86723e4acfc5",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "b427e86b-00d4-4cf9-aa64-8ea341922caa",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2da1bbe5-0f92-43b9-b381-be7201091bd1",
+        "type": "ShaderMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": false
+      },
+      {
+        "uuid": "26d74dd1-31d6-43f5-b029-dfa0b362b54f",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "9036ae4e-8abb-4dd8-b7de-0ad371fa77d0",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "bccdc36d-ff3c-445e-89e1-b2d1460a97f3",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "834420e7-b774-4e28-b00c-6bffee25f87a",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "e8e77b30-92b3-4c08-a807-82d3f2f1169d",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "5df8d09e-c97e-4183-bb07-ceb587c93a69",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "c2225a6f-993c-4265-9bbf-c088d159f8d6",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "164440c1-3ebd-42b1-a5ed-7884c4c64f34",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "ddd1b26f-11ad-458a-81e5-dd4b68717248",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "fbcadb0e-4006-4878-9534-e3ebd7008e99",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "1591e8a7-cabf-4a70-848d-cfdb3568e04d",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "2a32841a-b624-484a-a074-fda13d7f64c0",
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "compileAttempts": 0,
+        "matchedCompileAttempts": 0,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "78a57930-2ed8-4175-bce0-8981ea34f1f7",
+        "type": "MeshPhysicalMaterial",
+        "name": "BakedMaterial.001",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "4c2b8e8e-4481-4c36-adeb-f50cdcd7b030",
+        "type": "MeshPhysicalMaterial",
+        "name": "BakedMaterial",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "e754e69e-d6a1-4342-ba51-3830b1849b22",
+        "type": "MeshPhysicalMaterial",
+        "name": "BakedMaterial",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "0c779b09-bfc9-499d-b499-a1ccf2a0e44e",
+        "type": "MeshPhysicalMaterial",
+        "name": "BakedMaterial",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      },
+      {
+        "uuid": "dcba6034-727f-4d70-b29f-77ad7ae7aae8",
+        "type": "MeshPhysicalMaterial",
+        "name": "BakedMaterial",
+        "compileAttempts": 1,
+        "matchedCompileAttempts": 1,
+        "shaderSourceMatched": null
+      }
+    ],
+    "scope": "Observed onBeforeCompile source replacements and ShaderMaterial source matches only; cache reuse can bypass hooks. Does not prove successful GPU linking, execution, image equivalence or warning cause."
+  },
+  "skinCulling": {
+    "holdSnapshot": true,
+    "disableDither": false,
+    "offscreen": false,
+    "drawOnly": false,
+    "ditherWasEnabled": true,
+    "nativeControlExact": false,
+    "candidateImageExact": false,
+    "verdict": "inconclusive-native-not-repeatable",
+    "scope": "25 production-prepared WorldScene camera poses with fixed camera/entity snapshot during native-control/native/candidate draws; actual RGBA framebuffer comparison and color-pass mesh callbacks. Optional holdSnapshot fixes camera/entity sync only for comparison, then restores them. drawOnly compares prepared sky/scene renderer draws, excluding repeated WorldScene preparation and effect passes. readPixels stalls; no GPU/frame/mobile timing claim.",
+    "width": 1600,
+    "height": 900,
+    "stateExact": true,
+    "rows": [
+      {
+        "species": "warthog",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.78942395095398,
+          23.260238836056764,
+          85.19869174038723
+        ],
+        "target": [
+          -65.43044010233152,
+          33.93338897981229,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 9,
+        "controlMaxChannelDifference": 14,
+        "changedPixels": 2,
+        "maxChannelDifference": 1,
+        "eye": [
+          -30.789423950953985,
+          9.636751519245045,
+          85.19869174038723
+        ],
+        "target": [
+          -42.3364293347465,
+          3.6367515192450455,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 19,
+        "controlMaxChannelDifference": 60,
+        "changedPixels": 23,
+        "maxChannelDifference": 60,
+        "eye": [
+          -30.78942395095398,
+          8.575223682513908,
+          85.19869174038723
+        ],
+        "target": [
+          -30.78942395095398,
+          2.575223682513908,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 17,
+        "controlMaxChannelDifference": 80,
+        "changedPixels": 31,
+        "maxChannelDifference": 80,
+        "eye": [
+          -30.789423950953985,
+          9.915563952085574,
+          85.19869174038723
+        ],
+        "target": [
+          -19.242418567161472,
+          3.9155639520855736,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "warthog",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.789423950953985,
+          23.260238836056764,
+          85.19869174038723
+        ],
+        "target": [
+          3.8515922004235508,
+          38.59425587835965,
+          65.19869174038723
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.295040659013168,
+          22.380036932980445,
+          84.84593866913484
+        ],
+        "target": [
+          -60.93605681039071,
+          24.08011479506423,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 4,
+        "controlMaxChannelDifference": 14,
+        "changedPixels": 4,
+        "maxChannelDifference": 14,
+        "eye": [
+          -26.29504065901317,
+          9.088588264100855,
+          84.84593866913484
+        ],
+        "target": [
+          -37.842046042805684,
+          3.088588264100855,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 5,
+        "controlMaxChannelDifference": 19,
+        "changedPixels": 8,
+        "maxChannelDifference": 49,
+        "eye": [
+          -26.295040659013175,
+          9.520972492634954,
+          84.84593866913484
+        ],
+        "target": [
+          -26.295040659013175,
+          3.5209724926349537,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.29504065901317,
+          10.246992775097876,
+          84.84593866913484
+        ],
+        "target": [
+          -14.748035275220658,
+          4.246992775097877,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "hyena",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -26.29504065901317,
+          22.380036932980445,
+          84.84593866913484
+        ],
+        "target": [
+          8.345975492364364,
+          38.90903734105593,
+          64.84593866913484
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 57,
+        "maxChannelDifference": 20,
+        "eye": [
+          -34.64285314197825,
+          23.501171934074865,
+          85.03777019506585
+        ],
+        "target": [
+          -69.28386929335579,
+          38.144559449228225,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 8,
+        "controlMaxChannelDifference": 44,
+        "changedPixels": 8,
+        "maxChannelDifference": 44,
+        "eye": [
+          -34.64285314197825,
+          9.855369547347362,
+          85.03777019506585
+        ],
+        "target": [
+          -46.18985852577077,
+          3.8553695473473613,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 42,
+        "controlMaxChannelDifference": 53,
+        "changedPixels": 38,
+        "maxChannelDifference": 53,
+        "eye": [
+          -34.64285314197825,
+          8.544761330893623,
+          85.03777019506585
+        ],
+        "target": [
+          -34.64285314197825,
+          2.5447613308936226,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 13,
+        "controlMaxChannelDifference": 9,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -34.64285314197825,
+          9.639419081201016,
+          85.03777019506585
+        ],
+        "target": [
+          -23.095847758185734,
+          3.639419081201015,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "buffalo",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -34.64285314197825,
+          23.501171934074865,
+          85.03777019506585
+        ],
+        "target": [
+          -0.0018369906007151828,
+          34.147604617263326,
+          65.03777019506585
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 3,
+        "controlMaxChannelDifference": 3,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.54035709248933,
+          23.401661982510127,
+          88.86829670562905
+        ],
+        "target": [
+          -65.18137324386687,
+          34.31261246620772,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 3,
+        "controlMaxChannelDifference": 3,
+        "changedPixels": 10,
+        "maxChannelDifference": 20,
+        "eye": [
+          -30.540357092489334,
+          9.658712441833046,
+          88.86829670562905
+        ],
+        "target": [
+          -42.08736247628185,
+          3.658712441833047,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 10,
+        "controlMaxChannelDifference": 35,
+        "changedPixels": 8,
+        "maxChannelDifference": 14,
+        "eye": [
+          -30.540357092489334,
+          8.540236851212715,
+          88.86829670562905
+        ],
+        "target": [
+          -30.540357092489334,
+          2.540236851212714,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 0,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 25,
+        "controlMaxChannelDifference": 31,
+        "changedPixels": 17,
+        "maxChannelDifference": 31,
+        "eye": [
+          -30.540357092489334,
+          9.82146664345749,
+          88.86829670562905
+        ],
+        "target": [
+          -18.99335170869682,
+          3.8214666434574927,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "lion",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -30.540357092489334,
+          23.401661982510127,
+          88.86829670562905
+        ],
+        "target": [
+          4.100659058888201,
+          38.08497626324167,
+          68.86829670562905
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": -60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -35.01805885917255,
+          23.617835301729706,
+          89.41465960076363
+        ],
+        "target": [
+          -69.65907501055008,
+          39.08985641919558,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": -30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 1,
+            "lion": 0,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 13,
+        "controlMaxChannelDifference": 28,
+        "changedPixels": 13,
+        "maxChannelDifference": 28,
+        "eye": [
+          -35.01805885917255,
+          10.029111824014489,
+          89.41465960076363
+        ],
+        "target": [
+          -46.565064242965065,
+          4.029111824014489,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 0,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 14,
+        "controlMaxChannelDifference": 65,
+        "changedPixels": 17,
+        "maxChannelDifference": 65,
+        "eye": [
+          -35.01805885917255,
+          8.825582472521509,
+          89.41465960076363
+        ],
+        "target": [
+          -35.01805885917255,
+          2.825582472521509,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 30,
+        "calls": {
+          "nativeControl": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "native": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          },
+          "candidate": {
+            "warthog": 1,
+            "hyena": 1,
+            "buffalo": 1,
+            "lion": 1,
+            "rhino": 1
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 15,
+        "maxChannelDifference": 65,
+        "eye": [
+          -35.01805885917255,
+          9.60238584463966,
+          89.41465960076363
+        ],
+        "target": [
+          -23.47105347538003,
+          3.6023858446396604,
+          69.41465960076363
+        ]
+      },
+      {
+        "species": "rhino",
+        "degrees": 60,
+        "calls": {
+          "nativeControl": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "native": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          },
+          "candidate": {
+            "warthog": 0,
+            "hyena": 0,
+            "buffalo": 0,
+            "lion": 0,
+            "rhino": 0
+          }
+        },
+        "poseDeltas": {
+          "nativeControl": {
+            "eye": 0,
+            "target": 0
+          },
+          "native": {
+            "eye": 0,
+            "target": 0
+          },
+          "candidate": {
+            "eye": 0,
+            "target": 0
+          }
+        },
+        "controlChangedPixels": 0,
+        "controlMaxChannelDifference": 0,
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "eye": [
+          -35.01805885917255,
+          23.617835301729706,
+          89.41465960076363
+        ],
+        "target": [
+          -0.37704270779501314,
+          33.90345172932931,
+          69.41465960076363
+        ]
+      }
+    ],
+    "ok": false
+  }
+}

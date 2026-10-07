@@ -1,5 +1,7 @@
 # Respaldo directo cuando el iframe deniega Screen Wake Lock
 
+Actualización física del 7 de octubre: el usuario confirma que la Jam publicada en itch.io mantiene encendida la pantalla del Pixel más allá del timeout habitual. [Registro y alcance](../pixel-screen-awake-physical.md). Wake Lock deja de ser prioridad salvo regresión; las observaciones siguientes conservan su contexto histórico.
+
 El controlador de producción consulta `document.permissionsPolicy` o su variante compatible `featurePolicy`, cuando están disponibles. Si `screen-wake-lock` está denegado, inicia el respaldo existente de vídeo directamente desde el gesto, sin esperar una promesa nativa destinada al rechazo. Evita repetir esas peticiones en cada click. Si la política cambia, un nuevo gesto puede solicitar el bloqueo nativo y pausar el respaldo. Una API de inspección ausente o que lanza un error conserva la ruta nativa anterior; denegaciones de energía/permisos siguen usando su manejo existente.
 
 La política del anfitrión no se modifica. Según la [especificación W3C](https://www.w3.org/TR/screen-wake-lock/#policy-control), el permiso por defecto es `self` y un iframe de otro origen necesita delegación explícita. El juego no puede concedérsela por sí mismo.

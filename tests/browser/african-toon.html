@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {GpuTimer} from './gpu-timer.js';
 import {runCameraExclusionPath} from './camera-exclusion-path.js';
 import {FineNoiseVolume} from './noise-volume.js';
-const noiseVolume=new FineNoiseVolume();addEventListener('pagehide',()=>noiseVolume.dispose(),{once:true});
+const noiseVolume=new FineNoiseVolume({singleExit:new URL(document.URL).searchParams.get('noise-volume-single-exit')==='1'});addEventListener('pagehide',()=>noiseVolume.dispose(),{once:true});
 import {cropSpec,hitStructure} from '../../src/simulation/rules.js';
 import * as Game from '../../src/simulation/game.js';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
