@@ -33,7 +33,15 @@ export class Assets {
     for(const resource of this.ownedResources)this.release(resource);
     this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
   }
-  async building(descriptor){this.assertOpen();const key='building:'+descriptor.url;if(!this.cache.has(key))this.cache.set(key,this.model(descriptor.url).then(gltf=>{this.assertOpen();return prepareNativeBuilding(gltf,descriptor);}));return this.cache.get(key);}
+  async building(descriptor){
+    this.assertOpen();const key='building:'+descriptor.url;
+    if(!this.cache.has(key)){
+      const pending=this.model(descriptor.url).then(gltf=>{this.assertOpen();return prepareNativeBuilding(gltf,descriptor);});
+      this.cache.set(key,pending);
+      pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});
+    }
+    return this.cache.get(key);
+  }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
     if(!this.cache.has(key)){const pending=this.textures.loadAsync(assetUrl(url)).then(texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}

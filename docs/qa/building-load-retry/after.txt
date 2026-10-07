@@ -1,0 +1,187 @@
+TAP version 13
+# Subtest: preload deduplicates concurrent downloads and hands the warmed rig to the first animal
+ok 1 - preload deduplicates concurrent downloads and hands the warmed rig to the first animal
+  ---
+  duration_ms: 19.5882
+  ...
+# Subtest: failed preloads can retry, and a disposed pool does not create a rig after a delayed load
+ok 2 - failed preloads can retry, and a disposed pool does not create a rig after a delayed load
+  ---
+  duration_ms: 3.4105
+  ...
+# Subtest: concurrent animals consume the reserve once and get distinct rigs with shared assets
+ok 3 - concurrent animals consume the reserve once and get distinct rigs with shared assets
+  ---
+  duration_ms: 5.196
+  ...
+# Subtest: planned reserves create one rig per frame and remove synchronous creation from group take
+ok 4 - planned reserves create one rig per frame and remove synchronous creation from group take
+  ---
+  duration_ms: 5.019
+  ...
+# Subtest: changed plans release excess reserves and cancel a waiting generation
+ok 5 - changed plans release excess reserves and cancel a waiting generation
+  ---
+  duration_ms: 9.7507
+  ...
+# Subtest: taking a reserve during preparation reduces remaining demand instead of refilling the whole group
+ok 6 - taking a reserve during preparation reduces remaining demand instead of refilling the whole group
+  ---
+  duration_ms: 1.9901
+  ...
+# Subtest: dispose during reserve preparation releases the unregistered rig
+ok 7 - dispose during reserve preparation releases the unregistered rig
+  ---
+  duration_ms: 2.0987
+  ...
+# Subtest: failed GPU preparation releases the new rig and retains existing reserves for retry
+ok 8 - failed GPU preparation releases the new rig and retains existing reserves for retry
+  ---
+  duration_ms: 2.3013
+  ...
+# Subtest: an obsolete preparation failure cancels quietly even when the same composition returns
+ok 9 - an obsolete preparation failure cancels quietly even when the same composition returns
+  ---
+  duration_ms: 3.8817
+  ...
+# Subtest: leaving actors release private bone textures once while retaining shared model resources
+ok 10 - leaving actors release private bone textures once while retaining shared model resources
+  ---
+  duration_ms: 2.7948
+  ...
+# (node:45732) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: offscene packed prototypes and standalone textures are owned and released once; caches clear
+ok 11 - offscene packed prototypes and standalone textures are owned and released once; caches clear
+  ---
+  duration_ms: 258.3496
+  ...
+# Subtest: scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+ok 12 - scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+  ---
+  duration_ms: 5.8305
+  ...
+# Subtest: inflight model and texture finishing after close dispose once without resurrecting caches
+ok 13 - inflight model and texture finishing after close dispose once without resurrecting caches
+  ---
+  duration_ms: 1.0333
+  ...
+# Subtest: a failed standalone texture is retryable while open
+ok 14 - a failed standalone texture is retryable while open
+  ---
+  duration_ms: 0.7345
+  ...
+# Subtest: pending building cannot create new procedural resources after its owner closes
+ok 15 - pending building cannot create new procedural resources after its owner closes
+  ---
+  duration_ms: 0.7713
+  ...
+# Subtest: packed biome, village and wall binary loads cannot allocate prototypes after close
+ok 16 - packed biome, village and wall binary loads cannot allocate prototypes after close
+  ---
+  duration_ms: 12.1951
+  ...
+# Subtest: failed building download clears both caches; concurrent retry prepares the original model once
+ok 17 - failed building download clears both caches; concurrent retry prepares the original model once
+  ---
+  duration_ms: 1092.9655
+  ...
+# Subtest: camera volumes retain all five native center scales, pivots and collapse envelopes
+ok 18 - camera volumes retain all five native center scales, pivots and collapse envelopes
+  ---
+  duration_ms: 31.5085
+  ...
+# Subtest: auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+ok 19 - auxiliary depth preserves native shell/ash cuts, camera inputs and LessDepth in all five cultures
+  ---
+  duration_ms: 36.3675
+  ...
+# Subtest: five native center envelopes contain intact/interior and falling vertices throughout collapse
+ok 20 - five native center envelopes contain intact/interior and falling vertices throughout collapse
+  ---
+  duration_ms: 7352.921
+  ...
+# Subtest: all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+ok 21 - all five DEST cultures share HDR resources with cel debris, retain native depth and use lab exposure
+  ---
+  duration_ms: 9.2747
+  ...
+# Subtest: removing world fog also removes it from DEST buildings, debris and smoke
+ok 22 - removing world fog also removes it from DEST buildings, debris and smoke
+  ---
+  duration_ms: 2.9085
+  ...
+# Subtest: Five native center templates retain original textures, proportions, UVs and world footprint
+ok 23 - Five native center templates retain original textures, proportions, UVs and world footprint
+  ---
+  duration_ms: 12.9784
+  ...
+# Subtest: Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+ok 24 - Collapse displays all native 3.2 seconds after an oversized hit and restores intact on repair
+  ---
+  duration_ms: 31.7386
+  ...
+# Subtest: Separate houses keep independent damage masks, shader time and interior depth guard
+ok 25 - Separate houses keep independent damage masks, shader time and interior depth guard
+  ---
+  duration_ms: 23.8523
+  ...
+# Subtest: Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+ok 26 - Opening pass invalidates on damage, view, transform and resolution and restores renderer on failure
+  ---
+  duration_ms: 2.1816
+  ...
+# Subtest: Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+ok 27 - Original visual raycast tracks displaced houses and leaves ruins selectable for reconstruction
+  ---
+  duration_ms: 151.9436
+  ...
+# Subtest: Removing a center disposes private materials while shared native templates remain reusable
+ok 28 - Removing a center disposes private materials while shared native templates remain reusable
+  ---
+  duration_ms: 1.6463
+  ...
+# Subtest: Five paid centers clear their native damage only when the real rounded repair debit executes
+ok 29 - Five paid centers clear their native damage only when the real rounded repair debit executes
+  ---
+  duration_ms: 76.2086
+  ...
+# Subtest: Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+ok 30 - Real blocking pauses and a saved collapse retain identical native geometry phase and shader time
+  ---
+  duration_ms: 20.3853
+  ...
+# Subtest: GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+ok 31 - GPU particle instances preserve native shapes, upload layouts, softness scale and paused clocks
+  ---
+  duration_ms: 10.5064
+  ...
+# Subtest: Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+ok 32 - Smoke captures actual opaque material shaders, excludes transparency, skips quiet scenes and restores failure state
+  ---
+  duration_ms: 6.4463
+  ...
+# Subtest: Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+ok 33 - Native debris support follows Float32 rendered terrain triangles on both sides of grid diagonals
+  ---
+  duration_ms: 63.5686
+  ...
+# Subtest: Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+ok 34 - Particle meshes remain presentation only and release geometry, materials and emitters on center removal
+  ---
+  duration_ms: 2.7175
+  ...
+# Subtest: centers consume shared fractional atmosphere rather than inferring night from sun intensity
+ok 35 - centers consume shared fractional atmosphere rather than inferring night from sun intensity
+  ---
+  duration_ms: 2.8811
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12360.3342
