@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+ok 1 - retiring a crop batch releases InstancedMesh buffers for every stage and bridge
+  ---
+  duration_ms: 50.878
+  ...
+# Subtest: mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+ok 2 - mature plants and paused morphs keep both buffer versions stable; wind changes through the shared uniform alone
+  ---
+  duration_ms: 43.1756
+  ...
+# Subtest: growth within a stage uploads only growth components while the position and rotation remain untouched
+ok 3 - growth within a stage uploads only growth components while the position and rotation remain untouched
+  ---
+  duration_ms: 31.6789
+  ...
+# Subtest: slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+ok 4 - slot changes, height and recentering update matrices, retain unchanged growth, and clamp visible count to capacity
+  ---
+  duration_ms: 17.6635
+  ...
+# Subtest: multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+ok 5 - multiple updates before a GPU draw retain earlier dirty ranges and never upload the unused capacity
+  ---
+  duration_ms: 20.677
+  ...
+# Subtest: immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+ok 6 - immutable terrain heights survive growth, slot reorder, wind and origin changes without resampling
+  ---
+  duration_ms: 14.6363
+  ...
+# Subtest: unkeyed ground remains dynamic, including after leaving keyed terrain
+ok 7 - unkeyed ground remains dynamic, including after leaving keyed terrain
+  ---
+  duration_ms: 16.1684
+  ...
+# Subtest: cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+ok 8 - cached terrain and metadata preserve every Float32 buffer through changing native presentation inputs
+  ---
+  duration_ms: 49.2648
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 666.0392
