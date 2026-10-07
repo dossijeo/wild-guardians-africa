@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {densityFogFragment} from './far-density-fog.js';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
 import {modelOrigin,NearTreeSelection,treeDensityRank,treeImportanceRank} from './far-impostor-math.js';
@@ -34,7 +35,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  void main(){if(coverageThreshold(gl_FragCoord.xy)<1.-vMix*vDensityFade)discard;float first=floor(vView);vec4 c=${prelitAtlas?'uPrelitEnabled>.5?prelitColor(floor(vView*uPrelitViews/8.)):(':''}(uBlend>.5?mix(viewAt(first),viewAt(first+1.),fract(vView)):viewAt(floor(vView+.5)))${prelitAtlas?')':''};if(c.a<.35)discard;${prelitAtlas?'if(uPrelitEnabled>.5){gl_FragColor=vec4(c.rgb/max(c.a,.0001),1.);}else{':''}${toon?(hasNormals?normalAtlasLightingColor():impostorLightingColor):'gl_FragColor=vec4(c.rgb/max(c.a,.0001)*uLighting,1.);'}${prelitAtlas?'}':''}
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
- #include <fog_fragment>
+ ${densityFogFragment}
  }`});
  if(toon||prelitAtlas)material.toneMapped=false;
  const impostors=new THREE.Mesh(geometry,material);impostors.frustumCulled=false;impostors.castShadow=false;
