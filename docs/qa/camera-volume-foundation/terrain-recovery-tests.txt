@@ -1,0 +1,339 @@
+TAP version 13
+# Subtest: shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+ok 1 - shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+  ---
+  duration_ms: 13.2296
+  ...
+# Subtest: registry updates native state, transform, replacement and removal without rebuilding idle volumes
+ok 2 - registry updates native state, transform, replacement and removal without rebuilding idle volumes
+  ---
+  duration_ms: 2.0269
+  ...
+# Subtest: village registry uses independent unit boxes and excludes unrelated decorative meshes
+ok 3 - village registry uses independent unit boxes and excludes unrelated decorative meshes
+  ---
+  duration_ms: 3.1812
+  ...
+# Subtest: pose resolver keeps desired eye separate from correction through synchronous updates and focus
+ok 4 - pose resolver keeps desired eye separate from correction through synchronous updates and focus
+  ---
+  duration_ms: 27.2098
+  ...
+# Subtest: fast pan cannot tunnel through a house and oblique pan slides beside it
+ok 5 - fast pan cannot tunnel through a house and oblique pan slides beside it
+  ---
+  duration_ms: 19.9694
+  ...
+# Subtest: approach decelerates while retreat converges smoothly to raw intent
+ok 6 - approach decelerates while retreat converges smoothly to raw intent
+  ---
+  duration_ms: 6.3798
+  ...
+# Subtest: finite roof allows overflight and upward recovery from a loaded volume
+ok 7 - finite roof allows overflight and upward recovery from a loaded volume
+  ---
+  duration_ms: 16.6183
+  ...
+# Subtest: opposing faces of overlapping houses cannot trap recovery in an oscillation
+ok 8 - opposing faces of overlapping houses cannot trap recovery in an oscillation
+  ---
+  duration_ms: 0.4601
+  ...
+# Subtest: focus reset chooses safe destination rather than sweeping through intervening buildings
+ok 9 - focus reset chooses safe destination rather than sweeping through intervening buildings
+  ---
+  duration_ms: 0.3311
+  ...
+# Subtest: rotated volumes and deletion preserve safety without trapping an idle camera
+ok 10 - rotated volumes and deletion preserve safety without trapping an idle camera
+  ---
+  duration_ms: 13.1288
+  ...
+# (node:42012) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 11 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 5.9193
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 12 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.0638
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 13 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 1.1538
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 14 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 1.0187
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 15 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 1.7767
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 16 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 35.0368
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 17 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 87.7733
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 18 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 656.2854
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 19 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 502.7726
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 20 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1076.788
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 21 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 414.455
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 22 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 732.5082
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 23 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2899.1181
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 24 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 397.9121
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 25 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 395.9124
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 26 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 818.8128
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 27 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 347.4528
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 28 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 651.6867
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 29 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3250.7602
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 30 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 466.8477
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 31 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 462.0419
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 32 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 834.6808
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 33 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 413.0277
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 34 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 694.3926
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 35 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3349.1986
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 36 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 524.4161
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 37 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 551.4819
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 38 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 947.1704
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 39 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 506.774
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 40 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 730.6439
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 41 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3443.0614
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 42 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 542.6857
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 43 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 528.2712
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 44 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 846.7495
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 45 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 392.9196
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 46 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 722.1569
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 47 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3513.2921
+  ...
+# Subtest: travel waits for farm entry, then smoothly follows the moving animal once per incursion
+ok 48 - travel waits for farm entry, then smoothly follows the moving animal once per incursion
+  ---
+  duration_ms: 14.2539
+  ...
+# Subtest: manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+ok 49 - manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+  ---
+  duration_ms: 1.2343
+  ...
+# Subtest: menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+ok 50 - menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+  ---
+  duration_ms: 0.7945
+  ...
+# Subtest: a departing animal or ended raid stops the trip; saved focus does not replay on reload
+ok 51 - a departing animal or ended raid stops the trip; saved focus does not replay on reload
+  ---
+  duration_ms: 2.3952
+  ...
+# Subtest: sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 52 - sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 699.2009
+  ...
+# Subtest: gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 53 - gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 553.4064
+  ...
+# Subtest: manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 54 - manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 425.3886
+  ...
+# Subtest: volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 55 - volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 441.4138
+  ...
+# Subtest: gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 56 - gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 747.4422
+  ...
+# Subtest: desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 57 - desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 3058.2258
+  ...
+# (node:48520) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 58 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 55.3663
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 59 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 0.7547
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 60 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 26.1597
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 61 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 1217.0612
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 62 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 2.0311
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 63 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 1.2873
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 64 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 54.4491
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 65 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 1.5035
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32225.1811
