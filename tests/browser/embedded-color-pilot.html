@@ -3,7 +3,7 @@
 <header>Facóquero: runtime actual / candidata Tinify desde PNG original. Pose congelada, luz nativa fija y suelo QA; sin HDR ni simulación.<br><button id="baseline" disabled>Runtime actual</button><button id="candidate" disabled>Candidata Tinify</button><button id="night" disabled>Día / noche</button><button id="compare" disabled>Comparar seis paletas día/noche</button><output id="status">Cargando…</output><pre id="report"></pre></header><canvas id="view"></canvas>
 <script type="module">
 import * as THREE from 'three';
-import {Assets,json} from '/src/rendering/assets.js';
+import {Assets,json,bytes} from '/src/rendering/assets.js';
 import {prepareAnimalModel,prepareAnimalClips,animalGroundSamples,applyAnimalPose} from '/src/rendering/animal-actions.js';
 import {AfricanToon} from '/src/rendering/african-toon.js';
 import {installNativeShadow} from '/src/rendering/native-shadow.js';
@@ -40,6 +40,9 @@ document.querySelector('#compare').onclick=async()=>{
 };
 try{
  const pilot=await json(directory+'report.json');
+ const digest=async url=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await bytes(url))),byte=>byte.toString(16).padStart(2,'0')).join('');
+ const hashes=await Promise.all([digest(pilot.runtimePath),digest(directory+'candidate.glb')]);
+ if(hashes[0]!==pilot.runtimeGlbSha256||hashes[1]!==pilot.candidateGlbSha256)throw Error('Pilot baseline/candidate changed; regenerate the receipt or use its frozen source. Refusing a stale A/B comparison.');
  for(const url of [pilot.runtimePath,directory+'candidate.glb']){
   const gltf=await assets.model(url),model=prepareAnimalModel(gltf.scene,'warthog');model.scale.setScalar(1);scene.add(model);toon.apply(model);model.traverse(mesh=>{if(mesh.isMesh)mesh.castShadow=mesh.receiveShadow=true;});
   const actor={model,mixer:new THREE.AnimationMixer(model),clips:prepareAnimalClips(gltf.animations),groundSamples:animalGroundSamples(model)};applyAnimalPose(actor,{species:'warthog',status:'walking',motionPhase:actor.clips.find(clip=>clip.name==='Walking').duration*.55},0);actors.push(actor);

@@ -2,6 +2,8 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Color embebido del facóquero integrado](tinify-embedded-color-runtime/README.md): reconstrucción real completa, un GLB cambiado y diecinueve idénticos; ahorro de 165.424 bytes en ese asset. Verificador completo de veinte modelos, 17 pruebas dirigidas, build y paquete/ZIP directo correctos. Hash distribuido idéntico a la candidata revisada de día/noche. PSNR inferior al anterior pero sobre el gate existente; no acredita RAM, FPS ni móvil. Las notas de piloto pendiente inferiores describen la etapa anterior.
+
 - [Piloto Tinify de color embebido](tinify-embedded-color-pilot/README.md): candidata de facóquero desde PNG original a resolución runtime intacta; 165.424 bytes de ahorro potencial. 29 pruebas de preparación/reempaquetado y tres del gate independiente. Geometría descodificada idéntica al original, alpha intacto, PSNR 38,64 dB y ningún error de conformidad nuevo (se conserva una tangente nula heredada). Doce pares nativos con cero errores GL y cuatro capturas cercanas día/noche inspeccionadas. No está instalado: pendientes receta reproducible y build/paquete; no acredita FPS, RAM, mundo completo ni móvil.
 
 - [Cosecha automática sin clic](automatic-harvest-click/README.md):60 pruebas, cero clics desde cuatro solicitudes reales en escena nativa, recolección/entrega conservadas en jornada legal dirigida. Capturas de mundo visibles mediante render detenido de la fixture. Pico musical mayor en esta repetición requiere revisar retención; sin aceptación de escucha, RAM total, FPS o móvil.

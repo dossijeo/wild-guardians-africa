@@ -1,5 +1,8 @@
 # Offline rebuild recipe
 
+The checkpoint below is historical. The original rebuild subsequently completed;
+see [the terminal result and runtime/package verification](../tinify-embedded-color-runtime/README.md).
+
 The reviewed WebP bytes are now preserved in `content/optimized-images/`, outside
 `public/`, and identified by SHA-256 in
 `content/manifests/embedded-color-recipes.json`. No credential, provider response

@@ -1171,7 +1171,7 @@
         {
           "index": 1,
           "beforeBytes": 9738506,
-          "afterBytes": 306700,
+          "afterBytes": 141274,
           "before": [
             4096,
             4096
@@ -1181,13 +1181,16 @@
             2048
           ],
           "alpha": false,
-          "quality": 90,
           "lossless": false,
           "role": "color",
-          "alphaQuality": 100,
-          "rmse": 1.918961526350872,
-          "psnr": 42.46947825738826,
-          "maxChannelError": 43
+          "encoding": {
+            "provider": "Tinify",
+            "outputSha256": "ac003e756ca0aada4c5a59a31b24f8b897dba9954867d612ca9e175c152ada99",
+            "recipe": "content/manifests/embedded-color-recipes.json"
+          },
+          "rmse": 2.9808030647175054,
+          "psnr": 38.644137927219646,
+          "maxChannelError": 66
         },
         {
           "index": 2,

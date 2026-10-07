@@ -2,6 +2,8 @@
 
 Follow-up: [offline rebuild recipe and current execution checkpoint](REBUILD.md).
 
+Later result: [runtime installation and complete rebuild/package proof](../tinify-embedded-color-runtime/README.md).
+
 This is an offline compression pilot, not an accepted runtime asset change.
 The production facóquero GLB and asset manifest remain unchanged. Native A/B
 appearance and the production Assets loader have now been checked in an isolated
