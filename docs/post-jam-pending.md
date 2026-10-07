@@ -289,4 +289,4 @@ Estado: integrado en main mediante [PR #5](https://github.com/dossijeo/wild-guar
 
 [Reembolso de muralla — SFX 114](qa/wall-refund-audio/README.md): ingreso sonoro únicamente tras una devolución positiva confirmada; conserva demolición, sin duplicar ventas ni modificar el saldo. 31 pruebas dirigidas, build y verificación de los 126 Opus. Catálogo actualizado: 95 asignados/31 reservados; escucha y aceptación móvil pendientes.
 
-[Pago de jornales — SFX 115](qa/payroll-audio/README.md): gasto sonoro tras contratación inicial o proporcional confirmada con coste positivo; vacías, rechazadas e históricas no producen gasto. 26 pruebas dirigidas, build, paquete y hashes de los126sonidos correctos. Catálogo actual:96asignados/30reservados. Reproducción nativa, escucha y aceptación móvil pendientes.
+[Pago de jornales — SFX 115](qa/payroll-audio/README.md): gasto sonoro tras contratación inicial o proporcional confirmada con coste positivo; vacías, rechazadas e históricas no producen gasto. 26 pruebas dirigidas, build, paquete y hashes de los 126 sonidos correctos. Catálogo actual: 96 asignados/30 reservados. Reproducción nativa, escucha y aceptación móvil pendientes.
