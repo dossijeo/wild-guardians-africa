@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA — audio de trazo de muralla</title>
+<style>body{font:16px system-ui;background:#172a28;color:#fff;padding:20px}button{padding:12px;margin:4px}canvas{display:block;background:#e0cc9c;touch-action:none;margin:16px 0;max-width:100%}pre{white-space:pre-wrap}</style>
+<h1>Audio nativo del trazo de muralla</h1><p>Fixture aislada: WallDrawing y UiAudio reales, AudioSystem y Opus del juego. Sin simulación ni WebGL.</p>
+<button id="activate">Activar audio y trazo</button><button id="cancel">Cancelar trazo</button><button id="read">Actualizar informe</button>
+<canvas id="stroke" width="640" height="200" aria-label="Área para trazar muralla"></canvas><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {UiAudio} from '../../src/audio/ui-audio.js';
+import {WallDrawing} from '../../src/rendering/wall-drawing.js';
+const errors=[],requests=[],phases=[],strokes=[],canvas=document.querySelector('#stroke'),context=canvas.getContext('2d');let taps=0,terrainQueries=0;
+const audio=new AudioSystem({music:0,sfx:.5});
+const ui=new UiAudio((id,options)=>{
+ const request={id,bus:options.bus,emitter:options.emitter,requestedAt:performance.now()};requests.push(request);
+ return audio.sound(id,options).then(voice=>{request.accepted=!!voice;request.rate=voice?.playbackRate.value??null;request.voiceBus=voice?audio.voices.get(voice)?.bus:null;paint();return voice;});
+});
+const drawing=new WallDrawing(canvas,{screenSpace:true,point:event=>{terrainQueries++;return {x:event.clientX,z:event.clientY};},stroke:points=>{strokes.push({samples:points.length,start:points[0],end:points.at(-1)});paint();},tap:()=>{taps++;paint();},activity:phase=>{phases.push(phase);ui.wallGesture(phase);paint();},preview:points=>{
+ context.clearRect(0,0,canvas.width,canvas.height);const rect=canvas.getBoundingClientRect();context.strokeStyle='#e53924';context.lineWidth=3;context.beginPath();points.forEach(([x,y],i)=>{const px=(x-rect.left)*canvas.width/rect.width,py=(y-rect.top)*canvas.height/rect.height;i?context.lineTo(px,py):context.moveTo(px,py);});context.stroke();
+}});
+function paint(){document.querySelector('#report').textContent=JSON.stringify({scope:'Native isolated wall gesture audio; no Game/economy/world acceptance or performance claim',context:audio.context?.state,enabled:drawing.enabled,active:drawing.active,phases,requests,strokes,taps,terrainQueries,voices:audio.voices.size,errors},null,2);}
+document.querySelector('#activate').onclick=async()=>{try{await audio.unlock();const bank=await audio.sfxBank();await Promise.all(['spirit_drag','spirit_drop'].map(id=>audio.buffer(bank.items.find(item=>item.id===id).audio.url)));drawing.setEnabled(true);}catch(error){errors.push(error.message);}paint();};
+document.querySelector('#cancel').onclick=()=>{drawing.cancel();paint();};document.querySelector('#read').onclick=paint;
+addEventListener('error',event=>errors.push(event.message));addEventListener('unhandledrejection',event=>errors.push(String(event.reason)));addEventListener('pagehide',()=>{drawing.dispose();ui.reset();audio.stop();});paint();
+</script></html>

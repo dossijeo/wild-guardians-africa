@@ -10,6 +10,7 @@ import {navigationPathKey} from '../src/world/raid-navigation-warmth.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {numberOf} from '../src/simulation/money.js';
 import {diagnosticWateringSource} from './watering-route-diagnostics.mjs';
+import {readBlockedCheckpoint} from './intensive-blocked-checkpoint.mjs';
 
 const input=process.argv[2]??'docs/qa/intensive-canyon-10/state.json';
 const output=resolve(process.argv[3]??'.cache/watering-diagnostics/report.json');
@@ -26,11 +27,19 @@ assert.equal(gameSource.split("from '../world/work-points.js'").length,2);
 const observedGame=absolute(gameSource.replace("from '../world/work-points.js'",`from '${pathToFileURL(workPath).href}'`),gameUrl);
 writeFileSync(workPath,observedWork);writeFileSync(gamePath,observedGame);
 const Work=await import(pathToFileURL(workPath).href),ObservedGame=await import(pathToFileURL(gamePath).href);
-const bytes=readFileSync(input),raw=(input.endsWith('.gz')?gunzipSync(bytes):bytes).toString('utf8');
+const checkpoint=/-blocked-(first|latest)\.json$/.test(input)?readBlockedCheckpoint(input):null;
+const bytes=readFileSync(input),raw=checkpoint?serialize(checkpoint.state):(input.endsWith('.gz')?gunzipSync(bytes):bytes).toString('utf8');
 const worlds=[];
 for(const [name,Game] of [['original',OriginalGame],['observed',ObservedGame]]){
  const state=deserialize(raw),profile=JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[state.biome]}.json`,'utf8')).profile;
  const nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);
+ if(checkpoint){
+  const saved=checkpoint.receipt.navigation;
+  assert.deepEqual(nav.config,saved.config,'Checkpoint terrain recipe differs from current constructor');
+  assert.deepEqual(profile,saved.profile,'Checkpoint profile differs from current runtime profile');
+  if(saved.activeBounds)nav.setActiveBounds(saved.activeBounds);
+  if(saved.raidView)nav.setRaidView(saved.raidView.eye,saved.raidView.target);
+ }
  const living=state.plants.filter(p=>p.alive).length;
  let hired=0;
  if(state.result==='victory')Game.continuePostgame(state);
@@ -58,5 +67,5 @@ for(let i=0;i<ticks;i++){
  const state=serialize(worlds[0].state);assert.equal(state,serialize(worlds[1].state),`Observer changed complete state at tick ${i}`);trajectory.update(state+'\n');
 }
 const s=worlds[1].state;
-const report={scope:'QA observer only; native historical snapshot and ordinary paid hiring where required, complete serialized parity at every tick. No positions, collision, reach, growth, RNG, speed or economic overrides. Counters do not prove global inaccessibility; a null A* can reflect a search limit. Not the live day-76 checkpoint, 100-night acceptance, rendering or a performance benchmark.',input,inputSha256:sha(bytes),node:process.version,ticks,stepSeconds:.1,trajectorySha256:trajectory.digest('hex'),sourceHashes:{workPoints:sha(readFileSync(workUrl)),game:sha(gameSource),observedWork:sha(observedWork),observedGame:sha(observedGame),navigation:sha(readFileSync(new URL('../src/world/navigation.js',import.meta.url))),observer:sha(readFileSync(new URL('./watering-route-diagnostics.mjs',import.meta.url))),runner:sha(readFileSync(new URL(import.meta.url)))},watering:{...Work.qaWatering},navigation:worlds[1].counters,final:{day:s.day,time:s.time,result:s.result,hired:worlds[1].hired,workers:s.workers.length,living:s.plants.filter(p=>p.alive).length,tasks:s.tasks.length,blocked:s.tasks.filter(t=>t.blocked).length,stateSha256:sha(serialize(s))}};
+const report={scope:'QA observer only; native historical snapshot and ordinary paid hiring where required, complete serialized parity at every tick. No positions, collision, reach, growth, RNG, speed or economic overrides. Counters do not prove global inaccessibility; a null A* can reflect a search limit. Cold-navigation replay without caches or strategy cursor; not 100-night acceptance, rendering or a performance benchmark.',checkpoint:checkpoint?{receipt:input,contextRestored:true,navigationCachesRestored:false,originalProvenance:checkpoint.receipt.provenance}:null,input,inputSha256:sha(bytes),node:process.version,ticks,stepSeconds:.1,trajectorySha256:trajectory.digest('hex'),sourceHashes:{workPoints:sha(readFileSync(workUrl)),game:sha(gameSource),observedWork:sha(observedWork),observedGame:sha(observedGame),navigation:sha(readFileSync(new URL('../src/world/navigation.js',import.meta.url))),observer:sha(readFileSync(new URL('./watering-route-diagnostics.mjs',import.meta.url))),runner:sha(readFileSync(new URL(import.meta.url)))},watering:{...Work.qaWatering},navigation:worlds[1].counters,final:{day:s.day,time:s.time,result:s.result,hired:worlds[1].hired,workers:s.workers.length,living:s.plants.filter(p=>p.alive).length,tasks:s.tasks.length,blocked:s.tasks.filter(t=>t.blocked).length,stateSha256:sha(serialize(s))}};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

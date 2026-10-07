@@ -1,5 +1,10 @@
 # Tareas pendientes posteriores a la Jam
 
+[SFX del gesto de muralla 094/095](qa/wall-gesture-audio/README.md): arrastre una
+vez al superar umbral, release una vez, cancelación y protección de decode tardío;
+101 pruebas dirigidas y voces nativas Opus aceptadas en navegador. Matriz vigente:
+99 asignados y 27 reservas. Sigue pendiente la escucha/contexto del barrido completo.
+
 [Montañas de horizonte HQ generadas](../assets-source/far-backdrops-hq/README.md):
 seis candidatos imagegen por bioma, fuentes originales y prompts conservados.
 Relieve natural sin facetas low poly. Antes de sustituir los fondos: corregir
@@ -342,3 +347,5 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 [Reparación de cultivos/trabajadores para FrontSide](frontside-model-repair-post-jam.md): encargo delegado en rama independiente, Blender headless/Python, originales conservados y pilotos representativos antes de ampliarlo. Requiere conservación de rigs/morphs/UV/comportamiento, comparación automatizada multivista y ganancia GPU suficiente. Ningún candidato aceptado ni activado; PR, revisión/merge y activación controlada posteriores condicionados a esa evidencia.
 
 [Diagnóstico de reservas de riego](qa/watering-route-diagnostics/README.md): observador QA distingue altura/alcance, destino bloqueado y ruta fallida sin muestras extra ni modificar la simulación. 24 pruebas y paridad completa por paso en checkpoints históricos de Gran Cañón y Gran Río. No reproduce todavía el atasco del día 76; producción intacta, pendiente checkpoint representativo.
+
+[Checkpoints de colas bloqueadas](qa/intensive-blocked-checkpoints/README.md): nuevas campañas conservan el primer y el mayor backlog capturado, con estado completo/contexto/hashes y límites de frecuencia. 16 pruebas, dos jornadas nativas con paridad por tick y CLI normal aprobadas; esos recorridos no dispararon capturas. Las campañas vivas siguen congeladas; falta reproducir un atasco real a partir de uno de estos recibos.
