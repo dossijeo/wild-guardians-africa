@@ -731,3 +731,10 @@ acceptance: repaired undefined directions deliberately change source shading.
 The opt-in localNormal comparison will use existing guided WaterV6 views,
 same real material/shader/shadowFront and policy2 gates, with3controls each;
 stop at failure/control invalidity. No source asset or production manifest change.
+
+Guided local-normal WaterV6 two-view screen passes alpha/RGB with3exact source
+controls per sample and identical metrics to the frozen shell screen. This is
+not proof that repaired tiny pole faces were drawn. Before extending the
+normal repair, an opt-in source/candidate ID coverage draw will count the
+original faces incident to those81undefined normals; it remains separate from
+PBR quality. A zero covered count limits what the compatible screen establishes.
