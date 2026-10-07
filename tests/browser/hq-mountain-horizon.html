@@ -1,0 +1,69 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Montañas HQ</title>
+<style>body{margin:0;font:13px system-ui}canvas{width:100vw;height:100vh;display:block}header{position:fixed;z-index:2;top:0;left:0;background:#fff9de;padding:10px;max-width:350px;max-height:86vh;overflow:auto}pre{font-size:10px;white-space:pre-wrap}button,select,input{padding:6px}#show{position:fixed;z-index:3;top:8px;left:8px}</style>
+<button id="show" hidden>Mostrar controles</button><header><b>Montañas HQ · mundo real</b>
+<p><label>Fase <select id="phase"><option value="day">Día</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label>
+<label>Fondo <select id="mode"><option value="hq">HQ reflejado</option><option value="original">Original</option></select></label></p>
+<p><label>Azimut <input id="yaw" type="number" min="0" max="360" step="5" value="0"></label></p>
+<button id="turn" disabled>Girar 45°</button><button id="rotation" disabled>Validar giro 360°</button><button id="move" disabled>Desplazar 20 m</button>
+<button id="hide">Ocultar controles</button><button id="export" disabled>Exportar recibo</button><button id="close" disabled>Cerrar mundo</button><pre id="report">Preparando metadatos</pre><pre id="full-report" hidden></pre></header><canvas></canvas>
+<script type="module">
+import * as THREE from 'three';
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {attachBiomeFarVegetation} from '../../src/rendering/far-vegetation.js';
+import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
+import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
+import {json} from '../../src/rendering/assets.js';
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',errors=[],rows=[];
+let world,originalTexture,hqTexture,mesh,state,eye,closed=false,ready=false,running=false,receipt=null;
+const report=document.querySelector('#report'),frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+function snapshot(){
+ const direction=world.camera.getWorldDirection(new THREE.Vector3());
+ return {biome,culture,quality:world.quality,mode:document.querySelector('#mode').value,phase:document.querySelector('#phase').value,yaw:Number(document.querySelector('#yaw').value),camera:world.camera.position.toArray(),direction:direction.toArray(),night:world.toon.uniforms.uNight.value,anchor:mesh.parent.position.toArray(),render:{calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles},texture:{url:document.querySelector('#mode').value==='hq'?`/.cache/hq-backdrops/${world.nav.config.biome}-backdrop.webp`:`/assets/far-vegetation/${world.nav.config.biome}-backdrop.webp`,width:mesh.material.uniforms.uBackdropAtlas.value.image.width,height:mesh.material.uniforms.uBackdropAtlas.value.image.height,wrapS:mesh.material.uniforms.uBackdropAtlas.value.wrapS,mipmaps:mesh.material.uniforms.uBackdropAtlas.value.generateMipmaps,samplers:Object.values(mesh.material.uniforms).filter(u=>u.value?.isTexture).length},memory:{...world.renderer.info.memory},errors:[...errors],glError:world.renderer.getContext().getError()};
+}
+function draw(){
+ if(!ready||closed)return;
+ const mode=document.querySelector('#mode').value,angle=Number(document.querySelector('#yaw').value)*Math.PI/180;
+ state.time=document.querySelector('#phase').value==='night'?305:document.querySelector('#phase').value==='dusk'?300+Math.log(2)/2.4:180;
+ mesh.material.uniforms.uBackdropAtlas.value=mode==='hq'?hqTexture:originalTexture;
+ const uv=mesh.geometry.attributes.uv,factor=mode==='hq'?2:1;
+ for(let i=0;i<uv.count;i++)uv.setX(i,mesh.geometry.userData.originalU[i]*factor);
+ uv.needsUpdate=true;
+ world.camera.position.copy(eye);world.controls.target.set(eye.x+Math.sin(angle)*100,eye.y-6,eye.z+Math.cos(angle)*100);world.camera.lookAt(world.controls.target);world.camera.updateMatrixWorld(true);world.render(0);
+ if(!running)report.textContent=JSON.stringify(snapshot(),null,2);
+}
+function close(){if(closed)return;closed=true;world?.dispose();originalTexture?.dispose();report.textContent=JSON.stringify({closed:true,errors,rows:rows.length});}
+document.querySelector('#hide').onclick=()=>{document.querySelector('header').hidden=true;document.querySelector('#show').hidden=false;};
+document.querySelector('#show').onclick=()=>{document.querySelector('header').hidden=false;document.querySelector('#show').hidden=true;};
+try{
+ if(!BIOME_IDS[biome])throw Error('Invalid QA biome');
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture),nav=new Navigation(712,biome,pack.profile);
+ state=Game.newGame({seed:712,biome,culture});const site=await findInitialLocationAsync(nav,payload);
+ Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);state.time=180;state.tutorial.step='done';Game.pause(state,'qa');nav.setState(state);
+ world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=error=>errors.push(String(error));world.qualitySetting('media');world.onChunkProgress=p=>report.textContent=JSON.stringify({loading:'native world',chunks:p,errors});
+ await world.load(state,nav,payload);
+ const loader=new THREE.TextureLoader();
+ await attachBiomeFarVegetation(world,{...farVegetationProfile({quality:world.quality,biome:nav.config.biome}),backdropMirrored:true},{loadTexture:url=>loader.loadAsync(url.endsWith('-backdrop.webp')?`/.cache/hq-backdrops/${nav.config.biome}-backdrop.webp`:url)});
+ await prepareInitialFarWorld(world);
+ mesh=world.scene.getObjectByName('biome-2d-backdrop').children[0];hqTexture=mesh.material.uniforms.uBackdropAtlas.value;
+ originalTexture=await loader.loadAsync(`/assets/far-vegetation/${nav.config.biome}-backdrop.webp`);originalTexture.colorSpace=THREE.SRGBColorSpace;
+ mesh.geometry.userData.originalU=Array.from({length:mesh.geometry.attributes.uv.count},(_,i)=>mesh.geometry.attributes.uv.getX(i)/2);
+ eye=world.camera.position.clone();eye.y+=4;world.releaseCameraIntent?.();world.releaseCameraIntent=null;world.updateCamera=()=>{};world.controls.enabled=false;
+ ready=true;for(const button of document.querySelectorAll('button'))button.disabled=false;
+ document.querySelector('#phase').value=params.get('phase')==='night'?'night':'day';document.querySelector('#yaw').value=params.get('yaw')??'0';
+ for(const id of ['phase','mode','yaw'])document.querySelector('#'+id).addEventListener('input',draw);
+ document.querySelector('#turn').onclick=()=>{document.querySelector('#yaw').value=(Number(document.querySelector('#yaw').value)+45)%360;draw();};
+ document.querySelector('#move').onclick=()=>{eye.x+=20;draw();};
+ document.querySelector('#rotation').onclick=async()=>{
+  if(running)return;running=true;const before=JSON.stringify(state),start=rows.length;
+  for(let yaw=0;yaw<=360&&!closed;yaw+=5){document.querySelector('#yaw').value=yaw;draw();await frame();await frame();rows.push(snapshot());report.textContent=JSON.stringify({running:true,completed:rows.length-start,yaw,phase:document.querySelector('#phase').value,errors});}
+  running=false;receipt={biome,culture,unchangedState:before===JSON.stringify(state),poses:rows.slice(start),errors:[...errors],limit:'Fixed-eye native horizon rotation, not frametime/driver-memory or all camera inclinations acceptance.'};report.textContent=JSON.stringify({completed:receipt.poses.length,unchangedState:receipt.unchangedState,errors,glErrors:receipt.poses.filter(p=>p.glError),first:receipt.poses[0],last:receipt.poses.at(-1)},null,2);
+ };
+ document.querySelector('#export').onclick=()=>document.querySelector('#full-report').textContent=JSON.stringify(receipt??snapshot(),null,2);
+ document.querySelector('#close').onclick=close;
+ function render(){if(closed)return;if(!running)draw();requestAnimationFrame(render);}render();addEventListener('pagehide',close,{once:true});
+}catch(error){errors.push(String(error.stack??error));report.textContent=JSON.stringify({errors});close();}
+</script></html>
