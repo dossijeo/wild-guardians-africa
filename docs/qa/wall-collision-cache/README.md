@@ -17,3 +17,11 @@ All 84 directed tests passed: 2,000 exact original polygon/segment comparisons, 
 The measured local CPU reduction is about 19–24%. It does not establish an equivalent integrated frametime/FPS gain, memory reduction or physical-mobile improvement. Cache memory and cold construction are not measured here; the initial equality pass populates the cache. Large-farm rendering and route-search costs remain separate work.
 
 Reproduce: `node tools/benchmark_wall_collision.mjs f63d82db .cache/wall-collision-benchmark.json`. The report retains source hashes, all measured rows and exact-result checks.
+
+## Native route comparison
+
+`integrated-routes.json` adds 180 exact waypoint comparisons against the same Git navigation reference: seed 712, Mapungubwe, all six native biomes, worker/animal permissions, radii .28/.6, and mixed-material wall snapshots before removal, after a gap/rotation/scale edit and after reconstruction/material/position edits. The native opening terrain, settlement footprint and procedural props remain active. Walls are explicit synthetic collision fixtures inserted into the state; this does not prove legal placement or paid construction commands.
+
+Both versions find the same 96 paths and reject the same 84 queries. Successful wall-crossing routes are checked segment by segment. Each biome/stage also has a short positive control selected on its actual walkable terrain. All 24 canyon wall-crossing queries are rejected by both versions; its six positive controls verify local travel, not travel through that wall fixture. The route sequence hash is `925370682322a7ffcd61ff8dfebf041f5a88fbc6b2f43b425097ed95e0c0850c`.
+
+This is route equivalence, not comparative timing, worker simulation, automatic-gate generation, rendered/physical-mobile acceptance or a 100-night result. Reproduce with `node tools/check_wall_navigation_equivalence.mjs f63d82db .cache/wall-navigation-equivalence.json`.
