@@ -1,0 +1,10 @@
+{
+  "baseline": "03eaef6",
+  "testCommand": "node --test tests/animal-actions.test.js tests/fixed-pose.test.js tests/actor-motion.test.js tests/animal-saved-load.test.js tests/animal-preload.test.js tests/render-origin.test.js",
+  "sha256": {
+    "src/rendering/animal-actions.js": "3f7d2195584d66617e15b88e10aac54c053f20504027c3d243a04a6e79230739",
+    "src/rendering/fixed-pose.js": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+    "tests/animal-actions.test.js": "b0c727ac40f1219114bfb9b330c2ec9b40ba05264d84fbe3f811f78246f80480",
+    "tools/benchmark_animal_ground.mjs": "bd1f9fae95326df6b248142b4760ff03b32740c377782a24652180dee55e2053"
+  }
+}

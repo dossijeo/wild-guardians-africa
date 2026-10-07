@@ -50,13 +50,22 @@ export function animalGroundSamples(model){
   });
   return samples;
 }
-const vertex=new Vector3(),rootInverse=new Matrix4();
+const vertex=new Vector3(),rootInverse=new Matrix4(),meshToRoot=new Matrix4();
 function groundAnimal(data){
   const model=data.model;if(!model||!data.groundSamples?.length)return;
   model.position.y=0;model.parent?.updateWorldMatrix(true,false);model.updateMatrixWorld(true);
-  rootInverse.copy(model.parent?.matrixWorld??new Matrix4()).invert();let min=Infinity;
+  if(model.parent)rootInverse.copy(model.parent.matrixWorld).invert();else rootInverse.identity();
+  let min=Infinity,previousMesh=null;
   for(const {mesh,index} of data.groundSamples){
-    mesh.getVertexPosition(index,vertex);vertex.applyMatrix4(mesh.matrixWorld).applyMatrix4(rootInverse);min=Math.min(min,vertex.y);
+    // Samples are grouped by mesh. Compose its parent-relative transform once,
+    // rather than taking every skinned vertex through world space and back.
+    // Recompute if a caller supplies interleaved samples; no frame cache can
+    // outlive a changed pose, parent transform, model scale or floating origin.
+    if(mesh!==previousMesh){meshToRoot.multiplyMatrices(rootInverse,mesh.matrixWorld);previousMesh=mesh;}
+    mesh.getVertexPosition(index,vertex);
+    // Object transforms are affine, and grounding only needs local height.
+    // Do not compute the unused X/Z coordinates or a homogeneous division.
+    const e=meshToRoot.elements;min=Math.min(min,e[1]*vertex.x+e[5]*vertex.y+e[9]*vertex.z+e[13]);
   }
   if(min<.022*model.scale.y){model.position.y=.022*model.scale.y-min;model.updateMatrixWorld(true);}
 }

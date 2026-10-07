@@ -1,0 +1,352 @@
+{
+  "baseline": "03eaef6",
+  "scope": "Node CPU only, original five GLBs with native skins/tracks; textures omitted. Background campaigns and child test suite may affect timing. No integrated GPU/FPS/mobile/RAM claim.",
+  "pattern": "ABBA, 40 warmup +120 measured calls/group, static and changing poses",
+  "sourceHashes": {
+    "src/rendering/animal-actions.js": "3f7d2195584d66617e15b88e10aac54c053f20504027c3d243a04a6e79230739",
+    "src/rendering/fixed-pose.js": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+    "tools/benchmark_animal_ground.mjs": "bd1f9fae95326df6b248142b4760ff03b32740c377782a24652180dee55e2053"
+  },
+  "records": [
+    {
+      "species": "warthog",
+      "groundSamples": 232,
+      "referenceTransformCalls": 1714,
+      "candidateTransformCalls": 1250,
+      "maximumMatrixError": 0,
+      "sourceSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.23288833333333703,
+              "median": 0.14630000000011023,
+              "p95": 0.2477000000001226
+            },
+            {
+              "optimized": true,
+              "mean": 0.19391416666666336,
+              "median": 0.12930000000005748,
+              "p95": 0.2636999999999716
+            },
+            {
+              "optimized": true,
+              "mean": 0.11704500000000735,
+              "median": 0.11979999999994106,
+              "p95": 0.14909999999986212
+            },
+            {
+              "optimized": false,
+              "mean": 0.17403833333334925,
+              "median": 0.13970000000017535,
+              "p95": 0.19260000000008404
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.22179500000000113,
+              "median": 0.16889999999989413,
+              "p95": 0.44659999999998945
+            },
+            {
+              "optimized": true,
+              "mean": 0.1732750000000029,
+              "median": 0.14660000000003492,
+              "p95": 0.28149999999982356
+            },
+            {
+              "optimized": true,
+              "mean": 0.14461750000000773,
+              "median": 0.13940000000002328,
+              "p95": 0.20240000000012515
+            },
+            {
+              "optimized": false,
+              "mean": 0.15649916666665906,
+              "median": 0.13439999999991414,
+              "p95": 0.22899999999981446
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "species": "hyena",
+      "groundSamples": 1077,
+      "referenceTransformCalls": 7222,
+      "candidateTransformCalls": 5068,
+      "maximumMatrixError": 0,
+      "sourceSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.6583566666666514,
+              "median": 0.5397000000000389,
+              "p95": 1.5872999999999138
+            },
+            {
+              "optimized": true,
+              "mean": 0.8588516666666711,
+              "median": 0.4882000000000062,
+              "p95": 1.471900000000005
+            },
+            {
+              "optimized": true,
+              "mean": 0.6957466666666771,
+              "median": 0.47679999999991196,
+              "p95": 1.7369000000003325
+            },
+            {
+              "optimized": false,
+              "mean": 0.6235399999999989,
+              "median": 0.5102000000001681,
+              "p95": 1.0360000000000582
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.6836375000000127,
+              "median": 0.49299999999993815,
+              "p95": 0.9772000000002663
+            },
+            {
+              "optimized": true,
+              "mean": 0.6611558333333467,
+              "median": 0.5243999999997868,
+              "p95": 0.927599999999984
+            },
+            {
+              "optimized": true,
+              "mean": 0.6848941666666747,
+              "median": 0.5156999999999243,
+              "p95": 0.9268999999999323
+            },
+            {
+              "optimized": false,
+              "mean": 0.6633016666666739,
+              "median": 0.543800000000374,
+              "p95": 1.0561999999999898
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "species": "buffalo",
+      "groundSamples": 1180,
+      "referenceTransformCalls": 8436,
+      "candidateTransformCalls": 6076,
+      "maximumMatrixError": 0,
+      "sourceSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 1.0430091666666954,
+              "median": 0.6925000000001091,
+              "p95": 2.7939000000001215
+            },
+            {
+              "optimized": true,
+              "mean": 0.8312833333333174,
+              "median": 0.6493999999997868,
+              "p95": 1.841200000000299
+            },
+            {
+              "optimized": true,
+              "mean": 0.6424616666666414,
+              "median": 0.5603000000000975,
+              "p95": 1.127599999999802
+            },
+            {
+              "optimized": false,
+              "mean": 0.7414033333333123,
+              "median": 0.5506999999997788,
+              "p95": 1.1580000000003565
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.7497666666666533,
+              "median": 0.6279000000004089,
+              "p95": 1.6251000000002023
+            },
+            {
+              "optimized": true,
+              "mean": 0.810243333333339,
+              "median": 0.6350999999999658,
+              "p95": 2.120400000000245
+            },
+            {
+              "optimized": true,
+              "mean": 0.6224208333333233,
+              "median": 0.5648000000001048,
+              "p95": 0.966200000000299
+            },
+            {
+              "optimized": false,
+              "mean": 0.7770466666666949,
+              "median": 0.690599999999904,
+              "p95": 1.4447000000000116
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "species": "lion",
+      "groundSamples": 1435,
+      "referenceTransformCalls": 9389,
+      "candidateTransformCalls": 6519,
+      "maximumMatrixError": 0,
+      "sourceSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 1.1944808333333488,
+              "median": 0.7453000000004977,
+              "p95": 3.5113000000001193
+            },
+            {
+              "optimized": true,
+              "mean": 1.1695283333333237,
+              "median": 0.6999999999998181,
+              "p95": 2.2565000000004147
+            },
+            {
+              "optimized": true,
+              "mean": 0.826273333333332,
+              "median": 0.6556999999993423,
+              "p95": 2.176499999999578
+            },
+            {
+              "optimized": false,
+              "mean": 0.8081658333333356,
+              "median": 0.685099999999693,
+              "p95": 1.3386000000000422
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 1.0465183333333243,
+              "median": 0.7474000000001979,
+              "p95": 2.9921999999996842
+            },
+            {
+              "optimized": true,
+              "mean": 0.7697275000000142,
+              "median": 0.6639999999997599,
+              "p95": 1.2481000000007043
+            },
+            {
+              "optimized": true,
+              "mean": 0.7731633333333624,
+              "median": 0.6815000000005966,
+              "p95": 1.3927000000003318
+            },
+            {
+              "optimized": false,
+              "mean": 0.8296116666667482,
+              "median": 0.7538999999997031,
+              "p95": 1.4119000000000597
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "species": "rhino",
+      "groundSamples": 1235,
+      "referenceTransformCalls": 8044,
+      "candidateTransformCalls": 5574,
+      "maximumMatrixError": 0,
+      "sourceSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82",
+      "timings": [
+        {
+          "mode": "static",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 0.7042316666666617,
+              "median": 0.5444999999999709,
+              "p95": 1.9236999999993714
+            },
+            {
+              "optimized": true,
+              "mean": 0.6769616666666252,
+              "median": 0.5357999999996537,
+              "p95": 1.2577000000001135
+            },
+            {
+              "optimized": true,
+              "mean": 0.6557024999999915,
+              "median": 0.5468999999993684,
+              "p95": 1.1210000000000946
+            },
+            {
+              "optimized": false,
+              "mean": 0.7468724999999949,
+              "median": 0.5839999999998327,
+              "p95": 1.3527000000003682
+            }
+          ]
+        },
+        {
+          "mode": "changing",
+          "groups": [
+            {
+              "optimized": false,
+              "mean": 1.0091741666667076,
+              "median": 0.647899999999936,
+              "p95": 2.2479000000002998
+            },
+            {
+              "optimized": true,
+              "mean": 0.6066849999999856,
+              "median": 0.5311000000001513,
+              "p95": 1.1957000000002154
+            },
+            {
+              "optimized": true,
+              "mean": 0.8996291666666366,
+              "median": 0.6053000000001703,
+              "p95": 2.638500000000022
+            },
+            {
+              "optimized": false,
+              "mean": 0.8422525000000102,
+              "median": 0.6444999999994252,
+              "p95": 1.967899999999645
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

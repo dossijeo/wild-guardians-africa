@@ -1,0 +1,72 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA ciclo de vida musical Opus</title>
+<style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style>
+<h1>Ventanas Opus · solapamiento y liberación nativos</h1>
+<p>Cuatro casos con AudioContext real a 48 kHz, archivos de producción y reloj nativo. Salida silenciada; no mide escucha ni RAM física. Mezcla diurna fija para aislar dos decks durante saltos y wraps.</p>
+<button id="run">Comprobar los cuatro casos</button><p id="status">Preparado</p><pre id="report"></pre>
+<script type="module">
+import {AudioSystem} from '/src/audio/audio.js';
+import {json} from '/src/rendering/asset-fetch.js';
+const status=document.querySelector('#status'),report=document.querySelector('#report'),cases=[];
+let running=false,audio,current;
+const assert=(value,message)=>{if(!value)throw Error(message);};
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function paint(state){report.textContent=JSON.stringify({fixtureVersion:'native-window-lifecycle-1',state,muted:true,cases,current},null,2);}
+function snapshot(){
+ const transport=audio.transport,pool=audio.musicWindowPool;
+ return {time:audio.context.currentTime,decks:transport.decks.length,sources:audio.active.length,readyWindows:pool.ready.size,pcmBytes:pool.pcmBytes(),plan:transport.plan?.kind??null,section:transport.section.id,edge:transport.lastEdge,loops:transport.loops};
+}
+async function runCase(pack,kind){
+ const bank=await json(`/content/music-${pack}.json`),edge=bank.navigation.edges.find(edge=>edge.enabled),from=bank.navigation.sections.find(section=>section.id===edge.source);
+ const offset=kind==='wrap'?bank.duration-8:from.end-6;
+ current={pack,kind,offset,requestedEdge:kind==='jump'?edge.id:null,errors:[],peak:null,afterOverlap:null,endedSources:0};paint('loading');
+ audio=new AudioSystem({sfx:0,music:0},{json,musicTransport:{offset,random:kind==='wrap'?()=>1:()=>0}});
+ audio.sfx={items:[]};audio.musicScene='day';audio.context=new AudioContext({sampleRate:48000});await audio.unlock();
+ const sources=[],create=audio.context.createBufferSource.bind(audio.context);
+ audio.context.createBufferSource=()=>{
+  const source=create(),start=source.start.bind(source);
+  source.start=(when,offset)=>{source.qaWhen=when;source.qaOffset=offset;return start(when,offset);};
+  source.addEventListener('ended',()=>{source.qaEnded=true;});sources.push(source);return source;
+ };
+ try{
+  await audio.gameplay(pack==='a'?1:2);
+  assert(audio.transport?.constructor.name==='MusicWindowTransport','Window transport unavailable');
+  assert(audio.context.sampleRate===48000,'Unexpected native sample rate');
+  audio.mixer.automatic=false;
+  const initial=audio.transport,until=audio.context.currentTime+11;
+  current.rate=audio.context.sampleRate;current.initial=snapshot();
+  while(audio.context.currentTime<until){
+   audio.transport.update('day',audio.context.currentTime);
+   assert(!audio.musicError&&!audio.transport.windowError,'Music scheduling error');
+   assert(audio.transport===initial,'Transport restarted');
+   assert(audio.musicBuffers.size===0,'Full-track PCM retained');
+   const observed=snapshot();
+   if(!current.peak||observed.pcmBytes>current.peak.pcmBytes)current.peak=observed;
+   if(current.peak.decks===2&&observed.decks===1&&observed.pcmBytes<current.peak.pcmBytes)current.afterOverlap=observed;
+   for(const source of sources)if(source.qaEnded)assert(source.buffer===null,'Ended source still holds PCM');
+   for(const key of audio.musicWindowPool.ready.keys())assert(audio.transport.wantedKeys.has(key),'Expired window retained');
+   paint('playing');await delay(25);
+  }
+  audio.transport.update('day',audio.context.currentTime);current.final=snapshot();
+  assert(current.peak.decks===2,'No native deck overlap observed');
+  assert(current.afterOverlap,'PCM did not decrease after overlap');
+  if(kind==='jump')assert(audio.transport.lastEdge===edge.id,'Registered edge not reached');
+  else assert(audio.transport.loops===1,'Wrap not completed');
+  current.maximumClockError=Math.max(...sources.map(source=>Math.abs(source.musicWindowFirstSample/48000+source.qaOffset-(source.musicDeckOffset+source.qaWhen-source.musicDeckStart))));
+  assert(current.maximumClockError<1e-9,'Source phase shifted');
+  audio.stopMusic();await delay(250);
+  assert(audio.active.length===0&&!audio.musicWindowPool,'Music pool or sources survive stop');
+  assert(sources.every(source=>source.qaEnded&&source.buffer===null),'Stopped native sources retain PCM');
+  current.endedSources=sources.length;current.afterStop={active:audio.active.length,pool:audio.musicWindowPool??null};
+ }catch(error){current.errors.push(error.message);}
+ finally{audio.stop();await audio.context.close();current.contextAfterClose=audio.context.state;audio=null;cases.push(current);current=null;paint('between-cases');}
+}
+document.querySelector('#run').onclick=async()=>{
+ if(running)return;running=true;document.querySelector('#run').disabled=true;
+ try{
+  for(const pack of ['a','b'])for(const kind of ['wrap','jump']){status.textContent=`${pack.toUpperCase()} · ${kind}`;await runCase(pack,kind);}
+  const passed=cases.every(item=>!item.errors.length);status.textContent=passed?'4/4 casos correctos':'Completado con errores';paint(passed?'passed':'failed');
+ }catch(error){status.textContent='Error';report.textContent=JSON.stringify({state:'failed',error:error.message,cases,current},null,2);}
+ finally{running=false;}
+};
+window.addEventListener('pagehide',()=>audio?.dispose());
+</script></html>

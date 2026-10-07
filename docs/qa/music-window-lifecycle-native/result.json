@@ -1,0 +1,244 @@
+{
+  "fixtureVersion": "native-window-lifecycle-1",
+  "state": "passed",
+  "muted": true,
+  "cases": [
+    {
+      "pack": "a",
+      "kind": "wrap",
+      "offset": 141.28,
+      "requestedEdge": null,
+      "errors": [],
+      "peak": {
+        "time": 2.152,
+        "decks": 2,
+        "sources": 32,
+        "readyWindows": 32,
+        "pcmBytes": 72377856,
+        "plan": "wrap",
+        "section": "F",
+        "edge": null,
+        "loops": 0
+      },
+      "afterOverlap": {
+        "time": 10.970666666666666,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "I",
+        "edge": null,
+        "loops": 1
+      },
+      "endedSources": 40,
+      "rate": 48000,
+      "initial": {
+        "time": 0,
+        "decks": 1,
+        "sources": 0,
+        "readyWindows": 8,
+        "pcmBytes": 18719232,
+        "plan": null,
+        "section": "F",
+        "edge": null,
+        "loops": 0
+      },
+      "final": {
+        "time": 11,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "I",
+        "edge": null,
+        "loops": 1
+      },
+      "maximumClockError": 1.7763568394002505e-15,
+      "afterStop": {
+        "active": 0,
+        "pool": null
+      },
+      "contextAfterClose": "closed"
+    },
+    {
+      "pack": "a",
+      "kind": "jump",
+      "offset": 65.255182,
+      "requestedEdge": "B_A",
+      "errors": [],
+      "peak": {
+        "time": 4.32,
+        "decks": 2,
+        "sources": 32,
+        "readyWindows": 32,
+        "pcmBytes": 74876928,
+        "plan": "jump",
+        "section": "B",
+        "edge": null,
+        "loops": 0
+      },
+      "afterOverlap": {
+        "time": 11.250666666666667,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "A",
+        "edge": "B_A",
+        "loops": 0
+      },
+      "endedSources": 48,
+      "rate": 48000,
+      "initial": {
+        "time": 0.2613333333333333,
+        "decks": 1,
+        "sources": 0,
+        "readyWindows": 8,
+        "pcmBytes": 18719232,
+        "plan": null,
+        "section": "B",
+        "edge": null,
+        "loops": 0
+      },
+      "final": {
+        "time": 11.28,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "A",
+        "edge": "B_A",
+        "loops": 0
+      },
+      "maximumClockError": 1.4210854715202004e-14,
+      "afterStop": {
+        "active": 0,
+        "pool": null
+      },
+      "contextAfterClose": "closed"
+    },
+    {
+      "pack": "b",
+      "kind": "wrap",
+      "offset": 171.88,
+      "requestedEdge": null,
+      "errors": [],
+      "peak": {
+        "time": 2.632,
+        "decks": 2,
+        "sources": 32,
+        "readyWindows": 32,
+        "pcmBytes": 74221056,
+        "plan": "wrap",
+        "section": "F",
+        "edge": null,
+        "loops": 0
+      },
+      "afterOverlap": {
+        "time": 11.44,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "I",
+        "edge": null,
+        "loops": 1
+      },
+      "endedSources": 40,
+      "rate": 48000,
+      "initial": {
+        "time": 0.45066666666666666,
+        "decks": 1,
+        "sources": 0,
+        "readyWindows": 8,
+        "pcmBytes": 18719232,
+        "plan": null,
+        "section": "F",
+        "edge": null,
+        "loops": 0
+      },
+      "final": {
+        "time": 11.472,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "I",
+        "edge": null,
+        "loops": 1
+      },
+      "maximumClockError": 5.329070518200751e-15,
+      "afterStop": {
+        "active": 0,
+        "pool": null
+      },
+      "contextAfterClose": "closed"
+    },
+    {
+      "pack": "b",
+      "kind": "jump",
+      "offset": 137.433333,
+      "requestedEdge": "D_B",
+      "errors": [],
+      "peak": {
+        "time": 4.341333333333333,
+        "decks": 2,
+        "sources": 32,
+        "readyWindows": 32,
+        "pcmBytes": 74876928,
+        "plan": "jump",
+        "section": "D",
+        "edge": null,
+        "loops": 0
+      },
+      "afterOverlap": {
+        "time": 11.24,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "B",
+        "edge": "D_B",
+        "loops": 0
+      },
+      "endedSources": 40,
+      "rate": 48000,
+      "initial": {
+        "time": 0.272,
+        "decks": 1,
+        "sources": 0,
+        "readyWindows": 8,
+        "pcmBytes": 18719232,
+        "plan": null,
+        "section": "D",
+        "edge": null,
+        "loops": 0
+      },
+      "final": {
+        "time": 11.272,
+        "decks": 1,
+        "sources": 16,
+        "readyWindows": 16,
+        "pcmBytes": 37438464,
+        "plan": "natural",
+        "section": "B",
+        "edge": "D_B",
+        "loops": 0
+      },
+      "maximumClockError": 2.842170943040401e-14,
+      "afterStop": {
+        "active": 0,
+        "pool": null
+      },
+      "contextAfterClose": "closed"
+    }
+  ],
+  "current": null
+}

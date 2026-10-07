@@ -65,7 +65,7 @@ function geometryOnly(buffer){
   buffer.copy(out,0,0,20);out.writeUInt32LE(out.length,8);out.writeUInt32LE(length,12);json.copy(out,20);bin.copy(out,20+length);
   return out.buffer.slice(out.byteOffset,out.byteOffset+out.length);
 }
-for(const [species,library] of Object.entries(A.animals))test(`${species}: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding`,async()=>{
+for(const [species,library] of Object.entries(A.animals))test(`${species}: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding`,async t=>{
   const bytes=readFileSync(new URL('../public'+library.url,import.meta.url));assert.equal(createHash('sha256').update(bytes).digest('hex'),library.sha256);
   const gltf=await new GLTFLoader().parseAsync(geometryOnly(bytes),''),clips=prepareAnimalClips(gltf.animations);
   const native=library.presentation;assert.equal(native.scale,1);const source=readFileSync(new URL('../'+native.sourceScript,import.meta.url));assert.equal(createHash('sha256').update(source).digest('hex'),native.sourceScriptSha256);assert.match(source.toString(),/avatar\.s=\[1,1,1\]/);
@@ -100,5 +100,26 @@ for(const [species,library] of Object.entries(A.animals))test(`${species}: origi
     assert.equal(gltf.scene.position.toArray().filter(Number.isFinite).length,3);
   }
   const original=gltf.animations[0],copy=clips[0];assert.notEqual(original.tracks[0].times,copy.tracks[0].times);
+  // Compare the original two-transform grounding recipe through actual native
+  // skins, walking/running and every attack, including shifted/scaled parents.
+  // Restoring the reference height does not change the next fixed pose sample.
+  let maximumGroundError=0;
+  const point=new THREE.Vector3(),inverse=new THREE.Matrix4();
+  for(const [clipIndex,clip] of clips.filter(c=>['Walking','Running',...attacks].includes(c.name)).entries())for(let phase=0;phase<12;phase++){
+    parent.position.set(phase>5?4800:20,phase*.13,-phase*37);parent.rotation.set(.03*phase,.27*phase,-.02*phase);parent.scale.set(1.1,.9,1.2);
+    gltf.scene.scale.setScalar(phase%2?.75:1);gltf.scene.rotation.y=phase*.11;
+    if(phase===11)parent.remove(gltf.scene);
+    const attacking=attacks.includes(clip.name),time=clip.duration*(phase+.25)/12;
+    const animal=attacking?{species,status:'attacking',animation:clip.name,attackId:`ground-${clipIndex}-${phase}`,attackDuration:clip.duration,attackRemaining:clip.duration-time}:{species,status:clip.name==='Running'?'entering':'walking',motionPhase:time};
+    applyAnimalPose(data,animal,50);const actual=gltf.scene.position.y;
+    gltf.scene.position.y=0;parent.updateWorldMatrix(true,false);gltf.scene.updateMatrixWorld(true);if(gltf.scene.parent)inverse.copy(parent.matrixWorld).invert();else inverse.identity();let minimum=Infinity;
+    for(const {mesh,index} of data.groundSamples){mesh.getVertexPosition(index,point);point.applyMatrix4(mesh.matrixWorld).applyMatrix4(inverse);minimum=Math.min(minimum,point.y);}
+    const expected=minimum<.022*gltf.scene.scale.y?.022*gltf.scene.scale.y-minimum:0;
+    maximumGroundError=Math.max(maximumGroundError,Math.abs(actual-expected));assert.ok(Math.abs(actual-expected)<1e-9,`${species}/${clip.name}/${phase}: changed ground offset`);
+    gltf.scene.position.y=actual;gltf.scene.updateMatrixWorld(true);
+    if(phase===11)parent.add(gltf.scene);
+  }
+  assert.ok(maximumGroundError<1e-9);
+  t.diagnostic(JSON.stringify({species,groundingComparisonPoses:72,maximumGroundError}));
   assert.deepEqual(JSON.parse(readFileSync(new URL('../public/content/animal-actions.json',import.meta.url),'utf8')),A);
 });
