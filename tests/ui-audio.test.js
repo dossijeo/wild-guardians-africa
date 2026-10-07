@@ -19,7 +19,7 @@ test('audio failure cannot throw into a successful interface or game action',asy
  for(const play of [()=>{throw Error('device');},()=>Promise.reject(Error('decode'))]){const ui=new UiAudio(play);ui.surface('panel');ui.error();ui.pause([],['menu']);ui.close();await new Promise(done=>setImmediate(done));}
 });
 test('all transition cues retain original one-shot IDs from the supplied bank',()=>{
- const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,6);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
+ const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,7);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
 });
 
 
@@ -35,4 +35,11 @@ test('each completed failed wall gesture can cue error 107 even within the gener
  assert.deepEqual(f.calls.map(c=>c.id),['ui_error','ui_error']);
  const bank=JSON.parse(readFileSync(new URL('../public/content/sfx-routing.json',import.meta.url),'utf8'));
  const item=bank.items.find(i=>i.id==='ui_error');assert.equal(item.number,107);assert.equal(item.filename,'107_ui_error.mp3');
+});
+
+test('magic selection uses original 092 instead of panel closure and expires superseded or reset requests',()=>{
+ const f=fixture();f.ui.surface('panel','magic');f.ui.close({silent:true});assert.equal(f.ui.selectSpell('growth'),true);const first=f.calls.at(-1);assert.equal(first.id,'spirit_select');assert.equal(first.options.bus,'ui');assert.equal(first.options.emitter,'ui:magic');assert.equal(first.options.isCurrent(),true);assert.equal(f.calls.filter(c=>c.id==='ui_panel_close').length,0);
+ f.ui.selectSpell('shield');assert.equal(first.options.isCurrent(),false);assert.equal(f.calls.at(-1).options.isCurrent(),true);f.time(.501);assert.equal(f.calls.at(-1).options.isCurrent(),false);f.time(1);f.ui.selectSpell('multiply');f.ui.reset();assert.equal(f.calls.at(-1).options.isCurrent(),false);
+ const count=f.calls.length;assert.equal(f.ui.selectSpell('invalid'),false);assert.equal(f.calls.length,count);
+ const bank=JSON.parse(readFileSync(new URL('../public/content/sfx-routing.json',import.meta.url),'utf8'));assert.equal(bank.items.find(i=>i.id==='spirit_select').number,92);
 });
