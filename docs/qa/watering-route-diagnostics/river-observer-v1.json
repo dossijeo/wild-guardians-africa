@@ -1,0 +1,43 @@
+{
+  "scope": "QA observer only; native historical snapshot and ordinary paid hiring where required, complete serialized parity at every tick. No positions, collision, reach, growth, RNG, speed or economic overrides. Counters do not prove global inaccessibility; a null A* can reflect a search limit. Not the live day-76 checkpoint, 100-night acceptance, rendering or a performance benchmark.",
+  "input": "docs/qa/intensive-river-rejoin-100/state.json.gz",
+  "inputSha256": "81728d17c811c8697528d9dd66434b976cdfe9113d86e92124b2b3d2d27531ae",
+  "ticks": 300,
+  "stepSeconds": 0.1,
+  "trajectorySha256": "bf1a4d7ba08fa27fe57e3ce4a0fcbcbae0d4967918844fc1d081311b182b9409",
+  "sourceHashes": {
+    "workPoints": "32005dd48b01b4485febee5453a4b48afc81ee3a68a2f40a40a2409eb7883bf2",
+    "game": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "observedWork": "0acef44ac03d9a41d2407d62095ccd6e6a447ea69fdd5c18119ded987f51381d",
+    "observedGame": "1d1d5d6da780f89fe000bc0ee3f3bcd8d4db132a219eadf884d43b42cd603fb5",
+    "navigation": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8"
+  },
+  "watering": {
+    "routes": 82,
+    "candidates": 82,
+    "reachRejected": 0,
+    "walkRejected": 0,
+    "pathQueries": 82,
+    "pathRejected": 0,
+    "reachable": 82,
+    "unreachable": 0
+  },
+  "navigation": {
+    "queries": 239,
+    "searches": 192,
+    "failedMemoHits": 0,
+    "failures": 0,
+    "maxFailureKeys": 0
+  },
+  "final": {
+    "day": 101,
+    "time": 30.000000000000156,
+    "result": null,
+    "hired": 47,
+    "workers": 47,
+    "living": 516,
+    "tasks": 413,
+    "blocked": 0,
+    "stateSha256": "b6bdcca9a4f1f8f490387d4b3d5cef72e25b406416eb57af33bd4ab91c530f8a"
+  }
+}
