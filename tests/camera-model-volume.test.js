@@ -19,3 +19,12 @@ test('unsupported tilt, shear and invalid inputs fail rather than misrepresentin
  assert.throws(()=>cameraModelVolume('bad',new THREE.Box3(),new THREE.Matrix4()));
  assert.throws(()=>cameraModelVolume('bad',bounds,new THREE.Matrix4(),-1));
 });
+test('horizontal clearance does not inflate the roof or change scalar margin compatibility',()=>{
+ const box=new THREE.Box3(new THREE.Vector3(-2,0,-2),new THREE.Vector3(2,5,2)),matrix=new THREE.Matrix4().makeRotationY(.5);
+ const split=cameraModelVolume('house',box,matrix,{horizontal:6,vertical:.6}),uniform=cameraModelVolume('house',box,matrix,6);
+ for(const [actual,expected] of [[split.min,[-8,-.6,-8]],[split.max,[8,5.6,8]]])for(let i=0;i<3;i++)assert.ok(Math.abs(actual[i]-expected[i])<1e-12);
+ assert.equal(sweepCameraVolume([-20,6.1,0],[20,6.1,0],split,.45),null);
+ assert.ok(sweepCameraVolume([-20,6.1,0],[20,6.1,0],uniform,.45));
+ assert.deepEqual(cameraModelVolume('same',box,matrix,.6),cameraModelVolume('same',box,matrix,{horizontal:.6,vertical:.6}));
+ for(const margin of [null,{}, {horizontal:6},{vertical:.6},{horizontal:6,vertical:-1},{horizontal:NaN,vertical:.6},{horizontal:6,vertical:Infinity}])assert.throws(()=>cameraModelVolume('bad',box,matrix,margin));
+});

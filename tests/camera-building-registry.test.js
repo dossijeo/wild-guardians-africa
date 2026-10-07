@@ -6,6 +6,16 @@ import {installCameraPoseResolver,installTerrainCameraIntent,focusTerrainCamera,
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 const bounds=new THREE.Box3(new THREE.Vector3(-2,0,-2),new THREE.Vector3(2,5,2));
 const center=()=>{const root=new THREE.Group();root.userData.nativeBuilding=true;root.damage=0;root.template={culling:{boxes:{still:bounds,fall:bounds.clone().expandByScalar(2),ash:new THREE.Box3(new THREE.Vector3(-3,0,-3),new THREE.Vector3(3,1,3))}}};return root;};
+test('registry preserves independent center and village horizontal/vertical margins through damage',()=>{
+ const registry=new CameraBuildingRegistry({centerMargin:{horizontal:6,vertical:.6},villageMargin:{horizontal:3,vertical:.2}}),house=center(),village=new THREE.Group();
+ const mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());mesh.userData.unit={min:[-1,0,-1],max:[1,3,1]};mesh.scale.setScalar(16);village.add(mesh);
+ const objects=new Map([[1,house],[2,village]]),entities=[{id:1},{id:2}];registry.sync(objects,entities);
+ const centerBox=registry.index.records.get('1:center'),villageBox=registry.index.records.get('2:'+mesh.id);
+ assert.equal(centerBox.max[0],8);assert.ok(Math.abs(centerBox.max[1]-5.6)<1e-12);
+ assert.equal(villageBox.max[0],19);assert.ok(Math.abs(villageBox.max[1]-48.2)<1e-12);
+ house.damage=.9;registry.sync(objects,entities);const fallen=registry.index.records.get('1:center');assert.equal(fallen.max[0],10);assert.ok(Math.abs(fallen.max[1]-7.6)<1e-12);
+ registry.clear();mesh.geometry.dispose();mesh.material.dispose();
+});
 test('shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable',()=>{
  const registry=new CameraBuildingRegistry(),scene=new THREE.Scene(),parent=new THREE.Group(),objects=new Map(),entities=[];
  scene.add(parent);let sceneUpdates=0,parentUpdates=0;

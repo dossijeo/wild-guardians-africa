@@ -42,6 +42,12 @@ test('camera volumes retain all five native center scales, pivots and collapse e
    }
    const above=volume.max[1]+1;
    assert.equal(sweepCameraVolume([150,above,-49],[190,above,-49],volume,.5),null);
+   const split=cameraModelVolume(house.entityId,bounds,house.matrixWorld,{horizontal:6,vertical:.6}),uniform=cameraModelVolume(house.entityId,bounds,house.matrixWorld,6);
+   assert.ok(Math.abs(split.max[1]-volume.max[1]-.6)<1e-9);
+   assert.ok(Math.abs(split.max[0]-volume.max[0]-6)<1e-9);
+   const splitRoof=split.max[1]+.4501;
+   assert.equal(sweepCameraVolume([150,splitRoof,-49],[190,splitRoof,-49],split,.45),null);
+   assert.ok(sweepCameraVolume([150,splitRoof,-49],[190,splitRoof,-49],uniform,.45),`${house.entityId}/${state}: scalar margin blocks the same roof path`);
   }
   house.dispose();
  }
