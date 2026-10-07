@@ -1,0 +1,168 @@
+{
+  "input": "docs/qa/raid-spawn-navigation/desierto-profile.json",
+  "repeats": 12,
+  "warmupPairs": 2,
+  "sourceHashes": {
+    "src/world/navigation.js": "4785b6ffac8a1fef6dc8db141e3ac142ffced65b05c7c99c9a023583a73b97f7",
+    "src/simulation/raids.js": "49ebd8d619f4c32719b543e8c9c46c9ea8a0ba973c92c2b6234a1cb22ab909f0",
+    "tools/benchmark_sorted_props.mjs": "8cb18f0fdf8ae6ae3a0f664c1eb19dca96948f728e3fd3106fcc36106f7e9769",
+    "tools/prop-sorted-candidate.mjs": "7916b3bc66ce885f237add08f8ed6e6e86e85388eae47948d5c8a43ee6ebe9e2"
+  },
+  "stateSha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b",
+  "summary": {
+    "reference": {
+      "medianMs": 304.2199000000005
+    },
+    "sorted": {
+      "medianMs": 318.9884000000002
+    },
+    "candidatePairWins": 5
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "ms": 291.5528999999997,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 0,
+      "mode": "sorted",
+      "ms": 308.3624999999997,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 1,
+      "mode": "sorted",
+      "ms": 436.2679999999996,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "ms": 307.3104000000003,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 2,
+      "mode": "reference",
+      "ms": 308.52030000000013,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 2,
+      "mode": "sorted",
+      "ms": 329.0569000000005,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 3,
+      "mode": "sorted",
+      "ms": 356.6102000000001,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 3,
+      "mode": "reference",
+      "ms": 390.5149999999994,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 4,
+      "mode": "reference",
+      "ms": 301.1294000000007,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 4,
+      "mode": "sorted",
+      "ms": 327.2671,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 5,
+      "mode": "sorted",
+      "ms": 322.5429000000004,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 5,
+      "mode": "reference",
+      "ms": 313.5631000000003,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 6,
+      "mode": "reference",
+      "ms": 321.4886999999999,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 6,
+      "mode": "sorted",
+      "ms": 265.70570000000043,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 7,
+      "mode": "sorted",
+      "ms": 333.1986000000006,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 7,
+      "mode": "reference",
+      "ms": 307.875399999999,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 8,
+      "mode": "reference",
+      "ms": 295.2417000000005,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 8,
+      "mode": "sorted",
+      "ms": 315.4339,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 9,
+      "mode": "sorted",
+      "ms": 264.6080000000002,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 9,
+      "mode": "reference",
+      "ms": 300.8847000000005,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 10,
+      "mode": "reference",
+      "ms": 281.96270000000004,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 10,
+      "mode": "sorted",
+      "ms": 261.0181999999986,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 11,
+      "mode": "sorted",
+      "ms": 257.90890000000036,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    },
+    {
+      "iteration": 11,
+      "mode": "reference",
+      "ms": 259.1516999999985,
+      "sha256": "11008d654d6c97bed19b28349bf50fb20aaf9b544bf6d8f9a766f5ae0e70178b"
+    }
+  ],
+  "scope": "Same saved desert pre-state and complete spawn decisions. Fresh navigators with matching warmed chunks, index creation included in timing. CPU only; background campaign processes remain active. No renderer, mobile, memory or full campaign acceptance."
+}
