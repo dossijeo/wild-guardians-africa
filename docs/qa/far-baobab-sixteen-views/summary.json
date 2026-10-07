@@ -1,0 +1,146 @@
+{
+  "accepted": false,
+  "source": "677ad30 plus QA16 override",
+  "records": [
+    {
+      "name": "blend",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "blend",
+      "night": 0,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 68,
+        "triangles": 1074382
+      }
+    },
+    {
+      "name": "native",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "native",
+      "night": 0,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 68,
+        "triangles": 1084358
+      }
+    },
+    {
+      "name": "sprite",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "sprite",
+      "night": 0,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 65,
+        "triangles": 1048297
+      }
+    },
+    {
+      "name": "blend-night",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "blend",
+      "night": 1,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 68,
+        "triangles": 1074382
+      }
+    },
+    {
+      "name": "native-night",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "native",
+      "night": 1,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 68,
+        "triangles": 1084358
+      }
+    },
+    {
+      "name": "sprite-night",
+      "camera": [
+        63.20690623333192,
+        24.007256348111497,
+        -46.97362664255933
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverage": "sprite",
+      "night": 1,
+      "ready": {
+        "ready": 1,
+        "enabled": true
+      },
+      "render": {
+        "calls": 65,
+        "triangles": 1048297
+      }
+    }
+  ],
+  "estimatedExtraAtlasGpuBytes": 11184810.666666666,
+  "benchmarkPerformed": false
+}
