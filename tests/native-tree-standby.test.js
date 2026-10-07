@@ -109,3 +109,12 @@ test('a completed promise from an old epoch never adopts over the existing bank'
  assert.equal(f.owner.stats.cancelledPreparations,1);assert.deepEqual(f.owner.stats.errors,[]);assert.equal(f.scene.children.length,1);
  f.owner.prepare=async()=>{};f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.has('b',b),true);f.close();
 });
+
+
+test('native coverage alone cannot begin a handoff before its retained backup fence completes',async()=>{
+ let finish;const f=fixture(()=>new Promise(resolve=>finish=resolve)),t=tree();
+ const args={coverage:{has:()=>true},standby:f.owner,nativeTree:t,logicalTree:{...t},suppressed:new Set()};
+ f.owner.request([descriptor(t)],{x:0,z:0});assert.equal(standbyCoverageReady(t.id,args),false);
+ finish();await settled(f.owner);assert.equal(standbyCoverageReady(t.id,args),true);
+ args.logicalTree={...t,y:t.y+1};assert.equal(standbyCoverageReady(t.id,args),false);f.close();
+});

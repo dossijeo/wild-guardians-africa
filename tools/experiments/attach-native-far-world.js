@@ -42,7 +42,9 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,resourceRevision:()=>nativeFarGpuRevision(world.renderer),onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cancelled:()=>cancelled()||isCancelled(),diagnoseErrors:world.farGpuDiagnostics===true})});
  let physicalIds=nativeTreePresence(world);
  const standbyAvailable=(id,suppressed)=>standbyCoverageReady(id,{coverage,standby,nativeTree:nativeReferences.get(id)?.tree,logicalTree:layer.current?.treeById.get(id),suppressed,nativeMissing:!physicalIds.has(id)});
- const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},has(id,suppressed){return prepared.has(id,suppressed)||standbyAvailable(id,suppressed);}};
+ // Starting a fade also requires its owned backup fence: native packing may
+ // change on the next camera update, before a first standby upload completes.
+ const joint={get revision(){return prepared.revision+':'+standby.revision+':'+layer.revision+':'+world.chunkRevision;},has(id,suppressed){return standbyAvailable(id,suppressed);}};
  let referencesRevision=-1;const nativeReferences=new Map();
  let logicalPlan=null;
  function scheduleLogicalPreload(currentSignature){
