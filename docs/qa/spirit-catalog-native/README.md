@@ -1,5 +1,7 @@
 # Native Spirit media catalog · 2026-10-07
 
+Later evidence: [all 54 natural completions](../spirit-complete-native/README.md) passed in a new diagnostic run. The partial/full-failure descriptions below remain historical evidence. The first ES_21 timeout cause remains undetermined; muted completion does not certify perceptual quality or gameplay UI behavior.
+
 Actual browser run of tests/browser/spirit-voice-catalog.html on http://127.0.0.1:5191, main0a65063 (runtime731cd8e). Production SpiritVoice and54 original Opus clips:27 Spanish and27 English. All54 start native HTMLAudio playback, reach at least0.05seconds, report finite duration and rate1, and stop/release their source without firing a message advancement.
 
 The shortest measured clip ES_26 (2.312583seconds) additionally plays to its natural ended; exactly one callback fires and the media source is released. Browser console warning/error list was empty. Native JSON and source hashes are adjacent.
