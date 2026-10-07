@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>HUD frame reuse</title>
+<style>body{background:#23413a;color:white;font:18px sans-serif}#host{width:650px;max-width:95vw}section{position:relative;height:240px;padding:40px;box-sizing:border-box;color:#432811}.frame-canvas{position:absolute;inset:0;z-index:-1}section{isolation:isolate}button{padding:10px}</style>
+<button id="open">Open another panel</button><pre id="result">Loading…</pre><div id="host"></div>
+<script type="module">
+import {createFrameImageLoader} from '../../src/ui/frame-image-loader.js';
+import {ASSETS,framePaint} from '../../src/ui/native-hud.js';
+import {assetUrl} from '../../src/rendering/asset-url.js';
+for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
+let created=0,openings=0,previous=null,reused=0;
+const load=createFrameImageLoader(ASSETS,{createImage:()=>{created++;return new Image();}});
+async function open(){
+ const host=document.querySelector('#host');host.innerHTML='<section><canvas class="frame-canvas"></canvas><h2>Retained native frame</h2><p>Each opening replaces the panel, retaining its loaded artwork.</p></section>';
+ try{
+  const images=await load();if(previous===images)reused++;previous=images;openings++;
+  framePaint(host,{short:false,portrait:false},images);
+  document.querySelector('#result').textContent=JSON.stringify({openings,created,reused,frames:Object.keys(images).length,allReady:Object.values(images).every(image=>image.complete&&image.naturalWidth>0)},null,2);
+ }catch(error){document.querySelector('#result').textContent='ERROR: '+error.message;}
+}
+document.querySelector('#open').onclick=open;open();
+</script></html>
