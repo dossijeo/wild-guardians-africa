@@ -1,0 +1,44 @@
+{
+  "fixture": "tests/browser/embedded-color-pilot.html",
+  "fixtureSha256": "a0352a88c7846d79ff19efd9d79e311442201ca524305e6e6e4f0fb681f96286",
+  "source": "2ebe7f3 (front tab651, repeated back tab652)",
+  "browserTab": [
+    651,
+    652
+  ],
+  "resolution": [
+    1280,
+    720
+  ],
+  "runtimeGlbSha256": "82099f8c681ad28e68e45bdf32d943011a1bd49b7011f5158f017903285bcf9c",
+  "candidateGlbSha256": "79b28cda47e5a2ac427986eef9b58f0942d914c9c6f804e939714e43c938a2fa",
+  "views": [
+    {
+      "view": "front",
+      "rows": 12,
+      "maxRgbDifference": 15
+    },
+    {
+      "view": "back",
+      "rows": 12,
+      "maxRgbDifference": 18
+    }
+  ],
+  "consoleErrors": 0,
+  "consoleWarnings": 0,
+  "consoleScope": "Repeated back run tab652; tab651 console not recovered",
+  "moduleSyntax": "pass",
+  "files": {
+    "back-comparison.json": "7718dbb7eef3e5b5e2f3f19279523dd8492988d53421108e9736c79f4649344f",
+    "baseline-back-day.jpg": "7c0595d2f9109bd258e524467ba2ad590367c95cc78795a011de123419b6081d",
+    "baseline-back-night.jpg": "ee104d622af6d2c41f940c5a7bd86ee518239e9dd6416f21a6c5dd4db7768f70",
+    "baseline-front-day.jpg": "43703be73ef22b8b1e3800990ffaf868edb7c3b5535c2cc2b0151190f25282e8",
+    "baseline-front-night.jpg": "7a1ec2448386cf07e7bcf4fcc7b57d37ec0beccbba339a62390658f341f02ef4",
+    "candidate-back-day.jpg": "b67d7140b87b55e43d0b71cb317384b05e236180c70e039a1f80ce9641d86238",
+    "candidate-back-night.jpg": "11e27cbc7c8452f06dc9c74acba3c7dda76f7f444e3175a183365383e14838cc",
+    "candidate-front-day.jpg": "da74ab04c1e0bffea1582996f0dd31303aad0d53eac5a71bb536c390528261c0",
+    "candidate-front-night.jpg": "5c95728ee5b430dfdbc9b7dd0c511e80cd8a9c25885a62fdf626e201381cf862",
+    "console.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "front-comparison.json": "71522d7c05a17a8e63e264ea5cd13987fdd3ee5634aeef9ea9988cb52227ced0"
+  }
+}

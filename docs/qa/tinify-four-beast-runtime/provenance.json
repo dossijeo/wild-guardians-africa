@@ -1,0 +1,35 @@
+{
+  "baseHead": "779e515777627085fb374a914c2643f86f5c50d7",
+  "terminalSessions": {
+    "compression": 28531,
+    "decodedVerification": 84271,
+    "buildPackageZip": 21861,
+    "browserSyntax": 40132,
+    "recipeTests": 10007
+  },
+  "exitCodes": 0,
+  "directedTests": {
+    "tests": 11,
+    "passed": 11
+  },
+  "sourceHashes": {
+    "tools/compress_web_assets.mjs": "1559c3d3eade7746e6ec747bad38462fb1842c6432a14a19523c2afba7cf696e",
+    "tools/approved-embedded-colors.mjs": "8e9c9ceb12733a2923952cc3e31a10863640174e34981401266915268def863d",
+    "tools/verify_web_assets.mjs": "eda6a6f72d14e3e4e89b86ad3ff398b1cf3a2d990d48251a4fc1822e39314d0c",
+    "content/manifests/embedded-color-recipes.json": "be5bdcd1085ed407ff9c29162d4a8f14174a3d270abcbec7be91b821ec04bd4e",
+    "content/manifests/web-assets.json": "5ff18f3c39c7c7eb80a19a790f0e0f93d53ce41a48d86f5c3025ffaf04173061",
+    "content/manifests/web-assets-verification.json": "101cd00ab1deab780beddc56b887db39f31e7cfe3c89ccdc64e5f82accefbd71",
+    "tests/browser/embedded-color-pilot.html": "f94a73a518e49fe06dfa2ba9a04c40658c076b221d51a829adac613048636984"
+  },
+  "files": {
+    "compress.log": "6b69fd4866f3b75073e85b34e4f9b1d7201ba1629a27191eb41decf9c8a0f18c",
+    "verify.log": "30055184b2c21c12a47d3899d09f7c1baa46af5a11e02cdd0388448ecdefe1b3",
+    "build.log": "d90be1eb15fc3d849c7ad4af0c84f29c4df5bc9c85f03b56c364714b2d9afbbd",
+    "package.log": "4f1bd9fb8489082eeca32e33c455ec1e4259bdef1719c3927cd702eb57a56e76",
+    "zip.log": "200e28f2cf5a32110e4f33b8051aaa1be006665cccb6ce883b88254e8fad8e53",
+    "browser-syntax.json": "c0f3eb7e41dc309b86221d5a1611a0ef710ae799fbca637767ceb499183d445e",
+    "rebuild.json": "8785eb2281309fd31729dd4e5aa6b47e3505e65f373b62214e32562db940cb1c",
+    "zip.json": "b8a3fef687c2b97e32e7fa4753c9f0c7f525ade53569d721d4b5551847a80694"
+  },
+  "scope": "Completed actual offline rebuild and packaging, based on previously reviewed native candidate bytes. No deployment, gameplay or performance claim."
+}
