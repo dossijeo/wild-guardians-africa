@@ -1,0 +1,31 @@
+{
+  "reportSha256": "71ba88fb80f47517087b510b46ac933d875e0ae7aeac73ad4d8a7f3dde95cde4",
+  "sourceHead": "b8cfe48e",
+  "hashes": {
+    "tools/compare_crop_history.mjs": "da0951f02e00b322cf67dd4fb5bea9b88744fbffb5e22971dea0c44cc5d492b4",
+    "src/simulation/game.js": "397b505243cbba18f341911550cfad196faec17ac17044317b44e51f89ece8c4",
+    "src/world/navigation.js": "24fc9030577d8530a102677bbeb151b35981b088d28893aec2894efa22f3f6f0",
+    "src/simulation/tasks.js": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+    "src/simulation/worker-entity-lookup.js": "92f303ea81663edf061c689a7ece00f504969c9b1b050c479230c7800884cd8a"
+  },
+  "perArm": {
+    "full": {
+      "runMediansMs": [
+        1.7496500000006563,
+        1.9703000000008615,
+        1.6647499999999127,
+        1.9783000000006723
+      ],
+      "medianOfRunMediansMs": 1.8599750000007589
+    },
+    "live-only": {
+      "runMediansMs": [
+        1.2268999999996595,
+        1.1990500000001703,
+        1.1710000000002765,
+        1.2331500000000233
+      ],
+      "medianOfRunMediansMs": 1.2129749999999149
+    }
+  }
+}
