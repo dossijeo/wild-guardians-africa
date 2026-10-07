@@ -26,6 +26,7 @@ export class CameraVolumeIndex {
    minX=x-extentX;maxX=x+extentX;minZ=z-extentZ;maxZ=z+extentZ;
   }
   const keys=this.keys(this.range(minX,minZ,maxX,maxZ));
+  box.worldMin=[minX,box.min[1],minZ];box.worldMax=[maxX,box.max[1],maxZ];
   this.delete(id);this.records.set(id,box);
   if(keys===null)this.large.add(box);
   else for(const key of keys){let bucket=this.cells.get(key);if(!bucket)this.cells.set(key,bucket=new Set());bucket.add(box);}
