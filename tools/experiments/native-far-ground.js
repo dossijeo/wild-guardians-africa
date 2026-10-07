@@ -44,6 +44,12 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  let seamOwner=null,lastSeamPromise=null;
  candidate.updateGroundBounds=()=>{bounds.value.set(...world.nearBounds);if(seamOwner){const promise=seamOwner.update();if(promise!==lastSeamPromise){lastSeamPromise=promise;promise.catch(error=>world.onError?.(error));}}};
  candidate.updateGroundBounds();
- if(seam){seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,streamFactory:seamStreamFactory,prepare:seamPrepare??((root,stale)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,[colorMap],{cancelled:stale})),createMaterial:()=>{const seamMaterial=material.clone();seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;}
+ if(seam){
+  // Basic/fog ground requires no world lights or shadow casters. Upload this
+  // small replacement alone rather than redraw the resident world per border.
+  const warmScene=new THREE.Scene();
+  const prepareSeam=async(root,stale)=>{warmScene.fog=world.scene.fog;const previous=root.onBeforeRender;root.onBeforeRender=function(renderer,scene,...args){if(scene===warmScene)candidate.groundSeamStats.warmDraws=(candidate.groundSeamStats.warmDraws??0)+1;previous.call(this,renderer,scene,...args);};try{return await prepareNativeFarGpu(world.renderer,root,warmScene,world.camera,[colorMap],{cancelled:stale});}finally{root.onBeforeRender=previous;}};
+  seamOwner=attachNativeGroundSeam(candidate,data,world,{cancelled,streamFactory:seamStreamFactory,prepare:seamPrepare??prepareSeam,createMaterial:()=>{const seamMaterial=material.clone();seamMaterial.side=THREE.DoubleSide;seamMaterial.onBeforeCompile=(shader,renderer)=>patchGroundShader(shader,renderer,false);seamMaterial.customProgramCacheKey=()=>material.customProgramCacheKey()+':seam';return seamMaterial;}});candidate.groundSeamReady=seamOwner.update();lastSeamPromise=candidate.groundSeamReady;
+ }
  let disposed=false;const dispose=candidate.dispose;candidate.dispose=options=>{if(disposed)return;disposed=true;seamOwner?.dispose();mesh.removeFromParent();geometry.dispose();material.dispose();colorMap?.dispose();farToon?.shadowUniforms.fallback.dispose();dispose.call(candidate,options);};
 }
