@@ -18,7 +18,14 @@ export class MusicWindowTransport extends MusicTransport {
       const voice={id:track.id,volume,native:new Map(),scheduled:new Set(),stopAt:Infinity,
         stop(at){
           this.stopAt=at??-Infinity;
-          for(const source of this.native.values()){if(at===undefined)audio.stopVoice(source);else try{source.stop(Math.min(source.musicWindowEnd,at));}catch{}}
+          for(const source of this.native.values()){
+            if(at===undefined){
+              audio.stopVoice(source);
+              // A suspended clock cannot deliver ended until it resumes. A
+              // cancelled window must not retain its PCM reference meanwhile.
+              if(audio.context.state!=='running')source.buffer=null;
+            }else try{source.stop(Math.min(source.musicWindowEnd,at));}catch{}
+          }
           if(at===undefined){this.native.clear();volume.disconnect();}
         }};
       deck.sources.push(voice);deck.voices.set(track.id,volume.gain);

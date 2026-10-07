@@ -121,3 +121,14 @@ test('a wrap rounded a fraction below its start never passes a negative offset t
  assert.ok(wrap.filter(source=>source.musicWindowFirstSample===0).every(source=>source.offset===0));
  audio.stop();
 });
+
+for(const pack of ['a','b'])test(pack+': stopping suspended music releases native buffer references before ended',async()=>{
+ const {audio,pool}=await fixture(pack);
+ const active=[...audio.active];assert.ok(active.length>0);
+ assert.ok(active.every(source=>source.buffer));
+ audio.context.state='suspended';audio.stopMusic();
+ assert.equal(pool.pcmBytes(),0);assert.equal(audio.active.length,0);
+ assert.ok(active.every(source=>source.buffer===null));
+ for(const source of active)source.onended?.();
+ assert.equal(audio.active.length,0);assert.equal(pool.pcmBytes(),0);
+});

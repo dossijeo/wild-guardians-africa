@@ -1,0 +1,32 @@
+{
+  "url": "http://127.0.0.1:5191/tests/browser/world-load-cancel.html?stage=mud",
+  "observedAt": "2026-10-07T02:13:49.613Z",
+  "report": {
+    "ok": true,
+    "stage": "mud",
+    "result": {
+      "checkpoint": true,
+      "disposed": true,
+      "contextLost": true,
+      "stateCleared": true,
+      "worldSignalAborted": true,
+      "assets": {
+        "cache": 0,
+        "sources": 0,
+        "resources": 0
+      },
+      "groundTextures": 0,
+      "mudTextures": 0,
+      "programs": 0,
+      "geometries": 0,
+      "loadedVfx": false,
+      "rejection": {
+        "name": "Error",
+        "message": "Mud load cancelled"
+      },
+      "errors": []
+    },
+    "scope": "Controlled WorldScene.load interruption at a real asset request in Manglares/Mapungubwe. Waits for intercepted texture/building requests; no full gameplay, physical RAM or all cancellation phases acceptance."
+  },
+  "console": []
+}
