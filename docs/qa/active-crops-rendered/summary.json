@@ -1,0 +1,223 @@
+{
+  "rows": [
+    {
+      "label": "A1",
+      "simulation": {
+        "samples": 200,
+        "median": 2.200000047683716,
+        "p95": 9.199999928474426,
+        "max": 35.800000071525574,
+        "mean": 3.5109999984502793
+      },
+      "render": {
+        "samples": 200,
+        "median": 39.200000047683716,
+        "p95": 45.700000047683716,
+        "max": 74.19999992847443,
+        "mean": 39.74149999856949
+      },
+      "raf": {
+        "samples": 200,
+        "median": 71.95000004768372,
+        "p95": 81.39999997615814,
+        "max": 99.5,
+        "mean": 72.17150000035763
+      },
+      "gpuMedianMs": 65.84776,
+      "end": {
+        "time": 34.99999999999987,
+        "money": 841,
+        "workers": 18,
+        "live": 186
+      },
+      "events": {
+        "CrateDelivered": 17,
+        "CropPicked": 23,
+        "WaterSatisfied": 2,
+        "CropMatured": 3,
+        "HarvestRequested": 3
+      },
+      "viewport": {
+        "css": [
+          1280,
+          720
+        ],
+        "buffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25
+      },
+      "pathSearches": 89
+    },
+    {
+      "label": "B1",
+      "simulation": {
+        "samples": 200,
+        "median": 1,
+        "p95": 7.5,
+        "max": 28.299999952316284,
+        "mean": 2.3035000014305114
+      },
+      "render": {
+        "samples": 200,
+        "median": 40.59999990463257,
+        "p95": 52.800000071525574,
+        "max": 86.89999997615814,
+        "mean": 41.63349999308586
+      },
+      "raf": {
+        "samples": 200,
+        "median": 70.05000001192093,
+        "p95": 83.39999997615814,
+        "max": 129.10000002384186,
+        "mean": 70.39600000023842
+      },
+      "gpuMedianMs": 64.01161350000001,
+      "end": {
+        "time": 34.99999999999987,
+        "money": 841,
+        "workers": 18,
+        "live": 186
+      },
+      "events": {
+        "CrateDelivered": 17,
+        "CropPicked": 23,
+        "WaterSatisfied": 2,
+        "CropMatured": 3,
+        "HarvestRequested": 3
+      },
+      "viewport": {
+        "css": [
+          1280,
+          720
+        ],
+        "buffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25
+      },
+      "pathSearches": 89
+    },
+    {
+      "label": "B2",
+      "simulation": {
+        "samples": 200,
+        "median": 0.9500000476837158,
+        "p95": 7.5,
+        "max": 33.39999997615814,
+        "mean": 2.21750000834465
+      },
+      "render": {
+        "samples": 200,
+        "median": 39.44999998807907,
+        "p95": 52.199999928474426,
+        "max": 77.60000002384186,
+        "mean": 40.37499999761582
+      },
+      "raf": {
+        "samples": 200,
+        "median": 70,
+        "p95": 84.10000002384186,
+        "max": 112.69999992847443,
+        "mean": 70.42699999988079
+      },
+      "gpuMedianMs": 64.2182285,
+      "end": {
+        "time": 34.99999999999987,
+        "money": 841,
+        "workers": 18,
+        "live": 186
+      },
+      "events": {
+        "CrateDelivered": 17,
+        "CropPicked": 23,
+        "WaterSatisfied": 2,
+        "CropMatured": 3,
+        "HarvestRequested": 3
+      },
+      "viewport": {
+        "css": [
+          1280,
+          720
+        ],
+        "buffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25
+      },
+      "pathSearches": 89
+    },
+    {
+      "label": "A2",
+      "simulation": {
+        "samples": 200,
+        "median": 2.100000023841858,
+        "p95": 7.699999928474426,
+        "max": 28.899999976158142,
+        "mean": 3.2929999941587447
+      },
+      "render": {
+        "samples": 200,
+        "median": 38.15000003576279,
+        "p95": 45.10000002384186,
+        "max": 71.19999992847443,
+        "mean": 38.53000000536442
+      },
+      "raf": {
+        "samples": 200,
+        "median": 70.05000001192093,
+        "p95": 81.90000009536743,
+        "max": 105.20000004768372,
+        "mean": 70.48899999976157
+      },
+      "gpuMedianMs": 64.0821085,
+      "end": {
+        "time": 34.99999999999987,
+        "money": 841,
+        "workers": 18,
+        "live": 186
+      },
+      "events": {
+        "CrateDelivered": 17,
+        "CropPicked": 23,
+        "WaterSatisfied": 2,
+        "CropMatured": 3,
+        "HarvestRequested": 3
+      },
+      "viewport": {
+        "css": [
+          1280,
+          720
+        ],
+        "buffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25
+      },
+      "pathSearches": 89
+    }
+  ],
+  "stateIdentical": true,
+  "submissionsIdentical": true,
+  "totalCpuSamples": 800,
+  "totalGpuSamples": 800,
+  "warnings": [
+    {
+      "level": "warn",
+      "message": "THREE.WebGLProgram: Program Info Log: (756,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(761,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+      "timestamp": "2026-10-07T16:47:06.357Z",
+      "url": "http://127.0.0.1:5181/node_modules/.vite/deps/chunk-SCGUQBHX.js?v=2b5a0819"
+    }
+  ],
+  "reportSha256": "18a4b1390567050c920e7d8b06c59ed1d417758392cc2c1f3f071bc2c49b915b",
+  "sources": {
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "src/simulation/active-crops.js": "64e8fab6f86309ddc629c48238aa5826c2cd12cf28fd9e433fc80a1e82cbce52",
+    "tests/browser/late-farm-render.html": "51163986674f77c2dedf881d9b85925c73474da557167d9bad6f10ab9ddac426",
+    "tools/prepare_active_crops_render.mjs": "d51dadbed0dd439e4d1ecbdbb9fb577d1666f9b2770cc5facbed4333918f5103"
+  }
+}

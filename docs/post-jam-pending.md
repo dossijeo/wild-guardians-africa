@@ -1,5 +1,7 @@
 # Tareas pendientes posteriores a la Jam
 
+[Índice de cultivos comprobado en finca renderizada](qa/active-crops-rendered/README.md): 800 muestras y queries, estado/eventos/rutas/envíos idénticos. CPU simulación mediana 2,1–2,2 a 0,95–1,0 ms; RAF permanece ~70 ms y render sigue dominante. Framebuffer 1600×900, distinto del ensayo anterior de audio; no comparar absolutos entre ellos. Próxima prioridad: coste de dibujo/materiales/pases y fincas actuales mayores, sin atribuir mejora general de FPS a este ahorro.
+
 [Índice activo de cultivos aplicado al crecimiento](qa/active-crops-index/README.md): conserva historial/guardado/FIFO y retira entradas del índice al recoger o destruir. 75 pruebas dirigidas y build; tres estados históricos nativos con estado final completo idéntico y menor mediana CPU del recorrido. No acredita FPS ni mejora de p95 constante; pendientes frametime integrado, memoria/móvil y campañas actuales completas.
 
 [Coste del historial de cultivos aislado](qa/crop-history-comparison/README.md): cuatro calibraciones y ocho pasadas sobre Sabana histórica, estado final completo idéntico. Mediana de medianas CPU por tick 1,860 ms con historial / 1,213 ms excluyendo temporalmente registros muertos; no acredita FPS ni autoriza borrar historial. Próximo candidato: índice de plantas activas con invalidación de ciclo de vida y comparación de nacimientos, muertes, entrega y guardado antes de integrar.
