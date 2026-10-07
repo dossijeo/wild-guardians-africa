@@ -665,3 +665,15 @@ requires3source controls in every sample; stop at the first failed candidate
 or invalid control and retain it. First limited screens can only diagnose
 generalization, not satisfy full states/cultures/shadow/resource/GPU gates.
 The colorGuided source/index layout and sidecar are frozen before this profile.
+
+First CULT_WITHHELD_V1 mature sample (wind2.875, Sabana/day, elevation47.5,
+azimuth43.125) REJECTED: all3source controls exact, indexed DoubleSide exact,
+alphaIoU1/0missing/0added, compensated MAE1.509e-5 but local tile .057203
+exceeds .01. Largest RGB region2pixels does not waive that tile failure.
+Correct raw-ID join identifies44RGB-outlier pixels, all source Back faces
+unselected in both original visibility and frozen color-guided training.
+Campaign stopped immediately; no morph view, reattempt, source-noise rejection
+or tolerance change. The frozen training receipt is unchanged. More camera
+selection can increase reversals but does not address the failed triangle
+budget. Next exploration must consider winding/component and thin-surface
+geometry rather than treating these training successes as adaptation approval.
