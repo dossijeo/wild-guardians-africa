@@ -2,6 +2,8 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Cosecha automática sin clic](automatic-harvest-click/README.md):60 pruebas, cero clics desde cuatro solicitudes reales en escena nativa, recolección/entrega conservadas en jornada legal dirigida. Capturas de mundo visibles mediante render detenido de la fixture. Pico musical mayor en esta repetición requiere revisar retención; sin aceptación de escucha, RAM total, FPS o móvil.
+
 - [Mezcla y colapsos nativos](audio-world-collapses-current/README.md): trabajo pagado, incursión y tres colapsos integrados; fuentes043/046 desde emisiones/contactos reales, límites correctos, cero voces y contexto cerrado al terminar. Silenciado y precargado: no acredita escucha, primer decode, cosecha entregada, FPS ni móvil. El canvas de la captura final está vacío y falta aceptación visual; también se identifica el ui_click heredado de la solicitud automática de cosecha para revisar.
 
 - [Validate Game c18d119](validation-c18d119/README.md): resultado terminal correcto, 2713 pruebas, verificaciones, build y paquete. No incluye la optimización posterior del guardado ni acredita los ensayos nativos/móviles pendientes.
