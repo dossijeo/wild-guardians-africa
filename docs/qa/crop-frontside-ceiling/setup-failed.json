@@ -1,0 +1,473 @@
+{
+  "scope": "Synthetic dense crop-only farm: original native 8 species, 1600 plants; fixed growth, camera, native wind clock=17, day shader/HDR, media 1024 shadow map. No workers, terrain chunks, HUD, simulation or repaired assets. Forced FrontSide visual invalidity expressly ignored. Total is this isolated scene, not full-game GPU time.",
+  "blocks": [],
+  "errors": [],
+  "context": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "buffer": [
+      1280,
+      720
+    ],
+    "attributes": {
+      "alpha": true,
+      "antialias": true,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": false,
+      "stencil": false,
+      "xrCompatible": false
+    },
+    "camera": [
+      33,
+      34,
+      45
+    ],
+    "target": [
+      0,
+      1,
+      0
+    ],
+    "asset": "http://127.0.0.1:5298/assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "inventory": [
+      {
+        "name": "maiz_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 898,
+        "bridge": false
+      },
+      {
+        "name": "maiz_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 1254,
+        "bridge": false
+      },
+      {
+        "name": "maiz_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2743,
+        "bridge": false
+      },
+      {
+        "name": "maiz_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 3205,
+        "bridge": false
+      },
+      {
+        "name": "maiz_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 4935,
+        "bridge": false
+      },
+      {
+        "name": "algodon_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 701,
+        "bridge": false
+      },
+      {
+        "name": "algodon_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 1513,
+        "bridge": false
+      },
+      {
+        "name": "algodon_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2310,
+        "bridge": false
+      },
+      {
+        "name": "algodon_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 2980,
+        "bridge": false
+      },
+      {
+        "name": "algodon_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 3276,
+        "bridge": false
+      },
+      {
+        "name": "girasol_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 656,
+        "bridge": false
+      },
+      {
+        "name": "girasol_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 1367,
+        "bridge": false
+      },
+      {
+        "name": "girasol_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 1781,
+        "bridge": false
+      },
+      {
+        "name": "girasol_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 2009,
+        "bridge": false
+      },
+      {
+        "name": "girasol_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 2801,
+        "bridge": false
+      },
+      {
+        "name": "platano_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 784,
+        "bridge": false
+      },
+      {
+        "name": "platano_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 1423,
+        "bridge": false
+      },
+      {
+        "name": "platano_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2320,
+        "bridge": false
+      },
+      {
+        "name": "platano_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 2244,
+        "bridge": false
+      },
+      {
+        "name": "platano_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 5640,
+        "bridge": false
+      },
+      {
+        "name": "sorgo_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 2356,
+        "bridge": false
+      },
+      {
+        "name": "sorgo_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 2878,
+        "bridge": false
+      },
+      {
+        "name": "sorgo_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 3758,
+        "bridge": false
+      },
+      {
+        "name": "sorgo_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 4819,
+        "bridge": false
+      },
+      {
+        "name": "sorgo_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 6396,
+        "bridge": false
+      },
+      {
+        "name": "mijo_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 2000,
+        "bridge": false
+      },
+      {
+        "name": "mijo_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 2213,
+        "bridge": false
+      },
+      {
+        "name": "mijo_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2806,
+        "bridge": false
+      },
+      {
+        "name": "mijo_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 3470,
+        "bridge": false
+      },
+      {
+        "name": "mijo_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 3345,
+        "bridge": false
+      },
+      {
+        "name": "yuca_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 1899,
+        "bridge": false
+      },
+      {
+        "name": "yuca_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 2396,
+        "bridge": false
+      },
+      {
+        "name": "yuca_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2716,
+        "bridge": false
+      },
+      {
+        "name": "yuca_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 3339,
+        "bridge": false
+      },
+      {
+        "name": "yuca_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 3269,
+        "bridge": false
+      },
+      {
+        "name": "batata_01_brote",
+        "count": 68,
+        "trianglesPerInstance": 1788,
+        "bridge": false
+      },
+      {
+        "name": "batata_02_joven",
+        "count": 33,
+        "trianglesPerInstance": 2378,
+        "bridge": false
+      },
+      {
+        "name": "batata_03_adulto",
+        "count": 33,
+        "trianglesPerInstance": 2922,
+        "bridge": false
+      },
+      {
+        "name": "batata_04_desarrollo",
+        "count": 33,
+        "trianglesPerInstance": 3530,
+        "bridge": false
+      },
+      {
+        "name": "batata_05_maduro",
+        "count": 33,
+        "trianglesPerInstance": 3991,
+        "bridge": false
+      },
+      {
+        "name": "puente_maiz_1_2",
+        "count": 0,
+        "trianglesPerInstance": 2152,
+        "bridge": true
+      },
+      {
+        "name": "puente_maiz_2_3",
+        "count": 0,
+        "trianglesPerInstance": 3997,
+        "bridge": true
+      },
+      {
+        "name": "puente_maiz_3_4",
+        "count": 0,
+        "trianglesPerInstance": 5948,
+        "bridge": true
+      },
+      {
+        "name": "puente_maiz_4_5",
+        "count": 0,
+        "trianglesPerInstance": 8140,
+        "bridge": true
+      },
+      {
+        "name": "puente_algodon_1_2",
+        "count": 0,
+        "trianglesPerInstance": 2214,
+        "bridge": true
+      },
+      {
+        "name": "puente_algodon_2_3",
+        "count": 0,
+        "trianglesPerInstance": 3823,
+        "bridge": true
+      },
+      {
+        "name": "puente_algodon_3_4",
+        "count": 0,
+        "trianglesPerInstance": 5290,
+        "bridge": true
+      },
+      {
+        "name": "puente_algodon_4_5",
+        "count": 0,
+        "trianglesPerInstance": 6256,
+        "bridge": true
+      },
+      {
+        "name": "puente_girasol_1_2",
+        "count": 0,
+        "trianglesPerInstance": 2023,
+        "bridge": true
+      },
+      {
+        "name": "puente_girasol_2_3",
+        "count": 0,
+        "trianglesPerInstance": 3148,
+        "bridge": true
+      },
+      {
+        "name": "puente_girasol_3_4",
+        "count": 0,
+        "trianglesPerInstance": 3790,
+        "bridge": true
+      },
+      {
+        "name": "puente_girasol_4_5",
+        "count": 0,
+        "trianglesPerInstance": 4810,
+        "bridge": true
+      },
+      {
+        "name": "puente_platano_1_2",
+        "count": 0,
+        "trianglesPerInstance": 2207,
+        "bridge": true
+      },
+      {
+        "name": "puente_platano_2_3",
+        "count": 0,
+        "trianglesPerInstance": 3743,
+        "bridge": true
+      },
+      {
+        "name": "puente_platano_3_4",
+        "count": 0,
+        "trianglesPerInstance": 4564,
+        "bridge": true
+      },
+      {
+        "name": "puente_platano_4_5",
+        "count": 0,
+        "trianglesPerInstance": 7884,
+        "bridge": true
+      },
+      {
+        "name": "puente_sorgo_1_2",
+        "count": 0,
+        "trianglesPerInstance": 5234,
+        "bridge": true
+      },
+      {
+        "name": "puente_sorgo_2_3",
+        "count": 0,
+        "trianglesPerInstance": 6636,
+        "bridge": true
+      },
+      {
+        "name": "puente_sorgo_3_4",
+        "count": 0,
+        "trianglesPerInstance": 8577,
+        "bridge": true
+      },
+      {
+        "name": "puente_sorgo_4_5",
+        "count": 0,
+        "trianglesPerInstance": 11215,
+        "bridge": true
+      },
+      {
+        "name": "puente_mijo_1_2",
+        "count": 0,
+        "trianglesPerInstance": 4213,
+        "bridge": true
+      },
+      {
+        "name": "puente_mijo_2_3",
+        "count": 0,
+        "trianglesPerInstance": 5019,
+        "bridge": true
+      },
+      {
+        "name": "puente_mijo_3_4",
+        "count": 0,
+        "trianglesPerInstance": 6276,
+        "bridge": true
+      },
+      {
+        "name": "puente_mijo_4_5",
+        "count": 0,
+        "trianglesPerInstance": 6815,
+        "bridge": true
+      },
+      {
+        "name": "puente_yuca_1_2",
+        "count": 0,
+        "trianglesPerInstance": 4295,
+        "bridge": true
+      },
+      {
+        "name": "puente_yuca_2_3",
+        "count": 0,
+        "trianglesPerInstance": 5112,
+        "bridge": true
+      },
+      {
+        "name": "puente_yuca_3_4",
+        "count": 0,
+        "trianglesPerInstance": 6055,
+        "bridge": true
+      },
+      {
+        "name": "puente_yuca_4_5",
+        "count": 0,
+        "trianglesPerInstance": 6608,
+        "bridge": true
+      },
+      {
+        "name": "puente_batata_1_2",
+        "count": 0,
+        "trianglesPerInstance": 4166,
+        "bridge": true
+      },
+      {
+        "name": "puente_batata_2_3",
+        "count": 0,
+        "trianglesPerInstance": 5300,
+        "bridge": true
+      },
+      {
+        "name": "puente_batata_3_4",
+        "count": 0,
+        "trianglesPerInstance": 6452,
+        "bridge": true
+      },
+      {
+        "name": "puente_batata_4_5",
+        "count": 0,
+        "trianglesPerInstance": 7521,
+        "bridge": true
+      }
+    ],
+    "plants": 1600,
+    "meshInstances": 1600,
+    "triangles": 3922467
+  }
+}
