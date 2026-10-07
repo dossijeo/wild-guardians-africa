@@ -2,6 +2,8 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Reservas de animales cerradas](animal-preload-disposed/README.md): llamadas tardías a warm/take no inician nuevas cargas; 39 pruebas, build y paquete correctos. No acredita ausencia de tirones en móvil ni recuperación de contexto WebGL.
+
 - [Windows 016872d](windows-016872d/README.md): ejecutable/instalador generados, smoke WebView2 correcto y 300177,1 ms de minimización real sin cambio de la proyección comprobada. Restauración mantiene pausa del menú y reanuda sin recuperar tiempo oculto. No acredita móvil físico ni HEAD posterior; Validate Game de ese SHA falló por la expectativa de routing reparada posteriormente.
 
 - [Factores de fade compartidos](obstruction-rates/README.md): coberturas, contadores y versiones de subida exactas en 1200 frames, nueve pruebas y menor CPU aislada con cámara móvil. No demuestra ahorro GPU, RAM, móvil ni frametime total; reposo sin mejora consistente.
