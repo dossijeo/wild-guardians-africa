@@ -1,3 +1,4 @@
+import {createCropGrouping} from './crop-components.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -8,7 +9,6 @@ import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 import {releaseTask} from './tasks.js';
 import {rational,compare} from './money.js';
-import {contiguousGroup} from './crops.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
@@ -187,9 +187,9 @@ export function raidTarget(s,id){
   return s.plants.find(eligible)??s.structures.find(eligible);
 }
 function targetFor(s,a,nav) {
-  const groups=[],seen=new Set();
-  for(const p of s.plants.filter(p=>p.alive))if(!seen.has(p.id)) {
-    const group=contiguousGroup(s.plants,p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
+  const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
+  for(const p of components.living)if(!seen.has(p.id)) {
+    const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
     if(!s.raid?.reservations[`crop:${id}`])groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
