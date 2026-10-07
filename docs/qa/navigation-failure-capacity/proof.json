@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-07T17:49:40.365002+00:00",
+  "baseHead": "58a5f819",
+  "scope": "Bounded failure-entry eviction; not attribution or completion of frozen Gran Ca\u00f1\u00f3n campaign. No FPS/GPU/RAM claim.",
+  "logs": {
+    "directed": {
+      "exitCode": 0,
+      "passedTests": 31,
+      "sha256": "9a018185118710e8f07730dac96fd8754b6b4bf3dc489b3614091f5d5221fbcb",
+      "compressedSha256": "e7a5d473ea3160e6d29a58b948ae83036b8d6b471e4b2f3474d4b66c23ee78c4"
+    },
+    "expanded": {
+      "exitCode": 0,
+      "passedTests": 52,
+      "sha256": "e79d1cb7108a3dc01c94055dd8a19dd6961e97b2f59c2d637b151cd875cbf64c",
+      "compressedSha256": "0d68be11459cb926845705e2e2f6db9aae9bc50f0102fde11550783803859e2e"
+    },
+    "build": {
+      "exitCode": 0,
+      "passedTests": null,
+      "sha256": "1f0f2a48b3b28cec47c5e44e4a45b82bccf3bb22e03e1e15f9afbf95daf9cc20",
+      "compressedSha256": "392deeb39d0197d3c9951e0e25a262e05ea43e6215f0eb0307cb85043371d5ff"
+    },
+    "package": {
+      "exitCode": 0,
+      "passedTests": null,
+      "sha256": "26021125edf687af5b447af171485d2dbcc40497c559ea08eb1a7bb8c600cd91",
+      "compressedSha256": "17aad26133ba1081b07717369e794a157b8286a17d2ba12934e68ba2fe17464c"
+    }
+  },
+  "sourceHashes": {
+    "src/world/navigation.js": "0dc563ccafa312864888fa0e1e8cdcd5f621cb050d8a5285b6f25bf7a0f809c8",
+    "src/world/fifo-eviction.js": "08996afff0f43b0bd7aa45e045c806854eb2fd38f2458d881f8e55c2fbb52337",
+    "tests/navigation-failure-capacity.test.js": "b1422ccacd7a18ee4727cba471ea74b3e737c7248abdd2b1af40369aeac9a6bd",
+    "tools/check_failure_cache_canyon.mjs": "0e25b9d7b89ab2e104a8b7dda3290c94bc553bbed49ef578336b41c291604b38",
+    "src/simulation/game.js": "a3557985b486988657747b99b3b57f043799c9fb34265d1e5bd7f3f16a204e19",
+    "docs/qa/intensive-canyon-10/state.json": "501a1240a9de9f6f6ca860216c45c9a24ab4c5101155a4fded85159eebdc32ec"
+  },
+  "nativeReportSha256": "2daa33ffe945dbd7ff239ac1a17f88fab6b5d86377d91ce26b8c155528b2532f",
+  "oldPolicyDetection": {
+    "expectedExitCode": 1,
+    "observedExitCode": 1,
+    "expectedFailedTests": 2,
+    "observedFailedTests": 2,
+    "logSha256": "34f0950a0145dbd5ad92e5de117270a321544019e36c61fb09fee819757c892c",
+    "compressedSha256": "69ecfe85471ec33410adaf05a4d5c1939c8aaa08c182d6c00e8be195f25f5d7a",
+    "referenceSourceSha256": "37834fbbdd93776dd72b85e3f86935e73962cad91c5e3d246bfb5f57c76e14cc"
+  }
+}
