@@ -57,3 +57,20 @@ closing disposes the world and the separately borrowed comparison texture.
 It renders paused state and uploads QA UV changes, so it is **not** a valid
 frametime benchmark. Native six-biome receipts, visual acceptance and a
 controlled cost comparison are still pending.
+
+## Native Sabana result: reflected panorama rejected
+
+Root reviewed the fixed-eye Sabana harness at this branch's `f6083dd1` and
+archived 73 yaw poses each for day and night, plus four screenshots, in
+`savanna-mirror-counterexample`. The native world loads without JS or GL
+errors and the artwork adds detail. Nevertheless, yaw 180° exposes an
+exactly bilateral mesa with repeated wings; a similar reflection is apparent
+at yaw 0°. This is a visual rejection of mirroring, despite continuous edge
+sampling. It does not approve the other five biomes.
+
+The geometry also stretches each 4:1 panorama across half of a radius-430 m
+cylinder of height 110 m (approximately 12.3:1 along the arc). Next candidate:
+separate asymmetrical mountain silhouettes on proportionate horizon arcs,
+with joins in low/open atmospheric areas and a shared atlas/material. This
+candidate has not yet been generated, integrated or accepted. Public assets
+and default wrapping remain unchanged.
