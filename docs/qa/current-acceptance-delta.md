@@ -44,3 +44,25 @@ La nueva evidencia móvil inglesa está en [i18n-current-mobile.md](i18n-current
 La revisión posterior de reservas de tareas conserva equivalencia y registra una reducción de CPU en un ensayo aislado; su alcance está en [task-target-index.md](task-target-index.md). Pasan 1.748 pruebas y la compilación web. Las treinta aperturas intensivas de una noche también pasan y conservan sus estados en [intensive-matrix.md](intensive-matrix.md). La matriz de cien noches por combinación está activa, pero sigue sin aceptación final; la apertura no sustituye esa campaña ni demuestra que el ritmo o todas las especies estén equilibrados.
 
 La campaña mixta anterior ya terminó con snapshot completo: cien noches, ocho especies, 11935 entregas y 992 monedas. No conserva procedencia de arranque, por lo que no verifica el HEAD actual. Su guardado de unos 7,3 MB reprodujo el límite de localStorage de una sola ranura. IndexedDB ahora lo guarda dos veces y recupera sin diferencias; once comprobaciones nativas cubren migración, recuperación, aborto, orden de escrituras y eliminación. Véase [intensive-mixed-100.md](intensive-mixed-100.md). Permanecen pendientes el balance de todas las combinaciones, las pérdidas de cultivos caros y el tiempo sin acciones (57,25 % en esta estrategia). El smoke Windows se adapta al backend asincrónico y requiere evidencia de la nueva Action.
+
+## Revisión de evidencia del 7 de octubre · main 731cd8e
+
+Esta actualización conserva la procedencia de cada ensayo. No cambia los estados históricos de los 159 casos ni declara terminado el objetivo.
+
+| Evidencia contrastada | Alcance probado | Límite pendiente |
+| --- | --- | --- |
+| [Suite congelada 61a583a](validation-61a583a/result.json) | 2.687/2.687 pruebas, salida terminal 0; hashes del log original y gzip comprobados de nuevo | No atribuir este resultado a main posterior; falta resultado de su CI |
+| [Normales sin pérdida](lossless-normal-recompression/README.md) | Dos atlas integrados, 124.796 bytes menos; diez variantes de datos y veinte comparaciones nativas RGBA exactas | Ahorro de archivo, no de memoria ni frametime |
+| [Reintento de edificios](building-load-retry/README.md) | Una descarga fallida deja reintentar la plantilla; concurrentes comparten el segundo intento | Fallo de red simulado, sin aceptación de CDN o teléfono físico |
+| [Cierre compartido de plantilla](building-template-close/README.md) | Cinco GLB originales; tres solicitudes tardías por cultura liberan recursos una sola vez | Escenario concreto de propiedad; no prueba toda cancelación posible |
+| [Cancelación nativa actual](world-load-cancel-current/README.md) | Cuatro fases reales de carga interrumpidas; mundo cerrado, recursos limpios y sin errores observados | No mide RAM física ni sustituye los casos concurrentes de plantilla |
+| [Cierre musical suspendido](music-suspended-close/README.md) | Ocho fuentes por banco liberan sus referencias sin esperar ended; pausa ordinaria conserva buffers | WebAudio real con buffers sintéticos; no es escucha de Opus ni medida de RAM física |
+| [Recuperación de voz del Espíritu](spirit-stall-recovery/README.md) | Una resolución tardía de play no cancela el timeout de waiting; playing recupera y ended avanza | Orden de eventos controlado; no acredita su frecuencia en navegador ni escucha móvil |
+
+Las campañas congeladas siguen siendo ensayos separados del HEAD. Se consultaron sus procesos vivos 40968 y43068; los últimos registros leídos muestran día61 en Manglares/Saheliana (02d252e) y día46 en la estrategia de defensas pagadas (a28c843). Ninguno tiene resultado terminal y no se reinicia por tardar en observarse.
+
+Los impostores siguen fuera de main: las reproducciones independientes de cancelación tardía y radio de horizonte pasan contra la rama corregida ([propiedad](far-owner-cancel-review/fixed-result.json), [radio](far-horizon-radius-review/fixed-result.json)). Esto solo resuelve esas regresiones. La revisión visual ha encontrado un baobab con tramado demasiado visible desde cámara elevada; la transición angular, las vistas restantes y la PR siguen pendientes.
+
+Prioridades de aceptación que permanecen abiertas: recorrido móvil actualizado y pantalla encendida en el Pixel/Chrome de itch.io; audio perceptual con ataques y colapsos; frametime/memoria de fincas grandes; campaña intensiva responsable de cien noches, actividad y diversidad, con controles de mala gestión; revisión final de impostores antes de integrarlos. La compilación o una prueba aislada no sustituye ninguno de estos requisitos.
+
+[Paquete731cd8e verificado](package-731cd8e/README.md):641 archivos,382.699.729 bytes,859 enlaces relativos y20 GLB de runtime sin duplicados originales;550 ventanas Opus reconstruidas y126 SFX con hashes válidos. La compresión no introduce errores adicionales del validador respecto a los originales, algunos de los cuales conservan incidencias previas. Son verificaciones de integridad/rutas/representación, no aceptación visual, asignación de todos los sonidos ni prueba de itch.io en un teléfono.
