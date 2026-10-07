@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "dimensions": [
+    2048,
+    512
+  ],
+  "tileDimensions": [
+    960,
+    240
+  ],
+  "padding": [
+    32,
+    8
+  ],
+  "bytes": 737754,
+  "atlasSha256": "3ab8bd01b1026a83558a95f2bdd30677c631d6a75315f17821d1c5bf2f69c287",
+  "versions": {
+    "sharp": "0.35.5",
+    "vips": "8.18.7",
+    "webp": "1.6.0"
+  },
+  "assets": [
+    {
+      "cell": 0,
+      "source": "assets-source/far-backdrops-hq/grand_river-isolated-v3.png",
+      "sourceSha256": "9f8705d54452f555ab060322c42744edc6ebcdc89451e1210f7a4e49987c5347",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.515625,
+        0.484375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 1,
+      "source": "assets-source/far-backdrops-hq/grand_river-ridge-b-v1.png",
+      "sourceSha256": "6be4a2d60609a1564e27da1b3d8ab0aaf7648ad8e92b615ec83bb44e4daf4b91",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.515625,
+        0.984375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 2,
+      "source": "assets-source/far-backdrops-hq/grand_river-ridge-c-v1.png",
+      "sourceSha256": "b031b4e77efdecf7fbeeb53d078807e44f113cfb30fac20e74ebf4bdcea15f35",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.015625,
+        0.484375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 3,
+      "source": "assets-source/far-backdrops-hq/grand_river-ridge-d-v1.png",
+      "sourceSha256": "bdfe4b113c50bdd0526def84a617d8211abb616da456655b71fb2eeb9e75e2e3",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.015625,
+        0.984375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    }
+  ],
+  "limit": "Four populated candidate cells; native composition and cross-variant mip filtering still pending."
+}

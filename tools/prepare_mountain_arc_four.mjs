@@ -2,22 +2,23 @@ import fs from 'node:fs/promises';
 import sharp from 'sharp';
 import {createHash} from 'node:crypto';
 import {hqBackdropCrop} from './experiments/hq-backdrop-frame.js';
-const output=process.argv[2]??'.cache/hq-arc-four',sourceDirectory='assets-source/far-backdrops-hq';
-const names=['savanna-isolated-v3','savanna-ridge-b-v1','savanna-ridge-c-v1','savanna-ridge-d-v1'];
-const contract=JSON.parse(await fs.readFile(sourceDirectory+'/savanna-four-export-contract.json','utf8'));
+const output=process.argv[2]??'.cache/hq-arc-four',sourceDirectory='assets-source/far-backdrops-hq',biome=process.argv[3]??'savanna';
+if(!['savanna','grand_river','mangrove','volcanoes','canyons','desert'].includes(biome))throw Error('Unknown mountain biome');
+const contract=JSON.parse(await fs.readFile(sourceDirectory+'/'+biome+'-four-export-contract.json','utf8'));
+if(contract.sources?.length!==4||contract.sources.some(entry=>!entry.source.startsWith(sourceDirectory+'/'+biome+'-')||!/^[a-z_0-9\/-]+\.png$/.test(entry.source)||entry.source.includes('..')))throw Error('Invalid mountain source contract');
 for(const [key,value] of Object.entries(contract.versions))if(sharp.versions[key]!==value)throw Error('Pinned encoder mismatch: '+key);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const assets=[],tiles=[];
-for(const [cell,name] of names.entries()){
- const source=sourceDirectory+'/'+name+'.png',original=await fs.readFile(source),decoded=await sharp(original).ensureAlpha().raw().toBuffer({resolveWithObject:true});
- if(hash(original)!==contract.sources[cell]?.sha256||source!==contract.sources[cell]?.source)throw Error('Source contract mismatch: '+name);
+for(const [cell,entry] of contract.sources.entries()){
+ const source=entry.source,original=await fs.readFile(source),decoded=await sharp(original).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ if(hash(original)!==entry.sha256)throw Error('Source contract mismatch: '+source);
  const crop=hqBackdropCrop(decoded.data,decoded.info.width,decoded.info.height);
  let lowest=-1,extreme=0;
  for(let y=0;y<decoded.info.height;y++)for(let x=0;x<decoded.info.width;x++){
   const i=(y*decoded.info.width+x)*4;if(decoded.data[i+3]<90)continue;lowest=Math.max(lowest,y);
   if(Math.max(decoded.data[i],decoded.data[i+1],decoded.data[i+2])-Math.min(decoded.data[i],decoded.data[i+1],decoded.data[i+2])>160)extreme++;
  }
- if(extreme)throw Error('Visible source fringe in '+name);
+ if(extreme)throw Error('Visible source fringe in '+source);
  const input=await sharp(original).extract(crop).resize(960,240,{kernel:'lanczos3'}).png().toBuffer();
  const left=32+(cell%2)*1024,top=8+Math.floor(cell/2)*256;
  tiles.push({input,left,top});
@@ -29,5 +30,5 @@ await fs.mkdir(output,{recursive:true});await fs.writeFile(output+'/atlas.webp',
 await fs.writeFile(output+'/cells.json',JSON.stringify(assets,null,2)+'\n');
 const receipt={version:1,dimensions:[2048,512],tileDimensions:[960,240],padding:[32,8],bytes:atlas.length,atlasSha256:hash(atlas),versions:{sharp:sharp.versions.sharp,vips:sharp.versions.vips,webp:sharp.versions.webp},assets,limit:'Four populated candidate cells; native composition and cross-variant mip filtering still pending.'};
 const {assets:sourceAssets,...summary}=receipt;
-await fs.writeFile(output+'/export.json',JSON.stringify({...summary,sourceAssets,assets:[{biome:'savanna',file:'atlas.webp'}]},null,2)+'\n');
+await fs.writeFile(output+'/export.json',JSON.stringify({...summary,sourceAssets,assets:[{biome,file:'atlas.webp'}]},null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));
