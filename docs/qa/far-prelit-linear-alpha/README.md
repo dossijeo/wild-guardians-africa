@@ -1,4 +1,4 @@
-# Prelit atlas alpha/color order — isolated pilot, not adopted
+# Prelit atlas alpha/color order â€” isolated pilot, not adopted
 
 The current upload uses sRGB decoding after browser premultiplication of encoded RGB, then divides the decoded sample by alpha. These operations do not commute. Native nearest-sampled CanvasTexture readback reproduced darkening: for source alpha 128, maximum linear RGB8 error is 85; alpha 64 gives 119. Opaque samples are exact. The reference and decode-after-unpremultiply diagnostic have error at most 1 in the first probe. Both GL0, logs[]; this establishes the isolated arithmetic defect, not equivalence in the tree scene.
 
@@ -7,3 +7,5 @@ The candidate performs alpha multiplication in linear light offline, then sRGB e
 The candidate files are regenerated from the existing public elevation-8 LOD2 atlas, not the rejected elevation-22 bake. Geometry, metadata/framing and light orientation stay unchanged. PNG RGBA decode matches every transformed byte including zero RGB under alpha zero. Lossless WebP was attempted and rejected: it preserved visible RGB and alpha but reconstructed nonzero RGB under transparent pixels. Those RGB values matter for premultiplied filtering, so visible-only equality is insufficient here. An initial PNG effort setting also enabled palette quantization and was rejected; final non-palette PNG is byte exact. The pair increases disk size from 1,150,850 to 2,076,957 bytes; this is a pilot limit, not an acceptable final package decision.
 
 Six directed tests cover arithmetic, texture aliases/default legacy handling, unchanged shader strings, readiness and native-backed ownership. Probe fixture: tests/browser/prelit-alpha-color.html. No performance benchmark or gameplay activation from these probes.
+
+Native 368648d3: six diagnostic captures are archived under native/. All expose linearAlphaPilot:true, errors[]/GL0, identical camera/target, and no warning/error console messages. The fixed alpha arithmetic does not establish silhouette equivalence: crown differences and the gray terrain/atmospheric band remain. This run compared native/sprite/blend within the candidate, not old and new atlas uploads in the same world; no isolated color-improvement claim or cost acceptance.
