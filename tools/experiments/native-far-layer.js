@@ -11,7 +11,7 @@ export class NativeFarLayer {
   if(typeof prepare!=='function')throw Error('Explicit GPU preparation is required');
   this.scene=scene;this.source=source;this.texture=texture;this.metadata=metadata;this.options=options;this.stream=stream;this.prepare=prepare;this.create=create;
   this.treesOnly=treesOnly;this.attachData=attachData;this.selectTrees=selectTrees;
-  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,options);this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;
+  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,{...options,treeHeight:metadata.impostorHeight});this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;
  }
  async request(key,request){
   if(this.closed)return null;
