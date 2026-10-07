@@ -6,6 +6,20 @@ import {installCameraPoseResolver,installTerrainCameraIntent,focusTerrainCamera,
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 const bounds=new THREE.Box3(new THREE.Vector3(-2,0,-2),new THREE.Vector3(2,5,2));
 const center=()=>{const root=new THREE.Group();root.userData.nativeBuilding=true;root.damage=0;root.template={culling:{boxes:{still:bounds,fall:bounds.clone().expandByScalar(2),ash:new THREE.Box3(new THREE.Vector3(-3,0,-3),new THREE.Vector3(3,1,3))}}};return root;};
+test('shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable',()=>{
+ const registry=new CameraBuildingRegistry(),scene=new THREE.Scene(),parent=new THREE.Group(),objects=new Map(),entities=[];
+ scene.add(parent);let sceneUpdates=0,parentUpdates=0;
+ const originalScene=scene.updateMatrix,originalParent=parent.updateMatrix;
+ scene.updateMatrix=function(){sceneUpdates++;originalScene.call(this);};parent.updateMatrix=function(){parentUpdates++;originalParent.call(this);};
+ for(let i=0;i<20;i++){const root=center();root.position.x=i*10;parent.add(root);objects.set(i,root);entities.push({id:i});}
+ registry.sync(objects,entities);assert.equal(sceneUpdates,1);assert.equal(parentUpdates,1);
+ scene.position.z=50;parent.rotation.y=.5;parent.scale.setScalar(2);registry.sync(objects,entities);assert.equal(sceneUpdates,2);assert.equal(parentUpdates,2);
+ const p=new THREE.Vector3().setFromMatrixPosition(objects.get(0).matrixWorld),v=registry.index.records.get('0:center');
+ assert.ok(Math.abs((v.min[0]+v.max[0])/2-p.x)<1e-9);assert.ok(Math.abs((v.min[2]+v.max[2])/2-p.z)<1e-9);
+ const other=new THREE.Group();other.position.x=100;scene.add(other);other.add(objects.get(0));registry.sync(objects,entities);assert.ok(registry.index.records.get('0:center').min[0]>90);
+ other.matrixAutoUpdate=false;other.matrix.makeTranslation(200,0,0);registry.sync(objects,entities);assert.ok(registry.index.records.get('0:center').min[0]>190);
+ registry.clear();
+});
 test('registry updates native state, transform, replacement and removal without rebuilding idle volumes',()=>{
  const registry=new CameraBuildingRegistry({centerMargin:.1}),root=center(),objects=new Map([[1,root]]),entities=[{id:1}];
  registry.sync(objects,entities);const first=registry.index.records.get('1:center');
