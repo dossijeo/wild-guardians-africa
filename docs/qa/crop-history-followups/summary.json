@@ -1,0 +1,111 @@
+{
+  "scope": "QA-only candidate evaluation; no production change. Native domain histories preserved.",
+  "cases": [
+    {
+      "case": "mangrove",
+      "input": "docs/qa/intensive-mangrove-shield-100/state.json.gz",
+      "history": 12201,
+      "initiallyLiving": 215,
+      "staff": 18,
+      "targetPasses": 16,
+      "picked": 24,
+      "delivered": 16,
+      "medianOfRunMediansMs": {
+        "full": 0.4106250000008913,
+        "active": 0.4456750000003922
+      },
+      "p95ByArmMs": {
+        "full": [
+          7.855799999999363,
+          7.280800000000454,
+          5.952100000002247,
+          5.554199999998673
+        ],
+        "active": [
+          9.477100000000064,
+          7.0208999999995285,
+          6.175100000000384,
+          10.748199999998178
+        ]
+      },
+      "stateSha256": "ba0b1ab4c8064a5efb2c0da702915bf968556481317bc297473f530e2c6badfd",
+      "reportSha256": "1ad0e44c3f2c713bdbc5f1af781e137c418d51fb640cd508138f711c8b1fce30",
+      "compressedSha256": "b20ab08d087eabd6c485bc188c66a8cd319c00f39add36690e732f66782bfd3e"
+    },
+    {
+      "case": "river",
+      "input": "docs/qa/intensive-river-rejoin-100/state.json.gz",
+      "history": 13541,
+      "initiallyLiving": 557,
+      "staff": 47,
+      "targetPasses": 46,
+      "picked": 43,
+      "delivered": 27,
+      "medianOfRunMediansMs": {
+        "full": 1.8874249999989843,
+        "active": 1.7278500000002168
+      },
+      "p95ByArmMs": {
+        "full": [
+          12.869700000001103,
+          76.94290000000183,
+          40.54179999999906,
+          33.47409999999945
+        ],
+        "active": [
+          16.64809999999852,
+          11.015000000003056,
+          61.65350000000035,
+          16.926500000001397
+        ]
+      },
+      "stateSha256": "426b40df21db512563d0c6407e726e589a21080579d94e77f7c87b650c3a7ba5",
+      "reportSha256": "d7bd422a0312647c4d4d3a280d0dad90eb7fb35b285c5389dc8ee6b5348c8083",
+      "compressedSha256": "c7ba285f3fc3a6e65bc2fb24eb4e0998fef55c28d83796a5db822cf8e41f5ff8"
+    },
+    {
+      "case": "savanna",
+      "input": "docs/qa/crop-lifecycle-eight-100/state.json.gz",
+      "history": 20443,
+      "initiallyLiving": 546,
+      "staff": 46,
+      "targetPasses": 45,
+      "picked": 43,
+      "delivered": 19,
+      "medianOfRunMediansMs": {
+        "full": 1.3332750000008673,
+        "active": 1.3574249999996937
+      },
+      "p95ByArmMs": {
+        "full": [
+          19.264400000000023,
+          14.271699999997509,
+          12.424800000000687,
+          11.157999999999447
+        ],
+        "active": [
+          14.306500000000597,
+          13.366100000002916,
+          10.219999999997526,
+          12.523400000001857
+        ]
+      },
+      "stateSha256": "62f8f7916fd3be12a46e0cdda5fc7e94045ff42ecd195f2b806301cbb0d3ab9d",
+      "reportSha256": "7e1d3e0d39c238244dbddcd7ba706f4ceaf86bc3e7ff41c880a54f8bf497cd4b",
+      "compressedSha256": "6f0e22b287df178b4cb8b73f21e7275d23b5ebd5213ea372f31d82bd004e5b66"
+    }
+  ],
+  "idleProbe": {
+    "warmupTicks": 1200,
+    "timedTicks": 100,
+    "initiallyLiving": 215,
+    "staff": 18,
+    "history": 12201,
+    "idleRequests": 0,
+    "picked": 44,
+    "delivered": 44,
+    "stateSha256": "031e84a470668d0f12a9950d5fa1e39012a5187c45097c1de4d07e8b7ed915c4",
+    "reportSha256": "b66f9f9fe816bf7108fe6f0643f054ce57f380007f59222f95474e63247c2929"
+  },
+  "decision": "Do not promote either candidate: idle branch not exercised in the native 130 s coverage probe, and pending target index timing is mixed across counterbalanced lots/cases. Keep existing production implementation."
+}
