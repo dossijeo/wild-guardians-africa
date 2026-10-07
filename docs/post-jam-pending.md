@@ -1,5 +1,45 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ: alternativa sin mipmaps](qa/hq-mountain-no-mips/README.md):
+146 poses nativas día/noche y cuatro capturas conservan el acabado. No basta
+para elegir filtro: verificar niveles efectivos y parpadeo/móvil; el negativo
+CPU de mezcla entre celdas desde mip5 permanece registrado.
+
+[Montañas HQ: pilotos de los otros cinco biomas](qa/hq-mountain-biome-pilots/README.md):
+730 poses nativas día/noche sin errores, diez capturas revisadas. Gran Río,
+Manglares, Volcanes y Desierto siguen una dirección artística aceptable; revisar
+contacto y composición final. Cañón necesita cámara elevada: sus paredes ocultan
+el atlas en la vista inicial, por lo que no se acepta visualmente todavía.
+
+[Montañas HQ: cuatro siluetas Sabana](qa/hq-mountain-four-arcs/README.md):
+dirección de composición aceptable en vistas día/noche y valles abiertos;
+dos giros nativos de 73 poses sin errores, estado invariado. Falta filtrado
+entre celdas, móvil/coste e integración de los demás biomas; fondos sin activar.
+
+[Piloto de montañas HQ con arcos](qa/hq-mountain-arc-pilot/README.md):
+Sabana conserva proporciones y elimina simetría por espejo. La mezcla existente
+de bruma en la base mejora el contacto; bajar 30 m recorta laderas y se descarta.
+Dos giros nativos sin errores, vistas diurnas/nocturnas y negativos conservados.
+Continuar composición de cuatro siluetas antes de los demás biomas; no activado.
+
+[Campaña Sabana/Saheliana: cien noches archivadas](qa/intensive-sabana-saheliana-e461b550/README.md):
+segundo caso terminal de la matriz congelada, ocho especies, contratación y
+entregas físicas diarias; contabilidad y resumen completos reconciliados.
+25,40 % de jornada sin acciones sigue siendo un asunto de diseño. Los hashes
+prueban fuentes congeladas e461b550; el HEAD ambiental del hijo no identifica
+su código. No es replay de main ni cierre de la matriz de treinta casos.
+
+[Montañas HQ: primera integración visual rechazada](qa/hq-mountain-sabana-negative/README.md):
+Sabana carga y gira día/noche sin errores, pero el empalme por reflejo produce
+simetría artificial. Conservar fuentes/evidencia y terminar una composición
+natural de 360° antes de promover los seis fondos; también revisar proporciones.
+
+[Impostores y horizonte integrados en main](qa/far-merge-e4afdcbd/README.md): PR #6
+revisada/mergeada/pull, 44 atlas reproducibles exactos, CI de rama web/Windows
+aprobada y 208 pruebas combinadas + build/paquete correctos. Montañas HQ siguen
+en rama separada para aceptación de costuras/composición/luz y coste; la matriz
+intensiva y aceptación física más amplia continúan pendientes.
+
 [SFX del gesto de muralla 094/095](qa/wall-gesture-audio/README.md): arrastre una
 vez al superar umbral, release una vez, cancelación y protección de decode tardío;
 101 pruebas dirigidas y voces nativas Opus aceptadas en navegador. Matriz vigente:
@@ -349,3 +389,19 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 [Diagnóstico de reservas de riego](qa/watering-route-diagnostics/README.md): observador QA distingue altura/alcance, destino bloqueado y ruta fallida sin muestras extra ni modificar la simulación. 24 pruebas y paridad completa por paso en checkpoints históricos de Gran Cañón y Gran Río. No reproduce todavía el atasco del día 76; producción intacta, pendiente checkpoint representativo.
 
 [Checkpoints de colas bloqueadas](qa/intensive-blocked-checkpoints/README.md): nuevas campañas conservan el primer y el mayor backlog capturado, con estado completo/contexto/hashes y límites de frecuencia. 16 pruebas, dos jornadas nativas con paridad por tick y CLI normal aprobadas; esos recorridos no dispararon capturas. Las campañas vivas siguen congeladas; falta reproducir un atasco real a partir de uno de estos recibos.
+
+[Montañas HQ: altura y muestreo del atlas](qa/hq-mountain-elevation-lod/README.md): 438 poses nativas sin errores ni cambios lógicos. Gran Cañón a altura intermedia permite revisar la nueva silueta de día/noche; la vista muy elevada no representa el encuadre final. Ocho capturas seleccionadas de Sabana, también con buffer 320×180, muestran estimaciones de LOD inferiores a la zona de mezcla entre celdas. No acredita todos los píxeles/poses, niveles reales del driver, estabilidad temporal, móvil físico ni política definitiva de mipmaps. Pendientes composiciones de cuatro siluetas por bioma y validación integrada antes de promover assets públicos.
+
+[Gran Río con cuatro montañas HQ](qa/hq-mountain-river-four/README.md): 146 poses día/noche sin errores ni cambios lógicos; ocho capturas seleccionadas revisadas. Relieve variado y abierto, bases integradas con bruma y tono nocturno coherente. Atlas de 737.754 bytes, una textura/sampler; no es un benchmark GPU ni aprobación de todos los encuadres. Pendientes los otros biomas con cuatro siluetas y la integración pública.
+
+[Manglares/Volcanes con cuatro montañas HQ](qa/hq-mountain-mangrove-volcanoes/README.md): 292 poses día/noche, 16 capturas y desplazamiento nativo de 20m en Volcanes. Manglares conserva horizonte discreto y abierto. Volcanes necesita corregir puntas horizontales superpuestas en los flancos, especialmente visibles contra el cielo nocturno; candidato no aprobado aunque el export y GL sean correctos. Evidencia negativa conservada y revisión delegada al autor de los assets.
+
+[Desierto/Gran Cañón con cuatro montañas HQ](qa/hq-mountain-desert-canyons/README.md): otras292 poses día/noche y16 capturas. Desierto mantiene perfiles detallados y abiertos. En Gran Cañón tres orientaciones muestran mesas, pero la cuarta queda oculta; además un pan de20m desplaza verticalmente el fondo19m por seguir la altura local bajo la cámara. Corregir anclaje/composición y verificar recorrido ida/vuelta antes de aprobar la integración.
+
+[Recorrido directo de obstrucciones](qa/obstruction-traversal/README.md): candidato con menos listas temporales, 1600 frames de equivalencia exacta y ocho lotes alternados por escenario. No demuestra mejora consistente y empeora el P95 móvil en la muestra de 49 chunks; no se promueve al runtime. Evidencia y reproducción conservadas, sin atribuir resultados a GPU/FPS ni a una causa concreta de la variabilidad.
+
+[Volcanes HQ v2 y datum estable de Cañón](qa/hq-mountain-repaired/README.md): ocho vistas de volcanes regenerados con imagegen, revisadas de día/noche sin los cortes anteriores; atlas de 718.398 bytes. Cinco recibos verificados de Cañón mantienen anchorY2.36 en pan +20/−20 y elevación80→100→80. Pendientes cuarta silueta de Cañón, recorrido continuo, benchmark e integración pública/PR; no acredita aún coste GPU ni móvil.
+
+[Coste HQ y recorrido continuo](qa/hq-mountain-cost-path/README.md): ABBA nativo de Sabana, 480 muestras GPU válidas; mediana14,629ms anterior frente14,118ms HQ en este encuadre, mismas54 llamadas. CPU7,1→7,3ms con campañas activas, sin promesa general de FPS. Cañón161poses confirma datum2,36 fijo y estado lógico intacto. Cuarta silueta sigue invisible en120/180m; alpha/composición confirma cima bajo meseta y se corrige individualmente con imagegen antes de PR.
+
+[Sabana/Suajili: cien noches terminadas](qa/intensive-sabana-suajili-e461b550/README.md): tercer caso de la matriz congelada e461b550, 100 noches/victoria, ocho cultivos, hasta1.460 plantas vivas y cuentas exactas. Archivo completo auditado en main, resumen idéntico; no es replay de navegación actual. Inactividad de estrategia19,92% diurno pendiente de reducir. El padre avanzó a Musgum sin reiniciar; Gran Cañón sigue independiente.

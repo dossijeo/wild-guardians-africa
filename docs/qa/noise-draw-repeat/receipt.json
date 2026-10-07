@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-07T20:41:23.852Z",
+  "baseGitHead": "416537de",
+  "sources": {
+    "tests/browser/african-toon.html": "73b819fdeef946b854fd1a7a9d7e1ad618944f49ff0f06a2acd08075c1e28496",
+    "tests/browser/noise-spatial-review.js": "190ec824fc86c8069c3056b2e2bb4a4cb26596850766c8d691bca998da7a2d4b",
+    "tests/browser/noise-spatial-metrics.js": "5cd6d2c2b8998d67932ac1f7441f44eb6d0243955b273d56fa3e90e4a9ab6eee",
+    "tests/browser/noise-volume.js": "99b7ad665794a700ab8a2a564d3c7ca527c0b7493fc039c51d2c5202011b3329"
+  },
+  "files": {
+    "sabana-draw-repeat.json": {
+      "rawSha256": "2e115614e27dfc2ccced3a01f54837d92d91acf834237814a203ded2e1e5fdfa",
+      "gzipSha256": "2681d41fddfc98cf8b18977fa82418ac86de404edaaa81676c8242081227baa3",
+      "bytes": 2174,
+      "cameraMatricesEqual": true
+    },
+    "sabana-draw-repeat-no-shadows.json": {
+      "rawSha256": "b425b3de604590abe600aa0a54699cbd0287932cde7dbff1bf040182fc960c26",
+      "gzipSha256": "8c6f686375cada64077835f66ff21804e695070d45b76ec3b21a09876ae1ef5b",
+      "bytes": 2266,
+      "cameraMatricesEqual": true
+    },
+    "draw-no-shadows.png": {
+      "bytes": 129892,
+      "sha256": "d75c04b9e8138c889633c26c9c7904a31309ec8b0c4aa5986c54fcbaa89ce29f"
+    }
+  },
+  "observedControls": {
+    "firstRun": "Native default shadows=true, PCF1",
+    "secondRun": "Root CUA clicked shadowOn; DOM status explicitly reported shadows=false, PCF0. These flags are observation metadata, not fields in raw repeat report."
+  }
+}

@@ -2,6 +2,18 @@ import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {readFileSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
+import {relative} from 'node:path';
+
+// A copied runner below .cache still discovers the enclosing repository. Its
+// HEAD may advance while the copied sources stay frozen; never call that HEAD
+// the copied source revision. Per-file hashes remain the authoritative inputs.
+export function gitSourceContext(cwd){
+  const git=(...args)=>execFileSync('git',args,{cwd,encoding:'utf8'}).trim();
+  const repositoryGitHead=git('rev-parse','HEAD');
+  const sourceRootIsGitRoot=relative(git('rev-parse','--show-toplevel'),cwd)==='';
+  return {gitHead:sourceRootIsGitRoot?repositoryGitHead:null,repositoryGitHead,
+    sourceRootIsGitRoot,gitScope:sourceRootIsGitRoot?'source-root':'enclosing-repository'};
+}
 
 // Record inputs before a long campaign starts: later commits must not be
 // mistaken for the code already loaded by that process.
@@ -21,5 +33,5 @@ export function intensiveRunProvenance(args){
   scan('public/content/');
   scan('content/manifests/');
   for(const path of ['package-lock.json','tools/check_intensive_farm.mjs','tools/farm-defense-policy.mjs','tools/check_intensive_matrix.mjs','tools/check_intensive_case.mjs','tools/check_intensive_matrix_parallel.mjs','tools/summarize_intensive_farm.mjs','tools/check_opening.mjs','tools/intensive-run-provenance.mjs','tools/intensive-heartbeat.mjs','tools/intensive-blocked-checkpoint.mjs'])sourceHashes[path]=hash(readFileSync(new URL(path,root)));
-  return {startedAt:new Date().toISOString(),node:process.version,arguments:args,gitHead:git('rev-parse','HEAD'),trackedChanges:git('diff','--name-only','HEAD').split('\n').filter(Boolean),sourceHashes};
+  return {startedAt:new Date().toISOString(),node:process.version,arguments:args,...gitSourceContext(cwd),trackedChanges:git('diff','--name-only','HEAD').split('\n').filter(Boolean),sourceHashes};
 }

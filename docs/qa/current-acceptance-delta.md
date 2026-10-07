@@ -2,6 +2,8 @@
 
 ## Evidencia incremental del 7 de octubre
 
+- [Validate game a1fcef13](validate-a1fcef13/README.md): resultado terminal correcto con 3.067 pruebas, verificaciones, build y paquete de 695 archivos/20 GLB. ZIP directo y subidas de artefactos correctos. Se conservan log completo, hashes y estado de pasos; no acredita HEAD posterior, rama de montañas, Windows ni aceptación física/perceptual.
+
 - [Contratación con plantilla obligatoria](hiring-nonempty/README.md): botón inicialmente desactivado, refresco y guardia de confirmación exigen una persona y saldo suficiente. Mensaje ES/EN y pruebas dirigidas correctos. Recorrido real Sabana/Mapungubwe acredita plantilla vacía → selección → poner a cero → pago único de 30 monedas; no acredita móvil físico ni jornada completa.
 - [Marco HUD reutilizado](hud-frame-reuse/README.md): carga compartida y pintura inmediata al reabrir, con reintentos y protección frente a paneles sustituidos. Fixture nativa acredita tres aperturas con los mismos nueve objetos de imagen; no prueba cero tráfico en itch.io ni mejora de FPS.
 - [Primer día tras los colores de edificios](first-day-volcano-post-colors/README.md): Volcanes/Mapungubwe, centro y brote pagados, contratación automática con cuatro retratos y viewport landscape 844×390. Ocho imágenes de cultivos completas con URLs iguales al reabrir; no prueba descarga cero, navegación física móvil ni toda la geometría de colocación junto a lava.
