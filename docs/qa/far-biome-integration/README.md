@@ -226,3 +226,19 @@ A subsequent soft-grade option (`backdrop-grade=soft`, source6001b5d) retains on
 | A2 native |23.769|7.9|59|960014|
 
 Both candidate medians are below both native medians in this view. A baselines drift5.2% and B medians differ4.8%, so this does not establish a precise percentage gain or isolate the arithmetic cost of the backdrop gradient. The earlier tree-circle measurement is a different source/configuration and is not reused to claim a free shader change. Other-biome/quality cost remains pending.
+
+## High-quality Manglares species, suppression and disposal (4d9b5e2)
+
+`mangroves-high-softfog-{day,night}.json/png` captures the same horizon with49 exact terrain/picking chunks,25 small-prop chunks and current tree residency. Only the active biome's four pairs of atlases load (estimated44,739,242.67 texture bytes including mipmaps), plus5,592,405.33 backdrop bytes; these are allocation estimates, not total GPU/RAM measurements. The wide soft-grade horizon is less abruptly flat than the prior low-angle orbital capture, which used a different camera/source; this is visual evidence, not an exact A/B comparison.
+
+The species selector repeats native motion without reloading atlas resources:
+
+| Slot / phase / path | Ready transition frames | Selected descents | Evidence |
+| --- | --- | --- | --- |
+| 1 / night / orbit |422/438|0|`mangroves-high-slot1-night-orbit.json`|
+| 2 / dusk / lateral |425/425|0|`mangroves-high-slot2-dusk-lateral.json`|
+| 3 / day / approach |244/244|0|`mangroves-high-slot3-day-approach.json`|
+
+All paths preserve state/errors0. All-near declines10/0/11 retain native orders/residency and havefrustum=false. Slot0 was exercised in the previous medium-quality paths, so all four Manglares slots now have native motion evidence, across different phases/qualities/revisions rather than a complete Cartesian matrix.
+
+`mangroves-high-visible-suppression.json` removes a nearby prepared native tree through logical suppression: ID0:6:5 is suppressed, its native occurrences become0 and its remaining impostor state isenabled=false. `mangroves-high-native-close.json` then closes the owner: state equality and owner removal pass, counters218geometries/72textures become194/62, and the retained-bank owned allocation estimate before release is10,496,916bytes. Counter changes are affected by native grouping restoration; do not present them as measured total memory reclaimed.
