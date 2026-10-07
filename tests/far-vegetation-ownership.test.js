@@ -70,3 +70,14 @@ test('landscape composition forwards existing backdrop controls without altering
  const owner=await attachBiomeFarVegetation(f.world,{backdropHeight:180,backdropRadius:600,backdropParallax:.04,backdropFogMix:.7,groundWash:0},f.services);
  assert.equal(received.height,180);assert.equal(received.radius,600);assert.equal(received.parallax,.04);assert.equal(received.fogMix,.7);assert.equal(f.textures.length,3);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
 });
+
+
+test('runtime metadata selects linear premultiplied atlases without changing unmarked species',async()=>{
+ for(const marked of [false,true]){const f=fixture();f.services.loadManifest=async()=>({biomes:{savanna:[{...metadata,...(marked?{prelitAlphaEncoding:'srgb-encoded-linear-premultiplied'}:{})}]}});f.services.attachSpecies=async(_,options)=>{assert.equal(options.prelitAtlas.premultipliedLinear,marked);return {update(){},dispose(){}};};const owner=await attachBiomeFarVegetation(f.world,{},f.services);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));}
+});
+
+
+test('authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets',async()=>{
+ const f=fixture(),policy={minimumHeight:24,start:200,end:240};const owner=await attachBiomeFarVegetation(f.world,{start:90,end:120,visualRange:1,transitionHeight:policy},f.services);policy.end=400;owner.update(0);assert.equal(f.world.farPropTransitionDistance,248);owner.dispose();assert.equal(f.world.farPropTransitionDistance,undefined);
+ const bad=fixture();await assert.rejects(attachBiomeFarVegetation(bad.world,{transitionHeight:{minimumHeight:24,start:20,end:240}},bad.services),/height policy/);assert.equal(bad.textures.length,0);
+});

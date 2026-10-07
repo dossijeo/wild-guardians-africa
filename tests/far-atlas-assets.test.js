@@ -22,3 +22,9 @@ test('offline atlases cover the native tree slots, preserve alpha and match both
  }
  assert.equal(bytes,manifest.totalTextureBytes);assert.ok(bytes<24*1024*1024);
 });
+
+
+test('runtime baobab uses the exact GPU-reviewed linear-alpha pair and explicit metadata',async()=>{
+ const tree=manifest.biomes.savanna.find(t=>t.slot===2);assert.equal(tree.prelitAlphaEncoding,'srgb-encoded-linear-premultiplied');
+ for(const phase of ['day','night'])assert.deepEqual(await fs.readFile('public/'+tree[phase].slice(2)),await fs.readFile('docs/qa/far-prelit-linear-alpha/'+phase+'-exact.webp'));
+});
