@@ -1,0 +1,706 @@
+{
+  "status": "CONSERVATIVE_INDEX_ESTIMATE_NOT_GPU_BENCHMARK",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "bridgeSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "selectionSha256": "12550d30e26fe909c339e159ccc218895e1b0f60270642fa1a34e11dae7633ee",
+  "allPairs": {
+    "originalUnindexedBytes": 44743512,
+    "sourceIndexedBytes": 30557002,
+    "pairIndexedBytes": 32636940,
+    "pairIndexedVersusOriginalPercent": -27.057715093978317,
+    "cullingIncrementVersusIndexedSourcePercent": 6.806747599126384
+  },
+  "pilotPairs": {
+    "originalUnindexedBytes": 10199640,
+    "sourceIndexedBytes": 6526538,
+    "pairIndexedBytes": 8606476,
+    "pairIndexedVersusOriginalPercent": -15.61980618923805,
+    "cullingIncrementVersusIndexedSourcePercent": 31.86893265618005
+  },
+  "pairs": [
+    {
+      "a": 0,
+      "b": 1,
+      "sourceTriangles": 2152,
+      "reverseTriangles": 541,
+      "originalUnindexedBytes": 568128,
+      "pairUnindexedBytes": 710952,
+      "sourceIndexed": {
+        "vertices": 3659,
+        "indices": 6456,
+        "indexComponentBytes": 2,
+        "bytes": 334904
+      },
+      "pairIndexed": {
+        "vertices": 4841,
+        "indices": 8079,
+        "indexComponentBytes": 2,
+        "bytes": 442166
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "sourceTriangles": 3997,
+      "reverseTriangles": 918,
+      "originalUnindexedBytes": 1055208,
+      "pairUnindexedBytes": 1297560,
+      "sourceIndexed": {
+        "vertices": 7313,
+        "indices": 11991,
+        "indexComponentBytes": 2,
+        "bytes": 667526
+      },
+      "pairIndexed": {
+        "vertices": 9363,
+        "indices": 14745,
+        "indexComponentBytes": 2,
+        "bytes": 853434
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 2,
+      "b": 3,
+      "sourceTriangles": 5948,
+      "reverseTriangles": 1459,
+      "originalUnindexedBytes": 1570272,
+      "pairUnindexedBytes": 1955448,
+      "sourceIndexed": {
+        "vertices": 11124,
+        "indices": 17844,
+        "indexComponentBytes": 2,
+        "bytes": 1014600
+      },
+      "pairIndexed": {
+        "vertices": 14385,
+        "indices": 22221,
+        "indexComponentBytes": 2,
+        "bytes": 1310322
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 3,
+      "b": 4,
+      "sourceTriangles": 8140,
+      "reverseTriangles": 2426,
+      "originalUnindexedBytes": 2148960,
+      "pairUnindexedBytes": 2789424,
+      "sourceIndexed": {
+        "vertices": 15404,
+        "indices": 24420,
+        "indexComponentBytes": 2,
+        "bytes": 1404392
+      },
+      "pairIndexed": {
+        "vertices": 20770,
+        "indices": 31698,
+        "indexComponentBytes": 2,
+        "bytes": 1891156
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 5,
+      "b": 6,
+      "sourceTriangles": 2214,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 584496,
+      "pairUnindexedBytes": 584496,
+      "sourceIndexed": {
+        "vertices": 3922,
+        "indices": 6642,
+        "indexComponentBytes": 2,
+        "bytes": 358420
+      },
+      "pairIndexed": {
+        "vertices": 3922,
+        "indices": 6642,
+        "indexComponentBytes": 2,
+        "bytes": 358420
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 6,
+      "b": 7,
+      "sourceTriangles": 3823,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1009272,
+      "pairUnindexedBytes": 1009272,
+      "sourceIndexed": {
+        "vertices": 7110,
+        "indices": 11469,
+        "indexComponentBytes": 2,
+        "bytes": 648618
+      },
+      "pairIndexed": {
+        "vertices": 7110,
+        "indices": 11469,
+        "indexComponentBytes": 2,
+        "bytes": 648618
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 7,
+      "b": 8,
+      "sourceTriangles": 5290,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1396560,
+      "pairUnindexedBytes": 1396560,
+      "sourceIndexed": {
+        "vertices": 10139,
+        "indices": 15870,
+        "indexComponentBytes": 2,
+        "bytes": 923972
+      },
+      "pairIndexed": {
+        "vertices": 10139,
+        "indices": 15870,
+        "indexComponentBytes": 2,
+        "bytes": 923972
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 8,
+      "b": 9,
+      "sourceTriangles": 6256,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1651584,
+      "pairUnindexedBytes": 1651584,
+      "sourceIndexed": {
+        "vertices": 11789,
+        "indices": 18768,
+        "indexComponentBytes": 2,
+        "bytes": 1074968
+      },
+      "pairIndexed": {
+        "vertices": 11789,
+        "indices": 18768,
+        "indexComponentBytes": 2,
+        "bytes": 1074968
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 10,
+      "b": 11,
+      "sourceTriangles": 2023,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 534072,
+      "pairUnindexedBytes": 534072,
+      "sourceIndexed": {
+        "vertices": 3594,
+        "indices": 6069,
+        "indexComponentBytes": 2,
+        "bytes": 328410
+      },
+      "pairIndexed": {
+        "vertices": 3594,
+        "indices": 6069,
+        "indexComponentBytes": 2,
+        "bytes": 328410
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 11,
+      "b": 12,
+      "sourceTriangles": 3148,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 831072,
+      "pairUnindexedBytes": 831072,
+      "sourceIndexed": {
+        "vertices": 5736,
+        "indices": 9444,
+        "indexComponentBytes": 2,
+        "bytes": 523656
+      },
+      "pairIndexed": {
+        "vertices": 5736,
+        "indices": 9444,
+        "indexComponentBytes": 2,
+        "bytes": 523656
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 12,
+      "b": 13,
+      "sourceTriangles": 3790,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1000560,
+      "pairUnindexedBytes": 1000560,
+      "sourceIndexed": {
+        "vertices": 6739,
+        "indices": 11370,
+        "indexComponentBytes": 2,
+        "bytes": 615772
+      },
+      "pairIndexed": {
+        "vertices": 6739,
+        "indices": 11370,
+        "indexComponentBytes": 2,
+        "bytes": 615772
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 13,
+      "b": 14,
+      "sourceTriangles": 4810,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1269840,
+      "pairUnindexedBytes": 1269840,
+      "sourceIndexed": {
+        "vertices": 8435,
+        "indices": 14430,
+        "indexComponentBytes": 2,
+        "bytes": 771140
+      },
+      "pairIndexed": {
+        "vertices": 8435,
+        "indices": 14430,
+        "indexComponentBytes": 2,
+        "bytes": 771140
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 15,
+      "b": 16,
+      "sourceTriangles": 2207,
+      "reverseTriangles": 545,
+      "originalUnindexedBytes": 582648,
+      "pairUnindexedBytes": 726528,
+      "sourceIndexed": {
+        "vertices": 3817,
+        "indices": 6621,
+        "indexComponentBytes": 2,
+        "bytes": 349138
+      },
+      "pairIndexed": {
+        "vertices": 5022,
+        "indices": 8256,
+        "indexComponentBytes": 2,
+        "bytes": 458448
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 16,
+      "b": 17,
+      "sourceTriangles": 3743,
+      "reverseTriangles": 1124,
+      "originalUnindexedBytes": 988152,
+      "pairUnindexedBytes": 1284888,
+      "sourceIndexed": {
+        "vertices": 6718,
+        "indices": 11229,
+        "indexComponentBytes": 2,
+        "bytes": 613642
+      },
+      "pairIndexed": {
+        "vertices": 9130,
+        "indices": 14601,
+        "indexComponentBytes": 2,
+        "bytes": 832642
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 17,
+      "b": 18,
+      "sourceTriangles": 4564,
+      "reverseTriangles": 1487,
+      "originalUnindexedBytes": 1204896,
+      "pairUnindexedBytes": 1597464,
+      "sourceIndexed": {
+        "vertices": 8199,
+        "indices": 13692,
+        "indexComponentBytes": 2,
+        "bytes": 748896
+      },
+      "pairIndexed": {
+        "vertices": 11362,
+        "indices": 18153,
+        "indexComponentBytes": 2,
+        "bytes": 1036162
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 18,
+      "b": 19,
+      "sourceTriangles": 7884,
+      "reverseTriangles": 1879,
+      "originalUnindexedBytes": 2081376,
+      "pairUnindexedBytes": 2577432,
+      "sourceIndexed": {
+        "vertices": 15297,
+        "indices": 23652,
+        "indexComponentBytes": 2,
+        "bytes": 1393440
+      },
+      "pairIndexed": {
+        "vertices": 19586,
+        "indices": 29289,
+        "indexComponentBytes": 2,
+        "bytes": 1782146
+      },
+      "selectedPilotPair": true
+    },
+    {
+      "a": 20,
+      "b": 21,
+      "sourceTriangles": 5234,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1381776,
+      "pairUnindexedBytes": 1381776,
+      "sourceIndexed": {
+        "vertices": 10990,
+        "indices": 15702,
+        "indexComponentBytes": 2,
+        "bytes": 998524
+      },
+      "pairIndexed": {
+        "vertices": 10990,
+        "indices": 15702,
+        "indexComponentBytes": 2,
+        "bytes": 998524
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 21,
+      "b": 22,
+      "sourceTriangles": 6636,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1751904,
+      "pairUnindexedBytes": 1751904,
+      "sourceIndexed": {
+        "vertices": 13607,
+        "indices": 19908,
+        "indexComponentBytes": 2,
+        "bytes": 1237232
+      },
+      "pairIndexed": {
+        "vertices": 13607,
+        "indices": 19908,
+        "indexComponentBytes": 2,
+        "bytes": 1237232
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 22,
+      "b": 23,
+      "sourceTriangles": 8577,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 2264328,
+      "pairUnindexedBytes": 2264328,
+      "sourceIndexed": {
+        "vertices": 17637,
+        "indices": 25731,
+        "indexComponentBytes": 2,
+        "bytes": 1603518
+      },
+      "pairIndexed": {
+        "vertices": 17637,
+        "indices": 25731,
+        "indexComponentBytes": 2,
+        "bytes": 1603518
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 23,
+      "b": 24,
+      "sourceTriangles": 11215,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 2960760,
+      "pairUnindexedBytes": 2960760,
+      "sourceIndexed": {
+        "vertices": 23432,
+        "indices": 33645,
+        "indexComponentBytes": 2,
+        "bytes": 2129306
+      },
+      "pairIndexed": {
+        "vertices": 23432,
+        "indices": 33645,
+        "indexComponentBytes": 2,
+        "bytes": 2129306
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 25,
+      "b": 26,
+      "sourceTriangles": 4213,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1112232,
+      "pairUnindexedBytes": 1112232,
+      "sourceIndexed": {
+        "vertices": 8886,
+        "indices": 12639,
+        "indexComponentBytes": 2,
+        "bytes": 807246
+      },
+      "pairIndexed": {
+        "vertices": 8886,
+        "indices": 12639,
+        "indexComponentBytes": 2,
+        "bytes": 807246
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 26,
+      "b": 27,
+      "sourceTriangles": 5019,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1325016,
+      "pairUnindexedBytes": 1325016,
+      "sourceIndexed": {
+        "vertices": 10424,
+        "indices": 15057,
+        "indexComponentBytes": 2,
+        "bytes": 947426
+      },
+      "pairIndexed": {
+        "vertices": 10424,
+        "indices": 15057,
+        "indexComponentBytes": 2,
+        "bytes": 947426
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 27,
+      "b": 28,
+      "sourceTriangles": 6276,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1656864,
+      "pairUnindexedBytes": 1656864,
+      "sourceIndexed": {
+        "vertices": 12698,
+        "indices": 18828,
+        "indexComponentBytes": 2,
+        "bytes": 1155080
+      },
+      "pairIndexed": {
+        "vertices": 12698,
+        "indices": 18828,
+        "indexComponentBytes": 2,
+        "bytes": 1155080
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 28,
+      "b": 29,
+      "sourceTriangles": 6815,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1799160,
+      "pairUnindexedBytes": 1799160,
+      "sourceIndexed": {
+        "vertices": 13811,
+        "indices": 20445,
+        "indexComponentBytes": 2,
+        "bytes": 1256258
+      },
+      "pairIndexed": {
+        "vertices": 13811,
+        "indices": 20445,
+        "indexComponentBytes": 2,
+        "bytes": 1256258
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 30,
+      "b": 31,
+      "sourceTriangles": 4295,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1133880,
+      "pairUnindexedBytes": 1133880,
+      "sourceIndexed": {
+        "vertices": 9130,
+        "indices": 12885,
+        "indexComponentBytes": 2,
+        "bytes": 829210
+      },
+      "pairIndexed": {
+        "vertices": 9130,
+        "indices": 12885,
+        "indexComponentBytes": 2,
+        "bytes": 829210
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 31,
+      "b": 32,
+      "sourceTriangles": 5112,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1349568,
+      "pairUnindexedBytes": 1349568,
+      "sourceIndexed": {
+        "vertices": 10854,
+        "indices": 15336,
+        "indexComponentBytes": 2,
+        "bytes": 985824
+      },
+      "pairIndexed": {
+        "vertices": 10854,
+        "indices": 15336,
+        "indexComponentBytes": 2,
+        "bytes": 985824
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 32,
+      "b": 33,
+      "sourceTriangles": 6055,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1598520,
+      "pairUnindexedBytes": 1598520,
+      "sourceIndexed": {
+        "vertices": 12569,
+        "indices": 18165,
+        "indexComponentBytes": 2,
+        "bytes": 1142402
+      },
+      "pairIndexed": {
+        "vertices": 12569,
+        "indices": 18165,
+        "indexComponentBytes": 2,
+        "bytes": 1142402
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 33,
+      "b": 34,
+      "sourceTriangles": 6608,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1744512,
+      "pairUnindexedBytes": 1744512,
+      "sourceIndexed": {
+        "vertices": 13342,
+        "indices": 19824,
+        "indexComponentBytes": 2,
+        "bytes": 1213744
+      },
+      "pairIndexed": {
+        "vertices": 13342,
+        "indices": 19824,
+        "indexComponentBytes": 2,
+        "bytes": 1213744
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 35,
+      "b": 36,
+      "sourceTriangles": 4166,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1099824,
+      "pairUnindexedBytes": 1099824,
+      "sourceIndexed": {
+        "vertices": 8988,
+        "indices": 12498,
+        "indexComponentBytes": 2,
+        "bytes": 815940
+      },
+      "pairIndexed": {
+        "vertices": 8988,
+        "indices": 12498,
+        "indexComponentBytes": 2,
+        "bytes": 815940
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 36,
+      "b": 37,
+      "sourceTriangles": 5300,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1399200,
+      "pairUnindexedBytes": 1399200,
+      "sourceIndexed": {
+        "vertices": 11375,
+        "indices": 15900,
+        "indexComponentBytes": 2,
+        "bytes": 1032800
+      },
+      "pairIndexed": {
+        "vertices": 11375,
+        "indices": 15900,
+        "indexComponentBytes": 2,
+        "bytes": 1032800
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 37,
+      "b": 38,
+      "sourceTriangles": 6452,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1703328,
+      "pairUnindexedBytes": 1703328,
+      "sourceIndexed": {
+        "vertices": 13437,
+        "indices": 19356,
+        "indexComponentBytes": 2,
+        "bytes": 1221168
+      },
+      "pairIndexed": {
+        "vertices": 13437,
+        "indices": 19356,
+        "indexComponentBytes": 2,
+        "bytes": 1221168
+      },
+      "selectedPilotPair": false
+    },
+    {
+      "a": 38,
+      "b": 39,
+      "sourceTriangles": 7521,
+      "reverseTriangles": 0,
+      "originalUnindexedBytes": 1985544,
+      "pairUnindexedBytes": 1985544,
+      "sourceIndexed": {
+        "vertices": 15508,
+        "indices": 22563,
+        "indexComponentBytes": 2,
+        "bytes": 1409830
+      },
+      "pairIndexed": {
+        "vertices": 15508,
+        "indices": 22563,
+        "indexComponentBytes": 2,
+        "bytes": 1409830
+      },
+      "selectedPilotPair": false
+    }
+  ],
+  "guarantees": [
+    "Role/sourceVertexID/faceLabel/reverse tuple reconstructed exactly after stable indexing.",
+    "Original triangles remain a prefix in original order; source data is not modified.",
+    "No merging across source IDs, organ labels, roles or side flags, even for coincident coordinates."
+  ],
+  "limitations": [
+    "This does not construct a runtime candidate or verify rendered maps/poses/states.",
+    "Normal-frame XY compensation is required independently for indexed states and bridges.",
+    "Float32 attribute payloads estimated from runtime 22 lanes; driver overhead and GPU residency omitted.",
+    "No GPU timing: sourceIndexed must be a separate DoubleSide control to isolate the culling benefit.",
+    "Source states/instance buffers/textures are excluded; full pilot budget must include them."
+  ]
+}

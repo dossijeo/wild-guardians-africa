@@ -498,3 +498,16 @@ Before measurement, version5 reserves times .21875/.71875, elevations
 32.5/62.5 and azimuths26.25/116.25/206.25/296.25. It uses policy2 and new
 views, not a retry of version4's invalid sample. Water may be screened first;
 the complete shader/map/shadow/12clip/resource/GPU acceptance remains pending.
+
+An additional read-only alternative indexes bridges by the conservative tuple
+(role, original vertex ID, exact faceLabel, reverse flag). Identical tuples
+have identical22float32 shader inputs; no position welding or organ merging
+is performed. Stable indices preserve all source triangle order/provenance.
+The8pilot pairs estimate10,199,640B current unindexed payload,6,526,538B
+indexed source payload and8,606,476B indexed with pair-selected reverses:
+15.620%below current payload. The extra reverses still cost31.869%relative
+to indexed source; these are different comparisons. An eventual GPU campaign
+must include indexed DoubleSide source as a separate control so indexing's
+gain is not misattributed to culling. Triangles, state meshes, instances,
+normal-map compensation and full pilot budget remain separate unresolved
+gates. This estimate establishes neither rendering equivalence nor GPU gain.
