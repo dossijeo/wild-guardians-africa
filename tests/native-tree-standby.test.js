@@ -1,6 +1,8 @@
+import {AfricanToon} from '../src/rendering/african-toon.js';
+import {SceneMaterialRegistry} from '../src/rendering/material-registry.js';
 import {NativeFarGpuCancelled} from '../tools/experiments/prepare-native-far-gpu.js';
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
-import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady} from '../tools/experiments/native-tree-standby.js';
+import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady,finalizeStandbyMaterials} from '../tools/experiments/native-tree-standby.js';
 function fixture(prepare=async()=>{}){const geometry=new THREE.BoxGeometry(2,4,2),material=new THREE.MeshStandardMaterial(),scene=new THREE.Scene(),sources=[{geometry,material},{geometry,material}],owner=new NativeTreeStandby({scene,sources,prepare});return {owner,scene,sources,close(){owner.dispose();geometry.dispose();material.dispose();}};}
 function tree(id='a',x=0){return {id,x,y:0,z:0,yaw:0,sx:1,sy:1,sz:1};}
 function descriptor(t=tree(),level=0){const matrix=new THREE.Matrix4().makeTranslation(t.x,t.y,t.z).toArray();return {id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,level,matrix};}
@@ -117,4 +119,25 @@ test('native coverage alone cannot begin a handoff before its retained backup fe
  f.owner.request([descriptor(t)],{x:0,z:0});assert.equal(standbyCoverageReady(t.id,args),false);
  finish();await settled(f.owner);assert.equal(standbyCoverageReady(t.id,args),true);
  args.logicalTree={...t,y:t.y+1};assert.equal(standbyCoverageReady(t.id,args),false);f.close();
+});
+
+test('logical sources finalize the real toon recipe before a fenced bank enters the registry',async()=>{
+ const f=fixture(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(f.scene,toon),t=tree();
+ const before=f.sources[0].material.version;finalizeStandbyMaterials(toon,f.sources);
+ const finalized=f.sources[0].material.version;assert.equal(finalized,before+1);
+ let fencedVersion;f.owner.prepare=async()=>{fencedVersion=f.sources[0].material.version;};
+ f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
+ assert.equal(fencedVersion,finalized);assert.equal(f.sources[0].material.version,finalized);
+ assert.equal(f.owner.has(t.id,t),true);assert.equal(registry.materials.has(f.sources[0].material),true);
+ finalizeStandbyMaterials(toon,f.sources);assert.equal(f.sources[0].material.version,finalized);
+ f.sources[0].material.needsUpdate=true;assert.equal(f.owner.has(t.id,t),false);
+ registry.dispose();f.close();
+});
+
+test('control: registry adoption invalidates a fence captured before the first real toon recipe',async()=>{
+ const f=fixture(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(f.scene,toon),t=tree();
+ let fencedVersion;f.owner.prepare=async()=>{fencedVersion=f.sources[0].material.version;};
+ f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
+ assert.equal(f.sources[0].material.version,fencedVersion+1);assert.equal(f.owner.has(t.id,t),false);
+ registry.dispose();f.close();
 });

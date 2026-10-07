@@ -1,6 +1,6 @@
 import {nativeTreeDiagnosticBounds} from './native-tree-diagnostic-bounds.js';
 import {nativeFarRenderSignature,nativeFarPackingSignature} from './native-far-render-signature.js';
-import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady} from './native-tree-standby.js';
+import {NativeTreeStandby,standbyTreeKey,standbyCoverageReady,finalizeStandbyMaterials} from './native-tree-standby.js';
 import {nativeTreePresence} from './native-tree-presence.js';
 import {logicalNativeStandbyEntries} from './logical-native-standby.js';
 import {NativeFarLayer} from './native-far-layer.js';
@@ -30,6 +30,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  const frustum=new Frustum(),vp=new Matrix4();
  const prepared=new NativePreparedTreeCoverage(coverage,signature,record=>nativeFarPackingSignature(world,record)),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
  const stats={cancelledRegions:0,regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,logicalPreloads:0,logicalPreloadEntries:0,errors};
+ finalizeStandbyMaterials(world.toon,world.prototypes[slot]);
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
  const fog=new Fog(fogDayColor,fogStart,fogEnd),fogDay=new Color(fogDayColor),fogNight=new Color(fogNightColor);

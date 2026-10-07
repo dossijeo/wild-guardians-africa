@@ -11,6 +11,9 @@ export function standbyCoverageReady(id,{coverage,standby,nativeTree,logicalTree
  if(nativeMissing&&nativeTree===undefined)return standby.has(id,logicalTree,suppressed);
  return coverage.has(id,suppressed)&&standby.has(id,nativeTree,suppressed)&&standby.has(id,logicalTree,suppressed);
 }
+// Logical preloads can precede the first resident chunk. Finalize the same
+// idempotent recipe the scene registry applies before capturing GPU proof.
+export function finalizeStandbyMaterials(toon,sources){for(const source of sources)toon.material(source.material);}
 function sourceKey(source){return [source.geometry.uuid,source.material.uuid,source.material.version].join(':');}
 function geometryView(source,capacity){
  const g=new THREE.BufferGeometry();if(source.index)g.setIndex(new THREE.BufferAttribute(source.index.array,source.index.itemSize,source.index.normalized));
