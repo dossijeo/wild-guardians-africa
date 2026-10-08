@@ -37,6 +37,8 @@ for node in doc['nodes']:
     # the source's storage. Account for replacement of all forward indices.
     candidate_bytes=original_bytes-accessor(doc,binary,p['indices']).nbytes+(len(ix)+len(faces))*3*index_width+len(verts)*width
     row=dict(mesh=node['name'],model=model,sourceTriangles=len(ix),stemTriangles=int((labels==1).sum()),selectedStemReverseFaces=faces,privateVertices=len(verts),sourceBytes=original_bytes,proposedBytes=candidate_bytes,triangleGrowthPercent=100*len(faces)/len(ix),bufferGrowthPercent=100*(candidate_bytes/original_bytes-1),triangleBudgetPass=len(faces)<=len(ix)*.1,bufferBudgetPass=candidate_bytes<=original_bytes*1.1)
+    shared_bytes=original_bytes+len(faces)*3*accessor(doc,binary,p['indices']).dtype.itemsize
+    row.update(sharedAttributeProposalBytes=shared_bytes,sharedAttributeBufferGrowthPercent=100*(shared_bytes/original_bytes-1),sharedAttributeBufferBudgetPass=shared_bytes<=original_bytes*1.1)
     rows.append(row);by_model[model]=row
 pairs=[]
 for pair in bridges['pairs']:
@@ -48,6 +50,9 @@ for pair in bridges['pairs']:
     index_width=2 if (triangles+backs)*3<=65535 else 4
     proposed=(triangles+backs)*3*(22*4+index_width)
     pairs.append(dict(a=a,b=b,sourceTriangles=triangles,reverseTriangles=backs,sourceBytes=original_bytes,proposedBytes=proposed,triangleGrowthPercent=100*backs/triangles,bufferGrowthPercent=100*(proposed/original_bytes-1),triangleBudgetPass=backs<=triangles*.1,bufferBudgetPass=proposed<=original_bytes*1.1))
+    shared_index_width=2 if triangles*3<=65535 else 4
+    shared_bytes=original_bytes+(triangles+backs)*3*shared_index_width
+    pairs[-1].update(sharedAttributeProposalBytes=shared_bytes,sharedAttributeBufferGrowthPercent=100*(shared_bytes/original_bytes-1),sharedAttributeBufferBudgetPass=shared_bytes<=original_bytes*1.1)
 report=dict(status='STEM_DERIVATIVE_COST_ONLY_NOT_APPROVED',sourceSha256=receipt['sourceSha256'],trainingSelectionSha256=hashlib.sha256(selection_path.read_bytes()).hexdigest(),bridgeSha256=hashlib.sha256(bridge_path.read_bytes()).hexdigest(),states=rows,pairs=pairs,limitations=['Training-selected reverses are not complete angular coverage or closedness proof.', 'Does not read withheld V2 or select from its failure pixels.', 'Original defined normal/UV/driver values would be retained; private normals reversed. Their real mapped shading is still unverified.', 'Private vertex count and decoded referenced buffer bytes are estimates, not complete GPU allocation, compressed web size or GPU timings.', 'Index width reduction is separate from culling and does not repair invalid source normals.', 'No exported model, runtime activation, bridge remapping, material change or acceptance.'])
 (folder/'crop-stem-reverse-budget.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
 print(json.dumps(dict(states=len(rows),pairs=len(pairs),stateTriFailures=sum(not r['triangleBudgetPass'] for r in rows),stateBytesFailures=sum(not r['bufferBudgetPass'] for r in rows),pairTriFailures=sum(not r['triangleBudgetPass'] for r in pairs),pairBytesFailures=sum(not r['bufferBudgetPass'] for r in pairs),maize=[{k:r[k] for k in ['mesh','triangleGrowthPercent','bufferGrowthPercent','privateVertices']} for r in rows if r['mesh'].startswith('maiz')])) )

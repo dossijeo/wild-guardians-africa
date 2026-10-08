@@ -1189,3 +1189,21 @@ measured total GPU memory or demonstrated culling savings. All original zero
 normals and rejected Badge visual results remain. They are not served/activated
 by the browser fixture or production. Raw append-only archive sizes include
 unreferenced original views; packed web sizes use controlled liveness pruning.
+
+Prospective stemReverses is a separate training-only partial derivative in the
+disabled fixture, requiring sidePartition/stemOnly/preserveDoubleShader. It adds
+actual inverse-wound indices selected by the earlier visibility training and
+shares all original normal/UV/driver attributes. Its private reverse material
+keeps FrontSide hardware culling and the original DOUBLE_SIDED normal fragment
+recipe with source-back-facing faceDirection=-1. This deliberately preserves
+original mapped appearance rather than inventing flat geometric normals; it
+does not repair undefined source normals, certify closure or solve thin leaves.
+No old held-out failure is used to choose reverses. The fixture refuses the old
+withheldV1/V2 profiles for this new training experiment. A new independent
+profile, actual shadow-side readbacks and net GPU timings would be necessary
+after successful training screens. Eleven correspondence tests pass, including
+reverse corner ancestry, shared live attributes and retained shader hooks.
+Sharing attributes removes private-vertex buffer growth, but cannot waive the
+same triangle gates (three native states and two bridges category-wide still
+exceed them), or assume benefit from the raw forced-Front ceiling. Category
+adaptation remains incomplete and no production assets are replaced.

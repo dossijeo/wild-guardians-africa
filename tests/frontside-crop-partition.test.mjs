@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {partitionCropGeometry} from '../tools/lib/frontside-crop-partition.mjs';
+import {partitionCropGeometry,preserveSourceBackFacingRecipe} from '../tools/lib/frontside-crop-partition.mjs';
 test('stable partition preserves corners, UV lanes, live instance buffers and source provenance',()=>{
  const source=new THREE.InstancedBufferGeometry();
  source.setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:27},(_,i)=>i/10),3));
@@ -14,6 +14,19 @@ test('stable partition preserves corners, UV lanes, live instance buffers and so
  assert.deepEqual(Array.from(source.index.array),original);assert.equal(source.groups.length,0);
  out.sourceFaceOrder.forEach((face,newFace)=>assert.deepEqual(Array.from(out.geometry.index.array.slice(newFace*3,newFace*3+3)),original.slice(face*3,face*3+3)));
  assert.equal(out.additionalActiveIndexBytes,0);source.attributes.iGrowth.array[0]=.8;assert.equal(out.geometry.attributes.iGrowth.array[0],source.attributes.iGrowth.array[0]);
+});
+
+test('selected reverses share original normal/UV/driver lanes and retain corner ancestry',()=>{
+ const source=new THREE.BufferGeometry();source.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array(27),3));source.setAttribute('normal',new THREE.Float32BufferAttribute(new Float32Array(27),3));source.setAttribute('aPeerRoot',new THREE.Float32BufferAttribute(new Float32Array(27),3));source.setIndex([0,1,2,3,4,5,6,7,8]);
+ const out=partitionCropGeometry(source,[0,1,5],[1],[1]);
+ assert.deepEqual(Array.from(out.geometry.index.array),[3,4,5,0,1,2,6,7,8,3,5,4]);
+ assert.deepEqual(out.geometry.userData.qaTriangleSourceFaces,[1,0,2,1]);
+ assert.deepEqual(out.geometry.userData.qaFaceLabels,[1,0,5,1]);
+ assert.equal(out.geometry.attributes.normal,source.attributes.normal);assert.equal(out.geometry.attributes.aPeerRoot,source.attributes.aPeerRoot);assert.equal(out.additionalActiveIndexBytes,6);
+ assert.throws(()=>partitionCropGeometry(source,[0,1,5],[1],[0]),/Invalid regional reverse/);
+ assert.throws(()=>partitionCropGeometry(source,[0,1,5],[1],[1,1]),/Invalid regional reverse/);
+ const material=new THREE.MeshStandardMaterial();let originalHook=false;material.onBeforeCompile=()=>{originalHook=true;};preserveSourceBackFacingRecipe(material);
+ const shader={fragmentShader:'#include <normal_fragment_begin>'};material.onBeforeCompile(shader,{});assert.equal(originalHook,true);assert.equal(material.side,THREE.FrontSide);assert.match(shader.fragmentShader,/float faceDirection = -1.0;/);assert.equal(material.defines.DOUBLE_SIDED,'');assert.equal(source.groups.length,0);
 });
 test('unindexed bridge adds only sequential-partition indices and rejects incomplete labels',()=>{
  const source=new THREE.BufferGeometry();source.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array(18),3));
