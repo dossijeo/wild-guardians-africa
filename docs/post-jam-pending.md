@@ -4,7 +4,8 @@
 campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
 1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
 Auditoría monetaria/cajas/restauración y síntesis completa exactas. Inactividad
-estratégica19,93% pendiente de mejorar; no es replay de main actual ni GPU/móvil.
+estratégica19,93% aprobada por el usuario el 2026-10-08 (criterio: menos del20%).
+No queda pendiente reducirla para este caso; no es replay de main actual ni GPU/móvil.
 
 [Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
 consulta GL síncrona repetida y serialización de texturas al clonar material
