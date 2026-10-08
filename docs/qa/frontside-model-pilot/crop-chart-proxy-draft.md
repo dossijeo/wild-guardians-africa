@@ -1,6 +1,6 @@
 # Geometry draft for separate source fields
 
-`tools/frontside_blender_chart_proxy.py` ran in Blender 4.5.9 and ended with exit code 0 inside the exec call (wall 3.98 seconds, no ongoing handle/live PID returned). Root's CPU run 57382 was terminal before this authorized generation; loading was notified and started its next pilot afterward. No GPU was used.
+`tools/frontside_blender_chart_proxy.py` ran in Blender 4.5.9 and ended with exit code 0 inside the exec call (wall 3.98 seconds, no ongoing handle/live PID returned). Root's CPU run 57382 was terminal before this authorized generation. Loading said its next measured pilot was prepared but not active, and received the Blender terminal/release notice afterward. This does not establish the later pilot's actual dispatch time. No GPU was used.
 
 The isolated draft has 1519 leaf triangles and 1197 vertices, against 3009 original leaf triangles. There are 83 charts; 43 charts with at most three input faces triggered Blender's modifier-size warnings. Their 58 source faces were retained as 58 output faces. No chart had collapsed-position input degeneracy. These facts describe generation, not field correspondence or topology/visual acceptance.
 
