@@ -100,5 +100,5 @@ report=dict(status=payload['status'],sourceSha256=source['sourceSha256'],blender
     boundaryFieldPass=not (source_boundary_fields-output_fields),
     restoredOriginalTriangleCorners=restored_tri,restoredUniqueAnchorCorners=restored_anchor,ambiguousAnchorCorners=ambiguous,newUnmappedCorners=unmapped,
     maxSampledDistance=max(distances,default=0),limitations=payload['limitations'])
-(folder/('maize-soil-budget-'+args.boundary_weight.lower().replace('_','-')+'-diagnostic.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
+(folder/('maize-soil-budget-'+args.boundary_weight.lower().replace('_','-')+'-diagnostic.json')).write_bytes((json.dumps(report,indent=2)+'\n').encode('utf8'))
 print(json.dumps(report))
