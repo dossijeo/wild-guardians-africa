@@ -1,0 +1,29 @@
+{
+  "status": "CPU_RUNTIME_BRIDGE_INDEX_CONTROL_PASS_NOT_NATIVE_OR_GPU_APPROVAL",
+  "command": "node --test tools/frontside_runtime_bridge_index_control.test.mjs",
+  "exitCode": 0,
+  "observedCommandSeconds": 0.3719823,
+  "observedTapMilliseconds": 128.132,
+  "tests": [
+    {
+      "name": "indexed runtime control preserves native mesh/material/instance ownership and restores before disposal",
+      "passed": true
+    },
+    {
+      "name": "control rejects altered source sidedness before installation",
+      "passed": true
+    }
+  ],
+  "sources": {
+    "tools/lib/frontside-runtime-bridge-index-control.mjs": "d2b1fb5f177664ea90d9ca85dbf84535f77aa614623d522a7362b4164e6b0801",
+    "tools/frontside_runtime_bridge_index_control.test.mjs": "9e101098796f51993dbeb3068bbfb3b9c0ca31f3b4f3536ca0832981ea8755cd",
+    "tools/lib/frontside-bridge-index-runtime-rigs.mjs": "467d80adfd7bc94415dfcbfe5e080435455c0452bb02cd96c2993d3a22250ba3"
+  },
+  "scope": [
+    "CPU Three geometry and instanced mesh fixtures; source material and shadow-depth references unchanged.",
+    "Source iBridge and instanceMatrix references unchanged; restore occurs before candidate disposal.",
+    "Borrowed iBridge detached from candidate, retained on source; candidate attributes/indices still owned by candidate.",
+    "No WebGL, buffer identity readback, source texture rendering, draw timing, build or Blender.",
+    "Actual source bridge CPU geometry/driver audit is separately recorded in maize-bridge-index-control-audit.json."
+  ]
+}
