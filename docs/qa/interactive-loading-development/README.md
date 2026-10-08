@@ -216,3 +216,14 @@ Completed evidence on prior frozen runtime is indexed separately:
 - `texture-owner-comparison-08fe1462.md/json/png`: new native Source sharing/owned-texture disposal and empty-batch upload observations. Final New Game nominal RGBA excess falls substantially, but physical peak RAM/VRAM and deferred first-crop fluency remain unaccepted. Requested buffer peaks are unchanged.
 
 Still-open gates include final uninstrumented matched ABBA against current production main, reduced-motion and orbit-extreme presentation/continuity on the final source, actual-menu/night/mobile/audio/failure/repeated-load coverage, complete resource-cost attribution and justification, first-crop behavior after the sampler-upload candidate, and final build/CI/compatibility regression. Retain earlier negative screenshots and performance reports; do not replace them with an acceptance statement derived from units or resource-instrumented timings.
+
+
+## Owned wait integration — 0fbc/a8fd/b249
+
+Native New Game86 on runtime0fbc67bc passed readiness, logical/camera preservation and explicit disposal/context loss, but its first maize draw122ms and loading RAF116.4ms leave responsiveness acceptance open. Raw JSON and bounded-wait details are in `native-bounded-first-crops-0fbc67bc.json` and the matching Markdown. No historical CPU process inventory was taken fresh for86; no perfect isolation claim is made.
+
+Loading-only native far preparation now uses the shared program compiler, queue gate/decode/frame/fence waits with owner/deadline checks, plus context identity/generation protection.74 directed contracts passed after cooperative decode coverage. Original gameplay and root QA flag defaults remain unchanged. The initial queue test failed71/72 due a premature RAF before gate admission; the correction and fixture finally cleanup were checked by two72/72 reruns before the decode extension.
+
+Cinematic reveal preparation and orbit settling now use the same shared frame waiter. Suspended RAF cancellation and deadline return rather than retaining presentation work indefinitely. A new deadline assertion exposed `cinematic=true` being reapplied on unsuccessful preparation; the correction reapplies it only after success, leaving the intended camera restored and cinematic false on error/cancel. The intermediate12/13 failure is retained in session history, final15/15 directed contracts pass. Native source coverage after these changes, broad lifecycle/visual/paired timing and memory acceptance remain pending.
+
+QA-only candidate `retain-loading-maize-textures.js` registers already-present Assets-owned maize samplers before their local diorama copies disappear. It creates no Texture/Source/pixel copies or geometry draws but deliberately keeps atlas residency in an empty farm. Four unit contracts pass. Native peak/residency/first-crop comparisons are still pending; it is not used by production.
