@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interactive loading baseline QA</title><style>body{margin:0;background:#735b3d;color:white;font:15px system-ui}canvas{width:100vw;height:100vh}aside{position:fixed;top:0;left:0;padding:12px;background:#172019e8;max-height:45vh;overflow:auto}button{padding:12px}pre{white-space:pre-wrap}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script><canvas></canvas><aside><button id="run">Run native loading baseline</button><button id="dispose" disabled>Dispose</button><pre id="status">Ready. No world or renderer initialized.</pre></aside><script type="application/json" id="report">{}</script><script type="module">
 import * as Game from '/src/simulation/game.js';
 import {BufferRequests} from './buffer-requests.js';
+import {TextureRequests} from './texture-requests.js';
 import {loadingAssetInventory} from './loading-asset-inventory.js';
 import {deserialize,serialize} from '/src/persistence/snapshots.js';
 import {resumeLoadedWorld} from '/src/app/resume-loaded-world.js';
@@ -11,28 +12,28 @@ import {prepareInitialFarWorld} from '/src/app/far-world-loading.js';
 import {farVegetationProfile} from '/src/rendering/far-vegetation-profile.js';
 import {json} from '/src/rendering/assets.js';
 const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe',quality=params.get('quality')??'media';
-let world,raf,observer,report,bufferAudit;
+let world,raf,observer,report,bufferAudit,textureAudit;
 const status=document.querySelector('#status'),run=document.querySelector('#run'),dispose=document.querySelector('#dispose');
 const update=()=>{status.textContent=JSON.stringify({done:report.done,errors:report.errors,disposed:report.disposed,lastStage:report.stages.at(-1)?.stage},null,2);document.querySelector('#report').textContent=JSON.stringify(report);};
-dispose.onclick=()=>{cancelAnimationFrame(raf);observer?.disconnect();world?.dispose();report.bufferRequestsAfterDispose=bufferAudit?.snapshot();bufferAudit?.dispose();report.disposed=true;report.contextLost=world.renderer.getContext().isContextLost();update();};
+dispose.onclick=()=>{cancelAnimationFrame(raf);observer?.disconnect();world?.dispose();report.textureRequestsAfterDispose=textureAudit?.snapshot();textureAudit?.dispose();report.bufferRequestsAfterDispose=bufferAudit?.snapshot();bufferAudit?.dispose();report.disposed=true;report.contextLost=world.renderer.getContext().isContextLost();update();};
 run.onclick=async()=>{
  run.disabled=true;report={biome,culture,quality,scope:'Frozen maincdb822f5 production-recipe requested-buffer QA: no diorama or cinematic. Buffer binding queries perturb scheduling; ignore timing summaries. Excludes physical VRAM, textures, driver caches, earlier context allocations and total process RAM.',stages:[],frames:[],longTasks:[],errors:[]};
  const started=performance.now();let previous=started;
  const heartbeat=now=>{report.frames.push(now-previous);previous=now;raf=requestAnimationFrame(heartbeat);};raf=requestAnimationFrame(heartbeat);
  try{observer=new PerformanceObserver(list=>report.longTasks.push(...list.getEntries().map(e=>({start:e.startTime-started,duration:e.duration}))));observer.observe({type:'longtask',buffered:false});}catch{report.longTasksSupported=false;}
- const sample=stage=>{report.stages.push({stage,at:performance.now()-started,memory:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize}:null,bufferRequests:bufferAudit?.snapshot(),assetInventory:world?loadingAssetInventory(world):null,resources:world?{geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,owned:world.assets.ownedResources.size}:null});update();};
+ const sample=stage=>{report.stages.push({stage,at:performance.now()-started,memory:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize}:null,textureRequests:textureAudit?.snapshot(),bufferRequests:bufferAudit?.snapshot(),assetInventory:world?loadingAssetInventory(world,textureAudit):null,resources:world?{geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,owned:world.assets.ownedResources.size}:null});update();};
  try{
   if(!Game.BIOMES.includes(biome)||!Game.CULTURES.includes(culture))throw Error('Invalid native fixture');
   let state=Game.newGame({seed:712,biome,culture});
   if(params.get('save')==='dense'){const response=await fetch('/.cache/loading-dense-save.bin');if(!response.ok)throw Error('Archived dense save is not available in QA cache');const raw=await new Response(new Blob([await response.arrayBuffer()]).stream().pipeThrough(new DecompressionStream('gzip'))).text();state=deserialize(raw);report.archivedSave={sha256:Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw)))).map(x=>x.toString(16).padStart(2,'0')).join(''),plants:state.plants.length,workers:state.workers.length,day:state.day};resumeLoadedWorld(state);}
   const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[state.biome]+'.json'),json('/content/villages.json')]);sample('configuration');
   const payload=villages.find(v=>v.id===(state.culture==='saheliana'?'saheliano':state.culture)),nav=new Navigation(state.seed,state.biome,pack.profile);if(!report.archivedSave){const site=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);for(const v of state.villages)if(!v.entry)v.entry=findVillageEntry(nav,[],v.x,v.z);sample('initial-site');
-  world=new WorldScene(document.querySelector('canvas'),()=>{});bufferAudit=new BufferRequests(world.renderer.getContext());world.onError=e=>report.errors.push(e.message);world.qualitySetting(quality);
+  world=new WorldScene(document.querySelector('canvas'),()=>{});bufferAudit=new BufferRequests(world.renderer.getContext());textureAudit=new TextureRequests(world.renderer.getContext());world.onError=e=>report.errors.push(e.message);world.qualitySetting(quality);
   for(const [owner,name] of [[world.sky,'load'],[world.assets,'biome'],[world.assets,'village'],[world.assets,'walls'],[world,'warmAnimalModels'],[world,'warmAnimalGpu']]){const original=owner[name].bind(owner);owner[name]=async(...args)=>{sample(name+':begin');const result=await original(...args);sample(name+':end');return result;};}
   const logicalBefore=serialize(state);sample('renderer');await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});sample('world-load');await world.loadReady(prepareInitialFarWorld(world));sample('far-ready');world.render(0);sample('visible-ready');
   report.logicalUnchanged=serialize(state)===logicalBefore;report.totalMs=performance.now()-started;report.camera={eye:world.camera.position.toArray(),target:world.controls.target.toArray()};report.done=true;dispose.disabled=false;
  }catch(error){report.errors.push(error.stack??String(error));report.done=true;dispose.disabled=!world;}
  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));cancelAnimationFrame(raf);observer?.disconnect();report.frameSummary={count:report.frames.length,max:Math.max(...report.frames),over50:report.frames.filter(t=>t>50).length,over100:report.frames.filter(t=>t>100).length};update();
 };
-addEventListener('error',event=>{report?.errors.push(event.message);});addEventListener('unhandledrejection',event=>{report?.errors.push(String(event.reason));});addEventListener('pagehide',()=>{cancelAnimationFrame(raf);observer?.disconnect();world?.dispose();bufferAudit?.dispose();});
+addEventListener('error',event=>{report?.errors.push(event.message);});addEventListener('unhandledrejection',event=>{report?.errors.push(String(event.reason));});addEventListener('pagehide',()=>{cancelAnimationFrame(raf);observer?.disconnect();world?.dispose();textureAudit?.dispose();bufferAudit?.dispose();});
 </script></html>

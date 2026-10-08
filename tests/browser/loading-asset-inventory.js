@@ -1,8 +1,8 @@
 // QA only: JS asset ownership and native texture object metadata, not GPU bytes.
-export function loadingAssetInventory(world){
+export function loadingAssetInventory(world,textureAudit){
  const textures=[];let geometryObjects=0,materialObjects=0;
  for(const resource of world.assets.ownedResources){
-  if(resource.isTexture){const image=resource.image;const properties=world.renderer.properties.get(resource);textures.push({id:resource.id,name:resource.name,width:image?.width??null,height:image?.height??null,format:resource.format,type:resource.type,colorSpace:resource.colorSpace,mipmaps:resource.mipmaps?.length??0,generateMipmaps:resource.generateMipmaps,initialized:!!properties.__webglTexture,imageSource:typeof image?.src==='string'?image.src:null});}
+  if(resource.isTexture){const image=resource.image;const properties=world.renderer.properties.get(resource);textures.push({id:resource.id,nativeTextureId:textureAudit?.id(properties.__webglTexture)??null,name:resource.name,width:image?.width??null,height:image?.height??null,format:resource.format,type:resource.type,colorSpace:resource.colorSpace,mipmaps:resource.mipmaps?.length??0,generateMipmaps:resource.generateMipmaps,initialized:!!properties.__webglTexture,imageSource:typeof image?.src==='string'?image.src:null});}
   else if(resource.isBufferGeometry)geometryObjects++;
   else if(resource.isMaterial)materialObjects++;
  }
