@@ -20,10 +20,12 @@ import {DepthReadback} from './depth-readback.js';
 import {summarizeDepthComparisons} from './depth-comparison-summary.js';
 import {captureDepthSubmissionState,compareDepthSubmissionState} from './depth-submission-state.js';
 import {depthPixelCandidates} from './depth-pixel-candidates.js';
+import {withExcludedDepthObject} from './depth-draw-exclusion.js';
 import {withDepthCaptureMaterials} from '../../src/rendering/depth-capture.js';
 import {renderOriginBounds,withRenderOrigin} from '../../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials as beforeCompatibility} from './depth-capture-before-compatibility.js';
 const params=new URLSearchParams(window.location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'suajili',errors=[];
+const exclusionButton=document.createElement('button');exclusionButton.textContent='Excluir dibujos de profundidad';exclusionButton.disabled=true;document.querySelector('#status').before(exclusionButton);
 const showError=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent=errors.join('; ');};
 addEventListener('error',e=>showError(e.error??e));addEventListener('unhandledrejection',e=>showError(e.reason));
 const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
@@ -44,6 +46,7 @@ readScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),readMaterial));let res
 function readDepth(){const renderer=world.renderer,texture=world.destructionPass.smokeDepth.depthTexture,size=renderer.getDrawingBufferSize(new THREE.Vector2()),target=new THREE.WebGLRenderTarget(size.x,size.y,{depthBuffer:false}),old=renderer.getRenderTarget();readMaterial.uniforms.depth.value=texture;const bytes=new Uint8Array(size.x*size.y*4);try{renderer.setRenderTarget(target);renderer.render(readScene,readCamera);renderer.readRenderTargetPixels(target,0,0,size.x,size.y,bytes);}finally{renderer.setRenderTarget(old);target.dispose();}return bytes;}
 function status(){const depthStateAnomalies=[];world.scene.traverse(o=>{const m=o.material;if(m&&!Array.isArray(m)&&m.depthWrite&&(!m.depthTest||m.depthFunc!==THREE.LessEqualDepth||m.stencilWrite))depthStateAnomalies.push({name:o.name,type:m.type,depthTest:m.depthTest,depthFunc:m.depthFunc,features:[...(nativeDepthRecipe(m)?.features??[])]});});document.querySelector('#status').textContent=`${biome}/${culture} · ${state.structures[0].hp} PV · ${world.chunks.size} chunks · ${errors.length} errores${benchRunning?' · prueba en curso':''}${result?' · diferencias '+result.differentPixels:''}${benchmark?.baseline.meanMs!=null?' · GPU '+benchmark.baseline.meanMs.toFixed(2)+' → '+benchmark.specialized.meanMs.toFixed(2)+' ms':''}`;document.querySelector('#data').textContent=JSON.stringify({depthStateAnomalies,preserveOrder:document.querySelector('#order').checked,biome,culture,scope:document.querySelector('#scope').value,elapsed:state.elapsed,growth:state.plants[0].growth,damage:world.objects.get(state.structures[0].id)?.damage,stats:world.destructionPass.depthCaptureStats,workers:state.workers.map(w=>({id:w.id,status:w.status,meshPresent:world.objects.has(w.id)})),pixelCandidates,workVfx:[...world.workVfx.effects.values()].map(e=>({id:e.native.definition.id,solids:[...e.rigids.values()].reduce((n,m)=>n+m.geometry.instanceCount,0)})),result,benchmark,errors},null,2);}
 const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+let capturedNativeDraws=[];
 async function measure(optimized){
  world.destructionPass.optimizedDepth=optimized;
  for(let i=0;i<8;i++){await nextFrame();world.render(0);}
@@ -137,6 +140,7 @@ async function comparePreparation(kind){
   }
   const pairs=nativeComparison?[[0,1],[1,2],[2,3],[1,3],[3,4],[4,5],[1,5]]:[[0,1],[1,2],[2,3],[3,4],[1,4]];
   const comparisons=pairs.map(([a,b])=>({pair:frames[a].label+'/'+frames[b].label,color:diff(frames[a].color,frames[b].color),depth:diff(frames[a].depth,frames[b].depth,true),depthSubmissionState:compareDepthSubmissionState(frames[a].submissionState,frames[b].submissionState)}));
+  capturedNativeDraws=nativeComparison?frames.find(frame=>frame.label==='N2').submissionState:[];
   if(comparisons.some(c=>!c.depth.nonUniformPixels))throw Error('Constant depth cannot prove equivalence');
   result={kind,frames:frames.map(({color,depth,submissionState,...frame})=>({...frame,depthSubmissionDraws:submissionState.length})),mode:nativeComparison?'native-full-vs-guarded-vs-single-pass-alpha':kind==='empty'?'prepare-all-vs-known-empty-skipped':singleComparison?'current-depth-vs-single-pass-alpha':'current-depth-vs-QA-stock-alpha',scope:nativeComparison?'Six fixed-clock native world renders: full native N/N, production guard G, single-traversal alpha B/B, native N. Direct final color and packed actual depth attachment; no GPU/all-biome/mobile acceptance.':'Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.',...summarizeDepthComparisons(comparisons),comparisons,alphaApplications:singleComparison?singleAlpha.applications:alphaExperiment.applications,logicalStateUnchanged:true,width:world.canvas.width,height:world.canvas.height};comparisonSnapshot=before;
  }catch(e){showError(e);}finally{singleAlpha.setEnabled(false);alphaExperiment.setEnabled(false);world.destructionPass.nonEmptyDepthOnly=previousEmpty;world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}
@@ -151,6 +155,28 @@ document.querySelector('#pixel-candidates').onclick=()=>{
   const pixels=result.comparisons.find(pair=>pair.depth.firstDifferentDepthPixels?.length)?.depth.firstDifferentDepthPixels??[];
   pixelCandidates=depthPixelCandidates(world.scene,world.camera,world.canvas.width,world.canvas.height,pixels,{recipe:nativeDepthRecipe});status();
  }catch(e){showError(e);}
+};
+exclusionButton.onclick=async()=>{
+ const previous=world.destructionPass.optimizedDepth;
+ try{
+  if(result?.mode!=='native-full-vs-guarded-vs-single-pass-alpha'||serialize(state)!==comparisonSnapshot)throw Error('Ejecutar primero la comparación nativa sin cambiar estado');
+  const captured=result.frames[0].cameraInput;
+  const cameraMatches=()=>JSON.stringify(captured.eye)===JSON.stringify(world.camera.position.toArray())&&JSON.stringify(captured.view)===JSON.stringify(world.camera.matrixWorldInverse.elements)&&JSON.stringify(captured.projection)===JSON.stringify(world.camera.projectionMatrix.elements);
+  if(!cameraMatches()||result.width!==world.canvas.width||result.height!==world.canvas.height||document.querySelector('#scope').value!=='all')throw Error('Cámara/resolución/selección cambiada; repetir comparación');
+  const pixels=result.comparisons.find(pair=>pair.depth.firstDifferentDepthPixels?.length)?.depth.firstDifferentDepthPixels?.slice(0,8)??[];
+  if(!pixels.length){result.depthExclusion={scope:'No differing depth pixels reproduced; no ownership inference.',rows:[]};status();return;}
+  const objects=[...new Map(capturedNativeDraws.map(draw=>[draw.object,draw])).values()];if(objects.length>128)throw Error('Depth object query exceeds bounded QA budget');
+  benchRunning=true;document.querySelectorAll('button').forEach(button=>button.disabled=true);world.destructionPass.optimizedDepth=false;
+  const sample=bytes=>pixels.map(({x,y})=>({x,y,rgba:Array.from(bytes.subarray((y*world.canvas.width+x)*4,(y*world.canvas.width+x)*4+4))}));
+  world.render(0);const baseline=sample(readDepth()),rows=[];
+  for(const draw of objects){
+   await nextFrame();const {skipped}=withExcludedDepthObject(world,draw.object,()=>world.render(0));
+   if(!cameraMatches()||serialize(state)!==comparisonSnapshot)throw Error('Exclusion changed camera or logical state');
+   const excluded=sample(readDepth());rows.push({object:draw.object,name:draw.name,geometry:draw.geometry,type:draw.type,map:draw.map?.[0]??null,alphaTest:draw.alphaTest,skipped,pixels:excluded.map((pixel,i)=>({...pixel,changed:JSON.stringify(pixel.rgba)!==JSON.stringify(baseline[i].rgba)}))});
+  }
+  world.render(0);const repeated=sample(readDepth());if(world.renderer.getContext().getError()!==0)throw Error('Depth exclusion WebGL error');
+  result.depthExclusion={scope:'Leave-one-mesh-out actual native depth submissions, unchanged materials/shaders. Changes identify involvement at these pixels; coincident/occluded draws may remain indistinguishable. Not GPU performance or alpha acceptance.',baseline,repeated,controlPixelsIdentical:JSON.stringify(baseline)===JSON.stringify(repeated),rows};
+ }catch(error){showError(error);}finally{world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(button=>button.disabled=false);status();}
 };
 document.querySelector('#damage').onclick=()=>{hitStructure(state.structures[0],40);world.render(0);status();};
 // Controlled render-only QA states; these do not represent a simulated attack.

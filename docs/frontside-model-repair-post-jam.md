@@ -7,6 +7,13 @@ ningún modelo candidato ni cambio de sidedness aceptado todavía.
 
 ## Alcance y pipeline
 
+Ampliación autorizada por el usuario el 8 de octubre de 2026: continuar tanto
+con reparaciones como con modelos derivados de los existentes, hechos
+expresamente para FrontSide, eligiendo el enfoque que mejor funcione. Esta
+autorización se ha transmitido al subagente y no rebaja los criterios de
+conservación, calidad visual, coste ni beneficio GPU descritos abajo. Los
+originales permanecen conservados y ningún candidato está aceptado todavía.
+
 Priorizar cultivos y trabajadores por su repetición en fincas avanzadas.
 Blender CLI/headless y scripts Python son la herramienta principal de reparación;
 glTF Transform/Validator pueden complementar inspección, conversión y validación.
