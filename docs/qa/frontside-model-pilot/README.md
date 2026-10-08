@@ -959,3 +959,15 @@ faces and about4430 projected square pixels at Water0.90625/elevation67.5/
 azimuth144.375 (caseOffset13). This prediction is not raster coverage; a native
 screen must verify face coverage and real shading without promoting this
 closeup or the previous six-pixel screen into complete approval.
+
+The native Badge5 closeup at HEAD348f6a8c is REJECTED and archived as
+worker-badge-water-closeup-guided-*: both source and candidate ID draws cover
+4434pixels on all16 affected nondegenerate faces. AlphaIoU1 and0missing/added
+do not rescue RGB quality: globalMAE0.00107435 passes, but maxTileMAE0.33183158
+and RGB regions4434pixels and157pixels fail unchanged gates. No normal/map
+preservation credit is taken from the earlier tiny views. This comparison
+includes the existing selective Front candidate, so a separate baseline-side
+isolation would be needed to attribute the full change solely to normals.
+CPU44164/49032 and suite40728 were active, with no timing claim. Root closed
+the context/tab. QA Run buttons now remain disabled with a loading message
+until module imports and handlers are initialized, preventing a lost early click.

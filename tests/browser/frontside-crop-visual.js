@@ -15,6 +15,7 @@ import {derivedCropGeometry} from '../../tools/lib/frontside-derived-crop.mjs';
 const status=document.querySelector('#status'),size=1024,linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let renderer,cancelled=false;
 document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();renderer?.forceContextLoss();status.textContent+='\nGPU liberada';};
 document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await run();}catch(e){status.textContent=e.stack;renderer?.dispose();renderer?.forceContextLoss();}};
+document.querySelector('#run').disabled=false;status.textContent='Preparado: módulo QA cargado';
 function colorMetrics(a,b,envelope){
  let source=0,union=0,intersection=0,missing=0,added=0,error=0,channels=0,nominalError=0;const hist=new Uint32Array(256),tiles=new Float64Array(4096),nominalTiles=new Float64Array(4096),counts=new Uint32Array(4096),missingMask=new Uint8Array(size*size),alpha=new Uint8Array(size*size),rgb=new Uint8Array(size*size);
  for(let p=0;p<size*size;p++){const o=p*4,aa=!!a[o+3],bb=!!b[o+3];source+=aa;intersection+=aa&&bb;missing+=aa&&!bb;added+=!aa&&bb;if(!aa&&!bb)continue;union++;alpha[p]=aa;missingMask[p]=aa&&!bb;const tile=Math.floor(p/size/16)*64+Math.floor(p%size/16);
