@@ -1090,3 +1090,15 @@ and runs sourceTwin at the same original Badge closeup. Any nonzero identical-
 source twin result invalidates instrument use for candidate attribution; exact
 results still cannot prove original undefined zero behavior unaffected by DCE.
 No old readback is reclassified, threshold changed or candidate promoted.
+
+
+Native sourceTwin at HEAD87ff0900 validates this identical-source instrument
+control only: PBR IoU1/RGBMAE0/tile0/shadow-packed0; vertex/direction/perturbed
+source repeats and twins all exact. Conditions were43808/49032 active as
+verified by root, with44164 completed; old captures keep historical conditions.
+The next derived readback adds oriented direction (normalize(vNormal) times
+front-facing sign), separating expected original Double back-face reversal
+from actual before-map angular differences. Within saved nominal PBR RGB
+outliers it also records channel byte distributions, without equating zero
+encoded bytes to NaN or claiming undefined original shader behavior. New unit
+normal data still fails saved PBR gates; this does not approve the candidate.
