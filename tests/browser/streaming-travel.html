@@ -68,7 +68,7 @@ try{
  const capturePrograms=stage=>{if(!params.has('trace'))return;for(const program of world.renderer.info.programs){if(seenPrograms.has(program))continue;seenPrograms.add(program);programEvents.push({stage,at:running?performance.now()-started:null,id:program.id,name:program.name,cacheKey:program.cacheKey});}};
  capturePrograms('ready');
  if(params.has('trace'))for(const name of ['compileAsync','render','initTexture']){
-  const original=world.renderer[name];world.renderer[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running)segments.push({name,at:begin-started,cpuMs:performance.now()-begin});}};
+  const original=world.renderer[name];world.renderer[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running){const root=args[0];segments.push({name,at:begin-started,cpuMs:performance.now()-begin,...(name==='compileAsync'?{preparationRoot:{kind:root===world.assetGroups.root?'native-merged':root?.name==='native-tree-standby'?'standby':'other',uuid:root?.uuid,name:root?.name,type:root?.type,children:root?.children?.length}}:{})});}}};
  }
  if(params.has('trace')){
   const wrap=(owner,name,label,after)=>{const original=owner[name];owner[name]=function(...args){const begin=performance.now();try{const result=original.apply(this,args);after?.(args,result);return result;}finally{if(running)segments.push({name:label,at:begin-started,cpuMs:performance.now()-begin});}};};
