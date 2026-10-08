@@ -319,8 +319,75 @@
       }
     ]
   },
+  "capacityRecreation": {
+    "oldCapacity": 64,
+    "newCapacity": 128,
+    "plants": 65,
+    "adapter": {
+      "status": "QA_WORLD_MAIZE_ONLY_NOT_PRODUCTION_APPROVAL",
+      "closed": false,
+      "authoredWorldDepth": false,
+      "worldDepthSide": null,
+      "capacity": 128,
+      "matureCount": 18,
+      "matureVisible": true,
+      "groups": [
+        {
+          "start": 0,
+          "count": 5778,
+          "materialIndex": 0
+        },
+        {
+          "start": 5778,
+          "count": 4509,
+          "materialIndex": 1
+        },
+        {
+          "start": 10287,
+          "count": 4509,
+          "materialIndex": 2
+        }
+      ],
+      "materialSides": [
+        0,
+        0,
+        0
+      ],
+      "shadowSides": [
+        2,
+        2,
+        2
+      ],
+      "events": [
+        {
+          "event": "installed",
+          "capacity": 64,
+          "vertices": 6903,
+          "triangles": 4932,
+          "attributeBytes": 220896,
+          "indexBytes": 29592,
+          "liveGrowthShared": true
+        },
+        {
+          "event": "restored",
+          "capacity": 64
+        },
+        {
+          "event": "installed",
+          "capacity": 128,
+          "vertices": 6903,
+          "triangles": 4932,
+          "attributeBytes": 220896,
+          "indexBytes": 29592,
+          "liveGrowthShared": true
+        }
+      ]
+    },
+    "liveLanesAndDispatchEqual": true
+  },
   "limitations": [
     "Actual source geometry/metadata and production batch factory; CPU-only, source textures were not loaded.",
+    "Actual factory disposal/recreation64 to128 preserves live lanes/dispatch for65 plants; WorldScene demand scheduling itself was not invoked.",
     "Original and candidate stage/bridge dispatch, live instance matrices and growth lanes agree. GPU deformation/interpolation, switch perceptual continuity and completed worker harvest/delivery remain unproven."
   ]
 }
