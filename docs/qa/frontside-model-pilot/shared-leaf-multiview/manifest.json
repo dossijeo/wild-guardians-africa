@@ -1,0 +1,771 @@
+{
+  "status": "NATIVE_CAPTURES_ARCHIVED_HUMAN_REVIEW_PENDING",
+  "visualAcceptancePolicyVersion": 3,
+  "fixtureSourceCommit": "353036e9fe7d450889530298ba3e8213ecd26f4f",
+  "fixtureJsSha256": "60c79fe48cd9ee4f807f4d460814739cf4c8b2c9129f808d5c1d90bc363b0bf6",
+  "rows": [
+    {
+      "index": 1,
+      "id": "mature-day-gran-rio",
+      "json": "case1.json.gz",
+      "png": "case1.png",
+      "rawJsonSha256": "e689b4c9fb73ef9e566e8378226f1b8719dc513a5f743907295e7a167ab26797",
+      "gzipSha256": "a0a7d78b8e0106d1ecdf1a4e9d873576cc004b57b34ff1968d915b6153510605",
+      "pngSha256": "1907b0b34d8bd6ee970cfc14cd3f76ccc70fab15e9a7db182b2cbaccdb9af363",
+      "phaseSummary": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "sourceControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        }
+      ],
+      "comparisons": [
+        {
+          "arm": 1,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 0,
+          "maxTileMae": 0,
+          "historicalDiagnosticWithinThreshold": true
+        },
+        {
+          "arm": 2,
+          "alphaIoU": 0.9489243454097142,
+          "missingPixels": 4862,
+          "addedPixels": 6883,
+          "linearRgbMae": 0.021120498845359367,
+          "maxTileMae": 0.23194380295573355,
+          "historicalDiagnosticWithinThreshold": false
+        },
+        {
+          "arm": 3,
+          "alphaIoU": 0.9478763051580106,
+          "missingPixels": 5103,
+          "addedPixels": 6883,
+          "linearRgbMae": 0.021819942940010523,
+          "maxTileMae": 0.23194380295573355,
+          "historicalDiagnosticWithinThreshold": false
+        }
+      ],
+      "shadowUniformAtCapture": {
+        "on": 1
+      },
+      "effectiveShadowDrawCount": 9,
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            0,
+            0,
+            0
+          ],
+          "shadowSides": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "restore source material",
+          "derived material 2",
+          "derived material 1",
+          "derived material 0",
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true,
+      "visualReview": {
+        "status": "HUMAN_REVIEW_PENDING",
+        "reviewer": null,
+        "decision": null,
+        "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+        "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+        "required": [
+          "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+          "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+          "Functional contracts and stability, resources and measured net GPU benefit before integration."
+        ],
+        "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+      }
+    },
+    {
+      "index": 2,
+      "id": "mature-night-volcanes",
+      "json": "case2.json.gz",
+      "png": "case2.png",
+      "rawJsonSha256": "9c77b4b896ec7aeadbafb7e337baeb9db90d15ac9a6a8a74b69671ab200f9cea",
+      "gzipSha256": "f63d583d1d9061a23f5dfc9631896181a140706c906cf65225b44265ec8a7056",
+      "pngSha256": "553a391bcca449416254a1124fe72ba4b946160a7a73771ff5a5073d49ff3655",
+      "phaseSummary": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "sourceControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 14,
+          "maxByteDifference": 9,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        }
+      ],
+      "comparisons": [
+        {
+          "arm": 1,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 1.1254540209219073e-7,
+          "maxTileMae": 0.0001600665049117409,
+          "historicalDiagnosticWithinThreshold": true
+        },
+        {
+          "arm": 2,
+          "alphaIoU": 0.9573734816138748,
+          "missingPixels": 4714,
+          "addedPixels": 5589,
+          "linearRgbMae": 0.016466835955525776,
+          "maxTileMae": 0.1878868523813392,
+          "historicalDiagnosticWithinThreshold": false
+        },
+        {
+          "arm": 3,
+          "alphaIoU": 0.9572576374408367,
+          "missingPixels": 4742,
+          "addedPixels": 5589,
+          "linearRgbMae": 0.01663503413933582,
+          "maxTileMae": 0.1878868523813392,
+          "historicalDiagnosticWithinThreshold": false
+        }
+      ],
+      "shadowUniformAtCapture": {
+        "on": 1
+      },
+      "effectiveShadowDrawCount": 9,
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            0,
+            0,
+            0
+          ],
+          "shadowSides": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "restore source material",
+          "derived material 2",
+          "derived material 1",
+          "derived material 0",
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true,
+      "visualReview": {
+        "status": "HUMAN_REVIEW_PENDING",
+        "reviewer": null,
+        "decision": null,
+        "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+        "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+        "required": [
+          "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+          "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+          "Functional contracts and stability, resources and measured net GPU benefit before integration."
+        ],
+        "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+      }
+    },
+    {
+      "index": 7,
+      "id": "end-final-bridge",
+      "json": "case7.json.gz",
+      "png": "case7.png",
+      "rawJsonSha256": "8b63156ebb777b711bb401bb57e3fc5d92d89d3293a542823830ddcad447e68e",
+      "gzipSha256": "2548da9ca4895d99c54d0c299d7f5626d5c3b2333a41cde91a69c20d78e0b2b3",
+      "pngSha256": "6cf59beda14242c98c40221d944d7b394a622d1986c38727608132702cf2e1b9",
+      "phaseSummary": [
+        {
+          "arm": 0,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "active": [
+            {
+              "name": "puente_maiz_4_5",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 1,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "active": [
+            {
+              "name": "puente_maiz_4_5",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 2,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "active": [
+            {
+              "name": "puente_maiz_4_5",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 3,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "active": [
+            {
+              "name": "puente_maiz_4_5",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "sourceControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        }
+      ],
+      "comparisons": [
+        {
+          "arm": 1,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 0,
+          "maxTileMae": 0,
+          "historicalDiagnosticWithinThreshold": true
+        },
+        {
+          "arm": 2,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 0,
+          "maxTileMae": 0,
+          "historicalDiagnosticWithinThreshold": true
+        },
+        {
+          "arm": 3,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 0,
+          "maxTileMae": 0,
+          "historicalDiagnosticWithinThreshold": true
+        }
+      ],
+      "shadowUniformAtCapture": {
+        "on": 1
+      },
+      "effectiveShadowDrawCount": 7,
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            0,
+            0,
+            0
+          ],
+          "shadowSides": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "restore source material",
+          "derived material 2",
+          "derived material 1",
+          "derived material 0",
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true,
+      "visualReview": {
+        "status": "HUMAN_REVIEW_PENDING",
+        "reviewer": null,
+        "decision": null,
+        "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+        "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+        "required": [
+          "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+          "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+          "Functional contracts and stability, resources and measured net GPU benefit before integration."
+        ],
+        "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+      }
+    },
+    {
+      "index": 8,
+      "id": "first-derived-native",
+      "json": "case8.json.gz",
+      "png": "case8.png",
+      "rawJsonSha256": "03bd3cf9b9479b01b604ffb1fb8c1c3a9e4fa6d2a616d2bf48e55bcf5460efea",
+      "gzipSha256": "41ad3fe5bee5ab138e0fd01f884982edaa9f633aa4b89dd9a9774e13c47cbc46",
+      "pngSha256": "0218a697cd7e05634f692e11b3d6737cb94235e50aa4fed26f69ccd63cce2375",
+      "phaseSummary": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "active": [
+            {
+              "name": "maiz_05_maduro",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "sourceControls": [
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        },
+        {
+          "differentBytes": 0,
+          "maxByteDifference": 0,
+          "alphaDifferences": 0
+        }
+      ],
+      "comparisons": [
+        {
+          "arm": 1,
+          "alphaIoU": 1,
+          "missingPixels": 0,
+          "addedPixels": 0,
+          "linearRgbMae": 0,
+          "maxTileMae": 0,
+          "historicalDiagnosticWithinThreshold": true
+        },
+        {
+          "arm": 2,
+          "alphaIoU": 0.9382908729891634,
+          "missingPixels": 4985,
+          "addedPixels": 9684,
+          "linearRgbMae": 0.019572867522328043,
+          "maxTileMae": 0.3770646157096687,
+          "historicalDiagnosticWithinThreshold": false
+        },
+        {
+          "arm": 3,
+          "alphaIoU": 0.9381688766238137,
+          "missingPixels": 5014,
+          "addedPixels": 9684,
+          "linearRgbMae": 0.02022738896222382,
+          "maxTileMae": 0.3770646157096687,
+          "historicalDiagnosticWithinThreshold": false
+        }
+      ],
+      "shadowUniformAtCapture": {
+        "on": 1
+      },
+      "effectiveShadowDrawCount": 9,
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            0,
+            0,
+            0
+          ],
+          "shadowSides": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "restore source material",
+          "derived material 2",
+          "derived material 1",
+          "derived material 0",
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true,
+      "visualReview": {
+        "status": "HUMAN_REVIEW_PENDING",
+        "reviewer": null,
+        "decision": null,
+        "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+        "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+        "required": [
+          "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+          "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+          "Functional contracts and stability, resources and measured net GPU benefit before integration."
+        ],
+        "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+      }
+    }
+  ],
+  "limitations": [
+    "Original runtime report bytes preserved, including its live-prefix capture reference. PNG filenames in this manifest locate the corresponding archived pixels.",
+    "Cases7/8 bracket the source bridge and changed mature mesh; they are static samples, not continuous gameplay validation.",
+    "Numeric differences are diagnostic under policy3. Assistant observations do not invent a named human decision.",
+    "ShadowSide/customDepth remain Double isolation. GPU timing, resident memory and net category benefit are unmeasured.",
+    "Process labels in runtime reports are not authoritative liveness inventories; background campaign conditions require root capture records."
+  ]
+}

@@ -1,0 +1,5 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import {gunzipSync} from 'node:zlib';
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),base=new URL('./',import.meta.url),manifest=JSON.parse(fs.readFileSync(new URL('manifest.json',base)));
+if(manifest.visualAcceptancePolicyVersion!==3||manifest.rows.length!==4)throw Error('Unexpected archive policy/scope');
+for(const row of manifest.rows){const gzip=fs.readFileSync(new URL(row.json,base)),raw=gunzipSync(gzip),png=fs.readFileSync(new URL(row.png,base)),report=JSON.parse(raw);if(sha(gzip)!==row.gzipSha256||sha(raw)!==row.rawJsonSha256||sha(png)!==row.pngSha256||report.viewCaseIndex!==row.index||report.viewCaseId!==row.id||report.visualReview.status!=='HUMAN_REVIEW_PENDING'||report.cleanup.closed!==true||report.contextLost!==true||report.cleanup.errors.length)throw Error('Native archive identity/cleanup mismatch');}
+console.log('PASS: four native reports/pixels preserve original hashes; human review remains pending.');
