@@ -91,5 +91,5 @@ report=dict(status='EXACT_CHART_BUDGET_DIAGNOSTIC_NOT_CANDIDATE',blender=bpy.app
     'Savings are optimistic simple-boundary triangulation counts, not a verified tessellation or visual/map/shadow equivalence. Concavity/collinear constraints, GPU interpolation precision, material programs and reverse normal-map recipe still require validation.',
     'Coincident position triangles do not establish equivalent UV/normal fields, removal safety, duplicate causality or permission to canonicalize.',
     'Ten-percent budget remains unchanged; physical GPU storage/draw overhead/net benefit are not measured.'])
-(folder/'crop-maize-exact-chart-budget.json').write_text(json.dumps(report,indent=2)+'\n')
+(folder/'crop-maize-exact-chart-budget.json').write_bytes((json.dumps(report,indent=2)+'\n').encode('utf8'))
 print(json.dumps([{k:r[k] for k in ['mesh','eligibleExactAffineFaces','exactCoincidentFaces','optimisticChartSaving','savingNeededForAllStemReversesUnderTenPercent','optimisticBudgetFeasible']} for r in rows]))
