@@ -170,9 +170,9 @@ test('a real draw fault is not reclassified when ownership changes during that f
 });
 
 
-test('loading draw queue preserves concurrent compile but serializes fences and rejects stale draws',async()=>{
+test('loading queue preserves concurrent texture uploads but serializes compilation/fences and rejects stale jobs',async()=>{
  const f=fixture();let releaseFirst,started,compiles=0,frames=0,stale=false,held=false;const entered=new Promise(resolve=>started=resolve);f.renderer.compileAsync=async()=>{compiles++;};
  const options={cooperative:true,nextFrame:async()=>{frames++;if(!held&&f.calls.includes('fence')){held=true;started();await new Promise(resolve=>releaseFirst=resolve);}}},first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);await entered;
- const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{...options,cancelled:()=>stale}),rejected=assert.rejects(second,e=>e instanceof NativeFarGpuCancelled);stale=true;const third=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,3);assert.equal(f.calls.filter(c=>c==='render').length,1);releaseFirst();await first;await rejected;await third;assert.equal(f.calls.filter(c=>c==='render').length,2);assert.equal(f.calls.filter(c=>c==='delete').length,2);assert.ok(frames>=3);f.restored();
- await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,4);
+ const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[new Texture()],{...options,cancelled:()=>stale}),rejected=assert.rejects(second,e=>e instanceof NativeFarGpuCancelled);stale=true;const third=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[new Texture()],options);assert.equal(compiles,1);assert.equal(f.calls.filter(c=>c==='texture').length,2);assert.equal(f.calls.filter(c=>c==='render').length,1);releaseFirst();await first;await rejected;await third;assert.equal(compiles,2);assert.equal(f.calls.filter(c=>c==='render').length,2);assert.equal(f.calls.filter(c=>c==='delete').length,2);assert.ok(frames>=3);f.restored();
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,3);
 });

@@ -47,8 +47,8 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
    if(end<pending.length)await nextFrame();
   }
   check();
+  const compileDrawAndFence=async()=>{check();
   await renderer.compileAsync(root,camera,scene);check();checkErrors('after compilation');
-  const drawAndFence=async()=>{check();
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.
@@ -62,16 +62,17 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   const errorCode=gl.getError();if(errorCode!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+errorCode.toString(16));
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
   };
-  return cooperative?await queueLoadingFarDraw(renderer,drawAndFence,{check,nextFrame}):await drawAndFence();
+  return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame}):await compileDrawAndFence();
  }finally{if(sync)gl.deleteSync(sync);}
 }
 
-// Loading-only draw queue. Texture preparation and asynchronous compilation
-// remain concurrent; only upload draws/fences are admitted one at a time.
+// Loading-only compile/draw queue. Texture preparation remains concurrent;
+// program preparation and upload draws/fences are admitted one at a time.
 // This avoids serializing long image preparations just to separate native draw
-// continuations. Ordinary gameplay retains its existing scheduling.
+// continuations or concentrating pending compilations in the first draw.
+// Ordinary gameplay retains its existing scheduling.
 const loadingPreparations=new WeakMap();
-function queueLoadingFarDraw(renderer,draw,{check,nextFrame}){
+function queueLoadingFarPrograms(renderer,draw,{check,nextFrame}){
  const previous=loadingPreparations.get(renderer)??Promise.resolve();let release;
  const gate=new Promise(resolve=>{release=resolve;}),tail=previous.catch(()=>{}).then(()=>gate);loadingPreparations.set(renderer,tail);
  const clear=()=>{if(loadingPreparations.get(renderer)===tail)loadingPreparations.delete(renderer);};tail.then(clear,clear);
