@@ -8,6 +8,7 @@ import {logicalNativeStandbyEntries,adoptedLogicalPreloadBounds} from './logical
 import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
+import {NativePreparationCadence} from './native-preparation-cadence.js';
 import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
@@ -32,6 +33,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  if(!Number.isInteger(slot)||slot<0||slot>3||world.nav.config.biome==='canyons'&&slot>1)throw Error('Invalid native far species slot');
  if(ownsWorld&&world.farVegetation)throw Error('Far layer already attached');
  let closed=false,busy=false,lastRequested=null;const attachedSeed=world.state.seed;
+ const preparationCadence=new NativePreparationCadence(world.farPreparationInterval??0);
  const isCancelled=()=>closed||world.disposed||world.state?.seed!==attachedSeed||ownerCancelled();
  // Readiness modifies color visibility and consequently merged matrix versions.
  // Those versions must not invalidate the preparation that enabled that fade.
@@ -73,6 +75,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  }
  function schedulePreparation(){
   if(isCancelled()||busy||nativeFarGpuContextLost(world.renderer)||!coverage.counts.size||[...coverage.counts.keys()].every(id=>prepared.has(id)))return;
+  if(!preparationCadence.admit(performance.now()))return;
   busy=true;stats.preparationAttempts++;
   // Native merged batches are updated later in the synchronous render call.
   Promise.resolve().then(async()=>{

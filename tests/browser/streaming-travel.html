@@ -20,7 +20,7 @@ const params=new URLSearchParams(location.search),quality=params.get('quality')?
 const duration=Number(params.get('seconds')??30),speed=Number(params.get('speed')??12),angle=Number(params.get('angle')??0)*Math.PI/180;
 const errors=[],frames=[],installs=[],longTasks=[],segments=[],resourceStages=[];let world,timer,resources,shadowPrimer,dead=false,running=false,started=0,previous=0,last=performance.now(),raf,report=null,observer,finishedAt=0;
 const resourceStage=name=>{if(resources)resourceStages.push({name,buffers:resources.snapshot(),renderer:{...world.renderer.info.memory,programs:world.renderer.info.programs.length}});};
-const output=value=>document.querySelector('#report').textContent=JSON.stringify(value,null,2);
+const output=value=>document.querySelector('#report').textContent=JSON.stringify({...value,preparationInterval:world?.farPreparationInterval??0},null,2);
 const summarize=values=>{
  const sorted=values.slice().sort((a,b)=>a-b),q=p=>sorted.length?sorted[Math.ceil(sorted.length*p)-1]:null;
  return {count:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1)??null,over33:values.filter(v=>v>1000/30).length,over50:values.filter(v=>v>50).length,over100:values.filter(v=>v>100).length};
@@ -46,6 +46,7 @@ try{
  const state=restored??Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=restored?null:await findInitialLocationAsync(nav,payload);
  if(site){Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
  const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);world.farIsolatedPreparation=params.has('isolatePreparation');world.farOwnedCompilation=params.has('ownedCompilation');world.farOwnedWaits=params.has('ownedWaits');
+ world.farPreparationInterval=Number(params.get('preparationInterval')??0);
  if(params.has('resourceProfile')){resources=new BufferRequests(world.renderer.getContext());resourceStage('before-world-load');}
  await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
  // Matched readiness for resident-program ABBA: both arms await the same model
