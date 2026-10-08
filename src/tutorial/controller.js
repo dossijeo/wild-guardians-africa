@@ -22,8 +22,8 @@ function actionStep(s){
   return s.plants.some(p=>p.alive&&isMature(p))?'harvest':'observe';
 }
 export class TutorialController {
-  constructor(state,profile,{onError=()=>{}}={}){
-    this.state=state;this.profile=profile;this.onError=onError;
+  constructor(state,profile,{onError=()=>{},isNarrating=()=>false}={}){
+    this.state=state;this.profile=profile;this.onError=onError;this.isNarrating=isNarrating;
     const t=state.tutorial??={step:'intro',seen:[]};
     t.seen=[...new Set((t.seen??[]).filter(id=>known.has(id)))];
     t.pending=[...new Set((t.pending??[]).filter(id=>known.has(id)))];
@@ -44,6 +44,13 @@ export class TutorialController {
   update(){
     const s=this.state,t=s.tutorial,globalSeen=this.profile.read();
     resume(s,reason);resume(s,'intro');
+    // Real actions may complete while a spoken explanation is still audible.
+    // Keep its reading identity until ended/manual dismissal, without undoing
+    // actions or preventing the simulation from recording their completion.
+    if(t.reading&&this.isNarrating(t.reading)){
+      if(!t.basicSkipped&&t.step!=='done'&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
+      return;
+    }
     if(s.result==='defeat'){t.reading=null;resume(s,reason);resume(s,'tutorial-action');return;}
     if(t.basicSkipped){t.step='done';resume(s,'intro');resume(s,'tutorial-action');}
     else if(t.step!=='done'&&(t.step!=='intro'||t.seen.includes('basic.introduction')))t.step=actionStep(s);
@@ -114,7 +121,7 @@ export class TutorialController {
   }
   advance(seconds,{visible=true}={}){
     const message=this.presentation();
-    if(!message||!visible){this.presentationAge=0;return false;}
+    if(!message||!visible||this.isNarrating(message.id)){this.presentationAge=0;return false;}
     const key=message.id+':'+(message.variant??'')+':'+!!message.reading;
     if(key!==this.presentationKey){this.presentationKey=key;this.presentationAge=0;}
     this.presentationAge=(this.presentationAge??0)+Math.max(0,seconds);
@@ -122,9 +129,9 @@ export class TutorialController {
     if(this.presentationAge<duration)return false;
     return this.dismiss({automatic:true});
   }
-  dismiss({automatic=false}={}){
-    const message=this.presentation();if(!message)return false;
-    if(message.reading)this.acknowledge();
+  dismiss({automatic=false,message=this.presentation()}={}){
+    if(!message)return false;
+    if(message.reading&&this.state.tutorial.reading===message.id)this.acknowledge();
     const t=this.state.tutorial;
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];
     t.guideAfterAuto=(t.guideAfterAuto??[]).filter(id=>id!==message.id);
@@ -133,8 +140,10 @@ export class TutorialController {
     return true;
   }
   presentation(){
+    if(this.lastPresentation&&this.isNarrating(this.lastPresentation.id)&&!this.state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return this.lastPresentation;
     const message=this.currentPresentation();
     if(message&&!message.reading&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
+    this.lastPresentation=message;
     return message;
   }
   currentPresentation(){

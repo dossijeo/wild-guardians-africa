@@ -30,6 +30,12 @@ class FakeAudio {
  load(){this.loaded=true;}
 }
 const record=manifest.records[0];
+test('muted narration skips loading, and muting active audio switches to identified text fallback',async()=>{
+ let volume=0,created=0;const voice=new SpiritVoice({volume:()=>volume,create:()=>{created++;return new FakeAudio();}});
+ voice.play(record);assert.equal(created,0);assert.equal(voice.status,'fallback');assert.equal(voice.failure,'muted');
+ volume=1;voice.play(record);await Promise.resolve();const audio=voice.audio;volume=0;voice.refreshVolume();assert(audio.paused&&audio.released);assert.equal(voice.status,'fallback');assert.equal(voice.failure,'muted');
+ voice.dispose();
+});
 test('replacement stops/releases old media immediately and ignores stale ended and play promises',async()=>{
  const audios=[],voice=new SpiritVoice({create:()=>{const a=new FakeAudio();audios.push(a);return a;}});let ended=0;
  voice.play(record,()=>ended++);const lateEnded=audios[0].onended;voice.play(record,()=>ended++);
