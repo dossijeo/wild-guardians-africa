@@ -1,0 +1,9 @@
+# Retained rejected Sorgo view: original-face attribution only
+
+The native source/partition Sorgo TRAINING view already failed local RGB gates while preserving alpha. Exact whole-source boundary/component audits do not establish its cause; connected-component reversal would duplicate nearly the whole mature stem. Before proposing a narrow semantic reconstruction, inspect original-source face IDs/driver labels/back-facing ownership at saved nominal RGB outliers with the already existing original single-material attribution instrument.
+
+Opt-in sorgoSourceRgb requires sorgoStateStem +mapSourceRgb and all retained training guards. It keeps the original view/geometry/materials and four PBR arms unchanged, then performs a separate original arm0 ID draw. The report joins original source face IDs to original labels. A later ID shader changes the shading recipe and is nominal attribution only: no inference that the mapped face caused the PBR difference, no approval, no candidate mask generated from pixels. No source asset or reverse face changes. All controls and quality thresholds remain unchanged. Reusing this rejected training view for diagnosis is not independent acceptance or a new chance to approve it. Freeze and archive independently before overwriting either prior result.
+
+URL: `http://localhost:5284/tests/browser/frontside-crop-visual.html?sidePartition&stemOnly&preserveDoubleShader&sorgoStateStem&sorgoSourceRgb&mapSourceRgb&limit=1&cpuCampaigns=inventory-required-before-draw`
+
+No timing; coordinate native window with root/loading and inventory live CPU before drawing. Worker sourceBodyIsolation remains a separate pending source-only probe. If a geometric proposal follows this diagnosis, it must have explicit source semantic/attribute correspondence, preserve growth/wind and shadows, pass new independent views and resources, then demonstrate net GPU benefit. Attribution alone is not permission to choose reverse triangles by view.
