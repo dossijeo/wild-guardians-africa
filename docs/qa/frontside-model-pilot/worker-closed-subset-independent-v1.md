@@ -79,3 +79,36 @@ ID provenance for the worst source difference. A retained PNG shows original,
 worst original repeat and amplified difference; it is explicitly source-only.
 This does not retry acceptance, change gates, infer the noise cause or select
 candidate geometry from a held-out view. V1 remains invalid.
+
+Source-only native HEAD950fca1a confirms the variation in30draws: repeats alternate
+between0 and21changed bytes/max59, alpha unchanged. Suite46954 had already
+finished3139/3139PASS; CPU43808/49032 remained alive. The nominal RGB ID draw
+identifies6pixels on front-facing Mesh0face9365. This is later ID attribution,
+not proof of cause or permission to adapt this held-out face. No candidate drawn.
+Original/repeat/difference remains visible as a static image after WebGL disposal.
+Archive: worker-closed-subset-source-only-v1-{diagnostic.json,diagnostic.png,
+browser.png,console.json}. The source problem is not blamed solely on a suite or
+first draw because it persists without the suite and across later repeats.
+
+## Next isolated source program/state audit
+
+Append sourceStateAudit to the source-only URL. This opt-in instrumentation is
+rejected for any candidate acceptance run. Each original color draw records
+actual linked program shader-source strings, active uniform values, matrixWorld/
+modelView/normal matrices, texture object identities and sampler units, VAO and
+active attribute/buffer layout, element buffer, drawRange, depth/cull/blend/dither/
+polygon offset/framebuffer state and bone texture data fingerprint. Original
+attribute/index buffer fingerprints are sampled at start/end. All original mesh
+hooks are composed/restored before the later ID draw; activeTexture is restored
+after inspection. No product shader/material/render setting is changed.
+
+GL queries can alter CPU/GPU timing and possibly observed variability. This is
+an instrumented source diagnostic, never a benchmark or V1 acceptance retry.
+Identities are local to this capture; FNV32 data fingerprints are diagnostic,
+not cryptographic equality proofs. Shader sources are retained verbatim, but are
+not the compiled driver machine program. Equal captured fields cannot exclude
+unobserved state or establish a cause. Analyze with
+node tools/frontside_source_draw_compare.mjs PATH_TO_REPORT; draw records are
+compared by ordinal against the reference and all differing fields reported.
+The quality/control gates remain unchanged and V1 remains invalid regardless
+of this diagnostic result.
