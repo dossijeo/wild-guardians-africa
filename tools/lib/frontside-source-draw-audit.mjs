@@ -1,7 +1,7 @@
-// Source-only instrumentation, never used to accept or train candidate geometry.
+// Diagnostic instrumentation, never used to accept candidate geometry.
 // GL queries may perturb timing: these runs are explicitly not benchmarks.
 import { captureSourceTextureState } from './frontside-source-texture-state.mjs';
-export function installSourceDrawAudit(renderer,model){
+export function installSourceDrawAudit(renderer,model,scope='SOURCE_ONLY'){
  const gl=renderer.getContext(),objects=new WeakMap(),saved=[],programs=[],frames=[];let nextId=1,label='not-set';
  const identity=o=>o===null?null:(objects.has(o)?objects.get(o):(objects.set(o,nextId++),nextId-1));
  const lanes=value=>ArrayBuffer.isView(value)?Array.from(value):value;
@@ -19,5 +19,5 @@ export function installSourceDrawAudit(renderer,model){
    frames.push({label,mesh:this.name,program:id,group:args[5]?.materialIndex??null,material:material.name,side:material.side,state,uniforms,textures,attributes,elementBuffer:identity(gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING)),drawRange:{...this.geometry.drawRange},matrixWorld:this.matrixWorld.toArray(),modelViewMatrix:this.modelViewMatrix.toArray(),normalMatrix:this.normalMatrix.toArray(),boneTexture:this.skeleton?.boneTexture?.image?.data?fingerprint(this.skeleton.boneTexture.image.data):null});
   };
  });
- return{frame(name){label=name;},finish(){for(const {mesh,original} of saved)mesh.onAfterRender=original;return{programs,frames,initialBuffers,finalBuffers:saved.map(({mesh})=>({mesh:mesh.name,buffers:buffers(mesh.geometry)})),meaning:'Source-only after-color-draw GL program sources/uniforms, texture object identities, matrices, bone texture and attribute fingerprints. Object IDs local to this run. FNV fingerprints are diagnostic, not cryptographic preservation proofs; equal snapshots do not prove a cause or exclude unseen driver/GPU state. GL queries may change timing; no candidate acceptance or GPU benchmark.'};}};
+ return{frame(name){label=name;},finish(){for(const {mesh,original} of saved)mesh.onAfterRender=original;return{scope,programs,frames,initialBuffers,finalBuffers:saved.map(({mesh})=>({mesh:mesh.name,buffers:buffers(mesh.geometry)})),meaning:'Diagnostic after-color-draw GL program sources/uniforms, texture object identities, matrices, CPU bone texture and attribute fingerprints. Object IDs local to this run. FNV fingerprints are diagnostic, not cryptographic preservation proofs; equal snapshots do not prove a cause or exclude unseen driver/GPU state. GL queries may change timing; no candidate acceptance or GPU benchmark.'};}};
 }

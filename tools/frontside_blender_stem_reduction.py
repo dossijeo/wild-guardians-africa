@@ -35,7 +35,13 @@ old = np.unique(ix[stem])
 local = np.searchsorted(old, ix[stem])
 tree = BVHTree.FromPolygons(p[old].tolist(), local.tolist(), all_triangles=True)
 rows = []
-for ratio in [.75, .6, .5, .4]:
+# Optional offline proposal uses the maximum face count allowed by the existing
+# whole-state +10% gate with every stem reverse, independently of raster views.
+# Separate receipt keeps the frozen .75 training archive/report untouched.
+budget_max = '--budget-max' in sys.argv
+budget_triangles = int((len(ix)*1.1-len(kept))//2)
+ratios = [budget_triangles/len(stem)] if budget_max else [.75, .6, .5, .4]
+for ratio in ratios:
     mesh = bpy.data.meshes.new(f'{name}-stem-{ratio}')
     mesh.from_pydata(p[old].tolist(), [], local.tolist())
     mesh.update()
@@ -80,6 +86,8 @@ for ratio in [.75, .6, .5, .4]:
             'ALL reduced stem faces need geometric reverses, never saved visibility masks.',
             'New face labels/bridge mappings must be regenerated and validated over continuous growth.',
             'No GLB, production model or runtime bridge data changed; no GPU benefit inferred.'])
+    if budget_max:
+        payload['topologyProposal']='MAXIMUM_STEM_FACE_COUNT_UNDER_FIXED_WHOLE_STATE_GATE'
     data = (json.dumps(payload,separators=(',',':'))+'\n').encode()
     sha = hashlib.sha256(data).hexdigest()
     archive = ROOT/'.cache/frontside-model-pilot/candidates/archive'/(sha+'.json')
@@ -105,5 +113,5 @@ report = dict(status='STEM_REMODELLING_OFFLINE_COST_ONLY_NOT_APPROVED',sourceSha
     blenderVersion=bpy.app.version_string,blenderBuildHash=bpy.app.build_hash.decode(),rows=rows,
     limitations=['Single mature maize state; complete category/bridges, web bytes, real buffers and vertex invocations remain unmeasured.',
         'No visual acceptance, shadow acceptance or GPU timing; original files unchanged.'])
-(folder/'maize-blender-stem-reduction-diagnostic.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
+(folder/('maize-blender-stem-budget-max-diagnostic.json' if budget_max else 'maize-blender-stem-reduction-diagnostic.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
 print(json.dumps(report))
