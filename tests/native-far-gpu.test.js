@@ -411,3 +411,13 @@ test('cooperative never-resolving decode respects deadline without a resumed RAF
  const f=ownedFixture(),texture=new Texture({decode:()=>new Promise(()=>{})});
  await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{cooperative:true,decodeImages:true,timeout:5,nextFrame:()=>new Promise(()=>{})}),/timed out/);assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
 });
+
+
+test('cooperative isolated preparation restores world flags before a cancellable held fence',async()=>{
+ const f=fixture(),other=new Mesh();f.scene.add(other);f.renderer.shadowMap={enabled:true,autoUpdate:true,needsUpdate:true};let cancelled=false,started;
+ const entered=new Promise(resolve=>started=resolve),nativeDraw=f.renderer.render;
+ f.renderer.render=()=>{assert.equal(other.visible,false);assert.equal(f.renderer.shadowMap.enabled,true);assert.equal(f.renderer.shadowMap.autoUpdate,false);nativeDraw();};
+ f.renderer.getContext().clientWaitSync=()=>0;
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cooperative:true,isolateRoot:true,cancelled:()=>cancelled,nextFrame:()=>{if(f.calls.includes('fence')){assert.equal(other.visible,true);assert.equal(f.root.parent,f.parent);assert.equal(f.renderer.shadowMap.autoUpdate,true);f.restored();started();return new Promise(()=>{});}return Promise.resolve();}});
+ await entered;cancelled=true;await assert.rejects(pending,NativeFarGpuCancelled);assert.equal(other.visible,true);assert.equal(f.root.parent,f.parent);assert.deepEqual(f.renderer.shadowMap,{enabled:true,autoUpdate:true,needsUpdate:true});f.restored();releaseNativeFarGpuCache(f.renderer);
+});

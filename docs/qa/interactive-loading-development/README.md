@@ -232,3 +232,8 @@ QA-only candidate `retain-loading-maize-textures.js` registers already-present A
 ### World milestone cancellation audit
 
 Scene.load's remaining raw milestone RAF waits now use the shared owned frame waiter, loading AbortSignal and30s deadline. An aborted milestone cannot publish a new stage, and ordinary worlds without a loading progress owner acquire no new wait. Four new regression contracts cover a never-arriving frame, owner abort, deadline and explicit RAF-handle cancellation; the phase barrier plus retention directed run passes17/17. The first additional Node owned-RAF test failed because Node has no requestAnimationFrame global; the fixture now defines/restores those globals explicitly and the rerun passes. This is lifecycle evidence, not a loading-performance claim. Native final-source regression and full-suite/build gates remain required.
+
+
+### Loading-only isolated far upload candidate
+
+The first-crop and resource fixtures accept isolate-loading as an explicit QA flag. It sets existing world.farIsolatedPreparation only during the loading owner phase, then disables it before cinematic start after verified readiness. Normal production and subsequent gameplay keep their defaults. A cooperative+isolateRoot contract confirms unrelated visibility, shadow scheduling, framebuffer state and parent ownership restore before a held fence can cancel;52native-far GPU contracts pass. Root's earlier streaming isolation observations are background evidence, not acceptance of this new loading candidate. Native pilot, paired timing/resource/visual and lifecycle coverage remain required before promotion.
