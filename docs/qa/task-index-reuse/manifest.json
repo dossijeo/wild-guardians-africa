@@ -65,6 +65,11 @@
       "path": "package.log.gz",
       "rawBytes": 411,
       "rawSha256": "248a549298474b378a30e83c5a7435378a7ef27664fd6b832ccd4dba50fe99ba"
+    },
+    {
+      "path": "full-tests.log.gz",
+      "rawBytes": 772212,
+      "rawSha256": "7423bb76910cc3e00b3cb3c8496e24981e6403ec9427fe45af756a85372c8722"
     }
   ],
   "directedTests": {
@@ -72,7 +77,17 @@
     "failed": 0,
     "command": "node --test tests/worker-entity-lookup.test.js tests/acceptance-worker-routing.test.js tests/acceptance-crate-recovery.test.js tests/acceptance-defensive-reservations.test.js tests/acceptance-raid-reload.test.js tests/acceptance-economic-boundaries.test.js"
   },
-  "fullSuite": "running; session 46954",
+  "fullSuite": {
+    "status": "passed",
+    "session": 46954,
+    "exitCode": 0,
+    "tests": 3139,
+    "passed": 3139,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "runtimeCommit": "8ef6b9ce168d0ad51198f5b041bcf8d64b57280f"
+  },
   "sourceHashes": {
     "src/app/autosave-events.js": "28c3d64f89b4acea15f6995dc09046a9ea540b5feb80d5a7bcfd02218bec63db",
     "src/app/far-world-loading.js": "f518a881ab953aae289ef8d83060da0c67e26ae501af6fc503e1b1103ec49c56",
