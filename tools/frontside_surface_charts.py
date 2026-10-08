@@ -51,11 +51,13 @@ def topology_summary(triangles):
     for a,b in boundary:degree[a]+=1;degree[b]+=1
     return dict(boundaryEdges=len(boundary),boundaryJunctions=sum(v!=2 for v in degree.values()),nonManifoldEdges=sum(len(o)>2 for o in edges.values()))
 
-def collapse_interior_geometry(points,triangles,target_faces):
+def collapse_interior_geometry(points,triangles,target_faces,parameter_coordinates=None):
     """Approximate endpoint QEM with hard original boundary preservation.
 
-    No UV/normal field is averaged or invented. This returns geometry only;
-    continuous deformation, closest-surface error and pixel gates remain open.
+    No UV/normal field is averaged or invented. Optional auxiliary domain
+    coordinates reject nonpositive parameter orientation during generation.
+    This returns geometry only; continuous deformation, closest-surface error
+    and pixel gates remain open. Auxiliary coordinates never replace UVs.
     """
     faces={i:tuple(t) for i,t in enumerate(triangles)};vf=defaultdict(set)
     boundary,_=boundary_edges(triangles);locked={v for edge in boundary for v in edge}
@@ -63,6 +65,12 @@ def collapse_interior_geometry(points,triangles,target_faces):
     def normal(tri):
         p,a,b=[points[v] for v in tri];x=[a[i]-p[i] for i in range(3)];y=[b[i]-p[i] for i in range(3)]
         return (x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0])
+    def parameter_area(tri):
+        p,a,b=[parameter_coordinates[v] for v in tri]
+        return (float(a[0])-float(p[0]))*(float(b[1])-float(p[1]))-(float(a[1])-float(p[1]))*(float(b[0])-float(p[0]))
+    if parameter_coordinates is not None:
+        assert len(parameter_coordinates)==len(points)
+        assert all(math.isfinite(parameter_area(tri)) and parameter_area(tri)>0 for tri in triangles),'Source parameter triangles must be positive'
     for f,tri in faces.items():
         for v in tri:vf[v].add(f)
         N=normal(tri);length=math.sqrt(sum(x*x for x in N))
@@ -95,7 +103,8 @@ def collapse_interior_geometry(points,triangles,target_faces):
         valid=True
         for f,tri in replacement.items():
             old,new=normal(faces[f]),normal(tri)
-            if not all(math.isfinite(x) for x in new) or sum(old[i]*new[i] for i in range(3))<=0:
+            area=parameter_area(tri) if parameter_coordinates is not None else 1.
+            if not all(math.isfinite(x) for x in new) or sum(old[i]*new[i] for i in range(3))<=0 or not math.isfinite(area) or area<=0:
                 valid=False;break
         if not valid:continue
         affected=neighbors(keep)|neighbors(drop)|{keep,drop}
@@ -112,4 +121,5 @@ def collapse_interior_geometry(points,triangles,target_faces):
     result=[faces[f] for f in sorted(faces)]
     actual_boundary,_=boundary_edges(result)
     assert actual_boundary==boundary,'An original chart boundary was changed'
-    return result,dict(targetFaces=target_faces,outputFaces=len(result),collapsedInteriorEdges=collapsed,attemptedCandidates=attempted,originalBoundaryPreserved=True,retainedInputFaces=sorted(faces))
+    return result,dict(targetFaces=target_faces,outputFaces=len(result),collapsedInteriorEdges=collapsed,attemptedCandidates=attempted,originalBoundaryPreserved=True,
+        parameterOrientationConstrained=parameter_coordinates is not None,retainedInputFaces=sorted(faces))
