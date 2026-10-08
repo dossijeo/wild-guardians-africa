@@ -1,0 +1,387 @@
+{
+  "status": "GROWTH_LOCAL_ORIENTATION_DIAGNOSTIC_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "bridgeDataSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "cropBatchSha256": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+  "growthShaderSha256": "adaa5dd31f2fe4063b7fafb21d72c26bd8953325a5b3a03e36a198eb22af1151",
+  "growthShader": "\r\n float plantMask=smoothstep(uGround,uGround+0.12,position.y);\r\n float above=max(0.0,position.y-uGround);\r\n float sy=mix(1.0,iGrowth.x,plantMask);\r\n float sr=mix(1.0,iGrowth.y,plantMask);\r\n transformed.y=position.y+above*(sy-1.0);\r\n transformed.xz=position.xz*sr;\r\n float leafMask=plantMask*smoothstep(0.035,0.22,length(position.xz));\r\n float folded=1.0-iGrowth.z;\r\n transformed.xz*=1.0-leafMask*folded*0.16;\r\n transformed.y+=leafMask*folded*(0.10+above*0.12);\r\n float h=clamp(above/max(0.15,uHeight-uGround),0.0,1.0);\r\n float breeze=(sin(uClock*1.55+iGrowth.w)*0.017+sin(uClock*2.71+iGrowth.w*1.7)*0.009)*pow(h,1.7)*uWind*plantMask;\r\n transformed.x+=breeze; transformed.z+=breeze*0.47;\r\n",
+  "clock": 1.75,
+  "seed": 17,
+  "rows": [
+    {
+      "growth": 0,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        0.04500000178813934,
+        0.30000001192092896,
+        0.44999998807907104,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": -0.10740746528060723,
+      "maxCentroidDeterminant": 1.1241175619205457,
+      "negativeCoreFaces": 2,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [
+        {
+          "face": 443,
+          "label": 1,
+          "centroid": [
+            0.022168954213460285,
+            0.1638683577378591,
+            -0.01595507065455119
+          ],
+          "determinant": -0.10740746528060723
+        },
+        {
+          "face": 490,
+          "label": 1,
+          "centroid": [
+            -0.005595982074737549,
+            0.16599169373512268,
+            -0.055688321590423584
+          ],
+          "determinant": -0.07355321035644773
+        }
+      ],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.005,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        0.061083294451236725,
+        0.31178879737854004,
+        0.4592626392841339,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": -0.10129612726942418,
+      "maxCentroidDeterminant": 1.122128869137599,
+      "negativeCoreFaces": 2,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [
+        {
+          "face": 443,
+          "label": 1,
+          "centroid": [
+            0.022168954213460285,
+            0.1638683577378591,
+            -0.01595507065455119
+          ],
+          "determinant": -0.10129612726942418
+        },
+        {
+          "face": 490,
+          "label": 1,
+          "centroid": [
+            -0.005595982074737549,
+            0.16599169373512268,
+            -0.055688321590423584
+          ],
+          "determinant": -0.06881359724519005
+        }
+      ],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.015,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        0.17410103976726532,
+        0.39462903141975403,
+        0.5243514180183411,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": -0.04885104278479105,
+      "maxCentroidDeterminant": 1.1080572464193963,
+      "negativeCoreFaces": 2,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [
+        {
+          "face": 443,
+          "label": 1,
+          "centroid": [
+            0.022168954213460285,
+            0.1638683577378591,
+            -0.01595507065455119
+          ],
+          "determinant": -0.04885104278479105
+        },
+        {
+          "face": 490,
+          "label": 1,
+          "centroid": [
+            -0.005595982074737549,
+            0.16599169373512268,
+            -0.055688321590423584
+          ],
+          "determinant": -0.025940345250205592
+        }
+      ],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.03,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        0.4675125181674957,
+        0.6096950173377991,
+        0.6933318376541138,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.15298438491379224,
+      "maxCentroidDeterminant": 1.070727188913428,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.05,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        0.870898962020874,
+        0.9053709506988525,
+        0.9256486296653748,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.6792238862022348,
+      "maxCentroidDeterminant": 1.0175173281112406,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.065,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        1,
+        1,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.0000000000307558,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.07,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        1.0014556646347046,
+        1.0004768371582031,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.0032802805331675,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.12,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        1.1470221281051636,
+        1.0481630563735962,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.3539881651075583,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.1675,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        1.414569616317749,
+        1.135809063911438,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 2.121938471353592,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.2,
+      "phase": "original",
+      "mesh": "maiz_01_brote",
+      "actualFloat32IGrowth": [
+        1.6051353216171265,
+        1.1982365846633911,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 898,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 2.7735502418169635,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.27,
+      "phase": "original",
+      "mesh": "maiz_02_joven",
+      "actualFloat32IGrowth": [
+        1,
+        1,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 1254,
+      "minCentroidDeterminant": 0.9999999999171315,
+      "maxCentroidDeterminant": 1.000000000086267,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.4,
+      "phase": "original",
+      "mesh": "maiz_02_joven",
+      "actualFloat32IGrowth": [
+        1.1908992528915405,
+        0.9181529879570007,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 1254,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.1574160882099147,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.53,
+      "phase": "original",
+      "mesh": "maiz_03_adulto",
+      "actualFloat32IGrowth": [
+        1,
+        1,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 2743,
+      "minCentroidDeterminant": 0.9999999998642224,
+      "maxCentroidDeterminant": 1.0000000000585114,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.655,
+      "phase": "original",
+      "mesh": "maiz_03_adulto",
+      "actualFloat32IGrowth": [
+        1.0575273036956787,
+        1.0261752605438232,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 2743,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.147643126893813,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.78,
+      "phase": "original",
+      "mesh": "maiz_04_desarrollo",
+      "actualFloat32IGrowth": [
+        1,
+        1,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 3205,
+      "minCentroidDeterminant": 0.9999999998642224,
+      "maxCentroidDeterminant": 1.0000000000585114,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 0.89,
+      "phase": "original",
+      "mesh": "maiz_04_desarrollo",
+      "actualFloat32IGrowth": [
+        1.004698395729065,
+        1.0193063020706177,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 3205,
+      "minCentroidDeterminant": 0.9999999999457544,
+      "maxCentroidDeterminant": 1.0450242562559864,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    },
+    {
+      "growth": 1,
+      "phase": "original",
+      "mesh": "maiz_05_maduro",
+      "actualFloat32IGrowth": [
+        1,
+        1,
+        1,
+        17
+      ],
+      "nondegenerateFaces": 4935,
+      "minCentroidDeterminant": 0.9999999998642224,
+      "maxCentroidDeterminant": 1.0000000000585114,
+      "negativeCoreFaces": 0,
+      "negativeLeafFaces": 0,
+      "negativeFaces": [],
+      "uncertainFaces": []
+    }
+  ],
+  "limitations": [
+    "Actual stageSample and uploaded Float32 iGrowth from production createCropBatch, but formula evaluated in CPU Float64.",
+    "Finite-difference Jacobian at face centroid diagnoses local orientation only; not a discrete triangle raster winding or Front coverage proof.",
+    "Bridge deformation excluded explicitly. No geometry, growth shader, asset, material side or production path modified.",
+    "Negative local orientation can invalidate a rest-pose volume assumption; it does not authorize indiscriminate reverse faces or geometry promotion."
+  ]
+}

@@ -916,3 +916,14 @@ about6.18 projected square pixels total. Many triangles are subpixel. This is
 training guidance only: raster samples, WebGL runtime and normal/map quality
 still require native affected-face ID coverage. The previously captured
 zero-coverage view remains unchanged and is never counted as repair approval.
+
+An offline growth-orientation diagnostic uses production createCropBatch's
+actual stageSample and uploaded Float32 iGrowth, with the recorded growth
+shader evaluated in CPU Float64. At maize seed fractions0/.005/.015, two
+core-face centroids have negative local deformation Jacobian determinant
+(minimum−0.1074/−0.1013/−0.04885). Two finite-difference step sizes agree on
+sign. From fraction.03 through the sampled original stages the minima are
+positive. This demonstrates a limitation of assuming rest-pose orientation
+survives strong initial compression; it does NOT establish discrete triangle
+winding or raster coverage. Bridge deformation is explicitly excluded. No
+growth, asset, material or geometry changes follow from this diagnosis.
