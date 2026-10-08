@@ -7,10 +7,10 @@ import {initializeProgramBindings} from '../../src/rendering/program-bindings.js
 // including empty batches, without making them drawable or uploading geometry.
 const keys=new Set(['bioma-growth-depth-v3-opaque','bioma-local-bridge-depth-v3']);
 const fields=['visible','wireframe','side','alphaMap','alphaTest','map','clipShadows','clippingPlanes','clipIntersection','displacementMap','displacementScale','displacementBias','wireframeLinewidth','linewidth'];
-export async function prepareCropShadowPrograms(world,{compile=compileGpuPreparation,bindings=initializeProgramBindings,fence=waitLoadingGpuFence,now=()=>performance.now()}={}) {
+export async function prepareCropShadowPrograms(world,{compile=compileGpuPreparation,bindings=initializeProgramBindings,fence=waitLoadingGpuFence,timeout=30000,now=()=>performance.now()}={}) {
  const renderer=world.renderer,gl=renderer.getContext(),epoch=world.glResourceEpoch?.stats.epoch??0,started=now(),abort=new AbortController();
  const lose=()=>abort.abort(Error('Crop shadow context lost')),cancel=()=>abort.abort(Error('Crop shadow preparation cancelled'));
- const check=()=>{if(abort.signal.aborted||world.disposed||world.loading.signal.aborted||renderer.getContext()!==gl||gl.isContextLost()||(world.glResourceEpoch?.stats.epoch??0)!==epoch)throw Error('Crop shadow preparation cancelled');};
+ const check=()=>{if(abort.signal.aborted||world.disposed||world.loading.signal.aborted||renderer.getContext()!==gl||gl.isContextLost()||(world.glResourceEpoch?.stats.epoch??0)!==epoch)throw Error('Crop shadow preparation cancelled');if(now()-started>timeout)throw Error('Crop shadow preparation timed out');};
  check();if(!world.sun.shadow.map||!renderer.shadowMap.enabled)throw Error('Native shadow target unavailable');
  const meshes=[];world.scene.traverse(object=>{if(object.isInstancedMesh&&object.customDepthMaterial&&keys.has(object.customDepthMaterial.customProgramCacheKey())){if(Array.isArray(object.material))throw Error('Unsupported crop shadow material array');meshes.push(object);}});
  if(!meshes.length)throw Error('Native crop shadow sources unavailable');
