@@ -1,0 +1,75 @@
+{
+  "status": "EXACT_CHART_BUDGET_DIAGNOSTIC_NOT_CANDIDATE",
+  "blender": "4.5.9 LTS",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "states": [
+    {
+      "mesh": "maiz_01_brote",
+      "sourceTriangles": 898,
+      "sourceStemTriangles": 86,
+      "eligibleExactAffineFaces": 78,
+      "exactCoincidentTriangleGroups": 0,
+      "exactCoincidentFaces": 0,
+      "optimisticChartSaving": 0,
+      "savingNeededForAllStemReversesUnderTenPercent": 0,
+      "optimisticBudgetFeasible": true,
+      "chartsWithPotentialSavings": []
+    },
+    {
+      "mesh": "maiz_02_joven",
+      "sourceTriangles": 1254,
+      "sourceStemTriangles": 245,
+      "eligibleExactAffineFaces": 59,
+      "exactCoincidentTriangleGroups": 0,
+      "exactCoincidentFaces": 0,
+      "optimisticChartSaving": 0,
+      "savingNeededForAllStemReversesUnderTenPercent": 120,
+      "optimisticBudgetFeasible": false,
+      "chartsWithPotentialSavings": []
+    },
+    {
+      "mesh": "maiz_03_adulto",
+      "sourceTriangles": 2743,
+      "sourceStemTriangles": 390,
+      "eligibleExactAffineFaces": 119,
+      "exactCoincidentTriangleGroups": 0,
+      "exactCoincidentFaces": 0,
+      "optimisticChartSaving": 0,
+      "savingNeededForAllStemReversesUnderTenPercent": 116,
+      "optimisticBudgetFeasible": false,
+      "chartsWithPotentialSavings": []
+    },
+    {
+      "mesh": "maiz_04_desarrollo",
+      "sourceTriangles": 3205,
+      "sourceStemTriangles": 390,
+      "eligibleExactAffineFaces": 62,
+      "exactCoincidentTriangleGroups": 0,
+      "exactCoincidentFaces": 0,
+      "optimisticChartSaving": 0,
+      "savingNeededForAllStemReversesUnderTenPercent": 70,
+      "optimisticBudgetFeasible": false,
+      "chartsWithPotentialSavings": []
+    },
+    {
+      "mesh": "maiz_05_maduro",
+      "sourceTriangles": 4935,
+      "sourceStemTriangles": 824,
+      "eligibleExactAffineFaces": 118,
+      "exactCoincidentTriangleGroups": 0,
+      "exactCoincidentFaces": 0,
+      "optimisticChartSaving": 0,
+      "savingNeededForAllStemReversesUnderTenPercent": 331,
+      "optimisticBudgetFeasible": false,
+      "chartsWithPotentialSavings": []
+    }
+  ],
+  "limitations": [
+    "No source edits, triangulation, export, camera/heldout input or new candidate generated.",
+    "Exact rational P-plane and UV affine coefficients; constant finite nonzero normals, same semantic label, no signed-zero field merging.",
+    "Only below-ground identity or constant-height inner-radius domains certify source growth warp affine; this is a deliberately conservative domain, not proof other reconstruction is impossible.",
+    "Savings are optimistic simple-boundary triangulation counts, not a verified tessellation or visual/map/shadow equivalence. Concavity/collinear constraints, GPU interpolation precision, material programs and reverse normal-map recipe still require validation.",
+    "Coincident position triangles do not establish equivalent UV/normal fields, removal safety, duplicate causality or permission to canonicalize.",
+    "Ten-percent budget remains unchanged; physical GPU storage/draw overhead/net benefit are not measured."
+  ]
+}
