@@ -26,3 +26,12 @@ Reports preserve all frames, native state/camera/chunks and GPU query results.
 Endpoint screenshots establish neither transition continuity nor dynamic-shadow
 equivalence. GPU queries bracket world.render only, not asynchronous preparation
 outside it. Production continues without either resident warmup experiment.
+
+Use `node tools/experiments/travel-span-analysis.mjs <report.json.gz>` on
+future traced runs to locate spans overlapping slow RAF intervals. It unions
+nested spans within each interval; renderer/draw/GL category times overlap and
+must not be summed. This associates timestamps, without treating uncovered
+time as GPU time or proving causality. Two directed tests cover nesting,
+boundary clipping and invalid reports. It was exercised against the historical
+expanded-GL report (175 frames/2237 spans); that old trace does not establish
+the remaining bottlenecks of the current program-only candidate.
