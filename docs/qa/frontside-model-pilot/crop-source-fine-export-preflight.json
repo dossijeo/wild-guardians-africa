@@ -1,15 +1,46 @@
 {
   "status": "CPU_EXPORT_PREFLIGHT_PASS_NOT_NATIVE",
   "gpuDraws": 0,
-  "prefix": "crop-source-fine-field-training",
-  "httpStatus": 200,
-  "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-source-fine-field-training\",\"artifactsWritten\":false}",
-  "bodyBytes": 7673,
-  "source": "/assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "byteEvidence": {
+    "source": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+    "runtime": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+  },
+  "results": [
+    {
+      "source": "/assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "sourceOriginal": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtimeSource": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "sourceMapping": {
+        "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+        "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+      },
+      "prefix": "crop-source-fine-field-training",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-source-fine-field-training\",\"artifactsWritten\":false}",
+      "bodyBytes": 8228
+    },
+    {
+      "source": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "sourceOriginal": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "runtimeSource": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "sourceMapping": {
+        "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+        "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+      },
+      "prefix": "crop-source-fine-field-training",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-source-fine-field-training\",\"artifactsWritten\":false}",
+      "bodyBytes": 8231
+    }
+  ],
   "payloadSha256": "1046256f5f432fe479e62a563e5bcb38225f6e9f453c1e03e34b48cbdeab9233",
   "limitations": [
-    "Placeholder controls/comparisons/context flag contain no native observation or metric.",
-    "The lost825 POST is not reconstructed; cause remains unknown until an actual rejected request is retained.",
+    "Placeholder fields contain no native observation or metric.",
+    "827 mismatch is observed; lost825 payload remains unrecovered, so same cause there is only probable.",
     "No quality artifact is written by the preflight endpoint."
   ]
 }

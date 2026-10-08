@@ -26,7 +26,8 @@ async function run(){
  const options=new URLSearchParams(location.search);if(options.get('limit')!=='1'||options.size>2||[...options.keys()].some(k=>!['limit','cpuCampaigns'].includes(k)))throw Error('Only isolated TRAINING limit1 and declared CPU conditions are supported');
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,preserveDrawingBuffer:true});scope.defer('renderer context',()=>renderer.forceContextLoss());scope.defer('renderer resources',()=>renderer.dispose());renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.querySelector('#view').append(renderer.domElement);
  const gl=renderer.getContext(),assets=new Assets();scope.defer('source Assets',()=>assets.disposeModels());const manifest=await fetch('/content/models.json').then(r=>r.json());scope.assertOpen();const url=manifest.find(m=>m.source.includes('Cultivos')).url;
- const [gltf,bridges,data]=await Promise.all([assets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json()),loadSupportedFieldData('/docs/qa/frontside-model-pilot/maize-mature-supported-field-tables.json')]);
+ const [gltf,bridges,data,webMapping]=await Promise.all([assets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json()),loadSupportedFieldData('/docs/qa/frontside-model-pilot/maize-mature-supported-field-tables.json'),fetch('/content/manifests/web-assets.json').then(r=>r.json())]);
+ const mappingRecord=webMapping.records.find(r=>r.source===data.metadata.source);
  scope.assertOpen();
  if(url.split('/').at(-1)!==data.metadata.source.split('/').at(-1))throw Error('Source manifest mismatch');
  const scene=new THREE.Scene(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(scene,toon);scope.defer('material registry',()=>registry.dispose());const sky=new NativeSky();scope.defer('NativeSky',()=>sky.dispose());await sky.load();scope.assertOpen();toon.environment(sky.environmentTextures,sky.uniforms.uSkyYaw);
@@ -54,7 +55,7 @@ async function run(){
  for(const rig of rigs){rig.batch.update([{id:'1',species:'maiz',x:0,z:0,growth:cropSpec('maiz').growth_seconds}],sample.clock,()=>0);if(rig.fine)rig.fine.count=rig.original.count;}
  toon.update(sample.night,sun,sample.biome);registry.update(sample.clock);
  const height=rigs[0].batch.sample('maiz',cropSpec('maiz').growth_seconds).height,center=new THREE.Vector3(0,height*.5,0),a=sample.azimuth*Math.PI/180,e=sample.elevation*Math.PI/180;camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(Math.max(.65,height*.7)*3));camera.lookAt(center);camera.updateMatrixWorld();
- report=createSourceFineReport({source:url,metadata:data.metadata,sample,cpuCampaigns:options.get('cpuCampaigns'),contextAttributes:gl.getContextAttributes()});
+ report=createSourceFineReport({source:url,mappingRecord,metadata:data.metadata,sample,cpuCampaigns:options.get('cpuCampaigns'),contextAttributes:gl.getContextAttributes()});
  const pixels=[],envelope=new Float64Array(size*size*3);let invalid=false;
  for(let arm=0;arm<4;arm++){
   rigs.forEach((r,i)=>r.group.visible=i===arm);renderer.render(scene,camera);const frame=new Uint8Array(size*size*4);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,frame);pixels.push(frame);report.drawInfo.push({...renderer.info.render});

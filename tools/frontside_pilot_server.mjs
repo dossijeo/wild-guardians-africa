@@ -1,7 +1,11 @@
 // Isolated local QA server. Only the fixed pilot report artifact may be written.
 import {createServer} from 'vite';
 import {mkdir,writeFile} from 'node:fs/promises';
-import {sourceFineReportPrefix} from './lib/frontside-source-fine-report.mjs';
+import {sourceFineIdentity,sourceFineMapping,sourceFineReportPrefix} from './lib/frontside-source-fine-report.mjs';
+import {readFileSync} from 'node:fs';
+// Startup checks the independently loaded real web mapping against this fixed
+// experiment's identities; a stale or different mapping cannot be reported.
+sourceFineMapping(JSON.parse(readFileSync('content/manifests/web-assets.json')).records.find(r=>r.source===sourceFineIdentity.source));
 const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:true},plugins:[{
   name:'frontside-pilot-report',configureServer(server){server.middlewares.use('/__frontside_export_preflight',async(req,res)=>{
     if(req.method!=='POST'){res.statusCode=405;res.end();return;}
