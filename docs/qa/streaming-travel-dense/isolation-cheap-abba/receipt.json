@@ -1,0 +1,53 @@
+{
+  "head": "68abc5b82852ebe607bdc189d45d1a2b99b74d71",
+  "files": {
+    "tests/browser/streaming-travel.html": "9373abe7b927ca816e5d037e793aa524a9d19ddcccd131b8026a40869ac34d8c",
+    "tools/experiments/prepare-crate-shadow.js": "60e82eb66a420828e12a0f0b11489b2141baf9a48a405f24bdd6d02712f01eb9",
+    "tools/experiments/prepare-resident-textures.js": "8cb3f3893cc5a9ad446186bb9995032855a987dbee5877293ef70b04ff60d85c",
+    "tools/experiments/prepare-resident-travel-variants.js": "8477c4c622d093a241261d6ace9bda7e96609992e5a004b544bde14e3f5e4ddb",
+    "tools/experiments/prepare-native-far-gpu.js": "99757510133167a3144ae2cbedec299d6a2523cd6a16b45e05bf8bcc98c2667b",
+    "tools/experiments/isolated-gpu-root.js": "3fc53b415b8a8fa507480679febbb70871193ed12aedf2cf748c685a1b73a847",
+    "tools/experiments/attach-native-far-world.js": "71b6faa506f6c1fff0427dafcdf90d046f98e95db905cd72e125743f7764a17b",
+    "src/rendering/scene.js": "dd23d212668a78315cfbf625235e9ff5e839421f7eb509619ce7d05650984dc1",
+    "tests/browser/gpu-timer.js": "a59cf9c7419810d687ffd91a9c88d9efc4693a4a5489a7351b994ce1d1100a4b"
+  },
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2"
+  ],
+  "cpuProcesses": [
+    48904,
+    41304,
+    41320,
+    49032
+  ],
+  "condition": "Native Intel UHD IAB; sequential contexts. Equal actor/program/texture/crate readiness, no full resident draw prewarm. No trace/resource instrument, GPU timer queries only. Three continuing and one newly started CPU campaign live; cache/thermal state uncontrolled.",
+  "runs": [
+    {
+      "name": "A1",
+      "tab": 838,
+      "sha256": "8aa8d65f3e5a09df1f422586da62849386034781a84b77652dcd7e27236c6230",
+      "imageSha256": "b82afbb809f9320e632bf968d2291a9b14e6232173e59880767497b91a43ab93"
+    },
+    {
+      "name": "B1",
+      "tab": 839,
+      "sha256": "3f17545de8df978c2ad53e486c1c10cc6a3a30dfa088ee14d6aa9629e70e4386",
+      "imageSha256": "8fd35f17c86fd54257e225cbe92cf305b44a3cbeb55929729b37ed6c5bebd1ca"
+    },
+    {
+      "name": "B2",
+      "tab": 840,
+      "sha256": "237c7de72bf90b6292d33b998d4c506f8dd003fd3ff555a1375136f3a7ddf410",
+      "imageSha256": "01f6c65d7b034406e44600670aab418d421c331faf427e89ebab21f17118bcf5"
+    },
+    {
+      "name": "A2",
+      "tab": 841,
+      "sha256": "5452ba430b7d1ca02e8979aaee943b6b3e076a03729af5fd522c82a02542f5c8",
+      "imageSha256": "014bf953811ab7210eed1eacfe85d4fb99148ca1af3dc7a216c24b2f9fdc91a5"
+    }
+  ]
+}
