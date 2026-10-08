@@ -4,6 +4,7 @@ const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Camera poses are presentation-only and never written to simulation/save data.
 export class LoadingCinematic {
   constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onHandoff=()=>{}}={}) {
+    if(diorama.orbit&&!diorama.orbit.settled)throw Error('Loading orbit must settle before cinematic capture');
     this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onHandoff=onHandoff;this.handedOff=false;
     this.gameplay={eye:world.camera.position.clone(),quaternion:world.camera.quaternion.clone(),target:world.controls.target.clone()};
     // Raising above the existing opening eye preserves the same X/Z chunk
