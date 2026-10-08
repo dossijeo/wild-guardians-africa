@@ -6,4 +6,6 @@ The native adversarial connector compares70 whole states through arrival, with o
 
 Local directed session78374:52/52 pass. Build/package session3592 exits0: build16.20s and package701 files/859 relative links/20 runtime GLBs. These are completion results, not performance comparisons. Full Validate game run37782785754 is in progress at archival time, not declared green.
 
+Later update: [the same production CI completed3160/3160](../ci-2fbe9a7e/README.md), with build/assets/package/ZIP success. The original receipt retains its observed archival-time status.
+
 Executable assertions/report, direct final source bytes, production tests, prior candidate/guard, native fixture, build/package logs and historical input reference are SHA-bound. Dependencies are not fully bundled. `node docs/qa/worker-replan-view-cache/production-equivalence/verify.mjs` verifies bindings/results, not a rerun or completion of CI. No GPU/mobile/FPS or100-night matrix acceptance follows.

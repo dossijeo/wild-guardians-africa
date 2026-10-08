@@ -1,0 +1,43 @@
+{
+  "run": 37782785754,
+  "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/37782785754",
+  "headSha": "2fbe9a7e6250c1b54aea3d09ee8ddeb1ea3d15f6",
+  "tests": 3160,
+  "pass": 3160,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "productionSources": {
+    "src/simulation/game.js": "efdd9388ebbe37f3cecae40d9e77aaa4b7bb06b318e36eacd11bce297896fc46",
+    "src/world/navigation.js": "d703108e6e846c13543ba6e8895d7142c18072f56845a0197176c2e62c570826",
+    "src/simulation/worker-route-clearance.js": "7f17fe5e8ba36e3c88aa6a65c6f347b9d673c685c27eef537b5dca8ef75aceed",
+    "src/world/worker-view-cache.js": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c",
+    "src/persistence/snapshots.js": "607fc6be9c89989bd7d492169cfdf4689e49400903d51b71431d65393eab2d78"
+  },
+  "localHeadAtArchive": "b90bf104",
+  "runtimeTestsToolsPackageWorkflowsDiffFromCiCommit": "empty",
+  "sourceBindingArchive": "../production-equivalence/receipt.json",
+  "pieces": [
+    {
+      "source": ".cache/worker-guard-ci-status.json",
+      "path": "status.json",
+      "gzip": false,
+      "bytes": 3850,
+      "sha256": "5d0f84d49c7629eecea9553d5b789145b8f25bc21fe86d3c3eb2521aa84586c7"
+    },
+    {
+      "source": ".cache/worker-guard-ci.log",
+      "path": "log.txt.gz",
+      "gzip": true,
+      "bytes": 1712082,
+      "sha256": "51ca963f154cd51e21908efa033b1f86745160a4dc404900bad2b587b4a92778"
+    },
+    {
+      "source": ".cache/archive-worker-guard-ci.mjs",
+      "path": "archive.mjs.gz",
+      "gzip": true,
+      "bytes": 1778,
+      "sha256": "ceff8ffac8c019446ae115645632fb6f5de2e3665a2c7a3ee6cad4adc80d58af"
+    }
+  ]
+}
