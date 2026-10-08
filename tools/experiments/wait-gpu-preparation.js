@@ -1,4 +1,4 @@
-// Candidate only; not yet connected to native preparation while GPU QA is open.
+// Native preparation uses this only through explicit owned-compilation/wait QA gates.
 // The submitted work remains asynchronous. A caller's lifetime/deadline check
 // can stop waiting even when the driver compilation promise never settles.
 export async function waitGpuPreparation(pending,{check,nextFrame,signal,pollIntervalMs=100}) {

@@ -14,6 +14,57 @@ function fixture({renderError=false}={}){
  return {scene,parent,root,original,calls,renderer,current:()=>current,restored(){assert.deepEqual(viewport.toArray(),[2,3,100,200]);assert.deepEqual(scissor.toArray(),[4,5,60,70]);assert.equal(scissorTest,false);assert.equal(renderer.autoClear,true);}};
 }
 
+function ownedFixture(){const f=fixture();f.renderer.compile=()=>new Set();f.renderer.properties={get:()=>assert.fail('No selected material')};f.renderer.compileAsync=()=>assert.fail('Three async timer');return f;}
+
+test('owned texture frame wait cancels without uploading the remaining texture',async()=>{
+ const f=ownedFixture(),textures=[new Texture(),new Texture()];let cancelled=false,finish;
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},textures,{ownedCompilation:true,ownedWaits:true,cancelled:()=>cancelled,nextFrame:()=>new Promise(resolve=>finish=resolve)});
+ await new Promise(resolve=>setImmediate(resolve));cancelled=true;
+ await assert.rejects(pending,NativeFarGpuCancelled);assert.deepEqual(f.calls,['texture']);finish();await Promise.resolve();assert.deepEqual(f.calls,['texture']);
+ f.restored();releaseNativeFarGpuCache(f.renderer);assert.equal(textures[0]._listeners.dispose.length,0);
+});
+test('owned image decode wait cancels and observes a late decoder rejection',async()=>{
+ const f=ownedFixture();let cancelled=false,rejectDecode;
+ const texture=new Texture({decode:()=>new Promise((resolve,reject)=>rejectDecode=reject)});
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{ownedCompilation:true,ownedWaits:true,decodeImages:true,cancelled:()=>cancelled});
+ await new Promise(resolve=>setImmediate(resolve));cancelled=true;await assert.rejects(pending,NativeFarGpuCancelled);
+ rejectDecode(Error('late decode failure'));await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+test('owned fence wait checks cancellation even if RAF never resumes',async()=>{
+ const f=ownedFixture();let cancelled=false;
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,ownedWaits:true,cancelled:()=>cancelled,nextFrame:()=>new Promise(()=>{})});
+ await new Promise(resolve=>setImmediate(resolve));assert.ok(f.calls.includes('fence'));cancelled=true;
+ await assert.rejects(pending,NativeFarGpuCancelled);assert.equal(f.calls.at(-1),'delete');f.restored();assert.equal(f.root.parent,f.parent);releaseNativeFarGpuCache(f.renderer);
+});
+test('owned fence from a lost/restored context is never queried or deleted in the new epoch',async()=>{
+ const f=ownedFixture();f.renderer.domElement=new EventTarget();let queries=0;
+ f.renderer.getContext().clientWaitSync=()=>{queries++;return 0;};
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,ownedWaits:true,nextFrame:()=>new Promise(()=>{})});
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(queries,1);
+ f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));
+ await assert.rejects(pending,error=>error instanceof NativeFarGpuCancelled&&error.reason==='context-changed');
+ assert.equal(queries,1);assert.equal(f.calls.includes('delete'),false);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+test('owned fence deadline rejects rather than waiting indefinitely for a frame',async()=>{
+ const f=ownedFixture();await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,ownedWaits:true,timeout:15,nextFrame:()=>new Promise(()=>{})}),/timed out/);
+ assert.equal(f.calls.at(-1),'delete');f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+test('owned frame waits cannot wrap the uncancellable Three compiler',async()=>{
+ const f=fixture();await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedWaits:true}),/require owned compilation/);assert.deepEqual(f.calls,[]);
+});
+
+test('ownership changing inside the final fence query cannot adopt readiness',async()=>{
+ const f=ownedFixture();let cancelled=false;f.renderer.getContext().clientWaitSync=()=>{cancelled=true;return 3;};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,ownedWaits:true,cancelled:()=>cancelled}),NativeFarGpuCancelled);
+ assert.equal(f.calls.at(-1),'delete');f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
+test('a real fence fault is preserved when ownership changes inside the query',async()=>{
+ const f=ownedFixture();let cancelled=false;f.renderer.getContext().clientWaitSync=()=>{cancelled=true;return 4;};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,ownedWaits:true,cancelled:()=>cancelled}),error=>!(error instanceof NativeFarGpuCancelled)&&error.message==='Native GPU fence failed');
+ f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
 test('opt-in owned compilation bypasses Three async polling and preserves native draw/fence recipe',async()=>{
  const f=fixture(),material={};let queries=0;
  f.renderer.compile=(root,camera,scene)=>{assert.equal(root,f.root);assert.equal(scene,f.scene);f.calls.push('compile-owned');return new Set([material]);};
