@@ -200,6 +200,8 @@ No están activados; generación de fuentes no equivale a aceptación integrada.
 
 ## Barrido completo del catálogo SFX (pedido el 5 de octubre de 2026)
 
+Revalidación sobre `b7d70d4b` (9 de octubre): **99 asignados y 27 reservados/sin asignar en gameplay**. `node tools/audit_sfx_catalog.mjs --check` pasa tras actualizar únicamente hashes de `main.js` y `scene.js`; las 126 filas, rutas y bytes originales no cambiaron en esta revalidación. Los recuentos inferiores son históricos. Esto no acredita escucha ni completa los 27 contextos pendientes.
+
 Recuento contrastado el 7 de octubre sobre `3e6648da`: **96 asignados y 30 sin asignar en gameplay**. `node tools/audit_sfx_catalog.mjs --check` confirma que la matriz de los 126 IDs está vigente y que los 126 originales conservan sus bytes. `node tools/verify_sfx_runtime.mjs` verifica hashes, exportaciones, muestras Opus y paridad de decisiones entre los manifiestos originales/comprimidos. Los SFX 114 (reembolso positivo de muralla) y 115 (contratación con coste positivo) ya están incorporados. El párrafo histórico inferior describe la etapa de 94/32; no es el recuento actual. Siguen pendientes la escucha/contextos restantes y las reservas justificadas: la validación de archivos no demuestra reproducción de cada efecto.
 
 - Revisar los 126 efectos sonoros del catálogo y registrar para cada ID sus acciones asignadas y puntos de reproducción.
