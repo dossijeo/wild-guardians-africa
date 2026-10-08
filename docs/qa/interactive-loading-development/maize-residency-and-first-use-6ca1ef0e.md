@@ -34,3 +34,25 @@ Each command adds one original crop. Readiness, unchanged logical/save state, in
 Real PNGs record the final stationary camera. The unobstructed rectangle(0,330)–(1280,720) matches RGB exactly. It shows village/terrain, while the crops are outside this opening camera framing: this proves parity in that visible region, **not crop multiview visual acceptance**. A focused crop comparison is still required. Raw reports and both PNGs are retained without replacement.
 
 The helper remains QA-only; no production flag or asset changes were made. Reverse BA, focused crop/cancel/dense ownership checks, final-source matrix and total performance/memory acceptance remain open before PR.
+
+## Reverse BA and full sequence (91–94)
+
+Source remained frozen at runtime `6ca1ef0e` throughout both sequences. All four new reports were exported before explicit disposal/context loss/tab closure; the author's final browser inventory was empty. Root/repair did not run concurrent GPU or heavy CPU work. No fresh all-process inventory was captured.
+
+Resource A1/B1/B2/A2 contexts are87/88/91/92. Binding probes again invalidate their timing values. Requested-buffer peaks were68,519,166 /68,804,552 /68,562,286 /68,472,406bytes; controls had62,242,476bytes in every arm and disposal released all tracked buffers. World-load texture objects were65/65/64/65, and controls had62/64/63/62. B2's one fewer texture was already present before retention; its cause is not established, and perfect texture-multiset parity is not claimed. Registration did not change B2's64objects or54,857,654requested-buffer bytes. Existing atlas IDs4/5 survive handoff only in B arms; final dummy texture count is5 in all arms. This reproduces ownership/residency behavior, not physical RAM/VRAM neutrality.
+
+Unprobed first-use A1/B1/B2/A2 contexts are89/90/93/94. Both arms use the identical QA-only shadow-program preparation; only B retains maize originals.
+
+| CPU/RAF proxy | A1 | B1 | B2 | A2 |
+|---|---:|---:|---:|---:|
+| First maize render CPU wall time, ms |93.8|8.1|7.8|71.2|
+| Maize two-second RAF maximum, ms |83.2|66.6|50.2|66.4|
+| First millet render CPU wall time, ms |71.3|67.5|62.4|73.5|
+| Initialization, ms |10,796.3|10,275.9|12,247.2|11,849.9|
+| Controls available, ms |14,904.2|14,380.9|16,357.3|15,939.9|
+| Whole-loading RAF maximum, ms |99.9|83.1|116.4|99.7|
+| Whole-loading intervals above100ms |0|0|1|0|
+
+The targeted maize CPU render stall is smaller in both B arms, with reference drift22.6ms. These are two observations per arm, CPU wall times and RAF callback intervals; no timer-query GPU duration or presented-frame measurement was taken. The other crop's first atlas upload remains costly. B2 still has a116.4ms loading interval. Total initialization shows drift and cannot establish a causal loading improvement or close global fluency acceptance. No candidate has been promoted into production.
+
+Reverse reports: `maize-residency-candidate-ba-6ca1ef0e.json`, `maize-residency-control-ba-6ca1ef0e.json`, `maize-first-use-candidate-ba-6ca1ef0e.json`, `maize-first-use-control-ba-6ca1ef0e.json`. Existing negative/default evidence and initial AB reports remain intact. Focused crop visual QA, dense/cancel/repeated owner checks, broader profiles, final pipeline performance and physical-memory scope remain open.
