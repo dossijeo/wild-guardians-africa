@@ -1256,3 +1256,22 @@ coverage/IoU and world depth differences (max of0.1mm or0.01% model height),
 using the unchanged shadow limits. Two unit tests cover an actual missing shadow
 and identical coverage with excessive depth displacement. It is not imported
 into the frozen V3 fixture; no candidate shadow readback has passed this gate.
+
+The offline frontside_crop_bridge_orientation.mjs audit evaluates the recorded
+production bridge shader formula in Float64 with actual uploadedFloat32 iBridge
+drivers. Its deterministic domain has4maize pairs,8transition fractions,4clocks
+and2seeds (256samples), independent of visual result files. Two discrete stem
+cross-dot-transformed-authored-normal signs change in pair3/4 near t0.0625,
+across8samples. No undefined normals were found in these sampled stem drivers.
+This does not explain V3's hole (a different pair), prove outward winding,
+certify continuous-domain Float32 visibility or select repair faces. It shows
+why rest-pose volume assumptions alone cannot approve deformed bridges.
+
+Crate11 is now available only through its fixed hash archive URL in the local
+QA server and the opt-in crateNormal worker fixture. The first requested view
+is Carry_Crate V6 case13, original-target closeup, affected-face coverage enabled,
+with all occluders/maps/rig attachments retained. It is a training screen and
+cannot approve the category or GPU benefit. No other normal pilot is combined
+implicitly; it refuses originalShadow prefix shortcuts and retains shadowDouble
+color isolation until independent shadowFront testing. Existing worker body
+effective FrontSide and other source normals remain in their actual baseline.

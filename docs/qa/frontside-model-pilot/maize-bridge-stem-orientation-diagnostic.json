@@ -1,0 +1,5671 @@
+{
+  "status": "BRIDGE_STEM_DISCRETE_ORIENTATION_DIAGNOSTIC_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "bridgeSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "cropBatchSha256": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+  "recordedBridgeShader": "\r\nattribute vec3 aRoot;\r\nattribute vec3 aPeerRoot;\r\nattribute vec4 aSpin;\r\nattribute vec4 aPart;\r\nattribute vec4 iBridge;\r\nuniform vec2 uHeights;\r\nuniform vec2 uRadii;\r\nuniform float uClock;\r\nuniform float uWind;\r\nfloat bridgeEase(float x){x=clamp(x,0.0,1.0);return x*x*x*(x*(x*6.0-15.0)+10.0);}\r\nvec4 bridgeQuat(vec4 q,float t){\r\n float a=acos(clamp(q.w,-1.0,1.0));float sn=sin(a);\r\n if(abs(sn)<0.0001)return vec4(0.0,0.0,0.0,1.0);\r\n return vec4(q.xyz*(sin(t*a)/sn),cos(t*a));\r\n}\r\nvec3 bridgeRotate(vec3 v,vec4 q){return v+2.0*cross(q.xyz,cross(q.xyz,v)+q.w*v);}\r\nvec3 bridgeBase(vec3 p,float role){\r\n float ownH=mix(uHeights.x,uHeights.y,role),ownR=mix(uRadii.x,uRadii.y,role);\r\n float H=mix(uHeights.x,uHeights.y,iBridge.y),R=mix(uRadii.x,uRadii.y,iBridge.y);\r\n float sy=(H-0.1)/max(0.12,ownH-0.1),sr=clamp(R/max(0.08,ownR),0.25,2.8);\r\n float pm=smoothstep(0.1,0.22,p.y),above=max(0.0,p.y-0.1);\r\n vec3 v=p;v.y+=above*(mix(1.0,sy,pm)-1.0);v.xz*=mix(1.0,sr,pm);\r\n float lm=pm*smoothstep(0.035,0.22,length(p.xz));float folded=role*(1.0-mix(0.70,1.0,iBridge.y));\r\n v.xz*=1.0-lm*folded*0.16;v.y+=lm*folded*(0.10+above*0.12);\r\n float h=clamp(above/max(0.15,ownH-0.1),0.0,1.0);\r\n float breeze=(sin(uClock*1.55+iBridge.z)*0.017+sin(uClock*2.71+iBridge.z*1.7)*0.009)*pow(h,1.7)*uWind*pm;\r\n v.x+=breeze;v.z+=breeze*0.47;return v;\r\n}\r\nvec3 bridgeBaseNormal(vec3 p,vec3 n,float role){\r\n float ownH=mix(uHeights.x,uHeights.y,role),ownR=mix(uRadii.x,uRadii.y,role);\r\n float H=mix(uHeights.x,uHeights.y,iBridge.y),R=mix(uRadii.x,uRadii.y,iBridge.y);\r\n float sy=(H-0.1)/max(0.12,ownH-0.1),sr=clamp(R/max(0.08,ownR),0.25,2.8);\r\n float pm=smoothstep(0.1,0.22,p.y);return normalize(n/vec3(mix(1.0,sr,pm),mix(1.0,sy,pm),mix(1.0,sr,pm)));\r\n}\r\nfloat bridgePartTime(){\r\n // A tiny phase offset staggers organs, but is zero at both endpoints.\r\n float t=clamp(iBridge.x,0.0,1.0);t+=aPart.z*sin(3.14159265359*t)*0.055;\r\n return bridgeEase(t);\r\n}\r\nvec3 bridgePosition(vec3 p){\r\n float role=aPart.x,kind=aPart.y,t=bridgePartTime();\r\n vec3 v=bridgeBase(p,role);\r\n if(kind<0.5){\r\n  // Both bases keep their shape; the hidden one remains inside the soil slab.\r\n  float away=mix(t,1.0-t,role);v.y-=0.75*pow(away,6.0);return v;\r\n }\r\n float weight=mix(1.0-t,t,role),scale=sqrt(max(0.0,weight));\r\n vec3 root=bridgeBase(aRoot,role),peer=bridgeBase(aPeerRoot,1.0-role);\r\n float away=mix(t,1.0-t,role);vec3 pivot=mix(root,peer,away);\r\n if(kind<1.5){\r\n  // Collapse the core in radius only: never squash the stem vertically.\r\n  v.xz=mix(pivot.xz,v.xz,scale);return v;\r\n }\r\n vec4 q=bridgeQuat(aSpin,away);\r\n return pivot+bridgeRotate(v-root,q)*scale;\r\n}\r\nvec3 bridgeNormal(vec3 p,vec3 n){\r\n float role=aPart.x,kind=aPart.y,t=bridgePartTime();vec3 v=bridgeBaseNormal(p,n,role);\r\n if(kind<0.5)return v;\r\n float away=mix(t,1.0-t,role);\r\n if(kind<1.5){float s=max(0.001,sqrt(max(0.0,1.0-away)));return normalize(v/vec3(s,1.0,s));}\r\n return normalize(bridgeRotate(v,bridgeQuat(aSpin,away)));\r\n}\r\n",
+  "rows": [
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.0625,
+      "growth": 0.2278092592592593,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8903635144233704,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.1875,
+      "growth": 0.2287351851851852,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8947569131851196,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.3125,
+      "growth": 0.22966111111111115,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8990771770477295,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.4375,
+      "growth": 0.23058703703703706,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9033231735229492,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.5625,
+      "growth": 0.23151296296296298,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9074938297271729,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.6875,
+      "growth": 0.23243888888888894,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9115880727767944,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.8125,
+      "growth": 0.23336481481481486,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9156047701835632,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "t": 0.9375,
+      "growth": 0.23429074074074077,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9195428490638733,
+        0,
+        0
+      ],
+      "stemFaces": 331,
+      "positiveAuthoredNormalDot": 331,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.0625,
+      "growth": 0.47735925925925926,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8936232924461365,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.1875,
+      "growth": 0.47828518518518526,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8970507979393005,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.3125,
+      "growth": 0.47921111111111114,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9004325270652771,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.4375,
+      "growth": 0.4801370370370371,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9037678837776184,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.5625,
+      "growth": 0.481062962962963,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9070563316345215,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.6875,
+      "growth": 0.4819888888888889,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9102973341941833,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.8125,
+      "growth": 0.48291481481481485,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9134902954101562,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "t": 0.9375,
+      "growth": 0.4838407407407408,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9166347980499268,
+        0,
+        0
+      ],
+      "stemFaces": 635,
+      "positiveAuthoredNormalDot": 635,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.0625,
+      "growth": 0.7292592592592593,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8931397795677185,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.1875,
+      "growth": 0.7301851851851853,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.8967100977897644,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.3125,
+      "growth": 0.7311111111111112,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.9002309441566467,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.4375,
+      "growth": 0.732037037037037,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.903701663017273,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.5625,
+      "growth": 0.732962962962963,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9071215987205505,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.6875,
+      "growth": 0.7338888888888889,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9104902744293213,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.8125,
+      "growth": 0.7348148148148148,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9138069748878479,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "t": 0.9375,
+      "growth": 0.7357407407407408,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9170711040496826,
+        0,
+        0
+      ],
+      "stemFaces": 780,
+      "positiveAuthoredNormalDot": 780,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.0625,
+      "growth": 0.9549592592592593,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.0625,
+        0.8914185166358948,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1212,
+      "negativeAuthoredNormalDot": 2,
+      "changedDotSignFaces": [
+        4594,
+        6245
+      ],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.1875,
+      "growth": 0.9558851851851852,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.1875,
+        0.895498514175415,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.3125,
+      "growth": 0.9568111111111111,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.3125,
+        0.8995148539543152,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.4375,
+      "growth": 0.957737037037037,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.4375,
+        0.9034665822982788,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.5625,
+      "growth": 0.9586629629629629,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.5625,
+        0.9073529243469238,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.6875,
+      "growth": 0.9595888888888889,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.6875,
+        0.9111729264259338,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.8125,
+      "growth": 0.9605148148148148,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.8125,
+        0.9149256348609924,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 0.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 0.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 2.25,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 2.25,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 4.75,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 4.75,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 6.5,
+      "seed": 0,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "t": 0.9375,
+      "growth": 0.9614407407407408,
+      "clock": 6.5,
+      "seed": 17,
+      "actualFloat32IBridge": [
+        0.9375,
+        0.9186102747917175,
+        0,
+        0
+      ],
+      "stemFaces": 1214,
+      "positiveAuthoredNormalDot": 1214,
+      "negativeAuthoredNormalDot": 0,
+      "changedDotSignFaces": [],
+      "undefinedNormalFaces": [],
+      "collapsedFaces": []
+    }
+  ],
+  "limitations": [
+    "Actual bridge driver buffers and production stageSample; formula evaluated CPU Float64, not GPU Float32/raster visibility.",
+    "Discrete cross dot mean authored transformed normals may indicate incompatible orientation, not outward/closed volume proof or cause of a saved hole.",
+    "Deterministic domain grid independent of visual reports; never reads V3 failure pixels or selects reverse geometry.",
+    "Maize stem driver1 only; leaves and other species excluded. No model/material/shader/bridge contract changed."
+  ]
+}
