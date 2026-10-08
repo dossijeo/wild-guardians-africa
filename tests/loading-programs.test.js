@@ -29,3 +29,5 @@ test('bounded compiler cancels before a later submission',async()=>{
  const renderer={compile:()=>{calls++;return new Set();},getContext:()=>({isContextLost:()=>false}),properties:{get:()=>({})}};
  await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{batchSize:1,cancelled:()=>cancelled,nextFrame:async()=>{cancelled=true;}}),/cancelled/);assert.equal(calls,1);
 });
+
+test('compilation readiness includes every native variant of a shared material',async()=>{let ready=false;const f=fixture({isReady:()=>true});f.renderer.properties.get=()=>({currentProgram:{isReady:()=>true},programs:new Map([['instanced',{isReady:()=>ready}],['plain',{isReady:()=>true}]])});let resolved=false;const pending=compileLoadingPrograms(f.renderer,{},{}).then(()=>{resolved=true;});await Promise.resolve();assert.equal(resolved,false);ready=true;await pending;assert.equal(resolved,true);});

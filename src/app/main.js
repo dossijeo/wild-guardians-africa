@@ -138,10 +138,11 @@ async function startGame(loaded=null) {
   // Retain the complete menu frame until the diorama has actually warmed.
   if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
   try {
+    const audioUnlocked=audio.unlock().then(()=>true,()=>false);
     prepared=prepareLoadingScene();
     const next=loaded??Game.newGame({biome:selectedBiome,culture:selectedCulture});
     await prepared.pending;assertLoading();preparedLoading=null;world=prepared.world;loadingDiorama=prepared.diorama;loadingDiorama.show(next);
-    const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audio.unlock().then(()=>{if(loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
+    const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
     const overlay=new LoadingOverlay({locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
     loadingProgress=new LoadingProgress(LOADING_STAGES,{onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';

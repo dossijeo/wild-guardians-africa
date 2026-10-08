@@ -7,7 +7,8 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
   const check=()=>{if(signal?.aborted||cancelled()||renderer.getContext().isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
   check();
   const materials=screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene);
-  const programs=new Set([...materials].map(material=>renderer.properties.get(material).currentProgram).filter(Boolean));
+  const programs=new Set();
+  for(const material of materials){const properties=renderer.properties.get(material);for(const program of properties.programs?.values()??[properties.currentProgram])if(program)programs.add(program);}
   return new Promise((resolve,reject)=>{
     let timer,settled=false;
     const finish=(error)=>{if(settled)return;settled=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);error?reject(error):resolve(scene);};
