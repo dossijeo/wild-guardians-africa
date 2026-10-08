@@ -1,5 +1,17 @@
 # Tareas pendientes posteriores a la Jam
 
+Solicitudes añadidas el 9 de octubre de 2026:
+
+- Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
+  salida, estilo y adaptación móvil con la interfaz del juego. Subagente de
+  voces/tarjetas asignado en rama independiente; integración pendiente de QA/PR.
+- Espíritu: verificar que ningún avance/cierre automático ocurre antes del
+  final real del audio; conservar salto/cierre manual que detiene la voz.
+  Investigación y corrección asignadas al mismo subagente.
+- Incursiones: tras enfocar al animal, seguir su aproximación hasta la primera
+  entrada en la finca y dejar allí la cámara. Mantener cancelación por control
+  manual y protección de terreno. Implementación y pruebas dirigidas en curso.
+
 Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
 tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
 anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
