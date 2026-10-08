@@ -17,3 +17,25 @@ export async function waitForGpuPreload(renderer,{cancelled=()=>false,nextFrame=
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)return;if(status===gl.WAIT_FAILED)throw Error('GPU preload fence failed');await nextFrame();}
  }finally{if(sync)gl.deleteSync(sync);}
 }
+
+// Submit the same native screen/shadow recipes in small groups, so first-use
+// buffer/texture uploads and shadow variants are spread across real frames.
+// Each partial shadow map is replaced by a full final pass before readiness.
+export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onBatch=()=>{}}={}){
+ const meshes=[];scene.traverseVisible(object=>{if(object.isMesh||object.isLine||object.isPoints)meshes.push(object);});
+ const visible=new Map(meshes.map(mesh=>[mesh,mesh.visible])),shadows=renderer.shadowMap;
+ const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate]);});
+ const shadowNeeds=shadows.needsUpdate;
+ const check=()=>{if(cancelled()||renderer.getContext().isContextLost())throw Error('Loading scene upload cancelled');};
+ const restore=()=>{for(const [mesh,value] of visible)mesh.visible=value;};
+ const invalidate=()=>{shadows.needsUpdate=true;for(const [shadow] of lights)shadow.needsUpdate=true;};
+ try{
+  for(let start=0;start<meshes.length;start+=batchSize){
+   check();const batch=new Set(meshes.slice(start,start+batchSize));
+   for(const mesh of batch)for(let parent=mesh.parent;parent;parent=parent.parent)if(visible.has(parent))batch.add(parent);
+   try{for(const mesh of meshes)mesh.visible=batch.has(mesh);invalidate();renderScreenPreload(renderer,scene,camera);}finally{restore();}
+   onBatch(Math.min(meshes.length,start+batchSize),meshes.length);await nextFrame();
+  }
+  check();invalidate();renderScreenPreload(renderer,scene,camera);
+ }finally{restore();shadows.needsUpdate=shadowNeeds;for(const [shadow,value] of lights)shadow.needsUpdate=value;}
+}

@@ -6,14 +6,14 @@ import {CameraBuildingRegistry} from './camera-building-registry.js';
 import {CameraExclusionMotion} from './camera-exclusion-motion.js';
 import {constrainCameraToTerrain} from './camera-terrain-exclusion.js';
 import {installCameraPoseResolver} from './terrain-camera.js';
-import {initializeProgramBindings} from './program-bindings.js';
+import {initializeProgramBindings,initializeProgramBindingsAsync} from './program-bindings.js';
 import {VfxGpuPreload} from './vfx-preload.js';
 import {focusNewTutorialPlacement} from './tutorial-placement-focus.js';
 import {WallStrokePreview} from './wall-stroke-preview.js';
 import {RaidEntryPreparer} from '../world/raid-entry-preparer.js';
 import {AnimalPreload,releaseActorRig} from './animal-preload.js';
 import {updateSkinEnvelopeSphere} from './skin-envelope.js';
-import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
+import {renderScreenPreload,renderScreenPreloadBatched,waitForGpuPreload} from './screen-preload.js';
 import {farmHomeFocus} from './farm-focus.js';
 import {createWateringEmitter} from './watering-emitter.js';
 import {MudPatches,residentMudSurface} from './mud-patches.js';
@@ -311,10 +311,11 @@ export class WorldScene {
       // not only the linear, shadowless variant used by VFX depth capture.
       await compile(this.scene,this.camera,this.scene);if(this.disposed)return;
       await this.destructionPass.prepareDepth(this.camera,this.scene,{compile});if(this.disposed)return;
-      this.programBindings=initializeProgramBindings(this.renderer);
+      this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
-      renderScreenPreload(this.renderer,this.scene,this.camera);
+      if(this.loadingProgress)await renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)});
+      else renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
       // Warm that actual pass while the loading screen still covers the world,
       // including the staged animal skinning variants. Cached depth materials

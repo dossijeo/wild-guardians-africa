@@ -19,11 +19,10 @@ export class LoadingDiorama {
     material.onBeforeCompile=shader=>{
       shader.vertexShader='varying vec2 vLoadingSoil;\n'+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvLoadingSoil=position.xy;');
-      shader.fragmentShader='varying vec2 vLoadingSoil;\nuniform vec4 uLoadingSoilUv;\n'+shader.fragmentShader;
-      shader.uniforms.uLoadingSoilUv={value:this.soilUv??new THREE.Vector4(0,0,1,1)};
+      shader.fragmentShader='varying vec2 vLoadingSoil;\n'+shader.fragmentShader;
       shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#ifdef USE_MAP
-        vec2 soilUv=uLoadingSoilUv.xy+fract(vMapUv*10.)*uLoadingSoilUv.zw;
-        diffuseColor*=texture2D(map,soilUv);
+        vec3 soilColor=texture2D(map,fract(vMapUv*3.)).rgb;
+        diffuseColor.rgb*=pow(soilColor,vec3(2.2));
       #endif`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`float soilRadius=length(vLoadingSoil);
         float irregular=sin(vLoadingSoil.x*.9+sin(vLoadingSoil.y*.7))*.24+sin(vLoadingSoil.y*1.1)*.17;
@@ -31,7 +30,7 @@ export class LoadingDiorama {
         if(diffuseColor.a<.01)discard;
         #include <opaque_fragment>`);
     };
-    material.customProgramCacheKey=()=> 'loading-soil-native-map-soft-edge-v1';
+    material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v2';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
     this.scene.fog=new THREE.Fog('#a8b5c8',14,25);
     let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){down={x:e.clientX,y:e.clientY,id:e.pointerId};e.preventDefault();}},{signal:this.abort.signal});
@@ -40,19 +39,19 @@ export class LoadingDiorama {
   }
   async prepare() {
     const {world}=this;await world.loadReady(world.sky.load());if(this.disposed)throw Error('Loading diorama cancelled');
-    const [models,bridges]=await world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal})]));
+    const [models,bridges,ground]=await world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})]));
     const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
     const gltf=await world.loadReady(world.assets.model(descriptor.url));if(this.disposed)throw Error('Loading diorama cancelled');
-    // Borrow the maize soil's existing atlas rectangle. No new bitmap, sampler,
-    // texture clone or GPU upload; only this plane's local UV recipe is new.
-    let first;gltf.scene.traverse(mesh=>{if(mesh.isMesh&&mesh.userData.cropIndex===0&&mesh.userData.stage===1)first=mesh;});
-    if(first?.material.map){const uv=first.geometry.attributes.uv,index=first.geometry.index.array,labels=bridges.models[0].faceLabels,min=new THREE.Vector2(Infinity,Infinity),max=new THREE.Vector2(-Infinity,-Infinity);for(let face=0;face<labels.length;face++)if(labels[face]===0)for(let corner=0;corner<3;corner++){const point=new THREE.Vector2(uv.getX(index[face*3+corner]),uv.getY(index[face*3+corner]));min.min(point);max.max(point);}if(Number.isFinite(min.x)){this.soilUv=new THREE.Vector4(min.x,min.y,max.x-min.x,max.y-min.y);this.ground.material.map=first.material.map;this.ground.material.color.set('#ffffff');this.ground.material.needsUpdate=true;}}
+    // Reuse the existing canyon earth bitmap through the world's cache. The
+    // diorama borrows it and does not clone/upload another texture.
+    this.ground.material.map=await world.loadReady(world.assets.texture(ground.canyons.base,false));
+    this.ground.material.color.set('#c9865e');this.ground.material.needsUpdate=true;
     this.batch=await createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,cancelled:()=>this.disposed||world.disposed});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
     const shadow=world.renderer.shadowMap.enabled;
-    try{world.renderer.shadowMap.enabled=false;await compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed});if(this.disposed)throw Error('Loading diorama cancelled');renderScreenPreload(world.renderer,this.scene,this.camera);await waitForGpuPreload(world.renderer,{cancelled:()=>this.disposed||world.disposed});}
+    try{world.renderer.shadowMap.enabled=false;await compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed});if(this.disposed)throw Error('Loading diorama cancelled');renderScreenPreload(world.renderer,this.scene,this.camera);await compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed});world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});await waitForGpuPreload(world.renderer,{cancelled:()=>this.disposed||world.disposed});}
     finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
     this.prepared=true;return this;
   }
