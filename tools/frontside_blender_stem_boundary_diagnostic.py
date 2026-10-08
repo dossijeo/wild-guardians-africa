@@ -98,7 +98,7 @@ for start in sorted(adjacency):
         else:
             reverse_order=list(reversed(order));vectors=[Vector(points[v]) for v in reverse_order]
             cap_triangles=tessellate_polygon([vectors]);lookup={tuple(vec):v for vec,v in zip(vectors,reverse_order)}
-            cap_ids=[[lookup[tuple(vec)] for vec in tri] for tri in cap_triangles]
+            cap_ids=[[reverse_order[vec] if isinstance(vec,int) else lookup[tuple(vec)] for vec in tri] for tri in cap_triangles]
             edge_count=defaultdict(int)
             for tri in cap_ids:
                 for i in range(3):edge_count[(tri[i],tri[(i+1)%3])]+=1
@@ -113,6 +113,44 @@ for start in sorted(adjacency):
             closure['status']='CURVED_EXISTING_FIELD_CAP_HYPOTHESIS_NOT_APPROVED' if len(cap_ids)==len(order)-2 and boundary_matched and not zero_area and corner_dots and min(corner_dots)>0 else 'UNRESOLVED_CAP_WINDING_OR_ORIGINAL_NORMAL_FIELD'
     elif not ambiguous:closure['status']='UNRESOLVED_BOUNDARY_ORIENTATION_OR_AREA'
     row['curvedExistingFieldClosure']=closure
+    # Preserve independent per-edge fields instead of merging every chart at a
+    # geometric position. This tests ONE Blender triangulation, not existence
+    # of all possible caps. Conflicting boundary constraints remain unresolved.
+    reverse_order=list(reversed(order));vectors=[Vector(points[v]) for v in reverse_order]
+    lookup={tuple(vec):v for vec,v in zip(vectors,reverse_order)}
+    cap_ids=[[reverse_order[vec] if isinstance(vec,int) else lookup[tuple(vec)] for vec in tri] for tri in tessellate_polygon([vectors])]
+    boundary_fields={}
+    for i,v in enumerate(order):
+        other=order[(i+1)%len(order)];source_face=source_faces[i]
+        boundary_fields[(other,v)]={}
+        for original_vertex in ix[source_face]:
+            original_vertex=int(original_vertex);canonical=table[tuple(map(float,p[original_vertex]))]
+            if canonical in [v,other]:boundary_fields[(other,v)][canonical]=original_vertex
+        assert len(boundary_fields[(other,v)])==2
+    triangle_rows=[];edge_count=defaultdict(int)
+    for tri in cap_ids:
+        q=np.asarray([points[v] for v in tri],float);cross=np.cross(q[1]-q[0],q[2]-q[0]);length=float(np.linalg.norm(cross))
+        face_normal=cross/length if length>1e-14 else np.zeros(3)
+        required=defaultdict(dict)
+        for i,v in enumerate(tri):
+            other=tri[(i+1)%3];edge_count[(v,other)]+=1
+            for corner,original_vertex in boundary_fields.get((v,other),{}).items():
+                field=b''.join(np.asarray(a[original_vertex],dtype='<f4').tobytes() for a in (p,n,uv))
+                required[corner][field]=original_vertex
+        corner_rows=[]
+        for v in tri:
+            values=required[v] if required[v] else fields[v]
+            ids=list(values.values());aligned=[i for i in ids if float(np.dot(n[i],face_normal))>0]
+            corner_rows.append(dict(boundaryVertexId=v,requiredByOriginalEdge=bool(required[v]),originalSourceVertexOptions=ids,
+                originalNormalDots=[float(np.dot(n[i],face_normal)) for i in ids],positiveNormalOptions=aligned,
+                status='CONFLICTING_BOUNDARY_FIELDS' if len(required[v])>1 else 'ORIGINAL_NORMAL_OPPOSES_CAP' if not aligned else 'AMBIGUOUS_INTERIOR_FIELD' if len(aligned)>1 else 'UNIQUE_EXISTING_FIELD'))
+        triangle_rows.append(dict(boundaryVertexIds=tri,area=length/2,corners=corner_rows))
+    matched=all(edge_count[(order[(i+1)%len(order)],v)]==1 and edge_count[(v,order[(i+1)%len(order)])]==0 for i,v in enumerate(order))
+    corner_statuses=[c['status'] for t in triangle_rows for c in t['corners']]
+    row['edgeCornerClosure']=dict(status='EDGE_CORNER_TRIANGULATION_HYPOTHESIS_NOT_APPROVED' if consistent and matched and len(cap_ids)==len(order)-2 and all(t['area']>1e-14 for t in triangle_rows) and all(s=='UNIQUE_EXISTING_FIELD' for s in corner_statuses) else 'UNRESOLVED_EDGE_CORNER_TRIANGULATION',
+        triangles=triangle_rows,reversedBoundaryMatched=matched,expectedTriangles=len(order)-2,boundaryOrientationConsistent=bool(consistent),
+        limitations=['One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.',
+            'Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported.'])
     components.append(row)
 report=dict(status='BLENDER_SOURCE_STEM_BOUNDARIES_NOT_APPROVED',sourceSha256=s['sourceSha256'],mesh=node['name'],cropIndex=node['extras']['cropIndex'],stemTriangles=len(faces),wholeModelTriangles=len(ix),blenderVersion=bpy.app.version_string,blenderBuildHash=bpy.app.build_hash.decode(),boundaryEdges=len(boundary),nonManifoldJunctionEdges=sum(len(e.link_faces)>2 for e in bm.edges),components=components,
     limitations=['BMesh exact-coordinate diagnostic only; original PN/UV/index/driver/source asset unchanged, no normals recalculated or faces emitted.',

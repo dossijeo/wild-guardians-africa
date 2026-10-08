@@ -126,6 +126,223 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              70,
+              2,
+              1
+            ],
+            "area": 0.0021858152486343477,
+            "corners": [
+              {
+                "boundaryVertexId": 70,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7242
+                ],
+                "originalNormalDots": [
+                  0.9954317604927863
+                ],
+                "positiveNormalOptions": [
+                  7242
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 2,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7243,
+                  7350
+                ],
+                "originalNormalDots": [
+                  0.9991217841596178,
+                  -0.9545656958565076
+                ],
+                "positiveNormalOptions": [
+                  7243
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 1,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7349
+                ],
+                "originalNormalDots": [
+                  -0.9479899767311225
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              18,
+              19,
+              70
+            ],
+            "area": 0.0081466208792676,
+            "corners": [
+              {
+                "boundaryVertexId": 18,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7186
+                ],
+                "originalNormalDots": [
+                  -0.9584510078359795
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 19,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7788,
+                  8305
+                ],
+                "originalNormalDots": [
+                  -0.9888908331881995,
+                  -0.31075740139747243
+                ],
+                "positiveNormalOptions": [],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 70,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8304
+                ],
+                "originalNormalDots": [
+                  -0.30783727297419156
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              18,
+              0,
+              70
+            ],
+            "area": 0.0004148907088816909,
+            "corners": [
+              {
+                "boundaryVertexId": 18,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7186
+                ],
+                "originalNormalDots": [
+                  -0.70203620937179
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 0,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7348,
+                  7188
+                ],
+                "originalNormalDots": [
+                  -0.8807004759751597,
+                  -0.8173755914523528
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 70,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7242,
+                  8304
+                ],
+                "originalNormalDots": [
+                  0.8877269166608613,
+                  0.05935601179428779
+                ],
+                "positiveNormalOptions": [
+                  7242,
+                  8304
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              70,
+              0,
+              1
+            ],
+            "area": 0.0007160938780803782,
+            "corners": [
+              {
+                "boundaryVertexId": 70,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7242,
+                  8304
+                ],
+                "originalNormalDots": [
+                  0.5853999538077551,
+                  -0.7368827321563804
+                ],
+                "positiveNormalOptions": [
+                  7242
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 0,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7348,
+                  7188
+                ],
+                "originalNormalDots": [
+                  -0.40067154716762127,
+                  -0.8965473834694369
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 1,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7349
+                ],
+                "originalNormalDots": [
+                  -0.3860102691642474
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 4,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -244,6 +461,220 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              5,
+              22,
+              15
+            ],
+            "area": 0.009266315111183173,
+            "corners": [
+              {
+                "boundaryVertexId": 5,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7807
+                ],
+                "originalNormalDots": [
+                  -0.9994530105699837
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 22,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7809
+                ],
+                "originalNormalDots": [
+                  -1.000000045213287
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 15,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7808
+                ],
+                "originalNormalDots": [
+                  -0.9994484079381937
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              3,
+              5,
+              15
+            ],
+            "area": 0.008647762183457296,
+            "corners": [
+              {
+                "boundaryVertexId": 3,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7533
+                ],
+                "originalNormalDots": [
+                  -0.9975059223702134
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 5,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7535
+                ],
+                "originalNormalDots": [
+                  -0.9973179406852342
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 15,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7738,
+                  7808
+                ],
+                "originalNormalDots": [
+                  -0.1848519906585141,
+                  0.9885452345344456
+                ],
+                "positiveNormalOptions": [
+                  7808
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              16,
+              3,
+              15
+            ],
+            "area": 0.003061277774458966,
+            "corners": [
+              {
+                "boundaryVertexId": 16,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7648
+                ],
+                "originalNormalDots": [
+                  -0.8873634868090868
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 3,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  6905
+                ],
+                "originalNormalDots": [
+                  -0.741974311234595
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 15,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7738,
+                  7808
+                ],
+                "originalNormalDots": [
+                  0.9492151246695935,
+                  -0.05735471666522385
+                ],
+                "positiveNormalOptions": [
+                  7738
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              17,
+              15,
+              16
+            ],
+            "area": 0.0017789654682258754,
+            "corners": [
+              {
+                "boundaryVertexId": 17,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7740
+                ],
+                "originalNormalDots": [
+                  0.9999999996890396
+                ],
+                "positiveNormalOptions": [
+                  7740
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 15,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7738,
+                  7808
+                ],
+                "originalNormalDots": [
+                  0.9999999996890396,
+                  -0.29344782590740537
+                ],
+                "positiveNormalOptions": [
+                  7738
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 16,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7648,
+                  7739
+                ],
+                "originalNormalDots": [
+                  -0.7390796456122195,
+                  0.9999999996890396
+                ],
+                "positiveNormalOptions": [
+                  7739
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 4,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -356,6 +787,122 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              6,
+              21,
+              24
+            ],
+            "area": 0.0003760970450287993,
+            "corners": [
+              {
+                "boundaryVertexId": 6,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  6988
+                ],
+                "originalNormalDots": [
+                  -0.2819719726171751
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 21,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7107,
+                  7028
+                ],
+                "originalNormalDots": [
+                  -0.3235132426745646,
+                  0.20604946729884754
+                ],
+                "positiveNormalOptions": [
+                  7028
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 24,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7539
+                ],
+                "originalNormalDots": [
+                  0.39592147417445417
+                ],
+                "positiveNormalOptions": [
+                  7539
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              7,
+              6,
+              24
+            ],
+            "area": 0.0004753446508053282,
+            "corners": [
+              {
+                "boundaryVertexId": 7,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7660,
+                  7859
+                ],
+                "originalNormalDots": [
+                  0.2273179319724405,
+                  -0.5235791448235871
+                ],
+                "positiveNormalOptions": [
+                  7660
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 6,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7659
+                ],
+                "originalNormalDots": [
+                  0.2273179319724405
+                ],
+                "positiveNormalOptions": [
+                  7659
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 24,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7857
+                ],
+                "originalNormalDots": [
+                  -0.5235791448235871
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -441,6 +988,158 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              29,
+              32,
+              11
+            ],
+            "area": 0.0039224765620927225,
+            "corners": [
+              {
+                "boundaryVertexId": 29,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7892
+                ],
+                "originalNormalDots": [
+                  -0.9997363925183324
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 32,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7926
+                ],
+                "originalNormalDots": [
+                  -0.9992986529885652
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 11,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7894
+                ],
+                "originalNormalDots": [
+                  -0.9994770524957022
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              29,
+              11,
+              9
+            ],
+            "area": 0.0004731956330972296,
+            "corners": [
+              {
+                "boundaryVertexId": 29,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7892
+                ],
+                "originalNormalDots": [
+                  -0.9816876837518804
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 11,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7662,
+                  7894
+                ],
+                "originalNormalDots": [
+                  -0.5697202429517614,
+                  -0.9775706067632928
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 9,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7893
+                ],
+                "originalNormalDots": [
+                  -1.000000038291989
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              9,
+              11,
+              10
+            ],
+            "area": 0.00235974415353085,
+            "corners": [
+              {
+                "boundaryVertexId": 9,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7315
+                ],
+                "originalNormalDots": [
+                  -0.9994124899913559
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 11,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7662
+                ],
+                "originalNormalDots": [
+                  -0.9932852087155147
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 10,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7314
+                ],
+                "originalNormalDots": [
+                  -0.9972082751481597
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 3,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -702,6 +1401,223 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              73,
+              75,
+              78
+            ],
+            "area": 0.0005594797322875054,
+            "corners": [
+              {
+                "boundaryVertexId": 73,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8202
+                ],
+                "originalNormalDots": [
+                  0.9327529567371019
+                ],
+                "positiveNormalOptions": [
+                  8202
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 75,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8204,
+                  8216
+                ],
+                "originalNormalDots": [
+                  0.9327529567371019,
+                  -0.9249936974891833
+                ],
+                "positiveNormalOptions": [
+                  8204
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 78,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8215
+                ],
+                "originalNormalDots": [
+                  -0.9249936974891833
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              173,
+              124,
+              91
+            ],
+            "area": 0.0010484453104389248,
+            "corners": [
+              {
+                "boundaryVertexId": 173,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9002,
+                  8715
+                ],
+                "originalNormalDots": [
+                  0.9947259360644823,
+                  -0.8845366836265304
+                ],
+                "positiveNormalOptions": [
+                  9002
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 124,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9003
+                ],
+                "originalNormalDots": [
+                  0.9947259360644823
+                ],
+                "positiveNormalOptions": [
+                  9003
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 91,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8277
+                ],
+                "originalNormalDots": [
+                  -0.9552197845516133
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              91,
+              124,
+              73
+            ],
+            "area": 0.001686703429443124,
+            "corners": [
+              {
+                "boundaryVertexId": 91,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8277
+                ],
+                "originalNormalDots": [
+                  -0.8829111829797518
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 124,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8480
+                ],
+                "originalNormalDots": [
+                  0.6337006345795435
+                ],
+                "positiveNormalOptions": [
+                  8480
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 73,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8631
+                ],
+                "originalNormalDots": [
+                  0.6049543622304202
+                ],
+                "positiveNormalOptions": [
+                  8631
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              78,
+              91,
+              73
+            ],
+            "area": 0.0021829897537498596,
+            "corners": [
+              {
+                "boundaryVertexId": 78,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8275
+                ],
+                "originalNormalDots": [
+                  -0.923019684273551
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 91,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8277
+                ],
+                "originalNormalDots": [
+                  -0.9761014040458682
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 73,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8202,
+                  8631
+                ],
+                "originalNormalDots": [
+                  0.9047006409101626,
+                  0.7927203520267765
+                ],
+                "positiveNormalOptions": [
+                  8202,
+                  8631
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 4,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -801,6 +1717,122 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              197,
+              76,
+              190
+            ],
+            "area": 0.0007542620259571726,
+            "corners": [
+              {
+                "boundaryVertexId": 197,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8816
+                ],
+                "originalNormalDots": [
+                  -0.3999990793445446
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 76,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8814,
+                  9133
+                ],
+                "originalNormalDots": [
+                  -0.6766305196756818,
+                  0.9934053545891666
+                ],
+                "positiveNormalOptions": [
+                  9133
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 190,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9135
+                ],
+                "originalNormalDots": [
+                  0.9934053545891666
+                ],
+                "positiveNormalOptions": [
+                  9135
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              190,
+              236,
+              197
+            ],
+            "area": 0.0008375836705127578,
+            "corners": [
+              {
+                "boundaryVertexId": 190,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9170
+                ],
+                "originalNormalDots": [
+                  -0.8789961040143187
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 236,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9745,
+                  9577
+                ],
+                "originalNormalDots": [
+                  -0.8946727895136964,
+                  0.8962094428136661
+                ],
+                "positiveNormalOptions": [
+                  9577
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 197,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8816
+                ],
+                "originalNormalDots": [
+                  0.8640719905471675
+                ],
+                "positiveNormalOptions": [
+                  8816
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -941,6 +1973,316 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              122,
+              130,
+              116
+            ],
+            "area": 0.0020575082235990668,
+            "corners": [
+              {
+                "boundaryVertexId": 122,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8519
+                ],
+                "originalNormalDots": [
+                  -0.9899928713289992
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 130,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8518
+                ],
+                "originalNormalDots": [
+                  -0.9715079520032781
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 116,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8517
+                ],
+                "originalNormalDots": [
+                  -0.9999999932874324
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              115,
+              122,
+              116
+            ],
+            "area": 0.0007136016350349272,
+            "corners": [
+              {
+                "boundaryVertexId": 115,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8274
+                ],
+                "originalNormalDots": [
+                  -0.9096538606749275
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 122,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7958
+                ],
+                "originalNormalDots": [
+                  -0.9281072437927218
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 116,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8427,
+                  8562,
+                  8517
+                ],
+                "originalNormalDots": [
+                  -0.8905563065482711,
+                  0.05036915567197764,
+                  -0.8153777830141649
+                ],
+                "positiveNormalOptions": [
+                  8562
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              77,
+              115,
+              166
+            ],
+            "area": 0.004319685679006698,
+            "corners": [
+              {
+                "boundaryVertexId": 77,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8426
+                ],
+                "originalNormalDots": [
+                  -0.4846940142559205
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 115,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8274
+                ],
+                "originalNormalDots": [
+                  -0.5969343136320048
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 166,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8563
+                ],
+                "originalNormalDots": [
+                  -0.4859230760337642
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              166,
+              115,
+              116
+            ],
+            "area": 0.00123280858193777,
+            "corners": [
+              {
+                "boundaryVertexId": 166,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8563
+                ],
+                "originalNormalDots": [
+                  0.8514830039393302
+                ],
+                "positiveNormalOptions": [
+                  8563
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 115,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8274
+                ],
+                "originalNormalDots": [
+                  -0.13864067230970128
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 116,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8562
+                ],
+                "originalNormalDots": [
+                  0.8514830039393302
+                ],
+                "positiveNormalOptions": [
+                  8562
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              77,
+              123,
+              131
+            ],
+            "area": 0.005234550080582968,
+            "corners": [
+              {
+                "boundaryVertexId": 77,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8426,
+                  8477
+                ],
+                "originalNormalDots": [
+                  -0.5544937338410548,
+                  -0.2447389130894364
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 123,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8478,
+                  7888
+                ],
+                "originalNormalDots": [
+                  -0.2447389130894364,
+                  0.9562497497722313
+                ],
+                "positiveNormalOptions": [
+                  7888
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 131,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8382,
+                  8761
+                ],
+                "originalNormalDots": [
+                  0.9326085232225737,
+                  -0.4135845496350002
+                ],
+                "positiveNormalOptions": [
+                  8382
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              77,
+              166,
+              131
+            ],
+            "area": 0.0029221212979984516,
+            "corners": [
+              {
+                "boundaryVertexId": 77,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8426,
+                  8477
+                ],
+                "originalNormalDots": [
+                  -0.47632773635261,
+                  -0.15281349483938245
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 166,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8563
+                ],
+                "originalNormalDots": [
+                  -0.4936308555136734
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 131,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8761
+                ],
+                "originalNormalDots": [
+                  -0.48687472831341616
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 6,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1158,6 +2500,523 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              114,
+              125,
+              184
+            ],
+            "area": 0.0029795514328247084,
+            "corners": [
+              {
+                "boundaryVertexId": 114,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8419
+                ],
+                "originalNormalDots": [
+                  0.5583344204917674
+                ],
+                "positiveNormalOptions": [
+                  8419
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 125,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8489,
+                  8793
+                ],
+                "originalNormalDots": [
+                  0.3212364939944213,
+                  0.9752826730891219
+                ],
+                "positiveNormalOptions": [
+                  8489,
+                  8793
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 184,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8794
+                ],
+                "originalNormalDots": [
+                  0.9753037706689947
+                ],
+                "positiveNormalOptions": [
+                  8794
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              225,
+              255,
+              230
+            ],
+            "area": 0.00187190781540346,
+            "corners": [
+              {
+                "boundaryVertexId": 225,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9796
+                ],
+                "originalNormalDots": [
+                  -1.0000000946421954
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 255,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9795
+                ],
+                "originalNormalDots": [
+                  -1.0000000946421954
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 230,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9794
+                ],
+                "originalNormalDots": [
+                  -1.0000000946421954
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              96,
+              114,
+              184
+            ],
+            "area": 0.0015690246729373552,
+            "corners": [
+              {
+                "boundaryVertexId": 96,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8417
+                ],
+                "originalNormalDots": [
+                  -0.20327008931187898
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 114,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8419
+                ],
+                "originalNormalDots": [
+                  -0.16808810533610502
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 184,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9440,
+                  8794
+                ],
+                "originalNormalDots": [
+                  -0.2435483456867563,
+                  -0.08874370007259405
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              94,
+              96,
+              184
+            ],
+            "area": 0.0034641842916314247,
+            "corners": [
+              {
+                "boundaryVertexId": 94,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8311
+                ],
+                "originalNormalDots": [
+                  0.029985004724877612
+                ],
+                "positiveNormalOptions": [
+                  8311
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 96,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8313
+                ],
+                "originalNormalDots": [
+                  0.029985004724877612
+                ],
+                "positiveNormalOptions": [
+                  8313
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 184,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9440,
+                  8794
+                ],
+                "originalNormalDots": [
+                  -0.0929887917779435,
+                  0.19060585395875856
+                ],
+                "positiveNormalOptions": [
+                  8794
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              94,
+              184,
+              225
+            ],
+            "area": 0.0019321156611739067,
+            "corners": [
+              {
+                "boundaryVertexId": 94,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8311,
+                  8309
+                ],
+                "originalNormalDots": [
+                  -0.15471863411568934,
+                  -0.14508881604358695
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 184,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9440
+                ],
+                "originalNormalDots": [
+                  -0.12604833049342654
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 225,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9439
+                ],
+                "originalNormalDots": [
+                  -0.09077661655727559
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              225,
+              230,
+              235
+            ],
+            "area": 0.0012932072184237958,
+            "corners": [
+              {
+                "boundaryVertexId": 225,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9796,
+                  9439
+                ],
+                "originalNormalDots": [
+                  -0.8482702573367542,
+                  0.8245344820947209
+                ],
+                "positiveNormalOptions": [
+                  9439
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 230,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9485
+                ],
+                "originalNormalDots": [
+                  0.9289559523676693
+                ],
+                "positiveNormalOptions": [
+                  9485
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 235,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9574
+                ],
+                "originalNormalDots": [
+                  0.7983387661747104
+                ],
+                "positiveNormalOptions": [
+                  9574
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              94,
+              225,
+              235
+            ],
+            "area": 0.003723107727654886,
+            "corners": [
+              {
+                "boundaryVertexId": 94,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8311,
+                  8309
+                ],
+                "originalNormalDots": [
+                  -0.2698364901370707,
+                  -0.07646969507863041
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 225,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9796,
+                  9439
+                ],
+                "originalNormalDots": [
+                  -0.4972948997994401,
+                  -0.19679260992939626
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 235,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9574
+                ],
+                "originalNormalDots": [
+                  0.18001597212196402
+                ],
+                "positiveNormalOptions": [
+                  9574
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              121,
+              94,
+              235
+            ],
+            "area": 0.003474103743907329,
+            "corners": [
+              {
+                "boundaryVertexId": 121,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8472
+                ],
+                "originalNormalDots": [
+                  -0.4408807013076156
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 94,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8309
+                ],
+                "originalNormalDots": [
+                  -0.4229996972246813
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 235,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9574
+                ],
+                "originalNormalDots": [
+                  -0.10567117372486756
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              121,
+              235,
+              222
+            ],
+            "area": 0.0014614475796335055,
+            "corners": [
+              {
+                "boundaryVertexId": 121,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8472,
+                  8709
+                ],
+                "originalNormalDots": [
+                  -0.21459572111246772,
+                  0.4278247956732964
+                ],
+                "positiveNormalOptions": [
+                  8709
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 235,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9574
+                ],
+                "originalNormalDots": [
+                  0.43941128088400494
+                ],
+                "positiveNormalOptions": [
+                  9574
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 222,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9395
+                ],
+                "originalNormalDots": [
+                  0.5288594499747874
+                ],
+                "positiveNormalOptions": [
+                  9395
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              121,
+              222,
+              163
+            ],
+            "area": 0.003862546695137886,
+            "corners": [
+              {
+                "boundaryVertexId": 121,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8709
+                ],
+                "originalNormalDots": [
+                  -0.9702089946757619
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 222,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9395
+                ],
+                "originalNormalDots": [
+                  -0.8101303237542041
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 163,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9309,
+                  8710
+                ],
+                "originalNormalDots": [
+                  -0.8887358458955887,
+                  -0.9626190184128524
+                ],
+                "positiveNormalOptions": [],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 10,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1263,6 +3122,231 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              141,
+              172,
+              106
+            ],
+            "area": 0.0015289962432378885,
+            "corners": [
+              {
+                "boundaryVertexId": 141,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8547,
+                  8849
+                ],
+                "originalNormalDots": [
+                  -0.9698786037460827,
+                  0.9930472938018493
+                ],
+                "positiveNormalOptions": [
+                  8849
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 172,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7776
+                ],
+                "originalNormalDots": [
+                  0.9978456389546673
+                ],
+                "positiveNormalOptions": [
+                  7776
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 106,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8365
+                ],
+                "originalNormalDots": [
+                  0.9405167782319902
+                ],
+                "positiveNormalOptions": [
+                  8365
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              141,
+              140,
+              104
+            ],
+            "area": 0.006209709634271257,
+            "corners": [
+              {
+                "boundaryVertexId": 141,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8547
+                ],
+                "originalNormalDots": [
+                  -0.8128144326985125
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 140,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8217
+                ],
+                "originalNormalDots": [
+                  -0.8759870290647195
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 104,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  7865,
+                  8441
+                ],
+                "originalNormalDots": [
+                  0.988195004990599,
+                  -0.32417826135221545
+                ],
+                "positiveNormalOptions": [
+                  7865
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              104,
+              140,
+              118
+            ],
+            "area": 0.005423800212684166,
+            "corners": [
+              {
+                "boundaryVertexId": 104,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8441
+                ],
+                "originalNormalDots": [
+                  0.4643750933103882
+                ],
+                "positiveNormalOptions": [
+                  8441
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 140,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8217
+                ],
+                "originalNormalDots": [
+                  0.7220800784984929
+                ],
+                "positiveNormalOptions": [
+                  8217
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 118,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8548,
+                  8442
+                ],
+                "originalNormalDots": [
+                  0.568533964062957,
+                  0.4714268828140421
+                ],
+                "positiveNormalOptions": [
+                  8548,
+                  8442
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              141,
+              104,
+              106
+            ],
+            "area": 0.0007164342835311528,
+            "corners": [
+              {
+                "boundaryVertexId": 141,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  8547,
+                  8849
+                ],
+                "originalNormalDots": [
+                  -0.9127868433896702,
+                  0.9550286752543007
+                ],
+                "positiveNormalOptions": [
+                  8849
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 104,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  7865
+                ],
+                "originalNormalDots": [
+                  0.9780025223848108
+                ],
+                "positiveNormalOptions": [
+                  7865
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 106,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8365
+                ],
+                "originalNormalDots": [
+                  0.9667755123093632
+                ],
+                "positiveNormalOptions": [
+                  8365
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 4,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1360,6 +3444,123 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              135,
+              161,
+              136
+            ],
+            "area": 0.002000596418705193,
+            "corners": [
+              {
+                "boundaryVertexId": 135,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  1451,
+                  1279
+                ],
+                "originalNormalDots": [
+                  -0.9015377358494007,
+                  0.37743773015262616
+                ],
+                "positiveNormalOptions": [
+                  1279
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 161,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  1278,
+                  1913
+                ],
+                "originalNormalDots": [
+                  0.37743773015262616,
+                  0.8354099831876913
+                ],
+                "positiveNormalOptions": [
+                  1278,
+                  1913
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              },
+              {
+                "boundaryVertexId": 136,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  1452,
+                  1914
+                ],
+                "originalNormalDots": [
+                  -0.9015837455915966,
+                  0.856790302127254
+                ],
+                "positiveNormalOptions": [
+                  1914
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              135,
+              134,
+              136
+            ],
+            "area": 0.002802107618705045,
+            "corners": [
+              {
+                "boundaryVertexId": 135,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  1451
+                ],
+                "originalNormalDots": [
+                  -0.9996934351350415
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 134,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  1450
+                ],
+                "originalNormalDots": [
+                  -1.0000000018036797
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 136,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  1452
+                ],
+                "originalNormalDots": [
+                  -0.9996959862030892
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1518,6 +3719,122 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              179,
+              178,
+              177
+            ],
+            "area": 0.00048356833515166085,
+            "corners": [
+              {
+                "boundaryVertexId": 179,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8944
+                ],
+                "originalNormalDots": [
+                  -0.3324757115000322
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 178,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8943,
+                  8968
+                ],
+                "originalNormalDots": [
+                  -0.27505430212125515,
+                  0.11576864909853032
+                ],
+                "positiveNormalOptions": [
+                  8968
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 177,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  8933
+                ],
+                "originalNormalDots": [
+                  0.1766756395489295
+                ],
+                "positiveNormalOptions": [
+                  8933
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              242,
+              179,
+              177
+            ],
+            "area": 0.0004122249245796259,
+            "corners": [
+              {
+                "boundaryVertexId": 242,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9653,
+                  9654
+                ],
+                "originalNormalDots": [
+                  0.4757465860111232,
+                  -0.5853223034255999
+                ],
+                "positiveNormalOptions": [
+                  9653
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 179,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9506
+                ],
+                "originalNormalDots": [
+                  0.1662907530918032
+                ],
+                "positiveNormalOptions": [
+                  9506
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 177,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9655
+                ],
+                "originalNormalDots": [
+                  -0.5853223034255999
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1644,6 +3961,325 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              244,
+              209,
+              239
+            ],
+            "area": 0.00015087141910861564,
+            "corners": [
+              {
+                "boundaryVertexId": 244,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9667
+                ],
+                "originalNormalDots": [
+                  -0.4948885744853702
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 209,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9666,
+                  9623
+                ],
+                "originalNormalDots": [
+                  -0.4496632035771919,
+                  0.8117905907940719
+                ],
+                "positiveNormalOptions": [
+                  9623
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 239,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9625
+                ],
+                "originalNormalDots": [
+                  0.7490109498670103
+                ],
+                "positiveNormalOptions": [
+                  9625
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              232,
+              244,
+              239
+            ],
+            "area": 0.000492422046389182,
+            "corners": [
+              {
+                "boundaryVertexId": 232,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9538
+                ],
+                "originalNormalDots": [
+                  -0.9016512499631323
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 244,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9667
+                ],
+                "originalNormalDots": [
+                  -0.9443931830826087
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 239,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9625
+                ],
+                "originalNormalDots": [
+                  0.5998656539988947
+                ],
+                "positiveNormalOptions": [
+                  9625
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              232,
+              239,
+              182
+            ],
+            "area": 0.0008736319733258838,
+            "corners": [
+              {
+                "boundaryVertexId": 232,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9538,
+                  9815
+                ],
+                "originalNormalDots": [
+                  -0.8557728681738467,
+                  -0.1788296592612478
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 239,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9625
+                ],
+                "originalNormalDots": [
+                  0.535283308113883
+                ],
+                "positiveNormalOptions": [
+                  9625
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 182,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9624
+                ],
+                "originalNormalDots": [
+                  0.8671174599772429
+                ],
+                "positiveNormalOptions": [
+                  9624
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              226,
+              259,
+              232
+            ],
+            "area": 0.0040395104050108335,
+            "corners": [
+              {
+                "boundaryVertexId": 226,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9817
+                ],
+                "originalNormalDots": [
+                  -0.9999999994225904
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 259,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9816
+                ],
+                "originalNormalDots": [
+                  -0.9403139815233215
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 232,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9815
+                ],
+                "originalNormalDots": [
+                  -0.9862514674048461
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              243,
+              182,
+              232
+            ],
+            "area": 0.0012633061680566858,
+            "corners": [
+              {
+                "boundaryVertexId": 243,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9661
+                ],
+                "originalNormalDots": [
+                  0.29127648049590915
+                ],
+                "positiveNormalOptions": [
+                  9661
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 182,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9624,
+                  9662
+                ],
+                "originalNormalDots": [
+                  0.8201620471358763,
+                  0.36726459957608654
+                ],
+                "positiveNormalOptions": [
+                  9624,
+                  9662
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              },
+              {
+                "boundaryVertexId": 232,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9538,
+                  9815
+                ],
+                "originalNormalDots": [
+                  -0.9079370859023602,
+                  -0.3250196279158517
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              226,
+              243,
+              232
+            ],
+            "area": 0.0029351024978744463,
+            "corners": [
+              {
+                "boundaryVertexId": 226,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9817,
+                  9756
+                ],
+                "originalNormalDots": [
+                  -0.9810714947806259,
+                  0.9241247285905635
+                ],
+                "positiveNormalOptions": [
+                  9756
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 243,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9661
+                ],
+                "originalNormalDots": [
+                  0.945540332517462
+                ],
+                "positiveNormalOptions": [
+                  9661
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 232,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9538,
+                  9815
+                ],
+                "originalNormalDots": [
+                  -0.40864382890279344,
+                  -0.9582537529292473
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 6,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1762,6 +4398,232 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              216,
+              264,
+              250
+            ],
+            "area": 0.0010379050368652214,
+            "corners": [
+              {
+                "boundaryVertexId": 216,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9479,
+                  9906
+                ],
+                "originalNormalDots": [
+                  0.1449081737491309,
+                  0.9999999969611761
+                ],
+                "positiveNormalOptions": [
+                  9479,
+                  9906
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              },
+              {
+                "boundaryVertexId": 264,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9907
+                ],
+                "originalNormalDots": [
+                  0.9999999969611761
+                ],
+                "positiveNormalOptions": [
+                  9907
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 250,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9908,
+                  9703
+                ],
+                "originalNormalDots": [
+                  0.9999999969611761,
+                  -0.8066156745115471
+                ],
+                "positiveNormalOptions": [
+                  9908
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              249,
+              250,
+              216
+            ],
+            "area": 0.0028471410438145354,
+            "corners": [
+              {
+                "boundaryVertexId": 249,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9701
+                ],
+                "originalNormalDots": [
+                  -0.6820567596046869
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 250,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9703
+                ],
+                "originalNormalDots": [
+                  -0.6820567596046869
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 216,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9479,
+                  9906
+                ],
+                "originalNormalDots": [
+                  0.4783404422996331,
+                  0.861425340572831
+                ],
+                "positiveNormalOptions": [
+                  9479,
+                  9906
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              249,
+              216,
+              228
+            ],
+            "area": 0.008747898214491248,
+            "corners": [
+              {
+                "boundaryVertexId": 249,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9701,
+                  9714
+                ],
+                "originalNormalDots": [
+                  -0.08134266186457573,
+                  -0.9940641272030768
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 216,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9479
+                ],
+                "originalNormalDots": [
+                  0.9158091639993869
+                ],
+                "positiveNormalOptions": [
+                  9479
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 228,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9478
+                ],
+                "originalNormalDots": [
+                  0.8731887506918106
+                ],
+                "positiveNormalOptions": [
+                  9478
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              249,
+              198,
+              228
+            ],
+            "area": 0.006440411497213222,
+            "corners": [
+              {
+                "boundaryVertexId": 249,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9701,
+                  9714
+                ],
+                "originalNormalDots": [
+                  -0.08317732397915695,
+                  -0.9952440562841962
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 198,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9477,
+                  9715
+                ],
+                "originalNormalDots": [
+                  0.9191237785794008,
+                  -0.98389162540073
+                ],
+                "positiveNormalOptions": [
+                  9477
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 228,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9478
+                ],
+                "originalNormalDots": [
+                  0.8817418320661767
+                ],
+                "positiveNormalOptions": [
+                  9478
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 4,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1843,6 +4705,125 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              221,
+              202,
+              217
+            ],
+            "area": 0.0015537773142513542,
+            "corners": [
+              {
+                "boundaryVertexId": 221,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3358
+                ],
+                "originalNormalDots": [
+                  -0.45534989243388485
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 202,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3357,
+                  3294
+                ],
+                "originalNormalDots": [
+                  -0.28545013494952,
+                  0.191327342438991
+                ],
+                "positiveNormalOptions": [
+                  3294
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 217,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3293
+                ],
+                "originalNormalDots": [
+                  0.191327342438991
+                ],
+                "positiveNormalOptions": [
+                  3293
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              217,
+              199,
+              221
+            ],
+            "area": 0.0014336498377400249,
+            "corners": [
+              {
+                "boundaryVertexId": 217,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3293
+                ],
+                "originalNormalDots": [
+                  0.004909907793140392
+                ],
+                "positiveNormalOptions": [
+                  3293
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 199,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3292,
+                  3356
+                ],
+                "originalNormalDots": [
+                  0.004909907793140392,
+                  0.1812658893178334
+                ],
+                "positiveNormalOptions": [
+                  3292,
+                  3356
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 221,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3358
+                ],
+                "originalNormalDots": [
+                  0.18132865607446685
+                ],
+                "positiveNormalOptions": [
+                  3358
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -1940,6 +4921,129 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              240,
+              227,
+              238
+            ],
+            "area": 0.0007023328629065479,
+            "corners": [
+              {
+                "boundaryVertexId": 240,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9639,
+                  9798
+                ],
+                "originalNormalDots": [
+                  0.2526268655650866,
+                  -0.7137545167416708
+                ],
+                "positiveNormalOptions": [
+                  9639
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 227,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9407,
+                  9799
+                ],
+                "originalNormalDots": [
+                  0.6869252582207083,
+                  -0.7137545167416708
+                ],
+                "positiveNormalOptions": [
+                  9407
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 238,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9409
+                ],
+                "originalNormalDots": [
+                  0.7847945400515413
+                ],
+                "positiveNormalOptions": [
+                  9409
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              200,
+              238,
+              240
+            ],
+            "area": 0.0022538543828228364,
+            "corners": [
+              {
+                "boundaryVertexId": 200,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9614,
+                  9638
+                ],
+                "originalNormalDots": [
+                  0.3868211827201114,
+                  0.2398402245195495
+                ],
+                "positiveNormalOptions": [
+                  9614,
+                  9638
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 238,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9409
+                ],
+                "originalNormalDots": [
+                  0.8255652801308448
+                ],
+                "positiveNormalOptions": [
+                  9409
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 240,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9639
+                ],
+                "originalNormalDots": [
+                  0.2398402245195495
+                ],
+                "positiveNormalOptions": [
+                  9639
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -2094,6 +5198,322 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              247,
+              231,
+              246
+            ],
+            "area": 0.0020406938253109777,
+            "corners": [
+              {
+                "boundaryVertexId": 247,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4095,
+                  3950
+                ],
+                "originalNormalDots": [
+                  -0.3000217032777094,
+                  -0.940787069252016
+                ],
+                "positiveNormalOptions": [],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 231,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4094
+                ],
+                "originalNormalDots": [
+                  -0.25742217548111695
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 246,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  3951
+                ],
+                "originalNormalDots": [
+                  -0.9407625656868424
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              246,
+              231,
+              241
+            ],
+            "area": 0.0010144241801446964,
+            "corners": [
+              {
+                "boundaryVertexId": 246,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  3951,
+                  4220
+                ],
+                "originalNormalDots": [
+                  -0.6856724016098018,
+                  -0.5618429441004694
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 231,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4146,
+                  4094
+                ],
+                "originalNormalDots": [
+                  -0.41546166722340006,
+                  0.263220927670837
+                ],
+                "positiveNormalOptions": [
+                  4094
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 241,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4212,
+                  4332,
+                  4147
+                ],
+                "originalNormalDots": [
+                  -0.37736880793564154,
+                  -0.3572549135760355,
+                  -0.41546166722340006
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              241,
+              231,
+              258
+            ],
+            "area": 0.0014570454211745832,
+            "corners": [
+              {
+                "boundaryVertexId": 241,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4147
+                ],
+                "originalNormalDots": [
+                  -1.0000000352611094
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 231,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4146
+                ],
+                "originalNormalDots": [
+                  -1.0000000352611094
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 258,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4148
+                ],
+                "originalNormalDots": [
+                  -1.0000000352611094
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              246,
+              241,
+              262
+            ],
+            "area": 0.0011460760032442907,
+            "corners": [
+              {
+                "boundaryVertexId": 246,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  3951,
+                  4220
+                ],
+                "originalNormalDots": [
+                  -0.9674603079101711,
+                  -0.22073597178405013
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 241,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4332
+                ],
+                "originalNormalDots": [
+                  0.15228789740603554
+                ],
+                "positiveNormalOptions": [
+                  4332
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 262,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4331
+                ],
+                "originalNormalDots": [
+                  0.04220416110128844
+                ],
+                "positiveNormalOptions": [
+                  4331
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              260,
+              246,
+              261
+            ],
+            "area": 0.001071245337719991,
+            "corners": [
+              {
+                "boundaryVertexId": 260,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4221,
+                  4106
+                ],
+                "originalNormalDots": [
+                  0.48654361458020223,
+                  -0.9429502315694048
+                ],
+                "positiveNormalOptions": [
+                  4221
+                ],
+                "status": "CONFLICTING_BOUNDARY_FIELDS"
+              },
+              {
+                "boundaryVertexId": 246,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4220
+                ],
+                "originalNormalDots": [
+                  0.48654361458020223
+                ],
+                "positiveNormalOptions": [
+                  4220
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 261,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4105
+                ],
+                "originalNormalDots": [
+                  -0.9429502315694048
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              261,
+              246,
+              262
+            ],
+            "area": 0.002179605107638779,
+            "corners": [
+              {
+                "boundaryVertexId": 261,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4307
+                ],
+                "originalNormalDots": [
+                  -0.7705369429397548
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 246,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  3951,
+                  4220
+                ],
+                "originalNormalDots": [
+                  0.7069494359218401,
+                  -0.6360813682504941
+                ],
+                "positiveNormalOptions": [
+                  3951
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 262,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4331
+                ],
+                "originalNormalDots": [
+                  -0.8292725308541041
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": true,
+        "expectedTriangles": 6,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -2233,6 +5653,329 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              254,
+              257,
+              253
+            ],
+            "area": 0.001292522124501426,
+            "corners": [
+              {
+                "boundaryVertexId": 254,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4142
+                ],
+                "originalNormalDots": [
+                  -1.0000000215803837
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 257,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4141
+                ],
+                "originalNormalDots": [
+                  -1.0000000215803837
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 253,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4140
+                ],
+                "originalNormalDots": [
+                  -1.0000000215803837
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              234,
+              265,
+              254
+            ],
+            "area": 0.0012013572418523516,
+            "corners": [
+              {
+                "boundaryVertexId": 234,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4419
+                ],
+                "originalNormalDots": [
+                  -1.0000000568635572
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 265,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4418
+                ],
+                "originalNormalDots": [
+                  -1.0000000568635572
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 254,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4420
+                ],
+                "originalNormalDots": [
+                  -1.0000000568635572
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              256,
+              234,
+              254
+            ],
+            "area": 0.0005068691124779584,
+            "corners": [
+              {
+                "boundaryVertexId": 256,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4423
+                ],
+                "originalNormalDots": [
+                  0.9109248317418399
+                ],
+                "positiveNormalOptions": [
+                  4423
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 234,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4422
+                ],
+                "originalNormalDots": [
+                  0.9109248317418399
+                ],
+                "positiveNormalOptions": [
+                  4422
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 254,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4142,
+                  4420
+                ],
+                "originalNormalDots": [
+                  -0.25241424733570195,
+                  0.9449502885768242
+                ],
+                "positiveNormalOptions": [
+                  4420
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              233,
+              256,
+              254
+            ],
+            "area": 0.0007735413921343498,
+            "corners": [
+              {
+                "boundaryVertexId": 233,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4136
+                ],
+                "originalNormalDots": [
+                  0.731570643644881
+                ],
+                "positiveNormalOptions": [
+                  4136
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 256,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  4138
+                ],
+                "originalNormalDots": [
+                  0.731570643644881
+                ],
+                "positiveNormalOptions": [
+                  4138
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 254,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4142,
+                  4420
+                ],
+                "originalNormalDots": [
+                  0.5481150457203119,
+                  -0.8115065649624668
+                ],
+                "positiveNormalOptions": [
+                  4142
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              233,
+              254,
+              253
+            ],
+            "area": 0.0004428544414445434,
+            "corners": [
+              {
+                "boundaryVertexId": 233,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4136,
+                  4482
+                ],
+                "originalNormalDots": [
+                  -0.24651285781294352,
+                  -0.31152572473439716
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 254,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4142,
+                  4420
+                ],
+                "originalNormalDots": [
+                  -0.437971448708789,
+                  0.30283658363817245
+                ],
+                "positiveNormalOptions": [
+                  4420
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 253,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4481,
+                  4140
+                ],
+                "originalNormalDots": [
+                  -0.27737134080156683,
+                  -0.437971448708789
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              253,
+              233,
+              266
+            ],
+            "area": 0.0006997637784206466,
+            "corners": [
+              {
+                "boundaryVertexId": 253,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4481,
+                  4140
+                ],
+                "originalNormalDots": [
+                  1.0000000667801179,
+                  -0.19879721289612798
+                ],
+                "positiveNormalOptions": [
+                  4481
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 233,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4136,
+                  4482
+                ],
+                "originalNormalDots": [
+                  0.9502283492964125,
+                  0.998897263621213
+                ],
+                "positiveNormalOptions": [
+                  4136,
+                  4482
+                ],
+                "status": "AMBIGUOUS_INTERIOR_FIELD"
+              },
+              {
+                "boundaryVertexId": 266,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  4480
+                ],
+                "originalNormalDots": [
+                  0.9989019781062047
+                ],
+                "positiveNormalOptions": [
+                  4480
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 6,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     },
     {
@@ -2314,6 +6057,120 @@
           }
         ],
         "originalVerticesOnly": true
+      },
+      "edgeCornerClosure": {
+        "status": "UNRESOLVED_EDGE_CORNER_TRIANGULATION",
+        "triangles": [
+          {
+            "boundaryVertexIds": [
+              251,
+              267,
+              252
+            ],
+            "area": 0.0019035851234247205,
+            "corners": [
+              {
+                "boundaryVertexId": 251,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9874,
+                  9836
+                ],
+                "originalNormalDots": [
+                  -0.951237266572151,
+                  0.9971515162682603
+                ],
+                "positiveNormalOptions": [
+                  9836
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 267,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9947
+                ],
+                "originalNormalDots": [
+                  1.0000000048539919
+                ],
+                "positiveNormalOptions": [
+                  9947
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              },
+              {
+                "boundaryVertexId": 252,
+                "requiredByOriginalEdge": false,
+                "originalSourceVertexOptions": [
+                  9748,
+                  9801
+                ],
+                "originalNormalDots": [
+                  -0.9905481261579869,
+                  0.9923671856879099
+                ],
+                "positiveNormalOptions": [
+                  9801
+                ],
+                "status": "UNIQUE_EXISTING_FIELD"
+              }
+            ]
+          },
+          {
+            "boundaryVertexIds": [
+              252,
+              251,
+              263
+            ],
+            "area": 0.0024542862222601894,
+            "corners": [
+              {
+                "boundaryVertexId": 252,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9748
+                ],
+                "originalNormalDots": [
+                  -0.9967311232652714
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 251,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9874
+                ],
+                "originalNormalDots": [
+                  -0.958814565033019
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              },
+              {
+                "boundaryVertexId": 263,
+                "requiredByOriginalEdge": true,
+                "originalSourceVertexOptions": [
+                  9899
+                ],
+                "originalNormalDots": [
+                  -0.9285510123145807
+                ],
+                "positiveNormalOptions": [],
+                "status": "ORIGINAL_NORMAL_OPPOSES_CAP"
+              }
+            ]
+          }
+        ],
+        "reversedBoundaryMatched": false,
+        "expectedTriangles": 2,
+        "boundaryOrientationConsistent": true,
+        "limitations": [
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
+        ]
       }
     }
   ],
