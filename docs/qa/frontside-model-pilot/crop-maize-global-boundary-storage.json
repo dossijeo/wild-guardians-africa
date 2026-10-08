@@ -1,0 +1,102 @@
+{
+  "status": "CPU_SOURCE_TABLE_BITS_AND_STORAGE_VERIFIED_NO_RENDER_ACCEPTANCE",
+  "payloadSha256": "3509323bf6642622bacf26147f651e8e8cf7f7be035c4e0cfdb9963da660a7cb",
+  "arrays": [
+    {
+      "name": "originalPosition.npy",
+      "shape": [
+        8983,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 107796,
+      "sha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e"
+    },
+    {
+      "name": "originalNormal.npy",
+      "shape": [
+        8983,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 107796,
+      "sha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23"
+    },
+    {
+      "name": "originalUv.npy",
+      "shape": [
+        8983,
+        2
+      ],
+      "dtype": "<f4",
+      "bytes": 71864,
+      "sha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f"
+    },
+    {
+      "name": "originalIndices.npy",
+      "shape": [
+        4935,
+        3
+      ],
+      "dtype": "<u2",
+      "bytes": 29610,
+      "sha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966"
+    },
+    {
+      "name": "originalLabels.npy",
+      "shape": [
+        4935
+      ],
+      "dtype": "<i4",
+      "bytes": 19740,
+      "sha256": "0d4a3fbd0f6f13afc76b918957bc8a67161ed22e6e7f5ed457228d47a1303e7b"
+    },
+    {
+      "name": "sourceFaceChart.npy",
+      "shape": [
+        4935
+      ],
+      "dtype": "<i4",
+      "bytes": 19740,
+      "sha256": "1c75dfb4d67b2d78d4c0cbad607917400af81b0e21c9914c81166eba25397f41"
+    },
+    {
+      "name": "proxyPosition.npy",
+      "shape": [
+        1162,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 13944,
+      "sha256": "ed49c7674f9a32d8fc6705392c6d81fc077bd625264a1069b5a08f6a2fc19f2a"
+    },
+    {
+      "name": "proxyIndices.npy",
+      "shape": [
+        1339,
+        3
+      ],
+      "dtype": "<u4",
+      "bytes": 16068,
+      "sha256": "e388288b7cebf9c6c256e50ce5cc93e7680071d0f8991492f11a39db904c3d5b"
+    },
+    {
+      "name": "proxyFaceChart.npy",
+      "shape": [
+        1339
+      ],
+      "dtype": "<i4",
+      "bytes": 5356,
+      "sha256": "e2f15a11d0559b7d2e384102e5d99fc0a8c53f336114ef7c29ef35a2acc6a299"
+    }
+  ],
+  "totalDecodedArrayBytes": 391914,
+  "sourcePnuAndIndexBitExact": true,
+  "sourceLabelsAndChartAssignmentsVerified": true,
+  "proxyPositionFinite": true,
+  "proxyIndicesInRange": true,
+  "limitations": [
+    "No surface correspondence, UV field, normal field, growth, visual, shadow or GPU parity established.",
+    "Decoded NPZ arrays are CPU storage, not texture encoding or resident GPU allocation."
+  ]
+}
