@@ -3,6 +3,10 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {LoadingCinematic} from '../src/rendering/loading-cinematic.js';
 function fixture(){const camera=new THREE.PerspectiveCamera(42,1,.1,500);camera.position.set(8,7.5,10);const target=new THREE.Vector3(0,.18,0);camera.lookAt(target);const calls=[],world={camera,controls:{target,enabled:false},nav:{field:{surface:()=>0}},objects:new Map(),state:{villages:[],structures:[],plants:[{id:'real-crop'}]},render(){calls.push('world');}},diorama={camera:camera.clone(),stopPlanting(){this.stopped=true;},render(dt,progress,options){calls.push(options.skyOnly?'sky':'diorama');}};return {world,diorama,calls};}
+
+test('loading audio handoff fires once before the first world presentation',async()=>{
+ const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onHandoff:()=>calls.push('handoff')});cinema.step(.8);assert.equal(calls.includes('handoff'),false);cinema.step(.4);assert.deepEqual(calls.slice(-2),['handoff','world']);cinema.step(.3);assert.equal(calls.filter(c=>c==='handoff').length,1);cinema.cancel();
+});
 test('camera sky handoff and travel preserve exact gameplay pose and simulation state',async()=>{
  const {world,diorama,calls}=fixture(),before=JSON.stringify(world.state),eye=world.camera.position.toArray(),q=world.camera.quaternion.toArray(),target=world.controls.target.toArray(),cinema=new LoadingCinematic(world,diorama);
  cinema.step(.35);assert.equal(calls.at(-1),'diorama');cinema.step(.4);assert.equal(calls.at(-1),'sky');assert.deepEqual(world.camera.quaternion.toArray(),diorama.camera.quaternion.toArray());cinema.step(.7);assert.equal(calls.at(-1),'world');cinema.step(3);await cinema.finished;

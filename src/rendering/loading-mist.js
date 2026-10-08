@@ -1,0 +1,17 @@
+import * as THREE from 'three';
+
+// One untextured triangle behind the patch. Analytic height/distance haze,
+// without ray marching, noise, depth sampling, additional assets or shadows.
+export class LoadingMist {
+ constructor(sky){
+  this.scene=new THREE.Scene();this.day=new THREE.Color('#e6d5b5');this.night=new THREE.Color('#26364a');
+  this.uniforms={...sky.uniforms,uFogColor:{value:this.day.clone().convertLinearToSRGB()},uEyeHeight:{value:7.5}};
+  this.material=new THREE.RawShaderMaterial({glslVersion:THREE.GLSL3,uniforms:this.uniforms,depthWrite:false,depthTest:false,transparent:true,toneMapped:false,
+   vertexShader:'precision highp float;out vec2 vScreen;void main(){vec2 p=gl_VertexID==0?vec2(-1.,-1.):gl_VertexID==1?vec2(3.,-1.):vec2(-1.,3.);vScreen=p;gl_Position=vec4(p,0.,1.);}',
+   fragmentShader:'precision highp float;in vec2 vScreen;uniform vec3 uForward,uRight,uUp,uFogColor;uniform vec2 uViewScale;uniform float uEyeHeight;out vec4 color;void main(){vec3 ray=normalize(uForward+uRight*vScreen.x*uViewScale.x+uUp*vScreen.y*uViewScale.y);float groundDistance=uEyeHeight/max(.015,-ray.y);float distant=smoothstep(7.,24.,groundDistance);float belowHorizon=1.-smoothstep(-.10,.15,ray.y);float opacity=belowHorizon*mix(.86,.96,distant);color=vec4(uFogColor,opacity);}'});
+  // NativeSky owns this immutable three-vertex fullscreen geometry.
+  const triangle=new THREE.Mesh(sky.geometry,this.material);triangle.frustumCulled=false;this.scene.add(triangle);
+ }
+ render(renderer,camera,night){this.uniforms.uFogColor.value.copy(night===1?this.night:this.day);if(night>0&&night<1)this.uniforms.uFogColor.value.lerp(this.night,night);this.uniforms.uFogColor.value.convertLinearToSRGB();this.uniforms.uEyeHeight.value=Math.max(.1,camera.position.y);renderer.render(this.scene,camera);}
+ dispose(){this.material.dispose();this.scene.clear();}
+}

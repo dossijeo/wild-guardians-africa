@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import {json} from './assets.js';
 import {createCropBatchAsync} from './crop-batch.js';
 import {LoadingPlants} from './loading-plants.js';
+import {LoadingMist} from './loading-mist.js';
+import {withScreenTarget} from './screen-target.js';
 import {AfricanToon} from './african-toon.js';
 import {skyNight} from './sky.js';
 import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
@@ -32,8 +34,8 @@ export class LoadingDiorama {
     };
     material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v2';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
-    this.scene.fog=new THREE.Fog('#a8b5c8',14,25);
-    let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){down={x:e.clientX,y:e.clientY,id:e.pointerId};e.preventDefault();}},{signal:this.abort.signal});
+    this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,10,20);
+    let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};e.preventDefault();}},{signal:this.abort.signal});
     world.canvas.addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const start=down;down=null;if(this.interactive&&Math.hypot(e.clientX-start.x,e.clientY-start.y)<12)this.plantAt(e.clientX,e.clientY);},{signal:this.abort.signal});
     world.canvas.addEventListener('pointercancel',()=>{down=null;},{signal:this.abort.signal});
   }
@@ -51,23 +53,23 @@ export class LoadingDiorama {
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
     const shadow=world.renderer.shadowMap.enabled;
-    try{world.renderer.shadowMap.enabled=false;await compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});if(this.disposed)throw Error('Loading diorama cancelled');renderScreenPreload(world.renderer,this.scene,this.camera);await compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});await waitForGpuPreload(world.renderer,{cancelled:()=>this.disposed||world.disposed});}
+    try{world.renderer.shadowMap.enabled=false;await compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});if(this.disposed)throw Error('Loading diorama cancelled');renderScreenPreload(world.renderer,this.scene,this.camera);await compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});await compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});renderScreenPreload(world.renderer,this.mist.scene,this.camera);world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});await waitForGpuPreload(world.renderer,{cancelled:()=>this.disposed||world.disposed});}
     finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
     this.prepared=true;return this;
   }
   plantAt(clientX,clientY) {
     const rect=this.world.canvas.getBoundingClientRect();this.cursor.set((clientX-rect.left)/rect.width*2-1,1-(clientY-rect.top)/rect.height*2);this.ray.setFromCamera(this.cursor,this.camera);
-    const hit=this.ray.intersectObject(this.ground)[0];return hit?this.plants.plant(hit.point.x,hit.point.z):null;
+    const hit=this.ray.intersectObject(this.ground)[0],plant=hit?this.plants.plant(hit.point.x,hit.point.z):null;if(plant)this.onPlant?.(plant);return plant;
   }
   show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
   render(dt,progress,{ready=false,skyOnly=false}={}) {
     if(!this.prepared||this.disposed)return;
     const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.plants.time,()=>0);
-    const night=skyNight(this.state);this.toon.update(night,this.sun,this.state.biome);this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.set(night?'#253448':'#cbd5be');
+    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
-    try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly)world.renderer.render(this.scene,this.camera);}
+    try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
   }
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
-  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.scene.clear();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.scene.clear();}
 }

@@ -65,3 +65,15 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 #world-loading.interactive-loading-indicator{background:transparent;pointer-events:none;padding:0}
 
 .interactive-loading-cancel{position:fixed;top:max(14px,env(safe-area-inset-top));left:max(14px,env(safe-area-inset-left));z-index:102;background:#172c2255;color:#fff6df;border:1px solid #fff6df44;border-radius:8px;font-size:13px;padding:8px 12px;pointer-events:auto}
+
+#world-loading.interactive-loading-indicator{display:block;background:transparent;pointer-events:none;padding:0}
+.interactive-loading-info{position:absolute;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(390px,calc(100vw - 44px - env(safe-area-inset-left) - env(safe-area-inset-right)));color:#34402c;text-shadow:0 1px 3px #fff4de;font-family:Banga,sans-serif;text-align:left}
+.interactive-loading-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:clamp(14px,2.2vw,17px);font-weight:600;line-height:1.3}
+.interactive-loading-heading #loading-progress{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.interactive-loading-track{height:3px;margin:10px 0 8px;border-radius:4px;background:#34402c30;overflow:hidden}
+.interactive-loading-track>span{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:#76a66d}
+.interactive-loading-help{display:block;min-height:16px;font-size:12px;line-height:1.35;opacity:.88}
+.interactive-loading-indicator[data-night="true"] .interactive-loading-info{color:#f5edd9;text-shadow:0 1px 4px #132032}
+.interactive-loading-indicator[data-night="true"] .interactive-loading-track{background:#f5edd930}
+.interactive-loading-indicator[data-night="true"] .interactive-loading-track>span{background:#8fb987}
+@media(max-height:480px){.interactive-loading-info{bottom:calc(8px + env(safe-area-inset-bottom));width:min(360px,calc(100vw - 44px));}.interactive-loading-heading{font-size:14px}.interactive-loading-track{margin:6px 0}.interactive-loading-help{font-size:11px}}

@@ -3,8 +3,8 @@ import {CameraBuildingRegistry} from './camera-building-registry.js';
 const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Camera poses are presentation-only and never written to simulation/save data.
 export class LoadingCinematic {
-  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true}={}) {
-    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;
+  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onHandoff=()=>{}}={}) {
+    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onHandoff=onHandoff;this.handedOff=false;
     this.gameplay={eye:world.camera.position.clone(),quaternion:world.camera.quaternion.clone(),target:world.controls.target.clone()};
     // Raising above the existing opening eye preserves the same X/Z chunk
     // centre. Never ask the reveal to generate a different resident region.
@@ -41,6 +41,7 @@ export class LoadingCinematic {
     this.time+=Math.max(0,dt);const [a,b,c,d]=this.durations,{world,diorama}=this;
     if(this.time<a){const t=ease(this.time/a);diorama.camera.fov=THREE.MathUtils.lerp(this.loadingFov,world.camera.fov,t);diorama.camera.updateProjectionMatrix();diorama.camera.position.lerpVectors(this.loadingEye,this.loadingSkyEye,t);diorama.camera.quaternion.slerpQuaternions(this.loadingQuaternion,this.skyQuaternion,t);diorama.render(dt,1,{ready:true});return;}
     if(this.time<a+b){diorama.camera.fov=world.camera.fov;diorama.camera.updateProjectionMatrix();diorama.camera.quaternion.copy(this.skyQuaternion);diorama.render(dt,1,{ready:true,skyOnly:true});world.camera.position.copy(this.panorama);world.camera.quaternion.copy(this.skyQuaternion);return;}
+    if(!this.handedOff){this.handedOff=true;this.onHandoff();}
     if(this.time<a+b+c){world.camera.position.copy(this.panorama);world.camera.quaternion.slerpQuaternions(this.skyQuaternion,this.panoramaQuaternion,ease((this.time-a-b)/c));world.render(0);return;}
     const t=ease((this.time-a-b-c)/d);world.camera.position.lerpVectors(this.panorama,this.gameplay.eye,t);world.camera.quaternion.slerpQuaternions(this.panoramaQuaternion,this.gameplay.quaternion,t);world.render(0);
     if(this.time>=a+b+c+d){this.restore();this.done=true;this.resolve();}
