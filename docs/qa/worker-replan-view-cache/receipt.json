@@ -178,6 +178,30 @@
       "path": "fluid-boundary.json.gz",
       "rawBytes": 1065,
       "sha256": "a17786839e139eda90d1dccdab0e6f726390fd8ed44a28bfa2cd84d490332355"
+    },
+    {
+      "source": ".cache/benchmark-v6-production-cost.mjs",
+      "path": "production-cost-runner.mjs.gz",
+      "rawBytes": 3582,
+      "sha256": "6a28bb24541674489daa01332d51c12329ec58d4df8c7bad459f55954be1781c"
+    },
+    {
+      "source": ".cache/worker-route-refinement/report-v6-production-cost.json",
+      "path": "production-cost.json.gz",
+      "rawBytes": 41801,
+      "sha256": "afe20b8673419680526680d200cef6d79eda90cc6cf69b97687d9854eb026bb2"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "production-navigation.mjs.gz",
+      "rawBytes": 26337,
+      "sha256": "2ed816c61bd0eb4fedcb3b41c1f9c1b9fb71be14b6d1dcdbeb21e5d46253609c"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "production-game.mjs.gz",
+      "rawBytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
     }
   ],
   "benchmarkExitCode": 0,
@@ -186,5 +210,7 @@
   "replanCostExitCode": 0,
   "nativeGateExitCode": 0,
   "nativeTrafficExitCode": 0,
-  "fluidBoundaryExitCode": 0
+  "fluidBoundaryExitCode": 0,
+  "productionCostExitCode": 0,
+  "productionCostAmbientHead": "441051d978f5f89e2964dc24da73799bc35f2c0e"
 }
