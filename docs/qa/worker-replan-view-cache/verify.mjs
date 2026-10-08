@@ -17,3 +17,11 @@ assert.equal(receipt.shoreExitCode,0);const shores=report('native-shores');asser
 assert.equal(receipt.replanCostExitCode,0);const cost=report('replan-cost');assert.deepEqual(cost.runs.map(r=>r.mode),['v5','v6','v6','v5']);for(const r of cost.runs){assert.equal(r.searches,100);assert.deepEqual(r.route,cost.runs[0].route);assert.deepEqual(r.routeHashes,cost.runs[0].routeHashes);assert.equal(r.samplesMs.length,75);}assert(cost.candidateMedian<cost.referenceMedian*.03);
 for(const [key,path] of [['candidate-navigation-v5.mjs','reference-navigation-v5.mjs.gz'],['candidate-navigation-v6.mjs','candidate-navigation.mjs.gz'],['bounded-worker-view-cache.mjs','bounded-views.mjs.gz'],['replan-v6.json','replan.json.gz'],['boundary-v3.json','boundary-v3.json.gz']])assert.equal(Object.entries(cost.sourceHashes).find(([p])=>p.endsWith(key))[1],sha(path));
 console.log('PASS V6 archive integrity and scoped CPU/quality outcomes; no production acceptance');
+
+assert.equal(receipt.nativeGateExitCode,0);assert.equal(receipt.nativeTrafficExitCode,0);
+const gates=report('native-gates');assert.equal(gates.results.length,15);
+assert.deepEqual([...new Set(gates.results.map(x=>x.material))],['zarzas','empalizada','adobe','piedra','reforzado']);
+for(const g of gates.results){const [a,c]=g.arms;assert(a.reached&&c.reached);assert.deepEqual(a.rows,c.rows);assert.equal(a.final,c.final);assert.equal(c.viewCount,1);const articulated=['zarzas','empalizada','reforzado'].includes(g.material);assert.equal(c.steps,articulated?90:84);assert.equal(c.waits,articulated?6:0);assert.equal(c.restorePairs,c.steps-5);}
+const traffic=report('native-traffic');assert.deepEqual(traffic.results.map(x=>x.species),['warthog','hyena','buffalo','lion','rhino']);
+for(const t of traffic.results){const [a,c]=t.arms;assert(a.workerDone&&a.animalDone&&c.workerDone&&c.animalDone);assert.deepEqual(a.rows,c.rows);assert.equal(c.views,1);assert.equal(c.rejections,0);}
+console.log('PASS controlled native gate and moving traffic evidence; no full gameplay acceptance');

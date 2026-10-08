@@ -142,10 +142,36 @@
       "source": ".cache/worker-route-refinement/boundary-v3.json",
       "rawBytes": 2829,
       "sha256": "541a018ba574e7cda351769f4c5c34824bf1bd161978048edec426ed235a0623"
+    },
+    {
+      "source": ".cache/check-v6-native-gates.mjs",
+      "path": "native-gates-runner.mjs.gz",
+      "rawBytes": 4944,
+      "sha256": "b3fad2c23b4c5d51539c17128133fe357626c91d5c16f47860028a644f399b08"
+    },
+    {
+      "source": ".cache/worker-route-refinement/native-gates-v6.json",
+      "path": "native-gates.json.gz",
+      "rawBytes": 518306,
+      "sha256": "fb814ffa28850cde4213d027de6d20eda9690dfe7494a2542ef40b205ea7902a"
+    },
+    {
+      "source": ".cache/check-v6-native-traffic.mjs",
+      "path": "native-traffic-runner.mjs.gz",
+      "rawBytes": 4434,
+      "sha256": "678b67cb85388f5981bcb4044280484d403ea9ea093c9eb535d94e5594996742"
+    },
+    {
+      "source": ".cache/worker-route-refinement/native-traffic-v6.json",
+      "path": "native-traffic.json.gz",
+      "rawBytes": 324258,
+      "sha256": "0175e838a2078f5b017b60e02919ea09836c9a0f86b8fc1ead1a1774ca7c089e"
     }
   ],
   "benchmarkExitCode": 0,
   "benchmarkScope": "V3/originalGame versus V6/guardedGame ABBA,100ticks per arm. Four live CPU campaigns confirmed before dispatch, no Blender/GPU root. Avoidance views not exercised: zero guard rejections. CPU tick timing only, not production baseline, GPU/phone or proven cache speedup.",
   "shoreExitCode": 0,
-  "replanCostExitCode": 0
+  "replanCostExitCode": 0,
+  "nativeGateExitCode": 0,
+  "nativeTrafficExitCode": 0
 }
