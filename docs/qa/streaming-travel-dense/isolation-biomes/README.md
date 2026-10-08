@@ -18,3 +18,14 @@ Full reports are losslessly compressed; receipt hashes refer to original JSON.
 Final screenshots are endpoint evidence only. No paired control was measured,
 so timings cannot establish an optimization gain. Production activation remains
 off pending transition continuity, remaining biome coverage and resource checks.
+
+`node docs/qa/streaming-travel-dense/isolation-biomes/verify.mjs` checks original
+JSON hashes, recomputes frame summaries and validates the reported configuration,
+state, errors and chunk invariants. It does not rerun the browser.
+
+Lifecycle follow-up: 36 directed tests pass with the native preparation, isolated
+root and resident preparation suites. Added integration cases cover draw failure,
+fence cancellation and overlapping compilation completing out of order. Borrowed
+geometry/materials remain undisposed; visibility, culling, shadow scheduling,
+viewport/scissor and parent are restored. These tests use renderer doubles and
+establish cleanup contracts, not physical RAM/VRAM neutrality or GPU performance.

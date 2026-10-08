@@ -30,6 +30,40 @@ test('isolated upload restores unrelated visibility and shadow scheduling before
  const gl=f.renderer.getContext(),originalFence=gl.fenceSync;gl.fenceSync=(...args)=>{assert.equal(other.visible,true);assert.equal(f.renderer.shadowMap.autoUpdate,true);assert.equal(f.renderer.shadowMap.needsUpdate,true);return originalFence(...args);};
  await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,nextFrame:async()=>{}});assert.equal(other.visible,true);f.restored();
 });
+
+test('isolated draw failure restores the full render state without disposing borrowed resources',async()=>{
+ const f=fixture({renderError:true}),mesh=new Mesh(),other=new Mesh();other.visible=false;f.root.add(mesh);f.scene.add(other);
+ let disposals=0;mesh.geometry.addEventListener('dispose',()=>disposals++);mesh.material.addEventListener('dispose',()=>disposals++);
+ f.renderer.shadowMap={enabled:true,autoUpdate:false,needsUpdate:true};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true}),/Draw failed/);
+ assert.equal(mesh.frustumCulled,true);assert.equal(other.visible,false);assert.equal(f.root.parent,f.parent);
+ assert.deepEqual(f.renderer.shadowMap,{enabled:true,autoUpdate:false,needsUpdate:true});f.restored();
+ assert.equal(disposals,0);assert.equal(f.calls.includes('fence'),false);releaseNativeFarGpuCache(f.renderer);
+});
+
+test('isolated cancellation while waiting for the fence leaves the next gameplay draw intact',async()=>{
+ const f=fixture(),other=new Mesh();f.scene.add(other);let cancelled=false;
+ f.renderer.shadowMap={enabled:true,autoUpdate:true,needsUpdate:true};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,cancelled:()=>cancelled,nextFrame:async()=>{
+  assert.equal(other.visible,true);assert.equal(f.root.parent,f.parent);f.restored();
+  assert.deepEqual(f.renderer.shadowMap,{enabled:true,autoUpdate:true,needsUpdate:true});cancelled=true;
+ }}),NativeFarGpuCancelled);
+ assert.equal(f.calls.at(-1),'delete');assert.equal(other.visible,true);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
+test('overlapping isolated preparation restores flags between out-of-order compile completions',async()=>{
+ const f=fixture(),mesh=new Mesh(),other=new Mesh();f.root.add(mesh);f.scene.add(other);
+ const pending=[];f.renderer.compileAsync=()=>new Promise(resolve=>pending.push(resolve));
+ f.renderer.shadowMap={enabled:true,autoUpdate:true,needsUpdate:true};const draw=f.renderer.render;
+ f.renderer.render=()=>{assert.equal(other.visible,false);assert.equal(mesh.frustumCulled,false);draw();};
+ const first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,nextFrame:async()=>{}});
+ const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,nextFrame:async()=>{}});
+ assert.equal(other.visible,true);assert.equal(mesh.frustumCulled,true);
+ pending[1]();await second;assert.equal(other.visible,true);assert.equal(mesh.frustumCulled,true);f.restored();
+ pending[0]();await first;assert.equal(other.visible,true);assert.equal(mesh.frustumCulled,true);f.restored();
+ assert.deepEqual(f.renderer.shadowMap,{enabled:true,autoUpdate:true,needsUpdate:true});
+ assert.equal(f.calls.filter(call=>call==='delete').length,2);releaseNativeFarGpuCache(f.renderer);
+});
 test('failed zero-pixel draw restores renderer and parent before rejecting',async()=>{
  const f=fixture({renderError:true});await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[]),/Draw failed/);
  assert.equal(f.root.parent,f.parent);assert.equal(f.current(),f.original);f.restored();assert.deepEqual(f.calls,['compile','render','restore']);
