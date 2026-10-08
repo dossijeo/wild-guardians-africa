@@ -3,12 +3,25 @@ import {nativePropBatchVisible} from './prop-transition-residency.js';
 import {createAssetShadow} from './asset-shadows.js';
 
 const powerCapacity=count=>2**Math.ceil(Math.log2(Math.max(8,count)));
+function transferStaticAttributes(source,destination){
+  const names=Object.keys(source.attributes).filter(name=>name!=='nativeVisibility');
+  const other=Object.keys(destination.attributes).filter(name=>name!=='nativeVisibility');
+  const same=(a,b)=>!a&&!b||!!a&&!!b&&a.array===b.array&&a.itemSize===b.itemSize&&a.normalized===b.normalized&&a.usage===b.usage;
+  const previous=source.userData.nativeStaticVersions,next=destination.userData.nativeStaticVersions;
+  if(!previous||!next||previous.index!==next.index||!same(source.index,destination.index)||names.length!==other.length||!names.every(name=>previous.attributes[name]===next.attributes[name]&&same(source.attributes[name],destination.attributes[name])))return;
+  // Move private GPU identities only after packing succeeds. The retired
+  // geometry must no longer delete buffers now owned by its replacement.
+  destination.setIndex(source.index);source.setIndex(null);
+  for(const name of names){destination.setAttribute(name,source.attributes[name]);source.deleteAttribute(name);}
+}
 function geometryView(source,capacity){
   const view=new THREE.BufferGeometry();
   // Share CPU arrays, but own the GPU attribute identities. Retiring a color
   // group must not delete vertex buffers still used by the shadow pass.
   if(source.index)view.setIndex(new THREE.BufferAttribute(source.index.array,source.index.itemSize,source.index.normalized));
   for(const [name,a] of Object.entries(source.attributes))if(name!=='nativeVisibility')view.setAttribute(name,new THREE.BufferAttribute(a.array,a.itemSize,a.normalized));
+  // A source updated in place must upload again even when its array is unchanged.
+  view.userData.nativeStaticVersions={index:source.index?.version??null,attributes:Object.fromEntries(Object.entries(source.attributes).filter(([name])=>name!=='nativeVisibility').map(([name,a])=>[name,a.version]))};
   view.setAttribute('nativeVisibility',new THREE.InstancedBufferAttribute(new Float32Array(capacity).fill(1),1).setUsage(THREE.DynamicDrawUsage));
   view.boundingBox=source.boundingBox?.clone()??null;view.boundingSphere=source.boundingSphere?.clone()??null;
   view.groups=source.groups.map(g=>({...g}));view.drawRange={...source.drawRange};return view;
@@ -34,14 +47,18 @@ export class NativeAssetGroups{
   constructor(scene){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
     this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    this.enabled=true;this.omitZeroColor=false;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
+    this.enabled=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
-  retire(cache,key){const g=cache.get(key);g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color')g.mesh.geometry.dispose();cache.delete(key);}
+  retire(cache,key,retainGeometry=false){const g=cache.get(key);g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
   prepare(cache,key,entries,pass,stats){
     const count=entries.reduce((n,e)=>n+e.mesh.count,0),capacity=powerCapacity(count),first=entries[0],source=pass==='shadow'?first.batch.levels.at(-1):first.batch.levels[first.level];
-    let g=cache.get(key);
-    if(g&&g.capacity!==capacity){this.retire(cache,key);g=null;}
+    let g=cache.get(key),retiredGeometry=null;
+    if(g&&g.capacity!==capacity){
+      if(pass==='color'&&this.reuseStaticOnResize)retiredGeometry=g.mesh.geometry;
+      this.retire(cache,key,!!retiredGeometry);g=null;
+    }
+    try{
     if(!g){
       const mesh=pass==='shadow'?createAssetShadow([source],capacity,first.batch.group):new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -66,6 +83,8 @@ export class NativeAssetGroups{
     }
     stats.bytes+=capacity*(pass==='color'?68:64);
     if(pass==='shadow')this.shadowRoot.userData.lodBatches.push({shadow:g.mesh,meshes:[g.mesh]});
+    if(retiredGeometry)transferStaticAttributes(retiredGeometry,g.mesh.geometry);
+    }finally{retiredGeometry?.dispose();}
   }
   update(chunks,camera,origin={x:0,z:0},light=null){
     if(!this.origin||this.origin.x!==origin.x||this.origin.z!==origin.z){

@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Reutilización de buffers al redimensionar lotes](qa/asset-group-production/README.md):
+integración limitada a cambios de capacidad; matrices/cobertura/envíos
+iguales,121 frente a171 bufferData al aparecer el búfalo en Gran Río/Musgum.
+Ciclo WebGL acaba con cero buffers observados pendientes;60 pruebas dirigidas,
+build y paquete pasan. Suite completa termina con3.117 pruebas correctas;
+la evidencia conserva controles y negativos. No se acredita mejora general de FPS.
+
 [Asignaciones de lotes durante aparición](qa/asset-group-appearance/README.md):
 Gran Río/Musgum alta recrea15 lotes por capacidad (13 crecen/2 menguan), añade6
 claves y retira3 claves de visibilidad;171 bufferData en el primer render.
@@ -9,7 +16,8 @@ con propiedad/liberación, imagen y coste incluidos antes de adoptar el candidat
 
 [Montañas HQ integradas y paquete verificado](qa/hq-main-integration/README.md):
 PR #7 mergeada, seis atlas byte-exactos y ZIP sin ZIP anidado. Validate game del
-merge pasa 3.104 tests; Windows aún en pruebas del paquete al verificar. Las
+merge pasa 3.104 tests; Windows termina correctamente, incluidos WebView2 y
+minimización/restauración nativa (runtime68447e14, no commits posteriores). Las
 notas inferiores conservan etapas históricas rechazadas/apagadas y no describen
 el estado actual de activación. Siguen pendientes aceptación temporal/móvil y
 coste amplio; la integración no cierra esas comprobaciones.

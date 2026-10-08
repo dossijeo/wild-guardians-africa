@@ -36,6 +36,7 @@ if(savedActive){const camera=new PerspectiveCamera(),controls={target:new Vector
 if(savedReserves||savedActive){const count=Number(params.get('copies')??1);if(!Number.isInteger(count)||count<1||count>4)throw Error('Invalid saved group copies');Game.tick(state,300,nav);state.nightPlan={at:400,group:Array.from({length:count},()=>params.has('attack-species')?[params.get('attack-species')]:['warthog','hyena','buffalo','lion','rhino']).flat(),done:false};Game.tick(state,99.9,nav);if(savedActive){Game.tick(state,.2,nav);savedRaid=JSON.stringify(state.raid);}savedPlan=JSON.stringify(state.nightPlan);state=deserialize(serialize(state));nav.setState(state);}
 const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting(quality);
 if(params.get('reuse-group-static')==='1'){world.assetGroups.dispose();world.assetGroups=new StaticGeometryResizeGroups(world.scene);}
+if(params.get('legacy-group-resize')==='1')world.assetGroups.reuseStaticOnResize=false;
 world.animalSkinEnvelope=params.get('skin-envelope')==='1';
 let loadedModelIds=[];if(savedActive){const reserve=world.prepareSavedAnimalRigs.bind(world);world.prepareSavedAnimalRigs=async state=>{await reserve(state);loadedModelIds=(await world.animalPreload.spares()).map(r=>r.model.uuid);};}
 const resources=params.get('resource-profile')==='1'?new BufferRequests(world.renderer.getContext()):null,resourceStages=[];

@@ -1,0 +1,129 @@
+{
+  "ok": true,
+  "errors": [],
+  "drawingBuffer": [
+    1280,
+    720
+  ],
+  "frames": [
+    {
+      "cpuMs": 47.89999997615814,
+      "calls": {
+        "compileShader": 0,
+        "linkProgram": 0,
+        "bufferData": 121,
+        "bufferSubData": 59,
+        "texImage2D": 0,
+        "texSubImage2D": 5,
+        "texImage3D": 0,
+        "texSubImage3D": 0,
+        "drawCompiles": []
+      }
+    },
+    {
+      "cpuMs": 19.299999952316284,
+      "calls": {
+        "compileShader": 0,
+        "linkProgram": 0,
+        "bufferData": 0,
+        "bufferSubData": 0,
+        "texImage2D": 0,
+        "texSubImage2D": 1,
+        "texImage3D": 0,
+        "texSubImage3D": 0,
+        "drawCompiles": []
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "reference": "base-A1",
+      "frames": [
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.00004810474537037037,
+        "maxRgbDifference": 28
+      }
+    },
+    {
+      "reference": "base-A2",
+      "frames": [
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.00016312210648148148,
+        "maxRgbDifference": 87
+      }
+    },
+    {
+      "reference": "candidate-B1-fixed",
+      "frames": [
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.000078125,
+        "maxRgbDifference": 28
+      }
+    },
+    {
+      "reference": "candidate-B2-fixed",
+      "frames": [
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.0000415943287037037,
+        "maxRgbDifference": 28
+      }
+    }
+  ],
+  "scope": "Production resize integration vs archived same-scene QA baseline/candidate. Not GPU timing; CPU campaigns, tests and build may overlap."
+}

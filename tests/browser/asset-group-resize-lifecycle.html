@@ -7,8 +7,10 @@ import {RenderGlCalls} from './render-gl-calls.js';
 const canvas=document.querySelector('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:false}),camera=new THREE.PerspectiveCamera(60,1,.1,100);renderer.setSize(256,256);camera.position.set(12,10,25);camera.lookAt(12,0,0);
 const gl=renderer.getContext(),resources=new BufferRequests(gl),probe=new RenderGlCalls(gl,renderer),reports=[];
 try{
- for(const Class of [NativeAssetGroups,StaticGeometryResizeGroups]){
+ for(const mode of ['legacy','production','candidate']){
+  const Class=mode==='candidate'?StaticGeometryResizeGroups:NativeAssetGroups;
   const scene=new THREE.Scene(),groups=new Class(scene);groups.origin={x:0,z:0};
+  if(mode==='legacy')groups.reuseStaticOnResize=false;
   const source=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial({color:0x94ca48})),mesh=new THREE.InstancedMesh(source.geometry,source.material,32),group=new THREE.Group();group.updateMatrixWorld(true);
   source.geometry.computeBoundingBox();source.geometry.computeBoundingSphere();for(let i=0;i<32;i++)mesh.setMatrixAt(i,new THREE.Matrix4().makeTranslation(i,0,0));
   const entry={group,mesh,level:0,batch:{uid:1,group:0,levels:[source]}},frames=[];
@@ -16,7 +18,7 @@ try{
    mesh.count=count;probe.begin();groups.prepare(groups.colors,'0',[entry],'color',{uploads:0,bytes:0});renderer.render(scene,camera);frames.push({count,calls:probe.end(),requests:resources.snapshot(),geometries:renderer.info.memory.geometries});
   }
   groups.dispose();const after=resources.snapshot(),geometries=renderer.info.memory.geometries;source.geometry.dispose();source.material.dispose();mesh.dispose();
-  reports.push({candidate:Class===StaticGeometryResizeGroups,frames,after,geometries,resizeStats:groups.resizeStats??null});
+  reports.push({mode,candidate:Class===StaticGeometryResizeGroups,frames,after,geometries,resizeStats:groups.resizeStats??null});
  }
  document.querySelector('#report').textContent=JSON.stringify({reports,error:gl.getError(),scope:'Actual Three.js/WebGL buffer disposal for isolated box groups. Not WorldScene image quality or GPU timing.'},null,2);
 }catch(e){document.querySelector('#report').textContent=JSON.stringify({error:e.stack,reports});}

@@ -12,7 +12,7 @@ function sameLayout(a,b){
 }
 
 export class StaticGeometryResizeGroups extends NativeAssetGroups {
- constructor(scene){super(scene);this.resizeStats={attempts:0,transferred:0,rejected:0};}
+ constructor(scene){super(scene);this.reuseStaticOnResize=false;this.resizeStats={attempts:0,transferred:0,rejected:0};}
  prepare(cache,key,entries,pass,stats){
   const previous=this.resizeScope,scope={cache,key,geometry:null};this.resizeScope=scope;
   try{
