@@ -1,0 +1,125 @@
+{
+  "scope": "Read-only metadata and diagnostic GPU fingerprints; not acceptance or causality",
+  "meshNames": [
+    "Mesh0"
+  ],
+  "frames": 31,
+  "changedFields": {
+    "program": 0,
+    "state": 0,
+    "uniforms": 0,
+    "textures": 0,
+    "attributes": 0,
+    "elementBuffer": 0,
+    "drawRange": 0,
+    "matrixWorld": 0,
+    "modelViewMatrix": 0,
+    "normalMatrix": 0,
+    "boneTexture": 0,
+    "gpuInputs": 0
+  },
+  "sameFramebufferReads": 12,
+  "sameFramebufferAllExact": true,
+  "allBoneFramebufferComplete": true,
+  "allBoneCpuGpuEqual": true,
+  "largestControlBytes": 21,
+  "control": {
+    "linearRgbMae": 0.0000030024257595909438,
+    "p99Approx": 0,
+    "maxTileMae": 0.010757437286277613,
+    "maxError": 0.20566058903932571,
+    "outliers": [
+      {
+        "pixels": 7,
+        "diameterUpperBound": 3.6055512754639896,
+        "bounds": [
+          623,
+          740,
+          625,
+          743
+        ],
+        "classification": "rgb"
+      }
+    ],
+    "passes": false
+  },
+  "firstInputs": {
+    "buffers": [
+      {
+        "attributes": [
+          "position"
+        ],
+        "size": 180960,
+        "bytes": 180960,
+        "fnv1a32": "d106557a"
+      },
+      {
+        "attributes": [
+          "normal"
+        ],
+        "size": 180960,
+        "bytes": 180960,
+        "fnv1a32": "f58db0b9"
+      },
+      {
+        "attributes": [
+          "uv"
+        ],
+        "size": 120640,
+        "bytes": 120640,
+        "fnv1a32": "f479489c"
+      },
+      {
+        "attributes": [
+          "tangent"
+        ],
+        "size": 241280,
+        "bytes": 241280,
+        "fnv1a32": "b7bd9a3d"
+      },
+      {
+        "attributes": [
+          "skinIndex"
+        ],
+        "size": 60320,
+        "bytes": 60320,
+        "fnv1a32": "96eca18f"
+      },
+      {
+        "attributes": [
+          "skinWeight"
+        ],
+        "size": 241280,
+        "bytes": 241280,
+        "fnv1a32": "eda18bbb"
+      },
+      {
+        "attributes": [
+          "index"
+        ],
+        "size": 119706,
+        "bytes": 119706,
+        "fnv1a32": "045d00a5"
+      }
+    ],
+    "boneTexture": {
+      "attempted": true,
+      "width": 12,
+      "height": 12,
+      "floatExtensionRequested": true,
+      "floatExtensionAvailable": true,
+      "cpu": {
+        "bytes": 2304,
+        "fnv1a32": "e21e9964"
+      },
+      "gpu": {
+        "bytes": 2304,
+        "fnv1a32": "e21e9964"
+      },
+      "framebufferStatus": 36053,
+      "nonfiniteReadValues": 0,
+      "cpuGpuFingerprintEqual": true
+    },
+    "meaning": "Bound VBO/index read via COPY_READ_BUFFER; bone texture only if source Float32 image and temporary read framebuffer complete. Original bindings/read buffer/active texture restored. Float color extension may be enabled; queries/readbacks perturb timing. FNV is diagnostic, not collision-free; no static map/environment/depth GPU texels observed. No candidate acceptance or causal proof."
+  }
+}
