@@ -14,6 +14,46 @@ function fixture({renderError=false}={}){
  return {scene,parent,root,original,calls,renderer,current:()=>current,restored(){assert.deepEqual(viewport.toArray(),[2,3,100,200]);assert.deepEqual(scissor.toArray(),[4,5,60,70]);assert.equal(scissorTest,false);assert.equal(renderer.autoClear,true);}};
 }
 
+test('opt-in owned compilation bypasses Three async polling and preserves native draw/fence recipe',async()=>{
+ const f=fixture(),material={};let queries=0;
+ f.renderer.compile=(root,camera,scene)=>{assert.equal(root,f.root);assert.equal(scene,f.scene);f.calls.push('compile-owned');return new Set([material]);};
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>++queries>=2}})};
+ f.renderer.compileAsync=()=>assert.fail('Three async timer must not start');
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,nextFrame:async()=>{}});
+ assert.equal(queries,2);assert.deepEqual(f.calls,['compile-owned','render','restore','fence','flush','delete']);
+ f.restored();assert.equal(f.root.parent,f.parent);releaseNativeFarGpuCache(f.renderer);
+});
+
+test('direct owned compilation observes owner cancellation while RAF is suspended',async()=>{
+ const f=fixture(),material={};let cancelled=false,queries=0;
+ f.renderer.compile=()=>new Set([material]);
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>{assert.equal(cancelled,false);queries++;return false;}}})};
+ f.renderer.compileAsync=()=>assert.fail('Three async timer must not start');
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,cancelled:()=>cancelled,nextFrame:()=>new Promise(()=>{})});
+ await new Promise(resolve=>setImmediate(resolve));cancelled=true;
+ await assert.rejects(pending,error=>error instanceof NativeFarGpuCancelled&&error.reason==='owner-cancelled');
+ const finalQueries=queries;await new Promise(resolve=>setTimeout(resolve,25));assert.equal(queries,finalQueries);
+ assert.deepEqual(f.calls,[]);f.restored();assert.equal(f.root.parent,f.parent);releaseNativeFarGpuCache(f.renderer);
+});
+
+test('direct owned compilation rejects context loss and restoration before another query',async()=>{
+ const f=fixture(),material={};f.renderer.domElement=new EventTarget();let queries=0;
+ f.renderer.compile=()=>new Set([material]);
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>{assert.equal(nativeFarGpuRevision(f.renderer),0);queries++;return false;}}})};
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true});
+ await new Promise(resolve=>setImmediate(resolve));f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));
+ await assert.rejects(pending,error=>error instanceof NativeFarGpuCancelled&&error.reason==='context-changed');
+ const finalQueries=queries;await new Promise(resolve=>setTimeout(resolve,25));assert.equal(queries,finalQueries);
+ assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
+test('direct owned compilation applies the native deadline without starting a draw',async()=>{
+ const f=fixture(),material={};f.renderer.compile=()=>new Set([material]);
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>false}})};
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{ownedCompilation:true,timeout:15}),/timed out/);
+ assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
 test('owned compiler candidate cancels the real preparation and stops its readiness queries',async()=>{
  const f=fixture(),texture=new Texture(),owner=new AbortController(),material={};let queries=0;
  f.renderer.compile=(root,camera,scene)=>{assert.equal(root,f.root);assert.equal(scene,f.scene);f.calls.push('compile-owned');return new Set([material]);};

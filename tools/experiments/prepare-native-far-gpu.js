@@ -1,5 +1,6 @@
 import {Vector4} from 'three';
 import {withGpuRootIsolation} from './isolated-gpu-root.js';
+import {compileGpuPreparation} from './compile-gpu-preparation.js';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
@@ -30,8 +31,9 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false,ownedCompilation=false}={}){
  if(typeof isolateRoot!=='boolean')throw Error('Invalid isolated GPU preparation option');
+ if(typeof ownedCompilation!=='boolean')throw Error('Invalid owned GPU compilation option');
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
@@ -49,7 +51,11 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
    if(end<pending.length)await nextFrame();
   }
   check();
-  await renderer.compileAsync(root,camera,scene);check();checkErrors('after compilation');
+  // Explicit QA gate: preserve the original recipe until native cancellation,
+  // visual and traveling checks validate the owned readiness poll.
+  if(ownedCompilation)await compileGpuPreparation(renderer,root,camera,scene,{check});
+  else await renderer.compileAsync(root,camera,scene);
+  check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.

@@ -56,9 +56,24 @@ lost/restored epoch, never-ready deadline, query fault, and no late queries,
 draws or readiness fences after cancellation. The candidate remains unimported
 by runtime while the original resource audit recipe is being measured.
 
-This candidate is not imported by production or the pending native resource
-fixture, preserving its source while browser recovery remains unresolved.
-Next: connect it at the compilation wait, validate the direct integration,
-and rerun native
-loading/streaming cancellation QA after tab 846 is confirmed closed. The open
-resource audit and visual/performance gates remain incomplete.
+Browser recovery and the paired resource audit subsequently completed; see
+`isolation-cheap-resources/README.md`. That audit used the original compiler,
+so it is not evidence for the owned compilation option.
+
+The preparation API now imports this helper behind `ownedCompilation: true`.
+All three far-world preparation sites forward only an explicit
+`world.farOwnedCompilation === true`; ordinary production keeps the original
+compiler. The traveling fixture exposes `?ownedCompilation` and records that
+choice in the report. This is a QA integration gate, not production activation.
+
+Four new tests call the real option directly, without replacing compileAsync:
+successful selected-program polling preserves the native upload/fence recipe;
+owner cancellation works with suspended RAF; a lost/restored context rejects
+before another stale query; and the existing deadline interrupts never-ready
+programs before any draw. The directed suite now has 65 passing tests. The
+earlier injection tests remain as separate lower-level evidence.
+
+Next: native browser cancellation, exact shader-recipe and traveling regression
+checks with the explicit option. Texture frame yields, decoding and fence waits
+remain separate lifecycle gaps; this compilation option does not fix or claim
+to fix them. Visual/performance gates and production activation remain pending.
