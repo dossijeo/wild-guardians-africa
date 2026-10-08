@@ -58,7 +58,8 @@ el archivado; sourceHashes.navigation identifica ahora correctamente el origen.
 
 ## Decisión
 
-V3 supera estos casos, pero permanece exclusivamente en QA. Faltan escenarios
+V3 supera estos casos locales, pero la ampliación descrita debajo encuentra
+un fallo nativo: **se descarta como solución preventiva por sí sola**. Faltan escenarios
 de riesgo en todos los biomas (especialmente Gran Cañón), diferentes dt,
 segmentos de animación/desvíos entre actores, restitución de más guardados y
 coste en fincas/rutas distintas. Muestrear más fino puede seguir dejando
@@ -71,3 +72,43 @@ el recibo comprueba bytes/SHA-256. Los runners usan el guardado original de
 `docs/qa/intensive-sabana-musgum-e461b550/state.json.gz` y el perfil real.
 Para reproducir, restituir sus rutas .cache originales, V2 del archivo anterior
 y ejecutar prepare, quality, connector, restore, native return y benchmark.
+
+## Ampliación y fallo adversarial nativo
+
+Cinco continuaciones de cien ticks cada una en el mismo guardado histórico,
+dt=0,01 / 0,025 / 0,05 / 0,25 / 0,5, no observan entradas de válido a inválido.
+Representan distinta duración simulada; no son un benchmark ni trabajo igual.
+
+La pasada inicial de seis biomas buscaba pendientes >=0,46 en [-80,80] y no
+encontró casos para cuatro biomas. Se conserva como evidencia insuficiente,
+no como aprobación. Su texto de scope heredado menciona terrainSite, pero
+newGame no pobló edificios y setState dejó terrainSite ausente: esa etiqueta
+no acredita que se probase una plataforma de poblado real.
+
+La pasada final utiliza posiciones de hash determinista en [-160,160],
+seed712, terreno y props reales, 32 conectores originalmente aceptados por
+bioma. Manglares usa conectores ordinarios de baja pendiente, porque la
+búsqueda inicial no encontró puntos de riesgo. Otros cinco biomas parten de
+uno a tres puntos de riesgo: muchos conectores comparten origen, no son
+32 regiones independientes. Cuatro dt por brazo (0,01/0,1/0,25/0,5), 1536
+recorridos construidos en total, sin posiciones inválidas observadas.
+Edificios no poblados, sin finca, salarios, tareas o multitudes; no aceptación
+de campaña ni pruebas de caminos alternativos, porque todos los candidatos
+de esta muestra aceptaron sus conectores.
+
+Un barrido dirigido sobre el terreno histórico real, cerca del problema ya
+observado, cambia esta decisión favorable local: el candidato acepta el tramo
+(112,7455;9,867) → (112,8455;9,867). Sus once muestras de terreno cada 1 cm
+son válidas. Un trabajador construido con estado walking, navegación/path
+ordinarios y dt=0,01 entra en (112,7959;9,867) tras siete pasos: pendiente
+máxima 0,50002473756, superior al límite 0,5. No se modificó el terreno ni se
+forzó la ruta; nav.path devuelve directamente el destino aceptado.
+Se probaron 1092 segmentos y el primero aceptado reproduce el fallo.
+
+No basta con seguir reduciendo la separación de las muestras. Próximo trabajo:
+protección de avance en segmentos de riesgo y replanning que no deje al
+trabajador detenido frente al mismo tramo. El guard universal previo evitaba
+el fallo pero bloqueaba el recorrido y tenía coste mayor: tampoco se acepta.
+Conservar recuperación de retornos marginales, restricciones, velocidad,
+destino, guardado y propiedad/invalidation de caché. Ningún cambio de runtime
+se integra con este archivo de resultados negativos.

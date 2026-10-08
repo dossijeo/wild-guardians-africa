@@ -13,4 +13,8 @@ const connector=read('connector');assert.equal(connector.reached,true);assert.eq
 const b=read('benchmark');assert.deepEqual(b.runs.map(x=>x.mode),['reference','candidate','candidate','reference']);assert.deepEqual(b.runs[0].hashes,b.runs[3].hashes);assert.deepEqual(b.runs[1].hashes,b.runs[2].hashes);assert.deepEqual(b.firstDivergence,[-1,0,0,-1]);assert.equal(b.sourceHashes.candidate,createHash('sha256').update(raw('candidate-navigation.mjs.gz')).digest('hex'));
 const returning=read('native-return');assert.equal(returning.rows.length,27);assert(returning.rows.every(x=>x.firstValid&&x.homeTick!==null));assert.equal(Math.max(...returning.rows.map(x=>x.homeTick)),684);
 const restore=read('restore');assert.equal(restore.rows.length,40);assert(restore.rows.every(x=>/^[a-f0-9]{64}$/.test(x.sha256)));
+const time=read('time-steps');assert.deepEqual(time.results.map(x=>x.dt),[.01,.025,.05,.25,.5]);assert(time.results.every(x=>x.violations===0));
+const biomes=read('biomes');assert.equal(biomes.results.length,6);assert(biomes.results.every(x=>x.cases.length===32));assert.equal(biomes.results.flatMap(x=>x.cases).flatMap(x=>x.runs).length,1536);assert(biomes.results.every(x=>x.summary.referenceViolations===0&&x.summary.candidateViolations===0));
+assert.equal(biomes.sourceSha256,b.sourceHashes.candidate);
+const boundary=read('boundary');assert.equal(boundary.tested,1092);assert.equal(boundary.accepted,1);assert.equal(boundary.failure.dt,.01);assert(boundary.failure.peak>.5);assert.equal(boundary.failure.rows.at(-1).valid,false);assert(boundary.failure.plannerSamples.every(x=>x.valid));assert.equal(boundary.failure.path.length,1);
 console.log('PASS archive integrity and scoped V3 outcomes; no production promotion');
