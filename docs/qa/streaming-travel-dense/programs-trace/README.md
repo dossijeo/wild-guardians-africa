@@ -25,6 +25,16 @@ textures in bounded batches, preserving native material/alpha/skinning/shadow
 recipes and avoiding the full-resident warmup's large buffer increase. The
 current candidate remains QA-only and fails the stable-travel objective.
 
+Three r180's native shadow traversal calls `renderBufferDirect` with a null
+scene (no fog/environment) after resolving custom depth, alpha/clipping and
+shadow-side rules. Compiling a guessed depth material against the color scene
+does not establish a matching shadow variant. The trace fixture now records
+actual renderer program IDs/names/cache keys at readiness, immediately before
+travel and after each travel render. This distinguishes newly observed programs
+from those prepared before movement, without reading GL bindings or forcing
+reflection in the trace collector. It is diagnostic instrumentation only;
+native QA and cache-key comparison remain required before using it as evidence.
+
 Run `node tools/experiments/travel-span-analysis.mjs docs/qa/streaming-travel-dense/programs-trace/closed.json.gz`
 to reproduce temporal association. Nested category durations overlap; never sum
 them. Raw report hash and fixture provenance are in receipt.json. The endpoint

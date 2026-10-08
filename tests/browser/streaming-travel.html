@@ -60,6 +60,9 @@ try{
  const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
  const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
  const initialStream=world.chunkStream.summary();
+ const programEvents=[],seenPrograms=new Set();
+ const capturePrograms=stage=>{if(!params.has('trace'))return;for(const program of world.renderer.info.programs){if(seenPrograms.has(program))continue;seenPrograms.add(program);programEvents.push({stage,at:running?performance.now()-started:null,id:program.id,name:program.name,cacheKey:program.cacheKey});}};
+ capturePrograms('ready');
  if(params.has('trace'))for(const name of ['compileAsync','render','initTexture']){
   const original=world.renderer[name];world.renderer[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running)segments.push({name,at:begin-started,cpuMs:performance.now()-begin});}};
  }
@@ -89,7 +92,7 @@ try{
  document.querySelector('#dispose').disabled=false;document.querySelector('#dispose').onclick=dispose;
  document.querySelector('#run').disabled=false;
  document.querySelector('#run').onclick=()=>{
-  if(running||report)return;world.controls.enabled=false;running=true;started=performance.now();previous=0;frames.length=0;installs.length=0;longTasks.length=0;document.querySelector('#run').disabled=true;
+  if(running||report)return;capturePrograms('before-travel');world.controls.enabled=false;running=true;started=performance.now();previous=0;frames.length=0;installs.length=0;longTasks.length=0;document.querySelector('#run').disabled=true;
   output({running:true,duration,speed,biome,quality,culture});
  };
  const frame=timestamp=>{
@@ -99,10 +102,10 @@ try{
     const elapsed=Math.min(duration,(timestamp-started)/1000),distance=speed*Math.max(0,elapsed),dx=Math.sin(angle)*distance,dz=Math.cos(angle)*distance;
     world.controls.target.copy(startTarget);world.controls.target.x+=dx;world.controls.target.z+=dz;
     world.camera.position.copy(startEye);world.camera.position.x+=dx;world.camera.position.z+=dz;
-    const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();
+    const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();capturePrograms('travel');
     frames.push({at:timestamp-started,intervalMs:previous?timestamp-previous:null,cpuMs,chunks:world.chunks.size,created:world.chunkStream.stats.created,queued:world.chunkStream.queue.length,busy:!!world.chunkStream.busy,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,hidden:document.hidden});previous=timestamp;
     if(elapsed>=duration){
-     running=false;finishedAt=performance.now();resourceStage('after-travel');report={done:true,isolatedPreparation:world.farIsolatedPreparation,residentPreparation,residentTexturePreparation,actorReadiness,resourceStages,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:resources?'Resource QA only: bufferData requests after WorldScene construction, not physical VRAM, textures or RAM. Binding queries perturb timing; do not compare frametimes.':'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
+     running=false;finishedAt=performance.now();resourceStage('after-travel');report={done:true,isolatedPreparation:world.farIsolatedPreparation,residentPreparation,residentTexturePreparation,actorReadiness,resourceStages,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,programEvents,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:resources?'Resource QA only: bufferData requests after WorldScene construction, not physical VRAM, textures or RAM. Binding queries perturb timing; do not compare frametimes.':'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
     }
    }else {world.render(dt);if(report&&timer.pending.length&&performance.now()-finishedAt<5000){timer.poll();report.gpu=timer.report();output(report);}}
   }catch(error){errors.push(String(error));dispose();output({done:true,failed:true,errors});return;}
