@@ -1,0 +1,66 @@
+import {attachHumanVisualReview} from '../../tools/lib/frontside-human-visual-review.mjs';
+import * as THREE from 'three';
+import {Assets} from '../../src/rendering/assets.js';
+import {createCropBatch} from '../../src/rendering/crop-batch.js';
+import {cropSpec} from '../../src/simulation/rules.js';
+import {AfricanToon} from '../../src/rendering/african-toon.js';
+import {SceneMaterialRegistry} from '../../src/rendering/material-registry.js';
+import {NativeSky} from '../../src/rendering/sky.js';
+import {installNativeShadow} from '../../src/rendering/native-shadow.js';
+import {configureShadowCamera,updateShadowCamera} from '../../src/rendering/shadow-camera.js';
+import {createQaResourceScope} from '../../tools/lib/frontside-qa-resource-scope.mjs';
+import {regions,alphaDistanceGate,accumulateControlEnvelope,controlEnvelopeMetrics} from '../../tools/lib/frontside-visual-metrics.mjs';
+const size=1024,status=document.querySelector('#status'),linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let renderer,activeScope,lastCleanup;
+function metrics(a,b,envelope){
+ let source=0,union=0,intersection=0,missing=0,added=0,error=0,channels=0;const hist=new Uint32Array(256),tiles=new Float64Array(4096),counts=new Uint32Array(4096),missingMask=new Uint8Array(size*size),alpha=new Uint8Array(size*size),rgb=new Uint8Array(size*size);
+ for(let p=0;p<size*size;p++){const o=p*4,aa=!!a[o+3],bb=!!b[o+3];source+=aa;intersection+=aa&&bb;missing+=aa&&!bb;added+=!aa&&bb;if(!aa&&!bb)continue;union++;alpha[p]=aa;missingMask[p]=aa&&!bb;const tile=Math.floor(p/size/16)*64+Math.floor(p%size/16);for(let c=0;c<3;c++){const delta=Math.abs(linear[a[o+c]]-linear[b[o+c]])+envelope[p*3+c];error+=delta;channels++;tiles[tile]+=delta;counts[tile]++;hist[Math.min(255,Math.ceil(delta*255))]++;if(delta>.03)rgb[p]=1;}}
+ let cumulative=0,p99=0;for(let i=0;i<256;i++){cumulative+=hist[i];if(cumulative>=channels*.99){p99=i/255;break;}}
+ const out={alphaIoU:intersection/Math.max(union,1),missingPixels:missing,addedPixels:added,missingFraction:missing/Math.max(source,1),addedFraction:added/Math.max(source,1),linearRgbMae:error/Math.max(channels,1),p99Approx:p99,maxTileMae:Math.max(...Array.from(tiles,(v,i)=>counts[i]?v/counts[i]:0)),missingRegions:regions(missingMask,size,alpha),rgbOutlierRegions:regions(rgb,size),alphaDistanceGate:alphaDistanceGate(a,b,size)};
+ out.passes=out.alphaIoU>=.9995&&out.missingFraction<=.00025&&out.addedFraction<=.0005&&out.alphaDistanceGate.passes&&out.linearRgbMae<=.002&&out.p99Approx<=.015&&out.maxTileMae<=.01&&!out.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2)&&!out.rgbOutlierRegions.some(r=>r.pixels>16);return out;
+}
+
+import {sharedLeafReverseGeometry,preserveSharedLeafBackRecipe} from '../../tools/lib/frontside-shared-leaf-reverse.mjs';
+async function run(){
+ const scope=createQaResourceScope();activeScope=scope;
+ try{
+ const options=new URLSearchParams(location.search);if(options.get('limit')!=='1'||[...options.keys()].some(k=>!['limit','cpuCampaigns'].includes(k)))throw Error('Only one recorded human-review view is supported');
+ const [manifest,receipt,webMapping]=await Promise.all([fetch('/content/models.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/maize-blender-leaf-reduction-diagnostic.json').then(r=>r.json()),fetch('/content/manifests/web-assets.json').then(r=>r.json())]);scope.assertOpen();
+ const url=manifest.find(m=>m.source.includes('Cultivos')).url,mapping=webMapping.records.find(r=>r.sourceSha256===receipt.sourceSha256);
+ if(!mapping||url.replace(/^\//,'')!==mapping.runtime||receipt.mesh!=='maiz_05_maduro'||receipt.leafRatio!==.5)throw Error('Fixed source/runtime/Blender receipt identity mismatch');
+ const response=await fetch('/__frontside_candidate/maize-leaf-reduction');if(!response.ok)throw Error('Immutable leaf archive unavailable');const bytes=await response.arrayBuffer();
+ const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');if(hash!==receipt.archiveSha256)throw Error('Blender archive bytes hash mismatch');const payload=JSON.parse(new TextDecoder().decode(bytes));scope.assertOpen();
+ renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,preserveDrawingBuffer:true});scope.defer('renderer context',()=>renderer.forceContextLoss());scope.defer('renderer resources',()=>renderer.dispose());renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.querySelector('#view').append(renderer.domElement);
+ const gl=renderer.getContext(),assets=new Assets();scope.defer('source Assets',()=>assets.disposeModels());const [gltf,bridges]=await Promise.all([assets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json())]);scope.assertOpen();
+ const scene=new THREE.Scene(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(scene,toon);scope.defer('material registry',()=>registry.dispose());const sky=new NativeSky();scope.defer('NativeSky',()=>sky.dispose());await sky.load();scope.assertOpen();toon.environment(sky.environmentTextures,sky.uniforms.uSkyYaw);
+ const sun=new THREE.DirectionalLight('#ffe2a8',3),ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);updateShadowCamera(sun,new THREE.Vector3());scene.add(sun,sun.target,ambient);scope.defer('directional shadow targets',()=>sun.shadow.dispose());const release=installNativeShadow(renderer,sun,toon.shadowUniforms);scope.defer('native shadow hook',()=>release());release.cache.enabled=false;
+ const sample={growth:1,clock:1.75,biome:'sabana',night:0,elevation:32.5,azimuth:26.25},rigs=[];
+ for(let arm=0;arm<4;arm++){const group=new THREE.Group(),batch=createCropBatch(group,renderer,gltf,bridges,2);scope.defer('crop batch '+arm,()=>batch.dispose());scene.add(group);const target=group.getObjectByName(payload.mesh);if(!target?.isInstancedMesh)throw Error('Mature source mesh missing');rigs.push({group,batch,target});}
+ // Wrap each original material with the REAL toon recipe before cloning it.
+ // Then exclude only those already-wrapped derivative materials from rewrap.
+ toon.update(sample.night,sun,sample.biome);registry.update(sample.clock);
+ const resources=[];
+ for(let arm=0;arm<4;arm++){
+  const {target}=rigs[arm],source=target.geometry,original=target.material;
+  if(arm===1){const indexed=source.clone();for(const [name,attribute] of Object.entries(source.attributes))if(attribute.isInstancedBufferAttribute)indexed.setAttribute(name,attribute);scope.defer('indexed control '+arm,()=>indexed.dispose());target.geometry=indexed;}
+  if(arm>=2){const result=sharedLeafReverseGeometry(source,payload,{reverseLeaves:arm===3});scope.defer('derived geometry '+arm,()=>result.geometry.dispose());target.geometry=result.geometry;
+   if(arm===3){const materials=[0,1,2].map(part=>{const material=original.clone();material.onBeforeCompile=original.onBeforeCompile;material.customProgramCacheKey=original.customProgramCacheKey;material.side=THREE.FrontSide;material.defines={...material.defines,DOUBLE_SIDED:''};material.shadowSide=THREE.DoubleSide;if(part===2)preserveSharedLeafBackRecipe(material);scope.defer('derived material '+part,()=>material.dispose());return material;});target.material=materials;target.userData.materialRegistryExcluded=true;scope.defer('restore source material',()=>{target.material=original;});}
+   resources.push({arm,vertices:result.uniqueVertices,triangles:result.geometry.index.count/3,attributeBytes:result.attributeBytes,indexBytes:result.indexBytes,groups:result.geometry.groups,liveGrowthShared:result.geometry.getAttribute('iGrowth')===source.getAttribute('iGrowth')});
+  }
+ }
+ for(const rig of rigs)rig.batch.update([{id:'1',species:'maiz',x:0,z:0,growth:cropSpec('maiz').growth_seconds}],sample.clock,()=>0);
+ const camera=new THREE.PerspectiveCamera(35,1,.01,100),height=rigs[0].batch.sample('maiz',cropSpec('maiz').growth_seconds).height,center=new THREE.Vector3(0,height*.5,0),a=sample.azimuth*Math.PI/180,e=sample.elevation*Math.PI/180;camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(Math.max(.65,height*.7)*3));camera.lookAt(center);camera.updateMatrixWorld();
+ const report={status:'VISUAL_SCREEN_NOT_APPROVED',cropVisual:true,sharedLeafReverseHuman:true,metricPolicyVersion:2,source:url,sourceOriginal:mapping.source,runtimeSource:mapping.runtime,sourceMapping:{source:mapping.source,runtime:mapping.runtime,sourceSha256:mapping.sourceSha256,runtimeSha256:mapping.runtimeSha256},archiveSha256:hash,viewProfile:'SHARED_LEAF_HUMAN_REVIEW_V3',prospectiveCase:sample,arms:['original DoubleSide','cloned indexed original DoubleSide','derived shared leaves DoubleSide','same derived geometry plus shared reverses; three FrontSide groups'],resources,controls:[],comparisons:[],drawInfo:[],contextAttributes:gl.getContextAttributes(),campaignConditions:{cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false},limitations:['Mature maize only. All bridges/other states remain original; transition correspondence and category adaptation unresolved.','Colour FrontSide, shadowSide/customDepth DoubleSide isolation only; no shadowFront approval.','Human comparison pending. Diagnostic values do not decide appearance. No GPU timing, resident memory or net benefit measured.','Blender .5 geometry is an explicit historical derivative reevaluated under user policy3, not automatically approved.']};
+ const pixels=[],envelope=new Float64Array(size*size*3);
+ for(let arm=0;arm<4;arm++){rigs.forEach((rig,i)=>rig.group.visible=i===arm);renderer.info.reset();renderer.render(scene,camera);report.drawInfo.push({arm,...renderer.info.render});const frame=new Uint8Array(size*size*4);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,frame);pixels.push(frame);
+  if(arm===0){for(let j=0;j<3;j++){renderer.render(scene,camera);const repeat=new Uint8Array(frame.length);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);report.controls.push(accumulateControlEnvelope(envelope,frame,repeat,linear));}report.control=controlEnvelopeMetrics(envelope,frame,size);}else report.comparisons.push({arm,...metrics(pixels[0],frame,envelope)});
+ }
+ report.materialSides=rigs.map(({target},arm)=>({arm,sides:(Array.isArray(target.material)?target.material:[target.material]).map(m=>m.side),shadowSides:(Array.isArray(target.material)?target.material:[target.material]).map(m=>m.shadowSide)}));
+ const canvas=document.createElement('canvas');canvas.width=size*4;canvas.height=size;const ctx=canvas.getContext('2d');pixels.forEach((frame,arm)=>{const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(frame.subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);});report.capturePng=canvas.toDataURL('image/png');const retained=document.createElement('img');retained.src=report.capturePng;retained.alt=report.arms.join('; ');await retained.decode();document.querySelector('#view').replaceChildren(retained);
+ scope.assertOpen();report.cleanup=scope.cleanup();report.contextLost=gl.isContextLost();attachHumanVisualReview(report);
+ const details=document.createElement('pre'),{capturePng,...visible}=report;details.textContent=JSON.stringify(visible,null,2);document.querySelector('#view').after(details);
+ const exported=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!exported.ok)throw Error(await exported.text());status.textContent='Comparación guardada. GPU liberada. REVISIÓN HUMANA PENDIENTE. Sin benchmark.';
+ }finally{lastCleanup=scope.cleanup();if(activeScope===scope)activeScope=null;}
+}
+document.querySelector('#stop').onclick=()=>{status.textContent+='\nCancelado '+JSON.stringify(activeScope?.cleanup());};
+document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await run();}catch(error){status.textContent=error.stack+'\nCleanup '+JSON.stringify(lastCleanup);}};
+document.querySelector('#run').disabled=false;status.textContent='Preparado: hojas derivadas, reversos con atributos compartidos. Revisión humana pendiente.';

@@ -28,6 +28,10 @@ export function preserveSharedLeafBackRecipe(material){
  const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
  material.onBeforeCompile=function(shader,renderer){
   compile?.call(this,shader,renderer);
+  // Shader chunks have not yet been expanded by Three at this callback.
+  const include='#include <normal_fragment_begin>';
+  if(!shader.fragmentShader.includes(include))throw Error('Missing native normal chunk');
+  shader.fragmentShader=shader.fragmentShader.replace(include,THREE.ShaderChunk.normal_fragment_begin);
   if(!shader.fragmentShader.includes('gl_FrontFacing'))throw Error('Missing native face direction recipe');
   // A reversed geometric face is culled as FrontSide but corresponds to the
   // original back face. This includes AfricanToon's own face-direction uses,
