@@ -1,0 +1,73 @@
+{
+  "baseGitHead": "1f2031ad609e6d7f5a5454cf98839eb11b16161b",
+  "productionChanged": true,
+  "benchmark": false,
+  "observerSession": 7357,
+  "nativeSession": 26852,
+  "buildSession": 21974,
+  "exitCodes": [
+    0,
+    0,
+    0
+  ],
+  "pieces": [
+    {
+      "path": "observer.json.gz",
+      "rawBytes": 14267,
+      "sha256": "dd101e445848f881806a8c2b5aa5a7501a3f64c10ca30b53a16294ad22b5289f"
+    },
+    {
+      "path": "native-return.json.gz",
+      "rawBytes": 12447,
+      "sha256": "ce0d033a301accc7405276513c9867ebb8a3556472d1eb5ee21628268c6e0b1b"
+    },
+    {
+      "path": "native-runner.mjs.gz",
+      "rawBytes": 2969,
+      "sha256": "8103e6d178182adb7ef7b106b70a3e2c4e9e1e7bcf929f49a83c08f411960694"
+    },
+    {
+      "path": "recovery-source.js.gz",
+      "rawBytes": 2591,
+      "sha256": "6ef690dd055479608ac164b4adadc1f033036f60d837c2b176ca2998c3a3c1bd"
+    },
+    {
+      "path": "game-source.js.gz",
+      "rawBytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "path": "build.log.gz",
+      "rawBytes": 1235,
+      "sha256": "bca6b74bb7b0a45627f0c5054b10836957b5d066bac0fb7430ae96e054bb8d32"
+    },
+    {
+      "path": "package.log.gz",
+      "rawBytes": 323,
+      "sha256": "d76039481efcdecb37dd14482f1c5e0c54673970bed8ecb1b1a52ab2a0df1677"
+    }
+  ],
+  "directedTests": {
+    "routingRegression": 67,
+    "recoveryTestsFinal": 11,
+    "exitCodes": [
+      0,
+      0
+    ]
+  },
+  "webPackageExitCode": 0,
+  "fullSuite": {
+    "session": 94839,
+    "parentNodePid": 49328,
+    "status": "running",
+    "remainingFilesAtObservation": [
+      "tests/active-farm.test.js",
+      "tests/campaign.test.js"
+    ],
+    "childPids": [
+      26996,
+      43612
+    ],
+    "log": ".cache/worker-slope-full-tests.log"
+  }
+}
