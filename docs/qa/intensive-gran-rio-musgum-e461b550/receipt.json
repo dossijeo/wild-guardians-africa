@@ -1,0 +1,37 @@
+{
+  "historicalCampaign": "e461b550",
+  "ambientRecordedHead": "25e004084bcb3f72266af97ab732b302f874db5f",
+  "comparedMain": "68abc5b8",
+  "records": {
+    "summary": {
+      "sha256": "249f044ff7f1d45ec99aff484af310dbf3dfdcb24dbdbc6e4699fcf91901d55a",
+      "bytes": 73180
+    },
+    "report": {
+      "sha256": "7d2de0aa0b4cc1f69eca42c1fb5d6a4c13692aebc4b2e9ba64ac72ed6c726cf1",
+      "bytes": 93495
+    },
+    "state": {
+      "sha256": "685474e5a2f3edc3f6e01f25d615f4121ea55038058762d368c8426d9b9f41f5",
+      "bytes": 14333505
+    },
+    "process": {
+      "sha256": "7608ff4498a2b5eec4dfd7912d5687efac9ba8b3a7dd0520eff8d6b619cc3bf9",
+      "bytes": 184
+    }
+  },
+  "domainFilesCompared": 54,
+  "domainMismatches": [
+    "src/persistence/snapshots.js",
+    "src/simulation/animal-route-clearance.js",
+    "src/simulation/game.js",
+    "src/simulation/raids.js",
+    "src/simulation/worker-entity-lookup.js",
+    "src/world/active-region.js",
+    "src/world/fluid-placement.js",
+    "src/world/navigation.js"
+  ],
+  "idleCriterion": 0.2,
+  "idleAccepted": false,
+  "scope": "Historical completed domain strategy; source mismatch prevents current-main acceptance. Victory verified separately from idle target."
+}
