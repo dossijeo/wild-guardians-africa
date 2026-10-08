@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {LoadingCinematic} from '../src/rendering/loading-cinematic.js';
+function fixture(){const camera=new THREE.PerspectiveCamera(42,1,.1,500);camera.position.set(8,7.5,10);const target=new THREE.Vector3(0,.18,0);camera.lookAt(target);const calls=[],world={camera,controls:{target,enabled:false},nav:{field:{surface:()=>0}},objects:new Map(),state:{villages:[],structures:[],plants:[{id:'real-crop'}]},render(){calls.push('world');}},diorama={camera:camera.clone(),stopPlanting(){this.stopped=true;},render(dt,progress,options){calls.push(options.skyOnly?'sky':'diorama');}};return {world,diorama,calls};}
+test('camera sky handoff and travel preserve exact gameplay pose and simulation state',async()=>{
+ const {world,diorama,calls}=fixture(),before=JSON.stringify(world.state),eye=world.camera.position.toArray(),q=world.camera.quaternion.toArray(),target=world.controls.target.toArray(),cinema=new LoadingCinematic(world,diorama);
+ cinema.step(.35);assert.equal(calls.at(-1),'diorama');cinema.step(.4);assert.equal(calls.at(-1),'sky');assert.deepEqual(world.camera.quaternion.toArray(),diorama.camera.quaternion.toArray());cinema.step(.7);assert.equal(calls.at(-1),'world');cinema.step(3);await cinema.finished;
+ assert.deepEqual(world.camera.position.toArray(),eye);assert.deepEqual(world.camera.quaternion.toArray(),q);assert.deepEqual(world.controls.target.toArray(),target);assert.equal(world.cinematic,false);assert.equal(JSON.stringify(world.state),before);assert.ok(diorama.stopped);
+});
+test('reduced motion completes with the same exact final pose',async()=>{const {world,diorama}=fixture(),eye=world.camera.position.clone(),cinema=new LoadingCinematic(world,diorama,{reducedMotion:true});cinema.step(.5);await cinema.finished;assert.deepEqual(world.camera.position,eye);assert.equal(cinema.done,true);});
+test('cancelled cinematic restores the camera and rejects completion',async()=>{const {world,diorama}=fixture(),eye=world.camera.position.clone(),cinema=new LoadingCinematic(world,diorama);cinema.step(.8);cinema.cancel();await assert.rejects(cinema.finished,/cancelled/);assert.deepEqual(world.camera.position,eye);assert.equal(world.cinematic,false);});

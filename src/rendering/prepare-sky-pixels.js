@@ -10,6 +10,7 @@ export function prepareSkyPixelsAsync(buffer,index,{signal,createWorker=()=>new 
   const finish=(error,result)=>{if(settled)return;settled=true;signal?.removeEventListener('abort',abort);worker.terminate();error?reject(error):resolve(result);};
   const abort=()=>finish(new Error('Sky preparation cancelled'));
   signal?.addEventListener('abort',abort,{once:true});
+  if(signal?.aborted){abort();return;}
   worker.onmessage=event=>event.data.error?finish(new Error(event.data.error)):finish(null,event.data);
   worker.onerror=event=>finish(new Error(event.message??'Sky worker failed'));
   try{worker.postMessage({buffer,index},[buffer]);}catch(error){finish(error);}

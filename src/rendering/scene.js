@@ -1,3 +1,4 @@
+import {compileLoadingPrograms} from './loading-programs.js';
 import {createRendererWithGlEpoch} from './gl-resource-epoch.js';
 import {FluidGpuPreload} from './fluid-preload.js';
 import {chunkInPropTransition} from './prop-transition-residency.js';
@@ -33,7 +34,7 @@ import {waterTime} from './world-atmosphere.js';
 import {nativeChunkWater,nativeAssetWater,nativeWaterBuffer} from './water-geometry.js';
 import {cropSpec} from '../simulation/rules.js';
 import {BIOME_IDS} from '../world/navigation.js';
-import {createCropBatch} from './crop-batch.js';
+import {createCropBatch,createCropBatchAsync} from './crop-batch.js';
 import {applyWorkerPose,nativeCrate} from './worker-actions.js';
 import {applyAnimalPose,prepareAnimalClips,animalGroundSamples,prepareAnimalModel} from './animal-actions.js';
 import {NativeHands} from './hands.js';
@@ -90,7 +91,7 @@ export class WorldScene {
     canvas.addEventListener('pointerup',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('pointercancel',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('wheel',()=>this.raidCamera?.cancel(),listenerOptions);
-    let down=null;canvas.addEventListener('pointerdown',e=>{if(e.button===0&&!e.shiftKey)down=[e.clientX,e.clientY];},listenerOptions);canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;},listenerOptions);
+    let down=null;canvas.addEventListener('pointerdown',e=>{if(e.button===0&&!e.shiftKey)down=[e.clientX,e.clientY];},listenerOptions);canvas.addEventListener('pointerup',e=>{if(this.controls.enabled&&this.state&&down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;},listenerOptions);
     canvas.addEventListener('pointercancel',()=>{down=null;},listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>this.onContextRestored?.(),listenerOptions);
@@ -116,40 +117,42 @@ export class WorldScene {
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {this.quality=quality;this.farVegetation?.configureQuality?.(quality);this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
   async loadReady(pending,releaseLate){const value=await pending;if(this.disposed){releaseLate?.(value);throw new Error('Carga de mundo cancelada');}return value;}
-  async load(state,nav,villagePayload,{farVegetation=false}={}) {
-    await this.loadReady(this.sky.load());this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await this.loadReady(this.assets.biome(this.pack));this.biomeGround=new BiomeGround();await this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);
+  async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
+    this.loadingProgress=loadingProgress;
+    const milestone=async id=>{loadingProgress?.update(id);if(loadingProgress){await new Promise(resolve=>requestAnimationFrame(resolve));if(this.disposed)throw Error('World loading cancelled');}};
+    await this.loadReady(this.sky.load());this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await this.loadReady(this.assets.biome(this.pack));this.biomeGround=new BiomeGround();await this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
     this.villagePrototypes=await this.loadReady(this.assets.village(villagePayload));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
-    await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));
+    await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));await milestone('buildings');
     [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
     this.warmedAnimals=new Set();
     this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
     this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
-    await this.loadReady(this.warmAnimalModels(Object.keys(animalSources)));
+    await this.loadReady(this.warmAnimalModels(Object.keys(animalSources)));await milestone('animals');
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.loadReady(this.assets.model(cropModel.url));this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
-    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
-    this.wallPrototypes=await this.loadReady(this.assets.walls(await this.loadReady(json('/content/walls.json',{signal:this.loading.signal}))));
+    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=loadingProgress?await createCropBatchAsync(this.scene,this.renderer,gltf,this.cropBridgeData,128,{cancelled:()=>this.disposed}):createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);await milestone('crops');
+    this.wallPrototypes=await this.loadReady(this.assets.walls(await this.loadReady(json('/content/walls.json',{signal:this.loading.signal}))));await milestone('walls');
     const vfxCatalogue=await this.loadReady(json('/content/vfx.json',{signal:this.loading.signal}));this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.loadReady(this.assets.texture(vfxCatalogue.atlas)));
     this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(id,time,effect)=>this.wateringSource(id,time,effect));
     this.attackVfx=new AttackVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.shieldVfx=new ShieldVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.agricultureVfx=new AgricultureVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.materialVfx=new MaterialVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
-    this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);
+    this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
-    this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();
+    this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));this.sync(0);
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
-    await this.loadReady(this.warmAnimalGpu());
+    await this.loadReady(this.warmAnimalGpu());await milestone('gpu');
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.
-    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}
+    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}await milestone('far-assets');
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
@@ -284,6 +287,7 @@ export class WorldScene {
     }));
   }
   async warmAnimalGpu(){
+    const compile=(scene,camera,target)=>this.loadingProgress?compileLoadingPrograms(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
     const originals=[];
@@ -296,17 +300,17 @@ export class WorldScene {
     try{
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
       fluidPrimer=new FluidGpuPreload(this.fluidMaterial,{instanced:this.waterPrototypes.some(Boolean)});staging.add(fluidPrimer);
-      await this.renderer.compileAsync(staging,this.camera,this.scene);if(this.disposed)return;
+      await compile(staging,this.camera,this.scene);if(this.disposed)return;
       // The first building hit makes its opening-mask mesh drawable. Compile
       // that retained native recipe even while the intact opening is hidden.
-      await this.renderer.compileAsync(this.destructionPass.scene,this.camera,this.scene);if(this.disposed)return;
-      if(this.nav.field.canyon)await this.renderer.compileAsync(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
+      await compile(this.destructionPass.scene,this.camera,this.scene);if(this.disposed)return;
+      if(this.nav.field.canyon)await compile(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
       // Resident clipped/alpha props can be outside the opening view or on
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
-      await this.renderer.compileAsync(this.scene,this.camera,this.scene);if(this.disposed)return;
-      await this.destructionPass.prepareDepth(this.camera,this.scene);if(this.disposed)return;
+      await compile(this.scene,this.camera,this.scene);if(this.disposed)return;
+      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile});if(this.disposed)return;
       this.programBindings=initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
@@ -495,7 +499,7 @@ export class WorldScene {
     const config=this.tutorialGuideTarget();focusNewTutorialPlacement(this,config);
     this.hands.show(config,config?this.handColliders(config):[]);this.hands.update(dt,this.camera,this.renderer.domElement.clientHeight);
   }
-  render(dt) {if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();this.updateCamera();this.raidCamera?.update(this.state,dt);this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});this.farVegetation?.update(dt);this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
+  render(dt) {if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();if(!this.cinematic){this.updateCamera();this.raidCamera?.update(this.state,dt);}this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;this.sync(simulated);this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});this.farVegetation?.update(dt);this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);if(!this.cinematic)this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
   dispose() {if(this.disposed)return;this.disposed=true;this.loading?.abort();this.canvasEvents?.abort();this.raidEntryPreparer?.dispose();this.hiringRoutePreparer?.dispose();this.animalPreload?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.glResourceEpoch?.dispose();this.renderer.forceContextLoss();this.state=null;}
 
 }

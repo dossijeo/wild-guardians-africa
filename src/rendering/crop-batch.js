@@ -287,7 +287,7 @@ function writeInstance(modelIndex,plant,part){
    for(let i=0;i<bridges.length;i++){const b=bridges[i];if(!b)continue;b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
    for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
-  dispose(){entitySamples=new WeakMap();terrainIdentity=null;for(const model of [...models,...bridges].filter(Boolean)){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
+  dispose(){prepare.return();entitySamples=new WeakMap();terrainIdentity=null;for(const model of [...models,...bridges].filter(Boolean)){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
  };
 }

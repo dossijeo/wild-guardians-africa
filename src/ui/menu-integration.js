@@ -4,6 +4,7 @@ const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardian
 const sectionFrame=(src,title)=>`<iframe class="production-section" title="${title}" src="${src}" style="width:100%;height:70dvh;min-height:340px;border:0;border-radius:9px"></iframe>`;
 renderPanel=function(id){
  nativeRenderPanel(id);
+ if(id==='new'||id==='continue')sendProduction('prepare-loading');
  const panel=$('#panel'),backButton=$('#panel [data-back]');
  panel.style.width=id==='new'||id==='library'?'min(1160px,94vw)':'';
  const replace=html=>{panel.replaceChildren(backButton);panel.insertAdjacentHTML('beforeend',html);};
@@ -38,6 +39,6 @@ window.addEventListener('message',event=>{
 });
 const nativeBack=back;
 back=function(){
- const frames=$$('#panel iframe');nativeBack();
+ const frames=$$('#panel iframe');sendProduction('cancel-loading');nativeBack();
  if(frames.length)requestAnimationFrame(function cleanup(){if(state==='home'){frames.forEach(frame=>frame.remove());return;}requestAnimationFrame(cleanup);});
 };

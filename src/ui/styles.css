@@ -60,3 +60,8 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 #stage.short .notice-card img{width:56px;height:56px}
 #stage.short .notice-card .life{left:46px}
 #stage.portrait .notices{left:calc(10px + env(safe-area-inset-left));width:min(254px,calc(100vw - var(--action-w) - 30px))}
+
+.interactive-loading-progress{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:101;max-width:80vw;color:#fff6df;text-shadow:0 1px 3px #172c22;font-size:13px;pointer-events:none}
+#world-loading.interactive-loading-indicator{background:transparent;pointer-events:none;padding:0}
+
+.interactive-loading-cancel{position:fixed;top:max(14px,env(safe-area-inset-top));left:max(14px,env(safe-area-inset-left));z-index:102;background:#172c2255;color:#fff6df;border:1px solid #fff6df44;border-radius:8px;font-size:13px;padding:8px 12px;pointer-events:auto}

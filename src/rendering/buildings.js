@@ -147,14 +147,14 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true};}
-  async prepareDepth(camera,world){
+  async prepareDepth(camera,world,{compile=(scene,camera)=>this.renderer.compileAsync(scene,camera)}={}){
     const renderer=this.renderer,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.enabled;
     try{
       renderer.shadowMap.enabled=false;renderer.setRenderTarget(this.smokeDepth);
       let compiling;
       // Three starts compilation synchronously. Restore borrowed scene materials
       // immediately, then wait for those programs without holding scene mutations.
-      this.depthWarmStats=withDepthCaptureMaterials(world,()=>{compiling=renderer.compileAsync(world,camera);},this.depthCaptureOptions());
+      this.depthWarmStats=withDepthCaptureMaterials(world,()=>{compiling=compile(world,camera);},this.depthCaptureOptions());
       await compiling;
     }finally{renderer.setRenderTarget(target);renderer.shadowMap.enabled=shadows;}
   }

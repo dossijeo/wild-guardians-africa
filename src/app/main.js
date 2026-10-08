@@ -1,4 +1,8 @@
 import {EventCards} from '../ui/event-cards.js';
+import {LoadingDiorama} from '../rendering/loading-diorama.js';
+import {LoadingCinematic} from '../rendering/loading-cinematic.js';
+import {LoadingProgress} from './loading-progress.js';
+import {LOADING_STAGES} from './loading-recipe.js';
 import {SpiritVoice,spiritVoice} from '../audio/spirit-voice.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import {HiringRoutePreparer} from '../world/hiring-route-preparer.js';
@@ -53,6 +57,20 @@ for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 const loadFrameImages=createFrameImageLoader(ASSETS);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
+let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0;
+function prepareLoadingScene(){
+ if(preparedLoading)return preparedLoading;
+ const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
+ let owner,diorama;
+ try{owner=new WorldScene(canvas,onPick);owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
+ diorama=new LoadingDiorama(owner);const preparation={world:owner,diorama,canvas};preparedLoading=preparation;
+ preparation.pending=diorama.prepare();preparation.pending.catch(()=>{});return preparation;
+ }catch(failure){diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
+}
+function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
+function clearLoadingPresentation(){clearInterval(loadingDiagnostic);loadingDiagnostic=null;loadingCinema?.cancel();loadingCinema=null;loadingMature?.reject(new Error('Loading cancelled'));loadingMature=null;loadingDiorama?.dispose();loadingDiorama=null;loadingProgress=null;}
+function cancelLoading(failure=null){if(!starting)return;loadingGeneration++;starting=false;state=null;clearWorld();releasePreparedLoading();menu();if(failure)error(failure.message);}
+window.addEventListener('keydown',event=>{if(event.key==='Escape'&&screen==='loading'){event.preventDefault();cancelLoading();}});
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
@@ -71,12 +89,12 @@ function error(message,{silent=false}={}){if(String(message)===RESERVE_MESSAGE){
 function safe(action){if(leaving)return;commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){clearLoadingPresentation();dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
   try {
-  if(state){if(!await save())return;state=null;}clearWorld();screen='menu';
+  if(state){if(!await save())return;state=null;}clearWorld();releasePreparedLoading();screen='menu';
   app.innerHTML=`<iframe id="native-menu" title="Santuario · Menú principal de Wild Guardians Africa" src="${assetUrl('/menu/index.html')}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`;
   }finally{leaving=false;}
 }
@@ -84,6 +102,8 @@ window.addEventListener('message',event=>{
   if(event.origin!==location.origin||event.source!==document.querySelector('#native-menu')?.contentWindow||event.data?.type!=='wild-guardians:menu')return;
   safe(async()=>{
    const data=event.data,respond=detail=>event.source.postMessage({type:'wild-guardians:menu-data',...detail},location.origin);
+   if(data.action==='prepare-loading'){try{prepareLoadingScene();}catch(failure){error(failure.message);}return;}
+   if(data.action==='cancel-loading'){cancelLoading();return;}
    if(data.action==='request-saves')respond({slots:(await saves.list()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});
    if(data.action==='delete-slot'){await saves.delete(data.slotId);respond({slots:(await saves.list()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});return;}
    if(data.action==='load-slot')return startGame(await saves.load(data.slotId));
@@ -108,13 +128,24 @@ async function loadScreen() {
 }
 async function startGame(loaded=null) {
   if(starting)return;starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
-  app.innerHTML='<div class="loading"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p></div>';
+  let prepared;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
+  // Retain the complete menu frame until the diorama has actually warmed.
+  if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
   try {
+    prepared=prepareLoadingScene();
     const next=loaded??Game.newGame({biome:selectedBiome,culture:selectedCulture});
-    const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);
+    await prepared.pending;assertLoading();preparedLoading=null;world=prepared.world;loadingDiorama=prepared.diorama;loadingDiorama.show(next);
+    loadingProgress=new LoadingProgress(LOADING_STAGES,{onChange:snapshot=>{const label=document.querySelector('#loading-progress');if(label)label.textContent=Math.floor(snapshot.progress*100)+' %';}});
+    prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
+    app.replaceChildren(prepared.canvas);
+    const loadingCancel=document.createElement('button');loadingCancel.id='loading-cancel';loadingCancel.className='interactive-loading-cancel';loadingCancel.textContent=moneyLocale().startsWith('es')?'Cancelar':'Cancel';loadingCancel.onclick=()=>cancelLoading();app.append(loadingCancel);
+    const loadingHint=document.createElement('small');loadingHint.id='loading-progress';loadingHint.className='interactive-loading-progress';loadingHint.setAttribute('role','status');app.append(loadingHint);
+    loadingDiorama.render(0,0);lastFrame=performance.now();
+    loadingDiagnostic=setInterval(()=>{const snapshot=loadingProgress?.snapshot(),label=document.querySelector('#loading-progress');if(snapshot&&label&&snapshot.unchangedFor>15000)label.textContent='Still preparing: '+snapshot.pending[0]+' · '+Math.floor(snapshot.progress*100)+' %';},1000);
+    const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
-    if(!loaded) {const start=await findInitialLocationAsync(nav,payload);Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
+    if(!loaded) {const start=await findInitialLocationAsync(nav,payload);assertLoading();Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
     // Earlier saves predate native collision footprints. Preserve their units
     // and positions while restoring the geometric metadata from the catalog.
     for(const village of next.villages){
@@ -124,24 +155,28 @@ async function startGame(loaded=null) {
     }
     nav.setState(next);
     for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
-    state=next;audio.remember(state.events);
+    state=next;audio.remember(state.events);loadingProgress.update('configuration');
     resumeLoadedWorld(state,{hidden:document.hidden});
     if(document.hidden)audio.suspend();
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
-    app.innerHTML=`<main class="game world-loading" id="stage" aria-busy="true"><div id="world-loading" class="loading" role="status"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p><p id="loading-progress"></p></div><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
+    app.innerHTML=`<main class="game world-loading" id="stage" aria-busy="true"><div id="world-loading" class="loading interactive-loading-indicator" role="status"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p><p id="loading-progress"></p></div><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
+    document.querySelector('#world').replaceWith(prepared.canvas);document.querySelector('#world-loading').replaceChildren(loadingHint,loadingCancel);loadingDiorama.render(0,loadingProgress.value);
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
     bind('menuButton',pauseDialog);
     document.querySelector('[data-menu="home"]').onclick=()=>world.focusFarm();
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>guidedHudAction('grow',()=>toolPanel('plant')));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
-    world=new WorldScene(document.querySelector('#world'),onPick);world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting){const stats=document.querySelector('#loading-progress');if(stats)stats.textContent='Preparando el paisaje · '+Math.floor(progress.loaded/Math.max(1,progress.desired)*100)+' %';}};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
+    world.onError=e=>error(e.message);world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
-    await world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome})});
-    for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);world.objects.delete(village.id);}
-    await world.loadReady(prepareInitialFarWorld(world));
+    await world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
+    for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);assertLoading();world.objects.delete(village.id);}
+    await world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}}));assertLoading();
+    world.render(0);loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
+    if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
+    loadingCinema=new LoadingCinematic(world,loadingDiorama,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});await loadingCinema.finished;assertLoading();loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
     world.render(0);document.querySelector('#world-loading').remove();document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
-  } catch(e){state=null;clearWorld();menu();error(e.message);}finally{starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}
+  } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message);}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){
   const guided=!!hudHand&&!hudHand.image.hidden&&hudHand.selector===`[data-menu="${action}"]`;
@@ -405,6 +440,9 @@ function updateRaidLoading(){
 }
 function frame(now) {
   requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
+  if(screen==='loading'&&loadingDiorama?.prepared){
+    try{if(loadingCinema)loadingCinema.step(dt);else{loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}}catch(e){loadingProgress?.fail(e);cancelLoading(e);}
+  }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
     try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
