@@ -7,9 +7,9 @@ import {pathToFileURL} from 'node:url';
 export function coveredDuration(spans,start,end){
  const clipped=spans.map(s=>[Math.max(start,s.at),Math.min(end,s.at+s.cpuMs)])
   .filter(([a,b])=>Number.isFinite(a)&&Number.isFinite(b)&&b>a).sort((a,b)=>a[0]-b[0]);
- let total=0,left=0,right=0;
- for(const [a,b] of clipped){if(a>right){total+=right-left;left=a;right=b;}else right=Math.max(right,b);}
- return total+right-left;
+ let total=0,left=null,right=null;
+ for(const [a,b] of clipped){if(right===null||a>right){if(right!==null)total+=right-left;left=a;right=b;}else right=Math.max(right,b);}
+ return total+(right===null?0:right-left);
 }
 
 export function analyzeTravelSpans(report,threshold=100){

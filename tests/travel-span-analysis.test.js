@@ -7,6 +7,7 @@ test('nested and boundary-crossing renderer spans are counted once',()=>{
  assert.equal(coveredDuration(spans,0,100),95);
  assert.equal(coveredDuration(spans,100,150),35);
  assert.equal(coveredDuration(spans,150,200),0);
+ assert.equal(coveredDuration([{at:-40,cpuMs:20}],-30,0),10);
 });
 test('a long RAF gap retains category overlap without declaring a GPU cause',()=>{
  const report={done:true,frames:[{at:120,intervalMs:120}],segments:[{name:'render',at:5,cpuMs:110},{name:'GL',at:10,cpuMs:80}]};
