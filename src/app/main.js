@@ -11,7 +11,7 @@ import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js'
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {castPickedSpell} from './spell-placement.js';
-import {UiAudio} from '../audio/ui-audio.js';
+import {UiAudio,guidedPlacementKind} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
 import {RESERVE_MESSAGE,HIRING_RESERVE,BUDGET_WARNING_THRESHOLD} from '../simulation/budget.js';
 import {GameSurfaces} from '../ui/game-surfaces.js';
@@ -164,8 +164,11 @@ function onPick({entityId,point}) {
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
-      if(tool.kind==='center'||tool.kind==='wall'){if(Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav)===false)return;}
-      else if(tool.kind==='plant')Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
+      const guided=guidedPlacementKind(tool,world.hands);let committed=false;
+      if(tool.kind==='center'||tool.kind==='wall')committed=Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
+      else if(tool.kind==='plant')committed=Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
+      if(committed===false)return;
+      uiAudio.guidedPlacement(guided);
 
       toolSession.used(performance.now()/1000);save();world.syncResidentProps();
     } else {closeSurface();selection=entityId;}

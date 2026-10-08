@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>SFX 096 — confirmación guiada</title>
+<style>body{font:18px system-ui;background:#173a2a;color:#eee;padding:24px}button{padding:14px}pre{white-space:pre-wrap}</style>
+<h1>SFX 096 — colocación guiada</h1><p>Despacho y reproducción Web Audio nativa silenciada. No acredita un recorrido completo ni escucha perceptual.</p>
+<button id="run">Verificar confirmación guiada</button><pre id="report">Preparado</pre>
+<script type="module">
+import {AudioSystem} from '../../src/audio/audio.js';
+import {UiAudio,guidedPlacementKind} from '../../src/audio/ui-audio.js';
+document.querySelector('#run').onclick=async()=>{
+ document.querySelector('#run').disabled=true;let audio;
+ try{
+  audio=new AudioSystem({music:0,sfx:0});await audio.unlock();
+  const bank=await audio.sfxBank(),item=bank.items.find(i=>i.id==='spirit_valid'),buffer=await audio.buffer(item.audio.url),calls=[],pending=[];
+  const ui=new UiAudio((id,options)=>{const promise=audio.sound(id,options);calls.push({id,bus:options.bus,emitter:options.emitter});pending.push(promise);return promise;});
+  const guide=target=>({mesh:{visible:true},adapter:{phase:'reading'},hints:{custom:{target}}});
+  const ignored=ui.guidedPlacement(guidedPlacementKind({kind:'wall'},guide('center-site')));
+  const center=ui.guidedPlacement(guidedPlacementKind({kind:'center'},guide('center-site'))),repeat=ui.guidedPlacement('center');
+  const plant=ui.guidedPlacement(guidedPlacementKind({kind:'plant'},guide('plant-site'))),sources=await Promise.all(pending);
+  if(item.number!==96||ignored||!center||repeat||!plant||sources.length!==2||sources.some(s=>!s))throw Error('Unexpected guided placement dispatch or playback');
+  audio.stop();await audio.context.close();
+  document.querySelector('#report').textContent=JSON.stringify({ok:true,number:item.number,codec:bank.runtimeCodec,url:item.audio.url,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,samples:buffer.length,requests:calls,sourcesStarted:sources.length,wallIgnored:!ignored,repeatIgnored:!repeat,voicesAfterStop:audio.voices.size,context:audio.context.state,silenced:true,scope:'UI dispatcher with displayed-guide fixture and native decoder. Actual successful gameplay placement and audible mix need separate integration evidence.'},null,2);
+ }catch(error){audio?.dispose();document.querySelector('#report').textContent='ERROR: '+error.message;}
+};
+</script></html>
