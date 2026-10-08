@@ -14,10 +14,10 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
   constructor(world,{state={day:1,time:0,biome:'sabana'},reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
-    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,.65,0);this.baseQuaternion=this.camera.quaternion.clone();
+    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
-    this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,.65,0);
+    this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);
     this.ray=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.abort=new AbortController();
     const geometry=new THREE.PlaneGeometry(15,15,32,32),material=new THREE.MeshStandardMaterial({color:'#915432',roughness:1,metalness:0,transparent:true,depthWrite:true});
     material.onBeforeCompile=shader=>{
