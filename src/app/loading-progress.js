@@ -1,7 +1,9 @@
 // Estimated work completion is intentionally separate from verified readiness.
 // Weights are supplied by the measured loading recipe, not animation timers.
 export class LoadingProgress {
-  constructor(stages,{now=()=>performance.now(),onChange=()=>{},downloads=null,workEstimateMs=14000}={}) {
+  // Default16s is a rounded median exclusive-wait proxy from30 native worlds;
+  // it is a scheduling estimate, not a sum of network-inclusive stage durations.
+  constructor(stages,{now=()=>performance.now(),onChange=()=>{},downloads=null,workEstimateMs=16000}={}) {
     if(!stages.length||stages.some(s=>!s.id||!(s.weight>0))||new Set(stages.map(s=>s.id)).size!==stages.length)throw Error('Invalid loading stages');
     if(!(workEstimateMs>0))throw Error('Invalid loading work estimate');
     this.now=now;this.onChange=onChange;this.downloads=downloads;this.workEstimateMs=workEstimateMs;this.stages=new Map(stages.map(s=>[s.id,{...s,progress:0,started:null,finished:null}]));
