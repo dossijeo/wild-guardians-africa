@@ -101,8 +101,8 @@ document.querySelector('#run').onclick=async()=>{
  document.querySelector('#run').disabled=true;document.querySelector('#cancel').disabled=false;
  try{
   const cases=[{biome:'gran-rio',culture:'suajili',dense:true},...[['sabana','mapungubwe'],['gran-rio','suajili'],['gran-canon','musgum'],['volcanes','etiope'],['manglares','saheliana'],['desierto','mapungubwe']].map(([biome,culture])=>({biome,culture}))];
-  const selected=new URLSearchParams(location.search).get('case');assert(!selected||cases.some(c=>(c.dense?'dense':c.biome)===selected),'Unknown QA case');
-  for(const current of cases.filter(c=>!selected||(c.dense?'dense':c.biome)===selected)){status.textContent='Traveling '+current.biome+'/'+current.culture+(current.dense?' denso':'');await runCase(current);}
+  const selected=new URLSearchParams(location.search).get('case');assert(!selected||selected==='biomes'||cases.some(c=>(c.dense?'dense':c.biome)===selected),'Unknown QA case');
+  for(const current of cases.filter(c=>!selected||(selected==='biomes'?!c.dense:(c.dense?'dense':c.biome)===selected))){status.textContent='Traveling '+current.biome+'/'+current.culture+(current.dense?' denso':'');await runCase(current);}
  }catch(e){errors.push(String(e));close();}
  const report={done:true,cancelled,rows,errors,scope:'Readback temporal regression: real async isolated preparation, camera movement, independently sampled authored actor poses, native shadows and paused logical state. Not a frametime benchmark, live simulation/attack campaign, mobile proof or production acceptance.'};
  document.querySelector('#report').textContent=JSON.stringify(report);document.querySelector('#cancel').disabled=true;status.textContent='Terminado, GPU liberada. '+rows.length+' casos; errores '+errors.length;
