@@ -11,3 +11,7 @@ Directed CPU contracts: 12 PASS, zero skip, approximately 360 ms. Coverage inclu
 A first test runner was interrupted after its false test clock advanced to 11 while the second job's actual deadline was 17; the test now advances to 100. Runtime deadline checks were not relaxed. The negative runner is not counted as a pass.
 
 Native before/after, repeated cancel/restart, complete GLB poses and memory ownership are pending. Other slow frames, final UI polish and the full feature acceptance matrix remain open. No PR or production-readiness claim follows from these unit contracts.
+
+## Subsequent native observation and cancellation contracts
+
+Actual Continue e1163c57 is archived separately in actual-continue-actor-queue-e1163c57.md and raw JSON/audio. All36 rigs installed,19 frame yields, CPU206ms in304.7ms window with18 existing RAF16.4–16.9ms; no crop resize. Five later intervals remain over100ms, so fluidity is not accepted. This is not paired/causal overall loading evidence. Three repeated synthetic held-RAF cancellation cycles each adopt exactly one complete rig then reject35 queued jobs, preserving shared assets. Four rig contracts pass in423ms. These are CPU ownership contracts, not GLB multiview or physical peak-memory acceptance.
