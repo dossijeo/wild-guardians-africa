@@ -20,11 +20,12 @@ test('successful exact queries are shared only inside the synchronous scope, wit
  });
  nav.path(a,b);assert.equal(count(),8);withNavigationQueries(nav,()=>nav.path(a,b));assert.equal(count(),9);
 });
-test('geometry and crop epochs invalidate same-scope results, previews and dynamic clones stay separate',()=>{
+test('clear crops retain same-scope routes, geometry invalidates and previews/dynamic clones stay separate',()=>{
  const {nav,count}=fixture();
  withNavigationQueries(nav,()=>{
   nav.path(a,b);nav.path(a,b);assert.equal(count(),1);
-  nav.syncCropPlacement(nav.state);nav.path(a,b);assert.equal(count(),2);
+  nav.syncCropPlacement(nav.state);nav.path(a,b);assert.equal(count(),1);
+  nav.syncCropPlacement(nav.state,['removed-prop']);nav.path(a,b);assert.equal(count(),2);
   const preview=nav.forBuildingPlacement({kind:'house',x:2,z:2,radius:1});preview.path(a,b);assert.equal(count(),3);
   const dynamic=Object.assign(Object.create(nav),{failedPaths:new Set(),preparedPaths:null});dynamic.path(a,b);assert.equal(count(),4);
   nav.setState(nav.state);nav.path(a,b);assert.equal(count(),5);

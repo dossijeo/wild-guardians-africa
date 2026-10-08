@@ -82,12 +82,11 @@ export class Navigation {
   }
   syncCropPlacement(state,removedProps=[]) {
     // Crops are not navigation obstacles. Replanting already cleared ground
-    // can retain static-query caches and the obstacle index. Keep the existing
-    // route epoch change so worker replanning and saved route behaviour match
-    // the established simulation. Real prop removals still rebuild normally.
+    // can retain static-query caches, the obstacle index and active routes.
+    // Advancing the epoch here unnecessarily replans every moving actor even
+    // though its traversable geometry is unchanged. Real prop removals and
+    // replacing the state still rebuild and invalidate routes normally.
     if(this.state!==state||removedProps.length){this.setState(state);return;}
-    this.version=(this.version??0)+1;
-    state.navigationVersion=this.version;
   }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
