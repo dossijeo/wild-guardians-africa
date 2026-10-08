@@ -29,7 +29,7 @@ export function attachNativeFarGround(candidate,data,world,{simplified=false,sea
  let farToon=null;
  if(mapped){
   geometry.computeVertexNormals();
-  const water=new Float32Array(data.positions.length/3);if(world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;geometry.setAttribute('aFarWater',new THREE.BufferAttribute(water,1));
+  const water=data.water??new Float32Array(data.positions.length/3);if(!data.water&&world.nav?.field)for(let i=0;i<water.length;i++)water[i]=world.nav.field.waterInfo(data.positions[i*3],data.positions[i*3+2]).inside?1:0;geometry.setAttribute('aFarWater',new THREE.BufferAttribute(water,1));
   world.biomeGround.attach(material,0,0);const u=material.userData.biomeGround;u.uGroundMapped.value=0;u.uGroundMicro.value=0;u.uGroundRelief.value=0;
   farToon=new AfricanToon();Object.assign(farToon.uniforms,world.toon.uniforms,{uFineNoise:{value:0},uGroundDetail:{value:0}});farToon.environmentUniforms=world.toon.environmentUniforms;farToon.material(material);
  }
