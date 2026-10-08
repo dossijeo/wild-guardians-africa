@@ -48,13 +48,24 @@ for(const [name,Game] of [['original',OriginalGame],['observed',ObservedGame]]){
   assert.ok(numberOf(state.ledger.balance)>=hired*30,'Paid diagnostic hiring must be affordable');
   Game.hire(state,'qa-watering-diagnostic-hire',{olderFemale:hired});
  }
- const counters={queries:0,searches:0,failedMemoHits:0,failures:0,maxFailureKeys:0};
+ const counters={queries:0,searches:0,failedMemoHits:0,failures:0,maxFailureKeys:0,failureDestinations:{},failureSamples:[]};
  if(name==='observed'){
   const path=nav.path,find=nav.findPath;
   nav.findPath=function(...args){counters.searches++;return find.apply(this,args);};
   nav.path=function(start,end,radius=.3,ignore=null,worker=true,margin=16){
-   counters.queries++;if(this.failedPaths.has(navigationPathKey(start,end,radius,ignore,worker,margin)))counters.failedMemoHits++;
-   const result=path.call(this,start,end,radius,ignore,worker,margin);if(!result)counters.failures++;
+   counters.queries++;
+   const key=navigationPathKey(start,end,radius,ignore,worker,margin),memoHit=this.failedPaths.has(key);
+   if(memoHit)counters.failedMemoHits++;
+   const result=path.call(this,start,end,radius,ignore,worker,margin);
+   if(!result){
+    counters.failures++;
+    // Attribution from existing request metadata only: no extra collision,
+    // terrain or reach queries that could warm caches or affect the replay.
+    const kind=String(end.id??'unlabelled').startsWith('home-')?'home':String(end.id??'').startsWith('water-point-')?'water-point':'other';
+    const group=counters.failureDestinations[kind]??={queries:0,memoHits:0};
+    group.queries++;group.memoHits+=Number(memoHit);
+    if(!memoHit&&counters.failureSamples.length<32)counters.failureSamples.push({key,start:{x:start.x,z:start.z,id:start.id??null,status:start.status??null},end:{x:end.x,z:end.z,id:end.id??null},radius,ignore,worker,margin});
+   }
    counters.maxFailureKeys=Math.max(counters.maxFailureKeys,this.failedPaths.size);return result;
   };
  }
