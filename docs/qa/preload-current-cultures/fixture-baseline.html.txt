@@ -15,15 +15,13 @@ import {spawnRaid} from '/src/simulation/raids.js';
 import {focusTerrainCamera} from '/src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '/src/world/active-region.js';
 import {serialize,deserialize} from '/src/persistence/snapshots.js';
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'gran-canon',culture=params.get('culture')??'mapungubwe',quality=params.get('quality')??'media',measureTiming=params.get('timing')==='1',errors=[];
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'gran-canon',measureTiming=params.get('timing')==='1',errors=[];
 let failureContext=null,arrivalCpu=null;
 addEventListener('pagehide',()=>arrivalCpu?.dispose());
 addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
-if(!Game.BIOMES.includes(biome)||!Game.CULTURES.includes(culture)||!['muy_baja','baja','media','alta'].includes(quality))throw Error('Invalid preload QA biome/culture/quality');
-const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
-if(!payload)throw Error('Missing native village payload');
-let state=Game.newGame({seed:712,biome,culture,slotId:'qa-animal-preload'});const nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+let state=Game.newGame({seed:712,biome,slotId:'qa-animal-preload'});const nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
 Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
 if(params.get('motion')==='1'&&params.has('attack-species')||params.get('load-reserves')==='1'||params.get('load-active')==='1'){
  let planted=false;for(let dz=-9;dz<=9&&!planted;dz+=1.5)for(let dx=6;dx<=15&&!planted;dx+=1.5){const point={x:site.center.x+dx,z:site.center.z+dz};try{Game.plant(state,'qa-paid-seed','mijo',point.x,point.z,nav);planted=true;}catch{}}
@@ -32,7 +30,7 @@ if(params.get('motion')==='1'&&params.has('attack-species')||params.get('load-re
 const savedReserves=params.get('load-reserves')==='1',savedActive=params.get('load-active')==='1';let savedPlan=null,savedRaid=null;
 if(savedActive){const camera=new PerspectiveCamera(),controls={target:new Vector3(),update(){}};focusTerrainCamera(camera,controls,nav.field,state.structures[0]);nav.setRaidView(camera.position,controls.target);nav.setActiveBounds(activeChunkRegion(camera.position).bounds);}
 if(savedReserves||savedActive){const count=Number(params.get('copies')??1);if(!Number.isInteger(count)||count<1||count>4)throw Error('Invalid saved group copies');Game.tick(state,300,nav);state.nightPlan={at:400,group:Array.from({length:count},()=>params.has('attack-species')?[params.get('attack-species')]:['warthog','hyena','buffalo','lion','rhino']).flat(),done:false};Game.tick(state,99.9,nav);if(savedActive){Game.tick(state,.2,nav);savedRaid=JSON.stringify(state.raid);}savedPlan=JSON.stringify(state.nightPlan);state=deserialize(serialize(state));nav.setState(state);}
-const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting(quality);
+const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting('media');
 world.animalSkinEnvelope=params.get('skin-envelope')==='1';
 let loadedModelIds=[];if(savedActive){const reserve=world.prepareSavedAnimalRigs.bind(world);world.prepareSavedAnimalRigs=async state=>{await reserve(state);loadedModelIds=(await world.animalPreload.spares()).map(r=>r.model.uuid);};}
 const resources=params.get('resource-profile')==='1'?new BufferRequests(world.renderer.getContext()):null,resourceStages=[];
@@ -122,7 +120,7 @@ resourceSample('after-contact-or-appearance');
 if(resources&&params.get('dispose-world')==='1'){const original=world.renderer.forceContextLoss.bind(world.renderer);world.renderer.forceContextLoss=()=>{resourceSample('before-context-loss');return original();};const lost=new Promise(resolve=>{const canvas=world.renderer.domElement;let timer;const done=()=>{clearTimeout(timer);canvas.removeEventListener('webglcontextlost',done);resolve();};canvas.addEventListener('webglcontextlost',done,{once:true});timer=setTimeout(done,5000);});world.dispose();resourceSample('after-dispose');await lost;resourceSample('after-context-loss-event');if(!world.renderer.getContext().isContextLost())throw Error('QA context loss not observed after disposal');}
 resources?.dispose();
 const skinEnvelope={enabled:world.animalSkinEnvelope,preparedMeshes:[...world.mixers.values()].reduce((n,r)=>n+(r.skinEnvelopes?.size??0),0)};
-const report={...(resources?{resourceStages}:{}),skinEnvelope,ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,culture:state.culture,quality:world.quality,drawingBuffer:[world.renderer.domElement.width,world.renderer.domElement.height],gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],copies,plannedReserves,savedReserves,savedActive,savedRaidUnchangedAtLoad:savedActive?true:null,loadReservedRigs,repeatedRigResources,rigs,before,after,postMotion,appearanceMs:firstAppearanceMs,loadingMs,errors,...((measureTiming||params.get('motion')==='1')?{timing}:{}),spawnSpecies,scope:'Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
+const report={...(resources?{resourceStages}:{}),skinEnvelope,ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],copies,plannedReserves,savedReserves,savedActive,savedRaidUnchangedAtLoad:savedActive?true:null,loadReservedRigs,repeatedRigResources,rigs,before,after,postMotion,appearanceMs:firstAppearanceMs,loadingMs,errors,...((measureTiming||params.get('motion')==='1')?{timing}:{}),spawnSpecies,scope:'Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
 if(params.get('skin-culling')==='1'){
  if(!world.animalSkinEnvelope||world.disposed)throw Error('Skin-culling requires a live envelope pilot');
  const singleExit=params.get('skin-culling-single-exit')==='1',shaderState=serialize(state);

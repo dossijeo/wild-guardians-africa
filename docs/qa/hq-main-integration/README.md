@@ -34,3 +34,11 @@ This closes build/export/package integration checks, not physical mobile
 acceptance, all-biome visual acceptance on root hardware, mip shimmer or the
 ongoing FrontSide model experiments. The latter have not changed production
 assets or sidedness.
+
+Update: [Validate game on the merge runtime](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37703151920)
+completed successfully at 2026-10-07 23:52:45 UTC: 3,104 tests passed, zero
+failures, asset/audio/plan/balance/browser-syntax checks, build, package and ZIP
+CRC checks passed. `validate-ci.log.gz` preserves the complete log. Windows
+37703152016 subsequently completed compilation and installer checks but was
+still running packaged WebView2 smoke/visibility checks at inspection; its
+terminal success remains unproven here.

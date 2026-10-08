@@ -1,5 +1,19 @@
 # Tareas pendientes posteriores a la Jam
 
+[Montañas HQ integradas y paquete verificado](qa/hq-main-integration/README.md):
+PR #7 mergeada, seis atlas byte-exactos y ZIP sin ZIP anidado. Validate game del
+merge pasa 3.104 tests; Windows aún en pruebas del paquete al verificar. Las
+notas inferiores conservan etapas históricas rechazadas/apagadas y no describen
+el estado actual de activación. Siguen pendientes aceptación temporal/móvil y
+coste amplio; la integración no cierra esas comprobaciones.
+
+[Precarga actual en otras culturas/calidades](qa/preload-current-cultures/README.md):
+Gran Río/Etíope baja y Musgum alta alcanzan primer golpe real del búfalo, sin
+compile/link ni nuevas descargas GLB, con actor visible y cero esperas. El primer
+render conserva subidas de buffers y llega a42,2ms en el caso alta. No acredita
+ausencia global de tirones, todas las combinaciones ni teléfono físico; próximo
+diagnóstico: atribuir trabajo de aparición con coste de chunks/LOD/subidas.
+
 [Montañas HQ: alternativa sin mipmaps](qa/hq-mountain-no-mips/README.md):
 146 poses nativas día/noche y cuatro capturas conservan el acabado. No basta
 para elegir filtro: verificar niveles efectivos y parpadeo/móvil; el negativo
