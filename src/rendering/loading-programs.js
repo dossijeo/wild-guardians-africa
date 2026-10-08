@@ -1,22 +1,22 @@
+import {compileGpuPreparation} from '../../tools/experiments/compile-gpu-preparation.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
-// Three r180 compileAsync uses properties.currentProgram.isReady internally.
-// Snapshot those programs before borrowed depth materials are restored. Polling
-// is bounded and cancellable; GL submission itself remains synchronous.
-export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal,cancelled=()=>false,timeout=30000,now=()=>performance.now(),screen=false}={}) {
-  const begin=now();
-  const check=()=>{if(signal?.aborted||cancelled()||renderer.getContext().isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
-  check();
-  const materials=screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene);
-  const programs=new Set();
-  for(const material of materials){const properties=renderer.properties.get(material);for(const program of properties.programs?.values()??[properties.currentProgram])if(program)programs.add(program);}
-  return new Promise((resolve,reject)=>{
-    let timer,settled=false;
-    const finish=(error)=>{if(settled)return;settled=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);error?reject(error):resolve(scene);};
-    const abort=()=>finish(Error('Loading compilation cancelled'));
-    const poll=()=>{try{check();for(const program of programs)if(program.isReady())programs.delete(program);if(!programs.size){finish();return;}timer=setTimeout(poll,10);}catch(error){finish(error);}};
-    signal?.addEventListener('abort',abort,{once:true});poll();
-  });
+// Use the shared bounded compiler, selecting every borrowed recipe needed by
+// loading. Screen state and materials are restored before asynchronous waiting.
+// A loss event is latched even if the context is restored between polls.
+export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false}={}) {
+ const begin=now(),gl=renderer.getContext(),epoch=getEpoch(),owner=new AbortController();let lost=false;
+ const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
+ const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
+ const cleanup=()=>{gl.canvas?.removeEventListener('webglcontextlost',lose);signal?.removeEventListener('abort',abort);};
+ check();gl.canvas?.addEventListener('webglcontextlost',lose);signal?.addEventListener('abort',abort,{once:true});
+ let materials;
+ try{materials=screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene);check();}
+ catch(error){cleanup();throw error;}
+ // Submission has already restored screen state. Snapshot all variants through
+ // the shared core without submitting or querying the native renderer twice.
+ const submitted={compile:()=>materials,properties:renderer.properties};
+ return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene).finally(cleanup);
 }
 
 // Compile bounded views of the original objects against the complete native

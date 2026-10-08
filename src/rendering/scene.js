@@ -329,7 +329,7 @@ export class WorldScene {
       // including the staged animal skinning variants. Cached depth materials
       // retain their programs until their source material is disposed.
       this.destructionPass.captureDepth(this.camera,this.scene);
-      await waitForGpuPreload(this.renderer,{cancelled:()=>this.disposed});if(this.disposed)return;
+      await waitForGpuPreload(this.renderer,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0});if(this.disposed)return;
       prepared=true;this.animalGpuReady=true;
     }finally{
       fluidPrimer?.dispose();
@@ -407,7 +407,7 @@ export class WorldScene {
       this.animalReservePreparation=this.animalPreload.reserveGroup(s.nightPlan?.done?[]:upcoming,{prepare:async rig=>{
         if(this.disposed)return;const skeletons=new Set();rig.model.traverse(mesh=>{if(mesh.isSkinnedMesh)skeletons.add(mesh.skeleton);});
         for(const skeleton of skeletons){skeleton.computeBoneTexture();skeleton.update();this.renderer.initTexture(skeleton.boneTexture);}
-        await waitForGpuPreload(this.renderer,{cancelled:()=>this.disposed});
+        await waitForGpuPreload(this.renderer,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0});
       }}).catch(error=>{if(!this.disposed&&this.animalReserveKey===reserveKey){this.animalReserveKey=null;this.animalReserveRetryAt=performance.now()+3000;this.onError?.(error);}});
     }
   }
