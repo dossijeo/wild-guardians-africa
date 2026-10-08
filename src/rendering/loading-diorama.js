@@ -13,7 +13,7 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
   constructor(world,{state={day:1,time:0,biome:'sabana'}}={}) {
-    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(50,1,.1,80);this.camera.position.set(9,4.5,11);this.camera.lookAt(0,.65,0);this.baseQuaternion=this.camera.quaternion.clone();
+    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(50,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,.65,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.ray=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.abort=new AbortController();
@@ -64,8 +64,8 @@ export class LoadingDiorama {
   show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
   render(dt,progress,{ready=false,skyOnly=false}={}) {
     if(!this.prepared||this.disposed)return;
-    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.plants.time,()=>0);
-    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.45;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);
+    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const distance=this.camera.aspect<.8?1.2:1;this.camera.position.set(6*distance,3.3*distance,8*distance);this.camera.lookAt(0,.65,0);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.plants.time,()=>0);
+    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
