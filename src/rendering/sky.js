@@ -17,7 +17,8 @@ export class NativeSky {
     this.geometry=new THREE.BufferGeometry();this.geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0,0,0,0],3));
     this.uniforms={uForward:{value:new THREE.Vector3()},uRight:{value:new THREE.Vector3()},uUp:{value:new THREE.Vector3()},uViewScale:{value:new THREE.Vector2()},uSkyYaw:{value:0}};
   }
-  async load(){
+  load(){this.assertOpen();return this.ready??=this.loadResources();}
+  async loadResources(){
     this.assertOpen();const options={signal:this.loading.signal};
     const catalogue=await json('/content/skies.json',options);this.assertOpen();
     const images=await Promise.all(catalogue.panoramas.map(async p=>{const buffer=await bytes(p.url,options);this.assertOpen();return decodeRadiance(buffer);}));
