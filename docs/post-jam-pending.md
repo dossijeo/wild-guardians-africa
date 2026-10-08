@@ -1,5 +1,20 @@
 # Tareas pendientes posteriores a la Jam
 
+Solicitudes añadidas el 9 de octubre de 2026:
+
+- Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
+  salida, estilo y adaptación móvil con la interfaz del juego. Integrado en
+  main mediante PR 8, tras QA nativa, 3272 tests de CI y compilación Windows.
+- Espíritu: verificar que ningún avance/cierre automático ocurre antes del
+  final real del audio; conservar salto/cierre manual que detiene la voz.
+  Corrección integrada mediante PR 8; ended español, interrupción manual y
+  fallback verificados. [Evidencia y límites](qa/library-spirit-ended/README.md).
+- Incursiones: tras enfocar al animal, seguir su aproximación hasta la primera
+  entrada en la finca y dejar allí la cámara. Mantener cancelación por control
+  manual y protección de terreno. Implementado en main, con 13 pruebas
+  dirigidas aprobadas y comprobación nativa Gran Cañón/Mapungubwe.
+  [Evidencia y alcance](qa/raid-camera-approach.md).
+
 Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
 tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
 anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
@@ -173,7 +188,7 @@ No están activados; generación de fuentes no equivale a aceptación integrada.
 
 [Coste del historial de cultivos aislado](qa/crop-history-comparison/README.md): cuatro calibraciones y ocho pasadas sobre Sabana histórica, estado final completo idéntico. Mediana de medianas CPU por tick 1,860 ms con historial / 1,213 ms excluyendo temporalmente registros muertos; no acredita FPS ni autoriza borrar historial. Próximo candidato: índice de plantas activas con invalidación de ciclo de vida y comparación de nacimientos, muertes, entrega y guardado antes de integrar.
 
-[Campaña intensiva Sabana/Mapungubwe terminada](qa/intensive-sabana-mapungubwe-e461b550/README.md): revisión congelada e461b550, ocho cultivos, 100 noches, entrega física diaria y hasta 1.407 plantas vivas. Archivo y resumen recalculados en main; no equivale a repetir con navegación actual ni completar la matriz. Inactividad de estrategia 18,16% del tiempo diurno, aún por reducir; otras combinaciones y Gran Cañón siguen pendientes.
+[Campaña intensiva Sabana/Mapungubwe terminada](qa/intensive-sabana-mapungubwe-e461b550/README.md): revisión congelada e461b550, ocho cultivos, 100 noches, entrega física diaria y hasta 1.407 plantas vivas. Archivo y resumen recalculados en main; no equivale a repetir con navegación actual ni completar la matriz. Inactividad de estrategia 18,16% del tiempo diurno: cumple el umbral inferior al 25% aprobado por el usuario para esta métrica; otras combinaciones y Gran Cañón siguen pendientes.
 
 [Índice de audio medido en finca renderizada](qa/audio-task-frame-native/README.md): 800 muestras, cuatro continuaciones pagadas con estado/rutas/cues/envíos idénticos. La mediana de audio queda en 0,2 ms en ambos brazos y no aparece mejora consistente de frametime. Observadores con voces null, sin reproducción/descodificación; no extrapolar el ahorro aislado a FPS. Pendiente coste GPU sostenido y poblaciones mayores.
 
@@ -612,3 +627,18 @@ readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descarg
 recursos dos veces para medir. Distinguir observación real de estimaciones cuando
 caché o longitud de transferencia no sean observables. Pendiente de implementación
 y evidencia en rama; no aprobado por mera comunicación del requisito.
+# Regresión estática de aislamiento GPU, 2026-10-08
+
+[Seis biomas y control Manglares](qa/native-isolation-static/README.md): runtime
+2ba87182, cero cambios de framebuffer durante la subida aislada, restauración de
+visibilidad/culling/sombras y estado lógico, contextos liberados y errores vacíos.
+Cinco fotogramas posteriores idénticos; Manglares inicial conserva16 canales de
+diferencia/max7 como diagnóstico. Control separado con fotograma ordinario previo
+da cero diferencias antes y después; no atribuye la causa del ensayo inicial.
+No acredita continuidad en traveling ni entidades densas/rendimiento. Flags de
+preparación aislada y compilación/waits propios siguen fuera de producción.
+
+
+## Biblioteca a pantalla completa y lecturas que esperan la voz (9 de octubre de 2026)
+
+Encargo del usuario en rama `codex/library-spirit-ended`: reemplazar el iframe flotante por una pantalla Biblioteca integrada, con vuelta explícita, menú, ES/EN y safe areas. Conservar funciones de los cuatro labs. Corregir los caminos automáticos que retiraban lecturas al completar acciones o caducar contexto mientras su voz seguía audible; ended real debe terminar la presentación vigente, sin dar por hechas acciones pendientes ni impedir las reales. Implementado y revisable: 96 pruebas dirigidas PASS, QA CUA de cuatro cargas/vueltas, ES/EN, portrait/landscape, ended español, retención inglesa y cierre/fallback; build/paquete relativo y hashes de 54 voces PASS. [Evidencias y límites](qa/library-spirit-ended/README.md). Sin publicación itch ni afirmación de estabilidad global. Pendiente revisión/merge de PR.

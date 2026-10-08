@@ -39,3 +39,17 @@ test('preload honors the same explicit diagnostic options as capture without ena
 
 test('bounded loading depth submissions restore originals and renderer while each program is pending',async()=>{const s=setup(),pending=[],calls=[];let yielded=0;const compile=(view,camera,target)=>{assert.equal(target,s.world);assert.equal(s.renderer.getRenderTarget(),s.pipeline.smokeDepth);const meshes=[];view.traverse(mesh=>meshes.push(mesh));assert.equal(meshes.length,1);calls.push(meshes[0]);return new Promise(resolve=>pending.push(resolve));};const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,compile,nextFrame:async()=>{yielded++;assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);}});assert.equal(pending.length,1);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);for(let i=0;i<3;i++){pending[i]();for(let j=0;j<6;j++)await Promise.resolve();}await preparing;assert.deepEqual(calls,s.world.children);assert.equal(yielded,3);assert.equal(s.pipeline.depthWarmStats.excluded,1);s.cleanup();});
 test('cancelling after a bounded depth batch cannot leave borrowed materials or renderer state',async()=>{const s=setup();let stop=false,calls=0;await assert.rejects(s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,compile:()=>{calls++;return Promise.resolve();},cancelled:()=>stop,nextFrame:async()=>{stop=true;}}),/cancelled/);assert.equal(calls,1);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();});
+test('grouped world-depth QA flag applies equally to preload and capture without changing the default',async()=>{
+ const s=setup(),second=new MeshStandardMaterial(),sources=[s.originals[0],second];s.opaque.material=sources;
+ s.renderer.getDrawingBufferSize=out=>out.set(32,24);
+ for(const enabled of [false,true]){
+  s.pipeline.materialArrayDepth=enabled;
+  const inspect=()=>{assert.equal(s.renderer.shadowMap.enabled,false);assert.equal(s.renderer.getRenderTarget(),s.pipeline.smokeDepth);assert.ok(Array.isArray(s.opaque.material));if(enabled)assert.ok(s.opaque.material.every(m=>m.isMeshDepthMaterial));else assert.equal(s.opaque.material,sources);};
+  s.renderer.compileAsync=()=>{inspect();return Promise.resolve();};
+  await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world);
+  assert.equal(s.opaque.material,sources);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
+  s.renderer.render=inspect;s.pipeline.captureDepth(new PerspectiveCamera(),s.world);
+  assert.equal(s.opaque.material,sources);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
+ }
+ s.opaque.material=s.originals[0];second.dispose();s.cleanup();
+});
