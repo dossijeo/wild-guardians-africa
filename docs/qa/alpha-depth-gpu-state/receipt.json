@@ -1,0 +1,554 @@
+{
+  "base": "307b8dc928f9d54ae155490d064df621534aa32b",
+  "url": "http://127.0.0.1:5173/tests/browser/depth-capture.html?biome=volcanes&culture=mapungubwe",
+  "width": 1280,
+  "height": 720,
+  "errors": [],
+  "pairs": [
+    {
+      "pair": "N1/N2",
+      "differentPixels": 0,
+      "maxDepthDelta": 0
+    },
+    {
+      "pair": "N2/G",
+      "differentPixels": 0,
+      "maxDepthDelta": 0
+    },
+    {
+      "pair": "G/B1",
+      "differentPixels": 7,
+      "maxDepthDelta": 0.00001996755599975586
+    },
+    {
+      "pair": "N2/B1",
+      "differentPixels": 7,
+      "maxDepthDelta": 0.00001996755599975586
+    },
+    {
+      "pair": "B1/B2",
+      "differentPixels": 0,
+      "maxDepthDelta": 0
+    },
+    {
+      "pair": "B2/N3",
+      "differentPixels": 7,
+      "maxDepthDelta": 0.00001996755599975586
+    },
+    {
+      "pair": "N2/N3",
+      "differentPixels": 0,
+      "maxDepthDelta": 0
+    }
+  ],
+  "object": "46cfe407-280e-4d19-8aea-62d69eecc351",
+  "assetGroup": "18:2",
+  "expectedAssetName": "Afloramiento volcánico",
+  "B1B2RecordedGpuStateEqual": true,
+  "pipelineEqual": true,
+  "commonUniforms": [
+    {
+      "name": "modelViewMatrix",
+      "native": {
+        "type": 35676,
+        "size": 1,
+        "value": [
+          0.8137334585189819,
+          -0.24507154524326324,
+          0.527046263217926,
+          0,
+          0,
+          0.9067646861076355,
+          0.42163702845573425,
+          0,
+          -0.5812382102012634,
+          -0.3431001603603363,
+          0.7378647923469543,
+          0,
+          -67.53987884521484,
+          9.276664733886719,
+          -67.86328887939453,
+          1
+        ]
+      },
+      "depth": {
+        "type": 35676,
+        "size": 1,
+        "value": [
+          0.8137334585189819,
+          -0.24507154524326324,
+          0.527046263217926,
+          0,
+          0,
+          0.9067646861076355,
+          0.42163702845573425,
+          0,
+          -0.5812382102012634,
+          -0.3431001603603363,
+          0.7378647923469543,
+          0,
+          -67.53987884521484,
+          9.276664733886719,
+          -67.86328887939453,
+          1
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "projectionMatrix",
+      "native": {
+        "type": 35676,
+        "size": 1,
+        "value": [
+          1.465362548828125,
+          0,
+          0,
+          0,
+          0,
+          2.605088949203491,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000663757324,
+          -1,
+          0,
+          0,
+          -0.20004001259803772,
+          0
+        ]
+      },
+      "depth": {
+        "type": 35676,
+        "size": 1,
+        "value": [
+          1.465362548828125,
+          0,
+          0,
+          0,
+          0,
+          2.605088949203491,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000663757324,
+          -1,
+          0,
+          0,
+          -0.20004001259803772,
+          0
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "mapTransform",
+      "native": {
+        "type": 35675,
+        "size": 1,
+        "value": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "depth": {
+        "type": 35675,
+        "size": 1,
+        "value": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "opacity",
+      "native": {
+        "type": 5126,
+        "size": 1,
+        "value": 1
+      },
+      "depth": {
+        "type": 5126,
+        "size": 1,
+        "value": 1
+      },
+      "equal": true
+    },
+    {
+      "name": "alphaTest",
+      "native": {
+        "type": 5126,
+        "size": 1,
+        "value": 0.3499999940395355
+      },
+      "depth": {
+        "type": 5126,
+        "size": 1,
+        "value": 0.3499999940395355
+      },
+      "equal": true
+    },
+    {
+      "name": "map",
+      "native": {
+        "type": 35678,
+        "size": 1,
+        "value": 3
+      },
+      "depth": {
+        "type": 35678,
+        "size": 1,
+        "value": 0
+      },
+      "equal": false
+    }
+  ],
+  "commonAttributeBindings": [
+    {
+      "name": "instanceMatrix",
+      "native": {
+        "type": 35676,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 0,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 0
+          },
+          {
+            "index": 1,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 16
+          },
+          {
+            "index": 2,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 32
+          },
+          {
+            "index": 3,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 48
+          }
+        ]
+      },
+      "depth": {
+        "type": 35676,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 0,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 0
+          },
+          {
+            "index": 1,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 16
+          },
+          {
+            "index": 2,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 32
+          },
+          {
+            "index": 3,
+            "enabled": true,
+            "buffer": 8,
+            "size": 4,
+            "type": 5126,
+            "normalized": false,
+            "stride": 64,
+            "divisor": 1,
+            "offset": 48
+          }
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "position",
+      "native": {
+        "type": 35665,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 4,
+            "enabled": true,
+            "buffer": 9,
+            "size": 3,
+            "type": 5126,
+            "normalized": false,
+            "stride": 12,
+            "divisor": 0,
+            "offset": 0
+          }
+        ]
+      },
+      "depth": {
+        "type": 35665,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 4,
+            "enabled": true,
+            "buffer": 9,
+            "size": 3,
+            "type": 5126,
+            "normalized": false,
+            "stride": 12,
+            "divisor": 0,
+            "offset": 0
+          }
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "uv",
+      "native": {
+        "type": 35664,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 6,
+            "enabled": true,
+            "buffer": 11,
+            "size": 2,
+            "type": 5126,
+            "normalized": false,
+            "stride": 8,
+            "divisor": 0,
+            "offset": 0
+          }
+        ]
+      },
+      "depth": {
+        "type": 35664,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 6,
+            "enabled": true,
+            "buffer": 11,
+            "size": 2,
+            "type": 5126,
+            "normalized": false,
+            "stride": 8,
+            "divisor": 0,
+            "offset": 0
+          }
+        ]
+      },
+      "equal": true
+    },
+    {
+      "name": "nativeVisibility",
+      "native": {
+        "type": 5126,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 8,
+            "enabled": true,
+            "buffer": 13,
+            "size": 1,
+            "type": 5126,
+            "normalized": false,
+            "stride": 4,
+            "divisor": 1,
+            "offset": 0
+          }
+        ]
+      },
+      "depth": {
+        "type": 5126,
+        "size": 1,
+        "bindings": [
+          {
+            "index": 7,
+            "enabled": true,
+            "buffer": 13,
+            "size": 1,
+            "type": 5126,
+            "normalized": false,
+            "stride": 4,
+            "divisor": 1,
+            "offset": 0
+          }
+        ]
+      },
+      "equal": true
+    }
+  ],
+  "indexBufferEqual": true,
+  "textureMapNative": {
+    "unit": 3,
+    "target": 3553,
+    "id": 5,
+    "min": 9987,
+    "mag": 9729,
+    "wrapS": 33071,
+    "wrapT": 33071
+  },
+  "textureMapDepth": {
+    "unit": 0,
+    "target": 3553,
+    "id": 5,
+    "min": 9987,
+    "mag": 9729,
+    "wrapS": 33071,
+    "wrapT": 33071
+  },
+  "files": [
+    {
+      "source": ".cache/depth-gpu-native/named-before.json",
+      "archive": "before.json.gz",
+      "bytes": 34368,
+      "sha256": "6c25e85fc937af7241f8cfda0bef535668594e24b5e27d6832cdb9ac06b330c4"
+    },
+    {
+      "source": ".cache/depth-gpu-native/named-probe.json",
+      "archive": "probe.json.gz",
+      "bytes": 298484,
+      "sha256": "2980ae13ebf08ab009892c577dc1d79af98e41b6b07e6a0cdea97e75c4049f9d"
+    },
+    {
+      "source": ".cache/depth-gpu-native/named-context.png",
+      "archive": "context.png",
+      "bytes": 200915,
+      "sha256": "a5d9ae233215632219516cc6f030a8cf3c459fdcc52fbfca657fc33a994f8445"
+    },
+    {
+      "source": ".cache/depth-gpu-native/named-console.json",
+      "archive": "console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "source": ".cache/depth-gpu-native/directed-tests.log",
+      "archive": "directed-tests.log.gz",
+      "bytes": 2774,
+      "sha256": "ea2dfc219a8900fd00a42cf34219384fabc7c0244377d54bba22c6dc7b5fbade"
+    },
+    {
+      "source": ".cache/depth-gpu-native/syntax.json",
+      "archive": "syntax.json",
+      "bytes": 253,
+      "sha256": "f95b1ed53663d77edc98d28f92823d8dc1425b14fb69dd49a0aee32f1235491d"
+    },
+    {
+      "source": ".cache/depth-gpu-native/windows-65fb9114.json",
+      "archive": "windows-65fb9114.json",
+      "bytes": 3730,
+      "sha256": "352f57e29ab75a48bd28f3f2f0589bd8118b4d7031f3958334b876959fc5008c"
+    },
+    {
+      "source": ".cache/depth-gpu-native/validate-65fb9114.json",
+      "archive": "validate-65fb9114.json",
+      "bytes": 3825,
+      "sha256": "f0a78b8746c5a9376eddb8eff3ce5f5f5f9cfff6e61d6f363af2798052404aed"
+    },
+    {
+      "source": "tests/browser/depth-gpu-state.js",
+      "archive": "depth-gpu-state.js.gz",
+      "bytes": 4481,
+      "sha256": "352074433446872093cbea3e376ab000e32005a8357a49575297ec93412a4cb5"
+    },
+    {
+      "source": "tests/depth-gpu-state.test.js",
+      "archive": "depth-gpu-state.test.js.gz",
+      "bytes": 3629,
+      "sha256": "544a6442dab05e01a5edc7e241175397761729f9b19e433ad3cef2586eab8134"
+    },
+    {
+      "source": "tests/browser/depth-capture.html",
+      "archive": "depth-capture.html.gz",
+      "bytes": 32906,
+      "sha256": "5c3168bd54187e0c94a57d932bef4b196143722345482a7928ca54d02d34e991"
+    },
+    {
+      "source": "src/rendering/standard-depth.js",
+      "archive": "standard-depth.js.gz",
+      "bytes": 5574,
+      "sha256": "b65c8d7399d506855fcb64e0b3abf7b4b924459949b16f8d0852427ce5af848b"
+    },
+    {
+      "source": "src/rendering/asset-surface.js",
+      "archive": "asset-surface.js.gz",
+      "bytes": 3246,
+      "sha256": "0ee648d56f516af3feb66a18d4ebcd04fad9f286cc9bee6bf98a8601341e16db"
+    },
+    {
+      "source": "src/rendering/surface-alpha.js",
+      "archive": "surface-alpha.js.gz",
+      "bytes": 467,
+      "sha256": "364f5e80b46b8025f63a9a3f2107e182f356cd2a84b5e939e48394dddde857fa"
+    },
+    {
+      "source": "src/rendering/african-toon.js",
+      "archive": "african-toon.js.gz",
+      "bytes": 19158,
+      "sha256": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4"
+    }
+  ]
+}

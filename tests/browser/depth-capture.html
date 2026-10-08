@@ -21,11 +21,13 @@ import {summarizeDepthComparisons} from './depth-comparison-summary.js';
 import {captureDepthSubmissionState,compareDepthSubmissionState} from './depth-submission-state.js';
 import {depthPixelCandidates} from './depth-pixel-candidates.js';
 import {withExcludedDepthObject} from './depth-draw-exclusion.js';
+import {createDepthGpuProbe} from './depth-gpu-state.js';
 import {withDepthCaptureMaterials} from '../../src/rendering/depth-capture.js';
 import {renderOriginBounds,withRenderOrigin} from '../../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials as beforeCompatibility} from './depth-capture-before-compatibility.js';
 const params=new URLSearchParams(window.location.search),biome=params.get('biome')??'sabana',culture=params.get('culture')??'suajili',errors=[];
 const exclusionButton=document.createElement('button');exclusionButton.textContent='Excluir dibujos de profundidad';exclusionButton.disabled=true;document.querySelector('#status').before(exclusionButton);
+const gpuProbeButton=document.createElement('button');gpuProbeButton.textContent='Capturar estado GPU alpha';gpuProbeButton.disabled=true;document.querySelector('#status').before(gpuProbeButton);
 const showError=e=>{errors.push(String(e.message??e));document.querySelector('#status').textContent=errors.join('; ');};
 addEventListener('error',e=>showError(e.error??e));addEventListener('unhandledrejection',e=>showError(e.reason));
 const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
@@ -122,7 +124,8 @@ document.querySelector('#alpha-native-compare').onclick=()=>comparePreparation('
 document.querySelector('#alpha-single-compare').onclick=()=>comparePreparation('alpha-single');
 document.querySelector('#empty-compare').onclick=()=>comparePreparation('empty');
 document.querySelector('#alpha-compare').onclick=()=>comparePreparation('alpha');
-async function comparePreparation(kind){
+async function comparePreparation(kind,gpuProbe=null){
+ const gpuFrames=[];
  const nativeComparison=kind==='alpha-single-native',singleComparison=kind==='alpha-single'||nativeComparison;
  pixelCandidates=null;comparisonSnapshot=null;
  const before=serialize(state),previous=world.destructionPass.optimizedDepth,previousEmpty=world.destructionPass.nonEmptyDepthOnly,frames=[],gl=world.renderer.getContext();benchRunning=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);
@@ -132,7 +135,8 @@ async function comparePreparation(kind){
   const sequence=nativeComparison?[['N1',false,false],['N2',false,false],['G',false,true],['B1',true,true],['B2',true,true],['N3',false,false]]:[['A1',false,true],['A2',false,true],['B1',true,true],['B2',true,true],['A3',false,true]];
   for(const [label,enabled,optimized] of sequence){
    world.destructionPass.optimizedDepth=optimized;
-   if(kind==='empty')world.destructionPass.nonEmptyDepthOnly=enabled;else if(singleComparison)singleAlpha.setEnabled(enabled);else alphaExperiment.setEnabled(enabled);await nextFrame();const submissionState=captureDepthSubmissionState(world,()=>world.render(0));
+   if(kind==='empty')world.destructionPass.nonEmptyDepthOnly=enabled;else if(singleComparison)singleAlpha.setEnabled(enabled);else alphaExperiment.setEnabled(enabled);await nextFrame();let gpuState;const submissionState=captureDepthSubmissionState(world,()=>{if(gpuProbe)gpuState=gpuProbe.capture(()=>world.render(0));else world.render(0);});
+   if(gpuProbe)gpuFrames.push({label,rows:gpuState});
    const color=new Uint8Array(world.canvas.width*world.canvas.height*4);gl.readPixels(0,0,world.canvas.width,world.canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,color);
    const depth=alphaReadback.read(world.destructionPass.smokeDepth.depthTexture,world.canvas.width,world.canvas.height);
    if(gl.getError()!==gl.NO_ERROR)throw Error('Alpha readback WebGL error');if(serialize(state)!==before)throw Error('Alpha comparison changed logical state');
@@ -143,8 +147,21 @@ async function comparePreparation(kind){
   capturedNativeDraws=nativeComparison?frames.find(frame=>frame.label==='N2').submissionState:[];
   if(comparisons.some(c=>!c.depth.nonUniformPixels))throw Error('Constant depth cannot prove equivalence');
   result={kind,frames:frames.map(({color,depth,submissionState,...frame})=>({...frame,depthSubmissionDraws:submissionState.length})),mode:nativeComparison?'native-full-vs-guarded-vs-single-pass-alpha':kind==='empty'?'prepare-all-vs-known-empty-skipped':singleComparison?'current-depth-vs-single-pass-alpha':'current-depth-vs-QA-stock-alpha',scope:nativeComparison?'Six fixed-clock native world renders: full native N/N, production guard G, single-traversal alpha B/B, native N. Direct final color and packed actual depth attachment; no GPU/all-biome/mobile acceptance.':'Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.',...summarizeDepthComparisons(comparisons),comparisons,alphaApplications:singleComparison?singleAlpha.applications:alphaExperiment.applications,logicalStateUnchanged:true,width:world.canvas.width,height:world.canvas.height};comparisonSnapshot=before;
+  if(gpuProbe)result.gpuProbe={scope:'Post-draw WebGL queries, driver synchronization possible; not GPU timing or alpha acceptance. Buffer identities do not prove buffer byte equality.',frames:gpuFrames,programs:gpuProbe.programs};
  }catch(e){showError(e);}finally{singleAlpha.setEnabled(false);alphaExperiment.setEnabled(false);world.destructionPass.nonEmptyDepthOnly=previousEmpty;world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}
 }
+
+gpuProbeButton.onclick=async()=>{
+ try{
+  if(result?.mode!=='native-full-vs-guarded-vs-single-pass-alpha'||serialize(state)!==comparisonSnapshot)throw Error('Ejecutar primero comparación nativa');
+  const captured=result.frames[0].cameraInput;
+  if(JSON.stringify(captured.eye)!==JSON.stringify(world.camera.position.toArray())||JSON.stringify(captured.view)!==JSON.stringify(world.camera.matrixWorldInverse.elements)||JSON.stringify(captured.projection)!==JSON.stringify(world.camera.projectionMatrix.elements)||result.width!==world.canvas.width||result.height!==world.canvas.height)throw Error('Cámara/resolución cambiada; repetir comparación');
+  const pixels=result.comparisons.find(pair=>pair.depth.firstDifferentDepthPixels?.length)?.depth.firstDifferentDepthPixels??[];
+  const candidates=depthPixelCandidates(world.scene,world.camera,world.canvas.width,world.canvas.height,pixels,{recipe:nativeDepthRecipe});
+  const objects=[...new Set(candidates.rows.map(row=>row.candidates[0]?.object).filter(Boolean))];
+  await comparePreparation('alpha-single-native',createDepthGpuProbe(world,objects));
+ }catch(error){showError(error);}
+};
 document.querySelector('#pixel-candidates').onclick=()=>{
  try{
   if(!result?.comparisons||comparisonSnapshot===null)throw Error('Ejecutar primero la comparación alpha');
