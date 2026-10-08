@@ -21,3 +21,13 @@ test('an empty crop does not suppress its sampler shared by a drawable actor',as
  const renderer={properties:{get:()=>({currentProgram:{getUniforms:()=>({seq:[{id:'map'}]})}})},getContext:()=>({isContextLost:()=>false}),initTexture:texture=>calls.push(texture)};
  await initializeLoadingTextures(renderer,scene,{nextFrame:async()=>{}});assert.deepEqual(calls,[shared]);
 });
+
+
+test('already-aborted owner submits no texture or material queries',async()=>{
+ const f=fixture(),owner=new AbortController();owner.abort();f.renderer.properties.get=()=>assert.fail('Late material query');
+ await assert.rejects(initializeLoadingTextures(f.renderer,f.scene,{signal:owner.signal}),/cancelled/);assert.deepEqual(f.calls,[]);
+});
+test('native upload that aborts its owner stops before progress callback and subsequent samplers',async()=>{
+ const f=fixture(),owner=new AbortController();f.renderer.initTexture=texture=>{f.calls.push(texture);owner.abort();};
+ await assert.rejects(initializeLoadingTextures(f.renderer,f.scene,{signal:owner.signal,onTexture:()=>assert.fail('Late progress')}),/cancelled/);assert.deepEqual(f.calls,[f.shared]);
+});
