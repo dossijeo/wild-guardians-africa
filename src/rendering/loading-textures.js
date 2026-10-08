@@ -4,8 +4,8 @@ import {loadingYieldBudget} from './loading-yield-budget.js';
 // compilation may still reference their samplers, but does not make a texture
 // upload necessary for initial visible readiness. Shared samplers are collected
 // through any other nonempty object. Never clone or resize native assets.
-export async function initializeLoadingTextures(renderer,scene,{frameBudget=0,now=()=>performance.now(),cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onTexture=()=>{}}={}){
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame});
+export async function initializeLoadingTextures(renderer,scene,{frameBudget=0,now=()=>performance.now(),signal,cancelled=()=>false,nextFrame,onTexture=()=>{}}={}){
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal,cancelled});
  const textures=new Set(),materials=new Set();
  const collect=value=>{if(value?.isTexture&&!value.isRenderTargetTexture&&!value.isVideoTexture)textures.add(value);else if(Array.isArray(value))value.forEach(collect);};
  scene.traverse(object=>{if(object.isInstancedMesh&&object.count===0)return;for(const material of [object.material,object.customDepthMaterial,object.customDistanceMaterial].flat().filter(Boolean))materials.add(material);});

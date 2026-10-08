@@ -19,13 +19,13 @@ export function waitForGpuPreload(renderer,options={}){
 // Submit the same native screen/shadow recipes in small groups, so first-use
 // buffer/texture uploads and shadow variants are spread across real frames.
 // Color batches reuse shadows; one complete native shadow pass precedes readiness.
-export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,frameBudget=0,now=()=>performance.now(),warmShadows=false,cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onBatch=()=>{}}={}){
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame});
+export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,frameBudget=0,now=()=>performance.now(),warmShadows=false,signal,cancelled=()=>false,nextFrame,onBatch=()=>{}}={}){
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal,cancelled});
  const meshes=[];scene.traverseVisible(object=>{if(object.isMesh||object.isLine||object.isPoints)meshes.push(object);});
  const visible=new Map(meshes.map(mesh=>[mesh,mesh.visible])),shadows=renderer.shadowMap;
  const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate,object.shadow.autoUpdate]);});
  const shadowNeeds=shadows.needsUpdate,shadowAuto=shadows.autoUpdate;
- const check=()=>{if(cancelled()||renderer.getContext().isContextLost())throw Error('Loading scene upload cancelled');};
+ const check=()=>{if(signal?.aborted||cancelled()||renderer.getContext().isContextLost())throw Error('Loading scene upload cancelled');};
  const restore=()=>{for(const [mesh,value] of visible)mesh.visible=value;};
  const restoreShadows=()=>{shadows.needsUpdate=shadowNeeds;shadows.autoUpdate=shadowAuto;for(const [shadow,value,auto] of lights){shadow.needsUpdate=value;shadow.autoUpdate=auto;}};
  const suppressShadows=()=>{shadows.autoUpdate=false;shadows.needsUpdate=false;for(const [shadow] of lights){shadow.autoUpdate=false;shadow.needsUpdate=false;}};
