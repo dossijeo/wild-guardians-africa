@@ -28,3 +28,10 @@ test('ResourceTiming received before parse is retained even when the native reso
  owner.resource(timing);assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.timings.size,1);assert.equal(owner.downloads.snapshot().cacheHits,1);assert.equal(owner.downloads.snapshot().estimatedMs,0);assert.equal(owner.downloads.snapshot().networkPending,0);
  finishAssetTransfer(token);assert.equal(owner.downloads.snapshot().pending,0);assert.equal(owner.downloads.snapshot().cacheHits,1);assert.equal(owner.downloads.snapshot().estimatedMs,0);assert.equal(owner.timings.size,0);owner.dispose();
 });
+test('observed native Worker scripts contribute real transfer evidence without extra fetches',()=>{
+ const owner=new LoadingTransferOwner(),now=performance.now(),entry={name:'http://localhost/assets/snapshot-decode-worker-abc.js',initiatorType:'other',startTime:now,responseEnd:now+40,transferSize:1500,encodedBodySize:1200,decodedBodySize:1800};
+ owner.resource(entry);const request=[...owner.downloads.requests.values()][0];assert.equal(request.kind,'native-script');assert.equal(request.cache,'network');
+ owner.resource(entry);assert.equal(owner.downloads.requests.size,1);
+ owner.resource({...entry,name:'http://localhost/assets/far-helper.js',initiatorType:'script',transferSize:0});assert.equal(owner.downloads.snapshot().cacheHits,1);
+ owner.resource({...entry,name:'http://localhost/unrelated/metrics.js'});assert.equal(owner.downloads.requests.size,2);owner.dispose();
+});

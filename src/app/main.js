@@ -60,6 +60,10 @@ import '../ui/tutorial.css';
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa():null;
+// Hints come only from already-validated slot listings. The decoded save remains
+// authoritative; hints allow the first loading sky to use its known clock.
+const savePreviews=new Map();
+async function listedSaves(){const slots=await saves.list();savePreviews.clear();for(const slot of slots)savePreviews.set(slot.slotId,{day:slot.day,time:slot.time??0,biome:slot.biome,culture:slot.culture});return slots;}
 for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 const loadFrameImages=createFrameImageLoader(ASSETS);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
@@ -113,9 +117,9 @@ window.addEventListener('message',event=>{
    const data=event.data,respond=detail=>event.source.postMessage({type:'wild-guardians:menu-data',...detail},location.origin);
    if(data.action==='prepare-loading'){try{prepareLoadingScene();}catch(failure){error(failure.message);}return;}
    if(data.action==='cancel-loading'){cancelLoading();return;}
-   if(data.action==='request-saves')respond({slots:(await saves.list()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});
-   if(data.action==='delete-slot'){await saves.delete(data.slotId);respond({slots:(await saves.list()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});return;}
-   if(data.action==='load-slot')return startGame(await saves.load(data.slotId));
+   if(data.action==='request-saves')respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});
+   if(data.action==='delete-slot'){await saves.delete(data.slotId);respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});return;}
+   if(data.action==='load-slot')return startGame(null,{slotId:data.slotId,preview:savePreviews.get(data.slotId)});
    if(data.action==='start'&&Game.BIOMES.includes(data.biome)&&Game.CULTURES.includes(data.culture)){selectedBiome=data.biome;selectedCulture=data.culture;return startGame();}
    if(data.action==='request-settings')respond({settings});
    if(data.action==='settings-change'&&['muy_baja','baja','media','alta'].includes(data.settings?.quality)&&[data.settings.sfx,data.settings.music].every(value=>Number.isFinite(value)&&value>=0&&value<=1)){Object.assign(settings,data.settings);settings.resolution=worldResolution(settings.resolution);localStorage.setItem('wild-guardians:settings',JSON.stringify(settings));audio.volume();}
@@ -131,11 +135,11 @@ window.addEventListener('message',event=>{
  if(event.data.action==='start'&&Game.BIOMES.includes(event.data.biome)&&Game.CULTURES.includes(event.data.culture)){selectedBiome=event.data.biome;selectedCulture=event.data.culture;safe(()=>startGame());}
 });
 async function loadScreen() {
-  screen='load';const slots=await saves.list();if(screen!=='load')return;app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Tus poblados</div>${button('back','← Volver','ghost')}</header><h2>Retoma tu historia</h2><p class="muted">Cada partida conserva su propio mundo.</p><div class="slots">${slots.length?slots.map(s=>`<div class="slot"><div><h3>${esc(selector.cultures.find(c=>c.id===s.culture)?.name??s.culture)}</h3><p class="muted">Día ${s.day} · ${esc(selector.biomes.find(b=>b.id===s.biome)?.name??s.biome)} · ${localMoney(s.money)} monedas</p></div><button data-slot="${s.slotId}">Continuar →</button><button class="ghost" data-delete-slot="${s.slotId}">Eliminar partida</button></div>`).join(''):'<p class="muted">Todavía no hay partidas guardadas.</p>'}</div></main>`;bind('back',menu);
-  document.querySelectorAll('[data-slot]').forEach(el=>el.onclick=()=>safe(async()=>startGame(await saves.load(el.dataset.slot))));
+  screen='load';const slots=await listedSaves();if(screen!=='load')return;app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Tus poblados</div>${button('back','← Volver','ghost')}</header><h2>Retoma tu historia</h2><p class="muted">Cada partida conserva su propio mundo.</p><div class="slots">${slots.length?slots.map(s=>`<div class="slot"><div><h3>${esc(selector.cultures.find(c=>c.id===s.culture)?.name??s.culture)}</h3><p class="muted">Día ${s.day} · ${esc(selector.biomes.find(b=>b.id===s.biome)?.name??s.biome)} · ${localMoney(s.money)} monedas</p></div><button data-slot="${s.slotId}">Continuar →</button><button class="ghost" data-delete-slot="${s.slotId}">Eliminar partida</button></div>`).join(''):'<p class="muted">Todavía no hay partidas guardadas.</p>'}</div></main>`;bind('back',menu);
+  document.querySelectorAll('[data-slot]').forEach(el=>el.onclick=()=>safe(()=>startGame(null,{slotId:el.dataset.slot,preview:savePreviews.get(el.dataset.slot)})));
   document.querySelectorAll('[data-delete-slot]').forEach(el=>el.onclick=()=>safe(async()=>{await saves.delete(el.dataset.deleteSlot);await loadScreen();}));
 }
-async function startGame(loaded=null) {
+async function startGame(loaded=null,{slotId,preview}={}) {
   if(starting)return;starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
   let prepared;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
   // Retain the complete menu frame until the diorama has actually warmed.
@@ -143,7 +147,7 @@ async function startGame(loaded=null) {
   try {
     const audioUnlocked=audio.unlock().then(()=>true,()=>false);
     prepared=prepareLoadingScene();
-    const next=loaded??Game.newGame({biome:selectedBiome,culture:selectedCulture});
+    let next=loaded??(slotId!==undefined?(preview??{day:1,time:0,biome:selectedBiome,culture:selectedCulture}):Game.newGame({biome:selectedBiome,culture:selectedCulture}));
     await prepared.pending;assertLoading();preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;loadingDiorama=prepared.diorama;loadingDiorama.show(next);
     const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
     const overlay=new LoadingOverlay({locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
@@ -152,6 +156,12 @@ async function startGame(loaded=null) {
     app.replaceChildren(prepared.canvas);
     app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();
     loadingDiagnostic=setInterval(refreshLoadingOverlay,1000);
+    // Show the fully prepared diorama before parsing a Continue snapshot. Worker
+    // validation is unchanged; cancelled/late results cannot adopt into this game.
+    if(slotId!==undefined){
+      next=await world.loadReady(saves.loadPrepared(slotId,{signal:world.loading.signal,onDiagnostic:diagnostic=>{progressQa?.snapshotDecode(diagnostic);if(diagnostic.mode==='synchronous-fallback')console.warn('Snapshot compatibility fallback: '+diagnostic.reason);}}));assertLoading();loaded=next;
+      loadingDiorama.show(next);audioOwner.setState(next);audioOwner.start();loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
+    }
     const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
