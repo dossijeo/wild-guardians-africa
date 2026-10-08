@@ -37,9 +37,10 @@ export class LoadingDiorama {
     material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v2';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
     this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
-    let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};this.orbit.beginInteraction();e.preventDefault();}},{signal:this.abort.signal});
+    let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};this.orbit.beginInteraction();world.canvas.setPointerCapture?.(e.pointerId);e.preventDefault();}},{signal:this.abort.signal});
     world.canvas.addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const start=down;down=null;this.orbit.endInteraction();if(this.interactive&&Math.hypot(e.clientX-start.x,e.clientY-start.y)<12)this.plantAt(e.clientX,e.clientY);},{signal:this.abort.signal});
     world.canvas.addEventListener('pointercancel',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
+    world.canvas.addEventListener('lostpointercapture',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
   }
   async prepare() {
     const {world}=this;await world.loadReady(world.sky.load());if(this.disposed)throw Error('Loading diorama cancelled');
