@@ -1,4 +1,5 @@
 import {Vector4} from 'three';
+import {withScreenTarget} from '../../src/rendering/screen-target.js';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
@@ -48,14 +49,15 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   }
   check();
   const compileDrawAndFence=async()=>{check();
-  await renderer.compileAsync(root,camera,scene);check();checkErrors('after compilation');
+  const compilation=cooperative?withScreenTarget(renderer,()=>renderer.compileAsync(root,camera,scene)):renderer.compileAsync(root,camera,scene);
+  await compilation;check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.
   const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,parent=root.parent,culled=[];
   // Scope this mutation to the synchronous upload draw. Other species may be
   // awaiting compilation concurrently; none may inherit another one's flags.
-  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);checkErrors('after upload draw');}
+  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);if(cooperative)withScreenTarget(renderer,()=>{renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);});else renderer.render(scene,camera);checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}

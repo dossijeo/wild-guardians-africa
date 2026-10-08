@@ -1,8 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {compileLoadingPrograms} from '../src/rendering/loading-programs.js';
+import {Vector4} from 'three';
 function fixture(program){const material={};return {material,renderer:{compile:()=>new Set([material]),properties:{get:()=>({currentProgram:program})},getContext:()=>({isContextLost:()=>false})}};}
 test('loading compilation snapshots programs before borrowed materials are restored',async()=>{let ready=false;const original={isReady:()=>ready},f=fixture(original);const pending=compileLoadingPrograms(f.renderer,{},{});f.renderer.properties.get=()=>({currentProgram:{isReady:()=>false}});ready=true;await pending;});
 test('loading compilation cancellation releases a pending poll immediately',async()=>{const abort=new AbortController(),f=fixture({isReady:()=>false});const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{signal:abort.signal});abort.abort();await assert.rejects(pending,/cancelled/);});
 test('loading compilation reports timeout without an indefinite poll',async()=>{let clock=0;const f=fixture({isReady:()=>false});const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{now:()=>clock,timeout:1});clock=2;await assert.rejects(pending,/timed out/);});
 test('loading compilation rejects a destroyed owner before submitting programs',()=>{const f=fixture({isReady:()=>true});f.renderer.compile=()=>{throw Error('must not compile');};assert.throws(()=>compileLoadingPrograms(f.renderer,{},{},undefined,{cancelled:()=>true}),/cancelled/);});
+
+test('explicit screen compilation restores target and viewport while its program is still pending',async()=>{
+ let ready=false,target={depth:true};const previous=target,f=fixture({isReady:()=>ready}),viewport=new Vector4(1,2,3,4),scissor=new Vector4(4,3,2,1);let test=true;
+ Object.assign(f.renderer,{getRenderTarget:()=>target,setRenderTarget:value=>{target=value;viewport.set(0,0,900,600);},getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>test,setViewport:v=>viewport.copy(v),setScissor:v=>scissor.copy(v),setScissorTest:v=>{test=v;},compile:()=>{assert.equal(target,null);return new Set([f.material]);}});
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{screen:true});assert.equal(target,previous);assert.deepEqual(viewport.toArray(),[1,2,3,4]);assert.deepEqual(scissor.toArray(),[4,3,2,1]);assert.equal(test,true);ready=true;await pending;
+ f.renderer.compile=()=>{assert.equal(target,null);throw Error('compile fault');};assert.throws(()=>compileLoadingPrograms(f.renderer,{},{},undefined,{screen:true}),/compile fault/);assert.equal(target,previous);assert.deepEqual(viewport.toArray(),[1,2,3,4]);
+});

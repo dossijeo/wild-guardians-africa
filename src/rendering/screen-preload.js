@@ -1,11 +1,12 @@
 import {Vector4} from 'three';
+import {withScreenTarget} from './screen-target.js';
 
 // Keep the screen's output/color recipe while submitting buffers and textures.
 // A zero viewport prevents color/depth writes; shadow passes retain their own
 // viewport. Renderer state is restored before any asynchronous wait.
 export function renderScreenPreload(renderer,scene,camera){
  const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear;
- try{renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);}
+ try{withScreenTarget(renderer,()=>{renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);});}
  finally{renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);}
 }
 

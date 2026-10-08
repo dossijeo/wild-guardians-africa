@@ -294,7 +294,7 @@ export class WorldScene {
     }));
   }
   async warmAnimalGpu(){
-    const compile=(scene,camera,target)=>this.loadingProgress?compileLoadingPrograms(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed}):this.renderer.compileAsync(scene,camera,target);
+    const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?compileLoadingPrograms(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
     const originals=[];
@@ -317,7 +317,7 @@ export class WorldScene {
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
       await compile(this.scene,this.camera,this.scene);if(this.disposed)return;
-      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile});if(this.disposed)return;
+      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera)=>compile(scene,camera,undefined,{screen:false})});if(this.disposed)return;
       this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
