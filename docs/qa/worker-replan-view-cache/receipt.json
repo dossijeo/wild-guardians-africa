@@ -166,6 +166,18 @@
       "path": "native-traffic.json.gz",
       "rawBytes": 324258,
       "sha256": "0175e838a2078f5b017b60e02919ea09836c9a0f86b8fc1ead1a1774ca7c089e"
+    },
+    {
+      "source": ".cache/probe-v6-fluid-boundary.mjs",
+      "path": "fluid-boundary-runner.mjs.gz",
+      "rawBytes": 3246,
+      "sha256": "9d7098d4b12c30b79f2f5a6dce61c5561ad794d755888913006a9ad38a5c6aa0"
+    },
+    {
+      "source": ".cache/worker-route-refinement/fluid-boundary-v6.json",
+      "path": "fluid-boundary.json.gz",
+      "rawBytes": 1065,
+      "sha256": "a17786839e139eda90d1dccdab0e6f726390fd8ed44a28bfa2cd84d490332355"
     }
   ],
   "benchmarkExitCode": 0,
@@ -173,5 +185,6 @@
   "shoreExitCode": 0,
   "replanCostExitCode": 0,
   "nativeGateExitCode": 0,
-  "nativeTrafficExitCode": 0
+  "nativeTrafficExitCode": 0,
+  "fluidBoundaryExitCode": 0
 }

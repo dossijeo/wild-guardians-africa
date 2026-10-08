@@ -25,3 +25,6 @@ for(const g of gates.results){const [a,c]=g.arms;assert(a.reached&&c.reached);as
 const traffic=report('native-traffic');assert.deepEqual(traffic.results.map(x=>x.species),['warthog','hyena','buffalo','lion','rhino']);
 for(const t of traffic.results){const [a,c]=t.arms;assert(a.workerDone&&a.animalDone&&c.workerDone&&c.animalDone);assert.deepEqual(a.rows,c.rows);assert.equal(c.views,1);assert.equal(c.rejections,0);}
 console.log('PASS controlled native gate and moving traffic evidence; no full gameplay acceptance');
+
+assert.equal(receipt.fluidBoundaryExitCode,0);const fluids=report('fluid-boundary');assert.deepEqual(fluids.results.map(x=>x.biome),['sabana','gran-rio','manglares','volcanes']);assert.deepEqual(fluids.results.map(x=>x.interiorInvalid),[61,61,355,61]);assert(fluids.results.every(x=>x.anchors===32&&x.considered===20736&&x.accepted===0&&x.failure===null&&x.exercised.length===0));
+console.log('PASS bounded fluid search integrity; no interior-invalid movement acceptance claimed');
