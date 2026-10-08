@@ -3,7 +3,7 @@
   "resolution": 1024,
   "shader": "AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose",
   "source": "worker-actions.youngMale runtime web",
-  "candidate": "Five closed rigid meshes FrontSide; source geometry unchanged",
+  "candidate": "Source lossless repack control",
   "candidateSide": "FrontSide accessories; existing FrontSide body retained",
   "maxSamples": 1,
   "shadowSide": "Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained",
@@ -181,62 +181,23 @@
   ],
   "limitations": [
     "Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.",
-    "Partial sidedness investigation only: zero new triangles/groups/draw calls, source normal/TBN recipe retained viaDOUBLE_SIDED define on selected Front materials. All12clips/multiview/shadow/resources/netGPU gates remain."
+    "No FrontSide forcing, visible normal reconstruction or selective-back candidate included. Source-based packing/cleanup isolates geometry from earlier rejected shading changes."
   ],
   "originalWorldPath": "WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon",
   "candidateReceipt": {
     "category": "youngMale",
-    "path": ".cache/frontside-model-pilot/candidates/archive/3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7-web.glb",
-    "archivePath": ".cache/frontside-model-pilot/candidates/archive/74a0b60e73a9f6a78eb7bf0ef61954a5b08a9bff4ba52e018f6019c77d7c15d1.glb",
-    "sourceCandidateSha256": "3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7",
-    "bytes": 5219348,
+    "path": ".cache/frontside-model-pilot/candidates/archive/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238-web.glb",
+    "archivePath": ".cache/frontside-model-pilot/candidates/archive/b785ae89e25abd5a1e06b0113db955130b6dc5a42800af645469ad6bbb81b078.glb",
+    "sourceCandidateSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+    "bytes": 5218376,
     "baselineRuntimeBytes": 5612688,
-    "growthPercent": -7.008050331677085,
+    "growthPercent": -7.0253682371084984,
     "prunedUnusedAccessors": 589,
-    "sha256": "74a0b60e73a9f6a78eb7bf0ef61954a5b08a9bff4ba52e018f6019c77d7c15d1",
+    "sha256": "b785ae89e25abd5a1e06b0113db955130b6dc5a42800af645469ad6bbb81b078",
     "codec": "Same lossless Meshopt lanes; exact existing web texture payloads; explicit accessor/view liveness remap",
     "status": "NOT_APPROVED"
   },
-  "closedSubset": true,
-  "selectedClosedParts": [
-    {
-      "mesh": "Prop_FruitCrate_geometry_7",
-      "primitive": 0,
-      "triangles": 432,
-      "sourceMaterial": 5,
-      "candidateMaterial": 14
-    },
-    {
-      "mesh": "Prop_FruitCrate_geometry_8",
-      "primitive": 0,
-      "triangles": 5184,
-      "sourceMaterial": 6,
-      "candidateMaterial": 15
-    },
-    {
-      "mesh": "Prop_FruitCrate_geometry_9",
-      "primitive": 0,
-      "triangles": 1728,
-      "sourceMaterial": 7,
-      "candidateMaterial": 16
-    },
-    {
-      "mesh": "Prop_Hoe_geometry_23",
-      "primitive": 0,
-      "triangles": 432,
-      "sourceMaterial": 2,
-      "candidateMaterial": 17
-    },
-    {
-      "mesh": "Prop_Hoe_geometry_24",
-      "primitive": 0,
-      "triangles": 864,
-      "sourceMaterial": 3,
-      "candidateMaterial": 18
-    }
-  ],
-  "selectedDoubleControl": false,
-  "remainingSideMeaning": "BodyMesh0 alreadyFront; all nonselected accessories remain originalDoubleSide with undefined normals unchanged.",
+  "closedSubset": false,
   "materialSides": [
     {
       "side": 0,
@@ -465,23 +426,23 @@
     {
       "side": 1,
       "mesh": "Prop_FruitCrate_geometry_7",
-      "colorSide": 0,
-      "shadowSide": 2,
-      "sourceDoubleShaderDefine": true
+      "colorSide": 2,
+      "shadowSide": null,
+      "sourceDoubleShaderDefine": false
     },
     {
       "side": 1,
       "mesh": "Prop_FruitCrate_geometry_8",
-      "colorSide": 0,
-      "shadowSide": 2,
-      "sourceDoubleShaderDefine": true
+      "colorSide": 2,
+      "shadowSide": null,
+      "sourceDoubleShaderDefine": false
     },
     {
       "side": 1,
       "mesh": "Prop_FruitCrate_geometry_9",
-      "colorSide": 0,
-      "shadowSide": 2,
-      "sourceDoubleShaderDefine": true
+      "colorSide": 2,
+      "shadowSide": null,
+      "sourceDoubleShaderDefine": false
     },
     {
       "side": 1,
@@ -577,19 +538,19 @@
     {
       "side": 1,
       "mesh": "Prop_Hoe_geometry_23",
-      "colorSide": 0,
-      "shadowSide": 2,
-      "sourceDoubleShaderDefine": true
+      "colorSide": 2,
+      "shadowSide": null,
+      "sourceDoubleShaderDefine": false
     },
     {
       "side": 1,
       "mesh": "Prop_Hoe_geometry_24",
-      "colorSide": 0,
-      "shadowSide": 2,
-      "sourceDoubleShaderDefine": true
+      "colorSide": 2,
+      "shadowSide": null,
+      "sourceDoubleShaderDefine": false
     }
   ],
-  "sourceRepackControl": false,
+  "sourceRepackControl": true,
   "crateDegenerateOnly": false,
   "crateNormalDiagnosis": false,
   "localNormalDiagnosis": false,

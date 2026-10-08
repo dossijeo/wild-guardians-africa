@@ -1,0 +1,982 @@
+{
+  "profile": "WORKER_CLOSED_SUBSET_INDEPENDENT_V1",
+  "seed": "998d8e34:worker-closed-subset-independent-v1",
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "clips": [
+    "Idle",
+    "Walk_Skip",
+    "Run",
+    "Wave",
+    "Dig",
+    "Plant",
+    "Water",
+    "Harvest",
+    "Carry_Crate",
+    "Alert",
+    "Hit",
+    "Fall"
+  ],
+  "purpose": "Prospective 120-case rejection screen: 12 clips x 5 fractions x 2 directions. Not exhaustive category acceptance or GPU benchmark.",
+  "cases": [
+    {
+      "clipName": "Idle",
+      "fraction": 0,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 8.23131151293202
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 25.81209277485313
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 63.589448386358434
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 83.99399557488366
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 110.02941939421683
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 118.00521858548868
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 138.21498435950255
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 171.40340276188297
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 200.02687876707103
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 204.92033264667734
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 241.0279316395819
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 252.78249027237354
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.25,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 76.8949187457084
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.25,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 92.40988784618906
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.25,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 132.57938506141755
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.25,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 151.98828870069428
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.25,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 170.5796749828336
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.25,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 194.9972838941024
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.25,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 217.9359655146105
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.25,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 234.28538948653392
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.25,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 255.82644388494697
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.25,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 272.8663538567178
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.25,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 301.0813534752422
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.25,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 331.1323796444648
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.5,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 155.21742580300602
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.5,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 162.4454337376974
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.5,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 190.17291523613335
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.5,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 208.63444724193178
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.5,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 244.55291065842678
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.5,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 251.42353704127567
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.5,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 289.8750057221332
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.5,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 301.7464332036316
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.5,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 331.25065995269705
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.5,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 356.5193789578088
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.5,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 13.737979705500877
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.5,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 39.86401922636759
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.75,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 209.1343862058442
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.75,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 235.35555809872588
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.75,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 266.2201495384146
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.75,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 285.2008163576715
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.75,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 306.5318455786984
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.75,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 319.1996185244526
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.75,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 342.2828336003662
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.75,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 17.832906080720225
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.75,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 24.632959487296866
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.75,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 54.53550011444266
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.75,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 81.06013580529488
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.75,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 98.84529640650034
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 1,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 284.2452582589456
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 1,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 300.505760280766
+    },
+    {
+      "clipName": "Run",
+      "fraction": 1,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 325.9692607003891
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 1,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 352.28217746242467
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 1,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 12.986800946059358
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 1,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 39.15292591744869
+    },
+    {
+      "clipName": "Water",
+      "fraction": 1,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 48.02556649118792
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 1,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 76.73909361409933
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 1,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 98.92349126420996
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 1,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 132.9260395208667
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 1,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 148.01785305561913
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 1,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 173.6727473868925
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 162.17132829785612
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 186.0071335927367
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 213.9954528114748
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 236.48359655146106
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 252.92420080872816
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 273.1379186694133
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 305.06054016937514
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 321.8144884412909
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 357.5918059052415
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 20.07994964522774
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 27.786442359044784
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 58.76169222552834
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.25,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 228.69657434958418
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.25,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 262.96334782940414
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.25,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 285.723338673991
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.25,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 306.2441901274128
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.25,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 317.5182879377432
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.25,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 353.6719005111772
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.25,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 16.022285801480123
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.25,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 36.93524071107042
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.25,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 57.93344777599756
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.25,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 82.83913939116502
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.25,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 92.60466926070039
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.25,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 118.25053025101091
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.5,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 298.7213931486992
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.5,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 333.6202182040131
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.5,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 353.6479056992447
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.5,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 10.255344472419319
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.5,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 42.91333638513771
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.5,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 63.21879911497673
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.5,
+      "biome": "desierto",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 71.41252765697719
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.5,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 94.08105592431525
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.5,
+      "biome": "gran-rio",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 126.96996261539635
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.5,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 137.28285648889906
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.5,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 166.6129091325246
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.5,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 188.8179140917067
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 0.75,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 11.409353780422673
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 0.75,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 35.23584344243534
+    },
+    {
+      "clipName": "Run",
+      "fraction": 0.75,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 62.08144502937362
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 0.75,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 74.85874723430229
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 0.75,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 100.95740444037537
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 0.75,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 119.3046082246128
+    },
+    {
+      "clipName": "Water",
+      "fraction": 0.75,
+      "biome": "sabana",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 145.62034790569925
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 0.75,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 160.67518120088502
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 0.75,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 25,
+      "azimuth": 193.392172121767
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 0.75,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 55,
+      "azimuth": 208.57262531471733
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 0.75,
+      "biome": "gran-canon",
+      "night": 1,
+      "elevation": 85,
+      "azimuth": 229.21316853589684
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 0.75,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 256.19596398870834
+    },
+    {
+      "clipName": "Idle",
+      "fraction": 1,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": -15,
+      "azimuth": 76.407682917525
+    },
+    {
+      "clipName": "Walk_Skip",
+      "fraction": 1,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 5,
+      "azimuth": 96.40516517891203
+    },
+    {
+      "clipName": "Run",
+      "fraction": 1,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 25,
+      "azimuth": 115.75789272907606
+    },
+    {
+      "clipName": "Wave",
+      "fraction": 1,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": 55,
+      "azimuth": 144.3816510261692
+    },
+    {
+      "clipName": "Dig",
+      "fraction": 1,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": 85,
+      "azimuth": 176.86123445487144
+    },
+    {
+      "clipName": "Plant",
+      "fraction": 1,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": -15,
+      "azimuth": 182.03923857480734
+    },
+    {
+      "clipName": "Water",
+      "fraction": 1,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": 5,
+      "azimuth": 205.70933852140078
+    },
+    {
+      "clipName": "Harvest",
+      "fraction": 1,
+      "biome": "manglares",
+      "night": 0.5,
+      "elevation": 25,
+      "azimuth": 240.55424582284274
+    },
+    {
+      "clipName": "Carry_Crate",
+      "fraction": 1,
+      "biome": "volcanes",
+      "night": 1,
+      "elevation": 55,
+      "azimuth": 250.93347829404135
+    },
+    {
+      "clipName": "Alert",
+      "fraction": 1,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": 85,
+      "azimuth": 274.31761654077974
+    },
+    {
+      "clipName": "Hit",
+      "fraction": 1,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": -15,
+      "azimuth": 311.2653162432288
+    },
+    {
+      "clipName": "Fall",
+      "fraction": 1,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": 5,
+      "azimuth": 326.6876935988403
+    }
+  ]
+}

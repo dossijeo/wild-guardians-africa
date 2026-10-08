@@ -11,6 +11,7 @@ import {WorldScene} from '../../src/rendering/scene.js';
 import {Assets} from '../../src/rendering/assets.js';
 const status=document.querySelector('#status');let renderer,cancelled=false;
 import {regions,alphaDistanceGate,controlEnvelopeMetrics,accumulateControlEnvelope,addControlUncertainty} from '../../tools/lib/frontside-visual-metrics.mjs';
+import {comparePackedShadow} from '../../tools/lib/frontside-shadow-metrics.mjs';
 function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing',faceMaps={}){
  const saved=[],descriptors=[];let nextId=1;
  rig.model.traverse(mesh=>{if(!mesh.isMesh)return;const originalGeometry=mesh.geometry,originalMaterial=mesh.material;
@@ -55,7 +56,10 @@ async function campaign(){
  if(Number(localNormal)+Number(badgeNormal)+Number(badgeField)+Number(badgeBaseline)+Number(crateNormal)+Number(crateDegenerate)+Number(sourceRepackControl)+Number(closedSubset)>1)throw Error('Separate normal pilots cannot be combined implicitly');
  if((sourceRepackControl||crateDegenerate||closedSubset)&&sourceTwin)throw Error('Source-based archive controls cannot implicitly select the sourceTwin URL');
  if(closedSubset&&(originalShadow||(frontShadow&&positiveControl)))throw Error('Closed subset cannot combine shadow prefix shortcut or shadowFront with Double control');
+ if(closedSubset&&frontShadow&&noShadows)throw Error('Closed-subset shadowFront requires active shadows');
  const closedAudit=closedSubset?await fetch('/docs/qa/frontside-model-pilot/worker-closed-subset-candidate-audit.json').then(r=>r.json()):null;
+ const closedViews=options.has('closedSubsetV1')?await fetch('/docs/qa/frontside-model-pilot/worker-closed-subset-independent-v1-views.json').then(r=>r.json()):null;
+ if(closedViews&&(!(closedSubset||sourceRepackControl)||clipFilter||closedViews.sourceSha256!==library.youngMale.sha256||JSON.stringify(closedViews.clips)!==JSON.stringify(allClipNames)))throw Error('Independent closed-subset profile/source/clip contract mismatch');
  if(closedAudit&&closedAudit.sourceSha256!==library.youngMale.sha256)throw Error('Closed subset source mismatch');
  const closedNames=new Set(closedAudit?.selected.map(r=>r.mesh)??[]);
  if(closedSubset||sourceRepackControl)renderer.info.autoReset=false;
@@ -113,11 +117,14 @@ async function campaign(){
  report.sourceSha256=library.youngMale.sha256;
  const gpuInfo=gl.getExtension('WEBGL_debug_renderer_info');report.gpu=gpuInfo?gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);report.timerQueryAvailable=!!gl.getExtension('EXT_disjoint_timer_query_webgl2');report.browser=navigator.userAgent;
  report.originalEffectiveMaterials=[];models[0].scene.traverse(mesh=>{if(mesh.isMesh)report.originalEffectiveMaterials.push({mesh:mesh.name,material:mesh.material.name,side:mesh.material.side,shadowSide:mesh.material.shadowSide,effectivePcfDepthSide:mesh.material.shadowSide??({0:1,1:0,2:2}[mesh.material.side]),customDepthMaterial:mesh.customDepthMaterial?.type??null});});
- report.candidateSide=sourceTwin?'Original twin control':positiveControl?'Original effective sides retained':'FrontSide accessories; existing FrontSide body retained';
- report.shadowSide=frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
+ report.candidateSide=closedSubset?`${positiveControl?'DoubleSide control':'FrontSide'} on five selected rigid meshes; body already FrontSide; other accessories original DoubleSide`:sourceRepackControl||crateDegenerate?'Original effective sides retained: body FrontSide, accessories DoubleSide':sourceTwin?'Original twin control':positiveControl?'Original effective sides retained':'FrontSide accessories; existing FrontSide body retained';
+ report.shadowSide=closedSubset?`Five selected rigid meshes shadow${frontShadow?'Front':'Double'}; nonselected accessories original DoubleSide; body original default shadowSide`:sourceTwin||sourceRepackControl||crateDegenerate?'All original shadowSide values/defaults retained':frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
+ if(closedViews)report.independentProfile=closedViews;
+ if(closedSubset)report.selectedPartCoverage=[];
  let failed=false;
  report.caseOffset=caseOffset;let campaignIndex=0;
- campaignLoop: for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of campaignClips)for(const fraction of fractions)for(const elevation of elevations)for(const azimuth of azimuths){
+ function* legacyCases(){for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of campaignClips)for(const fraction of fractions)for(const elevation of elevations)for(const azimuth of azimuths)yield{biome,night,clipName,fraction,elevation,azimuth};}
+ campaignLoop: for(const {biome,night,clipName,fraction,elevation,azimuth} of closedViews?.cases??legacyCases()){
   if(campaignIndex++<caseOffset)continue;
   if(cancelled)throw Error('Cancelled');
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
@@ -134,11 +141,12 @@ async function campaign(){
     const control=accumulateControlEnvelope(controlEnvelope,pixels[0],repeat,linear);
     if(control.differentBytes>worstSourceBytes){worstSourceBytes=control.differentBytes;worstSourceRepeat=repeat;}
     controlAlphaDifferences+=control.alphaDifferences;originalControls.push(control);if(!report.samples.length)report.unchangedOriginalControls=originalControls;
+    if(closedSubset&&frontShadow){const map=rig.sun.shadow.map,repeatShadow=new Uint8Array(shadowPixels[0].length);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,repeatShadow);let changed=0;for(let j=0;j<repeatShadow.length;j++)changed+=repeatShadow[j]!==shadowPixels[0][j];control.shadowDifferentBytes=changed;}
    }
    controlMetrics=controlEnvelopeMetrics(controlEnvelope,pixels[0],size);
    if(controlDiagnosis){report.sourceOnlyDiagnosis={biome,night,clip:clipName,fraction,azimuth,elevation,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,nominalRgbFaceProvenance:mapMissingToSource(renderer,rig,camera,[pixels[0],worstSourceRepeat],size,'rgb'),meaning:'30 repeated original draws only; no candidate drawn or compared, no acceptance interpretation'};
     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
-   if(controlAlphaDifferences||!controlMetrics.passes){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original control exceeds prospective uncertainty budget; affected comparison not interpreted'};
+   if(controlAlphaDifferences||!controlMetrics.passes||originalControls.some(c=>c.shadowDifferentBytes>0)){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original color uncertainty budget or exact packed shadow control exceeded; affected comparison not interpreted'};
     if(options.has('mapControl'))report.invalidControl.lastRepeatNominalRgbFaceProvenance=mapMissingToSource(renderer,rig,camera,[pixels[0],lastSourceRepeat],size,'rgb');
     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
    }
@@ -149,7 +157,8 @@ async function campaign(){
    const unpack=(p,i)=>Math.min(1,p[i]/256+p[i+1]/65536+p[i+2]/16777216+p[i+3]/(255*16777216));
    for(let i=0;i<shadowPixels[0].length;i+=4){let differs=false;for(let c=0;c<4;c++){if(shadowPixels[0][i+c]!==shadowPixels[1][i+c]){different++;differs=true;}max=Math.max(max,Math.abs(shadowPixels[0][i+c]-shadowPixels[1][i+c]));}
     if(differs){changedTexels++;const a=unpack(shadowPixels[0],i),b=unpack(shadowPixels[1],i),delta=Math.abs(a-b);maxDepth=Math.max(maxDepth,delta);changed.push({x:(i/4)%1024,y:Math.floor(i/4/1024),originalDepth:a,candidateDepth:b,worldDepthDelta:delta*(sun.shadow.camera.far-sun.shadow.camera.near)});}}
-   shadowDifference={differentBytes:different,maxByteDifference:max,changedTexels,maxWorldDepthDelta:maxDepth*(sun.shadow.camera.far-sun.shadow.camera.near),changed};report.shadowPackedDifference=shadowDifference;}
+   shadowDifference={differentBytes:different,maxByteDifference:max,changedTexels,maxWorldDepthDelta:maxDepth*(sun.shadow.camera.far-sun.shadow.camera.near),changed};report.shadowPackedDifference=shadowDifference;
+   if(closedSubset&&frontShadow)shadowDifference.quantitativeGate=comparePackedShadow(shadowPixels[0],shadowPixels[1],{near:sun.shadow.camera.near,far:sun.shadow.camera.far,height:box.getSize(new THREE.Vector3()).y});}
   let original=0,union=0,intersection=0,missing=0,added=0,error=0,channels=0,maxError=0,nominalError=0,nominalMaxError=0;const tileError=new Float64Array(64*64),nominalTileError=new Float64Array(64*64),tileChannels=new Uint32Array(64*64),hist=new Uint32Array(256),nominalHist=new Uint32Array(256),rgbMask=new Uint8Array(size*size),nominalRgbMask=new Uint8Array(size*size),missingMask=new Uint8Array(size*size),originalAlpha=new Uint8Array(size*size);
   for(let offset=0;offset<pixels[0].length;offset+=4){const aa=pixels[0][offset+3]>0,bb=pixels[1][offset+3]>0;if(aa)original++;if(aa&&bb)intersection++;if(aa&&!bb)missing++;if(!aa&&bb)added++;if(!(aa||bb))continue;union++;const pixel=offset/4,tile=(Math.floor(pixel/size/16)*64)+Math.floor(pixel%size/16);
    originalAlpha[pixel]=aa?1:0;missingMask[pixel]=aa&&!bb?1:0;
@@ -161,6 +170,9 @@ async function campaign(){
   sample.nominalRgbMetrics={linearRgbMae:nominalError/Math.max(channels,1),p99Approx:nominalP99,maxError:nominalMaxError,maxTileMae:Math.max(...Array.from(nominalTileError,(v,i)=>tileChannels[i]?v/tileChannels[i]:0)),rgbOutlierRegions:regions(nominalRgbMask,size)};
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
   sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}Â°/${elevation}Â°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
+  if(closedSubset){const coverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible');coverage.push({side,parts:[...closedNames].map(mesh=>{const selected=faces.filter(f=>f.mesh===mesh);return{mesh,visiblePixels:selected.reduce((n,f)=>n+f.pixels,0),visibleFaces:selected.length};})});}report.selectedPartCoverage.push({sample:report.samples.length-1,coverage,meaning:'Later ID draw with original geometry, skin and visibility: coverage only, not PBR quality or GPU timing.'});}
+  if(closedSubset&&frontShadow){sample.colorPasses=sample.passes;sample.passes=sample.passes&&shadowDifference?.quantitativeGate?.passes===true;}
+  status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
   if(!sample.passes){failed=true;break campaignLoop;}
   if(report.samples.length>=maxSamples)break campaignLoop;
   await new Promise(requestAnimationFrame);
@@ -182,7 +194,8 @@ async function campaign(){
  if(failed&&options.has('mapMissing')){rigs.forEach((rig,i)=>rig.model.visible=i===0);report.missingTriangleProvenance=mapMissingToSource(renderer,rigs[0],camera,pixels,size);}
  if(failed&&options.has('mapRgb')){report.rgbTriangleProvenance=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);report.rgbTriangleProvenance.push({side:side===0?'source':'candidate',faces:mapMissingToSource(renderer,rigs[side],camera,pixels,size,'rgb',side===1&&!sourceTwin?candidateFaceMaps:{})});}}
  if(options.has('mapNormalCoverage')){const diagnostic=await fetch('/docs/qa/frontside-model-pilot/worker-zero-normal-diagnostics.json').then(r=>r.json());if(diagnostic.sourceSha256!==library.youngMale.sha256)throw Error('Normal coverage source mismatch');const affected=new Set(diagnostic.meshes.find(m=>m.mesh===normalMesh).affectedFaces);report.normalRepairCoverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible',side===1&&!sourceTwin?candidateFaceMaps:{}).filter(f=>f.mesh===normalMesh&&affected.has(f.face));report.normalRepairCoverage.push({side:side===0?'source':'candidate',mesh:normalMesh,affectedVisiblePixels:faces.reduce((n,f)=>n+f.pixels,0),faces,meaning:'Later diagnostic ID draw with retained-face provenance, not normal/PBR/map acceptance'});}}
- report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;report.requestedClips=campaignClips;report.withheldVersion=withheldVersion;report.effectiveShadowDraws=Object.entries(effectiveShadowDraws).map(([key,draws])=>({...JSON.parse(key),draws}));
+ if(closedSubset){report.selectedCoverageSummary=[...closedNames].map(mesh=>({mesh,arms:[0,1].map(side=>{const rows=report.selectedPartCoverage.map(s=>s.coverage[side].parts.find(p=>p.mesh===mesh));return{side,maxVisiblePixels:Math.max(0,...rows.map(r=>r.visiblePixels)),maxVisibleFaces:Math.max(0,...rows.map(r=>r.visibleFaces)),samplesVisible:rows.filter(r=>r.visiblePixels>0).length};})}));report.selectedCoverageMeaning='Max area and visible-face count per selected mesh/arm. Positive coverage is not sufficient visual acceptance; missing parts require further views.';}
+ report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;report.requestedClips=closedViews?.clips??campaignClips;report.withheldVersion=withheldVersion;report.effectiveShadowDraws=Object.entries(effectiveShadowDraws).map(([key,draws])=>({...JSON.parse(key),draws}));
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.
  const comparison=document.createElement('canvas');comparison.width=size*3;comparison.height=size;const ctx=comparison.getContext('2d');
@@ -190,5 +203,9 @@ async function campaign(){
   for(let c=0;c<3;c++)image.data[output+c]=side<2?pixels[side][input+c]:Math.min(255,Math.abs(pixels[0][input+c]-pixels[1][input+c])*8);image.data[output+3]=255;}ctx.putImageData(image,side*size,0);}
  report.capturePng=comparison.toDataURL('image/png');
  const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());
+ // Preserve the actual PBR comparison, including after later diagnostic ID
+ // draws and context disposal. A disposed WebGL canvas is not QA evidence.
+ const retainedComparison=document.createElement('img');retainedComparison.src=report.capturePng;retainedComparison.alt='Original, candidate, and amplified RGB difference for the last compared pose';retainedComparison.style.maxWidth='90vw';
+ await retainedComparison.decode();document.querySelector('#view').replaceChildren(retainedComparison);
  release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'rechazo':'pendiente gates completos'}. GPU liberada. NO aprobado.`;
 }
