@@ -41,3 +41,21 @@ assert.equal(ps.get('after-world-dispose').buffers.liveBytes,0);
 assert.equal(ps.get('after-world-dispose').buffers.liveBuffers,0);
 assert.equal(ps.get('after-resident-preparation').renderer.textures,99);
 console.log('PASS: program-only archived interval, identical reported farm/device and tracked-buffer cleanup. No paired performance or physical-memory proof.');
+
+const textureReceipt=JSON.parse(await readFile(new URL('textures-receipt.json',import.meta.url),'utf8'));
+const textureRaw=gunzipSync(await readFile(new URL('textures-closed.json.gz',import.meta.url)));
+assert.equal(createHash('sha256').update(textureRaw).digest('hex'),textureReceipt.sha256);
+const textureReport=JSON.parse(textureRaw),ts=new Map(textureReport.resourceStages.map(stage=>[stage.name,stage]));
+assert.equal(textureReport.done,true);assert.equal(textureReport.disposed,true);assert.equal(textureReport.logicalUnchanged,true);
+assert.deepEqual(textureReport.errors,[]);assert.equal(textureReport.speed,0);assert.equal(textureReport.duration,5);
+assert.deepEqual(textureReport.farm,report.farm);assert.deepEqual(textureReport.device,report.device);
+assert.equal(textureReport.residentTexturePreparation.fenced,true);assert.equal(textureReport.residentTexturePreparation.textures,27);
+for(const stage of ts.values()){
+ const b=stage.buffers;assert.equal(b.unattributed,0);assert.equal(b.liveBytes,b.requestedBytes-b.replacedBytes-b.deletedBytes);
+}
+assert.equal(ts.get('after-resident-textures').buffers.liveBytes-ts.get('after-resident-preparation').buffers.liveBytes,textureReceipt.bufferDelta);
+assert.equal(textureReceipt.bufferDelta,0);
+assert.equal(ts.get('after-resident-textures').renderer.textures-ts.get('after-resident-preparation').renderer.textures,textureReceipt.textureCountDelta);
+assert.equal(textureReceipt.textureCountDelta,2);
+assert.equal(ts.get('after-world-dispose').buffers.liveBytes,0);assert.equal(ts.get('after-world-dispose').buffers.liveBuffers,0);
+console.log('PASS: resident texture interval, 27 initializations/fence, no additional tracked buffer bytes, two more texture allocations. Not physical memory or performance acceptance.');

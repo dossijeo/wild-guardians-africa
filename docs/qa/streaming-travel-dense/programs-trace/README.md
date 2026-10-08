@@ -60,3 +60,22 @@ This does not divide one large upload into smaller operations, compile shadow
 programs, measure physical VRAM or prepare textures from future objects that do
 not yet exist. Compare native traveling and texture/resource counts before
 considering any production integration. The experiment has no production caller.
+
+## Texture-prepared diagnostic run
+
+Native tab 829/source 3f3ace67 adds residentTextures to the same dense 180 m route
+and traced program-only configuration. 231 intervals: p95 132.9 ms, p99 166.2 ms,
+maximum 166.5 ms, 31 above 100 ms. State unchanged, errors empty, scene disposed
+and tab closed. This is one diagnostic run, not a paired ABBA improvement claim.
+
+No `texSubImage2D` call above the trace's 2 ms threshold was recorded during
+travel. A remaining 104.1 ms draw of `Prop_FruitCrate_geometry_7` uses native
+MeshDepthMaterial and contains 99.5 ms getProgramInfoLog. Program events record
+81 variants at readiness and exactly one additional native depth cache key
+during travel. Preparing resident color programs/textures still leaves that
+shadow variant unprepared and does not meet the stable-travel objective.
+
+The resource run is separately archived under resident-resources; it must not
+be used for frametime comparison. Raw traced data and endpoint image are stored
+as textures-closed.json.gz/textures-final.jpg with a receipt hash. No candidate
+has been activated in production.

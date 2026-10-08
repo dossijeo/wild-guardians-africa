@@ -73,3 +73,22 @@ travel ABBA to check whether reduced shader stalls survive without hidden upload
 Depth/shadow variants may still stall; resource probes do not establish VRAM/RAM.
 The earlier statement of missing native evidence above describes the state when
 the candidate was introduced; this follow-up supplies storage evidence only.
+# Resident texture preparation interval
+
+Additional stationary resource run on main 3f3ace67 (tab 828): same archived
+dense farm/device, await 34 actors, isolated far preparation, resident programs
+followed by residentTextures. The texture phase initializes 27 identities in
+465.3 ms including per-frame yields and the final GPU fence. Two native calls
+take 15.7/20.9 ms; this is instrumentation-specific timing, not a travel benchmark.
+
+Before/after texture phase: tracked buffers remain 80,424,806 bytes / 1476
+buffers / 234 geometries / 81 programs. Texture count grows from 99 to 101.
+No extra buffer upload is observed in this interval; do not equate that with
+physical RAM/VRAM neutrality. Renderer counts do not measure texture storage.
+State unchanged, errors empty, unattributed buffer calls zero. Disposal returns
+tracked bytes/buffers and geometries to zero; renderer retains five textures and
+three programs before context/tab destruction. Tab closed.
+
+`textures-receipt.json` hashes the uncompressed raw report; `verify.mjs` checks
+the phase arithmetic, farm/device, fence and cleanup. Separate uninstrumented
+ABBA and visual checks are still required before production integration.
