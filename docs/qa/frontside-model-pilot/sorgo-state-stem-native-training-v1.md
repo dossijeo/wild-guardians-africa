@@ -1,0 +1,11 @@
+# Sorgo partial stem: rejected native training screen
+
+Native IAB execution of frozen d9acd926 completed on tab785, then disposed/closed. This is the new TRAINING view in sorgo-state-stem-proposal.md: mature Sorgo, Sabana/day, clock2.375, azimuth38.75, elevation37.5, resolution1024. CPU campaigns35912/49032/41320/41304 were inventoried live before drawing. No GPU timing was performed.
+
+Three source repeats are byte-exact. Indexed original Double is exact. Grouped Double passes with RGB MAE1.1781101622837447e-7, maximum tile0.0006217930795372201 and one outlier pixel; it is not byte-exact. Stem Front with the original DOUBLE_SIDED shader recipe fails: alphaIoU1 and no missing/added pixels, RGB MAE0.00005498022276828212, maximum tile0.019029154871043823 exceeding0.01, and RGB regions115/28/19 pixels exceeding16. Global MAE or unchanged silhouette does not override these local failures. No winding/normal, boundary or shader cause is established.
+
+The native mature contract confirms13097 vertices,6396 triangles, Uint16Array19188 index entries and groups1284/17904. Stem material side0, DOUBLE_SIDED retained, shadowSide2. All procedural bridges and other native regions remain original DoubleSide; this is partial investigation, not a full adaptation. Resource rows report whole corpus276592 triangles and51962614 geometry/instance bytes for the original arm, including Sorgo51869 triangles and9788426 bytes. These instrumentation counts do not establish peak GPU residency or net draw-call benefit. No asset is promoted, independent matrix expanded, shadowFront gate approved or benchmark started.
+
+Root recorded two ANGLE warnings about potentially uninitialized f_environment4 and no errors. The warning is not proof of an uninitialized source return or the observed color cause. Original sources, report and frame also have a frozen receipt in root docs/qa/frontside-native-inputs/sorgo-state-stem.
+
+Preserved local report SHA256884a56b5f45d2dc0a0f2d75215b0c13db28ffdaa3c06ed7c1dba00455e128732; comparison PNG6c3aa3d622f279d6059da5c0dcd7a3ce8066c8986ea0746c2f589d935db5afab; browser PNG453f8db787d05e7895c2146c35ed0d9db1b6ef0e31cb194b476d2d3cafc96437. The retained negative cannot be reinterpreted as acceptance or used to adjust thresholds.
