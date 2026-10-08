@@ -50,6 +50,12 @@ uploading geometry. The report records each call duration and a separate buffer
 resource stage; texture ownership remains with the native world. Three tests
 cover shared/hidden maps, render-target exclusion, ordering and cancellation.
 
+Completion now waits for the native GPU fence after the last upload. The next
+travel measurement must not accidentally absorb work still queued by texture
+preparation. Fence/context failure propagates instead of reporting readiness;
+four directed tests cover that boundary as well. This still does not eliminate
+the possible blocking cost of an individual upload during preparation.
+
 This does not divide one large upload into smaller operations, compile shadow
 programs, measure physical VRAM or prepare textures from future objects that do
 not yet exist. Compare native traveling and texture/resource counts before

@@ -15,11 +15,15 @@ test('uploads yield one texture at a time without disposing borrowed textures',a
  for(const texture of textures)texture.dispose=()=>assert.fail('borrowed texture disposed');
  const scene=new THREE.Scene();scene.add(new THREE.Mesh(new THREE.BufferGeometry(),textures.map(map=>new THREE.MeshBasicMaterial({map}))));
  const world={scene,loading:new AbortController(),renderer:{initTexture(texture){calls.push(texture);}}};
- await prepareResidentTextures(world,{nextFrame:async()=>calls.push('frame')});
- assert.deepEqual(calls,['frame',textures[0],'frame',textures[1]]);
+ const result=await prepareResidentTextures(world,{nextFrame:async()=>calls.push('frame'),fence:async()=>calls.push('fence')});
+ assert.deepEqual(calls,['frame',textures[0],'frame',textures[1],'fence']);assert.equal(result.fenced,true);
 });
 test('cancellation while yielding prevents any texture upload',async()=>{
  const scene=new THREE.Scene();scene.add(new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({map:new THREE.Texture()})));
  const world={scene,loading:new AbortController(),renderer:{initTexture(){assert.fail('upload after cancellation');}}};
- await assert.rejects(prepareResidentTextures(world,{nextFrame:async()=>world.loading.abort()}),/cancelled/);
+ await assert.rejects(prepareResidentTextures(world,{nextFrame:async()=>world.loading.abort(),fence:()=>assert.fail('fence after cancellation')}),/cancelled/);
+});
+test('GPU fence failure cannot be reported as completed texture preparation',async()=>{
+ const world={scene:new THREE.Scene(),loading:new AbortController(),renderer:{}};
+ await assert.rejects(prepareResidentTextures(world,{fence:async()=>{throw Error('GPU context lost');}}),/GPU context lost/);
 });
