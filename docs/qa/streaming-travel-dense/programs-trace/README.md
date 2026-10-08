@@ -29,3 +29,18 @@ Run `node tools/experiments/travel-span-analysis.mjs docs/qa/streaming-travel-de
 to reproduce temporal association. Nested category durations overlap; never sum
 them. Raw report hash and fixture provenance are in receipt.json. The endpoint
 image is not proof of transition continuity or shadow equivalence.
+
+## Next isolated experiment
+
+The traveling fixture now accepts `residentTextures`. It scans actual resident
+materials (including hidden worker tools), shared map properties and direct/
+array texture uniforms, deduplicates texture identities and skips render-target
+textures. `renderer.initTexture` runs once per yielded frame without drawing or
+uploading geometry. The report records each call duration and a separate buffer
+resource stage; texture ownership remains with the native world. Three tests
+cover shared/hidden maps, render-target exclusion, ordering and cancellation.
+
+This does not divide one large upload into smaller operations, compile shadow
+programs, measure physical VRAM or prepare textures from future objects that do
+not yet exist. Compare native traveling and texture/resource counts before
+considering any production integration. The experiment has no production caller.
