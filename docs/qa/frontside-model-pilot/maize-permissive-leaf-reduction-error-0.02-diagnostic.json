@@ -1,0 +1,90 @@
+{
+  "status": "CONSTRAINED_LEAF_COST_DIAGNOSIS_NOT_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "mesh": "maiz_05_maduro",
+  "policy": {
+    "absoluteAppearanceError": 0.02,
+    "desiredLeafRatio": 0.5,
+    "attributeWeights": [
+      1,
+      1,
+      1,
+      100,
+      100
+    ],
+    "flags": [
+      "LockBorder",
+      "ErrorAbsolute",
+      "Sparse",
+      "Permissive"
+    ],
+    "interpretation": "Approximate quadric appearance metric, not a maximum silhouette/UV/normal bound. No tolerance or quality gate is changed. Permissive allows attribute-seam collapses in this independent training proposal."
+  },
+  "exactOriginalDrawCornerOrder": false,
+  "sourceTriangles": 4935,
+  "forwardTriangles": 4767,
+  "projectedAllLeafReverseTriangles": 7608,
+  "projectedTriangleChangePercent": 54.16413373860183,
+  "projectedReverseVertices": 14194,
+  "projectedStateGeometryBytes": 556632,
+  "sourceStateGeometryBytes": 317066,
+  "leaves": [
+    {
+      "label": 2,
+      "sourceFaces": 446,
+      "proposedFaces": 411,
+      "reportedAppearanceError": 0.01942364126443863,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 3,
+      "sourceFaces": 588,
+      "proposedFaces": 568,
+      "reportedAppearanceError": 0.018717914819717407,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 4,
+      "sourceFaces": 573,
+      "proposedFaces": 538,
+      "reportedAppearanceError": 0.018532587215304375,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 5,
+      "sourceFaces": 351,
+      "proposedFaces": 325,
+      "reportedAppearanceError": 0.01953463815152645,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 6,
+      "sourceFaces": 622,
+      "proposedFaces": 588,
+      "reportedAppearanceError": 0.019898852333426476,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 7,
+      "sourceFaces": 209,
+      "proposedFaces": 199,
+      "reportedAppearanceError": 0.014614138752222061,
+      "originalVertexLanesUnchanged": true
+    },
+    {
+      "label": 8,
+      "sourceFaces": 220,
+      "proposedFaces": 212,
+      "reportedAppearanceError": 0.018708594143390656,
+      "originalVertexLanesUnchanged": true
+    }
+  ],
+  "archive": ".cache/frontside-model-pilot/candidates/archive/f6d1bb73ce59a82eabe33925f4d5ed14aa61d3ed1c01742059539482a09aaeff.json",
+  "archiveSha256": "f6d1bb73ce59a82eabe33925f4d5ed14aa61d3ed1c01742059539482a09aaeff",
+  "limitations": [
+    "Original lanes retained by bits; interpolation/topology can still change under real growth/bridge/shadow shaders.",
+    "Border lock is topological, not proof of every camera silhouette.",
+    "Approximate priority ancestry is not a bridge correspondence or exact original face ID.",
+    "No GLB export/activation, no measured GPU benefit or visual acceptance."
+  ]
+}

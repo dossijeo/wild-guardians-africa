@@ -927,3 +927,35 @@ positive. This demonstrates a limitation of assuming rest-pose orientation
 survives strong initial compression; it does NOT establish discrete triangle
 winding or raster coverage. Bridge deformation is explicitly excluded. No
 growth, asset, material or geometry changes follow from this diagnosis.
+
+A separate locked-border, seam-permissive training family checks approximate
+appearance errors0.001/0.005/0.01/0.02 with unchanged weights normal1/UV100.
+These are proposal-generation metrics, never relaxed raster/map acceptance
+thresholds. All surviving P/N/UV lanes remain original bits, but interpolation
+and approximate face-priority ancestry can change. Forward triangles are
+4935/4923/4880/4767; projected all-leaf reverses7944/7920/7834/7608
+(+60.97/+60.49/+58.74/+54.16%). Float32 reverse-flag indexed state bytes are
+572616/571176/567132/556632 versus317066 source (+80.60/+80.14/+78.87/+75.56%).
+Every proposal remains outside both resource gates and is kept offline,
+without visual execution, GLB export, bridge reuse or GPU benefit credit.
+This diagnoses this constrained family only; it is not a proof that another
+authored recreation or selective reversal strategy cannot succeed.
+
+Root's Badge14 screen is archived as worker-badge-water-v6-guided-coverage*:
+HEAD96008e05, fraction0.90625/elevation67.5/azimuth234.375, Sabana/day,
+CPU44164/49032 and main suite40728 active. AlphaIoU1, RGBMAE0.0000071115,
+tileMAE0.00153063 pass the general screen. Affected source faces13/17/21/23/25/29
+each occupy ONE raster pixel in both source and candidate ID draws; candidate
+compact indices are correctly mapped back. Six pixels establish real coverage,
+but not adequate normal/map or category acceptance. The earlier zero-coverage
+view is preserved independently. Root disposed/closed the GPU tab afterwards.
+
+Prospective normalCloseup QA frames the original Badge5 bounding box with the
+same FOV42, resolution1024, rig pose, lighting, materials, shaders and all
+surrounding geometry retained. Camera bounds/position are recorded; quality
+gates are unchanged. It requires affected-face instrumentation and is marked
+training inspection. CPU centroid guidance predicts16 affected nondegenerate
+faces and about4430 projected square pixels at Water0.90625/elevation67.5/
+azimuth144.375 (caseOffset13). This prediction is not raster coverage; a native
+screen must verify face coverage and real shading without promoting this
+closeup or the previous six-pixel screen into complete approval.

@@ -49,6 +49,7 @@ async function campaign(){
  const campaignClips=clipFilter?[clipFilter]:options.has('allClips')?allClipNames:['Idle','Water','Carry_Crate','Fall'];
  const sourceAssets=new Assets();
  const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal');
+ const normalCloseup=options.has('normalCloseup');if(normalCloseup&&!options.has('mapNormalCoverage'))throw Error('Normal closeup requires affected-face coverage instrumentation');
  if(localNormal&&badgeNormal)throw Error('Separate normal pilots cannot be combined implicitly');
  if(badgeNormal&&originalShadow)throw Error('Badge cleanup requires mapped shadow geometry; originalShadow prefix diagnostic is incompatible');
  const normalMesh=badgeNormal?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
@@ -85,6 +86,7 @@ async function campaign(){
  report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
  report.candidateReceipt=sourceTwin?null:(await fetch(badgeNormal?'/docs/qa/frontside-model-pilot/packed-badge-normal-candidate-receipts.json':localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
  report.localNormalDiagnosis=localNormal;report.candidate=localNormal?'Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb':report.candidate;
+ report.normalCloseup=normalCloseup;if(normalCloseup)report.limitations.push('Training camera frames the original repaired accessory at unchanged FOV42/resolution1024; all surrounding rig geometry/occlusion and real materials remain present. Closeup is not withheld/general-category acceptance.');
  report.badgeNormalDiagnosis=badgeNormal;if(badgeNormal)report.candidate='Can_badge_geometry_5-normals-cleanup-v2-NOT-APPROVED-web.glb';
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
  report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
@@ -99,8 +101,10 @@ async function campaign(){
   if(campaignIndex++<caseOffset)continue;
   if(cancelled)throw Error('Cancelled');
   for(const rig of rigs){rig.action?.stop();const clip=rig.clips.find(c=>c.name===clipName);rig.action=rig.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();rig.action.paused=true;rig.action.clampWhenFinished=true;sampleFixedPose(rig,clip.duration*fraction,true);syncWorkerToolVisibility(rig,true);rig.model.updateMatrixWorld(true);rig.sun.intensity=3-2.6*night;rig.ambient.intensity=2-.9*night;rig.toon.update(night,rig.sun,biome);rig.registry.update(0);}
-  const box=new THREE.Box3().setFromObject(rigs[0].model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
+  const cameraTarget=normalCloseup?rigs[0].model.getObjectByName(normalMesh):rigs[0].model;if(!cameraTarget)throw Error('Missing original camera target');
+  const box=new THREE.Box3().setFromObject(cameraTarget),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5,a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
   camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(radius*3));camera.lookAt(center);camera.updateMatrixWorld();
+  if(normalCloseup)report.closeupCamera={targetMesh:normalMesh,targetBounds:{min:box.min.toArray(),max:box.max.toArray()},position:camera.position.toArray(),center:center.toArray(),fov:camera.fov,near:camera.near,far:camera.far,meaning:'Original-target training inspection, not a changed geometry/lighting/material gate'};
   const shadowPixels=[];let shadowDifference=null;const originalControls=[],controlEnvelope=new Float64Array(size*size*3);let controlAlphaDifferences=0,controlMetrics=null,lastSourceRepeat=null,worstSourceRepeat=null,worstSourceBytes=-1;
   for(let side=0;side<2;side++){const rig=rigs[side];rigs.forEach((r,i)=>r.model.visible=i===side);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[side]);
    if(rig.sun.shadow.map){const map=rig.sun.shadow.map,packed=new Uint8Array(map.width*map.height*4);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,packed);shadowPixels[side]=packed;}

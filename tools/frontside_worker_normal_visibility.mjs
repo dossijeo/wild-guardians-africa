@@ -19,6 +19,7 @@ const bytes=writeGlb(json,bin),gltf=await new GLTFLoader().parseAsync(bytes.buff
 const model=gltf.scene,data={model,mixer:new THREE.AnimationMixer(model),action:null},target=model.getObjectByName('Can_badge_geometry_5');
 if(!target?.isMesh||target.isSkinnedMesh)throw Error('Expected rigid Badge5 accessory');
 const affected=diagnostic.meshes.find(m=>m.mesh===target.name).affectedFaces,rows=[];
+const closeup=process.argv.includes('--closeup');if(process.argv.slice(2).some(a=>a!=='--closeup'))throw Error('Unknown guidance option');
 const camera=new THREE.PerspectiveCamera(42,1,.01,100),ray=new THREE.Raycaster(),point=new THREE.Vector3(),normal=new THREE.Vector3();
 const corners=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];
 for(const fraction of [.40625,.90625]){
@@ -26,7 +27,7 @@ for(const fraction of [.40625,.90625]){
  data.action=data.mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce,1).play();data.action.paused=true;data.action.clampWhenFinished=true;
  sampleFixedPose(data,clip.duration*fraction,true);syncWorkerToolVisibility(data,true);model.updateMatrixWorld(true);
  const meshes=[];model.traverseVisible(o=>{if(o.isMesh){if(o.isSkinnedMesh){o.skeleton.update();o.computeBoundingBox();o.computeBoundingSphere();}meshes.push(o);}});
- const box=new THREE.Box3().setFromObject(model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5;
+ const box=new THREE.Box3().setFromObject(closeup?target:model),center=box.getCenter(new THREE.Vector3()),radius=box.getSize(new THREE.Vector3()).length()*.5;
  for(const elevation of [37.5,67.5])for(const azimuth of [54.375,144.375,234.375,324.375]){
   const a=azimuth*Math.PI/180,e=elevation*Math.PI/180;camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(radius*3));camera.lookAt(center);camera.updateMatrixWorld(true);
   const visible=[];
@@ -40,6 +41,6 @@ for(const fraction of [.40625,.90625]){
   rows.push({clip:'Water',fraction,elevation,azimuth,centroidRayVisibleFaces:visible,projectedAreaPixels:visible.reduce((n,f)=>n+f.projectedTriangleAreaPixels,0)});
  }
 }
-const report={status:'CPU_CENTROID_GUIDANCE_NOT_RENDER_COVERAGE',sourceSha256:library.sha256,mesh:target.name,views:rows,rankedViews:[...rows].sort((a,b)=>b.projectedAreaPixels-a.projectedAreaPixels),limitations:['Only triangle centroid rays; neither raster sample coverage nor exact visibility guarantee.', 'Original raw GLB geometry/rig/animation with textures omitted only in memory; runtime web/WorldScene and shaders still require native ID coverage.', '16 existing V6 views inspected for training guidance. No candidate or pixel-quality gate evaluated.']};
-await writeFile(folder+'worker-badge-cpu-visibility-guidance.json',JSON.stringify(report,null,2)+'\n');
+const report={status:'CPU_CENTROID_GUIDANCE_NOT_RENDER_COVERAGE',sourceSha256:library.sha256,mesh:target.name,closeup,views:rows,rankedViews:[...rows].sort((a,b)=>b.projectedAreaPixels-a.projectedAreaPixels),limitations:['Only triangle centroid rays; neither raster sample coverage nor exact visibility guarantee.', 'Original raw GLB geometry/rig/animation with textures omitted only in memory; runtime web/WorldScene and shaders still require native ID coverage.', '16 existing V6 views inspected for training guidance. No candidate or pixel-quality gate evaluated.']};
+await writeFile(folder+(closeup?'worker-badge-cpu-closeup-guidance.json':'worker-badge-cpu-visibility-guidance.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report.rankedViews.slice(0,4)));
