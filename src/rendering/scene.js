@@ -312,7 +312,7 @@ export class WorldScene {
     }));
   }
   async warmAnimalGpu(){
-    const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,frameBudget:6}):this.renderer.compileAsync(scene,camera,target);
+    const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,frameBudget:6,onSubmit:this.onLoadingSpan}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
     const originals=[];
@@ -375,6 +375,7 @@ export class WorldScene {
     const root=this.objects.get(entity.id),state=this.state;
     const prepared=type==='animal'&&this.animalPreload?await this.animalPreload.take(entity.species):null;
     const gltf=prepared?null:await this.assets.model(descriptor.url);if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root){releaseActorRig(prepared);return;}
+    return loadingSyncWitness(this.onLoadingSpan,'actor-prepare:'+type+':'+(entity.profile??entity.species),()=>{
     const model=prepared?.model??clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
     // Native bestiary labs use unit scale. Their heroic dimensions are already
     // authored in the GLB; animated foot grounding follows in applyAnimalPose.
@@ -385,6 +386,7 @@ export class WorldScene {
     // can cache a sphere from the cloned source's stale world transforms.
     this.updateActor(entity,0,type);root.updateMatrixWorld(true);
     model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
+    });
   }
   wateringSource(id,time,effect){
     const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);

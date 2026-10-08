@@ -45,3 +45,6 @@ test('loading compilation rejects generation changes even without a loss event',
  const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{getEpoch:()=>epoch});epoch++;
  await assert.rejects(pending,/cancelled/);assert.equal(queries,1);
 });
+
+test('submission CPU witness is synchronous and does not include pending program readiness',async()=>{let clock=1;const rows=[],abort=new AbortController(),f=fixture({isReady:()=>false});f.renderer.compile=()=>{clock=9;return new Set([f.material]);};const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{signal:abort.signal,now:()=>clock,onSubmit:row=>rows.push(row)});assert.equal(rows.length,1);assert.equal(rows[0].label,'loading-compile-submit');assert.equal(rows[0].duration,8);clock=30;assert.equal(rows[0].duration,8);abort.abort();await assert.rejects(pending,/cancelled/);});
+test('optional compile diagnostic failure cannot change native readiness or original submission error',async()=>{const f=fixture({isReady:()=>true});await compileLoadingPrograms(f.renderer,{},{},undefined,{onSubmit:()=>{throw Error('diagnostic');}});f.renderer.compile=()=>{throw Error('native failure');};assert.throws(()=>compileLoadingPrograms(f.renderer,{},{},undefined,{onSubmit:()=>{throw Error('diagnostic');}}),/native failure/);});

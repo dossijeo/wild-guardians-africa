@@ -1,17 +1,18 @@
+import {loadingSyncWitness} from './loading-sync-witness.js';
 import {compileGpuPreparation} from '../../tools/experiments/compile-gpu-preparation.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
 // Use the shared bounded compiler, selecting every borrowed recipe needed by
 // loading. Screen state and materials are restored before asynchronous waiting.
 // A loss event is latched even if the context is restored between polls.
-export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false}={}) {
+export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false,onSubmit}={}) {
  const begin=now(),gl=renderer.getContext(),epoch=getEpoch(),owner=new AbortController();let lost=false;
  const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
  const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
  const cleanup=()=>{gl.canvas?.removeEventListener('webglcontextlost',lose);signal?.removeEventListener('abort',abort);};
  check();gl.canvas?.addEventListener('webglcontextlost',lose);signal?.addEventListener('abort',abort,{once:true});
  let materials;
- try{materials=screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene);check();}
+ try{materials=onSubmit?loadingSyncWitness(onSubmit,'loading-compile-submit',()=>screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene),now):(screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene));check();}
  catch(error){cleanup();throw error;}
  // Submission has already restored screen state. Snapshot all variants through
  // the shared core without submitting or querying the native renderer twice.
