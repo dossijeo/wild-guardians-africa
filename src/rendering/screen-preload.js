@@ -20,22 +20,24 @@ export async function waitForGpuPreload(renderer,{cancelled=()=>false,nextFrame=
 
 // Submit the same native screen/shadow recipes in small groups, so first-use
 // buffer/texture uploads and shadow variants are spread across real frames.
-// Each partial shadow map is replaced by a full final pass before readiness.
+// Color batches reuse shadows; one complete native shadow pass precedes readiness.
 export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onBatch=()=>{}}={}){
  const meshes=[];scene.traverseVisible(object=>{if(object.isMesh||object.isLine||object.isPoints)meshes.push(object);});
  const visible=new Map(meshes.map(mesh=>[mesh,mesh.visible])),shadows=renderer.shadowMap;
- const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate]);});
- const shadowNeeds=shadows.needsUpdate;
+ const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate,object.shadow.autoUpdate]);});
+ const shadowNeeds=shadows.needsUpdate,shadowAuto=shadows.autoUpdate;
  const check=()=>{if(cancelled()||renderer.getContext().isContextLost())throw Error('Loading scene upload cancelled');};
  const restore=()=>{for(const [mesh,value] of visible)mesh.visible=value;};
+ const restoreShadows=()=>{shadows.needsUpdate=shadowNeeds;shadows.autoUpdate=shadowAuto;for(const [shadow,value,auto] of lights){shadow.needsUpdate=value;shadow.autoUpdate=auto;}};
+ const suppressShadows=()=>{shadows.autoUpdate=false;shadows.needsUpdate=false;for(const [shadow] of lights){shadow.autoUpdate=false;shadow.needsUpdate=false;}};
  const invalidate=()=>{shadows.needsUpdate=true;for(const [shadow] of lights)shadow.needsUpdate=true;};
  try{
   for(let start=0;start<meshes.length;start+=batchSize){
    check();const batch=new Set(meshes.slice(start,start+batchSize));
    for(const mesh of batch)for(let parent=mesh.parent;parent;parent=parent.parent)if(visible.has(parent))batch.add(parent);
-   try{for(const mesh of meshes)mesh.visible=batch.has(mesh);invalidate();renderScreenPreload(renderer,scene,camera);}finally{restore();}
+   try{for(const mesh of meshes)mesh.visible=batch.has(mesh);suppressShadows();renderScreenPreload(renderer,scene,camera);}finally{restore();restoreShadows();}
    onBatch(Math.min(meshes.length,start+batchSize),meshes.length);await nextFrame();
   }
   check();invalidate();renderScreenPreload(renderer,scene,camera);
- }finally{restore();shadows.needsUpdate=shadowNeeds;for(const [shadow,value] of lights)shadow.needsUpdate=value;}
+ }finally{restore();restoreShadows();}
 }
