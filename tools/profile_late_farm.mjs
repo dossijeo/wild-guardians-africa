@@ -13,7 +13,7 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 
 const output=resolve(process.argv[2]??'.cache/late-farm-profile/report.json');
 const source=process.argv[3]??'intensive-mangrove-shield-100';
-assert.ok(['intensive-mangrove-shield-100','intensive-river-rejoin-100','crop-lifecycle-eight-100'].includes(source),'Unknown archived case');
+assert.ok(['intensive-mangrove-shield-100','intensive-river-rejoin-100','crop-lifecycle-eight-100','intensive-sabana-musgum-e461b550'].includes(source),'Unknown archived case');
 const input=`docs/qa/${source}/state.json.gz`;
 const raw=gunzipSync(readFileSync(input)),state=deserialize(raw.toString('utf8'));
 assert.equal(state.result,'victory');assert.equal(state.day,101);
