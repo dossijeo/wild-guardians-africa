@@ -20,6 +20,26 @@ for source_face,tri in enumerate(ix):
     for a,z in zip(tri,np.roll(tri,-1)):
         ka,kz=tuple(map(float,p[a])),tuple(map(float,p[z]))
         whole_edges[tuple(sorted((ka,kz)))].append(dict(sourceFaceId=source_face,driver=int(labels[source_face]),sourceVertexIds=[int(a),int(z)],direction=1 if ka<kz else -1))
+whole_boundary={edge:owners[0] for edge,owners in whole_edges.items() if len(owners)==1}
+whole_adjacency=defaultdict(list)
+for edge in whole_boundary:
+    for a,z in [edge,tuple(reversed(edge))]:whole_adjacency[a].append(z)
+whole_seen=set();whole_components=[]
+for start in sorted(whole_adjacency):
+    if start in whole_seen:continue
+    pending=[start];vertices=set()
+    while pending:
+        v=pending.pop()
+        if v in vertices:continue
+        vertices.add(v);whole_seen.add(v);pending.extend(whole_adjacency[v])
+    edges=[edge for edge in whole_boundary if edge[0] in vertices];owners=[whole_boundary[edge] for edge in edges]
+    counts={str(driver):sum(o['driver']==driver for o in owners) for driver in sorted({o['driver'] for o in owners})}
+    q=np.asarray(sorted(vertices),float)
+    whole_components.append(dict(boundaryEdges=len(edges),simpleCycle=len(vertices)>=3 and all(len(whole_adjacency[v])==2 for v in vertices),
+        vertexDegrees=[dict(position=list(v),degree=len(whole_adjacency[v])) for v in sorted(vertices)],
+        sourceFaceIds=sorted({o['sourceFaceId'] for o in owners}),driverEdgeCounts=counts,
+        stemBoundaryEdges=sum(o['driver']==1 for o in owners),bounds=[q.min(axis=0).tolist(),q.max(axis=0).tolist()],
+        originalBoundaryEdges=[dict(positions=[list(v) for v in edge],owner=whole_boundary[edge]) for edge in edges]))
 table={};points=[];triangles=[]
 for face in faces:
     tri=[]
@@ -168,7 +188,7 @@ for start in sorted(adjacency):
         limitations=['One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.',
             'Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported.'])
     components.append(row)
-report=dict(status='BLENDER_SOURCE_STEM_BOUNDARIES_NOT_APPROVED',sourceSha256=s['sourceSha256'],mesh=node['name'],cropIndex=node['extras']['cropIndex'],stemTriangles=len(faces),wholeModelTriangles=len(ix),blenderVersion=bpy.app.version_string,blenderBuildHash=bpy.app.build_hash.decode(),boundaryEdges=len(boundary),nonManifoldJunctionEdges=sum(len(e.link_faces)>2 for e in bm.edges),components=components,
+report=dict(status='BLENDER_SOURCE_STEM_BOUNDARIES_NOT_APPROVED',sourceSha256=s['sourceSha256'],mesh=node['name'],cropIndex=node['extras']['cropIndex'],stemTriangles=len(faces),wholeModelTriangles=len(ix),blenderVersion=bpy.app.version_string,blenderBuildHash=bpy.app.build_hash.decode(),boundaryEdges=len(boundary),nonManifoldJunctionEdges=sum(len(e.link_faces)>2 for e in bm.edges),components=components,wholeModelBoundaryEdges=len(whole_boundary),wholeModelBoundaryComponents=whole_components,
     limitations=['BMesh exact-coordinate diagnostic only; original PN/UV/index/driver/source asset unchanged, no normals recalculated or faces emitted.',
     'Local source-space witnesses do not prove global manifold/outward volume, original occlusion or semantic tube ownership.',
     'Cycles require explicit planarity, consistent directed boundary, adjacent third vertices in inward halfspace and radial original normal witness; remaining loops are not blindly capped.',
