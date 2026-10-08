@@ -17,6 +17,12 @@ test('GPU preparation compiles, uploads through zero-pixel draw and yields until
  assert.equal(result.textures,1);assert.equal(frames,1);assert.equal(f.root.parent,f.parent);assert.equal(f.current(),f.original);f.restored();
  assert.deepEqual(f.calls,['texture','compile','render','restore','fence','flush','delete']);
 });
+
+test('normal streaming proves completion with an async fence without synchronous error readbacks',async()=>{
+ const f=fixture();f.renderer.getContext().getError=()=>{throw Error('Synchronous GL error readback');};
+ const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}});
+ assert.equal(result.textures,0);assert.ok(f.calls.includes('fence'));assert.ok(f.calls.includes('delete'));f.restored();
+});
 test('failed zero-pixel draw restores renderer and parent before rejecting',async()=>{
  const f=fixture({renderError:true});await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[]),/Draw failed/);
  assert.equal(f.root.parent,f.parent);assert.equal(f.current(),f.original);f.restored();assert.deepEqual(f.calls,['compile','render','restore']);
@@ -120,9 +126,9 @@ test('loss invalidates an in-flight fence generation and clears warm texture own
  const recovered=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{nextFrame:async()=>{}});assert.equal(recovered.cachedTextures,0);assert.equal(recovered.textureUploads.length,1);releaseNativeFarGpuCache(f.renderer);
 });
 
-test('nonzero WebGL error rejects the native proof with its original code and releases the fence',async()=>{
- const f=fixture();f.renderer.getContext().getError=()=>0x502;
- await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}}),/Native GPU preparation error 0x502/);
+test('diagnostic error after fence completion rejects the proof and releases the fence',async()=>{
+ const f=fixture();let reads=0;f.renderer.getContext().getError=()=>++reads===4?0x502:0;
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{},diagnoseErrors:true}),/Native GPU preparation error 0x502/);
  assert.equal(f.calls.at(-1),'delete');f.restored();releaseNativeFarGpuCache(f.renderer);
 });
 

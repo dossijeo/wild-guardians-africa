@@ -1,6 +1,7 @@
 import {cloneRuntimeMaterial} from '../../src/rendering/clone-runtime-material.js';
 import {farGroundColorUvs} from './far-ground-color-map.js';
 import {attachNativeGroundSeam} from './native-far-ground-seam.js';
+import {cloneRuntimeMaterial} from '../../src/rendering/clone-runtime-material.js';
 import {prepareNativeFarGpu} from './prepare-native-far-gpu.js';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';

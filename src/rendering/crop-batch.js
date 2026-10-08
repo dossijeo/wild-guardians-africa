@@ -4,6 +4,7 @@ import {cropSpec} from '../simulation/rules.js';
 const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const MARKS=[.065,.27,.53,.78,1];
+const ZERO_ORIGIN={x:0,z:0};
 export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128,{species=ids,shadows=true,deferPreparation=false}={}) {
  const selected=new Set(species.map(id=>ids.indexOf(id)));
  if(!selected.size||selected.has(-1))throw Error('Invalid crop batch species');
@@ -258,15 +259,16 @@ function writeInstance(modelIndex,plant,part){
  writeValues(item.growthAttr,slot*4,instanceValues);
 }
 
- function* preparation(){yield* prepareModels(gltf);yield* prepareBridges(bridgeData);}
+ let renderables=[];
+ function* preparation(){try{yield* prepareModels(gltf);yield* prepareBridges(bridgeData);}finally{renderables=[...models,...bridges].filter(Boolean);}}
  const prepare=preparation();
  if(!deferPreparation)for(const _ of prepare){}
  return {
   capacity:MAX_PLANTS,
   preparation:prepare,
-  update(plants,clock,ground,origin={x:0,z:0},groundKey=null) {
+  update(plants,clock,ground,origin=ZERO_ORIGIN,groundKey=null) {
    if(groundKey!==terrainIdentity){entitySamples=new WeakMap();terrainIdentity=groundKey;}
-   renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges].filter(Boolean))model.mesh.position.set(origin.x,0,origin.z);
+   renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of renderables)model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
    for(const entity of plants){
     let entry=entitySamples.get(entity);
@@ -287,7 +289,7 @@ function writeInstance(modelIndex,plant,part){
    for(let i=0;i<bridges.length;i++){const b=bridges[i];if(!b)continue;b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
    for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
-  dispose(){prepare.return();entitySamples=new WeakMap();terrainIdentity=null;for(const model of [...models,...bridges].filter(Boolean)){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
+  dispose(){prepare.return();entitySamples=new WeakMap();terrainIdentity=null;for(const model of renderables){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
  };
 }

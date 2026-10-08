@@ -10,3 +10,9 @@ test('runtime clone copies native fields without serializing borrowed texture un
 test('runtime clone retains the ground borrower until both material owners close',()=>{
  const material=new THREE.MeshBasicMaterial();let owners=0,released=0;const retain=next=>{owners++;next.addEventListener('dispose',()=>{if(--owners===0)released++;});};material.userData={retainBiomeGround:retain};retain(material);const clone=cloneRuntimeMaterial(material);assert.equal(owners,2);material.dispose();assert.equal(released,0);clone.dispose();assert.equal(owners,0);assert.equal(released,1);
 });
+
+test('a failed material copy leaves source metadata untouched',()=>{
+ class FailedMaterial extends THREE.MeshStandardMaterial{copy(){throw Error('Copy failed');}}
+ const source=new FailedMaterial(),metadata=source.userData;metadata.owner={};
+ assert.throws(()=>cloneRuntimeMaterial(source),/Copy failed/);assert.equal(source.userData,metadata);assert.ok(metadata.owner);source.dispose();
+});
