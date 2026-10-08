@@ -1,0 +1,47 @@
+{
+  "status": "rejected before FrontSide",
+  "sourceCommit": "8a2950f4",
+  "mainAuditCommit": "4e1ac82d",
+  "trainingViews": 1,
+  "promoted": false,
+  "gpuBenchmark": false,
+  "conditionsCorrection": "URL labels 43808 active, but root process observation found it absent/passed; matrix advanced to live20024. PIDs49032/41320/41304 also observed live. No exhaustive load or idle-machine claim.",
+  "pieces": [
+    {
+      "path": "report.json.gz",
+      "gzip": true,
+      "rawBytes": 305834,
+      "sha256": "21018bde03903d10f54953989ec4acf77acfa8ad67b053a04db291095c84affe"
+    },
+    {
+      "path": "console.json.gz",
+      "gzip": true,
+      "rawBytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "crop-fixture.js.gz",
+      "gzip": true,
+      "rawBytes": 28577,
+      "sha256": "12920cde231b0ac8e70a978d1d4c1efff771fab1735257aacf8fe252c73040a0"
+    },
+    {
+      "path": "stem-helper.mjs.gz",
+      "gzip": true,
+      "rawBytes": 4054,
+      "sha256": "ea8500cf35ae7d0c91c1c5539caf41598c12a0041f6e0ebb44b949caa489f965"
+    },
+    {
+      "path": "browser.png",
+      "gzip": false,
+      "rawBytes": 69288,
+      "sha256": "787dd286b898d54bc473b7c7134fd669628ba6bc6be15b69301e57e9d9302a70"
+    },
+    {
+      "path": "comparison.png",
+      "gzip": false,
+      "rawBytes": 689005,
+      "sha256": "076d02793042aeaf8a89c3912907122c29db4cf61f4742abd5b122e45065c8b1"
+    }
+  ]
+}

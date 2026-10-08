@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 const dir=new URL('./',import.meta.url),m=JSON.parse(readFileSync(new URL('manifest.json',dir))),hash=b=>createHash('sha256').update(b).digest('hex');
 for(const p of m.pieces){const b=readFileSync(new URL(p.path,dir)),raw=p.gzip?gunzipSync(b):b;assert.equal(raw.length,p.rawBytes);assert.equal(hash(raw),p.sha256);}
 const read=p=>JSON.parse(gunzipSync(readFileSync(new URL(p,dir))));
-const r=read('report.json.gz'),a=r.sourceDrawAudit,analysis=read('analysis.json.gz');assert.equal(r.samples.length,0);assert.equal(r.sourceSha256,m.workerScriptSha256);assert.equal(r.conditions.gpuTiming,false);
+const r=read('report.json.gz'),a=r.sourceDrawAudit,analysis=read('analysis.json.gz');assert.equal(r.samples.length,0);assert.equal(r.sourceSha256,m.sourceAssetSha256);assert.equal(r.conditions.gpuTiming,false);
 assert.equal(r.unchangedOriginalControls.length,30);const changed=new Set(r.unchangedOriginalControls.map(c=>c.differentBytes));assert.deepEqual([...changed].sort((a,b)=>a-b),[0,21]);
 for(const c of r.unchangedOriginalControls){assert.equal(c.alphaDifferences,0);assert.equal(c.maxByteDifference,c.differentBytes?59:0);}
 assert.deepEqual(a.initialBuffers,a.finalBuffers);assert.equal(a.initialBuffers.length,25);assert.equal(a.programs.length,1);

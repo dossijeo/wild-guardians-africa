@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "3cb4b1df",
+  "sourceAssetSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "conditions": {
+    "cpuCampaigns": "20024/49032/41320/41304-active-suite44690-finished",
+    "gpuTiming": false
+  },
+  "status": "source-only noShadows diagnosis; no candidate or GPU timing",
+  "pieces": [
+    {
+      "path": "report.json.gz",
+      "gzip": true,
+      "rawBytes": 855618,
+      "sha256": "8837f2fb6e043d2b165c5a782b71b9f1defee86fab3c360cd7b0cd6697ff0841"
+    },
+    {
+      "path": "console.json.gz",
+      "gzip": true,
+      "rawBytes": 388,
+      "sha256": "69fcf4500b216e07a601b1e08d1beee023e39bc66522e853478a6f0221f69979"
+    },
+    {
+      "path": "audit-helper.mjs.gz",
+      "gzip": true,
+      "rawBytes": 5070,
+      "sha256": "ad391088b4ff08ef89bd4ce252dd767a1bd63ff9d8620dbe036e0fcd6e25a8bd"
+    },
+    {
+      "path": "texture-helper.mjs.gz",
+      "gzip": true,
+      "rawBytes": 2707,
+      "sha256": "ceee843774314f200dcd93e3b9fe543bc2c9c6f5112658fd0ade99088de58042"
+    },
+    {
+      "path": "browser.png",
+      "gzip": false,
+      "rawBytes": 55053,
+      "sha256": "be1f7cd706adbf0a1d9774ea0f7c5e5cd81560335e63f2171fdb9c1fb6dd011f"
+    },
+    {
+      "path": "comparison.png",
+      "gzip": false,
+      "rawBytes": 397659,
+      "sha256": "8f926b17b32bdf87dc398a6d59af24af6e807816f1ed5a2215cd9755082112e1"
+    }
+  ]
+}
