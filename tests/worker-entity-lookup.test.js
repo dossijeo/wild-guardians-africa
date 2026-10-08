@@ -32,3 +32,16 @@ test('reused task queues keep reservations live and discard same-length rebuilt 
  assert.notEqual(lookup('replacement'),prior);rows.at(-1).workerId=null;assert.equal(lookup('replacement').workerId,null);
  assert.equal(lookup('appended'),undefined);rows.push({id:'appended',workerId:null});assert.equal(lookup('appended'),rows.at(-1));
 });
+test('append-only histories index only new members and preserve first matches, live fields and prior misses',()=>{
+ let reads=0;const rows=Array.from({length:100},(_,i)=>({get id(){reads++;return 'crop-'+i;},alive:true}));
+ let lookup=workerEntityLookup(()=>rows,{reuse:true,appendOnly:true});lookup('crop-99');lookup('crop-98');assert.equal(lookup('crate-new'),undefined);
+ reads=0;const crate={id:'crate-new',delivered:false};rows.push(crate);assert.equal(lookup('crate-new'),crate);assert.equal(reads,0);
+ rows.push({id:'crop-99',alive:false});assert.equal(lookup('crop-99'),rows[99]);rows[99].alive=false;assert.equal(lookup('crop-99').alive,false);
+ lookup=workerEntityLookup(()=>rows,{reuse:true,appendOnly:true});crate.delivered=true;assert.equal(lookup('crate-new').delivered,true);
+});
+for(const appendOnly of [false,true])test(`small collection regrowth retires removed members of a reused index (appendOnly=${appendOnly})`,()=>{
+ let rows=Array.from({length:100},(_,i)=>({id:'old-'+i}));const lookup=workerEntityLookup(()=>rows,{reuse:true,appendOnly});lookup('old-99');lookup('old-98');
+ rows.length=32;assert.equal(lookup('old-0'),rows[0]);for(let i=32;i<100;i++)rows.push({id:'new-'+i});
+ assert.equal(lookup('old-99'),undefined);assert.equal(lookup('new-99'),rows[99]);
+ rows=rows.map(r=>({...r}));assert.equal(lookup('new-99'),rows[99]);
+});

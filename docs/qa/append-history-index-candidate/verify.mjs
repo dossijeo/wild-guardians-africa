@@ -8,7 +8,7 @@ const read=p=>JSON.parse(gunzipSync(readFileSync(new URL(p,dir))));
 const helper=read('helper-check.json.gz');assert.equal(helper.queries,519);assert.equal(helper.tailPreviousMemberIdReads,0);assert.equal(helper.baselineStaleIndexReproduced,true);assert.equal(helper.candidateSmallCollectionRegrowthSafe,true);
 const native=read('native-check.json.gz');assert.equal(native.cases.length,4);
 for(const r of native.cases){assert.equal(r.checkpoints.length,9);assert.equal(hash(gunzipSync(readFileSync(new URL('../'+r.source+'/state.json.gz',dir)))),r.inputSha256);assert.equal(r.samples.length,200);assert.equal(r.cold.reference.length,150);assert.equal(r.cold.candidate.length,150);}
-assert.equal(m.promoted,false);assert.equal(m.performanceAcceptance,false);
+assert.equal(m.promoted,true);assert.equal(m.performanceAcceptance,true);
 const ab=read('final-ab.json.gz'),ba=read('final-ba.json.gz');
 assert.equal(ab.reverse,false);assert.equal(ba.reverse,true);assert.equal(ab.cases.length,4);assert.equal(ba.cases.length,4);
 for(let i=0;i<4;i++){
@@ -31,4 +31,9 @@ for(const c of small.cases){
  assert.equal(c.candidateWins,c.samples.filter(s=>s.candidate.totalMs<s.reference.totalMs).length);
 }
 assert.equal(checkpoints,1568);
-console.log('PASS: archive integrity, 519 helper queries, 72 final native and 1568 small-opening checkpoint pairs; full integrated suite pending');
+const suite=read('suite-sources.json.gz');assert.equal(Object.keys(suite.files).length,833);assert.equal(suite.suiteSession,44690);
+for(const [file,archive] of [['src/simulation/worker-entity-lookup.js','integrated-helper.js.gz'],['src/simulation/game.js','integrated-game.js.gz'],['tests/worker-entity-lookup.test.js','lookup-tests.js.gz']])assert.equal(suite.files[file],hash(gunzipSync(readFileSync(new URL(archive,dir)))));
+const log=gunzipSync(readFileSync(new URL('full-tests.log.gz',dir))).toString('utf8');
+for(const text of ['# tests 3142','# pass 3142','# fail 0','# cancelled 0','# skipped 0','# duration_ms 937673.125'])assert.ok(log.includes(text));
+assert.equal(m.fullSuite.exitCode,0);assert.equal(m.fullSuite.tests,3142);assert.equal(m.fullSuite.passed,3142);
+console.log('PASS: archive integrity, 519 helper queries, 72 final native and 1568 small-opening checkpoint pairs, complete 3142-test integrated regression; CPU-only acceptance');

@@ -445,7 +445,7 @@ function reserveAvailableTasks(s,nav){
 function updateWorkers(s,dt,nav) {
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
-  const findPlant=workerEntityLookup(()=>s.plants,{reuse:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
+  const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
   const newArrivals=[];
   if(!s.raid&&s.time<300)for(const w of s.workers){

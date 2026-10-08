@@ -1,8 +1,8 @@
 {
   "base": "44851761a3bab50997b0f0f5ae46e4a724753c41",
-  "promoted": false,
+  "promoted": true,
   "version": 2,
-  "performanceAcceptance": false,
+  "performanceAcceptance": true,
   "conditions": {
     "suiteSession": 46954,
     "suitePid": 40124,
@@ -108,6 +108,21 @@
       "path": "villages.json.gz",
       "rawBytes": 71831,
       "rawSha256": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f"
+    },
+    {
+      "path": "full-tests.log.gz",
+      "rawBytes": 772994,
+      "rawSha256": "d63c5860c270e91657a08537c4cfa31319ed1dae0f0ea89bf178c5c4912a8652"
+    },
+    {
+      "path": "suite-sources.json.gz",
+      "rawBytes": 90788,
+      "rawSha256": "5427c23f465de02c730179e8ab8595778e52f079db5270934ac80bd0c55ed79a"
+    },
+    {
+      "path": "lookup-tests.js.gz",
+      "rawBytes": 5560,
+      "rawSha256": "a5cde2a2cbf393c3f2ebb42b800e37225251bc4b09f18a21879ae7394ce63a54"
     }
   ],
   "sourceHashes": {
@@ -349,7 +364,7 @@
     "src/world/wall-stroke-sampling.js": "0b2da0982b076f4fdf34af03967c04606cc574cf1b54956fdf1cbc347c22ecd2",
     "src/world/work-points.js": "32005dd48b01b4485febee5453a4b48afc81ee3a68a2f40a40a2409eb7883bf2"
   },
-  "integrationStatus": "working-tree: directed 78 PASS and build/package PASS; full suite running",
+  "integrationStatus": "accepted for main: directed 78, complete 3142, build/package PASS",
   "finalBenchmarkConditions": {
     "cpuCampaigns": [
       43808,
@@ -361,7 +376,29 @@
     "scope": "Native CPU Game.tick continuations only; not GPU, frametime or current 100-night acceptance",
     "largeCheckpointPairs": 72,
     "smallMeasuredPairs": 32,
-    "smallMeasuredCheckpointPairs": 1568
+    "smallMeasuredCheckpointPairs": 1568,
+    "cpuCampaignsRecordedAtMeasurement": [
+      43808,
+      49032
+    ],
+    "additionalCampaignsDiscoveredAfterMeasurement": [
+      41320,
+      41304
+    ],
+    "backgroundLoadInventoryComplete": false,
+    "backgroundLoadCaveat": "Two additional live QA campaigns started before the measurements were discovered afterward; CPU load at measurement was not exhaustively inventoried. AB/BA remains a paired CPU observation under background load, not idle-machine performance."
   },
-  "smallSetupReproduction": "Restore integrated-game/helper and opening-setup at their original paths over frozen base; use base source/content hashes. Setup imports main modules; frozen arms import their own src. No arbitrary newer main setup."
+  "smallSetupReproduction": "Restore integrated-game/helper and opening-setup at their original paths over frozen base; use base source/content hashes. Setup imports main modules; frozen arms import their own src. No arbitrary newer main setup.",
+  "performanceAcceptanceScope": "Opt-in append-only crop/crate histories: final paired native CPU observation and functional parity. No GPU/mobile/FPS/general statistical acceptance.",
+  "fullSuite": {
+    "session": 44690,
+    "exitCode": 0,
+    "tests": 3142,
+    "passed": 3142,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 937673.125,
+    "trackedSrcTestFilesUnchanged": 833
+  }
 }
