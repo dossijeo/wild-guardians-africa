@@ -612,3 +612,13 @@ readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descarg
 recursos dos veces para medir. Distinguir observación real de estimaciones cuando
 caché o longitud de transferencia no sean observables. Pendiente de implementación
 y evidencia en rama; no aprobado por mera comunicación del requisito.
+# Regresión estática de aislamiento GPU, 2026-10-08
+
+[Seis biomas y control Manglares](qa/native-isolation-static/README.md): runtime
+2ba87182, cero cambios de framebuffer durante la subida aislada, restauración de
+visibilidad/culling/sombras y estado lógico, contextos liberados y errores vacíos.
+Cinco fotogramas posteriores idénticos; Manglares inicial conserva16 canales de
+diferencia/max7 como diagnóstico. Control separado con fotograma ordinario previo
+da cero diferencias antes y después; no atribuye la causa del ensayo inicial.
+No acredita continuidad en traveling ni entidades densas/rendimiento. Flags de
+preparación aislada y compilación/waits propios siguen fuera de producción.
