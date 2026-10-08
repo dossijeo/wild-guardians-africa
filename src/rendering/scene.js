@@ -1,3 +1,4 @@
+import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
 import {loadingSyncWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
@@ -168,6 +169,7 @@ export class WorldScene {
     this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
+    if(this.loadingProgress)await this.loadReady(this.loadedWorkerActors());
     if(this.loadingProgress&&farVegetation){
       // Compile the eventual fog variant, not a temporary fog-free world. The
       // distant adapter uses this same linear-fog recipe at first presentation.
@@ -189,6 +191,19 @@ export class WorldScene {
       await this.loadReady(this.objects.get(animal.id)?.userData.actorReady);
       if(!this.mixers.has(animal.id))throw Error('Animal guardado sin modelo: '+animal.id);
     }
+  }
+  async loadedWorkerActors(){
+    for(const worker of this.state.workers??[]){
+      await this.loadReady(this.objects.get(worker.id)?.userData.actorReady);
+      if(!this.mixers.has(worker.id))throw Error('Trabajador guardado sin modelo: '+worker.id);
+    }
+  }
+  loadingActorPreparation(){
+    if(!this.loadingActorQueue){
+      const gl=this.renderer.getContext();
+      this.loadingActorQueue=new LoadingSyncQueue({signal:this.loading.signal,cancelled:()=>this.disposed||this.renderer.getContext()!==gl||gl.isContextLost(),getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onDiagnostic:stats=>this.onLoadingActorQueue?.(stats)});
+    }
+    return this.loadingActorQueue;
   }
   setCameraExclusion(enabled,options={}){
     this.releaseCameraExclusion?.();this.releaseCameraExclusion=null;this.cameraExclusion=null;
@@ -375,18 +390,29 @@ export class WorldScene {
     const root=this.objects.get(entity.id),state=this.state;
     const prepared=type==='animal'&&this.animalPreload?await this.animalPreload.take(entity.species):null;
     const gltf=prepared?null:await this.assets.model(descriptor.url);if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root){releaseActorRig(prepared);return;}
-    return loadingSyncWitness(this.onLoadingSpan,'actor-prepare:'+type+':'+(entity.profile??entity.species),()=>{
-    const model=prepared?.model??clone(gltf.scene);model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
-    // Native bestiary labs use unit scale. Their heroic dimensions are already
-    // authored in the GLB; animated foot grounding follows in applyAnimalPose.
-    if(type==='animal')prepareAnimalModel(model,entity.species);
-    root.add(model);
-    this.mixers.set(entity.id,prepared??{profile:type==='worker'?entity.profile:null,mixer:new THREE.AnimationMixer(model),clips:type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations,action:null,name:null,model,groundSamples:type==='animal'?animalGroundSamples(model):null});
-    // Initialize bones before a pointer raycast or an offscreen first render
-    // can cache a sphere from the cloned source's stale world transforms.
-    this.updateActor(entity,0,type);root.updateMatrixWorld(true);
-    model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
-    });
+    let rig=null,model=null,preparedReleased=false,adopted=false,rigReleased=false;
+    const releasePrepared=()=>{if(prepared&&!preparedReleased){releaseActorRig(prepared);preparedReleased=true;}};
+    const cleanup=()=>{if(rig&&!rigReleased){const current=this.mixers.get(entity.id)===rig;if(current){this.mixers.delete(entity.id);root.remove(model);}if(current||!adopted)releaseActorRig(rig);rigReleased=true;if(rig===prepared)preparedReleased=true;}else if(!rig)releasePrepared();};
+    const adopt=()=>{
+      if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root){releasePrepared();return;}
+      return loadingSyncWitness(this.onLoadingSpan,'actor-prepare:'+type+':'+(entity.profile??entity.species),()=>{
+        try{
+          model=prepared?.model??clone(gltf.scene);
+          rig=prepared??{profile:type==='worker'?entity.profile:null,mixer:new THREE.AnimationMixer(model),clips:[],action:null,name:null,model,groundSamples:null};
+          model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
+          // Geometry/materials are borrowed; only this rig's skeleton and mixer
+          // belong to the adoption. Native poses and skin bounds stay unchanged.
+          if(type==='animal')prepareAnimalModel(model,entity.species);
+          if(!prepared){rig.clips=type==='animal'?prepareAnimalClips(gltf.animations):gltf.animations;rig.groundSamples=type==='animal'?animalGroundSamples(model):null;}
+          root.add(model);this.mixers.set(entity.id,rig);adopted=true;
+          this.updateActor(entity,0,type);root.updateMatrixWorld(true);
+          model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
+        }catch(error){cleanup();throw error;}
+      });
+    };
+    try{return this.loadingProgress&&!this.loadingProgress.ready?await this.loadingActorPreparation().run(adopt):adopt();}
+    catch(error){cleanup();throw error;}
+
   }
   wateringSource(id,time,effect){
     const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);
@@ -545,6 +571,6 @@ export class WorldScene {
   }
   render(dt) {for(const step of this.renderFrameUpdates(dt)){}return this.drawRenderFrame();}
   drawRenderFrame() {return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
-  dispose() {if(this.disposed)return;this.disposed=true;this.loading?.abort();this.canvasEvents?.abort();this.raidEntryPreparer?.dispose();this.hiringRoutePreparer?.dispose();this.animalPreload?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.glResourceEpoch?.dispose();this.renderer.forceContextLoss();this.state=null;}
+  dispose() {if(this.disposed)return;this.disposed=true;this.loading?.abort();this.loadingActorQueue?.dispose();this.canvasEvents?.abort();this.raidEntryPreparer?.dispose();this.hiringRoutePreparer?.dispose();this.animalPreload?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.hands?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.glResourceEpoch?.dispose();this.renderer.forceContextLoss();this.state=null;}
 
 }
