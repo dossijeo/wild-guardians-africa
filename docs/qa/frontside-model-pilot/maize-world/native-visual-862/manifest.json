@@ -1,0 +1,96 @@
+{
+  "status": "WORLD_MAIZE_STATIC_VISUAL_SUBSET_PENDING",
+  "sourceCommit": "ff58341c",
+  "sources": {
+    "tests/browser/frontside-maize-world.js": "6b2c1d4f0100bcd8461791409dddcebc52d46864c2b7dd092ea60118f68d3408",
+    "tests/browser/frontside-maize-world.html": "1d0a793fc31990f60fd779fe935c2a04ffa994ba5e9acf94de19f5bc5f28783a",
+    "tools/lib/frontside-world-maize-adapter.mjs": "726a06c3cfc162d65365ee18a2e9d861934161df5fa4aa6461e4ed3590ac1e57",
+    "tools/lib/frontside-world-maize-report.mjs": "1e46e437658a5dd3ab20628ca2853a1a8984a23ac9c9a7cbbd5ed8e5b78d5565",
+    "tools/lib/frontside-shared-leaf-reverse.mjs": "291045f79ecad88df8cfe851e6d71f65b34a00be9ac800ba16f3b22ec8158d8c",
+    "tools/lib/frontside-compact-leaf-payload.mjs": "02312070b2c41abbe0df25fb1b7e1c7d852e789a4408c39adbb12b68f4ffcc4c",
+    "tools/frontside_pilot_server.mjs": "575a9e3900d3606f900cab9938214e0e981276a8cc03dc7d204b3508463fa5a4"
+  },
+  "files": {
+    "report.json.gz": {
+      "sha256": "510eff7c6e2183466c63b9300fea5829713f21b8fe339b17d2f9368945ba35d8",
+      "decodedSha256": "aeabb53c9a2dadd33fd1628a060de9bdadac5bb024fdc1a4b31331068cc6cccb"
+    },
+    "compare-0.png": {
+      "sha256": "cd19bd17aab946ead720685887a071f9ab88b87e3de6d82b79057305a36cbfc5",
+      "bytes": 2431682
+    },
+    "compare-1.png": {
+      "sha256": "be0c453193b65826700bb0ada0aa37606aff0a905cfdd27d3070be3b3e3d70bc",
+      "bytes": 2415324
+    },
+    "compare-2.png": {
+      "sha256": "0ffd6b7192c064f7d45d1a1a43b38845d9433272008ff32f7cebcee350b0ef68",
+      "bytes": 2266014
+    },
+    "compare-3.png": {
+      "sha256": "64e42dfad42205f6efbef13c6d194ff66174dc3db94bdf5c3805b6bb4a71c801",
+      "bytes": 2113265
+    },
+    "compare-4.png": {
+      "sha256": "4bdc23c6e88e77c45e3b6ba6bde4c0a3137eae0e880a6e94d21f8e0175f545cd",
+      "bytes": 941180
+    },
+    "compare-5.png": {
+      "sha256": "5a9aa98c015473c54416f67ea90972c4697cc8889a045873e6e317e367f5047e",
+      "bytes": 2460702
+    }
+  },
+  "executionAuthority": "Root native IAB tab862; author CUA inventory empty",
+  "scope": {
+    "captures": [
+      {
+        "time": 150,
+        "logicalUnchanged": true
+      },
+      {
+        "time": 150,
+        "logicalUnchanged": true
+      },
+      {
+        "time": 150,
+        "logicalUnchanged": true
+      },
+      {
+        "time": 450,
+        "logicalUnchanged": true
+      },
+      {
+        "time": 450,
+        "logicalUnchanged": true
+      },
+      {
+        "time": 150,
+        "logicalUnchanged": true
+      }
+    ],
+    "saveRestores": [],
+    "humanReviewPending": true,
+    "completedHarvest": false,
+    "gpuTiming": false
+  },
+  "observation": {
+    "authority": "Root assistant inspection of all six static PNGs",
+    "usefulCaptures": [
+      0,
+      1,
+      2,
+      3,
+      5
+    ],
+    "inconclusiveCapture": 4,
+    "notes": [
+      "Useful views show recognizable maize/leaf shape without evident missing face or gross distortion in these stills.",
+      "Capture4 night angle2 is obscured by building/awning, inconclusive; not attributed to crop defect.",
+      "No user human decision, motion/growth/category approval or performance inferred."
+    ]
+  },
+  "limitations": [
+    "Original bridges and Double shadow isolation remain.",
+    "Actual growth/switch/resize/harvest delivery and dense World GPU/VFX comparisons remain pending."
+  ]
+}
