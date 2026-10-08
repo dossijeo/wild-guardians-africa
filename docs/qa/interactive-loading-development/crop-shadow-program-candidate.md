@@ -8,4 +8,4 @@ During the synchronous compile submission it borrows exactly the source properti
 
 The helper owns a context-loss latch/abort signal and checks context identity/epoch. Failure and owner cancellation remove its listeners and polling, never adopt stale readiness. Synchronous driver calls cannot be interrupted. Native resources, key fidelity, startup cost, visual parity and unprobed first-crop performance are still unverified; do not promote based on unit tests.
 
-Five tests pass using real Three objects and stub GL submission: native source/lighting recipe and identity; restoration before pending readiness; thrown compile; owner abort; loss/restoration before polling. No browser/GPU scene was opened for those tests. Runtime remains `08fe1462`.
+Six tests pass using real Three objects and stub GL submission: native source/lighting recipe and identity; restoration before pending readiness; thrown compile; owner abort; loss/restoration before polling; a never-ready deadline. No browser/GPU scene was opened for those tests. Runtime remains `08fe1462`.
