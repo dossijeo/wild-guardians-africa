@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<title>Crop thumbnails — original / Tinify pilots</title>
+<style>
+body{margin:16px;background:#eee4ce;color:#292619;font:14px system-ui}
+main{display:flex;flex-wrap:wrap;gap:16px}article{padding:12px;background:#fff8e8}
+section{display:flex;gap:12px}figure{margin:0}img{width:192px;height:192px;object-fit:contain}
+pre{white-space:pre-wrap}figcaption{padding:4px 0}
+@media(max-width:470px){section{flex-wrap:wrap}}
+</style>
+<h1>Crop thumbnail pilots</h1>
+<p>Seven unchanged 192px crops. Original at left; Tinify at right. Runtime assets remain untouched.</p>
+<main></main><pre id="report">Loading native image comparison…</pre>
+<script type="module">
+const directory=new URL('../../docs/qa/tinify-crop-thumbnail-pilots/',location.href);
+const rows=[],errors=[];
+try{
+ const proof=await (await fetch(new URL('proof.json',directory))).json();
+ for(const row of proof.rows){
+  const card=document.createElement('article'),title=document.createElement('h2'),section=document.createElement('section');
+  title.textContent=row.name;card.append(title,section);document.querySelector('main').append(card);
+  const pixels=[];
+  for(const [label,suffix] of [['Original','original'],['Tinify','candidate']]){
+   const img=new Image();img.src=new URL(row.name+'-'+suffix+'.webp',directory).href;await img.decode();
+   if(img.naturalWidth!==192||img.naturalHeight!==192)throw Error('Unexpected dimensions: '+row.name);
+   const figure=document.createElement('figure'),caption=document.createElement('figcaption');caption.textContent=label;figure.append(img,caption);section.append(figure);
+   const canvas=document.createElement('canvas');canvas.width=192;canvas.height=192;
+   const context=canvas.getContext('2d');context.drawImage(img,0,0);pixels.push(context.getImageData(0,0,192,192).data);
+  }
+  let alphaDifferences=0,rgbError=0,maxRgbDifference=0;
+  for(let i=0;i<pixels[0].length;i+=4){
+   if(pixels[0][i+3]!==pixels[1][i+3])alphaDifferences++;
+   for(let c=0;c<3;c++){const delta=Math.abs(pixels[0][i+c]-pixels[1][i+c]);rgbError+=delta;maxRgbDifference=Math.max(maxRgbDifference,delta);}
+  }
+  if(alphaDifferences)throw Error('Native alpha differs: '+row.name);
+  rows.push({name:row.name,width:192,height:192,alphaDifferences,rgbMeanAbsoluteDifference:rgbError/(192*192*3),maxRgbDifference});
+ }
+}catch(error){errors.push(String(error.message));}
+document.querySelector('#report').textContent=JSON.stringify({done:true,ok:errors.length===0&&rows.length===7,rows,errors,scope:'Native decode and canvas RGBA comparison; no promotion or GPU/performance measurement.'},null,2);
+</script></html>
