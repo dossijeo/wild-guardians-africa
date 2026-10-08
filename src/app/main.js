@@ -2,7 +2,7 @@ import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
 import {LoadingCinematic} from '../rendering/loading-cinematic.js';
 import {LoadingProgress} from './loading-progress.js';
-import {LOADING_STAGES} from './loading-recipe.js';
+import {LOADING_STAGES,loadingWaitMessage} from './loading-recipe.js';
 import {SpiritVoice,spiritVoice} from '../audio/spirit-voice.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import {HiringRoutePreparer} from '../world/hiring-route-preparer.js';
@@ -69,7 +69,7 @@ function prepareLoadingScene(){
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
 function clearLoadingPresentation(){clearInterval(loadingDiagnostic);loadingDiagnostic=null;loadingCinema?.cancel();loadingCinema=null;loadingMature?.reject(new Error('Loading cancelled'));loadingMature=null;loadingDiorama?.dispose();loadingDiorama=null;loadingProgress=null;}
-function cancelLoading(failure=null){if(!starting)return;loadingGeneration++;starting=false;state=null;clearWorld();releasePreparedLoading();menu();if(failure)error(failure.message);}
+function cancelLoading(failure=null){if(!starting){releasePreparedLoading();return;}loadingGeneration++;starting=false;state=null;clearWorld();releasePreparedLoading();menu();if(failure)error(failure.message);}
 window.addEventListener('keydown',event=>{if(event.key==='Escape'&&screen==='loading'){event.preventDefault();cancelLoading();}});
 const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';fontStyles.href=assetUrl('/content/fonts.css');document.head.append(fontStyles);
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
@@ -141,7 +141,7 @@ async function startGame(loaded=null) {
     const loadingCancel=document.createElement('button');loadingCancel.id='loading-cancel';loadingCancel.className='interactive-loading-cancel';loadingCancel.textContent=moneyLocale().startsWith('es')?'Cancelar':'Cancel';loadingCancel.onclick=()=>cancelLoading();app.append(loadingCancel);
     const loadingHint=document.createElement('small');loadingHint.id='loading-progress';loadingHint.className='interactive-loading-progress';loadingHint.setAttribute('role','status');app.append(loadingHint);
     loadingDiorama.render(0,0);lastFrame=performance.now();
-    loadingDiagnostic=setInterval(()=>{const snapshot=loadingProgress?.snapshot(),label=document.querySelector('#loading-progress');if(snapshot&&label&&snapshot.unchangedFor>15000)label.textContent='Still preparing: '+snapshot.pending[0]+' · '+Math.floor(snapshot.progress*100)+' %';},1000);
+    loadingDiagnostic=setInterval(()=>{const snapshot=loadingProgress?.snapshot(),label=document.querySelector('#loading-progress');if(snapshot&&label&&snapshot.unchangedFor>15000)label.textContent=loadingWaitMessage(snapshot,moneyLocale());},1000);
     const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
@@ -172,9 +172,11 @@ async function startGame(loaded=null) {
     await world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);assertLoading();world.objects.delete(village.id);}
     await world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}}));assertLoading();
-    world.render(0);loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
+    loadingCinema=new LoadingCinematic(world,loadingDiorama,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,autoStart:false});
+    await loadingCinema.prepare({afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}});assertLoading();
+    loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
-    loadingCinema=new LoadingCinematic(world,loadingDiorama,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});await loadingCinema.finished;assertLoading();loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
+    loadingCinema.start();await loadingCinema.finished;assertLoading();loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
     world.render(0);document.querySelector('#world-loading').remove();document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message)});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message);}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
@@ -441,7 +443,7 @@ function updateRaidLoading(){
 function frame(now) {
   requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='loading'&&loadingDiorama?.prepared){
-    try{if(loadingCinema)loadingCinema.step(dt);else{loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}}catch(e){loadingProgress?.fail(e);cancelLoading(e);}
+    try{if(loadingCinema?.armed)loadingCinema.step(dt);else{loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}}catch(e){loadingProgress?.fail(e);cancelLoading(e);}
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;

@@ -11,7 +11,7 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
   constructor(world,{state={day:1,time:0,biome:'sabana'}}={}) {
-    this.world=world;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(8,7.5,10);this.camera.lookAt(0,.65,0);this.baseQuaternion=this.camera.quaternion.clone();
+    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(8,7.5,10);this.camera.lookAt(0,.65,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.ray=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.abort=new AbortController();

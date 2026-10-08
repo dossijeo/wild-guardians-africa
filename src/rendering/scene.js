@@ -1,3 +1,4 @@
+import {initializeLoadingTextures} from './loading-textures.js';
 import {compileLoadingPrograms} from './loading-programs.js';
 import {createRendererWithGlEpoch} from './gl-resource-epoch.js';
 import {FluidGpuPreload} from './fluid-preload.js';
@@ -314,6 +315,7 @@ export class WorldScene {
       this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
+      if(this.loadingProgress)this.loadingTextureUploads=await initializeLoadingTextures(this.renderer,this.scene,{cancelled:()=>this.disposed});
       if(this.loadingProgress)await renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)});
       else renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
