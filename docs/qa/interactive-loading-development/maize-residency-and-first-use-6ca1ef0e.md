@@ -61,3 +61,19 @@ Reverse reports: `maize-residency-candidate-ba-6ca1ef0e.json`, `maize-residency-
 ## Focus-fixture negative control (95)
 
 The first native focus attempt on fixture fd6e9500 failed because the QA camera filter incorrectly assumed transaction IDs were plant entity IDs. Game.plant correctly creates plant-N entities independently. Loading, paid commands and first-use windows completed; only the QA focus reported an error. The raw report maize-focus-negative-fd6e9500.json is retained, with explicit disposal/context loss and tab closure. The fixture now records entity IDs from the actual plants appended by the paid command and uses only those for visual focus, including dense saves. No production or gameplay change was required. Native rerun remains required.
+
+
+## Focused original-seedling pair (96–97)
+
+Fixture f38f6e19 was rerun with actual paid entity IDs. Both day/New Game contexts use the same shadow-program preparation; only97 retains maize originals. After both first-use windows end, a QA-only native camera focus frames the two seedlings. Reports/PNGs maize-focused-control-f38f6e19 and maize-focused-candidate-f38f6e19 retain the original plant state; no artificial growth or save mutation. Plant IDs3/5 at(88.5,-12)/(90,-12), camera eye/target and logical flags match. Errors and warn/error console logs are empty; explicit disposal/context loss/tab closure pass.
+
+The visible rectangle(0,120)–(1280,720) has mean RGB absolute difference0.0000534 byte/channel and maximum2; the only differing bounding rectangle is(928,128)–(936,136), away from the seedlings. The plants are now actually visible, unlike the earlier opening-village images. This is one day view of initial seedlings, not maturity/morph/multiview acceptance.
+
+These contexts are visual QA, not additional benchmark acceptance arms.97 records one232.7ms RAF interval during its maize window although the immediate first maize draw takes4.6ms. No trace attributes that later interval; it is preserved as an unresolved fluency observation rather than removed or assigned to retention. Context96 first draw48.1ms; the earlier frozen ABBA remains the targeted timing evidence.
+
+
+## Dense restored owner check (98)
+
+The same helper was exercised on the archived day101 save SHA b485768f1cc172c5b174138f2c678e2bfa2d0b544d5316a3e9cb3dddf33f9103, containing23,894 historical plants and36workers. The world-load→retention phase remains exactly110explicit texture objects,195renderer geometries,53programs,242Assets-owned resources and79,763,840requested-buffer bytes. No texture/storage or requested buffer is added by registering the already-owned maize originals in this dense world. This is a within-run ownership observation, not a matched physical-memory benchmark. Controls finish with111texture objects and88,729,054requested-buffer bytes; peak requested buffers94,956,936bytes.
+
+Readiness, restored logical state, final logical state and intended camera flags pass; errors and warn/error console logs are empty. All109,160,798cumulative requested-buffer bytes are explicitly deleted at disposal, leaving0live tracked buffers/bytes and5dummy texture objects. The context is lost and tab closed before the author's inventory returns empty. Raw report maize-residency-dense-f38f6e19.json is preserved. Binding probes invalidate its timing/frame measurements. Repeated actual-app ownership and low-quality/mobile physical-memory coverage remain open.
