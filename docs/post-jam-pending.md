@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Asignaciones de lotes durante aparición](qa/asset-group-appearance/README.md):
+Gran Río/Musgum alta recrea15 lotes por capacidad (13 crecen/2 menguan), añade6
+claves y retira3 claves de visibilidad;171 bufferData en el primer render.
+Observador QA y12 pruebas, producción sin cambios. Evitar solo reducciones no
+basta en este caso: investigar conservación de buffers estáticos al redimensionar,
+con propiedad/liberación, imagen y coste incluidos antes de adoptar el candidato.
+
 [Montañas HQ integradas y paquete verificado](qa/hq-main-integration/README.md):
 PR #7 mergeada, seis atlas byte-exactos y ZIP sin ZIP anidado. Validate game del
 merge pasa 3.104 tests; Windows aún en pruebas del paquete al verificar. Las
