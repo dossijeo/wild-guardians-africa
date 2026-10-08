@@ -1,0 +1,2327 @@
+{
+  "status": "BLENDER_SOURCE_STEM_BOUNDARIES_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "mesh": "sorgo_05_maduro",
+  "cropIndex": 4,
+  "stemTriangles": 428,
+  "wholeModelTriangles": 6396,
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "boundaryEdges": 169,
+  "nonManifoldJunctionEdges": 20,
+  "components": [
+    {
+      "vertexIds": [
+        0,
+        1,
+        2,
+        18,
+        19,
+        70
+      ],
+      "boundaryEdges": 6,
+      "degrees": {
+        "0": 2,
+        "1": 2,
+        "2": 2,
+        "18": 2,
+        "19": 2,
+        "70": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        0,
+        1,
+        2,
+        70,
+        19,
+        18
+      ],
+      "sourceNeighborFaceIds": [
+        1106,
+        1106,
+        1786,
+        1933,
+        1398,
+        1398
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.013393445791588639,
+      "projectedArea": 0.009283980614118963,
+      "planeSingularValues": [
+        0.23980827885567485,
+        0.08552897952110117,
+        0.01959509831200511
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.699032614559695,
+        0.6334210464370457,
+        -0.3318601839818016
+      ],
+      "thirdVertexSignedDistances": [
+        0.02571673044686954,
+        0.011777783400666339
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.9828885415019888,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          0,
+          2,
+          70,
+          19
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 0,
+            "originalSourceVertexIds": [
+              7348,
+              7188
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 2,
+            "originalSourceVertexIds": [
+              7350,
+              7243
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 70,
+            "originalSourceVertexIds": [
+              7242,
+              8304
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 19,
+            "originalSourceVertexIds": [
+              8305,
+              7788
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        3,
+        5,
+        15,
+        16,
+        17,
+        22
+      ],
+      "boundaryEdges": 6,
+      "degrees": {
+        "3": 2,
+        "5": 2,
+        "15": 2,
+        "16": 2,
+        "17": 2,
+        "22": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        5,
+        3,
+        16,
+        17,
+        15,
+        22
+      ],
+      "sourceNeighborFaceIds": [
+        1221,
+        1490,
+        1360,
+        1360,
+        1410,
+        1410
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.0308131593166084,
+      "projectedArea": 0.003045733545131606,
+      "planeSingularValues": [
+        0.22809768227093838,
+        0.09110072197598668,
+        0.05262273607485868
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.716601538226799,
+        -0.1421419342541418,
+        0.6828454480608894
+      ],
+      "thirdVertexSignedDistances": [
+        -0.037342369455480605,
+        -0.037342369455480605
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.8078128957251969,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          5,
+          3,
+          16,
+          15
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 5,
+            "originalSourceVertexIds": [
+              7535,
+              7807
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 3,
+            "originalSourceVertexIds": [
+              7533,
+              6905
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 16,
+            "originalSourceVertexIds": [
+              7648,
+              7739
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 15,
+            "originalSourceVertexIds": [
+              7738,
+              7808
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        6,
+        7,
+        21,
+        24
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "6": 2,
+        "7": 2,
+        "21": 2,
+        "24": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        6,
+        7,
+        24,
+        21
+      ],
+      "sourceNeighborFaceIds": [
+        1295,
+        1462,
+        1469,
+        1404
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.004073415801583038,
+      "projectedArea": 0.0007900258749840044,
+      "planeSingularValues": [
+        0.1364788416594856,
+        0.03807967753285391,
+        0.005607752309044968
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.9460153328085985,
+        0.3126994638903184,
+        -0.08528795561944244
+      ],
+      "thirdVertexSignedDistances": [
+        -0.03618799777738717,
+        -0.03618799777738717,
+        -0.10964435862181354,
+        -0.1424662607970759
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.5558118755454328,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          6,
+          7,
+          24,
+          21
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 6,
+            "originalSourceVertexIds": [
+              7659,
+              6988
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 7,
+            "originalSourceVertexIds": [
+              7660,
+              7859
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 24,
+            "originalSourceVertexIds": [
+              7857,
+              7539
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 21,
+            "originalSourceVertexIds": [
+              7028,
+              7107
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        9,
+        10,
+        11,
+        29,
+        32
+      ],
+      "boundaryEdges": 5,
+      "degrees": {
+        "9": 2,
+        "10": 2,
+        "11": 2,
+        "29": 2,
+        "32": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        9,
+        10,
+        11,
+        32,
+        29
+      ],
+      "sourceNeighborFaceIds": [
+        1297,
+        1297,
+        1529,
+        1529,
+        1500
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.01689694944210647,
+      "projectedArea": 0.006215575398998808,
+      "planeSingularValues": [
+        0.12220907092905961,
+        0.08016632911423341,
+        0.024180726214645832
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.7005486229455814,
+        -0.3558611781754832,
+        -0.6185421964236607
+      ],
+      "thirdVertexSignedDistances": [],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.9697892128947364,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          9,
+          11
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 9,
+            "originalSourceVertexIds": [
+              7315,
+              7893
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 11,
+            "originalSourceVertexIds": [
+              7662,
+              7894
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        12,
+        23,
+        36,
+        37,
+        40,
+        41,
+        43,
+        52,
+        53,
+        54,
+        55,
+        60,
+        65,
+        66,
+        67,
+        111
+      ],
+      "boundaryEdges": 15,
+      "degrees": {
+        "12": 2,
+        "23": 2,
+        "36": 3,
+        "37": 2,
+        "40": 2,
+        "41": 1,
+        "43": 2,
+        "52": 2,
+        "53": 1,
+        "54": 1,
+        "55": 2,
+        "60": 2,
+        "65": 2,
+        "66": 2,
+        "67": 2,
+        "111": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        26,
+        27,
+        28,
+        51,
+        80,
+        85,
+        157,
+        159
+      ],
+      "boundaryEdges": 8,
+      "degrees": {
+        "26": 2,
+        "27": 3,
+        "28": 2,
+        "51": 2,
+        "80": 2,
+        "85": 2,
+        "157": 1,
+        "159": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        33,
+        34,
+        35,
+        47,
+        48,
+        58,
+        59,
+        128,
+        129,
+        138,
+        147,
+        148
+      ],
+      "boundaryEdges": 13,
+      "degrees": {
+        "33": 2,
+        "34": 4,
+        "35": 2,
+        "47": 2,
+        "48": 2,
+        "58": 2,
+        "59": 2,
+        "128": 2,
+        "129": 2,
+        "138": 2,
+        "147": 2,
+        "148": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        44,
+        46,
+        57,
+        68,
+        97,
+        113,
+        149,
+        150,
+        153
+      ],
+      "boundaryEdges": 9,
+      "degrees": {
+        "44": 2,
+        "46": 2,
+        "57": 2,
+        "68": 2,
+        "97": 1,
+        "113": 3,
+        "149": 2,
+        "150": 2,
+        "153": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        73,
+        75,
+        78,
+        91,
+        124,
+        173
+      ],
+      "boundaryEdges": 6,
+      "degrees": {
+        "73": 2,
+        "75": 2,
+        "78": 2,
+        "91": 2,
+        "124": 2,
+        "173": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        75,
+        73,
+        124,
+        173,
+        91,
+        78
+      ],
+      "sourceNeighborFaceIds": [
+        1821,
+        2409,
+        3156,
+        2723,
+        1904,
+        1846
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.003929072033108931,
+      "projectedArea": 0.005403271409671906,
+      "planeSingularValues": [
+        0.14653575506412125,
+        0.08796954082988008,
+        0.005580540554401045
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.8309582189677986,
+        0.5133376612986094,
+        -0.21445951557890416
+      ],
+      "thirdVertexSignedDistances": [
+        -0.04008807230929533,
+        -0.04008807230929533,
+        0.02440216330546318,
+        -0.012143265385128077,
+        -0.04008807230929533,
+        -0.04008807230929533
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.9920844436998829,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          75,
+          73,
+          124,
+          173,
+          78
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 75,
+            "originalSourceVertexIds": [
+              8204,
+              8216
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 73,
+            "originalSourceVertexIds": [
+              8202,
+              8631
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 124,
+            "originalSourceVertexIds": [
+              8480,
+              9003
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 173,
+            "originalSourceVertexIds": [
+              9002,
+              8715
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 78,
+            "originalSourceVertexIds": [
+              8275,
+              8215
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        76,
+        190,
+        197,
+        236
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "76": 2,
+        "190": 2,
+        "197": 2,
+        "236": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        190,
+        76,
+        197,
+        236
+      ],
+      "sourceNeighborFaceIds": [
+        3117,
+        3183,
+        3881,
+        4084
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.004484512961670909,
+      "projectedArea": 0.0010360865809714145,
+      "planeSingularValues": [
+        0.1499109391218246,
+        0.06945598599110085,
+        0.006089753223906418
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.8052858793423189,
+        0.5268696489835336,
+        0.27188789144027053
+      ],
+      "thirdVertexSignedDistances": [
+        -0.08642466198378118,
+        -0.08374783166233646,
+        -0.03837466253664629,
+        -0.03837466253664629
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.6732707963202347,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          190,
+          76,
+          236
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 190,
+            "originalSourceVertexIds": [
+              9135,
+              9170
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 76,
+            "originalSourceVertexIds": [
+              9133,
+              8814
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 236,
+            "originalSourceVertexIds": [
+              9577,
+              9745
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        77,
+        115,
+        116,
+        122,
+        123,
+        130,
+        131,
+        166
+      ],
+      "boundaryEdges": 8,
+      "degrees": {
+        "77": 2,
+        "115": 2,
+        "116": 2,
+        "122": 2,
+        "123": 2,
+        "130": 2,
+        "131": 2,
+        "166": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        115,
+        77,
+        123,
+        131,
+        166,
+        116,
+        130,
+        122
+      ],
+      "sourceNeighborFaceIds": [
+        2104,
+        2176,
+        2243,
+        2599,
+        2599,
+        2236,
+        2236,
+        2169
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.028478169580518325,
+      "projectedArea": 0.003683086677517031,
+      "planeSingularValues": [
+        0.23112747690186058,
+        0.07187988757554695,
+        0.04615039214602811
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.02368637055454703,
+        -0.2726764217867781,
+        -0.9618141841600756
+      ],
+      "thirdVertexSignedDistances": [
+        -0.01082431028819577,
+        -0.01082431028819577
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.9924112494597236,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          77,
+          123,
+          131,
+          116,
+          122
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 77,
+            "originalSourceVertexIds": [
+              8426,
+              8477
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 123,
+            "originalSourceVertexIds": [
+              8478,
+              7888
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 131,
+            "originalSourceVertexIds": [
+              8382,
+              8761
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 116,
+            "originalSourceVertexIds": [
+              8427,
+              8562,
+              8517
+            ],
+            "distinctFieldCount": 3,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 122,
+            "originalSourceVertexIds": [
+              8519,
+              7958
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        82,
+        83,
+        86
+      ],
+      "boundaryEdges": 2,
+      "degrees": {
+        "82": 2,
+        "83": 1,
+        "86": 1
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        94,
+        96,
+        114,
+        121,
+        125,
+        163,
+        184,
+        222,
+        225,
+        230,
+        235,
+        255
+      ],
+      "boundaryEdges": 12,
+      "degrees": {
+        "94": 2,
+        "96": 2,
+        "114": 2,
+        "121": 2,
+        "125": 2,
+        "163": 2,
+        "184": 2,
+        "222": 2,
+        "225": 2,
+        "230": 2,
+        "235": 2,
+        "255": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        96,
+        94,
+        121,
+        163,
+        222,
+        235,
+        230,
+        255,
+        225,
+        184,
+        125,
+        114
+      ],
+      "sourceNeighborFaceIds": [
+        1940,
+        2167,
+        2545,
+        3606,
+        3875,
+        4006,
+        4150,
+        4150,
+        3686,
+        3002,
+        2187,
+        2099
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.049127908690215744,
+      "projectedArea": 0.017382029470456407,
+      "planeSingularValues": [
+        0.23193979798450554,
+        0.17598630573129623,
+        0.10171273739863806
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.30926325784605285,
+        -0.8746717830482155,
+        -0.37323653262469025
+      ],
+      "thirdVertexSignedDistances": [
+        -0.19332415918878965,
+        -0.1384008494879551,
+        -0.1384008494879551,
+        -0.15946553466625357,
+        -0.13029626210091594,
+        -0.13029626210091594,
+        -0.1159020525777395,
+        -0.1159020525777395,
+        -0.19332415918878965,
+        -0.19332415918878965
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.5409841200483525,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          96,
+          94,
+          121,
+          163,
+          230,
+          225,
+          184,
+          125
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 96,
+            "originalSourceVertexIds": [
+              8313,
+              8417
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 94,
+            "originalSourceVertexIds": [
+              8311,
+              8309
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 121,
+            "originalSourceVertexIds": [
+              8472,
+              8709
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 163,
+            "originalSourceVertexIds": [
+              8710,
+              9309
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 230,
+            "originalSourceVertexIds": [
+              9485,
+              9794
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 225,
+            "originalSourceVertexIds": [
+              9796,
+              9439
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 184,
+            "originalSourceVertexIds": [
+              9440,
+              8794
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 125,
+            "originalSourceVertexIds": [
+              8793,
+              8489
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        104,
+        106,
+        118,
+        140,
+        141,
+        172
+      ],
+      "boundaryEdges": 6,
+      "degrees": {
+        "104": 2,
+        "106": 2,
+        "118": 2,
+        "140": 2,
+        "141": 2,
+        "172": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        106,
+        104,
+        118,
+        140,
+        141,
+        172
+      ],
+      "sourceNeighborFaceIds": [
+        2007,
+        2124,
+        2278,
+        2278,
+        2719,
+        2719
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.01844310561893931,
+      "projectedArea": 0.0012968113987873312,
+      "planeSingularValues": [
+        0.3102638040233565,
+        0.06337826244794625,
+        0.022711654101135174
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.7436666578218676,
+        0.5896352592787557,
+        -0.3151034164513737
+      ],
+      "thirdVertexSignedDistances": [
+        -0.048374037055091884,
+        -0.048374037055091884
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.5804146299031079,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          104,
+          118,
+          141
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 104,
+            "originalSourceVertexIds": [
+              7865,
+              8441
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 118,
+            "originalSourceVertexIds": [
+              8442,
+              8548
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 141,
+            "originalSourceVertexIds": [
+              8547,
+              8849
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        134,
+        135,
+        136,
+        161
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "134": 2,
+        "135": 2,
+        "136": 2,
+        "161": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        136,
+        134,
+        135,
+        161
+      ],
+      "sourceNeighborFaceIds": [
+        2254,
+        2254,
+        2542,
+        2584
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.008520448938449075,
+      "projectedArea": 0.0012764490926172295,
+      "planeSingularValues": [
+        0.1403352376937575,
+        0.026504188645677877,
+        0.01134969891965189
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.311791932672818,
+        -0.5643912106489787,
+        -0.7643614014733665
+      ],
+      "thirdVertexSignedDistances": [
+        -0.008969271474677808,
+        -0.008969271474677808
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.978489809498446,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          136,
+          135,
+          161
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 136,
+            "originalSourceVertexIds": [
+              1452,
+              1914
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 135,
+            "originalSourceVertexIds": [
+              1451,
+              1279
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 161,
+            "originalSourceVertexIds": [
+              1278,
+              1913
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        162,
+        192,
+        212,
+        214,
+        220
+      ],
+      "boundaryEdges": 5,
+      "degrees": {
+        "162": 2,
+        "192": 3,
+        "212": 2,
+        "214": 1,
+        "220": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        171,
+        185,
+        188,
+        195,
+        196,
+        205,
+        206,
+        210,
+        213
+      ],
+      "boundaryEdges": 10,
+      "degrees": {
+        "171": 2,
+        "185": 2,
+        "188": 2,
+        "195": 4,
+        "196": 2,
+        "205": 2,
+        "206": 2,
+        "210": 2,
+        "213": 2
+      },
+      "simpleCycle": false,
+      "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
+    },
+    {
+      "vertexIds": [
+        177,
+        178,
+        179,
+        242
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "177": 2,
+        "178": 2,
+        "179": 2,
+        "242": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        178,
+        179,
+        242,
+        177
+      ],
+      "sourceNeighborFaceIds": [
+        2848,
+        3970,
+        3971,
+        2882
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.0033598902427639738,
+      "projectedArea": 0.0005828224228971097,
+      "planeSingularValues": [
+        0.11171965724071256,
+        0.08228804659736756,
+        0.004612449200355149
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.7430409891178037,
+        0.4371640409298288,
+        -0.5067323650693122
+      ],
+      "thirdVertexSignedDistances": [
+        -0.03130623409399093,
+        -0.05061921665401356,
+        -0.05061921665401356,
+        -0.03130623409399093
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.698457651813802,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          178,
+          179,
+          242,
+          177
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 178,
+            "originalSourceVertexIds": [
+              8943,
+              8968
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 179,
+            "originalSourceVertexIds": [
+              8944,
+              9506
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 242,
+            "originalSourceVertexIds": [
+              9653,
+              9654
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 177,
+            "originalSourceVertexIds": [
+              9655,
+              8933
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        182,
+        209,
+        226,
+        232,
+        239,
+        243,
+        244,
+        259
+      ],
+      "boundaryEdges": 8,
+      "degrees": {
+        "182": 2,
+        "209": 2,
+        "226": 2,
+        "232": 2,
+        "239": 2,
+        "243": 2,
+        "244": 2,
+        "259": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        239,
+        209,
+        244,
+        232,
+        259,
+        226,
+        243,
+        182
+      ],
+      "sourceNeighborFaceIds": [
+        3932,
+        3986,
+        3986,
+        4198,
+        4198,
+        4109,
+        3981,
+        3932
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.019297754736354502,
+      "projectedArea": 0.001732707309937295,
+      "planeSingularValues": [
+        0.14397724534673262,
+        0.09455530106943029,
+        0.03349963905041573
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.02740850150405132,
+        0.9538732116701345,
+        0.29895596683024256
+      ],
+      "thirdVertexSignedDistances": [
+        -0.020521603873493957,
+        -0.020521603873493957
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.8776528150460867,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          209,
+          232,
+          226,
+          182
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 209,
+            "originalSourceVertexIds": [
+              9623,
+              9666
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 232,
+            "originalSourceVertexIds": [
+              9538,
+              9815
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 226,
+            "originalSourceVertexIds": [
+              9817,
+              9756
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 182,
+            "originalSourceVertexIds": [
+              9624,
+              9662
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        198,
+        216,
+        228,
+        249,
+        250,
+        264
+      ],
+      "boundaryEdges": 6,
+      "degrees": {
+        "198": 2,
+        "216": 2,
+        "228": 2,
+        "249": 2,
+        "250": 2,
+        "264": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        198,
+        228,
+        216,
+        264,
+        250,
+        249
+      ],
+      "sourceNeighborFaceIds": [
+        3713,
+        3713,
+        4346,
+        4346,
+        4037,
+        4050
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.01100939907377901,
+      "projectedArea": 0.00426939044770666,
+      "planeSingularValues": [
+        0.19350869624242215,
+        0.12379199893844088,
+        0.01811102416157499
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        -0.8793519324765643,
+        0.23661401124282935,
+        -0.41322389637254786
+      ],
+      "thirdVertexSignedDistances": [
+        0.004404957162647518,
+        0.004404957162647518
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.9370652670921346,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          198,
+          216,
+          250,
+          249
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 198,
+            "originalSourceVertexIds": [
+              9477,
+              9715
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 216,
+            "originalSourceVertexIds": [
+              9479,
+              9906
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 250,
+            "originalSourceVertexIds": [
+              9908,
+              9703
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 249,
+            "originalSourceVertexIds": [
+              9701,
+              9714
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        199,
+        202,
+        217,
+        221
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "199": 2,
+        "202": 2,
+        "217": 2,
+        "221": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        199,
+        217,
+        202,
+        221
+      ],
+      "sourceNeighborFaceIds": [
+        3529,
+        3529,
+        3575,
+        3575
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.013620958906191706,
+      "projectedArea": 0.0006220401475429179,
+      "planeSingularValues": [
+        0.09871131063729409,
+        0.023316332354227927,
+        0.020034880460184305
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.32048777698814207,
+        0.28663997537368824,
+        -0.9028427932475123
+      ],
+      "thirdVertexSignedDistances": [],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.7346252192176191,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          199,
+          202
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 199,
+            "originalSourceVertexIds": [
+              3292,
+              3356
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 202,
+            "originalSourceVertexIds": [
+              3294,
+              3357
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        200,
+        227,
+        238,
+        240
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "200": 2,
+        "227": 2,
+        "238": 2,
+        "240": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        227,
+        238,
+        200,
+        240
+      ],
+      "sourceNeighborFaceIds": [
+        3925,
+        3925,
+        3947,
+        4154
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.009125172927278904,
+      "projectedArea": 0.001741827174712017,
+      "planeSingularValues": [
+        0.08444524411521553,
+        0.038811349118109774,
+        0.013032012745071906
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.5499076382999168,
+        -0.246858407622974,
+        -0.7979113459058327
+      ],
+      "thirdVertexSignedDistances": [
+        -0.013479937782773673,
+        -0.013479937782773673
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.8928040719244983,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          227,
+          200,
+          240
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 227,
+            "originalSourceVertexIds": [
+              9407,
+              9799
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 200,
+            "originalSourceVertexIds": [
+              9614,
+              9638
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 240,
+            "originalSourceVertexIds": [
+              9639,
+              9798
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        231,
+        241,
+        246,
+        247,
+        258,
+        260,
+        261,
+        262
+      ],
+      "boundaryEdges": 8,
+      "degrees": {
+        "231": 2,
+        "241": 2,
+        "246": 2,
+        "247": 2,
+        "258": 2,
+        "260": 2,
+        "261": 2,
+        "262": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        247,
+        246,
+        260,
+        261,
+        262,
+        241,
+        258,
+        231
+      ],
+      "sourceNeighborFaceIds": [
+        4026,
+        4216,
+        4204,
+        4297,
+        4297,
+        4171,
+        4171,
+        4137
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.025425033080598992,
+      "projectedArea": 0.0045303412202444635,
+      "planeSingularValues": [
+        0.16923189622303905,
+        0.05611835163225562,
+        0.038743642626329566
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.9753674714165163,
+        -0.06487982704987473,
+        0.21082908657139743
+      ],
+      "thirdVertexSignedDistances": [
+        -0.02392726474561878,
+        -0.0184378136773789,
+        -0.02392726474561878
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.6477867307034577,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          247,
+          246,
+          260,
+          261,
+          241,
+          231
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 247,
+            "originalSourceVertexIds": [
+              3950,
+              4095
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 246,
+            "originalSourceVertexIds": [
+              3951,
+              4220
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 260,
+            "originalSourceVertexIds": [
+              4221,
+              4106
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 261,
+            "originalSourceVertexIds": [
+              4105,
+              4307
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 241,
+            "originalSourceVertexIds": [
+              4212,
+              4332,
+              4147
+            ],
+            "distinctFieldCount": 3,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 231,
+            "originalSourceVertexIds": [
+              4146,
+              4094
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        233,
+        234,
+        253,
+        254,
+        256,
+        257,
+        265,
+        266
+      ],
+      "boundaryEdges": 8,
+      "degrees": {
+        "233": 2,
+        "234": 2,
+        "253": 2,
+        "254": 2,
+        "256": 2,
+        "257": 2,
+        "265": 2,
+        "266": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        256,
+        233,
+        266,
+        253,
+        257,
+        254,
+        265,
+        234
+      ],
+      "sourceNeighborFaceIds": [
+        4165,
+        4408,
+        4408,
+        4169,
+        4169,
+        4361,
+        4361,
+        4362
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.02598885447220393,
+      "projectedArea": 0.0013803617217807269,
+      "planeSingularValues": [
+        0.11355666887966136,
+        0.05463551867726635,
+        0.04055450038934233
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.7878945160419238,
+        0.21426255754560838,
+        0.5773333422080156
+      ],
+      "thirdVertexSignedDistances": [
+        -0.13446629219581108,
+        -0.10239717909953039
+      ],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.5630859540262083,
+      "localOutwardHalfspace": true,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          256,
+          233,
+          253,
+          254,
+          234
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 256,
+            "originalSourceVertexIds": [
+              4138,
+              4423
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 233,
+            "originalSourceVertexIds": [
+              4136,
+              4482
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 253,
+            "originalSourceVertexIds": [
+              4481,
+              4140
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 254,
+            "originalSourceVertexIds": [
+              4142,
+              4420
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 234,
+            "originalSourceVertexIds": [
+              4419,
+              4422
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    },
+    {
+      "vertexIds": [
+        251,
+        252,
+        263,
+        267
+      ],
+      "boundaryEdges": 4,
+      "degrees": {
+        "251": 2,
+        "252": 2,
+        "263": 2,
+        "267": 2
+      },
+      "simpleCycle": true,
+      "orderedVertexIds": [
+        252,
+        263,
+        251,
+        267
+      ],
+      "sourceNeighborFaceIds": [
+        4336,
+        4336,
+        4414,
+        4414
+      ],
+      "planarityTolerance": 1.975414991378784e-07,
+      "maxPlanarDeviation": 0.0011538797660174457,
+      "projectedArea": 0.0005781299410392483,
+      "planeSingularValues": [
+        0.1228815095011298,
+        0.06124045020150796,
+        0.0016962181472105129
+      ],
+      "boundaryOrientationConsistent": true,
+      "hypotheticalOutwardCapNormal": [
+        0.7693071170705671,
+        -0.42636588072377446,
+        -0.4757927021079802
+      ],
+      "thirdVertexSignedDistances": [],
+      "maxAbsOriginalBoundaryNormalDotCapNormal": 0.969800638813892,
+      "localOutwardHalfspace": false,
+      "radialBoundaryNormalWitness": false,
+      "classification": "SHEET_ATTACHMENT_OR_CURVED_AMBIGUOUS_UNRESOLVED",
+      "curvedExistingFieldClosure": {
+        "status": "UNRESOLVED_ATTRIBUTE_CORRESPONDENCE",
+        "ambiguousVertexIds": [
+          252,
+          251
+        ],
+        "attributeAlternatives": [
+          {
+            "boundaryVertexId": 252,
+            "originalSourceVertexIds": [
+              9748,
+              9801
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          },
+          {
+            "boundaryVertexId": 251,
+            "originalSourceVertexIds": [
+              9874,
+              9836
+            ],
+            "distinctFieldCount": 2,
+            "differingLanes": [
+              "NORMAL",
+              "TEXCOORD_0"
+            ]
+          }
+        ],
+        "originalVerticesOnly": true
+      }
+    }
+  ],
+  "limitations": [
+    "BMesh exact-coordinate diagnostic only; original PN/UV/index/driver/source asset unchanged, no normals recalculated or faces emitted.",
+    "Local source-space witnesses do not prove global manifold/outward volume, original occlusion or semantic tube ownership.",
+    "Cycles require explicit planarity, consistent directed boundary, adjacent third vertices in inward halfspace and radial original normal witness; remaining loops are not blindly capped.",
+    "Curved closure is a separate reconstruction hypothesis with original PN/UV vertices, projected nonintersection, reversed boundary matching and strictly positive original normal corner dots; no cap is exported or approved.",
+    "No image/view masks used. Any future closure needs original field/material identity, mappings for new growth/bridge faces, native Double-only quality then Front/shadow and net GPU gates."
+  ]
+}
