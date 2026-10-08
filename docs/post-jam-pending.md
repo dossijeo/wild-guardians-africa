@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Retención de rutas al plantar: ensayo de CPU](qa/crop-route-epoch-experiment/README.md):
+en finca densa nativa, diez siembras pagadas reducen consultas de1539 a299
+y mediana de tick de4,7174 a4,0576ms. La comparación cambia las trayectorias
+y el momento de un riego; conserva dos incidencias de terreno en cada brazo.
+No se integra: falta aceptación de recorridos, tareas, restauración e incursiones.
+Producción ya reutiliza cachés estáticas y conserva la invalidación de rutas.
+
 [Caché privada de replanteo de trabajadores, V6](qa/worker-replan-view-cache/README.md):
 seis pruebas de aislamiento/invalidation y límites;100 consultas fallidas iguales
 invocan una búsqueda frente a100 de V5. El conector nativo problemático llega en70
