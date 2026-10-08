@@ -2,13 +2,13 @@
 // Vertex hook and material maps are retained; fragment output is diagnostic.
 import * as THREE from 'three';
 export function captureNormalField(renderer,rig,camera,size,kind){
- if(!['vertex','perturbed'].includes(kind))throw Error('Unknown normal diagnostic');
+ if(!['vertex','direction','perturbed'].includes(kind))throw Error('Unknown normal diagnostic');
  const saved=[];let shadow=renderer.shadowMap.enabled,color=renderer.outputColorSpace;
  try{
   rig.model.traverse(mesh=>{if(!mesh.isMesh)return;if(Array.isArray(mesh.material))throw Error('Normal diagnostic expects single materials');
    const original=mesh.material,material=original.clone(),compile=original.onBeforeCompile;
-   material.onBeforeCompile=(shader,r)=>{compile.call(original,shader,r);const expression=kind==='vertex'?'vNormal':'normal';
-    if(kind==='vertex'&&material.flatShading)throw Error('No vertex normal varying on flat shading');
+   material.onBeforeCompile=(shader,r)=>{compile.call(original,shader,r);const expression=kind==='vertex'?'vNormal':kind==='direction'?'normalize(vNormal)':'normal';
+    if(kind!=='perturbed'&&material.flatShading)throw Error('No vertex normal varying on flat shading');
     const end=shader.fragmentShader.lastIndexOf('}');if(end<0)throw Error('Fragment entry closure missing');
     shader.fragmentShader=shader.fragmentShader.slice(0,end)+`\n gl_FragColor=vec4(clamp(${expression}*.5+.5,0.,1.),1.);\n`+shader.fragmentShader.slice(end);
    };

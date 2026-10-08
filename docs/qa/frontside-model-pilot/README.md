@@ -1075,3 +1075,18 @@ undefined zero normalization, so it cannot prove the original PBR pole value
 or infer causality solely from these diagnostic fields. Existing negatives
 and gates remain intact. It is intended to locate whether the large cap
 change is already present in interpolated vNormal or after map perturbation.
+
+
+The native mapNormalField at HEADac8f0299 is archived worker-badge-normal-field-
+guided-* without acceptance. PBR repeats the same field rejection. Diagnostic
+source repeats are exact in both modes. Unnormalized vNormal changes809254 of
+1048576 source-alpha pixels (mean channel104.12529bytes), while post-map normal
+changes32026 (mean0.70780bytes). Within4565 nominal PBR outlier pixels, raw
+vNormal differs4565 (mean161.33757bytes) and post-map normal4421 (mean156.81402).
+These changes do not establish a cause: raw varying magnitude differs by design,
+and the frame-wide raw result requires validating the diagnostic instrument.
+The next prospective read adds normalize(vNormal) direction before perturbation
+and runs sourceTwin at the same original Badge closeup. Any nonzero identical-
+source twin result invalidates instrument use for candidate attribution; exact
+results still cannot prove original undefined zero behavior unaffected by DCE.
+No old readback is reclassified, threshold changed or candidate promoted.

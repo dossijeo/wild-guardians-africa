@@ -156,7 +156,7 @@ async function campaign(){
   if(!normalCloseup||maxSamples!==1)throw Error('Normal-field readback requires one original-target closeup');
   report.normalFieldDiagnostic={meaning:'Later diagnostic normals, no PBR/map acceptance or inference from undefined normalize(0). 8-bit view-space fields; shadow disabled only for diagnostic draw.',fields:[]};
   const rgbScope=new Uint8Array(pixels[0].length);for(let i=0;i<rgbScope.length;i+=4)if(pixels[0][i+3]&&pixels[1][i+3]&&[0,1,2].some(c=>Math.abs(linear[pixels[0][i+c]]-linear[pixels[1][i+c]])>.03))rgbScope[i+3]=255;
-  for(const kind of ['vertex','perturbed']){
+  for(const kind of ['vertex','direction','perturbed']){
    const field=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);field.push(captureNormalField(renderer,rigs[side],camera,size,kind));}
    rigs.forEach((rig,i)=>rig.model.visible=i===0);const repeat=captureNormalField(renderer,rigs[0],camera,size,kind),control=normalFieldMetrics(field[0],repeat,pixels[0],size),difference=normalFieldMetrics(field[0],field[1],pixels[0],size);
    report.normalFieldDiagnostic.fields.push({kind,sourceRepeat:{...control,mask:undefined},sourceVsCandidate:{...difference,mask:undefined,regions:regions(difference.mask,size)},withinNominalPbrRgbOutliers:{...normalFieldMetrics(field[0],field[1],rgbScope,size),mask:undefined}});
