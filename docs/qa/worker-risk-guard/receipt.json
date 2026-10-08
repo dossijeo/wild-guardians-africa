@@ -1,0 +1,112 @@
+{
+  "baseGitHead": "9c62d7f3",
+  "productionChanged": false,
+  "gpuTiming": false,
+  "backgroundPidsConfirmedLive": [
+    20024,
+    49032,
+    41320,
+    41304
+  ],
+  "terminalSessions": [
+    89837,
+    40136,
+    97693,
+    63264
+  ],
+  "exitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "initialRunnerFailure": "Initial quality runner had conflicting Original imports; corrected runner rerun successfully in40136. Session89837 then completed native-return and restore only; its exit0 does not represent the initial quality attempt passing.",
+  "promotionDecision": "reject current guard cost; retain native functional proof and optimize classification reuse before promotion",
+  "pieces": [
+    {
+      "path": "guard.mjs.gz",
+      "rawBytes": 2672,
+      "sha256": "4307d4dc6560962cd4ab5995e5d9a1e61d9c76685fd30dac0f292784a79ca3aa"
+    },
+    {
+      "path": "candidate-game.mjs.gz",
+      "rawBytes": 47413,
+      "sha256": "3d572dbfdbf50c15dddddab0a8f62ce7ab0b179d63f1d21895c964fd75ab7de2"
+    },
+    {
+      "path": "candidate-navigation.mjs.gz",
+      "rawBytes": 29639,
+      "sha256": "227cf5fd10ddbf322f21708caa9f020477811a6a9ab9b47b25294e8d556ab616"
+    },
+    {
+      "path": "prepare.mjs.gz",
+      "rawBytes": 3432,
+      "sha256": "03e9e3edbe0de4ec6bef48640a7232b14c1705547391cfdb470076fc2f1dfe22"
+    },
+    {
+      "path": "replan-runner.mjs.gz",
+      "rawBytes": 1823,
+      "sha256": "51276adba105087133113778a33dbe6c5bb5495c0980b39e8e65d29d8d1ccece"
+    },
+    {
+      "path": "replan.json.gz",
+      "rawBytes": 26877,
+      "sha256": "3946beb09bf9f0359c1ed7a9aaef25da5e2eec731131982f13771e7b22746946"
+    },
+    {
+      "path": "quality-runner.mjs.gz",
+      "rawBytes": 1959,
+      "sha256": "2c626a698e06253a907455452afd9013cb2f30667a9c80988aa0b0d54cd070ed"
+    },
+    {
+      "path": "quality.json.gz",
+      "rawBytes": 15005,
+      "sha256": "2ae05e29f55121c126f71e5d29b304562ea4c31e7342cf5f4b68c6c6a03edcd8"
+    },
+    {
+      "path": "return-runner.mjs.gz",
+      "rawBytes": 3036,
+      "sha256": "b4af35c4c0df420acef9c1d07b1376981ddc36ca55e7364a6f01668a62728210"
+    },
+    {
+      "path": "native-return.json.gz",
+      "rawBytes": 12444,
+      "sha256": "b6147c07e1ac166c7934df8c8c2ed28ba635a169d558984f06ab1801bd0b29f1"
+    },
+    {
+      "path": "restore-runner.mjs.gz",
+      "rawBytes": 1652,
+      "sha256": "3ce910f6a8ad7d8371eb339896140ee47d4a7b5ed902dde6b5dba836173f8f6b"
+    },
+    {
+      "path": "restore.json.gz",
+      "rawBytes": 4873,
+      "sha256": "602346e7d2911379f55278ea7c3b6740731cf2cb7a0dc149ef3d50cb84254a99"
+    },
+    {
+      "path": "blocked-restore-runner.mjs.gz",
+      "rawBytes": 2348,
+      "sha256": "0c64eea262fb9f451830961deb58e5c4275a213d4632c0a38ca5af578cd1fa12"
+    },
+    {
+      "path": "blocked-restore.json.gz",
+      "rawBytes": 11240,
+      "sha256": "e0e03790b36ef5fd3f0b87b8419ec4a131390ef676c714354542f4fa574e4a4b"
+    },
+    {
+      "path": "prepare-benchmark.mjs.gz",
+      "rawBytes": 1894,
+      "sha256": "2d56c2f3d30d4273f1ed72eda3a20e6f268b75ae4504403fd2c183d3075f55f4"
+    },
+    {
+      "path": "benchmark-runner.mjs.gz",
+      "rawBytes": 3464,
+      "sha256": "0c171a692b18f55c45bd802757d3f6d868f161dd420c72fffa5985a92e4d3043"
+    },
+    {
+      "path": "benchmark.json.gz",
+      "rawBytes": 41881,
+      "sha256": "bf0c4945c16fd12a811b9538a5b364daae09416192480cc962bf87f165d07007"
+    }
+  ]
+}
