@@ -1,3 +1,4 @@
+import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import * as THREE from 'three';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
 const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
@@ -22,18 +23,22 @@ export class LoadingCinematic {
     diorama.stopPlanting();world.cinematic=true;world.controls.enabled=false;
     this.finished=new Promise((resolve,reject)=>{this.resolve=resolve;this.reject=reject;});this.finished.catch(()=>{});
   }
-  async prepare({nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),afterRender=()=>{}}={}) {
+  async prepare({nextFrame,afterRender=()=>{},timeout=30000}={}) {
+    const waiting=performance.now(),check=()=>{if(this.world.disposed||this.diorama.disposed||this.done||this.diorama.abort?.signal.aborted)throw Error('Loading cinematic preparation cancelled');if(performance.now()-waiting>timeout)throw Error('Loading cinematic preparation timed out');};
+    const frame=()=>waitGpuFrame({check,nextFrame,signal:this.diorama.abort?.signal});
     // Upload the elevated reveal before announcing readiness. X/Z and the orbit
     // target remain unchanged, so this does not request a different chunk region.
+    let prepared=false;
     try {
       for(const [eye,quaternion] of [[this.panorama,this.panoramaQuaternion],[this.gameplay.eye,this.gameplay.quaternion]]) {
-        if(this.world.disposed||this.diorama.disposed||this.done)throw Error('Loading cinematic preparation cancelled');
+        check();
         this.world.camera.position.copy(eye);this.world.camera.quaternion.copy(quaternion);this.world.camera.updateMatrixWorld();
-        if(this.world.renderLoadingFrame)await this.world.renderLoadingFrame({nextFrame,afterRender});else this.world.render(0);afterRender();
+        if(this.world.renderLoadingFrame)await this.world.renderLoadingFrame({nextFrame:frame,afterRender});else this.world.render(0);afterRender();
         this.restore();this.world.cinematic=true;
-        await nextFrame();
+        await frame();check();
       }
-    } finally {this.restore();if(!this.done&&!this.world.disposed)this.world.cinematic=true;}
+      prepared=true;
+    } finally {this.restore();if(prepared&&!this.done&&!this.world.disposed)this.world.cinematic=true;}
   }
   start(){this.armed=true;}
   step(dt) {

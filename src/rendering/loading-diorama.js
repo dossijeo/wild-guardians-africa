@@ -1,3 +1,4 @@
+import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
 import * as THREE from 'three';
 import {json} from './assets.js';
@@ -75,12 +76,12 @@ export class LoadingDiorama {
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
   }
-  async freezeForCinematic({nextFrame}={}) {
+  async freezeForCinematic({nextFrame,timeout=30000}={}) {
     this.stopPlanting();this.orbit.stop();
-    const signal=this.abort.signal;
-    const frame=nextFrame??(()=>new Promise((resolve,reject)=>{let id;const abort=()=>{cancelAnimationFrame(id);signal.removeEventListener('abort',abort);reject(Error('Loading orbit cancelled'));};signal.addEventListener('abort',abort,{once:true});id=requestAnimationFrame(()=>{signal.removeEventListener('abort',abort);resolve();});if(signal.aborted)abort();}));
-    while(!this.orbit.settled){if(this.disposed||this.world.disposed||signal.aborted)throw Error('Loading orbit cancelled');await frame();}
-    if(this.disposed||this.world.disposed||signal.aborted)throw Error('Loading orbit cancelled');
+    const signal=this.abort.signal,waiting=performance.now();
+    const check=()=>{if(this.disposed||this.world.disposed||signal.aborted)throw Error('Loading orbit cancelled');if(performance.now()-waiting>timeout)throw Error('Loading orbit timed out');};
+    while(!this.orbit.settled){check();await waitGpuFrame({check,signal,nextFrame});}
+    check();
     this.camera.updateMatrixWorld();
   }
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}

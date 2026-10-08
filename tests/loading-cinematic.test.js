@@ -18,3 +18,13 @@ test('cancelled cinematic restores the camera and rejects completion',async()=>{
 test('reveal prewarm does not start transition or change final camera',async()=>{const {world,diorama,calls}=fixture(),eye=world.camera.position.toArray(),cinema=new LoadingCinematic(world,diorama,{autoStart:false});await cinema.prepare({nextFrame:async()=>{},afterRender:()=>calls.push('cover')});assert.equal(cinema.time,0);assert.deepEqual(world.camera.position.toArray(),eye);cinema.step(3);assert.equal(cinema.time,0);assert.deepEqual(calls,['world','cover','world','cover']);cinema.start();cinema.step(5);await cinema.finished;assert.deepEqual(world.camera.position.toArray(),eye);});
 
 test('cinematic rejects a moving orbit before capturing presentation pose',()=>{const {world,diorama}=fixture();diorama.orbit={settled:false};assert.throws(()=>new LoadingCinematic(world,diorama),/must settle/);assert.equal(world.cinematic,undefined);diorama.orbit.settled=true;const cinema=new LoadingCinematic(world,diorama);assert.deepEqual(cinema.loadingEye,diorama.camera.position);cinema.cancel();});
+
+
+test('cancel during a suspended reveal frame restores exact camera without a later draw',async()=>{
+ const {world,diorama,calls}=fixture(),eye=world.camera.position.toArray(),cinema=new LoadingCinematic(world,diorama,{autoStart:false});let entered;const started=new Promise(resolve=>entered=resolve);
+ const preparation=cinema.prepare({nextFrame:()=>{entered();return new Promise(()=>{});}});await started;cinema.cancel();await assert.rejects(preparation,/cancelled/);assert.deepEqual(world.camera.position.toArray(),eye);assert.equal(world.cinematic,false);assert.deepEqual(calls,['world']);
+});
+test('never-resumed reveal frame fails its deadline and restores intended camera',async()=>{
+ const {world,diorama,calls}=fixture(),eye=world.camera.position.toArray(),cinema=new LoadingCinematic(world,diorama,{autoStart:false});
+ await assert.rejects(cinema.prepare({timeout:5,nextFrame:()=>new Promise(()=>{})}),/timed out/);assert.deepEqual(world.camera.position.toArray(),eye);assert.deepEqual(calls,['world']);assert.equal(world.cinematic,false);cinema.cancel();
+});
