@@ -1,0 +1,99 @@
+{
+  "productionChanged": false,
+  "benchmark": false,
+  "viewTests": 6,
+  "exitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "base": "824bd2e0",
+  "scope": "V6 QA private avoidance view caching. No measured CPU/GPU benefit or production promotion.",
+  "pieces": [
+    {
+      "path": "candidate-navigation.mjs.gz",
+      "source": ".cache/worker-route-refinement/candidate-navigation-v6.mjs",
+      "rawBytes": 31028,
+      "sha256": "be0c24f261330444d529481a48dc98d7cfeca1f81f43f154766060c41fb6669f"
+    },
+    {
+      "path": "candidate-game.mjs.gz",
+      "source": ".cache/candidate-game-v5.mjs",
+      "rawBytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "path": "guard.mjs.gz",
+      "source": ".cache/worker-risk-clearance-v5.mjs",
+      "rawBytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "path": "bounded-views.mjs.gz",
+      "source": ".cache/bounded-worker-view-cache.mjs",
+      "rawBytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "path": "prepare.mjs.gz",
+      "source": ".cache/prepare-refinement-v6.mjs",
+      "rawBytes": 2862,
+      "sha256": "5941d3d66b2f604500f8c71208360b3a15d202343f7e0d6af267b554de1062f3"
+    },
+    {
+      "path": "view-tests.mjs.gz",
+      "source": ".cache/test-refinement-v6-views.mjs",
+      "rawBytes": 3872,
+      "sha256": "47428e5a8fc94517d1050e98e051ea24f5fba902a55ed2bba05e0d58576b08d9"
+    },
+    {
+      "path": "replan-runner.mjs.gz",
+      "source": ".cache/probe-refinement-v6-replan.mjs",
+      "rawBytes": 1823,
+      "sha256": "b853561e2d5e57f75415068bd91d8aa89c6ccb0f4f10a8e9c3f60649b1e4711d"
+    },
+    {
+      "path": "blocked-restore-runner.mjs.gz",
+      "source": ".cache/check-refinement-v6-blocked-restore.mjs",
+      "rawBytes": 2348,
+      "sha256": "3adb6a0633e7d08075f0c6287b84ed380a3b17ac8034d8e2f82ab28b44d3e726"
+    },
+    {
+      "path": "quality-runner.mjs.gz",
+      "source": ".cache/check-refinement-native-quality-v6.mjs",
+      "rawBytes": 1959,
+      "sha256": "e736c6ad0b4a6d6a25b722e6c8461594e4ff7fa775dd7be587ca4e5226c8929a"
+    },
+    {
+      "path": "failed-views-runner.mjs.gz",
+      "source": ".cache/probe-refinement-v6-failed-views.mjs",
+      "rawBytes": 1751,
+      "sha256": "93d44abbb01c178a6ceba38424eb14a99a765e6a63390df21c0aa465f0531afd"
+    },
+    {
+      "path": "replan.json.gz",
+      "source": ".cache/worker-route-refinement/replan-v6.json",
+      "rawBytes": 26913,
+      "sha256": "105e1657fd5db176fbf266e9b141df63403a3915c386ce9ca815d212206a7def"
+    },
+    {
+      "path": "blocked-restore.json.gz",
+      "source": ".cache/worker-route-refinement/blocked-restore-v6.json",
+      "rawBytes": 11240,
+      "sha256": "e0e03790b36ef5fd3f0b87b8419ec4a131390ef676c714354542f4fa574e4a4b"
+    },
+    {
+      "path": "quality.json.gz",
+      "source": ".cache/worker-route-refinement/quality-v6.json",
+      "rawBytes": 15005,
+      "sha256": "2ae05e29f55121c126f71e5d29b304562ea4c31e7342cf5f4b68c6c6a03edcd8"
+    },
+    {
+      "path": "failed-views.json.gz",
+      "source": ".cache/worker-route-refinement/failed-views-v6.json",
+      "rawBytes": 500,
+      "sha256": "d1632b48c1950f38114a2ab94be32f65c779445db4459e4532d423fe9d017b98"
+    }
+  ]
+}
