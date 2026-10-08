@@ -42,4 +42,5 @@ selected-source receipts, not a complete dependency closure. Native equivalence
 does not measure CPU/GPU cost, all-biome movement,100 nights, mobile or usability.
 Up to five fluid queries are added per dry movement clearance; an end-to-end
 performance saving is not claimed. Full CI is pending when this archive is made.
-No itch.io publication.
+The subsequent [full CI3167/3167](ci-b16457b3/README.md) has now closed the CI
+gate for the runtime commit. No itch.io publication.
