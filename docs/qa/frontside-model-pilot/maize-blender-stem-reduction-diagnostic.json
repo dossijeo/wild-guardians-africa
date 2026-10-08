@@ -1,0 +1,112 @@
+{
+  "status": "STEM_REMODELLING_OFFLINE_COST_ONLY_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "rows": [
+    {
+      "ratio": 0.75,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 618,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 5347,
+      "triangleGrowthPercent": 8.348530901722384,
+      "triangleBudgetPass": true,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 318194,
+      "bufferGrowthPercent": 0.3557618918458516,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 0.03894951567053795,
+      "meanSampledSurfaceDistance": 0.0010569427641092131,
+      "sampledCornersAndCentroids": 2472,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/8ee78b05ef4c647fa8f3f5a27be17767a4dc455893452ad1f70c1434de35394e.json",
+      "archiveSha256": "8ee78b05ef4c647fa8f3f5a27be17767a4dc455893452ad1f70c1434de35394e",
+      "limitations": [
+        "Stem geometry and UV/normal interpolation changed; surface-distance samples are not raster gates.",
+        "Every soil/leaf corner bit is original; only driver1 stem is simplified.",
+        "ALL reduced stem faces need geometric reverses, never saved visibility masks.",
+        "New face labels/bridge mappings must be regenerated and validated over continuous growth.",
+        "No GLB, production model or runtime bridge data changed; no GPU benefit inferred."
+      ]
+    },
+    {
+      "ratio": 0.6,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 494,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 5099,
+      "triangleGrowthPercent": 3.323201621073957,
+      "triangleBudgetPass": true,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 308578,
+      "bufferGrowthPercent": -2.677045157790492,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 0.03894951567053795,
+      "meanSampledSurfaceDistance": 0.0017500239020784303,
+      "sampledCornersAndCentroids": 1976,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/ec7c8b004065fc56503984fe5d41ec0b4aa09998be2b9934ee5f67a0dd32379b.json",
+      "archiveSha256": "ec7c8b004065fc56503984fe5d41ec0b4aa09998be2b9934ee5f67a0dd32379b",
+      "limitations": [
+        "Stem geometry and UV/normal interpolation changed; surface-distance samples are not raster gates.",
+        "Every soil/leaf corner bit is original; only driver1 stem is simplified.",
+        "ALL reduced stem faces need geometric reverses, never saved visibility masks.",
+        "New face labels/bridge mappings must be regenerated and validated over continuous growth.",
+        "No GLB, production model or runtime bridge data changed; no GPU benefit inferred."
+      ]
+    },
+    {
+      "ratio": 0.5,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 412,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 4935,
+      "triangleGrowthPercent": 0.0,
+      "triangleBudgetPass": true,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 302090,
+      "bufferGrowthPercent": -4.723306819400374,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 0.04438981041312218,
+      "meanSampledSurfaceDistance": 0.0024320886622764834,
+      "sampledCornersAndCentroids": 1648,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/3c1030dad3b2063fe82ac10d6fd6bc32a2daeb220287565722fd3d921c45073c.json",
+      "archiveSha256": "3c1030dad3b2063fe82ac10d6fd6bc32a2daeb220287565722fd3d921c45073c",
+      "limitations": [
+        "Stem geometry and UV/normal interpolation changed; surface-distance samples are not raster gates.",
+        "Every soil/leaf corner bit is original; only driver1 stem is simplified.",
+        "ALL reduced stem faces need geometric reverses, never saved visibility masks.",
+        "New face labels/bridge mappings must be regenerated and validated over continuous growth.",
+        "No GLB, production model or runtime bridge data changed; no GPU benefit inferred."
+      ]
+    },
+    {
+      "ratio": 0.4,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 329,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 4769,
+      "triangleGrowthPercent": -3.363728470111449,
+      "triangleBudgetPass": true,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 295686,
+      "bufferGrowthPercent": -6.7430755741706765,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 0.054160915315151215,
+      "meanSampledSurfaceDistance": 0.0034867718174327943,
+      "sampledCornersAndCentroids": 1316,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/d6f1e56a30c15f9dcfa400e4a76638f5476d620c85e5147856c83fcec91a44e2.json",
+      "archiveSha256": "d6f1e56a30c15f9dcfa400e4a76638f5476d620c85e5147856c83fcec91a44e2",
+      "limitations": [
+        "Stem geometry and UV/normal interpolation changed; surface-distance samples are not raster gates.",
+        "Every soil/leaf corner bit is original; only driver1 stem is simplified.",
+        "ALL reduced stem faces need geometric reverses, never saved visibility masks.",
+        "New face labels/bridge mappings must be regenerated and validated over continuous growth.",
+        "No GLB, production model or runtime bridge data changed; no GPU benefit inferred."
+      ]
+    }
+  ],
+  "limitations": [
+    "Single mature maize state; complete category/bridges, web bytes, real buffers and vertex invocations remain unmeasured.",
+    "No visual acceptance, shadow acceptance or GPU timing; original files unchanged."
+  ]
+}

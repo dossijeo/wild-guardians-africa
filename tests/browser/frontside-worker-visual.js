@@ -10,6 +10,12 @@ import {syncWorkerToolVisibility} from '../../src/rendering/worker-tool-visibili
 import {WorldScene} from '../../src/rendering/scene.js';
 import {Assets} from '../../src/rendering/assets.js';
 const status=document.querySelector('#status');let renderer,cancelled=false;
+function comparisonCapture(pixels,size){
+ const canvas=document.createElement('canvas');canvas.width=size*3;canvas.height=size;const ctx=canvas.getContext('2d');
+ for(let side=0;side<3;side++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const input=((size-1-y)*size+x)*4,output=(y*size+x)*4;for(let c=0;c<3;c++)image.data[output+c]=side<2?pixels[side][input+c]:Math.min(255,Math.abs(pixels[0][input+c]-pixels[1][input+c])*8);image.data[output+3]=255;}ctx.putImageData(image,side*size,0);}
+ return canvas.toDataURL('image/png');
+}
+async function retainComparison(data,alt){const image=document.createElement('img');image.src=data;image.alt=alt;image.style.maxWidth='90vw';await image.decode();document.querySelector('#view').replaceChildren(image);}
 import {regions,alphaDistanceGate,controlEnvelopeMetrics,accumulateControlEnvelope,addControlUncertainty} from '../../tools/lib/frontside-visual-metrics.mjs';
 import {comparePackedShadow} from '../../tools/lib/frontside-shadow-metrics.mjs';
 function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing',faceMaps={}){
@@ -59,7 +65,7 @@ async function campaign(){
  if(closedSubset&&frontShadow&&noShadows)throw Error('Closed-subset shadowFront requires active shadows');
  const closedAudit=closedSubset?await fetch('/docs/qa/frontside-model-pilot/worker-closed-subset-candidate-audit.json').then(r=>r.json()):null;
  const closedViews=options.has('closedSubsetV1')?await fetch('/docs/qa/frontside-model-pilot/worker-closed-subset-independent-v1-views.json').then(r=>r.json()):null;
- if(closedViews&&(!(closedSubset||sourceRepackControl)||clipFilter||closedViews.sourceSha256!==library.youngMale.sha256||JSON.stringify(closedViews.clips)!==JSON.stringify(allClipNames)))throw Error('Independent closed-subset profile/source/clip contract mismatch');
+ if(closedViews&&(!(closedSubset||sourceRepackControl||(sourceTwin&&controlDiagnosis))||clipFilter||closedViews.sourceSha256!==library.youngMale.sha256||JSON.stringify(closedViews.clips)!==JSON.stringify(allClipNames)))throw Error('Independent closed-subset profile/source/clip contract mismatch');
  if(closedAudit&&closedAudit.sourceSha256!==library.youngMale.sha256)throw Error('Closed subset source mismatch');
  const closedNames=new Set(closedAudit?.selected.map(r=>r.mesh)??[]);
  if(closedSubset||sourceRepackControl)renderer.info.autoReset=false;
@@ -145,7 +151,8 @@ async function campaign(){
    }
    controlMetrics=controlEnvelopeMetrics(controlEnvelope,pixels[0],size);
    if(controlDiagnosis){report.sourceOnlyDiagnosis={biome,night,clip:clipName,fraction,azimuth,elevation,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,nominalRgbFaceProvenance:mapMissingToSource(renderer,rig,camera,[pixels[0],worstSourceRepeat],size,'rgb'),meaning:'30 repeated original draws only; no candidate drawn or compared, no acceptance interpretation'};
-    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
+    report.capturePng=comparisonCapture([pixels[0],worstSourceRepeat??pixels[0]],size);report.captureMeaning='Original first draw, worst source repeat, and amplified source-only difference. No candidate comparison.';
+    const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());await retainComparison(report.capturePng,report.captureMeaning);release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
    if(controlAlphaDifferences||!controlMetrics.passes||originalControls.some(c=>c.shadowDifferentBytes>0)){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original color uncertainty budget or exact packed shadow control exceeded; affected comparison not interpreted'};
     if(options.has('mapControl'))report.invalidControl.lastRepeatNominalRgbFaceProvenance=mapMissingToSource(renderer,rig,camera,[pixels[0],lastSourceRepeat],size,'rgb');
     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
@@ -198,14 +205,10 @@ async function campaign(){
  report.sourceTwin=sourceTwin;report.originalShadowDiagnostic=originalShadow;report.frontShadow=frontShadow;report.sharedPersistentShadowHook=true;report.clipFilter=clipFilter;report.requestedClips=closedViews?.clips??campaignClips;report.withheldVersion=withheldVersion;report.effectiveShadowDraws=Object.entries(effectiveShadowDraws).map(([key,draws])=>({...JSON.parse(key),draws}));
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.
- const comparison=document.createElement('canvas');comparison.width=size*3;comparison.height=size;const ctx=comparison.getContext('2d');
- for(let side=0;side<3;side++){const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const input=((size-1-y)*size+x)*4,output=(y*size+x)*4;
-  for(let c=0;c<3;c++)image.data[output+c]=side<2?pixels[side][input+c]:Math.min(255,Math.abs(pixels[0][input+c]-pixels[1][input+c])*8);image.data[output+3]=255;}ctx.putImageData(image,side*size,0);}
- report.capturePng=comparison.toDataURL('image/png');
+ report.capturePng=comparisonCapture(pixels,size);
  const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());
  // Preserve the actual PBR comparison, including after later diagnostic ID
  // draws and context disposal. A disposed WebGL canvas is not QA evidence.
- const retainedComparison=document.createElement('img');retainedComparison.src=report.capturePng;retainedComparison.alt='Original, candidate, and amplified RGB difference for the last compared pose';retainedComparison.style.maxWidth='90vw';
- await retainedComparison.decode();document.querySelector('#view').replaceChildren(retainedComparison);
+ await retainComparison(report.capturePng,'Original, candidate, and amplified RGB difference for the last compared pose');
  release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'rechazo':'pendiente gates completos'}. GPU liberada. NO aprobado.`;
 }

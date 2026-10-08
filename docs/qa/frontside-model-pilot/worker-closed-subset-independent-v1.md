@@ -58,3 +58,24 @@ additional prospectively chosen views, never acceptance from empty draws.
 No benchmark while the main full suite is active. Neither this screen nor source
 packing savings count as GPU benefit. Net AB/BA GPU, all relevant maps/materials,
 full clip/angle/shadow coverage and resources remain required before extension.
+
+## Native result: invalid original control before candidate
+
+HEAD9dafb8a0 first V1 case (Idle0, Sabana/day, az8.23131151293202,
+elevation-15) stopped before any compared sample: samples=[]; not60cases.
+Repeated original draws differ21bytes, max59, alpha unchanged. The source
+envelope maxTileMae=.0107574372863 and maxError=.205660589 exceed the prospective
+control budget; a connected7pixel region has diameter3.60555. Candidate quality
+cannot be interpreted. Native report/browser/console are archived under
+worker-closed-subset-independent-v1-invalid-*. CPU suite46954 and campaigns
+43808/49032 were alive; the short Blender18024 offline job also overlapped.
+No second block, shadowFront or GPU benchmark is eligible from this result.
+
+Next source-only diagnostic uses the exact frozen first case, without a candidate:
+http://localhost:5284/tests/browser/frontside-worker-visual.html?sourceTwin&controlDiagnosis&closedSubsetV1&limit=1&cpuCampaigns=43808%2F49032-active-suite46954
+
+It performs30original draws, reports their unchanged control metrics and later
+ID provenance for the worst source difference. A retained PNG shows original,
+worst original repeat and amplified difference; it is explicitly source-only.
+This does not retry acceptance, change gates, infer the noise cause or select
+candidate geometry from a held-out view. V1 remains invalid.
