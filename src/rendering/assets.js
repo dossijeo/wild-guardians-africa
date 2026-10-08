@@ -49,7 +49,7 @@ export class Assets {
     if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',load=bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
     return this.cache.get(key);
   }
-  releaseLoadingImageDecoder(){this.loadingImageDecoder?.dispose();this.loadingImageDecoder=null;}
+  releaseLoadingImageDecoder(){if(this.loadingImageDecoder)this.loadingImageDecodeStats={...this.loadingImageDecoder.stats};this.loadingImageDecoder?.dispose();this.loadingImageDecoder=null;}
   async loadingTexture(url,{flipY=false,premultiplyAlpha=false}={}){
     this.assertOpen();const buffer=await bytes(url,{signal:this.preparation.signal});this.assertOpen();
     this.loadingImageDecoder??=new LoadingImageDecoder({signal:this.preparation.signal});
