@@ -48,6 +48,66 @@
       "path": "check-tool.mjs.gz",
       "rawBytes": 2753,
       "rawSha256": "e64035b78856865e702c0f4ee98a5459621effbe1b31d594cc94b32e8f7cc18e"
+    },
+    {
+      "path": "final-ab.json.gz",
+      "rawBytes": 154759,
+      "rawSha256": "10bde2ab28480c8aa8f4b333120105aab2eb9cce8a998f5fadb6b93ce831744c"
+    },
+    {
+      "path": "final-ba.json.gz",
+      "rawBytes": 154776,
+      "rawSha256": "e8df98853b8014979091be32a714b46f5a7dfe80fbfb645ea17e63619791e5a8"
+    },
+    {
+      "path": "small-opening.json.gz",
+      "rawBytes": 13646,
+      "rawSha256": "1b71b8030962bf175b0182fdb44c7f8080627641425be7cc15b5b4903088736c"
+    },
+    {
+      "path": "small-runner.mjs.gz",
+      "rawBytes": 3974,
+      "rawSha256": "c1fe92e854299aa4d51d9f2ae13160343c19ce43fa48fcd4f142fd1896503a65"
+    },
+    {
+      "path": "native-runner.mjs.gz",
+      "rawBytes": 6032,
+      "rawSha256": "343c129433a282feff1176ee03e2c437b670f42bb989466daf7bf4d4daeb1427"
+    },
+    {
+      "path": "integrated-helper.js.gz",
+      "rawBytes": 2026,
+      "rawSha256": "f41dabef4422f1e8b638cfdb4e40e38270b72d3541752edc6207b175c0b807c3"
+    },
+    {
+      "path": "integrated-game.js.gz",
+      "rawBytes": 45139,
+      "rawSha256": "3e253340ed036bc10bd9fc88a6a923468babbe1694c2b9131accefec1bc1afa2"
+    },
+    {
+      "path": "directed-tests.log.gz",
+      "rawBytes": 21232,
+      "rawSha256": "af830bb6330e4ab6ec0f41442e720fa4d7c38a4017b038155beee2f24ca3c630"
+    },
+    {
+      "path": "build-package.log.gz",
+      "rawBytes": 1646,
+      "rawSha256": "5ac792f4d82c19f71313c18c360f665b4a2a5b134f1765d7e8b88239c082ad2e"
+    },
+    {
+      "path": "opening-setup.mjs.gz",
+      "rawBytes": 3478,
+      "rawSha256": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93"
+    },
+    {
+      "path": "savanna-profile.json.gz",
+      "rawBytes": 21482,
+      "rawSha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    },
+    {
+      "path": "villages.json.gz",
+      "rawBytes": 71831,
+      "rawSha256": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f"
     }
   ],
   "sourceHashes": {
@@ -288,5 +348,20 @@
     "src/world/wall-layout.js": "c74a70ecd45e121d0e5d04b406962c1dff1039bda6d5df593333fbd63e1d4d8a",
     "src/world/wall-stroke-sampling.js": "0b2da0982b076f4fdf34af03967c04606cc574cf1b54956fdf1cbc347c22ecd2",
     "src/world/work-points.js": "32005dd48b01b4485febee5453a4b48afc81ee3a68a2f40a40a2409eb7883bf2"
-  }
+  },
+  "integrationStatus": "working-tree: directed 78 PASS and build/package PASS; full suite running",
+  "finalBenchmarkConditions": {
+    "cpuCampaigns": [
+      43808,
+      49032
+    ],
+    "otherSuiteActive": false,
+    "blenderAgentJobActive": false,
+    "gpuTiming": false,
+    "scope": "Native CPU Game.tick continuations only; not GPU, frametime or current 100-night acceptance",
+    "largeCheckpointPairs": 72,
+    "smallMeasuredPairs": 32,
+    "smallMeasuredCheckpointPairs": 1568
+  },
+  "smallSetupReproduction": "Restore integrated-game/helper and opening-setup at their original paths over frozen base; use base source/content hashes. Setup imports main modules; frozen arms import their own src. No arbitrary newer main setup."
 }
