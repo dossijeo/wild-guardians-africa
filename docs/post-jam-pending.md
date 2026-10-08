@@ -1,5 +1,11 @@
 # Tareas pendientes posteriores a la Jam
 
+[Sorgo: tallo FrontSide parcial rechazado](qa/frontside-native-inputs/sorgo-state-stem/README.md):
+primera vista nativa conserva silueta, pero falla color local (tile0,019>
+0,01; región115px>16). Original/indexado y agrupado DoubleSide pasan.
+Sin caras añadidas; hojas/suelo/puentes y sombras permanecen DoubleSide.
+No ampliar ni medir GPU antes de corregir calidad; fuentes y negativo archivados.
+
 [Retención de rutas al plantar: ensayo de CPU](qa/crop-route-epoch-experiment/README.md):
 en finca densa nativa, diez siembras pagadas reducen consultas de1539 a299
 y mediana de tick de4,7174 a4,0576ms. La comparación cambia las trayectorias
