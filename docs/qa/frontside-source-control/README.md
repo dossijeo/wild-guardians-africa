@@ -14,3 +14,12 @@ The branch author identified an outdated export-status whitelist. A specific
 validator/export fix and native rerun remain necessary; metric thresholds must
 remain unchanged. This is an instrumental failure, not proof that the source
 field passes or fails visual fidelity. Original assets and production unchanged.
+
+The rerun on 8dadfa84 (tab 825) also reached export, then the new validator
+rejected the report with `Unexpected source-fine training report`. Its status,
+screenshot and hashes are preserved separately. The fixture shader/visual
+source hash remained unchanged. Cleanup listed 24 disposal actions (some own
+multiple resources), closed true and errors empty; the tab was closed. Neither
+execution exposes quantitative comparison results, so neither establishes
+visual acceptance. Diagnose the producer/validator contract before repeating
+GPU work; do not relax the visual thresholds to make export pass.
