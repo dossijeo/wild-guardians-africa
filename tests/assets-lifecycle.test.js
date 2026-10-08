@@ -5,7 +5,13 @@ import * as THREE from 'three';
 import {Assets} from '../src/rendering/assets.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {geometryOnly} from '../tools/calibrate_footsteps.mjs';
+import {LoadingTransferOwner} from '../src/app/loading-transfer-owner.js';
 const counts=resources=>{const result=new Map();for(const r of resources){result.set(r,0);r.addEventListener('dispose',()=>result.set(r,result.get(r)+1));}return result;};
+test('pending shared GLTF promises are not cache hits and a completed model is',async()=>{
+ const owner=new LoadingTransferOwner(),assets=new Assets();let finish;assets.loader={loadAsync:()=>new Promise(resolve=>finish=resolve)};
+ const first=assets.model('/same.glb'),second=assets.model('/same.glb');assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.downloads.snapshot().cacheHits,0);
+ finish({scene:new THREE.Group()});await Promise.all([first,second]);assert.equal(owner.downloads.snapshot().pending,0);await assets.model('/same.glb');assert.equal(owner.downloads.snapshot().cacheHits,1);owner.dispose();assets.disposeModels();
+});
 test('offscene packed prototypes and standalone textures are owned and released once; caches clear',async t=>{
  t.mock.method(globalThis,'fetch',async url=>{const b=readFileSync(new URL('../public'+url,import.meta.url));return {ok:true,arrayBuffer:async()=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)};});
  const assets=new Assets();assets.textures={loadAsync:async()=>new THREE.Texture()};

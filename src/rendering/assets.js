@@ -6,12 +6,13 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetUrl} from './asset-url.js';
 import {json,bytes} from './asset-fetch.js';
+import {beginAssetTransfer,updateAssetTransfer,finishAssetTransfer,cachedAssetTransfer,observeLoadingManager} from './asset-transfer.js';
 export {json,bytes} from './asset-fetch.js';
 import {prepareNativeBuilding,prepareNativeBuildingAsync} from './buildings.js';
 import {nativeAssetMaterial} from './asset-surface.js';
 import {computeTangents} from './surface-source.js';
 export class Assets {
-  constructor(){this.preparation=new AbortController();this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
+  constructor(){this.preparation=new AbortController();this.activeModelTransfers=new Set();this.loadedTextureKeys=new Set();const manager=new THREE.LoadingManager();this.transfers=observeLoadingManager(manager,{skip:url=>this.activeModelTransfers.has(url)});this.loader=new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader(manager);this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
   assertOpen(){if(this.modelsDisposed)throw new Error('Asset collection is disposed');}
   own(resource){
     if(this.modelsDisposed){this.release(resource);return resource;}
@@ -26,14 +27,14 @@ export class Assets {
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
   async model(url) {
     this.assertOpen();
-    if(!this.cache.has(url)){const pending=this.loader.loadAsync(assetUrl(url)).then(gltf=>{this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}return this.cache.get(url);
+    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
   }
   disposeModels(){
     if(this.modelsDisposed)return;this.modelsDisposed=true;
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);
-    this.preparation.abort();this.releaseLoadingImageDecoder();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+    this.preparation.abort();this.transfers.release();this.activeModelTransfers.clear();this.loadedTextureKeys.clear();this.releaseLoadingImageDecoder();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
   }
   async building(descriptor){
     this.assertOpen();const key='building:'+descriptor.url;
@@ -46,7 +47,8 @@ export class Assets {
   }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
-    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',load=bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',load=bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}const owned=this.own(texture);if(!this.modelsDisposed)this.loadedTextureKeys.add(key);return owned;});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(this.loadedTextureKeys.has(key))cachedAssetTransfer(assetUrl(url));
     return this.cache.get(key);
   }
   releaseLoadingImageDecoder(){if(this.loadingImageDecoder)this.loadingImageDecodeStats={...this.loadingImageDecoder.stats};this.loadingImageDecoder?.dispose();this.loadingImageDecoder=null;}
