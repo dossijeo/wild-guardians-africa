@@ -1,0 +1,7 @@
+Native861 completed against051f1833, using current merged WorldScene and immutable compact payload. Original and candidate save/restores were exact in memory and used fresh canvas contexts. Three sequential paired captures preserved logical state and camera pose. Mature maize18/capacity2048 used three Front colour groups, original Double shadows and shared growth. Native harvest requested one task on a copy; completion/delivery is unproven. Final cleanup closed/lost context with no errors, and root closed the tab.
+
+Captures at time0,0,450 are all night presentation; no day150 was captured. At this wide scale root found maize too small/dark for broad perceptual approval. Named human decision remains pending. Source submissions221→225 calls and7430602→7430494 triangles are diagnostic counts, not performance timing. The separate isolated17.48% GPU gain does not establish whole WorldScene benefit.
+
+The first native860 failed on double gzip decoding before context creation. Native861 then reset once because Vite lazily optimized BufferGeometryUtils; a second explicit load completed with unchanged sources. These instrument events are retained and no timing is inferred.
+
+Run `node tools/frontside_verify_world_maize_archive.mjs` to verify raw report/three PNGs/source commit hashes and narrow functional assertions. Next validation needs explicit daylight, gameplay crop focus/multiview, growth continuity/completed lifecycle, resource and new full World GPU comparison. No category approval or production asset promotion.
