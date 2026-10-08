@@ -18,6 +18,7 @@ test('depth preload starts with the actual target and recipes, restores scene im
  };
  const preparing=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world);
  assert.deepEqual(s.world.children.map(mesh=>mesh.material),s.originals);assert.ok(s.originals.every(material=>material.visible&&material.colorWrite));assert.equal(s.pipeline.depthWarmStats.stockAlphaSpecialized,0);
+ assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
  s.complete();await preparing;assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();
 });
 

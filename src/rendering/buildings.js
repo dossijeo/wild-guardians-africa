@@ -159,14 +159,16 @@ export class BuildingDestructionPass {
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true};}
   async prepareDepth(camera,world,{compile=(scene,camera)=>this.renderer.compileAsync(scene,camera)}={}){
     const renderer=this.renderer,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.enabled;
+    let compiling;
     try{
       renderer.shadowMap.enabled=false;renderer.setRenderTarget(this.smokeDepth);
-      let compiling;
       // Three starts compilation synchronously. Restore borrowed scene materials
       // immediately, then wait for those programs without holding scene mutations.
       this.depthWarmStats=withDepthCaptureMaterials(world,()=>{compiling=compile(world,camera);},this.depthCaptureOptions());
-      await compiling;
     }finally{renderer.setRenderTarget(target);renderer.shadowMap.enabled=shadows;}
+    // Waiting must not leave the shared renderer in the linear depth target.
+    // The loading diorama can render real frames while these programs finish.
+    await compiling;
   }
   captureDepth(camera,world){
     camera.updateWorldMatrix(true,false);
