@@ -7,6 +7,7 @@ import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {Vector4} from 'three';
+import {sampleFixedPose} from '../../src/rendering/fixed-pose.js';
 import {withGpuRootIsolation} from '../../tools/experiments/isolated-gpu-root.js';
 
 const status=document.querySelector('#status'),rows=[],errors=[];
@@ -61,8 +62,18 @@ async function runCase({biome,culture,dense=false}){
   await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality:'media',biome:nav.config.biome})});check();await prepareInitialFarWorld(world);check();
   const actors=[...world.objects.values()].map(o=>o.userData.actorReady).filter(Boolean);await Promise.all(actors);check();
   world.focusFarm();world.controls.enabled=false;world.controls.enableDamping=false;world.render(0);
-  const rigs=[...world.mixers.values()],mixerTimes=rigs.map(r=>r.mixer.time),bones=[];
-  for(const rig of rigs)rig.model.traverse(o=>{if(o.isBone&&bones.length<8)bones.push(o);});
+  const rigs=[...world.mixers.values()],mixerTimes=rigs.map(r=>r.mixer.time),bones=[],poseOrigins=new Map(rigs.map(r=>[r,r.action?.time??0]));
+  for(const rig of rigs)rig.model.traverse(o=>{if(o.isBone)bones.push(o);});
+  let presentationTime=0,maxPoseDelta=0;
+  const nativeUpdateActor=world.updateActor.bind(world);
+  // QA-only presentation sampling AFTER native fixed-time pose evaluation.
+  // Keep each current authored clip, but repeat it on an independent clock.
+  // This diagnostic does not model task completion or advance simulation.
+  world.updateActor=(entity,dt,type)=>{
+   nativeUpdateActor(entity,dt,type);const rig=world.mixers.get(entity.id);
+   const duration=rig?.action?.getClip().duration;
+   if(duration>0)sampleFixedPose(rig,((poseOrigins.get(rig)??0)+presentationTime)%duration);
+  };
   const bonePose=()=>bones.flatMap(b=>[...b.position.toArray(),...b.quaternion.toArray(),...b.scale.toArray()]),initialPose=bonePose();
   row.actorReadiness=actors.length;row.mixers=rigs.length;row.initialStream=world.chunkStream.summary();row.livingPlants=state.plants.filter(p=>p.alive).length;
   const eye=world.camera.position.clone(),target=world.controls.target.clone(),duration=10000,distance=120;
@@ -71,18 +82,18 @@ async function runCase({biome,culture,dense=false}){
    const now=await frame();check();if(start===undefined){start=now;last=now;}const elapsed=Math.min(duration,now-start),fraction=elapsed/duration;
    world.camera.position.copy(eye);world.camera.position.z+=distance*fraction;world.controls.target.copy(target);world.controls.target.z+=distance*fraction;
    const dt=Math.min(.1,Math.max(0,(now-last)/1000));
-   // WorldScene normally advances actor clips from simulated time, which is
-   // paused here. Advance presentation mixers explicitly on this QA copy;
-   // never mutate elapsed, worker positions, tasks or any save data.
-   for(const rig of rigs)rig.mixer.update(dt);
+   // Advance only the independent QA presentation clock. Native rendering
+   // otherwise resamples paused clips and would erase mixer.update(dt).
+   presentationTime+=dt;
    world.render(dt);last=now;
+   const currentPose=bonePose();for(let i=0;i<currentPose.length;i++)maxPoseDelta=Math.max(maxPoseDelta,Math.abs(currentPose[i]-initialPose[i]));
    const index=Math.floor(elapsed/500);
    if(index!==sampled){sampled=index;const sample={elapsed,distance:distance*fraction,...witness(world),chunks:world.chunks.size,created:world.chunkStream.stats.created};row.samples.push(sample);
     if(index===0||index===10||elapsed===duration)row.captures.push({elapsed,png:canvas.toDataURL('image/png')});
    }
    if(elapsed===duration)break;
   }
-  const finalPose=bonePose();row.poseWitness={sampledBones:bones.length,changed:initialPose.some((value,i)=>value!==finalPose[i]),mixerTimeDeltas:rigs.map((r,i)=>r.mixer.time-mixerTimes[i])};
+  const finalPose=bonePose();row.poseWitness={sampledBones:bones.length,changed:maxPoseDelta>1e-7,maxPoseDelta,finalPoseChanged:initialPose.some((value,i)=>value!==finalPose[i]),presentationTime,mode:'QA repeated current authored clips; paused logical simulation',mixerTimeDeltas:rigs.map((r,i)=>r.mixer.time-mixerTimes[i])};
   row.finalStream=world.chunkStream.summary();row.logicalUnchanged=logical===serialize(state);assert(row.logicalUnchanged,'Paused logical state changed');row.requestedDistance=distance;row.initialEye=eye.toArray();row.initialTarget=target.toArray();row.finalEye=world.camera.position.toArray();row.finalTarget=world.controls.target.toArray();
  }finally{const gl=world.renderer.getContext();close();row.cleanup={disposed:world.disposed,contextLost:gl.isContextLost()};rows.push(row);}
 }
@@ -93,7 +104,7 @@ document.querySelector('#run').onclick=async()=>{
   const selected=new URLSearchParams(location.search).get('case');assert(!selected||cases.some(c=>(c.dense?'dense':c.biome)===selected),'Unknown QA case');
   for(const current of cases.filter(c=>!selected||(c.dense?'dense':c.biome)===selected)){status.textContent='Traveling '+current.biome+'/'+current.culture+(current.dense?' denso':'');await runCase(current);}
  }catch(e){errors.push(String(e));close();}
- const report={done:true,cancelled,rows,errors,scope:'Readback temporal regression: real async isolated preparation, camera movement, advancing renderer mixer poses, native shadows and paused logical state. Not a frametime benchmark, live simulation/attack campaign, mobile proof or production acceptance.'};
+ const report={done:true,cancelled,rows,errors,scope:'Readback temporal regression: real async isolated preparation, camera movement, independently sampled authored actor poses, native shadows and paused logical state. Not a frametime benchmark, live simulation/attack campaign, mobile proof or production acceptance.'};
  document.querySelector('#report').textContent=JSON.stringify(report);document.querySelector('#cancel').disabled=true;status.textContent='Terminado, GPU liberada. '+rows.length+' casos; errores '+errors.length;
  for(const row of rows)for(const capture of row.captures){const img=new Image();img.src=capture.png;img.alt=row.biome+(row.dense?' denso':'')+' '+capture.elapsed+'ms';document.querySelector('#captures').append(img);}
 };
