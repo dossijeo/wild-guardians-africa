@@ -17,6 +17,16 @@ cameraFocusedAnimalId prevents replay after a save reload; no save format change
 
 Directed tests cover moving approach beyond the initial trip, early entry,
 manual interruption, hidden pause, departure, reload and terrain protection in
-all six biomes. Native visual QA remains pending; unit results are not evidence
-of visual smoothness or traveling performance. This change does not activate any
-experimental preparation flag.
+all six biomes. Native Gran Cañón/Mapungubwe verification on main 3832e40d
+also observed continued following after the initial 1.2-second trip: camera and
+walking animal shared X/Z (-30.684595, 50.105090), then reached Z 42.547340
+before travel became null. The animal was visible, its rig loaded, and reported
+errors and browser error logs were empty. [Arrival capture](raid-camera-approach-native/arrival.png)
+and [DOM report](raid-camera-approach-native/arrival.json) are retained.
+
+The first URL used an invalid biome identifier and failed before initialization;
+its negative report is retained separately. The fixture pauses simulation on
+arrival, so subsequent movement inside the farm is covered by directed tests,
+not by that screenshot. Browser tab 872 was closed; no physical GPU disposal or
+frame-time measurement is claimed. Other biomes and manual input are covered
+by directed tests. This change does not activate experimental preparation flags.
