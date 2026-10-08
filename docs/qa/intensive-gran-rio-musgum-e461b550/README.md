@@ -14,10 +14,12 @@ This is domain simulation evidence, not a visual/pathfinding, physical player,
 GPU or complete culture/biome acceptance test.
 
 Unoccupied daylight is **6,100 / 30,000 seconds = 20.33%**, including 4,105
-seconds of budget inactivity and 1,995 at shift end. It exceeds the user's
-approved **less than 20%** criterion and is not accepted by rounding. The
-victory result is preserved separately from the unresolved activity target.
-No test or game parameter was altered to turn this result green.
+seconds of budget inactivity and 1,995 at shift end. It exceeded the previous
+less-than-20% criterion. The user subsequently explicitly accepted **less than
+25%**, so **20.33% is now accepted for the activity metric**. The measured
+value, historical initial decision and victory result remain unchanged.
+No test strategy or game parameter was altered; `updatedAcceptance` records
+the new user criterion separately from the receipt's initial decision.
 
 The campaign belongs to the historical `e461b550` runner. Its ambient recorded
 Git HEAD is `25e00408`; provenance is retained without relabeling it as the
@@ -29,4 +31,4 @@ campaigns remain separate and live.
 The exact report, summary, final state and terminal process record are archived
 as gzip; the receipt hashes their uncompressed bytes. Run
 `node docs/qa/intensive-gran-rio-musgum-e461b550/verify.mjs` to verify agreement,
-victory, activity arithmetic and the explicitly unmet idle criterion.
+victory, activity arithmetic, historical decision and updated activity acceptance.

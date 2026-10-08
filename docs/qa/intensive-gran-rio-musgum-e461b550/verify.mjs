@@ -21,6 +21,11 @@ assert.equal(activity.unoccupiedFraction,activity.unoccupiedSeconds/activity.day
 assert.equal(summary.daily.reduce((total,d)=>total+d.idle.budget+d.idle['shift-end'],0),6100);
 assert.equal(receipt.idleCriterion,.2);assert.equal(receipt.idleAccepted,false);
 assert.ok(activity.unoccupiedFraction>=receipt.idleCriterion);
+const policy=JSON.parse(await readFile(new URL('../intensive-acceptance-policy.json',import.meta.url),'utf8'));
+assert.equal(policy.unoccupiedDaylight.maximumFraction,.25);
+assert.equal(receipt.updatedAcceptance.idleCriterion,policy.unoccupiedDaylight.maximumFraction);
+assert.equal(receipt.updatedAcceptance.idleAccepted,true);
+assert.ok(activity.unoccupiedFraction<receipt.updatedAcceptance.idleCriterion);
 assert.equal(receipt.domainFilesCompared,54);assert.equal(receipt.domainMismatches.length,8);
 assert.equal(summary.provenance.gitHead,receipt.ambientRecordedHead);
-console.log('PASS: historical 100-night victory and hashes; idle 20.33% fails the <20% target. Eight domain differences prevent current-main acceptance.');
+console.log('PASS: historical 100-night victory and hashes; unchanged idle 20.33% accepted under updated user <25% criterion. Eight domain differences prevent current-main acceptance.');

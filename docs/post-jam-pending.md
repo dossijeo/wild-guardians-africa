@@ -1,10 +1,18 @@
 # Tareas pendientes posteriores a la Jam
 
+Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
+tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
+anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
+comprobaciones pendientes. [Política](qa/intensive-acceptance-policy.json).
+Gran Río/Musgum20,33% y Sabana/Musgum20,283% quedan aprobados en esa métrica;
+Gran Río/Saheliana25,40% sigue por encima del límite. Se conserva el alcance
+histórico de cada campaña, sin equivalencia automática a main actual.
+
 [Gran Río/Suajili: cien noches auditadas](qa/intensive-gran-rio-suajili-e461b550/README.md):
 campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
 1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
 Auditoría monetaria/cajas/restauración y síntesis completa exactas. Inactividad
-estratégica19,93% aprobada por el usuario el 2026-10-08 (criterio: menos del20%).
+estratégica19,93% aprobada por el usuario el 2026-10-08 (criterio vigente: menos del25%).
 No queda pendiente reducirla para este caso; no es replay de main actual ni GPU/móvil.
 
 [Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
@@ -42,7 +50,7 @@ Sigue en QA: falta aceptación amplia antes de integrar.
 [Campaña Gran Río/Mapungubwe: cien noches archivadas](qa/intensive-gran-rio-mapungubwe-e461b550/README.md):
 victoria con1363 plantas vivas máximas, ocho especies y entregas físicas diarias;
 contabilidad y resumen completo reconciliados.18,22% de jornada sin acciones
-sigue abierto como asunto de diseño. Fuentes congeladas e461b550,23 archivos
+aprobado bajo el criterio vigente del25%. Fuentes congeladas e461b550,23 archivos
 distintos de main; no es replay actual ni cierre de la matriz de treinta casos.
 
 [Reutilización de buffers al redimensionar lotes](qa/asset-group-production/README.md):
@@ -488,7 +496,7 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 
 [Sabana/Suajili: cien noches terminadas](qa/intensive-sabana-suajili-e461b550/README.md): tercer caso de la matriz congelada e461b550, 100 noches/victoria, ocho cultivos, hasta1.460 plantas vivas y cuentas exactas. Archivo completo auditado en main, resumen idéntico; no es replay de navegación actual. Inactividad de estrategia19,92% diurno pendiente de reducir. El padre avanzó a Musgum sin reiniciar; Gran Cañón sigue independiente.
 
-[Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% pendiente de reducir. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
+[Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% aceptada bajo el nuevo criterio del25%. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
 
 [Contenido de buffers GPU alpha](qa/alpha-depth-buffer-content/README.md): dos secuencias nativas copian los buffers completos del afloramiento volcánico. Hashes estables de posición/UV/instancias/visibilidad/índices mientras persisten siete píxeles de profundidad distintos. No aceptar alpha experimental; investigar evaluación/rasterización del shader. No es benchmark ni prueba de texels/propiedad exclusiva del fragmento.
 
