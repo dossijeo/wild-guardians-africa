@@ -1233,3 +1233,26 @@ three of the zero vertices are incident exclusively to repeated-position faces.
 Thus zero normals cannot all be dismissed as unrasterizable debris. This pilot
 has not been served, covered, shadow-tested or visually approved; Badge's
 rejection does not automatically prove all accessory repairs fail.
+
+CULT_STEM_REVERSE_V3 native HEAD66ecd016 is REJECTED at sample7/12 and archived
+maize-stem-reverses-independent-v3-screen/browser. The first six native-state
+samples pass their existing local gates, but are not exhaustive acceptance.
+Sample7 is bridge growth0.7304166666666667, Sabana night, clock5.252815246582031,
+elevation19.75490196/azimuth121.740157. Exact source/indexed controls and a passing
+groupedDouble control isolate the failure from lossless indexing. Candidate
+IoU0.9998429014 alone does not rescue35missing pixels,14beyond one pixel and an
+interior missing region32pixels (diameter8.944); RGBMAE0.0000043336/tile0.003496
+also cannot rescue an alpha hole. The partial reverse selection does not provide
+complete transition coverage. No new reverse face is selected from this held-out
+mask; the same candidate cannot reuse V3 as acceptance after modification.
+Actual onBeforeShadow depth draws reportDoubleSide only, confirming color
+isolation rather than approval of Front shadow casting. This candidate is not
+eligible for a GPU benchmark. Work must distinguish native-state geometry from
+bridge deformation and redesign the latter without fitting this held-out hole.
+
+An unconnected prospective frontside-shadow-metrics.mjs helper decodes the
+installed Three RGBADepthPacking formula. It distinguishes clear far depth,
+coverage/IoU and world depth differences (max of0.1mm or0.01% model height),
+using the unchanged shadow limits. Two unit tests cover an actual missing shadow
+and identical coverage with excessive depth displacement. It is not imported
+into the frozen V3 fixture; no candidate shadow readback has passed this gate.
