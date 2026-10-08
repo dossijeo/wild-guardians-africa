@@ -31,3 +31,11 @@ python tools/frontside_stem_triangle_correspondence_audit.py
 ```
 
 The first native check must compare this derived geometry using DoubleSide to the unchanged original, with the existing source controls, quantitative color/alpha/regions gates and contract audit. Any alpha failure of the unchanged 658 geometry cannot be repaired by changing normals. Only if image preservation succeeds may an independent FrontSide experiment proceed; previous reserved profiles cannot be reused as acceptance data. No threshold, source-control envelope or resource gate is widened for this experiment, and a pass in one training view would not establish multiview, growth, shadow or GPU acceptance.
+
+The disabled native fixture now accepts a separate guarded `stemAnchorNormals` flag, requiring `blenderStemReduction`, `stemBudgetMax`, `derivedContractAudit` and `limit=1`. All four arms remain DoubleSide: original, exact indexed original, restored field, and the same restored field in two groups. Archive SHA, source SHA and restoration/input recipe are checked before construction. Native contracts and unchanged gates are retained. This training sample diagnoses attribute preservation; since position/UV and winding are unchanged, the earlier 658 alpha rejection is explicitly expected to remain and cannot qualify the candidate by better RGB alone.
+
+```text
+http://localhost:5284/tests/browser/frontside-crop-visual.html?blenderStemReduction&stemBudgetMax&stemAnchorNormals&derivedContractAudit&limit=1&cpuCampaigns=20024%2F49032%2F41320%2F41304-active-inventory-required
+```
+
+HTTP validation served the exact 2323730-byte archive and expected SHA. The offline native `createCropBatch` contract verifier (`node tools/frontside_derived_batch_contract_verify.mjs --anchor-normals`) passes eight growth/clock samples, four with the mature mesh active. Live instance/growth objects, values and shader-hook strings remain equal; actual shared bilateral state bytes match 313938. Textures are stripped for Node loading and no raster/shadow/GPU gate is thereby satisfied. The original 658 and .75 receipts are not overwritten.

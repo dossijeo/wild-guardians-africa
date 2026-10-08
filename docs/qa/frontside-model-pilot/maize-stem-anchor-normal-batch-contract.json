@@ -1,0 +1,132 @@
+{
+  "status": "OFFLINE_DERIVED_BATCH_CONTRACT_ONLY_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "archiveSha256": "1a0b22844303e38748162a03c2cdb333e671caccd092de68cd3926e78262a8e8",
+  "unchangedOriginalFaces": 4111,
+  "liveInstanceObjectsPreserved": true,
+  "bilateralTriangles": 5427,
+  "sharedStateBytesWithoutInstanceDrivers": 313938,
+  "results": [
+    {
+      "growth": 0.865,
+      "clock": 1.75,
+      "activeMatureMesh": false,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 1.75,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 0.865,
+      "clock": 4.125,
+      "activeMatureMesh": false,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 4.125,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 0.92,
+      "clock": 1.75,
+      "activeMatureMesh": false,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 1.75,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 0.92,
+      "clock": 4.125,
+      "activeMatureMesh": false,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 4.125,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 0.98,
+      "clock": 1.75,
+      "activeMatureMesh": true,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 1.75,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 0.98,
+      "clock": 4.125,
+      "activeMatureMesh": true,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 4.125,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 1,
+      "clock": 1.75,
+      "activeMatureMesh": true,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 1.75,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    },
+    {
+      "growth": 1,
+      "clock": 4.125,
+      "activeMatureMesh": true,
+      "liveInstanceEqual": true,
+      "growthUniforms": {
+        "uGround": 0.1,
+        "uHeight": 1.782705,
+        "uClock": 4.125,
+        "uWind": 1
+      },
+      "growthHooksEqual": true,
+      "phase": "original"
+    }
+  ],
+  "limitations": [
+    "Original lossless geometry/native createCropBatch executed; textures stripped for Node-only loading and not rendered.",
+    "Growth hook comparison omits actual AfricanToon/GL macros, sampler contents, TBN/interpolation, shader evaluation and visual/shadow/GPU gates.",
+    "New658stem native state only; source bridge geometries retain original topology, not a completed adapted bridge.",
+    "Any inactive mature mesh sample does not validate derived mesh coverage; no view masks or heldout poses used.",
+    "The rejected .75 proposal remains rejected; fixed658 count chosen by unchanged resource gate, no quality claim.",
+    "Restored normals apply only to unique exact P/UV anchors; unchanged658 geometry is already rejected in native DoubleSide training. No repair of that rejection is demonstrated."
+  ],
+  "normalFieldMethod": "ORIGINAL_NORMAL_BITS_AT_UNAMBIGUOUS_EXACT_P_UV_ANCHORS"
+}
