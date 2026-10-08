@@ -1,10 +1,15 @@
 """CPU payload/source-bit correspondence and storage; not render acceptance."""
-import ast,hashlib,json,math,struct,zipfile
+import argparse,ast,hashlib,json,math,struct,zipfile
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];folder=root/'docs/qa/frontside-model-pilot'
-report=json.loads((folder/'crop-maize-chart-proxy-draft.json').read_text())
+parser=argparse.ArgumentParser()
+parser.add_argument('--report',default='crop-maize-chart-proxy-draft.json')
+parser.add_argument('--archive',default='maize-mature-chart-geometry-draft.npz')
+parser.add_argument('--storage',default='crop-maize-chart-proxy-storage.json')
+args=parser.parse_args()
+report=json.loads((folder/args.report).read_text())
 payload=root/report['payloadRelative']
-if not payload.exists():payload=folder/'maize-mature-chart-geometry-draft.npz'
+if not payload.exists():payload=folder/args.archive
 assert hashlib.sha256(payload.read_bytes()).hexdigest()==report['payloadSha256']
 arrays={};rows=[]
 with zipfile.ZipFile(payload) as archive:
@@ -55,5 +60,5 @@ assert all(proxy_chart.count(c['chart'])==c['proxyFaces'] for c in report['chart
 result=dict(status='CPU_SOURCE_TABLE_BITS_AND_STORAGE_VERIFIED_NO_RENDER_ACCEPTANCE',payloadSha256=report['payloadSha256'],arrays=rows,
     totalDecodedArrayBytes=sum(r['bytes'] for r in rows),sourcePnuAndIndexBitExact=True,sourceLabelsAndChartAssignmentsVerified=True,
     proxyPositionFinite=True,proxyIndicesInRange=True,limitations=['No surface correspondence, UV field, normal field, growth, visual, shadow or GPU parity established.','Decoded NPZ arrays are CPU storage, not texture encoding or resident GPU allocation.'])
-(folder/'crop-maize-chart-proxy-storage.json').write_bytes((json.dumps(result,indent=2)+'\n').encode())
+(folder/args.storage).write_bytes((json.dumps(result,indent=2)+'\n').encode())
 print(json.dumps(dict(status=result['status'],totalDecodedArrayBytes=result['totalDecodedArrayBytes'],payloadSha256=result['payloadSha256'])))
