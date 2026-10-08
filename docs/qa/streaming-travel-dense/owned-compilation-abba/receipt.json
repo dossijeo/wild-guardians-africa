@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-08",
+  "runtimeCommit": "8b8afc6ec21d28dc3357ee419b2fee70376149bd",
+  "tabs": [
+    852,
+    853,
+    854,
+    855
+  ],
+  "order": "ABBA",
+  "sources": {
+    "tests/browser/streaming-travel.html": "c1743fb6a93e7fccb3beb312b0eb251de323f406ba2833a493e5a1f7a30efd10",
+    "tools/experiments/attach-native-far-world.js": "fba7e18daa8f55597ec8043787fc40ceb029362aefacf8e8ab4dc6c74f24224c",
+    "tools/experiments/prepare-native-far-gpu.js": "ebcf3a13575343a696879319e928a72c105711a19058f86d00c23f867f9d6878",
+    "tools/experiments/compile-gpu-preparation.js": "f03e9b35fe170872d88b2d6d45d431abf69f47ad2dec76ffafeac897a40c4478",
+    "tools/experiments/wait-gpu-preparation.js": "500f179b4b87464b150645b49b855a928f5d5adcaafd2d177a456727766cbd6e",
+    "tools/experiments/isolated-gpu-root.js": "7ce41d346dcece4fa9909091f432227d0b81e7be62271f5508a512b5fb8d7505"
+  },
+  "runs": [
+    {
+      "arm": "A1",
+      "file": "a.json.gz",
+      "rawSha256": "bdf99abced59198c57d4f9d4e72f161679708a0eeb1959ce42b2c9a34dcd0baa",
+      "gzipSha256": "26dad8c5c63120e8d9aae8c540d2fcfbd46a89199aefa8f985538affba913bfb"
+    },
+    {
+      "arm": "B1",
+      "file": "b.json.gz",
+      "rawSha256": "a96934e946991e0758a6f982d2f5bda09680a30538883df467f9feecbd56a3e0",
+      "gzipSha256": "83df64736b73863e6d8935452096a00b423b3263c06a0b2cc6cc8f53fbda2351"
+    },
+    {
+      "arm": "B2",
+      "file": "b2.json.gz",
+      "rawSha256": "171cc3d6131f57dc7574ff2cc4a6efd9e3ad073a66d7eb0871378ca13ff98ca5",
+      "gzipSha256": "e06b6ac61216ea1a1446c0ebbaa8b47fcb7943bc77f13b8392986afdecd9cff3"
+    },
+    {
+      "arm": "A2",
+      "file": "a2.json.gz",
+      "rawSha256": "264b6896db08093f4e0a0a1d839db84f122a767111335e12daf0936dcb158da2",
+      "gzipSha256": "9ce56eaa8d26239fe6bb4f573562a64ffd992c5c5390083224fb3b8c16c5250c"
+    }
+  ],
+  "screenshotSha256": "a1330235e0aaf66997c05f1e0444b0b5aeaf02b12ebe7170b237fc7baf22ecf6",
+  "cpuCampaignCondition": "Previous four process handles absent; no node intensive command live in Win32_Process inventory before this series.",
+  "scope": "Sequential dense native traveling with isolated uploads, programs/textures/crate readiness; compiler option alone differs. No resource binding probes."
+}
