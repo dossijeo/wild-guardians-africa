@@ -237,3 +237,8 @@ Scene.load's remaining raw milestone RAF waits now use the shared owned frame wa
 ### Loading-only isolated far upload candidate
 
 The first-crop and resource fixtures accept isolate-loading as an explicit QA flag. It sets existing world.farIsolatedPreparation only during the loading owner phase, then disables it before cinematic start after verified readiness. Normal production and subsequent gameplay keep their defaults. A cooperative+isolateRoot contract confirms unrelated visibility, shadow scheduling, framebuffer state and parent ownership restore before a held fence can cancel;52native-far GPU contracts pass. Root's earlier streaming isolation observations are background evidence, not acceptance of this new loading candidate. Native pilot, paired timing/resource/visual and lifecycle coverage remain required before promotion.
+
+
+### Far-readiness frame ownership
+
+prepareInitialFarWorld now uses the shared cancellable frame waiter both for its outer region loop and for yields supplied to phased world rendering. Its existing90s whole-readiness deadline and actual world loading signal remain authoritative; no artificial ready state or extra frame is introduced. Three new contracts cover suspended-frame abort/late completion, real deadline without RAF and phase-render yield abort. Far/world owner directed tests pass19/19. The old increment-on-clock-read timeout fixture was changed to advance its clock on actual injected frames, retaining the two-render deadline expectation instead of coupling behavior to the number of checks. Native regression and performance acceptance remain open.
