@@ -1,0 +1,7 @@
+<!doctype html><html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>QA · Integrated library</title><script src="../../i18n/loader.js"></script><div id="app"></div><script type="module">
+import '../../src/ui/styles.css';import {LibraryViewer,LIBRARY_LABS} from '../../src/ui/library-viewer.js';import {assetUrl} from '../../src/rendering/asset-url.js';
+await window.WildGuardiansLanguageReady;const fonts=document.createElement('link');fonts.rel='stylesheet';fonts.href=assetUrl('content/fonts.css');document.head.append(fonts);
+const app=document.querySelector('#app');let viewer=null;const history=[];
+function catalogue(){viewer?.dispose();viewer=null;app.innerHTML='<main class="screen"><h1>Biblioteca</h1><p>QA de navegación nativa. Una vista y un contexto a la vez.</p><div id="labs" class="library-grid"></div><pre id="qa-report" data-no-i18n></pre></main>';for(const [key,title] of Object.entries(LIBRARY_LABS)){const button=document.createElement('button');button.textContent=title;button.onclick=()=>{history.push({event:'open',lab:key});viewer=new LibraryViewer(app,key,{onBack:()=>{history.push({event:'back',lab:key});catalogue();},onMenu:()=>{history.push({event:'menu',lab:key});catalogue();}});};document.querySelector('#labs').append(button);}document.querySelector('#qa-report').textContent=JSON.stringify(history);}
+catalogue();addEventListener('pagehide',()=>viewer?.dispose());
+</script></html>

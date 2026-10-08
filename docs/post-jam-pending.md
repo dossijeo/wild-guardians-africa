@@ -636,3 +636,8 @@ diferencia/max7 como diagnóstico. Control separado con fotograma ordinario prev
 da cero diferencias antes y después; no atribuye la causa del ensayo inicial.
 No acredita continuidad en traveling ni entidades densas/rendimiento. Flags de
 preparación aislada y compilación/waits propios siguen fuera de producción.
+
+
+## Biblioteca a pantalla completa y lecturas que esperan la voz (9 de octubre de 2026)
+
+Encargo del usuario en rama `codex/library-spirit-ended`: reemplazar el iframe flotante por una pantalla Biblioteca integrada, con vuelta explícita, menú, ES/EN y safe areas. Conservar funciones de los cuatro labs. Corregir los caminos automáticos que retiraban lecturas al completar acciones o caducar contexto mientras su voz seguía audible; ended real debe terminar la presentación vigente, sin dar por hechas acciones pendientes ni impedir las reales. Implementado y revisable: 96 pruebas dirigidas PASS, QA CUA de cuatro cargas/vueltas, ES/EN, portrait/landscape, ended español, retención inglesa y cierre/fallback; build/paquete relativo y hashes de 54 voces PASS. [Evidencias y límites](qa/library-spirit-ended/README.md). Sin publicación itch ni afirmación de estabilidad global. Pendiente revisión/merge de PR.
